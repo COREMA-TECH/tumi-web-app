@@ -46,7 +46,7 @@ class ApplicationList extends Component {
 		});
 	};
 
-	GET_APPLICATION_QUERY = gql`
+	/*GET_APPLICATION_QUERY = gql`
 		query applicationsByUser($idUsers: Int){
 			applicationsByUser(idUsers: $idUsers) {
 				id
@@ -65,6 +65,38 @@ class ApplicationList extends Component {
 					BusinessCompany {
 							Id
 							Code
+						}
+				}
+			}
+		}
+	`;*/
+	GET_APPLICATION_QUERY = gql`
+	query applications{
+		applications(isActive: true) {
+				id
+				firstName
+				middleName
+				lastName
+				socialSecurityNumber
+				emailAddress
+				cellPhone
+				isLead
+				idWorkOrder
+				recruiter{
+					Full_Name
+				}
+				user{
+					Full_Name
+				}
+				position{
+					id
+					position {
+							Position
+						}
+					BusinessCompany {
+							Id
+							Code
+							Name
 						}
 				}
 			}
@@ -128,13 +160,6 @@ class ApplicationList extends Component {
 			return <LinearProgress />;
 		}
 
-		/*	if (this.state.loadingRemoving) {
-			return (
-				<div className="nothing-container">
-					<CircularProgress size={150} />
-				</div>
-			);
-		}*/
 		// To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="row">
@@ -183,7 +208,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={variables} pollInterval={300}>
+					<Query query={this.GET_APPLICATION_QUERY} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
@@ -198,8 +223,8 @@ class ApplicationList extends Component {
 										icon="danger"
 									/>
 								);
-							if (data.applicationsByUser != null && data.applicationsByUser.length > 0) {
-								let dataApplication = data.applicationsByUser.filter((_, i) => {
+							if (data.applications != null && data.applications.length > 0) {
+								let dataApplication = data.applications.filter((_, i) => {
 									if (this.state.filterText === '') {
 										return true;
 									}
@@ -209,6 +234,10 @@ class ApplicationList extends Component {
 											_.middleName +
 											_.lastName +
 											(_.position ? _.position.position.Position.trim() : 'Open Position') +
+											(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
+											(_.position ? _.position.BusinessCompany.Name : '') +
+											(_.recruiter ? _.recruiter.Full_Name : '') +
+											(_.user ? _.user.Full_Name : '') +
 											_.emailAddress)
 											.toLocaleLowerCase()
 											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1

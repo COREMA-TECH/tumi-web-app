@@ -238,7 +238,9 @@ class RegionForm extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.configregions != null) {
+                if (data.configregions != null &&
+                    data.configregions.length > 0) {
+                    console.log("ata.configregions", data.configregions)
                     this.setState({
                         ConfigRegions: data.configregions,
                         IdRegionalManager: data.configregions[0].regionalManagerId,
@@ -527,7 +529,7 @@ class RegionForm extends Component {
                 <DialogContent>
                     <form action="">
                         <header className="RegionForm-header">
-                            <div className="container-fluid">
+                            <div className="">
                                 <div className="row">
                                     <div className="col-md-4">
                                         <label htmlFor="">* Region's Name</label>
@@ -578,9 +580,9 @@ class RegionForm extends Component {
                         </header>
                         <div className="container-fluid">
                             <div className="card">
-                                <div className="card-header">
-                                    <div className="card-body">
-                                        <div className="row">
+                                <div className="">
+                                    <div className="">
+                                        <div className="">
                                             <div className="col-md-6">
                                                 <label htmlFor="">* Regional Manager</label>
                                                 <select
@@ -598,8 +600,7 @@ class RegionForm extends Component {
                                                 </select>
                                             </div>
                                         </div>
-
-                                        <div className="row">
+                                        <div className="">
                                             <div className="col-lg-12">
                                                 <label htmlFor="">Regional Recruiter</label>
                                                 <Query query={GET_RECRUITER}>
@@ -634,7 +635,7 @@ class RegionForm extends Component {
                                             </div>
 
                                         </div>
-                                        <div className="row">
+                                        <div className="">
                                             <div className="col-lg-12">
                                                 <label htmlFor="">Property Name</label>
                                                 <Query query={GET_HOTEL_QUERY} >
@@ -669,7 +670,9 @@ class RegionForm extends Component {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
+                                <div className="row">
                                 </div>
 
                                 <div className="card-footer">

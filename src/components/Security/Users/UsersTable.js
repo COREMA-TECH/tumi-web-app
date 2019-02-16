@@ -52,7 +52,7 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
-	{ id: 'Delete', numeric: false, disablePadding: true, label: '' },
+	{ id: 'Delete', numeric: false, disablePadding: true, label: 'Actions' },
 	{ id: 'Id_Contact', numeric: false, disablePadding: false, label: 'Contact' },
 	{ id: 'Code_User', numeric: false, disablePadding: false, label: 'User Name' },
 	//{ id: 'Full_Name', numeric: false, disablePadding: false, label: 'Full Name' },
@@ -79,7 +79,6 @@ class EnhancedTableHead extends React.Component {
 								<TableCell
 									key={row.id}
 									numeric={row.numeric}
-									padding={row.disablePadding ? 'none' : 'default'}
 									sortDirection={orderBy === row.id ? order : false}
 									style={{ backgroundColor: '#3da2c7' }}
 									className={'Table-head'}
@@ -438,7 +437,7 @@ class UsersTable extends React.Component {
 											return this.props.onEditHandler({ ...row });
 										}}
 									>
-										<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
+										<CustomTableCell component="th">
 											<Tooltip title="Edit">
 												<button
 													className="btn btn-success ml-1 float-left"

@@ -12,6 +12,9 @@ import AntiHarassment from "./AntiHarassment/AntiHarassment";
 import WorkerCompensation from "./WorkerCompensation/WorkerCompensation";
 import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 import ProfilePreview from "./ProfilePreview/ProfilePreview";
+import FormsI9 from './I9/FormsI9';
+import FormsW4 from "./W4/FormsW4";
+
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 
@@ -113,9 +116,14 @@ class CustomizedTabs extends React.Component {
                 case 5:
                     return <WorkerCompensation applicationId={this.state.applicationId} />;
                 case 6:
-                    return <ApplicantDocument applicationId={this.state.applicationId} />;
+                    return <FormsI9 applicationId={this.state.applicationId} />;
                 case 7:
-                    return <ProfilePreview applicationId={this.state.applicationId}/>;
+                    return <FormsW4 applicationId={this.state.applicationId} />;
+                case 8:
+                    return <ApplicantDocument applicationId={this.state.applicationId} />;
+                case 9:
+                    return <ProfilePreview applicationId={this.state.applicationId} />;
+
             }
         };
 
@@ -167,7 +175,17 @@ class CustomizedTabs extends React.Component {
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label={applyTabs[9].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
                             label={applyTabs[7].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label={applyTabs[8].label}
                         />
                     </Tabs>
                     {getTabContent(value)}

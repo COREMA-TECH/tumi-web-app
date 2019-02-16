@@ -18,48 +18,48 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_MATCH = gql`
-query getlead  {
-	applications(isActive: true) {
+query getlead($language: Boolean,	$experience: Boolean,  $Position: String,  $WorkOrderId: Int,	$ShiftId: Int)   {
+			applicationsByMatches(language: $language, experience: $experience,Position: $Position, WorkOrderId: $WorkOrderId, ShiftId: $ShiftId) {
 		id
-	firstName
-	lastName
-	cellPhone
-	homePhone
-	car
-	city
-	isLead
-	zipCode
-	idealJobs
-    {
-      id
-	  description
-	  idPosition 
-    }
-	applicationPhases   {
-		id
-		StageId
-		ApplicationId
-		WorkOrderId
-		createdAt
-	  } 
-	cityInfo{
-		DisplayLabel
-	  }
-	state	
-	stateInfo{
-		DisplayLabel
-	  }
-	  generalComment
- languages
-{
-language
-}
-employments
-{
-  id
-}
+		firstName
+		lastName
+		cellPhone
+		homePhone
+		car
+		city
+		isLead
+		zipCode
+		idealJobs
+		{
+		  id
+		  description
+		  idPosition 
+		}
+		applicationPhases   {
+			id
+			StageId
+			ApplicationId
+			WorkOrderId
+			ShiftId
+			createdAt
+		  } 
+		cityInfo{
+			DisplayLabel
+		  }
+		state	
+		stateInfo{
+			DisplayLabel
+		  }
+		  generalComment
+	 languages
+	{
+	language
 	}
-
+	employments
+	{
+	  id
+	}
+}
     }
 	`;
 
@@ -146,6 +146,26 @@ query Cities($parent: Int!) {
 }
 `;
 
+/*export const GET_BOARD_SHIFT = gql`
+query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
+	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity)  {
+		id,
+		title,
+		quantity,
+		workOrderId,
+		CompanyName,
+		needExperience,
+		needEnglish,
+		zipCode,
+		Id_positionApplying,
+		positionName
+		status
+		isOpening
+	}
+}
+`;*/
+
+
 export const GET_BOARD_SHIFT = gql`
 query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity)  {
@@ -161,6 +181,15 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 		positionName
 		status
 		isOpening
+	}
+	getusers(Id: null,IsActive: 1) {
+		Id
+		Id_Contact
+	}
+	getcontacts(Id: null,IsActive: 1) {
+		Id
+		First_Name
+		Last_Name
 	}
 }
 `;

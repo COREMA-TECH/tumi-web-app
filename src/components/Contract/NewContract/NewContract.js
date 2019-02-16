@@ -9,7 +9,6 @@ import withApollo from 'react-apollo/withApollo';
 import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import Query from 'react-apollo/Query';
-import AccountDialog from 'ui-components/AccountDialog/AccountDialog';
 import ContactDialog from 'ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from 'ui-components/SelectForm/SelectFormContractTemplate';
 import withGlobalContent from 'Generic/Global';
@@ -21,7 +20,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import { Route } from "react-router-dom";
-import axios from 'axios';
 import LocationForm from '../../ui-components/LocationForm';
 
 const styles = (theme) => ({
@@ -154,6 +152,11 @@ class NewContract extends Component {
             Old_Billing_State: 0,
             Old_Billing_Street: '',
             Old_Billing_Zip_Code: '',
+
+            Management_Billing_City: 0,
+            Management_Billing_State: 0,
+            Management_Billing_Street: '',
+            Management_Billing_Zip_Code: '',
             ...this.DEFAULT_STATE
         };
     }
@@ -392,12 +395,15 @@ class NewContract extends Component {
                         this.getBusinessCompaniesbyId(this.state.Id_Entity);
 
                         this.props.getContractName(this.state.Contract_Name);
+                        this.props.updateCompanyId(this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity)
+
+
                         this.setState(
                             {
                                 loading: false
                             },
                             () => {
-                                this.props.updateCompanyId(this.state.Id_Entity);
+                                //  this.props.updateCompanyId(this.state.Id_Entity);
                             }
                         );
                     }
@@ -472,12 +478,15 @@ class NewContract extends Component {
                             }
                         })
                         .then(({ data }) => {
+                            this.props.updateCompanyId(this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity)
+
                             this.props.getContractName(this.state.Contract_Name);
+                            this.props.updateContractId(data.inscontracts.Id);
+
                             this.props.handleOpenSnackbar('success', 'Contract Inserted!');
                             this.setState({
                                 loadingInsert: false
                             });
-                            this.props.update(data.inscontracts.Id);
                         })
                         .catch((err) => {
                             this.props.handleOpenSnackbar('error', 'Error: Inserting Contract: ' + err);
@@ -555,12 +564,15 @@ class NewContract extends Component {
                             }
                         })
                         .then(({ data }) => {
+                            this.props.updateCompanyId(this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity)
+
                             this.props.getContractName(this.state.Contract_Name);
+
                             this.props.handleOpenSnackbar('success', 'Contract Updated!');
                             this.setState({
                                 loadingUpdate: false
                             });
-                            this.props.update(id);
+                            // this.props.update(id);
                         })
                         .catch((err) => {
                             this.props.handleOpenSnackbar('error', 'Error: Updating Contract: ' + err);
@@ -636,12 +648,16 @@ class NewContract extends Component {
                             }
                         })
                         .then(({ data }) => {
+                            this.props.updateCompanyId(this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity)
+
                             this.props.getContractName(this.state.Contract_Name);
+
                             this.props.handleOpenSnackbar('success', 'Contract Inserted!');
                             this.setState({
                                 loadingInsert: false
                             });
-                            this.props.update(data.inscontracts.Id);
+                            //this.props.update(data.inscontracts.Id);
+
                         })
                         .catch((err) => {
                             this.props.handleOpenSnackbar('error', 'Error: Inserting Contract: ' + err);
@@ -821,6 +837,32 @@ class NewContract extends Component {
             });
     };
 
+    geManagementbyId = (id) => {
+        this.props.client
+            .query({
+                query: this.getbusinesscompaniesbyIdQuery,
+                variables: {
+                    Id: id
+                }
+            })
+            .then(({ data }) => {
+
+                this.setState({
+
+                    Management_Billing_Street: this.getString(data.getbusinesscompanies[0].Location),
+                    Management_Billing_Zip_Code: this.getString(data.getbusinesscompanies[0].Zipcode),
+                    Management_Billing_State: data.getbusinesscompanies[0].State,
+                    Management_Billing_City: data.getbusinesscompanies[0].City,
+
+                }, () => { });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+
+    };
+
     getBusinessCompaniesbyId = (id) => {
         this.props.client
             .query({
@@ -967,9 +1009,6 @@ class NewContract extends Component {
         let Billing_CityValid = this.state.Billing_CityValid;
         let Billing_Zip_CodeValid = this.state.Billing_Zip_CodeValid;
 
-        let Id_ManagementValid = this.state.Id_ManagementValid;
-        let Id_HotelValid = this.state.Id_HotelValid;
-
         switch (fieldName) {
             case 'Contract_Name':
                 Contract_NameValid = value.trim().length >= 5;
@@ -1033,13 +1072,13 @@ class NewContract extends Component {
             case 'Billing_City':
                 Billing_CityValid = value !== null && value !== 0 && value !== '';
                 break;
-            case 'IdManagement':
-                Id_ManagementValid = value !== null && value !== 0 && value !== '';
-                break;
-            case 'Id_Entity':
-                Id_HotelValid = value !== null && value !== 0 && value !== '';
-                break;
-
+            /* case 'IdManagement':
+                 Id_ManagementValid = value !== null && value !== 0 && value !== '';
+                 break;
+             case 'Id_Entity':
+                 Id_HotelValid = value !== null && value !== 0 && value !== '';
+                 break;
+ */
             case 'Billing_Zip_Code':
                 Billing_Zip_CodeValid = value.toString().trim().length >= 2;
             default:
@@ -1152,7 +1191,6 @@ class NewContract extends Component {
                     this.state.Legal_NameValid &&
                     this.state.Contrat_OwnerValid &&
                     this.state.Id_Contract_TemplateValid &&
-                    this.state.Id_EntityValid &&
                     this.state.Id_User_SignedValid &&
                     this.state.User_Signed_TitleValid &&
                     this.state.Signed_DateValid &&
@@ -1191,22 +1229,35 @@ class NewContract extends Component {
 
     }
 
+
+    updateManagement = (id) => {
+        this.geManagementbyId(id);
+        console.log("updateManagement")
+    }
+
     updateEntity = (id) => {
         this.getBusinessCompaniesbyId(id);
     }
 
     updateAddress = () => {
+        console.log("updateAddress ")
+        console.log("this.state.city ", this.state.city)
+        console.log("this.state.Management_Billing_City  ", this.state.Management_Billing_City)
+        console.log("Compana  ", this.state.Management_Billing_City)
+
+
+
         if (document.getElementById("correctAddress").checked) {
             this.setState({
-                Old_Billing_City: this.state.city,
-                Old_Billing_State: this.state.state,
-                Old_Billing_Street: this.state.address,
-                Old_Billing_Zip_Code: this.state.zipCode,
+                Old_Billing_City: this.state.Id_Entity == "0" ? this.state.Management_Billing_City : this.state.city,
+                Old_Billing_State: this.state.Id_Entity == "0" ? this.state.Management_Billing_State : this.state.state,
+                Old_Billing_Street: this.state.Id_Entity == "0" ? this.state.Management_Billing_Street : this.state.address,
+                Old_Billing_Zip_Code: this.state.Id_Entity == "0" ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
 
-                Billing_City: this.state.city,
-                Billing_State: this.state.state,
-                Billing_Street: this.state.address,
-                Billing_Zip_Code: this.state.zipCode,
+                Billing_City: this.state.Id_Entity == "0" ? this.state.Management_Billing_City : this.state.city,
+                Billing_State: this.state.Id_Entity == "0" ? this.state.Management_Billing_State : this.state.state,
+                Billing_Street: this.state.Id_Entity == "0" ? this.state.Management_Billing_Street : this.state.address,
+                Billing_Zip_Code: this.state.Id_Entity == "0" ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
                 Disable_Billing_Street: true,
                 Disable_Billing_Zip_Code: true
 
@@ -1224,6 +1275,11 @@ class NewContract extends Component {
         }
     }
 
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
     /*End of Validations*/
 
     render() {
@@ -1268,7 +1324,7 @@ class NewContract extends Component {
                             )}
                         />
 
-                        <button
+                        {!this.state.searchigZipcode && <button
                             style={{
                                 margin: '5px'
                             }}
@@ -1284,7 +1340,7 @@ class NewContract extends Component {
                             disabled={this.state.loadingInsert || this.state.loadingUpdate}
                         >
                             Save <i className="fas fa-save" />
-                        </button>
+                        </button>}
 
 
 
@@ -1422,12 +1478,14 @@ class NewContract extends Component {
                                                                     id="management"
                                                                     required
                                                                     className="form-control"
-                                                                    error={!this.state.Id_ManagementValid}
+
                                                                     disabled={!this.state.editing}
                                                                     onChange={(e) => {
                                                                         this.setState({
-                                                                            IdManagement: e.target.value
+                                                                            IdManagement: e.target.value,
+                                                                            Id_Entity: 0
                                                                         });
+                                                                        this.updateManagement(e.target.value);
                                                                     }}
                                                                     value={this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.IdManagement}
                                                                 >
@@ -1443,14 +1501,15 @@ class NewContract extends Component {
                                                 </Query>
                                             </div>
                                             <div className="col-md-6">
-                                                <label>* Hotel</label>
+                                                <label>Hotel</label>
                                                 <Query
                                                     query={this.getbusinesscompaniesQuery}
-                                                    variables={{ Id_Parent: (this.state.IdManagement === 0 ? 919191 : this.state.IdManagement) }}
+                                                    variables={{ Id_Parent: this.state.IdManagement != "0" ? this.state.IdManagement : 99999 }}
                                                 >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         if (loading) return <LinearProgress />;
                                                         if (error) return <p> Select a Hotel </p>;
+
                                                         return (
                                                             <select
                                                                 name="hotel"
@@ -1463,11 +1522,12 @@ class NewContract extends Component {
                                                                     });
                                                                     this.updateEntity(e.target.value);
                                                                 }}
-                                                                error={this.state.Id_HotelValid}
+
                                                                 value={this.state.Id_Entity}
                                                             >
                                                                 <option value="0">Select a Hotel</option>
-                                                                {data.getbusinesscompanies.map((item) => (
+
+                                                                {data.getbusinesscompanies && data.getbusinesscompanies.map((item) => (
                                                                     <option value={item.Id}>{item.Name}</option>
                                                                 ))}
                                                             </select>
@@ -1485,7 +1545,7 @@ class NewContract extends Component {
                                                     valueSelected={this.state.Id_User_Signed}
                                                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                                                     error={!this.state.Id_User_SignedValid}
-                                                    idCompany={this.state.Id_Entity}
+                                                    idCompany={this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity}
                                                     update={this.updateIdContact}
                                                     updateEmailContact={(email) => {
                                                         this.setState(
@@ -1498,8 +1558,10 @@ class NewContract extends Component {
                                                         );
                                                     }}
                                                     updateTypeContact={(value) => {
+                                                        // console.log('updateTypeContact ', value),
                                                         this.setState(
                                                             {
+
                                                                 User_Signed_Title: value
                                                             },
                                                             () => {
@@ -1708,7 +1770,7 @@ class NewContract extends Component {
                                             defaultValue=""
                                             valueSelected={this.state.Id_User_Billing_Contact}
                                             error={!this.state.Id_User_Billing_ContactValid}
-                                            idCompany={this.state.Id_Entity}
+                                            idCompany={this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity}
                                             update={(id) => {
                                                 this.setState(
                                                     {
@@ -1766,7 +1828,9 @@ class NewContract extends Component {
                                         cityTitle="* Billing City"
                                         requiredCity={true}
                                         requiredState={true}
-                                        requiredZipCode={true} />
+                                        requiredZipCode={true}
+                                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}
+                                    />
 
                                 </div>
                             </div>

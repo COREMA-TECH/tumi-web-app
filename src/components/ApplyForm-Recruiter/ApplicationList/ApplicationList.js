@@ -57,16 +57,26 @@ class ApplicationList extends Component {
 				lastName
 				socialSecurityNumber
 				emailAddress
+				cellPhone
+				isLead
+				idWorkOrder
+				recruiter{
+					Full_Name
+				}
+				user{
+					Full_Name
+				}
 				position{
 					id
 					position {
-							  Position
-						  }
+							Position
+						}
 					BusinessCompany {
-							  Id
-							  Code
-						  }
-				  }
+							Id
+							Code
+							Name
+						}
+				}
 			}
 		}
 	`;
@@ -202,6 +212,10 @@ class ApplicationList extends Component {
 											_.middleName +
 											_.lastName +
 											(_.position ? _.position.position.Position.trim() : 'Open Position') +
+											(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
+											(_.position ? _.position.BusinessCompany.Name : '') +
+											(_.recruiter ? _.recruiter.Full_Name : '') +
+											(_.user ? _.user.Full_Name : '') +
 											_.emailAddress)
 											.toLocaleLowerCase()
 											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1

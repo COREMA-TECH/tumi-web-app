@@ -17,51 +17,50 @@ export const GET_POSTIONS_QUERY = gql`
 		}
     `;
 export const GET_LEAD = gql`
-	query getlead  {
-		applications(isActive: true,isLead:true ) {
-			id
-		firstName
-		lastName
-		cellPhone
-		homePhone
-		car
-		city
-		isLead
-		zipCode
-		idealJobs
-		{
-		  id
-		  description
-		  idPosition 
-		}
-		applicationPhases   {
-			id
-			StageId
-			ApplicationId
-			WorkOrderId
-			ShiftId
-			createdAt
-		  } 
-		cityInfo{
-			DisplayLabel
-		  }
-		state	
-		stateInfo{
-			DisplayLabel
-		  }
-		  generalComment
-	 languages
-	{
-	language
+query getlead($language: Boolean,	$experience: Boolean,  $Position: String,  $WorkOrderId: Int,	$ShiftId: Int)   {
+	applicationsByMatches(language: $language, experience: $experience,Position: $Position, WorkOrderId: $WorkOrderId, ShiftId: $ShiftId) {
+id
+firstName
+lastName
+cellPhone
+homePhone
+car
+city
+isLead
+zipCode
+idealJobs
+{
+	id
+	description
+	idPosition 
+}
+applicationPhases   {
+	id
+	StageId
+	ApplicationId
+	WorkOrderId
+	ShiftId
+	createdAt
+	} 
+cityInfo{
+	DisplayLabel
 	}
-	employments
-	{
-	  id
+state	
+stateInfo{
+	DisplayLabel
 	}
-		}
-	
-		}
-		`;
+	generalComment
+languages
+{
+language
+}
+employments
+{
+id
+}
+}
+}
+`;
 
 export const GET_BOARD_SHIFT = gql`
 query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {

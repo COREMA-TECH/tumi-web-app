@@ -188,9 +188,13 @@ class ApplicationTable extends React.Component {
 							<TableHead>
 								<TableRow>
 									<CustomTableCell padding="none" className={'Table-head'} />
-									<CustomTableCell className={'Table-head'}>Position Applying For</CustomTableCell>
-									<CustomTableCell className={'Table-head'}>Full Name</CustomTableCell>
-									<CustomTableCell className={'Table-head'}>Email Address</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Created By</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Updated By</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -224,9 +228,13 @@ class ApplicationTable extends React.Component {
 													</div>
 												</Tooltip>
 											</CustomTableCell>
+											<CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
 											<CustomTableCell>
 												{row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
 											</CustomTableCell>
+											<CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
+											<CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
+											<CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>
