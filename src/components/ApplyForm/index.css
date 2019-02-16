@@ -250,6 +250,14 @@
     padding: .5em !important;
 }
 
+.pdf-container--i9-w4 {
+    width: 100%;
+    height: calc(100vh - 180px - 8vh);
+
+    overflow-y: auto;
+    padding: .5em !important;
+}
+
 .pdf-container img, .pdf-content-item {
     width: 200px;
     height: 100px;

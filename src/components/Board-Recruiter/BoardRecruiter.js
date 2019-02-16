@@ -896,7 +896,7 @@ class BoardRecruiter extends Component {
                             <div class="card">
                                 <div class="card-header info">
                                     <div className="row">
-                                        <div className="col-md-9 col-lg-10">
+                                        <div className="col-md-9">
                                             <div className="row">
                                                 <div className="col-md-2">
                                                     <select
@@ -907,7 +907,7 @@ class BoardRecruiter extends Component {
                                                         onChange={(event) => {
                                                             this.updateHotel(event.target.value);
                                                         }}
-                                                        value={this.state.IdEntity}
+                                                        value={this.state.hotel}
                                                         //disabled={!isAdmin}
                                                         onBlur={this.handleValidate}
                                                     >
@@ -988,16 +988,39 @@ class BoardRecruiter extends Component {
                                                         <option value={2}>All work orders</option>
                                                     </select>
                                                 </div>
+                                                {/*<div className="col-md-2">*/}
+                                                    {/*<button className="btn btn-success" type="submit" onClick={() => {*/}
+                                                        {/*this.setState({ openModal: true })*/}
+                                                    {/*}}>*/}
+                                                        {/*Filter<i className="fas fa-filter ml2" />*/}
+                                                    {/*</button>*/}
+                                                {/*</div>*/}
                                                 <div className="col-md-2">
-                                                    <button className="btn btn-success" type="submit" onClick={() => {
+                                                    <a
+                                                        className="link-board" onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+
                                                         this.setState({ openModal: true })
                                                     }}>
-                                                        Filter<i className="fas fa-filter ml2" />
-                                                    </button>
+                                                        Advanced
+                                                    </a>
+                                                </div>
+                                                <div className="col-md-1">
+                                                    <button className="btn btn-danger" onClick={() => {
+                                                        this.setState({
+                                                            hotel: 0,
+                                                            state: 0,
+                                                            city: 0,
+                                                            status: null
+                                                        }, () => {
+                                                            this.getOpenings();
+                                                        })
+                                                    }}>Clear</button>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-md-3 col-lg-2">
+                                        <div className="col-md-3">
                                             <div className="row">
                                                 <div className="col-sm-0 col-md-2 col-lg-1"></div>
                                                 <div className="col-sm-12 col-md-10 col-lg-11">

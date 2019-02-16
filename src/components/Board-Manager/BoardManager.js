@@ -368,11 +368,11 @@ class BoardManager extends Component {
                     .mutate({
                         mutation: UPDATE_APPLICANT,
                         variables: {
-
                             id: id,
                             isLead: isLead,
                             idRecruiter: this.state.userId,
-                            idWorkOrder: this.state.Intopening
+                            idWorkOrder: this.state.Intopening,
+                            positionApplyingFor: this.state.Intopening
 
                         }
                     })
@@ -648,6 +648,17 @@ class BoardManager extends Component {
                             });
                         });
 
+                        if(data.applicationsByMatches.length === 0 ){
+                            this.props.handleOpenSnackbar(
+                                'warning',
+                                'No matches were found',
+                                'bottom',
+                                'right'
+                            );
+                        }
+                        this.setState({
+                            loading: false
+                        })
                     }).catch(error => {
                         this.setState({
                             loading: false,
@@ -888,7 +899,6 @@ class BoardManager extends Component {
                 <div className="App">
                     {isLoading && <LinearProgress />}
 
-
                     <div className="App-header">
                         <div className="row">
                             <div className="col-md-12 col-lg-12">
@@ -897,7 +907,7 @@ class BoardManager extends Component {
                                         <div className="row">
                                             <div className="col-md-8">
                                                 <div className="row">
-                                                    <div className="col-md-3">
+                                                    <div className="col-md-2">
                                                         <select
                                                             required
                                                             name="IdEntity"
@@ -906,7 +916,7 @@ class BoardManager extends Component {
                                                             onChange={(event) => {
                                                                 this.updateHotel(event.target.value);
                                                             }}
-                                                            value={this.state.IdEntity}
+                                                            value={this.state.hotel}
                                                             //disabled={!isAdmin}
                                                             onBlur={this.handleValidate}
                                                         >
@@ -993,9 +1003,21 @@ class BoardManager extends Component {
                                                             Advanced
                                                     </a>
                                                     </div>
+                                                    <div className="col-md-1">
+                                                        <button className="btn btn-danger" onClick={() => {
+                                                            this.setState({
+                                                                hotel: 0,
+                                                                state: 0,
+                                                                city: 0,
+                                                                status: null
+                                                            }, () => {
+                                                                this.getWorkOrders();
+                                                            })
+                                                        }}>Clear</button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-md-4"></div>
+                                            <div className="col-12 col-md-2"></div>
                                         </div>
                                     </div>
                                 </div>
