@@ -195,6 +195,7 @@ class ApplicationTable extends React.Component {
 									<CustomTableCell className={"Table-head"}>Updated By</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Completed</CustomTableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -235,6 +236,7 @@ class ApplicationTable extends React.Component {
 											<CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
+											<CustomTableCell>{/*TODO: show row.status */}</CustomTableCell>
 										</TableRow>
 									);
 								})}
