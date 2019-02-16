@@ -1453,7 +1453,7 @@ class GeneralInformation extends Component {
 											onChange={(e) => {
 												this.updateInput(e.target.value, 'phoneNumber');
 											}}
-											placeholder="+(999) 999-9999"
+											placeholder="+(___) ___-____"
 											disabled={!this.props.showStepper}
 										/>
 									</div>
@@ -1471,7 +1471,7 @@ class GeneralInformation extends Component {
 											onChange={(e) => {
 												this.updateInput(e.target.value, 'phonePrefix');
 											}}
-											placeholder="+(999) 999-9999"
+											placeholder="+(___) ___-____"
 											disabled={!this.props.showStepper}
 										/>
 									</div>
@@ -1487,7 +1487,7 @@ class GeneralInformation extends Component {
 											onChange={(e) => {
 												this.updateInput(e.target.value, 'fax');
 											}}
-											placeholder="+(999) 999-9999"
+											placeholder="+(___) ___-____"
 											disabled={!this.props.showStepper}
 										/>
 									</div>
