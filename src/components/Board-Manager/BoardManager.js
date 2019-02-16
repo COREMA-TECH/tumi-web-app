@@ -907,7 +907,7 @@ class BoardManager extends Component {
                                         <div className="row">
                                             <div className="col-md-8">
                                                 <div className="row">
-                                                    <div className="col-md-3">
+                                                    <div className="col-md-2">
                                                         <select
                                                             required
                                                             name="IdEntity"
@@ -992,7 +992,7 @@ class BoardManager extends Component {
                                                             <option value={3}>Closed work orders</option>
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-1">
+                                                    <div className="col-md-2">
                                                         <a
                                                             className="link-board" onClick={(e) => {
                                                                 e.preventDefault();
