@@ -875,7 +875,7 @@ class VerticalLinearStepper extends Component {
                                     });
                                 }}
                                 value={this.state.socialSecurityNumber}
-                                placeholder="999-99-9999"
+                                placeholder="___-__-____"
                                 pattern="^\d{3}-\d{2}-\d{4}$"
                                 required
                                 minLength="15"
