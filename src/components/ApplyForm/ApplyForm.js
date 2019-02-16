@@ -514,7 +514,7 @@ class ApplyForm extends Component {
                                     homePhone: event.target.value
                                 });
                             }}
-                            placeholder="+(999) 999-9999"
+                            placeholder="+(___) ___-____"
                             minLength="15"
                         />
                         <i className="optional" />
@@ -535,7 +535,7 @@ class ApplyForm extends Component {
                                         cellPhone: event.target.value
                                     });
                                 }}
-                                placeholder="+(999) 999-9999"
+                                placeholder="+(___) ___-____"
                                 required
                                 minLength="15"
                             />
@@ -1522,7 +1522,7 @@ class ApplyForm extends Component {
                                     });
                                 }}
                                 required
-                                placeholder="+(999) 999-9999"
+                                placeholder="+(___) ___-____"
                                 minLength="15"
                             />
                             {/*<input*/}

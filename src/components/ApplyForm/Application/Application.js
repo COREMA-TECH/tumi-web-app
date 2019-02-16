@@ -667,7 +667,7 @@ class Application extends Component {
                                                             })
                                                         });
                                                     }}
-                                                    placeholder="+(999) 999-9999"
+                                                    placeholder="+(___) ___-____"
                                                     minLength="15"
                                                 />
                                             </div>
@@ -709,7 +709,7 @@ class Application extends Component {
                                                             })
                                                         });
                                                     }}
-                                                    placeholder="+(999) 999-9999"
+                                                    placeholder="+(___) ___-____"
                                                     required
                                                     minLength="15"
                                                 />
