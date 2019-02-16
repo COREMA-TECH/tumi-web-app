@@ -731,7 +731,7 @@ class Application extends Component {
                                                         });
                                                     }}
                                                     value={this.state.socialSecurityNumber}
-                                                    placeholder="999-99-9999"
+                                                    placeholder="___-__-____"
                                                     required
                                                     minLength="11"
                                                 />
