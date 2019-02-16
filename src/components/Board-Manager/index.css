@@ -1,3 +1,8 @@
+.interview-title {
+    text-decoration: underline !important;
+    cursor: pointer !important;
+}
+
 @media (min-width: 320px) {
     .link-board {
         color: #0092bd !important;
