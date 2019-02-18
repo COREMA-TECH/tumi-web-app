@@ -615,9 +615,11 @@ class BoardManager extends Component {
                                     notify: getnotify,
                                     interview: getinterview,
                                     accepted: getaccepted
+                                }, () => {
+                                    this.addClickListenerToInterviewsElements();
                                 });
 
-                                console.log()
+                                console.log();
 
                                 this.setState(
                                     {
@@ -914,7 +916,7 @@ class BoardManager extends Component {
 
     addClickListenerToInterviewsElements = () => {
         let interview = document.querySelector('[title="Interview"]');
-        let interviews = interview.querySelectorAll('header div');
+        let interviews = interview.querySelectorAll('header > div:first-child');
         let elements = Array.from(interviews);
 
         elements.map(item => {
