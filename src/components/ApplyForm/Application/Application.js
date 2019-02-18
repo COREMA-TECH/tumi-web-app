@@ -17,6 +17,7 @@ import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-load
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import LocationForm from '../../ui-components/LocationForm'
+import {withRouter} from "react-router-dom";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -1090,4 +1091,4 @@ class Application extends Component {
     }
 }
 
-export default withApollo(withGlobalContent(Application));
+export default withApollo(withGlobalContent(withRouter(Application)));

@@ -19,6 +19,7 @@ import {Board} from 'react-trello'
 import Filters from './Filters';
 import CardTemplate from './CardTemplate';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import {withRouter} from "react-router-dom";
 
 const CustomCard = props => {
     return (
@@ -904,14 +905,14 @@ class BoardManager extends Component {
         // alert("cerrarVentana")
     }
 
-    goToEmployeePackage = () => {
-        window.location.href = '/employment-application';
+    goToEmployeePackage = (id) => {
+        // window.location.href = '/employment-application';
 
-        // FIXME: can't go back using this function
-        // this.props.history.push({
-        //     pathname: '/employment-application',
-        //     state: { ApplicationId: 0 }
-        // });
+        //FIXME: can't go back using this function
+        this.props.history.push({
+            pathname: '/home/application/info',
+            state: { ApplicationId: id }
+        });
     };
 
     addClickListenerToInterviewsElements = () => {
@@ -919,12 +920,17 @@ class BoardManager extends Component {
         let interviews = interview.querySelectorAll('header > div:first-child');
         let elements = Array.from(interviews);
 
-        elements.map(item => {
-            item.classList.add('interview-title');
-            item.addEventListener("click", () => {
-                this.goToEmployeePackage();
-            });
+        console.log(this.state.interview.length);
+        this.state.interview.map(item => {
+            console.log(item.id);
         });
+
+        for(let i = 0; i < elements.length; i++){
+            elements[i].classList.add('interview-title');
+            elements[i].addEventListener("click", () => {
+                this.goToEmployeePackage(this.state.interview[i].id);
+            });
+        }
     };
 
     render() {
@@ -1106,4 +1112,4 @@ class BoardManager extends Component {
     };
 }
 
-export default withApollo(withGlobalContent(BoardManager));
+export default withApollo(withGlobalContent(withRouter(BoardManager)));
