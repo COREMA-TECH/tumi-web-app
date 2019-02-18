@@ -520,7 +520,7 @@ class BoardManager extends Component {
         if (laneId == "lane1") {
             this.setState(
                 {
-                    loading: true
+                    loading: true,
                 },
                 () => {
                     this.props.client.query({
@@ -531,7 +531,8 @@ class BoardManager extends Component {
                             Position: PositionId,
                             WorkOrderId: this.state.Intopening,
                             ShiftId: this.state.ShiftId
-                        }
+                        },
+                        fetchPolicy: 'no-cache'
                     }).then(({data}) => {
                         data.applicationsByMatches.forEach((wo) => {
 
