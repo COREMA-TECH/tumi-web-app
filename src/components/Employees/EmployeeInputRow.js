@@ -206,7 +206,7 @@ class EmployeeInputRow extends Component {
                         onChange={(e) => {
                             this.props.onchange(phoneNumber, e.target.value);
                         }}
-                        placeholder="+(999) 999-9999"
+                        placeholder="+(___) ___-____"
                         pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                     />
                 </div>

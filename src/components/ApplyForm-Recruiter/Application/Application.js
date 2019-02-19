@@ -728,7 +728,7 @@ class Application extends Component {
                                             className="form-control"
                                             disabled={!this.state.editing}
                                             onChange={this.handleTextChange}
-                                            placeholder="+(999) 999-9999"
+                                            placeholder="+(___) ___-____"
                                             minLength="15"
                                         />
                                     </div>
@@ -745,7 +745,7 @@ class Application extends Component {
                                             className="form-control"
                                             disabled={!this.state.editing}
                                             onChange={this.handleTextChange}
-                                            placeholder="+(999) 999-9999"
+                                            placeholder="+(___) ___-____"
                                             minLength="15"
                                         />
                                     </div>

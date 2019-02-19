@@ -829,7 +829,7 @@ class VerticalLinearStepper extends Component {
                                     homePhone: event.target.value
                                 });
                             }}
-                            placeholder="+(999) 999-9999"
+                            placeholder="+(___) ___-____"
                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                             minLength="15"
                         />
@@ -853,7 +853,7 @@ class VerticalLinearStepper extends Component {
                                     });
                                 }}
                                 pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                                placeholder="+(999) 999-9999"
+                                placeholder="+(___) ___-____"
                                 required
                                 minLength="15"
                             />
@@ -875,7 +875,7 @@ class VerticalLinearStepper extends Component {
                                     });
                                 }}
                                 value={this.state.socialSecurityNumber}
-                                placeholder="999-99-9999"
+                                placeholder="___-__-____"
                                 pattern="^\d{3}-\d{2}-\d{4}$"
                                 required
                                 minLength="15"
@@ -1938,7 +1938,7 @@ class VerticalLinearStepper extends Component {
                                     });
                                 }}
                                 required
-                                placeholder="+(999) 999-9999"
+                                placeholder="+(___) ___-____"
                                 minLength="15"
                             />
                             {/*<input*/}

@@ -1116,7 +1116,7 @@ class Employees extends Component {
                                         onChange={(e) => {
                                             this.onChangeHandler(e.target.value, 'number');
                                         }}
-                                        placeholder="+(999) 999-9999"
+                                        placeholder="+(___) ___-____"
                                     />
                                 </div>
                                 <div className="col-md-12 col-lg-6">
@@ -1520,7 +1520,7 @@ class Employees extends Component {
                                                 });
                                             }}
                                             value={this.state.numberEdit}
-                                            placeholder="+(999) 999-9999"
+                                            placeholder="+(___) ___-____"
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>

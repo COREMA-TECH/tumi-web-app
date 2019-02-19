@@ -211,7 +211,7 @@ class PreviousEmployment extends Component {
 												previousEmploymentPhone: event.target.value
 											});
 										}}
-										placeholder="+(999) 999-9999"
+                                        placeholder="+(___) ___-____"
 										minLength="15"
 									/>
 								</div>
