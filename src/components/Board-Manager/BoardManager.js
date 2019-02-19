@@ -617,8 +617,6 @@ class BoardManager extends Component {
                                     notify: getnotify,
                                     interview: getinterview,
                                     accepted: getaccepted
-                                }, () => {
-                                    this.addClickListenerToInterviewsElements();
                                 });
 
                                 console.log();
@@ -912,7 +910,7 @@ class BoardManager extends Component {
         //FIXME: can't go back using this function
         this.props.history.push({
             pathname: '/home/application/info',
-            state: { ApplicationId: id }
+            state: {ApplicationId: id}
         });
     };
 
@@ -926,7 +924,7 @@ class BoardManager extends Component {
             console.log(item.id);
         });
 
-        for(let i = 0; i < elements.length; i++){
+        for (let i = 0; i < elements.length; i++) {
             elements[i].classList.add('interview-title');
             elements[i].addEventListener("click", () => {
                 this.goToEmployeePackage(this.state.interview[i].id);
@@ -937,7 +935,7 @@ class BoardManager extends Component {
     render() {
         // Call listener always in render
         if (this.state.interview.length > 0) {
-            this.addClickListenerToInterviewsElements();
+            //this.addClickListenerToInterviewsElements();
         }
 
         const {classes} = this.props;
@@ -1096,8 +1094,11 @@ class BoardManager extends Component {
                             }}
 
                             customCardLayout>
-                            <CardTemplate handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                          getWorkOrders={this.getWorkOrders}/>
+                            <CardTemplate
+                                history={this.props.history}
+                                handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                getWorkOrders={this.getWorkOrders}
+                            />
 
                         </Board>
                     </div>
