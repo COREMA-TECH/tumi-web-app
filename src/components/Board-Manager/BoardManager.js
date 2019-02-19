@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import withGlobalContent from '../Generic/Global';
 import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 
-import {ADD_APPLICATION_PHASES, UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE} from "./Mutations";
+import { ADD_APPLICATION_PHASES, UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE } from "./Mutations";
 import {
     GET_BOARD_SHIFT,
     GET_CITIES_QUERY,
@@ -14,12 +14,12 @@ import {
     GET_STATES_QUERY
 } from "./Queries";
 //import Board from 'react-trello'
-import {Board} from 'react-trello'
+import { Board } from 'react-trello'
 
 import Filters from './Filters';
 import CardTemplate from './CardTemplate';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 const CustomCard = props => {
     return (
@@ -34,12 +34,12 @@ const CustomCard = props => {
                     justifyContent: 'space-between',
                     color: props.cardColor
                 }}>
-                <div style={{margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8'}}>{props.name}</div>
-                <div style={{margin: 2, fontWeight: 'bold', fontSize: 12}}>{props.dueOn}</div>
+                <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{props.name}</div>
+                <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{props.dueOn}</div>
             </header>
-            <div style={{fontSize: 12, color: '#4C4C4C'}}>
-                <div style={{margin: 2, color: '#4C4C4C', fontWeight: 'bold'}}>{props.subTitle}</div>
-                <div style={{margin: 5, padding: '0px 0px'}}><i>{props.body}</i>
+            <div style={{ fontSize: 12, color: '#4C4C4C' }}>
+                <div style={{ margin: 2, color: '#4C4C4C', fontWeight: 'bold' }}>{props.subTitle}</div>
+                <div style={{ margin: 5, padding: '0px 0px' }}><i>{props.body}</i>
                 </div>
                 <header
                     style={{
@@ -50,9 +50,9 @@ const CustomCard = props => {
                         justifyContent: 'space-between',
                         color: props.cardColor
                     }}>
-                    <div style={{margin: 1, fontSize: 12, fontWeight: 'bold'}}>{props.escalationTextLeft}</div>
-                    <div style={{margin: 1, fontSize: 12, fontWeight: 'bold'}}>{props.escalationTextCenter}</div>
-                    <div style={{margin: 1, fontWeight: 'bold', fontSize: 12}}>{props.escalationTextRight}  </div>
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeft}</div>
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenter}</div>
+                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}  </div>
                 </header>
                 <header
                     style={{
@@ -63,9 +63,9 @@ const CustomCard = props => {
                         justifyContent: 'space-between',
                         color: props.cardColor
                     }}>
-                    <div style={{margin: 1, fontSize: 12, fontWeight: 'bold'}}>{props.escalationTextLeftLead}</div>
-                    <div style={{margin: 1, fontSize: 12, fontWeight: 'bold'}}>{props.escalationTextCenterLead}</div>
-                    {props.escalationTextRightLead && <div style={{margin: 1, fontWeight: 'bold', fontSize: 12}}><i
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftLead}</div>
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
+                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i
                         class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
                 </header>
             </div>
@@ -120,7 +120,7 @@ class BoardManager extends Component {
             Intopening: 0,
             userId: localStorage.getItem('LoginId'),
             ReasonId: 30471,
-            LaneOrigen: 'lane1',
+            LaneOrigen: '',
             LaneDestino: ''
 
         }
@@ -133,11 +133,6 @@ class BoardManager extends Component {
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
         console.log("sourceLaneId ", sourceLaneId);
         console.log("targetLaneId ", targetLaneId);
-
-        this.setState({
-            LaneOrigen: sourceLaneId,
-            LaneDestino: targetLaneId
-        });
 
         if (targetLaneId !== "lane1") {
             let IdLane;
@@ -157,66 +152,79 @@ class BoardManager extends Component {
                     IdLane = 30469
             }
 
+            if (sourceLaneId != 'lane1') {
+                if (targetLaneId != sourceLaneId) {
+                    this.addApplicationPhase(cardId, IdLane);
 
-            if (targetLaneId != sourceLaneId) {
-                this.addApplicationPhase(cardId, IdLane);
+                    if (targetLaneId != "Matches") {
+                        this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                    }
 
-                if (targetLaneId != "Matches") {
-                    this.updateApplicationInformation(cardId, false, 'candidate was updated!');
-                }
-
-                if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
-                    this.setState({
-                        ApplicationId: cardId,
-                        openReason: true
-                    }, () => {
-                    });
-
-                    this.setState(
-                        {
-                            lane: [
-                                {
-                                    id: 'lane1',
-                                    title: 'Work Orders',
-                                    label: ' ',
-                                    cards: this.state.workOrders,
-                                    laneStyle: {borderRadius: 50, marginBottom: 15},
-                                    droppable: false,
-                                    draggable: false,
-                                    editable: false
-                                },
-                                {
-                                    id: 'Matches',
-                                    title: 'Matches',
-                                    label: ' ',
-                                    cards: this.state.matches
-                                },
-                                {
-                                    id: 'Interview',
-                                    title: 'Interview',
-                                    label: ' ',
-                                    cards: this.state.interview,
-                                    droppable: false,
-                                    draggable: false,
-                                    editable: false
-                                },
-                                {
-                                    id: 'Notify',
-                                    title: 'Notify',
-                                    label: ' ',
-                                    cards: this.state.notify
-                                },
-                                {
-                                    id: 'Accepted',
-                                    title: 'Accepted',
-                                    label: ' ',
-                                    cards: this.state.accepted
-                                }
-                            ],
-                            loading: false
+                    if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
+                        this.setState({
+                            ApplicationId: cardId,
+                            openReason: true
+                        }, () => {
                         });
+
+                        this.setState(
+                            {
+                                lane: [
+                                    {
+                                        id: 'lane1',
+                                        title: 'Work Orders',
+                                        label: ' ',
+                                        cards: this.state.workOrders,
+                                        laneStyle: { borderRadius: 50, marginBottom: 15 },
+                                        droppable: false,
+                                        draggable: false
+                                    },
+                                    {
+                                        id: 'Matches',
+                                        title: 'Matches',
+                                        label: ' ',
+                                        cards: this.state.matches,
+                                        droppable: true,
+                                        draggable: true
+                                    },
+                                    {
+                                        id: 'Interview',
+                                        title: 'Interview',
+                                        label: ' ',
+                                        cards: this.state.interview,
+                                        droppable: false,
+                                        draggable: true
+                                    },
+                                    {
+                                        id: 'Notify',
+                                        title: 'Notify',
+                                        label: ' ',
+                                        cards: this.state.notify,
+                                        droppable: true,
+                                        draggable: true
+                                    },
+                                    {
+                                        id: 'Accepted',
+                                        title: 'Accepted',
+                                        label: ' ',
+                                        cards: this.state.accepted,
+                                        droppable: true,
+                                        draggable: true
+                                    }
+                                ],
+                                loading: false
+                            });
+                    }
                 }
             }
+            if (sourceLaneId == 'lane1') {
+                targetLaneId == sourceLaneId
+            }
+
+            this.setState({
+                LaneOrigen: sourceLaneId,
+                LaneDestino: targetLaneId
+            });
         }
     }
 
@@ -234,7 +242,7 @@ class BoardManager extends Component {
                     StageId: laneId
                 }
             }
-        }).then(({data}) => {
+        }).then(({ data }) => {
             this.setState({
                 editing: false
             });
@@ -268,7 +276,7 @@ class BoardManager extends Component {
             .query({
                 query: GET_HOTEL_QUERY
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 });
@@ -285,7 +293,7 @@ class BoardManager extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     states: data.getcatalogitem
                 }, () => {
@@ -304,7 +312,7 @@ class BoardManager extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     cities: data.getcatalogitem
                 });
@@ -374,7 +382,7 @@ class BoardManager extends Component {
 
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         this.setState({
                             editing: false
                         });
@@ -408,12 +416,9 @@ class BoardManager extends Component {
 
     onCardClick = (cardId, metadata, laneId) => {
         let needEnglish, needExperience, Position;
-        console.log("Entro en el onCardClick ", this.state.LaneOrigen, " ", this.state.LaneDestino)
-
 
         if (laneId.trim() == "lane1") {
-            if (this.state.LaneDestino != "lane1") {
-                console.log("Entro en el diferente del click ")
+            if (this.state.LaneOrigen != "lane1") {
                 this.clearArray();
 
                 let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
@@ -449,7 +454,6 @@ class BoardManager extends Component {
                 }).Zipcode);
 
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    console.log("sessionStorage.getItem('NewFilterLead') ", sessionStorage.getItem('NewFilterLead'))
                     this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => {
                         return item.id == cardId
                     }).Position);
@@ -470,16 +474,17 @@ class BoardManager extends Component {
                         title: 'Work Orders',
                         label: ' ',
                         cards: this.state.workOrders,
-                        laneStyle: {borderRadius: 50, marginBottom: 15},
+                        laneStyle: { borderRadius: 50, marginBottom: 15 },
                         droppable: false,
-                        draggable: false,
-                        editable: false
+                        draggable: false
                     },
                     {
                         id: 'Matches',
                         title: 'Matches',
                         label: ' ',
-                        cards: []
+                        cards: [],
+                        droppable: true,
+                        draggable: true
                     },
                     {
                         id: 'Interview',
@@ -487,20 +492,23 @@ class BoardManager extends Component {
                         label: ' ',
                         cards: [],
                         droppable: false,
-                        draggable: false,
-                        editable: false
+                        draggable: true
                     },
                     {
                         id: 'Notify',
                         title: 'Notify',
                         label: ' ',
-                        cards: []
+                        cards: [],
+                        droppable: true,
+                        draggable: true
                     },
                     {
                         id: 'Accepted',
                         title: 'Accepted',
                         label: ' ',
-                        cards: []
+                        cards: [],
+                        droppable: true,
+                        draggable: true
                     }
                 ],
                 loading: false
@@ -533,7 +541,7 @@ class BoardManager extends Component {
                             ShiftId: this.state.ShiftId
                         },
                         fetchPolicy: 'no-cache'
-                    }).then(({data}) => {
+                    }).then(({ data }) => {
                         data.applicationsByMatches.forEach((wo) => {
 
                             const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
@@ -541,7 +549,7 @@ class BoardManager extends Component {
                             });
 
                             this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-                                const {getDistance} = this.context;
+                                const { getDistance } = this.context;
                                 const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
 
@@ -571,7 +579,7 @@ class BoardManager extends Component {
                                                     body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                     escalationTextLeftLead: wo.generalComment,
                                                     escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: {borderRadius: 6, marginBottom: 15}
+                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
                                                 });
                                             }
                                             break;
@@ -583,7 +591,7 @@ class BoardManager extends Component {
                                                 body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                 escalationTextLeftLead: wo.generalComment,
                                                 escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: {borderRadius: 6, marginBottom: 15}
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
                                             break;
                                         case 30464:
@@ -595,7 +603,7 @@ class BoardManager extends Component {
                                                 body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                 escalationTextLeftLead: wo.generalComment,
                                                 escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: {borderRadius: 6, marginBottom: 15}
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
                                             break;
                                         case 30465:
@@ -606,7 +614,7 @@ class BoardManager extends Component {
                                                 body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                 escalationTextLeftLead: wo.generalComment,
                                                 escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: {borderRadius: 6, marginBottom: 15}
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
                                             break;
                                     }
@@ -629,16 +637,17 @@ class BoardManager extends Component {
                                                 title: 'Work Orders',
                                                 label: ' ',
                                                 cards: this.state.workOrders,
-                                                laneStyle: {borderRadius: 50, marginBottom: 15},
+                                                laneStyle: { borderRadius: 50, marginBottom: 15 },
                                                 droppable: false,
-                                                draggable: false,
-                                                editable: false
+                                                draggable: false
                                             },
                                             {
                                                 id: 'Matches',
                                                 title: 'Matches',
                                                 label: ' ',
-                                                cards: this.state.matches
+                                                cards: this.state.matches,
+                                                droppable: true,
+                                                draggable: true
                                             },
                                             {
                                                 id: 'Interview',
@@ -646,20 +655,23 @@ class BoardManager extends Component {
                                                 label: ' ',
                                                 cards: this.state.interview,
                                                 droppable: false,
-                                                draggable: false,
-                                                editable: false
+                                                draggable: true
                                             },
                                             {
                                                 id: 'Notify',
                                                 title: 'Notify',
                                                 label: ' ',
-                                                cards: this.state.notify
+                                                cards: this.state.notify,
+                                                droppable: true,
+                                                draggable: true
                                             },
                                             {
                                                 id: 'Accepted',
                                                 title: 'Accepted',
                                                 label: ' ',
-                                                cards: this.state.accepted
+                                                cards: this.state.accepted,
+                                                droppable: true,
+                                                draggable: true
                                             }
                                         ],
                                         loading: false
@@ -704,7 +716,7 @@ class BoardManager extends Component {
 
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         this.setState({
                             editing: false
                         });
@@ -724,7 +736,7 @@ class BoardManager extends Component {
     };
 
     getLatLongHotel = async (op, zipcode) => {
-        await this.props.client.query({query: GET_COORDENADAS, variables: {Zipcode: zipcode}}).then(({data}) => {
+        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
             this.setState({
                 latitud1: data.zipcode[0].Lat,
                 longitud1: data.zipcode[0].Long
@@ -735,7 +747,7 @@ class BoardManager extends Component {
 
     getLatLong = async (op, zipcode, fnc = () => {
     }) => {
-        await this.props.client.query({query: GET_COORDENADAS, variables: {Zipcode: zipcode}}).then(({data}) => {
+        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
             this.setState({
                 latitud2: data.zipcode[0].Lat,
                 longitud2: data.zipcode[0].Long
@@ -796,8 +808,8 @@ class BoardManager extends Component {
 
         await this.props.client.query({
             query: GET_BOARD_SHIFT,
-            variables: {...this.getDataFilters()}
-        }).then(({data}) => {
+            variables: { ...this.getDataFilters() }
+        }).then(({ data }) => {
             let _id = data.ShiftBoard.length === 0 ? 0 : data.ShiftBoard[0].workOrderId;
             let count = 1;
             let begin = true;
@@ -815,7 +827,7 @@ class BoardManager extends Component {
                     dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
-                    cardStyle: {borderRadius: 6, marginBottom: 15},
+                    cardStyle: { borderRadius: 6, marginBottom: 15 },
                     needExperience: ShiftBoard.needExperience,
                     needEnglish: ShiftBoard.needEnglish,
                     PositionApplyfor: ShiftBoard.Id_positionApplying,
@@ -844,16 +856,17 @@ class BoardManager extends Component {
                     title: 'Work Orders',
                     label: ' ',
                     cards: getworkOrders,
-                    laneStyle: {backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15},
+                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 },
                     droppable: false,
-                    draggable: false,
-                    editable: false
+                    cardDraggable: false
                 },
                 {
                     id: 'Matches',
                     title: 'Matches',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: true,
+                    cardDraggable: true,
                 },
                 {
                     id: 'Interview',
@@ -861,20 +874,23 @@ class BoardManager extends Component {
                     label: ' ',
                     cards: [],
                     droppable: false,
-                    draggable: false,
-                    editable: false
+                    draggable: true
                 },
                 {
                     id: 'Notify',
                     title: 'Notify',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: true,
+                    draggable: true
                 },
                 {
                     id: 'Accepted',
                     title: 'Accepted',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: true,
+                    draggable: true
                 }
             ],
             loading: false
@@ -882,7 +898,7 @@ class BoardManager extends Component {
     };
 
     handleCloseModal = (event) => {
-        this.setState({openModal: false});
+        this.setState({ openModal: false });
     };
 
     abrirVentana() {
@@ -938,19 +954,15 @@ class BoardManager extends Component {
             //this.addClickListenerToInterviewsElements();
         }
 
-        const {classes} = this.props;
+        const { classes } = this.props;
 
         let isLoading = this.state.loading;
 
-        /* if (isLoading) {
-             this.abrirVentana()
-         }
-         else { this.cerrarVentana() }*/
         return (
             <div>
 
                 <div className="App">
-                    {isLoading && <LinearProgress/>}
+                    {isLoading && <LinearProgress />}
 
                     <div className="App-header">
                         <div className="row">
@@ -1048,11 +1060,11 @@ class BoardManager extends Component {
                                                     <div className="col-md-2">
                                                         <a
                                                             className="link-board" onClick={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
 
-                                                            this.setState({openModal: true})
-                                                        }}>
+                                                                this.setState({ openModal: true })
+                                                            }}>
                                                             Advanced
                                                         </a>
                                                     </div>
@@ -1080,10 +1092,11 @@ class BoardManager extends Component {
                     </div>
                     <div className="App-intro">
                         <Board
-                            data={{lanes: this.state.lane}}
-                            editable={false}
-                            draggable={true}
+                            tagStyle={{ fontSize: '80%' }}
+                            customCardLayout
+                            data={{ lanes: this.state.lane }}
                             laneDraggable={false}
+                            draggable={true}
                             onDataChange={this.shouldReceiveNewData}
                             eventBusHandle={this.setEventBus}
                             handleDragStart={this.handleDragStart}
@@ -1092,17 +1105,15 @@ class BoardManager extends Component {
                             style={{
                                 backgroundColor: '#f5f7f9'
                             }}
-
                             customCardLayout>
                             <CardTemplate
                                 history={this.props.history}
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
                                 getWorkOrders={this.getWorkOrders}
                             />
-
                         </Board>
                     </div>
-                    <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal}/>
+                    <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
 
                 </div>
             </div>

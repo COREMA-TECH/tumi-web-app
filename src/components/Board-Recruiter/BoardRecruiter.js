@@ -146,66 +146,72 @@ class BoardRecruiter extends Component {
                 IdLane = 30460
         }
 
-        if (targetLaneId != sourceLaneId) {
-            this.addApplicationPhase(cardId, IdLane);
+        console.log(this.state.openReason)
+        if (!this.state.openReason) {
+            if (targetLaneId != sourceLaneId) {
+                this.addApplicationPhase(cardId, IdLane);
 
-            if (targetLaneId != "Leads") {
-                this.updateApplicationInformation(cardId, true, 'candidate was updated!');
-            }
+                if (targetLaneId != "Leads") {
+                    this.updateApplicationInformation(cardId, true, 'candidate was updated!');
+                }
 
-            if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
-                this.setState({
-                    ApplicationId: cardId,
-                    openReason: true
-                }, () => {
-                });
-
-                this.setState(
-                    {
-                        Opening: this.state.Openings,
-                        lane: [
-                            {
-                                id: 'lane1',
-                                title: 'Openings',
-                                label: ' ',
-                                cards: this.state.Openings,
-                                droppable: false,
-                                draggable: false,
-                                editable: false
-                            },
-                            {
-                                id: 'Leads',
-                                title: 'Leads',
-                                label: ' ',
-                                cards: this.state.leads
-                            },
-                            {
-                                id: 'Applied',
-                                title: 'Sent to Interview',
-                                label: ' ',
-                                cards: this.state.Applied
-                            },
-                            {
-                                id: 'Candidate',
-                                title: 'Candidate',
-                                label: ' ',
-                                cards: this.state.Candidate
-                            },
-                            {
-                                id: 'Placement',
-                                title: 'Placement',
-                                label: ' ',
-                                cards: this.state.Placement
-                            }
-                        ],
-                        loading: false
+                if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
+                    this.setState({
+                        ApplicationId: cardId,
+                        openReason: true
+                    }, () => {
                     });
+
+                    this.setState(
+                        {
+                            Opening: this.state.Openings,
+                            lane: [
+                                {
+                                    id: 'lane1',
+                                    title: 'Openings',
+                                    label: ' ',
+                                    cards: this.state.Openings,
+                                    droppable: false,
+                                    draggable: false,
+                                    editable: false
+                                },
+                                {
+                                    id: 'Leads',
+                                    title: 'Leads',
+                                    label: ' ',
+                                    cards: this.state.leads
+                                },
+                                {
+                                    id: 'Applied',
+                                    title: 'Sent to Interview',
+                                    label: ' ',
+                                    cards: this.state.Applied
+                                },
+                                {
+                                    id: 'Candidate',
+                                    title: 'Candidate',
+                                    label: ' ',
+                                    cards: this.state.Candidate
+                                },
+                                {
+                                    id: 'Placement',
+                                    title: 'Placement',
+                                    label: ' ',
+                                    cards: this.state.Placement
+                                }
+                            ],
+                            loading: false
+                        });
+                }
+
+
+
             }
         }
-
     };
 
     handleCloseModal = () => {
+        alert("estoy en el close")
         this.setState({ openModal: false });
 
 
@@ -658,7 +664,7 @@ class BoardRecruiter extends Component {
                                                 cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
                                             break
-                                        case 30462:
+                                        case 30462, 30464:
                                             getCandidate.push({
                                                 id: wo.id,
                                                 name: wo.firstName + ' ' + wo.lastName,
@@ -988,21 +994,14 @@ class BoardRecruiter extends Component {
                                                         <option value={2}>All work orders</option>
                                                     </select>
                                                 </div>
-                                                {/*<div className="col-md-2">*/}
-                                                    {/*<button className="btn btn-success" type="submit" onClick={() => {*/}
-                                                        {/*this.setState({ openModal: true })*/}
-                                                    {/*}}>*/}
-                                                        {/*Filter<i className="fas fa-filter ml2" />*/}
-                                                    {/*</button>*/}
-                                                {/*</div>*/}
                                                 <div className="col-md-2">
                                                     <a
                                                         className="link-board" onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
 
-                                                        this.setState({ openModal: true })
-                                                    }}>
+                                                            this.setState({ openModal: true })
+                                                        }}>
                                                         Advanced
                                                     </a>
                                                 </div>
