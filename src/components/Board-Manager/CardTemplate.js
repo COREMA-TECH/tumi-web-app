@@ -163,7 +163,24 @@ class CardTemplate extends Component {
         });
     };
 
+    goToEmployeePackage = (id) => {
+        // window.location.href = '/employment-application';
+
+        //FIXME: can't go back using this function
+        this.props.history.push({
+            pathname: '/home/application/info',
+            state: { ApplicationId: id }
+        });
+    };
+
+
     render() {
+        // console.log(this.props);
+        if(this.props.laneId === "Interview") {
+            console.log("Interview");
+            console.log(this.props);
+        }
+
         return <div>
             <header
                 style={{
@@ -175,7 +192,20 @@ class CardTemplate extends Component {
                     justifyContent: 'space-between',
                     color: this.props.cardColor
                 }}>
-                <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{this.props.name}</div>
+                {
+                    this.props.laneId === "Interview" ? (
+                        <div
+                            title="View Application"
+                            className="interview-title"
+                            style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}
+                            onClick={() => this.goToEmployeePackage(this.props.id)}
+                        >
+                            {this.props.name}
+                        </div>
+                    ) : (
+                        <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{this.props.name}</div>
+                    )
+                }
                 <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{this.props.dueOn}</div>
             </header>
             <div style={{ fontSize: 12, color: '#4C4C4C' }}>

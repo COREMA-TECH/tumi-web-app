@@ -682,8 +682,6 @@ class BoardManager extends Component {
                                     notify: getnotify,
                                     interview: getinterview,
                                     accepted: getaccepted
-                                }, () => {
-                                    this.addClickListenerToInterviewsElements();
                                 });
 
                                 console.log();
@@ -985,7 +983,7 @@ class BoardManager extends Component {
         //FIXME: can't go back using this function
         this.props.history.push({
             pathname: '/home/application/info',
-            state: { ApplicationId: id }
+            state: {ApplicationId: id}
         });
     };
 
@@ -1010,7 +1008,7 @@ class BoardManager extends Component {
     render() {
         // Call listener always in render
         if (this.state.interview.length > 0) {
-            this.addClickListenerToInterviewsElements();
+            //this.addClickListenerToInterviewsElements();
         }
 
         const { classes } = this.props;
@@ -1165,7 +1163,11 @@ class BoardManager extends Component {
                                 backgroundColor: '#f5f7f9'
                             }}
                             customCardLayout>
-                            <CardTemplate handleOpenSnackbar={this.props.handleOpenSnackbar} getWorkOrders={this.getWorkOrders} />
+                            <CardTemplate
+                                history={this.props.history}
+                                handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                getWorkOrders={this.getWorkOrders}
+                            />
                         </Board>
                     </div>
                     <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />

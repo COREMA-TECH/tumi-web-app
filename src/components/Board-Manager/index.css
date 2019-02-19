@@ -5,27 +5,27 @@
     position: relative;
 }
 
-.interview-title:after {
-    content: "View Application";
-    padding: 2px;
-    display: none;
-    position: absolute;
-    top: 20px;
-    right: -90px;
-    width: 130px;
-    z-index: 1500;
-    color: #fff;
-    font-weight: 100;
+/*.interview-title:after {*/
+    /*content: "View Application";*/
+    /*padding: 2px;*/
+    /*display: none;*/
+    /*position: absolute;*/
+    /*top: 20px;*/
+    /*right: -90px;*/
+    /*width: 130px;*/
+    /*z-index: 1500;*/
+    /*color: #fff;*/
+    /*font-weight: 100;*/
 
-    text-align: center;
-    background-color: rgba(0, 82, 146, 0.6);
-    /*border: 1px solid rgba(65, 175, 215, 0.53);*/
-    border-radius: 5px;
-}
+    /*text-align: center;*/
+    /*background-color: rgba(0, 82, 146, 0.6);*/
+    /*!*border: 1px solid rgba(65, 175, 215, 0.53);*!*/
+    /*border-radius: 5px;*/
+/*}*/
 
-.interview-title:hover:after {
-    display: block;
-}
+/*.interview-title:hover:after {*/
+    /*display: block;*/
+/*}*/
 
 @media (min-width: 320px) {
     .link-board {
