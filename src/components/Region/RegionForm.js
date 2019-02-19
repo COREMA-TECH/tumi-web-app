@@ -585,6 +585,7 @@ class RegionForm extends Component {
                                         <div className="">
                                             <div className="col-md-6">
                                                 <label htmlFor="">* Regional Manager</label>
+
                                                 <select
                                                     required
                                                     name="IdRegionalManager"
@@ -624,7 +625,7 @@ class RegionForm extends Component {
                                                                         onChange={this.handleChangerecruiterTag}
                                                                         closeMenuOnSelect={false}
                                                                         components={makeAnimated()}
-                                                                        isMulti
+                                                                    //isMulti
                                                                     />
                                                                 </div>
                                                             );
