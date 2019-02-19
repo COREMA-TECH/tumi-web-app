@@ -29,6 +29,7 @@ query getlead($language: Boolean,	$experience: Boolean,  $Position: String,  $Wo
 		city
 		isLead
 		zipCode
+		statusCompleted
 		idealJobs
 		{
 		  id
