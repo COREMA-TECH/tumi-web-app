@@ -664,7 +664,7 @@ class BoardRecruiter extends Component {
                                                 cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
                                             break
-                                        case 30462:
+                                        case 30462, 30464:
                                             getCandidate.push({
                                                 id: wo.id,
                                                 name: wo.firstName + ' ' + wo.lastName,
