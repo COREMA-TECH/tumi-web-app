@@ -173,10 +173,25 @@ class CardTemplate extends Component {
         });
     };
 
+    showTitle = () => {
+        if (this.props.laneId === "Interview")
+            return <React.Fragment>
+                <div
+                    title="View Application"
+                    className="interview-title ml-1"
+                    style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}
+                    onClick={() => this.goToEmployeePackage(this.props.id)}
+                >
+                    {this.props.name}
+                </div>
+                <i className={["fas fa-circle", "ml-auto", this.props.statusCompleted ? "text-info" : "text-danger"].join(" ")} style={{ marginTop: '7px', fontSize: '10px' }}></i>
+            </React.Fragment>
+        else return <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{this.props.name}</div>
+    }
 
     render() {
         // console.log(this.props);
-        if(this.props.laneId === "Interview") {
+        if (this.props.laneId === "Interview") {
             console.log("Interview");
             console.log(this.props);
         }
@@ -192,20 +207,7 @@ class CardTemplate extends Component {
                     justifyContent: 'space-between',
                     color: this.props.cardColor
                 }}>
-                {
-                    this.props.laneId === "Interview" ? (
-                        <div
-                            title="View Application"
-                            className="interview-title"
-                            style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}
-                            onClick={() => this.goToEmployeePackage(this.props.id)}
-                        >
-                            {this.props.name}
-                        </div>
-                    ) : (
-                        <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{this.props.name}</div>
-                    )
-                }
+                {this.showTitle()}
                 <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{this.props.dueOn}</div>
             </header>
             <div style={{ fontSize: 12, color: '#4C4C4C' }}>
