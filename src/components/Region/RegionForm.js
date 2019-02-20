@@ -125,7 +125,7 @@ class RegionForm extends Component {
             //this.getRecruiter();
             // this.getEmployeesWithoutEntity();
             //this.gethotelbyregion();
-            this.getrecruiterbyregion();
+            //this.getrecruiterbyregion();
         }
         this.setState({
             openModal: nextProps.openModal,
@@ -256,18 +256,47 @@ class RegionForm extends Component {
                         IdRegionalManager: data.configregions[0].regionalManagerId,
                         IdRegionalDirector: data.configregions[0].regionalDirectorId,
                     });
+                    this.getRegionalDirector(data.configregions[0].regionalDirectorId);
+                    this.getRegionalManager(data.configregions[0].regionalManagerId);
+
                 }
 
-                this.getEmployeesWithoutEntity();
+
             })
             .catch();
     };
 
-    getEmployeesWithoutEntity = () => {
+
+    getRegionalDirector = (idEmployee) => {
         this.props.client
             .query({
                 query: GET_EMPLOYEES_WITHOUT_ENTITY,
-                variables: { id: this.state.regionalManagerId }
+                variables: { id: idEmployee }
+            })
+            .then(({ data }) => {
+                let dataAPI = data.employees;
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        directorTags: [...prevState.directorTags, {
+                            value: item.id,
+                            label: item.firstName + ' ' + item.lastName
+                        }],
+                        Old_directorTags: [...prevState.directorTags, {
+                            value: item.id,
+                            label: item.firstName + ' ' + item.lastName
+                        }],
+
+                    }))
+                });
+            })
+            .catch();
+    };
+
+    getRegionalManager = (idEmployee) => {
+        this.props.client
+            .query({
+                query: GET_EMPLOYEES_WITHOUT_ENTITY,
+                variables: { id: idEmployee }
             })
             .then(({ data }) => {
                 let dataAPI = data.employees;
@@ -284,7 +313,6 @@ class RegionForm extends Component {
 
                     }))
                 });
-                console.log("La info del array ", this.state.managerTags)
             })
             .catch();
     };
@@ -385,7 +413,7 @@ class RegionForm extends Component {
                                 this.addregionusers(identificador, itemrecruiter.value)
                             });
 
-                            this.state.Old_managerTags.map((itemmanager) => {
+                            /*this.state.Old_managerTags.map((itemmanager) => {
                                 this.addregionusers(0, itemmanager.value)
                             });
 
@@ -399,7 +427,7 @@ class RegionForm extends Component {
 
                             this.state.directorTags.map((itemdirector) => {
                                 this.addregionusers(identificador, itemdirector.value)
-                            });
+                            });*/
 
                             if (isEdition) {
                                 this.addConfig(isEdition, id);
@@ -557,11 +585,15 @@ class RegionForm extends Component {
     };
 
     handleChangeDirectorTag = (directorTags) => {
+        console.log("handleChangeManagerTag ", directorTags.value)
         this.setState({ directorTags });
+        this.setState({ IdRegionalDirector: directorTags.value });
     };
 
     handleChangeManagerTag = (managerTags) => {
+        console.log("handleChangeManagerTag ", managerTags.value)
         this.setState({ managerTags });
+        this.setState({ IdRegionalManager: managerTags.value });
     };
 
     render() {
@@ -607,7 +639,7 @@ class RegionForm extends Component {
                                     </div>
                                     <div className="col-md-4">
                                         <label htmlFor="">* Regional Director</label>
-                                        <select
+                                        {/* <select
                                             required
                                             name="IdRegionalDirector"
                                             className="form-control"
@@ -619,7 +651,36 @@ class RegionForm extends Component {
                                             {this.state.employees.map((recruiter) => (
                                                 <option value={recruiter.id}>{recruiter.firstName} - {recruiter.lastName}</option>
                                             ))}
-                                        </select>
+                                        </select> */}
+                                        <Query query={GET_EMPLOYEES_WITHOUT_ENTITY}>
+                                            {({ loading, error, data, refetch, networkStatus }) => {
+                                                //if (networkStatus === 4) return <LinearProgress />;
+                                                if (error) return <p>Error </p>;
+                                                if (data.employees != null && data.employees.length > 0) {
+                                                    let options = [];
+                                                    data.employees.map((item) => (
+                                                        options.push({ value: item.id, label: item.firstName + '' + item.lastName })
+                                                    ));
+
+                                                    return (
+                                                        <div style={{
+                                                            paddingTop: '0px',
+                                                            paddingBottom: '2px',
+                                                        }}>
+                                                            <Select
+                                                                options={options}
+                                                                value={this.state.directorTags}
+                                                                onChange={this.handleChangeDirectorTag}
+                                                                closeMenuOnSelect={false}
+                                                                components={makeAnimated()}
+                                                            //isMulti
+                                                            />
+                                                        </div>
+                                                    );
+                                                }
+                                                return <SelectNothingToDisplay />;
+                                            }}
+                                        </Query>
                                     </div>
                                 </div>
                             </div>
@@ -751,7 +812,7 @@ class RegionForm extends Component {
                                 <div className="row">
                                 </div>
 
-                                <div className="card-footer">
+                                <div className="card-footer bg-light">
                                     <button
                                         type="button"
                                         className="btn btn-danger ml-1 float-right"
