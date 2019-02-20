@@ -204,7 +204,7 @@ class BoardManager extends Component {
                                         },
                                         {
                                             id: 'Interview',
-                                            title: 'Interview',
+                                            title: 'Sent for Interview',
                                             label: ' ',
                                             cards: this.state.interview,
                                             droppable: false,
