@@ -648,7 +648,8 @@ class BoardManager extends Component {
                                                 body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                 escalationTextLeftLead: wo.generalComment,
                                                 escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 },
+                                                statusCompleted: wo.statusCompleted
                                             });
                                             break;
                                         case 30464:
