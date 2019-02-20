@@ -741,7 +741,14 @@ class FilterForm extends Component {
                     <footer className="MasterShiftForm-footer">
                         <div className="row">
                             {!this.props.hotelManager && <div className="col-xs-6 col-md-6">
-                                <button className="btn btn-success float-left btn-not-rounded" type="button" onClick={this.savePublish}>Notify {this.showLoadingNotify()}</button>
+                                {
+                                    !this.state.summaryEnable ? (
+                                        <button className="btn btn-success float-left btn-not-rounded" type="button" onClick={this.savePublish}>Notify {this.showLoadingNotify()}</button>
+                                    ) : (
+                                        ''
+                                    )
+                                }
+
                             </div>}
                             {
                                 this.state.summaryEnable ? (
