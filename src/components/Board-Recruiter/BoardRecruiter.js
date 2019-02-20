@@ -837,6 +837,18 @@ class BoardRecruiter extends Component {
                                     });
                             });
                         });
+
+                        if (data.applicationsByMatches.length === 0) {
+                            this.props.handleOpenSnackbar(
+                                'warning',
+                                'No matches were found',
+                                'bottom',
+                                'right'
+                            );
+                        }
+                        this.setState({
+                            loading: false
+                        })
                     }).catch(error => {
                         this.setState({
                             loading: false,
