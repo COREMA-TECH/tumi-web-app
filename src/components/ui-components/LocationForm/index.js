@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import InputMask from 'react-input-mask';
 import axios from 'axios';
 import withApollo from 'react-apollo/withApollo';
-import { GET_CATALOGS_QUERY } from './queries';
+import { GET_CATALOGS_QUERY, GET_CITY_STATE_QUERY } from './queries';
 
 const STATE_ID = 3, CITY_ID = 5,
     DEFAULT_MASK = '99999', DEFAULT_PLACEHOLDER = '99999',
@@ -16,6 +16,8 @@ class LocationForm extends Component {
         stateCode: DEFAULT_STATE_CODE,
         states: [],
         cities: [],
+        countryId: 0,
+        stateId: 0,
     }
     constructor(props) {
         super(props);
@@ -58,6 +60,8 @@ class LocationForm extends Component {
 
 
     loadStates = () => {
+
+        console.log("this.state.stateCode ", this.state.stateCode)
         this.setState({ loadingStates: true },
             () => {
                 this.props.updateSearchingZipCodeProgress(true)
@@ -121,17 +125,18 @@ class LocationForm extends Component {
                         fetchPolicy: 'no-cache',
                         variables: {
                             Id_Catalog: CITY_ID,
-                            Id_Parent: this.state.state || 0
+                            Id_Parent: this.state.stateId
+
 
                         }
                     }).then(({ data: { catalogitem } }) => {
                         this.setState({ cities: catalogitem, loadingCities: false, findingZipCode: false },
                             () => {
                                 this.props.updateSearchingZipCodeProgress(false)
-                                var selectedCity = this.state.cities.find(item => item.Name.toLowerCase().trim().includes(this.state.cityName.toLowerCase().trim()))
-                                if (selectedCity) {
-                                    this.setState(() => { return { city: selectedCity.Id } }, () => { this.props.onChangeCity(selectedCity.Id) })
-                                }
+                                //var selectedCity = this.state.cities.find(item => item.Name.toLowerCase().trim().includes(this.state.cityName.toLowerCase().trim()))
+                                //if (selectedCity) {
+                                this.setState(() => { return { city: this.state.countryId } }, () => { this.props.onChangeCity(this.state.countryId) })
+                                //}
                             })
                     }).catch(error => {
                         this.setState({ loadingCities: false, findingZipCode: false }, () => {
@@ -172,19 +177,45 @@ class LocationForm extends Component {
         //Get firts five characters of Zipcode input
         const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
         this.setState({ findingZipCode: true }, () => {
-            if (zipCode)
-                this.setState({ loadingCities: true, loadingStates: true }, () => {
-                    axios.get(`https://ziptasticapi.com/${zipCode}`)
-                        .then(res => {
-                            const cities = res.data;
-                            if (!cities.error) {
-                                console.log("Infor del api ", cities)
-                                this.setState({ stateCode: cities.state, cityName: cities.city.toLowerCase() },
+            if (zipCode) {
+                this.props.client
+                    .query({
+                        query: GET_CITY_STATE_QUERY,
+                        fetchPolicy: 'no-cache',
+                        variables: {
+                            Zipcode: zipCode
+                        }
+                    }).then(({ data: { zipcode_City_State } }) => {
+                        this.setState({ states: zipcode_City_State, loadingStates: false, findingZipCode: false },
+                            () => {
+                                if (zipcode_City_State.length > 0)
+                                    console.log("Infor del api ", zipcode_City_State)
+                                this.setState({ countryId: zipcode_City_State[0].countryId, stateId: zipcode_City_State[0].stateId, stateCode: zipcode_City_State[0].State.trim(), cityName: zipcode_City_State[0].City.trim().toLowerCase() },
                                     () => { this.loadStates(); })
-                            } else
-                                this.setState({ findingZipCode: false, loadingCities: false, loadingStates: false })
-                        }).catch(error => { this.setState({ findingZipCode: false, loadingCities: false, loadingStates: false }) })
-                })
+                                /* this.setState({ state: zipcode_City_State[0].State }, () => {
+                                     this.props.updateSearchingZipCodeProgress(false)
+                                     this.props.onChangeState(zipcode_City_State[0].stateId)
+                                     this.props.onChangeCity(zipcode_City_State[0].countryId)
+                                 })*/
+                            })
+                    }).catch(error => {
+                        this.setState({ loadingStates: false, findingZipCode: false }, () => {
+                            this.props.updateSearchingZipCodeProgress(false)
+                        })
+                    })
+            }
+            /*this.setState({ loadingCities: true, loadingStates: true }, () => {
+                axios.get(`https://ziptasticapi.com/${zipCode}`)
+                    .then(res => {
+                        const cities = res.data;
+                        if (!cities.error) {
+                            console.log("Infor del api ", cities)
+                            this.setState({ stateCode: cities.state, cityName: cities.city.toLowerCase() },
+                                () => { this.loadStates(); })
+                        } else
+                            this.setState({ findingZipCode: false, loadingCities: false, loadingStates: false })
+                    }).catch(error => { this.setState({ findingZipCode: false, loadingCities: false, loadingStates: false }) })
+            })*/
             else
                 this.setState({ findingZipCode: false })
         })

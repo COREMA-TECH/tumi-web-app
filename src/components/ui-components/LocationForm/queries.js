@@ -10,3 +10,18 @@ export const GET_CATALOGS_QUERY = gql`
         }
     }  
 `;
+
+export const GET_CITY_STATE_QUERY = gql`
+	query coordenadas($Zipcode:String){
+		zipcode_City_State(Zipcode:$Zipcode){
+          Zipcode
+          State
+          City
+		  Lat
+          Long
+          countryId
+          stateId
+		}
+	  }
+
+`;

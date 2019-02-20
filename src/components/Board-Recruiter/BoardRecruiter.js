@@ -231,7 +231,6 @@ class BoardRecruiter extends Component {
     };
 
     handleCloseModal = () => {
-        alert("estoy en el close")
         this.setState({ openModal: false });
 
 
