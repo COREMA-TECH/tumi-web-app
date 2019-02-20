@@ -171,29 +171,6 @@ class ApplicationTable extends React.Component {
         return false;
     };
 
-    getStatus = (applicationId) => {
-        alert(applicationId);
-        this.props.client
-            .query({
-                query: GET_COMPLETED_STATUS,
-                variables: {
-                    id: applicationId
-                }
-            })
-            .then(data => {
-                this.setState({
-                    completed: data.applicationCompleted
-                })
-            })
-            .catch(error => {
-
-            })
-    };
-
-    componentWillMount(){
-        this.getStatus(this.props.data.id)
-    }
-
     render() {
         const {classes} = this.props;
         let items = this.props.data;
@@ -261,7 +238,7 @@ class ApplicationTable extends React.Component {
                                             <CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.emailAddress}</CustomTableCell>
-                                            <CustomTableCell>{this.state.completed === true ? "YES" : "NO"}</CustomTableCell>
+                                            <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
                                         </TableRow>
                                     );
                                 })}

@@ -125,10 +125,10 @@ class BoardRecruiter extends Component {
             LaneDestino: targetLaneId
         });
 
-        if (sourceLaneId == "lane1") {
+        if ("lane1||Placement||Candidate".includes(sourceLaneId)) {
             this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
             this.KeepArray();
-            this.onCardClick(this.state.ShiftId, null, 'lane1');
+            this.onCardClick(this.state.ShiftId, null, sourceLaneId);
 
             this.setState({
                 LaneOrigen: '',
@@ -211,13 +211,19 @@ class BoardRecruiter extends Component {
                                         id: 'Candidate',
                                         title: 'Candidate',
                                         label: ' ',
-                                        cards: this.state.Candidate
+                                        cards: this.state.Candidate,
+                                        droppable: false,
+                                        draggable: false,
+                                        editable: false
                                     },
                                     {
                                         id: 'Placement',
                                         title: 'Placement',
                                         label: ' ',
-                                        cards: this.state.Placement
+                                        cards: this.state.Placement,
+                                        droppable: false,
+                                        draggable: false,
+                                        editable: false
                                     }
                                 ],
                                 loading: false
@@ -264,13 +270,19 @@ class BoardRecruiter extends Component {
                         id: 'Candidate',
                         title: 'Candidate',
                         label: ' ',
-                        cards: this.state.Candidate
+                        cards: this.state.Candidate,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     },
                     {
                         id: 'Placement',
                         title: 'Placement',
                         label: ' ',
-                        cards: this.state.Placement
+                        cards: this.state.Placement,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     }
                 ],
                 loading: false
@@ -469,13 +481,19 @@ class BoardRecruiter extends Component {
                     id: 'Candidate',
                     title: 'Candidate',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 },
                 {
                     id: 'Placement',
                     title: 'Placement',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 }
             ],
             loading: false
@@ -562,13 +580,19 @@ class BoardRecruiter extends Component {
                         id: 'Candidate',
                         title: 'Candidate',
                         label: ' ',
-                        cards: this.state.Candidate
+                        cards: this.state.Candidate,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     },
                     {
                         id: 'Placement',
                         title: 'Placement',
                         label: ' ',
-                        cards: this.state.Placement
+                        cards: this.state.Placement,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     }
                 ],
                 loading: false
@@ -795,13 +819,19 @@ class BoardRecruiter extends Component {
                                                 id: 'Candidate',
                                                 title: 'Candidate',
                                                 label: ' ',
-                                                cards: getCandidate
+                                                cards: getCandidate,
+                                                droppable: false,
+                                                draggable: false,
+                                                editable: false
                                             },
                                             {
                                                 id: 'Placement',
                                                 title: 'Placement',
                                                 label: ' ',
-                                                cards: getPlacement
+                                                cards: getPlacement,
+                                                droppable: false,
+                                                draggable: false,
+                                                editable: false
                                             }
                                         ],
                                         loading: false
@@ -936,13 +966,19 @@ class BoardRecruiter extends Component {
                     id: 'Candidate',
                     title: 'Candidate',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 },
                 {
                     id: 'Placement',
                     title: 'Placement',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 }
             ],
             loading: false

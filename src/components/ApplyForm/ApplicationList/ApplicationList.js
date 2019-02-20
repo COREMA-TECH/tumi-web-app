@@ -82,6 +82,7 @@ class ApplicationList extends Component {
 				cellPhone
 				isLead
 				idWorkOrder
+            	statusCompleted
 				recruiter{
 					Full_Name
 				}
