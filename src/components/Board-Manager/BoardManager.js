@@ -663,7 +663,7 @@ class BoardManager extends Component {
                                                 cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
                                             break;
-                                        case 30465:
+                                        case 30463, 30465:
                                             getaccepted.push({
                                                 id: wo.id,
                                                 name: wo.firstName + ' ' + wo.lastName,
@@ -983,7 +983,7 @@ class BoardManager extends Component {
         //FIXME: can't go back using this function
         this.props.history.push({
             pathname: '/home/application/info',
-            state: {ApplicationId: id}
+            state: { ApplicationId: id }
         });
     };
 
