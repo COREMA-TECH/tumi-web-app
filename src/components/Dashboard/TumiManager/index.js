@@ -143,6 +143,7 @@ class DashboardManager extends React.Component {
                                 onEditHandler={this.onEditHandler}
                                 onLifeHandler={this.onLifeHandler}
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                rowsPerPage={5}
                                 showRecruiter
                             />
 

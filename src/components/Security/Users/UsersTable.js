@@ -347,7 +347,7 @@ let id = 0;
 class UsersTable extends React.Component {
 	state = {
 		page: 0,
-		rowsPerPage: 5,
+		rowsPerPage: 25,
 		order: 'asc',
 		orderBy: 'calories',
 		selected: []
@@ -398,7 +398,6 @@ class UsersTable extends React.Component {
 		const { classes } = this.props;
 		let items = this.props.data;
 		const { order, orderBy, selected, rowsPerPage, page } = this.state;
-		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
 		if (this.props.loading) {
 			return (
