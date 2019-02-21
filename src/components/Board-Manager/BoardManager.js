@@ -1115,7 +1115,7 @@ class BoardManager extends Component {
                                                             <option value={3}>Closed work orders</option>
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-4">
                                                         <a
                                                             className="link-board" onClick={(e) => {
                                                                 e.preventDefault();
@@ -1125,20 +1125,34 @@ class BoardManager extends Component {
                                                             }}>
                                                             Advanced
                                                         </a>
+                                                        <a
+                                                            className="link-board" onClick={(e) => {
+                                                                this.setState({
+                                                                    hotel: 0,
+                                                                    state: 0,
+                                                                    city: 0,
+                                                                    status: null
+                                                                }, () => {
+                                                                    this.getWorkOrders();
+                                                                })
+                                                            }}>
+                                                            Clear
+                                                        </a>
+
                                                     </div>
-                                                    <div className="col-md-1">
-                                                        <button className="btn btn-danger" onClick={() => {
-                                                            this.setState({
-                                                                hotel: 0,
-                                                                state: 0,
-                                                                city: 0,
-                                                                status: null
-                                                            }, () => {
-                                                                this.getWorkOrders();
-                                                            })
-                                                        }}>Clear
-                                                        </button>
-                                                    </div>
+                                                    {/*<div className="col-md-1">*/}
+                                                        {/*<button className="btn btn-danger" onClick={() => {*/}
+                                                            {/*this.setState({*/}
+                                                                {/*hotel: 0,*/}
+                                                                {/*state: 0,*/}
+                                                                {/*city: 0,*/}
+                                                                {/*status: null*/}
+                                                            {/*}, () => {*/}
+                                                                {/*this.getWorkOrders();*/}
+                                                            {/*})*/}
+                                                        {/*}}>Clear*/}
+                                                        {/*</button>*/}
+                                                    {/*</div>*/}
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-2"></div>

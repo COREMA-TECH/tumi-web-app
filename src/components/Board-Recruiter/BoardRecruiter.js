@@ -1111,7 +1111,7 @@ class BoardRecruiter extends Component {
                                                         <option value={2}>All work orders</option>
                                                     </select>
                                                 </div>
-                                                <div className="col-md-2">
+                                                <div className="col-md-4">
                                                     <a
                                                         className="link-board" onClick={(e) => {
                                                             e.preventDefault();
@@ -1121,19 +1121,33 @@ class BoardRecruiter extends Component {
                                                         }}>
                                                         Advanced
                                                     </a>
+                                                    <a
+                                                        className="link-board" onClick={(e) => {
+                                                            this.setState({
+                                                                hotel: 0,
+                                                                state: 0,
+                                                                city: 0,
+                                                                status: null
+                                                            }, () => {
+                                                                this.getOpenings();
+                                                            })
+                                                        }}>
+                                                        Clear
+                                                    </a>
+
                                                 </div>
-                                                <div className="col-md-1">
-                                                    <button className="btn btn-danger" onClick={() => {
-                                                        this.setState({
-                                                            hotel: 0,
-                                                            state: 0,
-                                                            city: 0,
-                                                            status: null
-                                                        }, () => {
-                                                            this.getOpenings();
-                                                        })
-                                                    }}>Clear</button>
-                                                </div>
+                                                {/*<div className="col-md-1">*/}
+                                                    {/*<button className="btn btn-danger" onClick={() => {*/}
+                                                        {/*this.setState({*/}
+                                                            {/*hotel: 0,*/}
+                                                            {/*state: 0,*/}
+                                                            {/*city: 0,*/}
+                                                            {/*status: null*/}
+                                                        {/*}, () => {*/}
+                                                            {/*this.getOpenings();*/}
+                                                        {/*})*/}
+                                                    {/*}}>Clear</button>*/}
+                                                {/*</div>*/}
                                             </div>
                                         </div>
                                         <div className="col-md-3">
