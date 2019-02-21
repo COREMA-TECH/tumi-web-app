@@ -35,7 +35,7 @@ class WorkOrdersTable extends Component {
         this.state = {
             data: [],
             Hotels: [],
-            rowsPerPage: 5,
+            rowsPerPage: props.rowsPerPage || 25,
             page: 0,
             openConfirm: false,
             ShiftsData: ShiftsData,
@@ -324,8 +324,8 @@ class WorkOrdersTable extends Component {
         const target = event.target;
         var value = target.value;
 
-        this.setState({
-            id: value == "" ? null : value
+        this.setState(() => {
+            return { id: value == "" ? null : value }
         }, () => {
             this.getWorkOrders()
         });
@@ -334,8 +334,6 @@ class WorkOrdersTable extends Component {
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-
 
         return (
             <div className="card">

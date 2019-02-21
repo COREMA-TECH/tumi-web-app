@@ -1574,6 +1574,7 @@ class NewContract extends Component {
                                             <div className="col-md-6 col-lg-6">
                                                 <label>* Customer Signed Title</label>
                                                 <InputForm
+                                                    disabled={true}
                                                     value={this.state.User_Signed_Title}
                                                     change={(text) => {
                                                     }}
@@ -1722,6 +1723,7 @@ class NewContract extends Component {
                                                         <label>* Company Signed By</label>
 
                                                         <InputForm
+                                                            disabled={true}
                                                             value={this.state.CompanySignedName}
                                                             change={(text) => {
                                                                 this.setState({
