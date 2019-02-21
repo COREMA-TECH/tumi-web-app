@@ -440,12 +440,13 @@ class Employees extends Component {
     /**
      * To open the user modal
      */
-    handleClickOpenUserModal = (email, phoneNumber, idEmployee) => {
+    handleClickOpenUserModal = (email, phoneNumber, idEmployee, fullName) => {
         this.setState({ openUserModal: true });
         this.setState({
             email: email,
             number: phoneNumber,
-            employeeId: idEmployee
+            employeeId: idEmployee,
+            fullName: fullName
         });
     };
 
@@ -1051,27 +1052,25 @@ class Employees extends Component {
                 open={this.state.openUserModal}
                 onClose={this.handleCloseUserModal}
                 aria-labelledby="responsive-dialog-title"
-                maxWidth={"xl"}
-
+                maxWidth={"sm"}
                 fullWidth
-
             >
-                <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
+                <DialogTitle id="responsive-dialog-title">
                     <div className="modal-header">
                         <h5 className="modal-title">
                             {this.state.idToEdit != null &&
                                 this.state.idToEdit != '' &&
                                 this.state.idToEdit != 0 ? (
-                                    'Edit  User'
+                                    this.state.fullName
                                 ) : (
-                                    'Create User'
+                                    this.state.fullName
                                 )}
                         </h5>
                     </div>
                 </DialogTitle>
                 <DialogContent >
                     <div className="row">
-                        <div className="col-lg-7">
+                        <div className="col-lg-12">
                             <div className="row">
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Username</label>
@@ -1160,7 +1159,7 @@ class Employees extends Component {
                             </div>
 
                         </div>
-                        <div className="col-lg-5">
+                        {/* <div className="col-lg-5">
                             <div className="card">
                                 <div className="card-header info">Permissions</div>
                                 <div className="card-body p-0">
@@ -1276,6 +1275,7 @@ class Employees extends Component {
                                 </div>
                             </div>
                         </div>
+                     */}
                     </div>
                 </DialogContent>
                 <DialogActions style={{ paddingTop: "10px", margin: '16px 10px', borderTop: '1px solid #eee' }}>
@@ -1397,7 +1397,7 @@ class Employees extends Component {
                         </DialogTitle>
                         <DialogContent>
                             <div className="container">
-                               
+
                                 <div className="row Employees-row">
                                     <div className="col-sm-3">
                                         <label htmlFor="" >* First Name</label>
