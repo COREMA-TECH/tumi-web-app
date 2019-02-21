@@ -292,6 +292,7 @@ class Catalogs extends React.Component {
         super(props);
         this.state = {
             data: [],
+            allData: [],
             contacts: [],
             roles: [{Id: 0, Name: 'Nothing'}],
             languages: [{Id: 0, Name: 'Nothing'}],
@@ -693,6 +694,7 @@ class Catalogs extends React.Component {
                         this.setState(
                             {
                                 data: data.data.getusers,
+                                allData: data.data.getusers,
                                 loadingData: false
                             },
                             func
@@ -1561,6 +1563,28 @@ class Catalogs extends React.Component {
                                 onChange={text => {
                                     this.setState({
                                         filterText: text.target.value
+                                    }, () => {
+                                        let allUser = this.state.allData.filter((_, i) => {
+                                            if (this.state.filterText === "") {
+                                                return true;
+                                            }
+
+                                            if (
+                                                _.Code_User.indexOf(this.state.filterText) > -1 ||
+                                                _.Code_User
+                                                    .toLocaleLowerCase()
+                                                    .indexOf(this.state.filterText) > -1 ||
+                                                _.Code_User
+                                                    .toLocaleUpperCase()
+                                                    .indexOf(this.state.filterText) > -1
+                                            ) {
+                                                return true;
+                                            }
+                                        });
+
+                                        this.setState({
+                                            data: allUser
+                                        })
                                     });
                                 }}
                                 value={this.state.filterText}
@@ -1571,7 +1595,8 @@ class Catalogs extends React.Component {
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <button className="float-right btn btn-success mr-1" onClick={this.handleClickOpenModal} disabled={isLoading}>
+                        <button className="float-right btn btn-success mr-1" onClick={this.handleClickOpenModal}
+                                disabled={isLoading}>
                             Add User<i className="fas fa-plus ml-2"/>
                         </button>
                     </div>
