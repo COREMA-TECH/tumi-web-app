@@ -8172,7 +8172,7 @@ optgroup {
   font-weight: 700; }
 
 .RegionForm-header, .MasterShiftHeader {
-  background: #FAFEFF;
+  background: #e6e6e6;
   border-bottom: solid 1px #bdbdbd;
   margin-left: -15px;
   margin-right: -15px;
@@ -11031,6 +11031,19 @@ button.rbc-input::-moz-focus-inner {
 
 .board-switch .onoffswitch-inner::after {
   content: " "; }
+
+.board-switch {
+  margin-left: auto;
+  position: relative;
+  height: 30px; }
+  .board-switch label {
+    bottom: 0;
+    position: absolute;
+    right: -16px;
+    -webkit-transform: scale(0.5, 0.5);
+    -ms-transform: scale(0.5, 0.5);
+    transform: scale(0.5, 0.5);
+    width: 86px; }
 
 .PropertiesTags-item .btn, .PropertiesTags-item .form-control {
   background-color: #dddddd;
