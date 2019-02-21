@@ -1,7 +1,6 @@
 .interview-title {
     text-decoration: underline !important;
     cursor: pointer !important;
-    color: #1c7430 !important;
     position: relative;
 }
 
@@ -32,6 +31,8 @@
         color: #0092bd !important;
         text-decoration: underline !important;
         cursor: pointer !important;
+        margin-left: 8px;
+        margin-right: 8px;
     }
 
     .reset-password-container {

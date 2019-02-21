@@ -125,10 +125,10 @@ class BoardRecruiter extends Component {
             LaneDestino: targetLaneId
         });
 
-        if (sourceLaneId == "lane1") {
+        if ("lane1||Placement||Candidate".includes(sourceLaneId)) {
             this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
             this.KeepArray();
-            this.onCardClick(this.state.ShiftId, null, 'lane1');
+            this.onCardClick(this.state.ShiftId, null, sourceLaneId);
 
             this.setState({
                 LaneOrigen: '',
@@ -211,13 +211,19 @@ class BoardRecruiter extends Component {
                                         id: 'Candidate',
                                         title: 'Candidate',
                                         label: ' ',
-                                        cards: this.state.Candidate
+                                        cards: this.state.Candidate,
+                                        droppable: false,
+                                        draggable: false,
+                                        editable: false
                                     },
                                     {
                                         id: 'Placement',
                                         title: 'Placement',
                                         label: ' ',
-                                        cards: this.state.Placement
+                                        cards: this.state.Placement,
+                                        droppable: false,
+                                        draggable: false,
+                                        editable: false
                                     }
                                 ],
                                 loading: false
@@ -231,7 +237,6 @@ class BoardRecruiter extends Component {
     };
 
     handleCloseModal = () => {
-        alert("estoy en el close")
         this.setState({ openModal: false });
 
 
@@ -264,13 +269,19 @@ class BoardRecruiter extends Component {
                         id: 'Candidate',
                         title: 'Candidate',
                         label: ' ',
-                        cards: this.state.Candidate
+                        cards: this.state.Candidate,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     },
                     {
                         id: 'Placement',
                         title: 'Placement',
                         label: ' ',
-                        cards: this.state.Placement
+                        cards: this.state.Placement,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     }
                 ],
                 loading: false
@@ -469,13 +480,19 @@ class BoardRecruiter extends Component {
                     id: 'Candidate',
                     title: 'Candidate',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 },
                 {
                     id: 'Placement',
                     title: 'Placement',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 }
             ],
             loading: false
@@ -562,13 +579,19 @@ class BoardRecruiter extends Component {
                         id: 'Candidate',
                         title: 'Candidate',
                         label: ' ',
-                        cards: this.state.Candidate
+                        cards: this.state.Candidate,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     },
                     {
                         id: 'Placement',
                         title: 'Placement',
                         label: ' ',
-                        cards: this.state.Placement
+                        cards: this.state.Placement,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     }
                 ],
                 loading: false
@@ -745,7 +768,7 @@ class BoardRecruiter extends Component {
                                                 cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
                                             break;
-                                        case 30463:
+                                        case 30463, 30465:
                                             getPlacement.push({
                                                 id: wo.id,
                                                 name: wo.firstName + ' ' + wo.lastName,
@@ -795,19 +818,37 @@ class BoardRecruiter extends Component {
                                                 id: 'Candidate',
                                                 title: 'Candidate',
                                                 label: ' ',
-                                                cards: getCandidate
+                                                cards: getCandidate,
+                                                droppable: false,
+                                                draggable: false,
+                                                editable: false
                                             },
                                             {
                                                 id: 'Placement',
                                                 title: 'Placement',
                                                 label: ' ',
-                                                cards: getPlacement
+                                                cards: getPlacement,
+                                                droppable: false,
+                                                draggable: false,
+                                                editable: false
                                             }
                                         ],
                                         loading: false
                                     });
                             });
                         });
+
+                        if (data.applicationsByMatches.length === 0) {
+                            this.props.handleOpenSnackbar(
+                                'warning',
+                                'No matches were found',
+                                'bottom',
+                                'right'
+                            );
+                        }
+                        this.setState({
+                            loading: false
+                        })
                     }).catch(error => {
                         this.setState({
                             loading: false,
@@ -936,13 +977,19 @@ class BoardRecruiter extends Component {
                     id: 'Candidate',
                     title: 'Candidate',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 },
                 {
                     id: 'Placement',
                     title: 'Placement',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 }
             ],
             loading: false
@@ -1064,7 +1111,7 @@ class BoardRecruiter extends Component {
                                                         <option value={2}>All work orders</option>
                                                     </select>
                                                 </div>
-                                                <div className="col-md-2">
+                                                <div className="col-md-4">
                                                     <a
                                                         className="link-board" onClick={(e) => {
                                                             e.preventDefault();
@@ -1072,21 +1119,35 @@ class BoardRecruiter extends Component {
 
                                                             this.setState({ openModal: true })
                                                         }}>
-                                                        Advanced
+                                                        Advanced <i className="fas fa-filter"></i>
                                                     </a>
+                                                    <a
+                                                        className="link-board" onClick={(e) => {
+                                                            this.setState({
+                                                                hotel: 0,
+                                                                state: 0,
+                                                                city: 0,
+                                                                status: null
+                                                            }, () => {
+                                                                this.getOpenings();
+                                                            })
+                                                        }}>
+                                                        Clear <i className="fas fa-times-circle text-danger"></i>
+                                                    </a>
+
                                                 </div>
-                                                <div className="col-md-1">
-                                                    <button className="btn btn-danger" onClick={() => {
-                                                        this.setState({
-                                                            hotel: 0,
-                                                            state: 0,
-                                                            city: 0,
-                                                            status: null
-                                                        }, () => {
-                                                            this.getOpenings();
-                                                        })
-                                                    }}>Clear</button>
-                                                </div>
+                                                {/*<div className="col-md-1">*/}
+                                                    {/*<button className="btn btn-danger" onClick={() => {*/}
+                                                        {/*this.setState({*/}
+                                                            {/*hotel: 0,*/}
+                                                            {/*state: 0,*/}
+                                                            {/*city: 0,*/}
+                                                            {/*status: null*/}
+                                                        {/*}, () => {*/}
+                                                            {/*this.getOpenings();*/}
+                                                        {/*})*/}
+                                                    {/*}}>Clear</button>*/}
+                                                {/*</div>*/}
                                             </div>
                                         </div>
                                         <div className="col-md-3">
