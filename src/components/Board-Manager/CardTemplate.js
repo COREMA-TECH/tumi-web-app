@@ -184,7 +184,8 @@ class CardTemplate extends Component {
                 >
                     {this.props.name}
                 </div>
-                <i className={["fas fa-circle", "ml-auto", this.props.statusCompleted ? "text-info" : "text-danger"].join(" ")} style={{ marginTop: '7px', fontSize: '10px' }}></i>
+                {/*<i className={["fas fa-circle", "ml-auto", this.props.statusCompleted ? "text-info" : "text-danger"].join(" ")} style={{ marginTop: '7px', fontSize: '10px' }}></i>*/}
+                <i className={["fas fa-pen", "ml-auto", this.props.statusCompleted ? "text-info" : "text-danger"].join(" ")} style={{ marginTop: '7px', fontSize: '10px' }}></i>
             </React.Fragment>
         else return <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{this.props.name}</div>
     }
