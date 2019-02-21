@@ -1119,7 +1119,7 @@ class BoardRecruiter extends Component {
 
                                                             this.setState({ openModal: true })
                                                         }}>
-                                                        Advanced
+                                                        Advanced <i className="fas fa-filter"></i>
                                                     </a>
                                                     <a
                                                         className="link-board" onClick={(e) => {
@@ -1132,7 +1132,7 @@ class BoardRecruiter extends Component {
                                                                 this.getOpenings();
                                                             })
                                                         }}>
-                                                        Clear
+                                                        Clear <i className="fas fa-times-circle text-danger"></i>
                                                     </a>
 
                                                 </div>
