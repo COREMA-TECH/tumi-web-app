@@ -756,7 +756,7 @@ class BoardRecruiter extends Component {
                                                 escalationTextRightLead: wo.car == true ? " Yes" : " No",
                                                 cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
-                                            break
+                                            break;
                                         case 30462, 30464:
                                             getCandidate.push({
                                                 id: wo.id,
@@ -767,7 +767,7 @@ class BoardRecruiter extends Component {
                                                 escalationTextRightLead: wo.car == true ? " Yes" : " No",
                                                 cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
-                                            break
+                                            break;
                                         case 30463, 30465:
                                             getPlacement.push({
                                                 id: wo.id,
@@ -778,7 +778,7 @@ class BoardRecruiter extends Component {
                                                 escalationTextRightLead: wo.car == true ? " Yes" : " No",
                                                 cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
-                                            break
+                                            break;
                                     }
                                 }
 
