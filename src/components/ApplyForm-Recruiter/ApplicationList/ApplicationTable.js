@@ -191,8 +191,8 @@ class ApplicationTable extends React.Component {
 									<CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Created By</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Updated By</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
 								</TableRow>

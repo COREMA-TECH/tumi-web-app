@@ -1,3 +1,32 @@
+.interview-title {
+    text-decoration: underline !important;
+    cursor: pointer !important;
+    color: #1c7430 !important;
+    position: relative;
+}
+
+/*.interview-title:after {*/
+    /*content: "View Application";*/
+    /*padding: 2px;*/
+    /*display: none;*/
+    /*position: absolute;*/
+    /*top: 20px;*/
+    /*right: -90px;*/
+    /*width: 130px;*/
+    /*z-index: 1500;*/
+    /*color: #fff;*/
+    /*font-weight: 100;*/
+
+    /*text-align: center;*/
+    /*background-color: rgba(0, 82, 146, 0.6);*/
+    /*!*border: 1px solid rgba(65, 175, 215, 0.53);*!*/
+    /*border-radius: 5px;*/
+/*}*/
+
+/*.interview-title:hover:after {*/
+    /*display: block;*/
+/*}*/
+
 @media (min-width: 320px) {
     .link-board {
         color: #0092bd !important;
@@ -76,23 +105,21 @@
         cursor: pointer;
     }
 
-    .dJewwL
-    {
+    .dJewwL {
         padding: 1em !important;
-        
-        
+
     }
 
 }
 
-@media (min-width: 768px){
+@media (min-width: 768px) {
     .reset-password-form {
         width: 50%;
         height: 45%;
     }
 }
 
-@media (min-width: 992px){
+@media (min-width: 992px) {
     .reset-password-form {
         width: 30%;
         height: 45%;

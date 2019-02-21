@@ -1240,7 +1240,7 @@ class GeneralInfoProperty extends Component {
                                                         phoneNumberValid: true
                                                     });
                                                 }}
-                                                placeholder="+(999) 999-9999"
+                                                placeholder="+(___) ___-____"
                                                 required
                                                 minLength="15"
                                             />
@@ -1266,7 +1266,7 @@ class GeneralInfoProperty extends Component {
                                                         faxValid: true
                                                     });
                                                 }}
-                                                placeholder="+(999) 999-9999"
+                                                placeholder="+(___) ___-____"
                                                 minLength="15"
                                             />
                                         </div>
