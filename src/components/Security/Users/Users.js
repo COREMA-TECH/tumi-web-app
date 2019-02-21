@@ -306,6 +306,7 @@ class Catalogs extends React.Component {
             idCompany: this.props.idCompany,
             IdSchedulesEmployees: "",
             IdSchedulesManager: "",
+            filterText: '',
 
             ...this.DEFAULT_STATE
         };
@@ -1192,7 +1193,7 @@ class Catalogs extends React.Component {
                                                 onChange={(e) => {
                                                     this.onChangeHandler(e.target.value, 'number');
                                                 }}
-                                                placeholder="+(999) 999-9999"
+                                                placeholder="+(___) ___-____"
                                             />
                                         </div>
                                         <div className="col-md-12 col-lg-6">
@@ -1548,10 +1549,32 @@ class Catalogs extends React.Component {
                     </DialogActions>
                 </Dialog>
 
-                <div className="users__header">
-                    <button className="btn btn-success mr-1" onClick={this.handleClickOpenModal} disabled={isLoading}>
-                        Add User<i className="fas fa-plus ml-2"/>
-                    </button>
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                            <span className="input-group-text" id="basic-addon1">
+                                <i className="fa fa-search icon"/>
+                            </span>
+                            </div>
+                            <input
+                                onChange={text => {
+                                    this.setState({
+                                        filterText: text.target.value
+                                    });
+                                }}
+                                value={this.state.filterText}
+                                type="text"
+                                placeholder="Search users"
+                                className="form-control"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                        <button className="float-right btn btn-success mr-1" onClick={this.handleClickOpenModal} disabled={isLoading}>
+                            Add User<i className="fas fa-plus ml-2"/>
+                        </button>
+                    </div>
                 </div>
                 <div className="row">
                     <div className="col-md-12">

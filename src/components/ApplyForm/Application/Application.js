@@ -17,6 +17,7 @@ import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-load
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import LocationForm from '../../ui-components/LocationForm'
+import {withRouter} from "react-router-dom";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -667,7 +668,7 @@ class Application extends Component {
                                                             })
                                                         });
                                                     }}
-                                                    placeholder="+(999) 999-9999"
+                                                    placeholder="+(___) ___-____"
                                                     minLength="15"
                                                 />
                                             </div>
@@ -709,7 +710,7 @@ class Application extends Component {
                                                             })
                                                         });
                                                     }}
-                                                    placeholder="+(999) 999-9999"
+                                                    placeholder="+(___) ___-____"
                                                     required
                                                     minLength="15"
                                                 />
@@ -731,7 +732,7 @@ class Application extends Component {
                                                         });
                                                     }}
                                                     value={this.state.socialSecurityNumber}
-                                                    placeholder="999-99-9999"
+                                                    placeholder="___-__-____"
                                                     required
                                                     minLength="11"
                                                 />
@@ -1090,4 +1091,4 @@ class Application extends Component {
     }
 }
 
-export default withApollo(withGlobalContent(Application));
+export default withApollo(withGlobalContent(withRouter(Application)));

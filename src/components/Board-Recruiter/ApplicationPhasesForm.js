@@ -39,11 +39,19 @@ class ApplicationPhasesForm extends Component {
         }
     };
 
-    handleSubmit = (event) => {
+    /*handleSubmit = (event) => {
+        event.preventDefault();
+        this.addApplicationPhase(event);
+        this.updateApplicationInformation(event);
+    }*/
+
+
+    handleSaveModal = (event) => {
         event.preventDefault();
         this.addApplicationPhase(event);
         this.updateApplicationInformation(event);
     }
+
 
     updateApplicationInformation = (event) => {
         this.setState(
@@ -58,7 +66,8 @@ class ApplicationPhasesForm extends Component {
                             id: this.props.ApplicationId,
                             isLead: true,
                             idRecruiter: localStorage.getItem('LoginId'),
-                            idWorkOrder: this.props.WorkOrderId
+                            idWorkOrder: this.props.WorkOrderId,
+                            positionApplyingFor: this.props.WorkOrderId
                         }
                     })
                     .then(({ data }) => {
@@ -144,7 +153,7 @@ class ApplicationPhasesForm extends Component {
                                     Cancel
                                     <i class="fas fa-ban ml-1"></i>
                                 </button>
-                                <button className="btn btn-success float-right mr-1" >
+                                <button className="btn btn-success float-right mr-1" onClick={this.handleSaveModal}>
                                     Save
                                     <i class="fas fa-save ml-1"></i>
                                 </button>

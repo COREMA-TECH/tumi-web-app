@@ -145,3 +145,5 @@ export const RECREATE_IDEAL_JOB_LIST = gql`
     }
 `;
 
+
+

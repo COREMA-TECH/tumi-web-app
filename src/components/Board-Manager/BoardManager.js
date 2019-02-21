@@ -4,23 +4,22 @@ import withGlobalContent from '../Generic/Global';
 import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 
-import { UPDATE_APPLICANT, ADD_APPLICATION_PHASES, UPDATE_APPLICATION_STAGE } from "./Mutations";
+import { ADD_APPLICATION_PHASES, UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE } from "./Mutations";
 import {
+    GET_BOARD_SHIFT,
     GET_CITIES_QUERY,
     GET_COORDENADAS,
     GET_HOTEL_QUERY,
     GET_MATCH,
-    GET_STATES_QUERY,
-    GET_WORK_ORDERS,
-    GET_BOARD_SHIFT
+    GET_STATES_QUERY
 } from "./Queries";
 //import Board from 'react-trello'
 import { Board } from 'react-trello'
-import ShiftsData from '../../data/shitfs.json';
 
 import Filters from './Filters';
 import CardTemplate from './CardTemplate';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import { withRouter } from "react-router-dom";
 
 const CustomCard = props => {
     return (
@@ -121,7 +120,7 @@ class BoardManager extends Component {
             Intopening: 0,
             userId: localStorage.getItem('LoginId'),
             ReasonId: 30471,
-            LaneOrigen: 'lane1',
+            LaneOrigen: '',
             LaneDestino: ''
 
         }
@@ -132,91 +131,106 @@ class BoardManager extends Component {
     };
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
-        console.log("sourceLaneId ", sourceLaneId);
-        console.log("targetLaneId ", targetLaneId);
 
         this.setState({
             LaneOrigen: sourceLaneId,
             LaneDestino: targetLaneId
         });
 
-        if (targetLaneId !== "lane1") {
-            let IdLane;
-            switch (targetLaneId) {
-                case "Notify":
-                    IdLane = 30464
-                    break;
-                case "Accepted":
-                    IdLane = 30465
-                    break;
-                case "Interview":
-                    IdLane = 30461
-                    break;
-                case "Matches":
-                    IdLane = 30469
-                default:
-                    IdLane = 30469
-            }
+        if (sourceLaneId == "lane1") {
+            this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
+            this.KeepArray();
+            this.onCardClick(this.state.ShiftId, null, 'lane1');
 
+            this.setState({
+                LaneOrigen: '',
+                LaneDestino: ''
+            });
+        }
+        else {
 
-
-            if (targetLaneId != sourceLaneId) {
-                this.addApplicationPhase(cardId, IdLane);
-
-                if (targetLaneId != "Matches") {
-                    this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+            if (targetLaneId !== "lane1") {
+                let IdLane;
+                switch (targetLaneId) {
+                    case "Notify":
+                        IdLane = 30464
+                        break;
+                    case "Accepted":
+                        IdLane = 30465
+                        break;
+                    case "Interview":
+                        IdLane = 30461
+                        break;
+                    case "Matches":
+                        IdLane = 30469
+                    default:
+                        IdLane = 30469
                 }
 
-                if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
-                    this.setState({
-                        ApplicationId: cardId,
-                        openReason: true
-                    }, () => {
-                    });
+                if (sourceLaneId != 'lane1') {
+                    if (targetLaneId != sourceLaneId) {
+                        this.addApplicationPhase(cardId, IdLane);
 
-                    this.setState(
-                        {
-                            lane: [
+                        if (targetLaneId != "Matches") {
+                            this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                        }
+
+                        if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
+                            this.setState({
+                                ApplicationId: cardId,
+                                openReason: true
+                            }, () => {
+                            });
+
+                            this.setState(
                                 {
-                                    id: 'lane1',
-                                    title: 'Work Orders',
-                                    label: ' ',
-                                    cards: this.state.workOrders,
-                                    laneStyle: { borderRadius: 50, marginBottom: 15 },
-                                    droppable: false,
-                                    draggable: false,
-                                    editable: false
-                                },
-                                {
-                                    id: 'Matches',
-                                    title: 'Matches',
-                                    label: ' ',
-                                    cards: this.state.matches
-                                },
-                                {
-                                    id: 'Interview',
-                                    title: 'Interview',
-                                    label: ' ',
-                                    cards: this.state.interview,
-                                    droppable: false,
-                                    draggable: false,
-                                    editable: false
-                                },
-                                {
-                                    id: 'Notify',
-                                    title: 'Notify',
-                                    label: ' ',
-                                    cards: this.state.notify
-                                },
-                                {
-                                    id: 'Accepted',
-                                    title: 'Accepted',
-                                    label: ' ',
-                                    cards: this.state.accepted
-                                }
-                            ],
-                            loading: false
-                        });
+                                    lane: [
+                                        {
+                                            id: 'lane1',
+                                            title: 'Work Orders',
+                                            label: ' ',
+                                            cards: this.state.workOrders,
+                                            laneStyle: { borderRadius: 50, marginBottom: 15 },
+                                            droppable: false,
+                                            draggable: false
+                                        },
+                                        {
+                                            id: 'Matches',
+                                            title: 'Matches',
+                                            label: ' ',
+                                            cards: this.state.matches,
+                                            droppable: true,
+                                            draggable: true
+                                        },
+                                        {
+                                            id: 'Interview',
+                                            title: 'Sent for Interview',
+                                            label: ' ',
+                                            cards: this.state.interview,
+                                            droppable: false,
+                                            draggable: true
+                                        },
+                                        {
+                                            id: 'Notify',
+                                            title: 'Notify',
+                                            label: ' ',
+                                            cards: this.state.notify,
+                                            droppable: true,
+                                            draggable: true
+                                        },
+                                        {
+                                            id: 'Accepted',
+                                            title: 'Accepted',
+                                            label: ' ',
+                                            cards: this.state.accepted,
+                                            droppable: true,
+                                            draggable: true
+                                        }
+                                    ],
+                                    loading: false
+                                });
+                        }
+                    }
                 }
             }
         }
@@ -410,38 +424,44 @@ class BoardManager extends Component {
 
     onCardClick = (cardId, metadata, laneId) => {
         let needEnglish, needExperience, Position;
-        console.log("Entro en el onCardClick ", this.state.LaneOrigen, " ", this.state.LaneDestino)
 
+        if (laneId.trim() == "lane1" && cardId > 0) {
 
-        if (laneId.trim() == "lane1") {
-            if (this.state.LaneDestino != "lane1") {
-                console.log("Entro en el diferente del click ")
+            let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+            let anotherCards = document.querySelectorAll("article[data-id]");
+
+            anotherCards.forEach((anotherCard) => {
+                anotherCard.classList.remove("CardBoard-selected");
+            });
+            cardSelected[0].classList.add("CardBoard-selected");
+
+            if (this.state.LaneOrigen != "lane1") {
                 this.clearArray();
-
-                let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
-                let anotherCards = document.querySelectorAll("article[data-id]");
-
-                anotherCards.forEach((anotherCard) => {
-                    anotherCard.classList.remove("CardBoard-selected");
-                });
-                cardSelected[0].classList.add("CardBoard-selected");
-
                 this.setState(
                     {
-                        Intopening: this.state.workOrders.find((item) => { return item.id == cardId }).WorkOrderId,
+                        Intopening: this.state.workOrders.find((item) => {
+                            return item.id == cardId
+                        }).WorkOrderId,
                         ShiftId: cardId
                     })
 
 
-                needEnglish = this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish;
-                needExperience = this.state.workOrders.find((item) => { return item.id == cardId }).needExperience;
-                Position = this.state.workOrders.find((item) => { return item.id == cardId }).Position;
+                needEnglish = this.state.workOrders.find((item) => {
+                    return item.id == cardId
+                }).needEnglish;
+                needExperience = this.state.workOrders.find((item) => {
+                    return item.id == cardId
+                }).needExperience;
+                Position = this.state.workOrders.find((item) => {
+                    return item.id == cardId
+                }).Position;
 
 
-                this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
+                this.getLatLongHotel(1, this.state.workOrders.find((item) => {
+                    return item.id == cardId
+                }).Zipcode);
 
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    console.log("sessionStorage.getItem('NewFilterLead') ", sessionStorage.getItem('NewFilterLead'))
                     this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => {
                         return item.id == cardId
                     }).Position);
@@ -452,6 +472,55 @@ class BoardManager extends Component {
         }
     }
 
+    KeepArray() {
+        this.setState(
+            {
+                lane: [
+                    {
+                        id: 'lane1',
+                        title: 'Work Orders',
+                        label: ' ',
+                        cards: this.state.workOrders,
+                        laneStyle: { borderRadius: 50, marginBottom: 15 },
+                        droppable: false,
+                        draggable: false
+                    },
+                    {
+                        id: 'Matches',
+                        title: 'Matches',
+                        label: ' ',
+                        cards: this.state.matches,
+                        droppable: true,
+                        draggable: true
+                    },
+                    {
+                        id: 'Interview',
+                        title: 'Interview',
+                        label: ' ',
+                        cards: this.state.interview,
+                        droppable: false,
+                        draggable: true
+                    },
+                    {
+                        id: 'Notify',
+                        title: 'Notify',
+                        label: ' ',
+                        cards: this.state.notify,
+                        droppable: true,
+                        draggable: true
+                    },
+                    {
+                        id: 'Accepted',
+                        title: 'Accepted',
+                        label: ' ',
+                        cards: this.state.accepted,
+                        droppable: true,
+                        draggable: true
+                    }
+                ],
+                loading: false
+            });
+    }
     clearArray() {
         this.setState(
             {
@@ -464,14 +533,15 @@ class BoardManager extends Component {
                         cards: this.state.workOrders,
                         laneStyle: { borderRadius: 50, marginBottom: 15 },
                         droppable: false,
-                        draggable: false,
-                        editable: false
+                        draggable: false
                     },
                     {
                         id: 'Matches',
                         title: 'Matches',
                         label: ' ',
-                        cards: []
+                        cards: [],
+                        droppable: true,
+                        draggable: true
                     },
                     {
                         id: 'Interview',
@@ -479,20 +549,23 @@ class BoardManager extends Component {
                         label: ' ',
                         cards: [],
                         droppable: false,
-                        draggable: false,
-                        editable: false
+                        draggable: true
                     },
                     {
                         id: 'Notify',
                         title: 'Notify',
                         label: ' ',
-                        cards: []
+                        cards: [],
+                        droppable: true,
+                        draggable: true
                     },
                     {
                         id: 'Accepted',
                         title: 'Accepted',
                         label: ' ',
-                        cards: []
+                        cards: [],
+                        droppable: true,
+                        draggable: true
                     }
                 ],
                 loading: false
@@ -512,15 +585,25 @@ class BoardManager extends Component {
         if (laneId == "lane1") {
             this.setState(
                 {
-                    loading: true
+                    loading: true,
                 },
                 () => {
                     this.props.client.query({
-                        query: GET_MATCH, variables: { language: language, experience: experience, Position: PositionId, WorkOrderId: this.state.Intopening, ShiftId: this.state.ShiftId }
+                        query: GET_MATCH,
+                        variables: {
+                            language: language,
+                            experience: experience,
+                            Position: PositionId,
+                            WorkOrderId: this.state.Intopening,
+                            ShiftId: this.state.ShiftId
+                        },
+                        fetchPolicy: 'no-cache'
                     }).then(({ data }) => {
                         data.applicationsByMatches.forEach((wo) => {
 
-                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
+                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
+                                return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId
+                            });
 
                             this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
                                 const { getDistance } = this.context;
@@ -539,7 +622,9 @@ class BoardManager extends Component {
 
                                     if (typeof Phases == undefined || Phases == null) {
                                         varphase = 30469;
-                                    } else { varphase = Phases.StageId }
+                                    } else {
+                                        varphase = Phases.StageId
+                                    }
 
                                     switch (varphase) {
                                         case 30469:
@@ -563,7 +648,8 @@ class BoardManager extends Component {
                                                 body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                 escalationTextLeftLead: wo.generalComment,
                                                 escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 },
+                                                statusCompleted: wo.statusCompleted
                                             });
                                             break;
                                         case 30464:
@@ -578,7 +664,7 @@ class BoardManager extends Component {
                                                 cardStyle: { borderRadius: 6, marginBottom: 15 }
                                             });
                                             break;
-                                        case 30465:
+                                        case 30463, 30465:
                                             getaccepted.push({
                                                 id: wo.id,
                                                 name: wo.firstName + ' ' + wo.lastName,
@@ -599,7 +685,7 @@ class BoardManager extends Component {
                                     accepted: getaccepted
                                 });
 
-                                console.log()
+                                console.log();
 
                                 this.setState(
                                     {
@@ -611,14 +697,15 @@ class BoardManager extends Component {
                                                 cards: this.state.workOrders,
                                                 laneStyle: { borderRadius: 50, marginBottom: 15 },
                                                 droppable: false,
-                                                draggable: false,
-                                                editable: false
+                                                draggable: false
                                             },
                                             {
                                                 id: 'Matches',
                                                 title: 'Matches',
                                                 label: ' ',
-                                                cards: this.state.matches
+                                                cards: this.state.matches,
+                                                droppable: true,
+                                                draggable: true
                                             },
                                             {
                                                 id: 'Interview',
@@ -626,20 +713,23 @@ class BoardManager extends Component {
                                                 label: ' ',
                                                 cards: this.state.interview,
                                                 droppable: false,
-                                                draggable: false,
-                                                editable: false
+                                                draggable: true
                                             },
                                             {
                                                 id: 'Notify',
                                                 title: 'Notify',
                                                 label: ' ',
-                                                cards: this.state.notify
+                                                cards: this.state.notify,
+                                                droppable: true,
+                                                draggable: true
                                             },
                                             {
                                                 id: 'Accepted',
                                                 title: 'Accepted',
                                                 label: ' ',
-                                                cards: this.state.accepted
+                                                cards: this.state.accepted,
+                                                droppable: true,
+                                                draggable: true
                                             }
                                         ],
                                         loading: false
@@ -648,7 +738,7 @@ class BoardManager extends Component {
                             });
                         });
 
-                        if(data.applicationsByMatches.length === 0 ){
+                        if (data.applicationsByMatches.length === 0) {
                             this.props.handleOpenSnackbar(
                                 'warning',
                                 'No matches were found',
@@ -826,14 +916,15 @@ class BoardManager extends Component {
                     cards: getworkOrders,
                     laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 },
                     droppable: false,
-                    draggable: false,
-                    editable: false
+                    cardDraggable: false
                 },
                 {
                     id: 'Matches',
                     title: 'Matches',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: true,
+                    cardDraggable: true,
                 },
                 {
                     id: 'Interview',
@@ -841,20 +932,23 @@ class BoardManager extends Component {
                     label: ' ',
                     cards: [],
                     droppable: false,
-                    draggable: false,
-                    editable: false
+                    draggable: true
                 },
                 {
                     id: 'Notify',
                     title: 'Notify',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: true,
+                    draggable: true
                 },
                 {
                     id: 'Accepted',
                     title: 'Accepted',
                     label: ' ',
-                    cards: []
+                    cards: [],
+                    droppable: true,
+                    draggable: true
                 }
             ],
             loading: false
@@ -884,15 +978,44 @@ class BoardManager extends Component {
         // alert("cerrarVentana")
     }
 
+    goToEmployeePackage = (id) => {
+        // window.location.href = '/employment-application';
+
+        //FIXME: can't go back using this function
+        this.props.history.push({
+            pathname: '/home/application/info',
+            state: { ApplicationId: id }
+        });
+    };
+
+    addClickListenerToInterviewsElements = () => {
+        let interview = document.querySelector('[title="Interview"]');
+        let interviews = interview.querySelectorAll('header > div:first-child');
+        let elements = Array.from(interviews);
+
+        console.log(this.state.interview.length);
+        this.state.interview.map(item => {
+            console.log(item.id);
+        });
+
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].classList.add('interview-title');
+            elements[i].addEventListener("click", () => {
+                this.goToEmployeePackage(this.state.interview[i].id);
+            });
+        }
+    };
+
     render() {
+        // Call listener always in render
+        if (this.state.interview.length > 0) {
+            //this.addClickListenerToInterviewsElements();
+        }
+
         const { classes } = this.props;
 
-        let isLoading = this.state.loading
+        let isLoading = this.state.loading;
 
-        /* if (isLoading) {
-             this.abrirVentana()
-         }
-         else { this.cerrarVentana() }*/
         return (
             <div>
 
@@ -992,7 +1115,7 @@ class BoardManager extends Component {
                                                             <option value={3}>Closed work orders</option>
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-4">
                                                         <a
                                                             className="link-board" onClick={(e) => {
                                                                 e.preventDefault();
@@ -1000,21 +1123,36 @@ class BoardManager extends Component {
 
                                                                 this.setState({ openModal: true })
                                                             }}>
-                                                            Advanced
-                                                    </a>
+                                                            Advanced <i className="fas fa-filter"></i>
+                                                        </a>
+                                                        <a
+                                                            className="link-board" onClick={(e) => {
+                                                                this.setState({
+                                                                    hotel: 0,
+                                                                    state: 0,
+                                                                    city: 0,
+                                                                    status: null
+                                                                }, () => {
+                                                                    this.getWorkOrders();
+                                                                })
+                                                            }}>
+                                                            Clear <i className="fas fa-times-circle text-danger"></i>
+                                                        </a>
+
                                                     </div>
-                                                    <div className="col-md-1">
-                                                        <button className="btn btn-danger" onClick={() => {
-                                                            this.setState({
-                                                                hotel: 0,
-                                                                state: 0,
-                                                                city: 0,
-                                                                status: null
-                                                            }, () => {
-                                                                this.getWorkOrders();
-                                                            })
-                                                        }}>Clear</button>
-                                                    </div>
+                                                    {/*<div className="col-md-1">*/}
+                                                        {/*<button className="btn btn-danger" onClick={() => {*/}
+                                                            {/*this.setState({*/}
+                                                                {/*hotel: 0,*/}
+                                                                {/*state: 0,*/}
+                                                                {/*city: 0,*/}
+                                                                {/*status: null*/}
+                                                            {/*}, () => {*/}
+                                                                {/*this.getWorkOrders();*/}
+                                                            {/*})*/}
+                                                        {/*}}>Clear*/}
+                                                        {/*</button>*/}
+                                                    {/*</div>*/}
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-2"></div>
@@ -1026,10 +1164,11 @@ class BoardManager extends Component {
                     </div>
                     <div className="App-intro">
                         <Board
+                            tagStyle={{ fontSize: '80%' }}
+                            customCardLayout
                             data={{ lanes: this.state.lane }}
-                            editable={false}
-                            draggable={true}
                             laneDraggable={false}
+                            draggable={true}
                             onDataChange={this.shouldReceiveNewData}
                             eventBusHandle={this.setEventBus}
                             handleDragStart={this.handleDragStart}
@@ -1038,16 +1177,18 @@ class BoardManager extends Component {
                             style={{
                                 backgroundColor: '#f5f7f9'
                             }}
-
                             customCardLayout>
-                            <CardTemplate handleOpenSnackbar={this.props.handleOpenSnackbar} getWorkOrders={this.getWorkOrders} />
-
+                            <CardTemplate
+                                history={this.props.history}
+                                handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                getWorkOrders={this.getWorkOrders}
+                            />
                         </Board>
                     </div>
                     <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
 
                 </div>
-            </div >
+            </div>
         )
     }
 
@@ -1056,4 +1197,4 @@ class BoardManager extends Component {
     };
 }
 
-export default withApollo(withGlobalContent(BoardManager));
+export default withApollo(withGlobalContent(withRouter(BoardManager)));
