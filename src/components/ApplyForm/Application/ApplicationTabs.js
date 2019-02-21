@@ -14,6 +14,8 @@ import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 import ProfilePreview from "./ProfilePreview/ProfilePreview";
 import FormsI9 from './I9/FormsI9';
 import FormsW4 from "./W4/FormsW4";
+import { GET_APPLICATION_STATUS } from './Queries';
+import { withApollo } from 'react-apollo';
 
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -75,12 +77,30 @@ class CustomizedTabs extends React.Component {
     state = {
         value: 0,
         applicationId: null,
-        openSignature: false
+        openSignature: false,
+        applicationStatus: []
     };
 
     handleChange = (event, value) => {
         this.setState({ value });
     };
+
+    getApplicantStatus = () => {
+        this.props.client
+            .query({
+                query: GET_APPLICATION_STATUS,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    id: this.state.applicationId
+                }
+            })
+            .then(({ data }) => {
+                this.setState({
+                    applicationStatus: data.applicationCompletedData
+                });
+            })
+            .catch();
+    }
 
     componentWillMount() {
         try {
@@ -91,6 +111,8 @@ class CustomizedTabs extends React.Component {
 
             this.setState({
                 applicationId: this.props.location.state.ApplicationId
+            }, () => {
+                this.getApplicantStatus();
             });
         } catch (error) {
             window.location.href = "/home/application";
@@ -139,52 +161,52 @@ class CustomizedTabs extends React.Component {
                     >
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon` }}
                             label={applyTabs[0].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[1].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantDisclosure ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[2].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantConductCode ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[3].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantHarassmentPolicy ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[4].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantWorkerCompensation ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[5].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantI9 ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[6].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[9].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[7].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[8].label}
                         />
                     </Tabs>
@@ -199,4 +221,4 @@ CustomizedTabs.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CustomizedTabs);
+export default withApollo(withStyles(styles)(CustomizedTabs));

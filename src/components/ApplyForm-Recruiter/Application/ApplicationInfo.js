@@ -10,7 +10,7 @@ import './index.css';
 import './stepper.css';
 import '../index.css';
 import withApollo from "react-apollo/withApollo";
-import Application from "./Application";
+import Application from "./Application"; 
 import Language from "./Languages/Language";
 import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
 import Skills from "./skills/Skills";
