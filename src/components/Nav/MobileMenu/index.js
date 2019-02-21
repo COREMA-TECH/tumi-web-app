@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../Generic/Global';
-import {GET_ROLES_FORMS} from '../MobileMenu/Queries';
+import { GET_ROLES_FORMS } from '../MobileMenu/Queries';
 
 class MobileMenu extends Component {
     constructor(props) {
@@ -33,7 +33,7 @@ class MobileMenu extends Component {
                             IdRoles: localStorage.getItem('IdRoles')
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
 
                         this.setState({
                             dataRolForm: data.rolesforms,
@@ -85,8 +85,8 @@ class MobileMenu extends Component {
                         return item.Forms.Value == "/home/company" ?
                             <li className="MainMenu-option">
                                 <Link to={`/home/Company`} className="MenuMobile-link"
-                                      onClick={this.props.handleCloseMenu}>
-                                    <i className={'fas fa-warehouse MenuMobile-icon'} title={'Companies'}/>
+                                    onClick={this.props.handleCloseMenu}>
+                                    <i className={'fas fa-warehouse MenuMobile-icon'} title={'Companies'} />
                                     <span>Management Company</span>
                                 </Link>
                             </li> : ''
@@ -96,8 +96,8 @@ class MobileMenu extends Component {
                         return item.Forms.Value == "/home/Properties" ?
                             <li className="MainMenu-option">
                                 <Link to={`/home/Properties`} className="MenuMobile-link"
-                                      onClick={this.props.handleCloseMenu}>
-                                    <i className={'fas fa-building MenuMobile-icon'} title={'Properties'}/>
+                                    onClick={this.props.handleCloseMenu}>
+                                    <i className={'fas fa-building MenuMobile-icon'} title={'Properties'} />
                                     <span>Properties</span>
                                 </Link>
                             </li> : ""
@@ -106,8 +106,8 @@ class MobileMenu extends Component {
                         return item.Forms.Value == "/home/Contracts" ?
                             <li className="MainMenu-option">
                                 <Link to={`/home/Contracts`} className="MenuMobile-link"
-                                      onClick={this.props.handleCloseMenu}>
-                                    <i className={'far fa-handshake MenuMobile-icon'} title={'Contracts'}/>
+                                    onClick={this.props.handleCloseMenu}>
+                                    <i className={'far fa-handshake MenuMobile-icon'} title={'Contracts'} />
                                     <span>Contracts</span>
                                 </Link>
                             </li> : ""
@@ -116,8 +116,8 @@ class MobileMenu extends Component {
                         return item.Forms.Value == "/home/employees" ?
                             <li className="MainMenu-option">
                                 <Link to={`/home/employees`} className="MenuMobile-link"
-                                      onClick={this.props.handleCloseMenu}>
-                                    <i className={'far fa-handshake MenuMobile-icon'} title={'Employees'}/>
+                                    onClick={this.props.handleCloseMenu}>
+                                    <i className={'far fa-handshake MenuMobile-icon'} title={'Employees'} />
                                     <span>Employees</span>
                                 </Link>
                             </li> : ""
@@ -131,7 +131,7 @@ class MobileMenu extends Component {
                                     onClick={this.handleItemMenuAction}
                                     data-submenu="1"
                                 >
-                                    <i className="fas fa-user-cog MenuMobile-icon" title={'Operations'}/>
+                                    <i className="fas fa-user-cog MenuMobile-icon" title={'Operations'} />
                                     <span>Operations</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
@@ -139,7 +139,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/dashboard/manager" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/manager">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Dashboard
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>
                                             </li> : ""
                                     })}
@@ -147,7 +147,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/board/manager" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/board/manager">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Board
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Board
                                                 </a>
                                             </li> : ""
                                     })}
@@ -155,7 +155,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/application" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/application">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> New
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> New
                                                     Employees Package
                                                 </a>
                                             </li> : ""
@@ -164,7 +164,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/work-orders" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/work-orders">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Work Order
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
                                                 </a>
                                             </li> : ""
                                     })}
@@ -172,7 +172,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/schedules" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/schedules">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Schedules
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Schedules
                                                 </a>
                                             </li> : ""
                                     })}
@@ -180,7 +180,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/property/schedules" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/property/schedules">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Manage
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Manage
                                                     Schedules
                                                 </a>
                                             </li> : ""
@@ -197,7 +197,7 @@ class MobileMenu extends Component {
                                     onClick={this.handleItemMenuAction}
                                     data-submenu="1"
                                 >
-                                    <i className="fas fa-chalkboard-teacher MenuMobile-icon" title={'Hotel Manager'}/>
+                                    <i className="fas fa-chalkboard-teacher MenuMobile-icon" title={'Hotel Manager'} />
                                     <span>Hotel Manager</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
@@ -205,7 +205,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/dashboard/hotel" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/hotel">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Dashboard
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>
                                             </li> : ""
                                     })}
@@ -213,7 +213,15 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/board/manager" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/board/manager">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Board
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Board
+                                                </a>
+                                            </li> : ""
+                                    })}
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/work-orders" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/work-orders">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
                                                 </a>
                                             </li> : ""
                                     })}
@@ -231,7 +239,7 @@ class MobileMenu extends Component {
                                     data-submenu="1"
 
                                 >
-                                    <i className="far fa-address-card MenuMobile-icon" title={'Recruiter'}/>
+                                    <i className="far fa-address-card MenuMobile-icon" title={'Recruiter'} />
                                     <span>Recruiter</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
@@ -239,7 +247,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/dashboard/recruiter" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/recruiter">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Dashboard
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>
                                             </li> : ""
                                     })}
@@ -247,7 +255,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/board/recruiter" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/board/recruiter">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Board
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Board
                                                 </a>
                                             </li> : ""
                                     })}
@@ -255,15 +263,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/Recruiter" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/Recruiter">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> New Lead
-                                                </a>
-                                            </li> : ""
-                                    })}
-                                    {items.map(item => {
-                                        return item.Forms.Value == "/home/work-orders" ?
-                                            <li className="SubMenu-item">
-                                                <a className="SubMenu-link" href="/home/work-orders">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Work Order
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> New Lead
                                                 </a>
                                             </li> : ""
                                     })}
@@ -280,7 +280,7 @@ class MobileMenu extends Component {
                                     data-submenu="1"
 
                                 >
-                                    <i className="far fa-address-card MenuMobile-icon" title={'Recruiter'}/>
+                                    <i className="far fa-address-card MenuMobile-icon" title={'Recruiter'} />
                                     <span>Admin</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
@@ -288,7 +288,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/employment-application" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/employment-application">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Public
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Public
                                                     Application
                                                 </a>
                                             </li> : ""
@@ -297,7 +297,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/Roles" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/roles">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Roles
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Roles
                                                 </a>
                                             </li> : ""
                                     })}
@@ -305,7 +305,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/Forms" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/forms">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Forms
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Forms
                                                 </a>
                                             </li> : ""
                                     })}
@@ -313,7 +313,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/RolesForms" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/rolesforms">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/>Roles & Forms
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" />Roles & Forms
                                                 </a>
                                             </li> : ""
                                     })}
@@ -321,7 +321,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/Users" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/users">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Users
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Users
                                                 </a>
                                             </li> : ""
                                     })}
@@ -329,7 +329,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/catalogs" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/catalogs">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Catalogs
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Catalogs
                                                 </a>
                                             </li> : ""
                                     })}
@@ -337,7 +337,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/region" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/region">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon"/> Regions
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Regions
                                                 </a>
                                             </li> : ""
                                     })}

@@ -347,10 +347,11 @@ let id = 0;
 class UsersTable extends React.Component {
 	state = {
 		page: 0,
-		rowsPerPage: 5,
+		rowsPerPage: 25,
 		order: 'asc',
 		orderBy: 'calories',
-		selected: []
+		selected: [],
+		items: this.props.data
 	};
 	handleChangePage = (event, page) => {
 		this.setState({ page });
@@ -394,11 +395,17 @@ class UsersTable extends React.Component {
 		}
 		return false;
 	}
+
+	componentWillReceiveProps(nextProps){
+		this.setState({
+			items: nextProps.data
+		})
+	}
+
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;
 		const { order, orderBy, selected, rowsPerPage, page } = this.state;
-		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
 		if (this.props.loading) {
 			return (
@@ -425,7 +432,7 @@ class UsersTable extends React.Component {
 					/>
 
 					<TableBody>
-						{this.getSortedItems(items, order, orderBy)
+						{this.getSortedItems(this.state.items, order, orderBy)
 							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 							.map((row) => {
 								return (

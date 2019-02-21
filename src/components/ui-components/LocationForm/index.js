@@ -5,7 +5,7 @@ import withApollo from 'react-apollo/withApollo';
 import { GET_CATALOGS_QUERY, GET_CITY_STATE_QUERY } from './queries';
 
 const STATE_ID = 3, CITY_ID = 5,
-    DEFAULT_MASK = '99999', DEFAULT_PLACEHOLDER = '99999',
+    DEFAULT_MASK = '99999', DEFAULT_PLACEHOLDER = '_____',
     DEFAULT_STATE_CODE = 'XYZ';
 
 class LocationForm extends Component {
@@ -307,7 +307,7 @@ class LocationForm extends Component {
                     className={this.props.zipCodeClass || "form-control"}
                     onChange={this.onValueChange}
                     value={this.state.zipCode}
-                    placeholder={this.props.placeholder || DEFAULT_PLACEHOLDER}
+                    placeholder={this.props.placeholder ? this.props.placeholder.replace('99999-99999', '_____-_____') : DEFAULT_PLACEHOLDER}
                     required={this.props.requiredZipCode}
                     minLength="15"
                     disabled={loading || this.props.disabledZipCode}

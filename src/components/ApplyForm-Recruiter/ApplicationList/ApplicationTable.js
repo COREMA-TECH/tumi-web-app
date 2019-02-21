@@ -143,10 +143,14 @@ const styles = (theme) => ({
 let id = 0;
 
 class ApplicationTable extends React.Component {
-	state = {
-		page: 0,
-		rowsPerPage: 7
-	};
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			page: 0,
+			rowsPerPage: 25
+		};
+	}
 	handleChangePage = (event, page) => {
 		this.setState({ page });
 	};
@@ -174,32 +178,32 @@ class ApplicationTable extends React.Component {
 		const { classes } = this.props;
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
-		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
 		if (this.state.loadingRemoving) {
 			return <LinearProgress />;
 		}
 
 		return (
-			<Route
-				render={({ history }) => (
-					<Paper className={classes.root}>
-						<Table className={classes.table}>
-							<TableHead>
-								<TableRow>
-									<CustomTableCell padding="none" className={'Table-head'} />
-									<CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-									return (
+
+			<Paper className={classes.root}>
+				<Table className={classes.table}>
+					<TableHead>
+						<TableRow>
+							<CustomTableCell padding="none" className={'Table-head'} />
+							<CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+							return (
+								<Route
+									render={({ history }) => (
 										<TableRow
 											hover
 											className={classes.row}
@@ -238,30 +242,32 @@ class ApplicationTable extends React.Component {
 											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>
-									);
-								})}
 
-
-							</TableBody>
-							<TableFooter>
-								<TableRow>
-									{items.length > 0 && (
-										<TablePagination
-											colSpan={3}
-											count={items.length}
-											rowsPerPage={rowsPerPage}
-											page={page}
-											onChangePage={this.handleChangePage}
-											onChangeRowsPerPage={this.handleChangeRowsPerPage}
-											ActionsComponent={TablePaginationActionsWrapped}
-										/>
 									)}
-								</TableRow>
-							</TableFooter>
-						</Table>
-					</Paper>
-				)}
-			/>
+								/>
+							);
+						})}
+
+
+					</TableBody>
+					<TableFooter>
+						<TableRow>
+							{items.length > 0 && (
+								<TablePagination
+									colSpan={3}
+									count={items.length}
+									rowsPerPage={rowsPerPage}
+									page={page}
+									onChangePage={this.handleChangePage}
+									onChangeRowsPerPage={this.handleChangeRowsPerPage}
+									ActionsComponent={TablePaginationActionsWrapped}
+								/>
+							)}
+						</TableRow>
+					</TableFooter>
+				</Table>
+			</Paper>
+
 		);
 	}
 }

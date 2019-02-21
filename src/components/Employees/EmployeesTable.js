@@ -142,11 +142,15 @@ const styles = (theme) => ({
 let id = 0;
 
 class EmployeesTable extends React.Component {
-    state = {
-        page: 0,
-        rowsPerPage: 7,
-        loadingRemoving: false,
-    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            page: 0,
+            rowsPerPage: 25,
+            loadingRemoving: false,
+        };
+    }
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
@@ -162,7 +166,8 @@ class EmployeesTable extends React.Component {
         }
 
         if (
-            this.state.page !== nextState.page //||
+            this.state.page !== nextState.page ||
+            this.state.rowsPerPage !== nextState.rowsPerPage //||
             //this.state.rowsPerPage !== nextState.rowsPerPage //||
             //	this.state.order !== nextState.order ||
             //this.state.orderBy !== nextState.orderBy
@@ -176,133 +181,126 @@ class EmployeesTable extends React.Component {
         const { classes } = this.props;
         let items = this.props.data;
         const { rowsPerPage, page } = this.state;
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
+
         if (this.state.loadingRemoving) {
             return <LinearProgress />;
         }
 
         return (
-            <Route
-                render={({ history }) => (
-                    <Paper className={classes.root}>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <CustomTableCell className={"Table-head"}>Actions</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>First Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Email</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Phone Number</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Department</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            className={classes.row}
-                                            key={uuidv4()}
-                                            onClick={() => {
-                                                this.props.update(row.id, row)
-                                            }}
-                                        >
-                                            <CustomTableCell>
-                                                <Tooltip title="Edit">
-                                                    <button
-                                                        className="btn btn-success float-left ml-1"
-                                                        disabled={this.props.loading}
-                                                        onClick={(e) => {
-                                                            this.props.update(row.id, row);
-                                                        }}
-                                                    >
-                                                        <i class="fas fa-pen"></i>
-                                                    </button>
-                                                </Tooltip>
 
-                                                <Tooltip title="Delete">
+            <Paper className={classes.root}>
+                <Table className={classes.table}>
+                    <TableHead>
+                        <TableRow>
+                            <CustomTableCell className={"Table-head"}>Actions</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>First Name</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>Email</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>Phone Number</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>Department</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                            return (
+                                <TableRow
+                                    hover
+                                    className={classes.row}
+                                    key={uuidv4()}
+                                    onClick={() => {
+                                        this.props.update(row.id, row)
+                                    }}
+                                >
+                                    <CustomTableCell>
+                                        <Tooltip title="Edit">
+                                            <button
+                                                className="btn btn-success float-left ml-1"
+                                                disabled={this.props.loading}
+                                                onClick={(e) => {
+                                                    this.props.update(row.id, row);
+                                                }}
+                                            >
+                                                <i class="fas fa-pen"></i>
+                                            </button>
+                                        </Tooltip>
+
+                                        <Tooltip title="Delete">
+                                            <button
+                                                className="btn btn-danger float-left ml-1"
+                                                disabled={this.props.loading}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    return this.props.delete(row.id);
+                                                }}
+                                            >
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </Tooltip>
+                                        {
+                                            row.idUsers == null ? (
+                                                <Tooltip title="Assign Role">
                                                     <button
-                                                        className="btn btn-danger float-left ml-1"
+                                                        className="btn btn-outline-info float-left ml-1"
                                                         disabled={this.props.loading}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            return this.props.delete(row.id);
+                                                            e.preventDefault();
+
+                                                            this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id);
                                                         }}
                                                     >
-                                                        <i class="fas fa-trash"></i>
+                                                        <i className="fas fa-plus"></i>
                                                     </button>
                                                 </Tooltip>
-                                                {
-                                                    row.idUsers == null ? (
-                                                        <Tooltip title="Assign Role">
-                                                            <button
-                                                                className="btn btn-outline-info float-left ml-1"
-                                                                disabled={this.props.loading}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    e.preventDefault();
-
-                                                                    this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id);
-                                                                }}
-                                                            >
-                                                                <i className="fas fa-plus"></i>
-                                                            </button>
-                                                        </Tooltip>
-                                                    ) : ''
+                                            ) : ''
+                                        }
+                                    </CustomTableCell>
+                                    <CustomTableCell>{row.firstName}</CustomTableCell>
+                                    <CustomTableCell>{row.lastName}</CustomTableCell>
+                                    <CustomTableCell>{row.electronicAddress}</CustomTableCell>
+                                    <CustomTableCell>{row.mobileNumber}</CustomTableCell>
+                                    <CustomTableCell>
+                                        {
+                                            this.props.departments.map(item => {
+                                                if (item.Id === row.Id_Deparment) {
+                                                    return item.Name.trim()
                                                 }
-                                            </CustomTableCell>
-                                            <CustomTableCell>{row.firstName}</CustomTableCell>
-                                            <CustomTableCell>{row.lastName}</CustomTableCell>
-                                            <CustomTableCell>{row.electronicAddress}</CustomTableCell>
-                                            <CustomTableCell>{row.mobileNumber}</CustomTableCell>
-                                            <CustomTableCell>
-                                                {
-                                                    this.props.departments.map(item => {
-                                                        if (item.Id === row.Id_Deparment) {
-                                                            return item.Name.trim()
-                                                        }
-                                                    })
+                                            })
+                                        }
+                                    </CustomTableCell>
+                                    <CustomTableCell>
+                                        {
+                                            this.props.titles.map(item => {
+                                                if (item.Id === row.Contact_Title) {
+                                                    return item.Position.trim()
                                                 }
-                                            </CustomTableCell>
-                                            <CustomTableCell>
-                                                {
-                                                    this.props.titles.map(item => {
-                                                        if (item.Id === row.Contact_Title) {
-                                                            return item.Position.trim()
-                                                        }
-                                                    })
-                                                }
-                                            </CustomTableCell>
-                                        </TableRow>
-                                    );
-                                })}
-
-                                {emptyRows > 0 && (
-                                    <TableRow style={{ height: 48 * emptyRows }}>
-                                        <TableCell colSpan={7} />
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                            <TableFooter>
-                                <TableRow>
-                                    {items.length > 0 && (
-                                        <TablePagination
-                                            colSpan={3}
-                                            count={items.length}
-                                            rowsPerPage={rowsPerPage}
-                                            page={page}
-                                            onChangePage={this.handleChangePage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            ActionsComponent={TablePaginationActionsWrapped}
-                                        />
-                                    )}
+                                            })
+                                        }
+                                    </CustomTableCell>
                                 </TableRow>
-                            </TableFooter>
-                        </Table>
-                    </Paper>
-                )}
-            />
+                            );
+                        })}
+
+                    </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            {items.length > 0 && (
+                                <TablePagination
+                                    colSpan={3}
+                                    count={items.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onChangePage={this.handleChangePage}
+                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                    ActionsComponent={TablePaginationActionsWrapped}
+                                />
+                            )}
+                        </TableRow>
+                    </TableFooter>
+                </Table>
+            </Paper>
+
         );
     }
 }

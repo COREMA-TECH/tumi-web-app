@@ -145,7 +145,7 @@ let id = 0;
 class ApplicationTable extends React.Component {
     state = {
         page: 0,
-        rowsPerPage: 7,
+        rowsPerPage: 25,
         completed: false
     };
     handleChangePage = (event, page) => {
@@ -175,7 +175,6 @@ class ApplicationTable extends React.Component {
         const {classes} = this.props;
         let items = this.props.data;
         const {rowsPerPage, page} = this.state;
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
         if (this.state.loadingRemoving) {
             return <LinearProgress/>;
