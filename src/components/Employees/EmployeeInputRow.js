@@ -143,8 +143,8 @@ class EmployeeInputRow extends Component {
         return (
 
             < div className="row Employees-row">
-                <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* First Name</label>
+                <div className="col-sm-3">
+                    <label htmlFor="" >* First Name</label>
                     <input
                         onChange={(e) => {
                             const value = e.target.value;
@@ -167,8 +167,8 @@ class EmployeeInputRow extends Component {
                         maxLength={50}
                     />
                 </div>
-                <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Last Name</label>
+                <div className="col-sm-3">
+                    <label htmlFor="" >* Last Name</label>
                     <input
                         onChange={(e) => {
                             this.props.onchange(lastName, e.target.value);
@@ -181,8 +181,8 @@ class EmployeeInputRow extends Component {
                         maxLength={50}
                     />
                 </div>
-                <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Email Address</label>
+                <div className="col-sm-6">
+                    <label htmlFor="" >Email Address</label>
                     <input
                         onChange={(e) => {
                             this.props.onchange(email, e.target.value);
@@ -194,8 +194,8 @@ class EmployeeInputRow extends Component {
                         maxLength={100}
                     />
                 </div>
-                <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Phone Number</label>
+                <div className="col-sm-3">
+                    <label htmlFor="" >Phone Number</label>
                     <InputMask
                         id="number"
                         name="number"
@@ -210,8 +210,8 @@ class EmployeeInputRow extends Component {
                         pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                     />
                 </div>
-                <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotel</label>
+                <div className="col-sm-3">
+                    <label htmlFor="" >Hotel</label>
                     <select
                         className="form-control"
                         onChange={(e) => {
@@ -247,8 +247,8 @@ class EmployeeInputRow extends Component {
                         }
                     </select>
                 </div>
-                <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
+                <div className="col-sm-3">
+                    <label htmlFor="" >Department</label>
                     <select
                         value={this.state.department}
                         name="department"
@@ -269,30 +269,9 @@ class EmployeeInputRow extends Component {
                             ))
                         }
                     </select>
-                    {/*<AutoComplete*/}
-                    {/*id="department"*/}
-                    {/*name="department"*/}
-                    {/*value={this.state.department}*/}
-                    {/*data={this.state.arrayDepartment}*/}
-                    {/*//data={this.props.departments}*/}
-                    {/*onChange={(value) => {*/}
-                    {/*console.log("Department Title: ",value);*/}
-                    {/*this.props.onchange(department, value);*/}
-                    {/*this.setState({*/}
-                    {/*department: value*/}
-                    {/*})*/}
-                    {/*}}*/}
-                    {/*onSelect={(value) => {*/}
-                    {/*console.log("Department Title: ",value);*/}
-                    {/*this.props.onchange(department, value);*/}
-                    {/*this.setState({*/}
-                    {/*department: value*/}
-                    {/*})*/}
-                    {/*}}*/}
-                    {/*/>*/}
                 </div>
-                <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
+                <div className="col-sm-3">
+                    <label htmlFor="" >Position</label>
                     <select
                         id="contactTitle"
                         name="contactTitle"
@@ -318,27 +297,6 @@ class EmployeeInputRow extends Component {
                             })
                         }
                     </select>
-                    {/*<AutoComplete*/}
-                    {/*id="contactTitle"*/}
-                    {/*name="contactTitle"*/}
-                    {/*value={this.state.contactTitle}*/}
-                    {/*//data={this.props.titles}*/}
-                    {/*data={this.state.arraytitles}*/}
-                    {/*onChange={(value) => {*/}
-                    {/*console.log("Contact Title: ",value);*/}
-                    {/*this.props.onchange(contactTitle, value);*/}
-                    {/*this.setState({*/}
-                    {/*contactTitle: value*/}
-                    {/*})*/}
-                    {/*}}*/}
-                    {/*onSelect={(value) => {*/}
-                    {/*console.log("Contact Title: ",value);*/}
-                    {/*this.props.onchange(contactTitle, value);*/}
-                    {/*this.setState({*/}
-                    {/*contactTitle: value*/}
-                    {/*})*/}
-                    {/*}}*/}
-                    {/*/>*/}
                 </div>
             </div>
         );

@@ -14,12 +14,11 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 import { Query } from "react-apollo";
 import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
-import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, GET_ALL_TITLES_QUERY, LIST_EMPLOYEES, SEND_EMAIL } from "./Queries";
+import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL } from "./Queries";
 import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
 import InputForm from "../ui-components/InputForm/InputForm";
-import gql from 'graphql-tag';
 import {
     GET_CONTACTS_IN_USER_DIALOG,
     GET_DEPARTMENTS_QUERY,
@@ -1052,7 +1051,10 @@ class Employees extends Component {
                 open={this.state.openUserModal}
                 onClose={this.handleCloseUserModal}
                 aria-labelledby="responsive-dialog-title"
-                maxWidth="md"
+                maxWidth={"xl"}
+
+                fullWidth
+
             >
                 <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
                     <div className="modal-header">
@@ -1067,7 +1069,7 @@ class Employees extends Component {
                         </h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{ minWidth: 600 }}>
+                <DialogContent >
                     <div className="row">
                         <div className="col-lg-7">
                             <div className="row">
@@ -1318,31 +1320,6 @@ class Employees extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <div className="container">
-                            <div className="d-none d-lg-block">
-                                <div className="row">
-                                    <div className="col">
-                                        <label htmlFor="">* First Name</label>
-                                    </div>
-                                    <div className="col">
-                                        <label htmlFor="">* Last Name</label>
-                                    </div>
-                                    <div className="col">
-                                        <label htmlFor="">Email Address</label>
-                                    </div>
-                                    <div className="col">
-                                        <label htmlFor="">Phone Number</label>
-                                    </div>
-                                    <div className="col">
-                                        <label htmlFor="">Hotel</label>
-                                    </div>
-                                    <div className="col">
-                                        <label htmlFor="">Department</label>
-                                    </div>
-                                    <div className="col">
-                                        <label htmlFor="">Position</label>
-                                    </div>
-                                </div>
-                            </div>
                             {this.state.rowsInput.map((item, index) => {
                                 return (
                                     <EmployeeInputRow
@@ -1420,38 +1397,10 @@ class Employees extends Component {
                         </DialogTitle>
                         <DialogContent>
                             <div className="container">
-                                <div className="d-none d-lg-block">
-                                    <div className="row">
-                                        <div className="col">
-                                            <label htmlFor="">* First Name</label>
-                                        </div>
-                                        <div className="col">
-                                            <label htmlFor="">* Last Name</label>
-                                        </div>
-                                        <div className="col">
-                                            <label htmlFor="">Email Address</label>
-                                        </div>
-                                        <div className="col">
-                                            <label htmlFor="">Phone Number</label>
-                                        </div>
-
-                                        <div className="col">
-                                            <label htmlFor="">Hotel</label>
-                                        </div>
-
-                                        <div className="col">
-                                            <label htmlFor="">Department</label>
-                                        </div>
-                                        <div className="col">
-                                            <label htmlFor="">Position</label>
-                                        </div>
-
-                                    </div>
-                                </div>
+                               
                                 <div className="row Employees-row">
-                                    <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* First
-                                            Name</label>
+                                    <div className="col-sm-3">
+                                        <label htmlFor="" >* First Name</label>
                                         <input
                                             type="text"
                                             name="firstName"
@@ -1467,9 +1416,8 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Last
-                                            Name</label>
+                                    <div className="col-sm-3">
+                                        <label htmlFor="" >* Last Name</label>
                                         <input
                                             type="text"
                                             name="lastName"
@@ -1485,9 +1433,8 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Email
-                                            Address</label>
+                                    <div className="col-sm-6">
+                                        <label htmlFor="" >Email Address</label>
                                         <input
                                             type="email"
                                             name="email"
@@ -1502,9 +1449,8 @@ class Employees extends Component {
                                             maxLength={100}
                                         />
                                     </div>
-                                    <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Phone
-                                            Number</label>
+                                    <div className="col-sm-3">
+                                        <label htmlFor="" >Phone Number</label>
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
@@ -1520,9 +1466,8 @@ class Employees extends Component {
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
-                                    <div className="col">
-                                        <label htmlFor=""
-                                            className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotelsss</label>
+                                    <div className="col-sm-3">
+                                        <label htmlFor=""                                            >Hotelsss</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1552,9 +1497,8 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col">
-                                        <label htmlFor=""
-                                            className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
+                                    <div className="col-sm-3">
+                                        <label htmlFor=""                                            >Department</label>
                                         <select
                                             name="departmentEmployee"
                                             className="form-control"
@@ -1577,9 +1521,8 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col">
-                                        <label htmlFor=""
-                                            className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
+                                    <div className="col-sm-3">
+                                        <label htmlFor=""                                            >Position</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1599,13 +1542,6 @@ class Employees extends Component {
                                                     }
                                                 })
                                             }
-                                            {/*{*/}
-                                            {/*this.state.titles.map(item => {*/}
-                                            {/*return (*/}
-                                            {/*<option value={item.Id}>{item.Position.trim()}</option>*/}
-                                            {/*)*/}
-                                            {/*})*/}
-                                            {/*}*/}
                                         </select>
                                     </div>
                                 </div>
