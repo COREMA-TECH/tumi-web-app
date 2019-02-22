@@ -816,18 +816,27 @@ class BoardManager extends Component {
     };
 
     getDataFilters = () => {
+
+        console.log("getDataFilters ", this.state.status)
         var variables;
 
-        if (this.state.status !== null) {
+        if (this.state.status == 0) {
             variables = {
                 shift: {
-                    status: [this.state.status]
+                    status: [0]
                 },
             };
-        } else {
+        } else if (this.state.status == 1) {
             variables = {
                 shift: {
                     status: [1, 2]
+                },
+            };
+        }
+        else {
+            variables = {
+                shift: {
+                    status: [1, 2, 0]
                 },
             };
         }
@@ -1110,9 +1119,9 @@ class BoardManager extends Component {
                                                             value={this.state.status}
                                                             showNone={false}
                                                         >
-                                                            <option value={"null"}>All work orders</option>
-                                                            <option value={"null"}>Active work orders</option>
-                                                            <option value={3}>Closed work orders</option>
+                                                            <option value={null}>All work orders</option>
+                                                            <option value={1}>Active work orders</option>
+                                                            <option value={0}>Closed work orders</option>
                                                         </select>
                                                     </div>
                                                     <div className="col-md-4">
@@ -1141,17 +1150,17 @@ class BoardManager extends Component {
 
                                                     </div>
                                                     {/*<div className="col-md-1">*/}
-                                                        {/*<button className="btn btn-danger" onClick={() => {*/}
-                                                            {/*this.setState({*/}
-                                                                {/*hotel: 0,*/}
-                                                                {/*state: 0,*/}
-                                                                {/*city: 0,*/}
-                                                                {/*status: null*/}
-                                                            {/*}, () => {*/}
-                                                                {/*this.getWorkOrders();*/}
-                                                            {/*})*/}
-                                                        {/*}}>Clear*/}
-                                                        {/*</button>*/}
+                                                    {/*<button className="btn btn-danger" onClick={() => {*/}
+                                                    {/*this.setState({*/}
+                                                    {/*hotel: 0,*/}
+                                                    {/*state: 0,*/}
+                                                    {/*city: 0,*/}
+                                                    {/*status: null*/}
+                                                    {/*}, () => {*/}
+                                                    {/*this.getWorkOrders();*/}
+                                                    {/*})*/}
+                                                    {/*}}>Clear*/}
+                                                    {/*</button>*/}
                                                     {/*</div>*/}
                                                 </div>
                                             </div>

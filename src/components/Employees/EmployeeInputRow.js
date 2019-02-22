@@ -143,7 +143,7 @@ class EmployeeInputRow extends Component {
         return (
 
             < div className="row Employees-row">
-                <div className="col-sm-3">
+                <div className="col">
                     <label htmlFor="" >* First Name</label>
                     <input
                         onChange={(e) => {
@@ -167,7 +167,7 @@ class EmployeeInputRow extends Component {
                         maxLength={50}
                     />
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                     <label htmlFor="" >* Last Name</label>
                     <input
                         onChange={(e) => {
@@ -181,7 +181,7 @@ class EmployeeInputRow extends Component {
                         maxLength={50}
                     />
                 </div>
-                <div className="col-sm-6">
+                <div className="col">
                     <label htmlFor="" >Email Address</label>
                     <input
                         onChange={(e) => {
@@ -194,7 +194,7 @@ class EmployeeInputRow extends Component {
                         maxLength={100}
                     />
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                     <label htmlFor="" >Phone Number</label>
                     <InputMask
                         id="number"
@@ -210,7 +210,7 @@ class EmployeeInputRow extends Component {
                         pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                     />
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                     <label htmlFor="" >Hotel</label>
                     <select
                         className="form-control"
@@ -247,7 +247,7 @@ class EmployeeInputRow extends Component {
                         }
                     </select>
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                     <label htmlFor="" >Department</label>
                     <select
                         value={this.state.department}
@@ -270,7 +270,7 @@ class EmployeeInputRow extends Component {
                         }
                     </select>
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                     <label htmlFor="" >Position</label>
                     <select
                         id="contactTitle"

@@ -1398,10 +1398,10 @@ class Employees extends Component {
                             </div>
                         </DialogTitle>
                         <DialogContent>
-                            <div className="container">
+                            <div className="container EmployeeModal-container">
 
                                 <div className="row Employees-row">
-                                    <div className="col-sm-3">
+                                    <div className="col">
                                         <label htmlFor="" >* First Name</label>
                                         <input
                                             type="text"
@@ -1418,7 +1418,7 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-sm-3">
+                                    <div className="col">
                                         <label htmlFor="" >* Last Name</label>
                                         <input
                                             type="text"
@@ -1435,7 +1435,7 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-sm-6">
+                                    <div className="col">
                                         <label htmlFor="" >Email Address</label>
                                         <input
                                             type="email"
@@ -1451,7 +1451,7 @@ class Employees extends Component {
                                             maxLength={100}
                                         />
                                     </div>
-                                    <div className="col-sm-3">
+                                    <div className="col">
                                         <label htmlFor="" >Phone Number</label>
                                         <InputMask
                                             name="number"
@@ -1468,7 +1468,7 @@ class Employees extends Component {
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
-                                    <div className="col-sm-3">
+                                    <div className="col">
                                         <label htmlFor=""                                            >Hotelsss</label>
                                         <select
                                             className="form-control"
@@ -1499,7 +1499,7 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col-sm-3">
+                                    <div className="col">
                                         <label htmlFor=""                                            >Department</label>
                                         <select
                                             name="departmentEmployee"
@@ -1523,7 +1523,7 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col-sm-3">
+                                    <div className="col">
                                         <label htmlFor=""                                            >Position</label>
                                         <select
                                             className="form-control"
