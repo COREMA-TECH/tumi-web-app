@@ -120,8 +120,8 @@ class Employees extends Component {
         password: 'TEMP',
         email: '',
         number: '',
-        idRol: '',
-        idLanguage: '',
+        idRol: 13,
+        idLanguage: 194,
         isAdmin: false,
         allowInsert: false,
         allowEdit: false,
@@ -1061,14 +1061,15 @@ class Employees extends Component {
                             {this.state.idToEdit != null &&
                                 this.state.idToEdit != '' &&
                                 this.state.idToEdit != 0 ? (
-                                    this.state.fullName
+                                    'Edit  User'
                                 ) : (
-                                    this.state.fullName
+                                    'Create User'
                                 )}
                         </h5>
                     </div>
                 </DialogTitle>
                 <DialogContent >
+                    <h3 className="text-success">{this.state.fullName}</h3>
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="row">
@@ -1123,6 +1124,7 @@ class Employees extends Component {
                                             this.updateSelect(event.target.value, 'idRol');
                                         }}
                                         value={this.state.idRol}
+                                        disabled
                                     >
                                         <option value="">Select a role</option>
                                         {this.state.roles.map((item) => (
@@ -1132,7 +1134,7 @@ class Employees extends Component {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-md-12 col-lg-12">
+                                <div className="col-md-6 col-lg-6">
                                     <label>* Language</label>
 
                                     <select
