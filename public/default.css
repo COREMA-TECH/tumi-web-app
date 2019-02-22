@@ -9693,6 +9693,10 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     .gradiant-overlay textarea:focus {
       opacity: 1; }
 
+@media (min-width: 992px) {
+  .EmployeeModal-container {
+    min-width: 992px; } }
+
 .Apply-container {
   margin: 0 auto;
   max-width: 1200px;
