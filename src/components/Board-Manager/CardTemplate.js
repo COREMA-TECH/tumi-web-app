@@ -15,8 +15,10 @@ class CardTemplate extends Component {
         this.state = {
             showConfirmToOpening: false,
             showConfirmToWorkOrder: false,
+            showCancelWorkOrder: false,
             convertingOneItem: false,
             convertingAllItems: false,
+
             currentStatus: props.isOpening,
             prevStatus: props.isOpening
         }
@@ -51,12 +53,24 @@ class CardTemplate extends Component {
         this.setState((prevState) => { return { showConfirmToWorkOrder: false, currentStatus: prevState.prevStatus } })
     }
 
+    handleCloseConfirmDialogCancelToWorkOrder = () => {
+        this.setState((prevState) => { return { showCancelWorkOrder: false, currentStatus: prevState.prevStatus } })
+    }
+
     handleConvertAllItemToWorkOrder = ({ WorkOrderId }) => {
         this.convertToOpeningOrWorkOrder({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 2, targetStatus: 1 }, ALL_ITEM_MESSAGE_WORK_ORDER, this.updateProgressAllItems)
     }
 
     handleConvertThisItemToWorkOrder = ({ id }) => {
         this.convertToOpeningOrWorkOrder({ shift: { id }, sourceStatus: 2, targetStatus: 1 }, ONE_ITEM_MESSAGE_WORK_ORDER, this.updateProgressOneItem)
+    }
+
+    handleCancelAllItemToWorkOrder = ({ WorkOrderId }) => {
+        this.convertToOpeningOrWorkOrder({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 1, targetStatus: 0 }, "Cancel All Items on this Work Order", this.updateProgressAllItems)
+    }
+
+    handleCancelThisItemToWorkOrder = ({ id }) => {
+        this.convertToOpeningOrWorkOrder({ shift: { id }, sourceStatus: 1, targetStatus: 0 }, "Cancel Only this Item", this.updateProgressOneItem)
     }
 
     //-----------------------------------------------
@@ -79,8 +93,9 @@ class CardTemplate extends Component {
             .then(({ data }) => {
                 this.props.handleOpenSnackbar('success', `${message} successful`, 'bottom', 'right');
                 fncUpdateProgress(false);
-                this.setState(() => { return { showConfirmToOpening: false, showConfirmToWorkOrder: false } }, () => {
-                    this.props.getWorkOrders("Esto es desde Card Template");
+                this.setState(() => { return { showConfirmToOpening: false, showConfirmToWorkOrder: false, showCancelWorkOrder: false } }, () => {
+                    this.props.getWorkOrders();
+                    window.location.reload();
                 })
 
             })
@@ -116,6 +131,7 @@ class CardTemplate extends Component {
     }
 
     printDialogConfirmConvertToWO = ({ id, WorkOrderId }) => {
+
         return <Dialog maxWidth="xl" open={this.state.showConfirmToWorkOrder} onClose={this.handleCloseConfirmDialogToWorkOrder}>
             <DialogContent>
                 <h2 className="text-center">Recall Work Order From Recruiting</h2>
@@ -128,6 +144,26 @@ class CardTemplate extends Component {
                     {ONE_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
                 </button>
                 <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToWorkOrder}>
+                    Cancel
+            </button>
+            </DialogActions>
+        </Dialog>
+    }
+
+
+    printDialogCancelWO = ({ id, WorkOrderId }) => {
+        return <Dialog maxWidth="xl" open={this.state.showCancelWorkOrder} onClose={this.handleCloseConfirmDialogCancelToWorkOrder}>
+            <DialogContent>
+                <h2 className="text-center">Cancel Work Order?</h2>
+            </DialogContent>
+            <DialogActions>
+                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleCancelAllItemToWorkOrder({ WorkOrderId })}>
+                    Cancel All Items on this Work Order {this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
+                </button>
+                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCancelThisItemToWorkOrder({ id })}>
+                    Cancel Only this Item {this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
+                </button>
+                <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogCancelToWorkOrder}>
                     Cancel
             </button>
             </DialogActions>
@@ -187,6 +223,7 @@ class CardTemplate extends Component {
                 {/*<i className={["fas fa-circle", "ml-auto", this.props.statusCompleted ? "text-info" : "text-danger"].join(" ")} style={{ marginTop: '7px', fontSize: '10px' }}></i>*/}
                 <i className={["fas fa-pen", "ml-auto", this.props.statusCompleted ? "text-info" : "text-danger"].join(" ")} style={{ marginTop: '7px', fontSize: '10px' }}></i>
             </React.Fragment>
+        else if (this.props.laneId === "lane1") { return <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}><i onClick={() => { this.setState({ showCancelWorkOrder: true }) }} style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#c83c3c' }} className="fas fa-ban"></i> {this.props.name}</div> }
         else return <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{this.props.name}</div>
     }
 
@@ -247,6 +284,7 @@ class CardTemplate extends Component {
             </div>
             {this.printDialogConfirmConvertToOpening(this.props)}
             {this.printDialogConfirmConvertToWO(this.props)}
+            {this.printDialogCancelWO(this.props)}
         </div>
     }
 }
