@@ -396,7 +396,7 @@ class UsersTable extends React.Component {
 		return false;
 	}
 
-	componentWillReceiveProps(nextProps){
+	componentWillReceiveProps(nextProps) {
 		this.setState({
 			items: nextProps.data
 		})

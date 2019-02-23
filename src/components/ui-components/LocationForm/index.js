@@ -31,7 +31,6 @@ class LocationForm extends Component {
     }
 
     loadFirstStates = (Id, city) => {
-        console.log("loadFirstStates ", Id, " City ", city)
         this.setState({ loadingStates: true },
             () => {
                 this.props.updateSearchingZipCodeProgress(true)
@@ -47,7 +46,6 @@ class LocationForm extends Component {
                         this.setState(() => { return { states: catalogitem, loadingStates: false, state: Id } },
                             () => {
                                 this.props.updateSearchingZipCodeProgress(false)
-                                //  this.loadFirstCities(Id, city)
                             })
                     }).catch(error => {
                         this.setState(() => { return { loadingStates: false } }, () => {
@@ -61,7 +59,6 @@ class LocationForm extends Component {
 
     loadStates = () => {
 
-        console.log("this.state.stateCode ", this.state.stateCode)
         this.setState({ loadingStates: true },
             () => {
                 this.props.updateSearchingZipCodeProgress(true)
@@ -133,10 +130,7 @@ class LocationForm extends Component {
                         this.setState({ cities: catalogitem, loadingCities: false, findingZipCode: false },
                             () => {
                                 this.props.updateSearchingZipCodeProgress(false)
-                                //var selectedCity = this.state.cities.find(item => item.Name.toLowerCase().trim().includes(this.state.cityName.toLowerCase().trim()))
-                                //if (selectedCity) {
                                 this.setState(() => { return { city: this.state.countryId } }, () => { this.props.onChangeCity(this.state.countryId) })
-                                //}
                             })
                     }).catch(error => {
                         this.setState({ loadingCities: false, findingZipCode: false }, () => {
@@ -174,7 +168,6 @@ class LocationForm extends Component {
     }
 
     findZipCode = () => {
-        //Get firts five characters of Zipcode input
         const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
         this.setState({ findingZipCode: true }, () => {
             if (zipCode) {
@@ -188,15 +181,9 @@ class LocationForm extends Component {
                     }).then(({ data: { zipcode_City_State } }) => {
                         this.setState({ states: zipcode_City_State, loadingStates: false, findingZipCode: false },
                             () => {
-                                if (zipcode_City_State.length > 0)
-                                    console.log("Infor del api ", zipcode_City_State)
-                                this.setState({ countryId: zipcode_City_State[0].countryId, stateId: zipcode_City_State[0].stateId, stateCode: zipcode_City_State[0].State.trim(), cityName: zipcode_City_State[0].City.trim().toLowerCase() },
-                                    () => { this.loadStates(); })
-                                /* this.setState({ state: zipcode_City_State[0].State }, () => {
-                                     this.props.updateSearchingZipCodeProgress(false)
-                                     this.props.onChangeState(zipcode_City_State[0].stateId)
-                                     this.props.onChangeCity(zipcode_City_State[0].countryId)
-                                 })*/
+                                if (zipcode_City_State[0] && zipcode_City_State.length > 0)
+                                    this.setState({ countryId: zipcode_City_State[0].countryId, stateId: zipcode_City_State[0].stateId, stateCode: zipcode_City_State[0].State.trim(), cityName: zipcode_City_State[0].City.trim().toLowerCase() },
+                                        () => { this.loadStates(); })
                             })
                     }).catch(error => {
                         this.setState({ loadingStates: false, findingZipCode: false }, () => {
@@ -204,18 +191,6 @@ class LocationForm extends Component {
                         })
                     })
             }
-            /*this.setState({ loadingCities: true, loadingStates: true }, () => {
-                axios.get(`https://ziptasticapi.com/${zipCode}`)
-                    .then(res => {
-                        const cities = res.data;
-                        if (!cities.error) {
-                            console.log("Infor del api ", cities)
-                            this.setState({ stateCode: cities.state, cityName: cities.city.toLowerCase() },
-                                () => { this.loadStates(); })
-                        } else
-                            this.setState({ findingZipCode: false, loadingCities: false, loadingStates: false })
-                    }).catch(error => { this.setState({ findingZipCode: false, loadingCities: false, loadingStates: false }) })
-            })*/
             else
                 this.setState({ findingZipCode: false })
         })
