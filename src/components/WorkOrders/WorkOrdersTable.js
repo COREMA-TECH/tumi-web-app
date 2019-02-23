@@ -393,9 +393,9 @@ class WorkOrdersTable extends Component {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell className={"Table-head text-center"}>Actions</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>No.</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Property</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"} style={{width: '80px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"} style={{width: '80px' }}>No.</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"} style={{width: '220px' }}>Property</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
@@ -409,7 +409,7 @@ class WorkOrdersTable extends Component {
                                     if (this.state.filterValue === 0) {
                                         return (
                                             <TableRow style={{ background: backgroundColor }}>
-                                                <CustomTableCell className={'text-center'}>
+                                                <CustomTableCell className={'text-center'} style={{width: '80px' }}>
                                                     <Tooltip title="Life Cycle">
                                                         <button
                                                             className="btn btn-success mr-1 float-left"
@@ -454,9 +454,9 @@ class WorkOrdersTable extends Component {
                                                             )
                                                     }
                                                 </CustomTableCell>
-                                                <CustomTableCell>{row.id}</CustomTableCell>
-                                                <CustomTableCell>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
-                                                <CustomTableCell>{row.position != null ? row.position.Position : ''}</CustomTableCell>
+                                                <CustomTableCell style={{width: '80px' }}>{row.id}</CustomTableCell>
+                                                <CustomTableCell style={{width: '220px' }}>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
+                                                <CustomTableCell >{row.position != null ? row.position.Position : ''}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
