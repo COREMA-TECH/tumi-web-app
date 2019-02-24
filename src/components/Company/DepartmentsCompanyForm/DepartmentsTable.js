@@ -186,81 +186,37 @@ class DepartmentsTable extends React.Component {
 			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
 		}
 		return (
-			<Paper className={classes.root}>
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<CustomTableCell className={"Table-head"}>Actions </CustomTableCell>
-							<CustomTableCell className={"company-th Table-head"}>Department Code</CustomTableCell>
-							<CustomTableCell className={"company-th Table-head"}>Department Name</CustomTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
+			<div className="card">
+				<div className="card-body">
+					<div className="RecordsCards-container row">
 						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
-								<TableRow
-									hover
-									className={classes.row}
-									key={uuidv4()}
-									onClick={() => {
-										return this.props.onEditHandler({ ...row });
-									}}
-								>
-									<CustomTableCell component="th">
-										<Tooltip title="Edit">
-											<button
-												className="btn btn-success float-left ml-1"
-												disabled={this.props.loading}
-												onClick={(e) => {
-													e.stopPropagation();
-													return this.props.onEditHandler({ ...row });
-												}}
-											>
-												<i class="fas fa-pen"></i>
-											</button>
-										</Tooltip>
-										<Tooltip title="Delete">
-											<button
-												className="btn btn-danger float-left ml-1"
-												disabled={this.props.loading}
-												onClick={(e) => {
-													e.stopPropagation();
-													return this.props.onDeleteHandler(row.Id);
-												}}
-											>
+								<div className="col-md-2">
+									<div className="RecordsCards-item" onClick={() => { return this.props.onEditHandler({ ...row }); }}>
+										{row.Description}
+										<div className="RecordsCards-controls">
+											<button disabled={this.props.loading} className="RecordsCards-btn" onClick={(e) => { e.stopPropagation(); return this.props.onDeleteHandler(row.Id); }}>
 												<i class="fas fa-trash"></i>
 											</button>
-										</Tooltip>
-									</CustomTableCell>
-									<CustomTableCell style={{ width: '150px' }}>{row.Code}</CustomTableCell>
-									<CustomTableCell>{row.Description}</CustomTableCell>
-								</TableRow>
-							);
+										</div>
+									</div>
+								</div>
+							)
 						})}
-
-						{emptyRows > 0 && (
-							<TableRow style={{ height: 48 * emptyRows }}>
-								<TableCell colSpan={4} />
-							</TableRow>
-						)}
-					</TableBody>
-					<TableFooter>
-						<TableRow>
-							{items.length > 0 && (
-								<TablePagination
-									colSpan={3}
-									count={items.length}
-									rowsPerPage={rowsPerPage}
-									page={page}
-									onChangePage={this.handleChangePage}
-									onChangeRowsPerPage={this.handleChangeRowsPerPage}
-									ActionsComponent={TablePaginationActionsWrapped}
-								/>
-							)}
-						</TableRow>
-					</TableFooter>
-				</Table>
-			</Paper>
+					</div>
+				</div>
+				{items.length > 0 && (
+					<TablePagination
+						colSpan={1}
+						count={items.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						onChangePage={this.handleChangePage}
+						onChangeRowsPerPage={this.handleChangeRowsPerPage}
+						ActionsComponent={TablePaginationActionsWrapped}
+					/>
+				)}
+			</div>
 		);
 	}
 }
