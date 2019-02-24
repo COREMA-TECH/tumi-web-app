@@ -9010,6 +9010,24 @@ tbody[class^="MuiTableBody-"] tr {
 tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   padding: 0px 5px 0px 5px !important; }
 
+.Tab-fa-icon:after {
+  color: #7e7e7e;
+  font-family: "Font Awesome 5 Free";
+  font-size: .3rem;
+  margin-left: 1rem;
+  line-height: 1.5;
+  height: 30px; }
+
+.Tab-fa-icon.completed::after {
+  color: #28a745; }
+
+.Tab-fa-icon.incomplete::after {
+  color: #f50057; }
+
+.Tab-fa-circle:after {
+  content: "\F111";
+  font-weight: 900; }
+
 .login-container {
   width: 100%;
   height: 100%;
