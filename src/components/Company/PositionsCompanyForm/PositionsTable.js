@@ -251,17 +251,20 @@ class PositionsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell className={"Table-head"}>
+							<CustomTableCell className={"Table-head"} style={{width: '30px' }}>
 								Actions
 							</CustomTableCell>
-							<CustomTableCell className={'Table-head'}>Department</CustomTableCell>
-							<CustomTableCell className={'Table-head'}>Title</CustomTableCell>
+							<CustomTableCell className={'Table-head'} style={{width: '50px' }}>Department</CustomTableCell>
+							<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Title</CustomTableCell>
 
-							<CustomTableCell className={'Table-head'}>Bill Rate</CustomTableCell>
+							<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Bill Rate</CustomTableCell>
 
 							{this.props.showPayRate && (
-								<CustomTableCell className={'Table-head'}>Pay Rate</CustomTableCell>
+								<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Pay Rate</CustomTableCell>
 							)}
+
+							<CustomTableCell className={'Table-head'} style={{width: '80px' }}></CustomTableCell>
+							<CustomTableCell className={'Table-head'} style={{width: '80px' }}></CustomTableCell>
 							{/*<CustomTableCell padding="none" className={'Table-head'}>
 								Shift
 							</CustomTableCell>*/}
@@ -279,7 +282,7 @@ class PositionsTable extends React.Component {
 									}}
 								>
 
-									<CustomTableCell component="th">
+									<CustomTableCell component="th" style={{width: '30px' }}>
 										<Tooltip title="Edit">
 											<button
 												className="btn btn-success ml-1 float-left"
@@ -305,7 +308,7 @@ class PositionsTable extends React.Component {
 											</button>
 										</Tooltip>
 									</CustomTableCell>
-									<CustomTableCell>
+									<CustomTableCell  style={{width: '50px' }}>
 										<Select
 											id="department"
 											name="department"
@@ -315,22 +318,24 @@ class PositionsTable extends React.Component {
 											IconComponent="div"
 										>
 											{this.props.departments.map(({ Id, Name }) => (
-												<MenuItem key={Id} value={Id} name={Name}>
+												<MenuItem key={Id} value={Id} name={Name} style={{width: '50px' }}>
 													{Name}
 												</MenuItem>
 											))}
 										</Select>
 									</CustomTableCell>
-									<CustomTableCell>{row.Position}</CustomTableCell>
-									<CustomTableCell>
+									<CustomTableCell  style={{width: '80px' }}>{row.Position}</CustomTableCell>
+									<CustomTableCell  style={{width: '80px' }}>
 										$ {row.Bill_Rate}
 									</CustomTableCell>
 
 									{this.props.showPayRate && (
-										<CustomTableCell>
+										<CustomTableCell  style={{width: '80px' }}>
 											$ {row.Pay_Rate}
 										</CustomTableCell>
 									)}
+									<CustomTableCell  style={{width: '80px' }}></CustomTableCell>
+									<CustomTableCell  style={{width: '80px' }}></CustomTableCell>
 									{/*
 									<CustomTableCell padding="none">
 										<Select

@@ -739,6 +739,7 @@ class GeneralInformation extends Component {
  */
 	handleClickOpen = (scroll, boolValue, id, rate) => () => {
 		//if (!this.props.showStepper) return false;
+		console.log("handleClickOpen  ", boolValue, id, rate)
 		this.setState(
 			{
 				propertyClick: boolValue,
@@ -1202,10 +1203,10 @@ class GeneralInformation extends Component {
 	};
 
 	updateSearchingZipCodeProgress = (searchigZipcode) => {
-        this.setState(() => {
-            return { searchigZipcode }
-        })
-    }
+		this.setState(() => {
+			return { searchigZipcode }
+		})
+	}
 	/**
      * Return the component
      *
@@ -1437,7 +1438,7 @@ class GeneralInformation extends Component {
 										requiredCity={true}
 										requiredState={true}
 										requiredZipCode={true}
-										updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}	/>
+										updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
 
 									<div className="col-md-6 col-lg-4">
 										<label>* Phone Number</label>
@@ -1674,7 +1675,7 @@ class GeneralInformation extends Component {
 						{this.state.open && <TabsInDialog
 							idCompany={this.props.idCompany}
 							idProperty={this.state.propertyClick ? this.state.idProperty : null}
-							Markup={this.props.Markup}
+							Markup={this.state.rate}
 							handleClose={this.handleClose}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
 						/>}
