@@ -193,9 +193,9 @@ class EmployeesTable extends React.Component {
                     <TableHead>
                         <TableRow>
                             <CustomTableCell className={"Table-head"}>Actions</CustomTableCell>
-                            <CustomTableCell className={"Table-head"}>First Name</CustomTableCell>
+                            <CustomTableCell style={{width: '60px' }} className={"Table-head"}>First Name</CustomTableCell>
                             <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
-                            <CustomTableCell className={"Table-head"}>Email</CustomTableCell>
+                            <CustomTableCell style={{width: '90px' }} className={"Table-head"}>Email</CustomTableCell>
                             <CustomTableCell className={"Table-head"}>Phone Number</CustomTableCell>
                             <CustomTableCell className={"Table-head"}>Department</CustomTableCell>
                             <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
@@ -256,9 +256,9 @@ class EmployeesTable extends React.Component {
                                             ) : ''
                                         }
                                     </CustomTableCell>
-                                    <CustomTableCell>{row.firstName}</CustomTableCell>
+                                    <CustomTableCell style={{width: '60px' }}>{row.firstName}</CustomTableCell>
                                     <CustomTableCell>{row.lastName}</CustomTableCell>
-                                    <CustomTableCell>{row.electronicAddress}</CustomTableCell>
+                                    <CustomTableCell style={{width: '90px' }} >{row.electronicAddress}</CustomTableCell>
                                     <CustomTableCell>{row.mobileNumber}</CustomTableCell>
                                     <CustomTableCell>
                                         {
