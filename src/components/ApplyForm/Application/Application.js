@@ -124,7 +124,11 @@ class Application extends Component {
             // Validation
             homePhoneNumberValid: true,
             cellPhoneNumberValid: true,
-            isCorrectCity: true
+            isCorrectCity: true,
+
+            positionCatalog: [],
+            positionCatalogTag: [],
+            dataWorkOrder: []
         };
     }
 
@@ -351,6 +355,59 @@ class Application extends Component {
             })
     };
 
+    // get ideal jobs
+    getPositionCatalog = () => {
+        this.props.client
+            .query({
+                query: GET_POSITIONS_CATALOG,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    positionCatalog: data.getcatalogitem,
+                    loading: false
+                }, () => {
+                    let options = [];
+                    this.state.positionCatalog.map((item) => (
+                        options.push({ value: item.Id, label: item.Description, key: item.Id })
+                    ));
+                    this.setState({
+                        positionCatalogTag: options
+                    });
+                })
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
+
+    getPositionCatalog = () => {
+        this.props.client
+            .query({
+                query: GET_POSITIONS_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    dataWorkOrder: data.workOrder,
+                    loading: false
+                })
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
+
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {
         if (document.addEventListener) {
@@ -376,6 +433,8 @@ class Application extends Component {
 
     componentWillMount() {
         this.getApplicationById(this.props.applicationId);
+        this.getPositionCatalog();
+        this.getPositionCatalog();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -858,73 +917,42 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[16].label}
                                                 </span>
-                                                <Query query={GET_POSITIONS_CATALOG}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            let options = [];
-                                                            data.getcatalogitem.map((item) => (
-                                                                options.push({ value: item.Id, label: item.Description, key: item.Id })
-                                                            ));
+                                                <Select
+                                                    isDisabled={!this.state.editing}
+                                                    options={this.state.positionCatalogTag}
+                                                    value={this.state.positionsTags}
+                                                    onChange={this.handleChangePositionTag}
+                                                    closeMenuOnSelect={false}
+                                                    components={makeAnimated()}
+                                                    isMulti
+                                                />
 
-                                                            return (
-                                                                <div style={{
-                                                                    paddingTop: '0px',
-                                                                    paddingBottom: '2px',
-                                                                }}>
-                                                                    <Select
-                                                                        isDisabled={!this.state.editing}
-                                                                        options={options}
-                                                                        value={this.state.positionsTags}
-                                                                        onChange={this.handleChangePositionTag}
-                                                                        closeMenuOnSelect={false}
-                                                                        components={makeAnimated()}
-                                                                        isMulti
-                                                                    />
-                                                                </div>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
                                             </div>
 
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[17].label}
                                                 </span>
-                                                <Query query={GET_POSITIONS_QUERY}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.workOrder != null && data.workOrder.length > 0) {
-                                                            return (
-                                                                <select
-                                                                    name="positionApply"
-                                                                    id="positionApply"
-                                                                    onChange={(event) => {
-                                                                        this.setState({
-                                                                            // Fixme: repair this
-                                                                            positionApplyingFor: event.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.positionApplyingFor}
-                                                                    className="form-control"
-                                                                    disabled={!this.state.editing}
-                                                                >
-                                                                    <option value="">Select a position</option>
-                                                                    <option value="0">Open Position</option>
-                                                                    {data.workOrder.map((item) => (
-                                                                        <option
-                                                                            value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
+                                                <select
+                                                    name="positionApply"
+                                                    id="positionApply"
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            // Fixme: repair this
+                                                            positionApplyingFor: event.target.value
+                                                        });
                                                     }}
-                                                </Query>
+                                                    value={this.state.positionApplyingFor}
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                >
+                                                    <option value="">Select a position</option>
+                                                    <option value="0">Open Position</option>
+                                                    {this.state.dataWorkOrder.map((item) => (
+                                                        <option
+                                                            value={item.id} key={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
+                                                    ))}
+                                                </select>
                                             </div>
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
