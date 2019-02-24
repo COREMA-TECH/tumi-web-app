@@ -17,7 +17,7 @@ import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-load
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import LocationForm from '../../ui-components/LocationForm'
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -249,7 +249,6 @@ class Application extends Component {
                     })
                     .then(({ data }) => {
                         let applicantData = data.applications[0];
-                        console.log("applicantData ", applicantData);
                         this.setState(
                             {
                                 firstName: applicantData.firstName,
@@ -310,8 +309,6 @@ class Application extends Component {
                             'bottom',
                             'right'
                         );
-
-                        console.log(error);
                     });
             }
         );
@@ -704,7 +701,6 @@ class Application extends Component {
                                                                     .replace('(', '')
                                                                     .replace(')', '').length === 0;
 
-                                                            console.log(phoneNumberValid);
                                                             this.setState({
                                                                 cellPhoneNumberValid: phoneNumberValid
                                                             })
@@ -869,7 +865,7 @@ class Application extends Component {
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                             let options = [];
                                                             data.getcatalogitem.map((item) => (
-                                                                options.push({ value: item.Id, label: item.Description })
+                                                                options.push({ value: item.Id, label: item.Description, key: item.Id })
                                                             ));
 
                                                             return (

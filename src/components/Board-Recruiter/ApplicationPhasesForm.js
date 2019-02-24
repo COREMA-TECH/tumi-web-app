@@ -127,19 +127,19 @@ class ApplicationPhasesForm extends Component {
                     <form action="" onSubmit={this.handleSubmit}>
                         <div className="row">
                             <div className="col-md-3 offset-md-3">
-                                <div class="inputGroup">
+                                <div className="inputGroup">
                                     <input id="radio1" name="ReasonId" type="radio" value="30458" onChange={this.handleChange} />
                                     <label for="radio1">No Show</label>
                                 </div>
                             </div>
                             <div className="col-md-3">
-                                <div class="inputGroup">
+                                <div className="inputGroup">
                                     <input id="radio2" name="ReasonId" type="radio" value="30459" onChange={this.handleChange} />
                                     <label for="radio2">Disqualify</label>
                                 </div>
                             </div>
                             <div className="col-md-3">
-                                <div class="inputGroup">
+                                <div className="inputGroup">
                                     <input id="radio3" name="ReasonId" type="radio" value="30492" onChange={this.handleChange} />
                                     <label for="radio3">Others</label>
                                 </div>
@@ -151,11 +151,11 @@ class ApplicationPhasesForm extends Component {
                             <div className="col-md-12 mt-2">
                                 <button className="btn btn-danger float-right" onClick={this.props.handleCloseModal}>
                                     Cancel
-                                    <i class="fas fa-ban ml-1"></i>
+                                    <i className="fas fa-ban ml-1"></i>
                                 </button>
                                 <button className="btn btn-success float-right mr-1" onClick={this.handleSaveModal}>
                                     Save
-                                    <i class="fas fa-save ml-1"></i>
+                                    <i className="fas fa-save ml-1"></i>
                                 </button>
                             </div>
                         </div>

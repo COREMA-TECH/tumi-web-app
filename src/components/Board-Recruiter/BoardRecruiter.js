@@ -1016,8 +1016,8 @@ class BoardRecruiter extends Component {
                 <div className="App-header">
                     <div className="row">
                         <div className="col-md-12 col-lg-12">
-                            <div class="card">
-                                <div class="card-header info">
+                            <div className="card">
+                                <div className="card-header info">
                                     <div className="row">
                                         <div className="col-md-9">
                                             <div className="row">
@@ -1137,16 +1137,16 @@ class BoardRecruiter extends Component {
 
                                                 </div>
                                                 {/*<div className="col-md-1">*/}
-                                                    {/*<button className="btn btn-danger" onClick={() => {*/}
-                                                        {/*this.setState({*/}
-                                                            {/*hotel: 0,*/}
-                                                            {/*state: 0,*/}
-                                                            {/*city: 0,*/}
-                                                            {/*status: null*/}
-                                                        {/*}, () => {*/}
-                                                            {/*this.getOpenings();*/}
-                                                        {/*})*/}
-                                                    {/*}}>Clear</button>*/}
+                                                {/*<button className="btn btn-danger" onClick={() => {*/}
+                                                {/*this.setState({*/}
+                                                {/*hotel: 0,*/}
+                                                {/*state: 0,*/}
+                                                {/*city: 0,*/}
+                                                {/*status: null*/}
+                                                {/*}, () => {*/}
+                                                {/*this.getOpenings();*/}
+                                                {/*})*/}
+                                                {/*}}>Clear</button>*/}
                                                 {/*</div>*/}
                                             </div>
                                         </div>

@@ -128,11 +128,11 @@ class Filters extends Component {
                                         <div className="col-md-12">
                                             <button
                                                 type="reset" className="btn btn-danger ml-1 float-right" onClick={this.CloseWin}>
-                                                Reset Filters<i class="fas fa-ban ml-2" />
+                                                Reset Filters<i className="fas fa-ban ml-2" />
                                             </button>
                                             <button className="btn btn-success ml-1 float-right" onClick={this.NewFilters}>
-                                                New Filter {!this.state.saving && <i class="fas fa-filter ml2" />}
-                                                {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
+                                                New Filter {!this.state.saving && <i className="fas fa-filter ml2" />}
+                                                {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
                                             </button>
                                         </div>
                                     </div>
