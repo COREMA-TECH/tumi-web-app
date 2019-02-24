@@ -193,8 +193,8 @@ class Catalogs extends React.Component {
         }
     `;
     INSERT_USER_QUERY = gql`
-        mutation insusers($input: iUsers!) {
-            insusers(input: $input) {
+        mutation insertUser($user: inputInsertUser) {
+            insertUser(user: $user) {
                 Id
             }
         }
@@ -207,8 +207,8 @@ class Catalogs extends React.Component {
     `;
 
     UPDATE_USER_QUERY = gql`
-        mutation updusers($input: iUsers!) {
-            updusers(input: $input) {
+        mutation udpdateUser($user: inputUpdateUser) {
+            udpdateUser(user: $user) {
                 Id
             }
         }
@@ -888,36 +888,37 @@ class Catalogs extends React.Component {
                 loading: true
             },
             () => {
+                var user = {
+                    Id_Entity: 1,
+                    Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
+                    Id_Roles: this.state.idRol,
+                    Code_User: this.state.username,
+                    Full_Name: this.state.firstName + ' ' + this.state.lastName,
+                    Electronic_Address: this.state.email,
+                    Phone_Number: this.state.number,
+                    Id_Language: this.state.idLanguage,
+                    IsAdmin: this.state.isAdmin ? 1 : 0,
+                    AllowDelete: this.state.allowDelete ? 1 : 0,
+                    AllowInsert: this.state.allowInsert ? 1 : 0,
+                    AllowEdit: this.state.allowEdit ? 1 : 0,
+                    AllowExport: this.state.allowExport ? 1 : 0,
+                    IsRecruiter: this.state.IsRecruiter,
+                    isEmployee: this.state.isEmployee,
+                    IdRegion: this.state.IdRegion,
+                    IsActive: this.state.IsActive ? 1 : 0,
+                    User_Created: 1,
+                    User_Updated: 1,
+                    Date_Created: new Date().toDateString(),
+                    Date_Updated: new Date().toDateString(),
+                    IdSchedulesEmployees: parseInt(this.state.IdSchedulesEmployees),
+                    IdSchedulesManager: parseInt(this.state.IdSchedulesManager),
+                }
+                if (isEdition) user = { ...user, Id: id }
                 this.props.client
                     .mutate({
                         mutation: query,
                         variables: {
-                            input: {
-                                Id: id,
-                                Id_Entity: 1,
-                                Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
-                                Id_Roles: this.state.idRol,
-                                Code_User: `'${this.state.username}'`,
-                                Full_Name: `'${this.state.firstName + ' ' + this.state.lastName}'`,
-                                Electronic_Address: `'${this.state.email}'`,
-                                Phone_Number: `'${this.state.number}'`,
-                                Id_Language: this.state.idLanguage,
-                                IsAdmin: this.state.isAdmin ? 1 : 0,
-                                AllowDelete: this.state.allowDelete ? 1 : 0,
-                                AllowInsert: this.state.allowInsert ? 1 : 0,
-                                AllowEdit: this.state.allowEdit ? 1 : 0,
-                                AllowExport: this.state.allowExport ? 1 : 0,
-                                IsRecruiter: this.state.IsRecruiter,
-                                isEmployee: this.state.isEmployee,
-                                IdRegion: this.state.IdRegion,
-                                IsActive: this.state.IsActive ? 1 : 0,
-                                User_Created: 1,
-                                User_Updated: 1,
-                                Date_Created: "'2018-08-14 16:10:25+00'",
-                                Date_Updated: "'2018-08-14 16:10:25+00'",
-                                IdSchedulesEmployees: parseInt(this.state.IdSchedulesEmployees),
-                                IdSchedulesManager: parseInt(this.state.IdSchedulesManager),
-                            }
+                            user
                         }
                     })
                     .then((data) => {
