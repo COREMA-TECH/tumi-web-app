@@ -1161,123 +1161,7 @@ class Employees extends Component {
                             </div>
 
                         </div>
-                        {/* <div className="col-lg-5">
-                            <div className="card">
-                                <div className="card-header info">Permissions</div>
-                                <div className="card-body p-0">
-                                    <ul className="row w-100 bg-light CardPermissions">
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Active?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.IsActive}
-                                                    name="IsActive"
-                                                    onChange={this.handleCheckedChange('IsActive')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="IsActive"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Admin?</label>
 
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.isAdmin}
-                                                    name="isAdmin"
-                                                    onChange={this.handleCheckedChange('isAdmin')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="isAdmin"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Insert?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowInsert}
-                                                    name="allowInsert"
-                                                    onChange={this.handleCheckedChange('allowInsert')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowInsert"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Edit?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowEdit}
-                                                    name="allowEdit"
-                                                    onChange={this.handleCheckedChange('allowEdit')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowEdit"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Delete?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowDelete}
-                                                    name="allowDelete"
-                                                    onChange={this.handleCheckedChange('allowDelete')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowDelete"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Export?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowExport}
-                                                    name="allowExport"
-                                                    onChange={this.handleCheckedChange('allowExport')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowExport"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowExport">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                     */}
                     </div>
                 </DialogContent>
                 <DialogActions style={{ paddingTop: "10px", margin: '16px 10px', borderTop: '1px solid #eee' }}>
@@ -1321,7 +1205,7 @@ class Employees extends Component {
                         </div>
                     </DialogTitle>
                     <DialogContent>
-                        <div className="container">
+                        <div className="container EmployeeModal-container">
                             {this.state.rowsInput.map((item, index) => {
                                 return (
                                     <EmployeeInputRow
