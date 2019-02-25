@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
-import {ADD_NON_DISCLOSURE} from "./Mutations";
+import { ADD_NON_DISCLOSURE } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import renderHTML from 'react-render-html';
-import {GET_APPLICANT_INFO} from "../ConductCode/Queries";
-import {CREATE_DOCUMENTS_PDF_QUERY, GET_DISCLOSURE_INFO} from "./Queries";
+import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_DISCLOSURE_INFO } from "./Queries";
 import PropTypes from 'prop-types';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -33,7 +33,8 @@ class NonDisclosure extends Component {
         this.setState({
             signature: value,
             openSignature: false,
-            date: new Date().toISOString().substring(0, 10)
+            date: new Date().toISOString().substring(0, 10),
+            completed: true
         }, () => {
             this.insertNonDisclosure(this.state)
         });
@@ -52,7 +53,7 @@ class NonDisclosure extends Component {
                     disclosures: disclosureObject
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 // Show a snackbar with a success message
                 this.props.handleOpenSnackbar(
                     'success',
@@ -82,7 +83,7 @@ class NonDisclosure extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.applications[0] !== null) {
                     this.setState({
                         applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
@@ -103,7 +104,7 @@ class NonDisclosure extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.applications[0].disclosure !== null) {
                     this.setState({
                         id: data.applications[0].disclosure.id,
@@ -157,12 +158,12 @@ class NonDisclosure extends Component {
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({loadingData: false, downloading: false});
+                    this.setState({ loadingData: false, downloading: false });
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({loadingData: false, downloading: false});
+                this.setState({ loadingData: false, downloading: false });
             });
     };
 
@@ -170,7 +171,7 @@ class NonDisclosure extends Component {
     downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + '/public/Documents/' + "NonDisclosure-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
-        this.setState({downloading: false});
+        this.setState({ downloading: false });
     };
 
     componentWillMount() {
@@ -206,8 +207,8 @@ class NonDisclosure extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
-                                       showSaveIcon={null}
-                                       signatureValue={this.handleSignature}
+                            showSaveIcon={null}
+                            signatureValue={this.handleSignature}
                         />
                     </DialogContent>
                 </Dialog>
@@ -225,33 +226,33 @@ class NonDisclosure extends Component {
                                     this.state.id === '' ? (
                                         ''
                                     ) : (
-                                        <div>
-                                            {
-                                                this.state.id !== null ? (
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        this.createDocumentsPDF();
-                                                        this.sleep().then(() => {
-                                                            this.downloadDocumentsHandler();
-                                                        }).catch(error => {
-                                                            this.setState({downloading: false})
-                                                        })
-                                                    }}>{this.state.downloading && (
-                                                        <React.Fragment>Downloading <i class="fas fa-spinner fa-spin"/></React.Fragment>)}
-                                                        {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
-                                                            className="fas fa-download"/></React.Fragment>)}
+                                            <div>
+                                                {
+                                                    this.state.id !== null ? (
+                                                        <button className="applicant-card__edit-button" onClick={() => {
+                                                            this.createDocumentsPDF();
+                                                            this.sleep().then(() => {
+                                                                this.downloadDocumentsHandler();
+                                                            }).catch(error => {
+                                                                this.setState({ downloading: false })
+                                                            })
+                                                        }}>{this.state.downloading && (
+                                                            <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                            {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
+                                                                className="fas fa-download" /></React.Fragment>)}
 
-                                                    </button>
-                                                ) : (
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        this.setState({
-                                                            openSignature: true
-                                                        })
-                                                    }}>{actions[8].label} <i className="far fa-edit"></i>
-                                                    </button>
-                                                )
-                                            }
-                                        </div>
-                                    )
+                                                        </button>
+                                                    ) : (
+                                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                                this.setState({
+                                                                    openSignature: true
+                                                                })
+                                                            }}>{actions[8].label} <i className="far fa-edit"></i>
+                                                            </button>
+                                                        )
+                                                }
+                                            </div>
+                                        )
                                 }
                             </div>
 

@@ -117,10 +117,10 @@ class CardTemplate extends Component {
             </DialogContent>
             <DialogActions>
                 <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToOpening({ WorkOrderId })}>
-                    {ALL_ITEM_MESSAGE_OPENING}{this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
+                    {ALL_ITEM_MESSAGE_OPENING}{this.state.convertingAllItems && <i className="fas fa-spinner fa-spin ml-1" />}
                 </button>
                 <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToOpening({ id })}>
-                    {ONE_ITEM_MESSAGE_OPENING}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
+                    {ONE_ITEM_MESSAGE_OPENING}{this.state.convertingOneItem && <i className="fas fa-spinner fa-spin ml-1" />}
                 </button>
                 <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToOpening}>
                     Cancel

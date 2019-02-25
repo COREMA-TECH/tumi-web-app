@@ -883,7 +883,7 @@ class BoardManager extends Component {
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
             let _id = data.ShiftBoard.length === 0 ? 0 : data.ShiftBoard[0].workOrderId;
-            let count = 1;
+            let count = 0;
             let begin = true;
             data.ShiftBoard.forEach((ShiftBoard) => {
                 if (_id == ShiftBoard.workOrderId)
@@ -892,7 +892,7 @@ class BoardManager extends Component {
                     count = 1;
                 }
 
-                if (begin) count = 1;
+                //if (begin) count = 1;
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
@@ -910,7 +910,7 @@ class BoardManager extends Component {
                     Status: ShiftBoard.status
                 };
                 getworkOrders.push(datas);
-
+                _id = ShiftBoard.workOrderId;
             });
 
             this.setState({
