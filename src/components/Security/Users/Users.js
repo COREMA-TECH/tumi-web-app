@@ -1066,10 +1066,39 @@ class Catalogs extends React.Component {
         this.setState({ openModal: false });
     };
 
+    searchUsers = () => {
+        this.setState(prevState => ({
+            items: []
+        }), () => {
+            let allUser = this.state.allData.filter((_, i) => {
+                if (this.state.filterText === "") {
+                    return true;
+                }
+
+                if (
+                    _.Code_User.indexOf(this.state.filterText) > -1 ||
+                    _.Code_User
+                        .toLocaleLowerCase()
+                        .indexOf(this.state.filterText) > -1 ||
+                    _.Code_User
+                        .toLocaleUpperCase()
+                        .indexOf(this.state.filterText) > -1
+                ) {
+                    return true;
+                }
+            });
+            this.setState(prevState => ({
+                data: [...prevState.data, allUser]
+            }));
+        });
+    };
+
     render() {
         const { loading, success } = this.state;
         const { classes } = this.props;
         const { fullScreen } = this.props;
+
+        this.searchUsers();
 
         const isLoading =
             this.state.loadingData ||
@@ -1564,28 +1593,6 @@ class Catalogs extends React.Component {
                                 onChange={text => {
                                     this.setState({
                                         filterText: text.target.value
-                                    }, () => {
-                                        let allUser = this.state.allData.filter((_, i) => {
-                                            if (this.state.filterText === "") {
-                                                return true;
-                                            }
-
-                                            if (
-                                                _.Code_User.indexOf(this.state.filterText) > -1 ||
-                                                _.Code_User
-                                                    .toLocaleLowerCase()
-                                                    .indexOf(this.state.filterText) > -1 ||
-                                                _.Code_User
-                                                    .toLocaleUpperCase()
-                                                    .indexOf(this.state.filterText) > -1
-                                            ) {
-                                                return true;
-                                            }
-                                        });
-
-                                        this.setState({
-                                            data: allUser
-                                        })
                                     });
                                 }}
                                 value={this.state.filterText}
