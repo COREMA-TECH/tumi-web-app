@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_WORKORDERS_QUERY = gql`
-query workOrder($id: Int, $startDate: Date, $endDate: Date, $status: Int) {
-	workOrder(id: $id, startDate: $startDate, endDate: $endDate, status: $status) {
+query workOrder($workOrder: inputQueryWorkOrder, $workOrderCompany: inputInsertWorkOrderCompany) {
+	workOrder(workOrder: $workOrder, workOrderCompany: $workOrderCompany) {
 			id
 			quantity
 			shift
@@ -144,4 +144,15 @@ export const GET_RECRUITER = gql`
         }
        
     }
-    `;
+		`;
+
+export const GET_STATE_QUERY = gql`
+    query {
+					catalogitem(Id_Catalog: 3) {
+					Id
+					Name
+					DisplayLabel
+					Value
+			}
+		} 
+`;

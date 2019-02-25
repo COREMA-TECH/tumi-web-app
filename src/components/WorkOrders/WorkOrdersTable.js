@@ -10,7 +10,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withApollo } from 'react-apollo';
-import { GET_WORKORDERS_QUERY, GET_RECRUITER, GET_HOTEL_QUERY } from './queries';
+import { GET_WORKORDERS_QUERY, GET_RECRUITER, GET_HOTEL_QUERY, GET_STATE_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import { DELETE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING } from './mutations';
@@ -62,7 +62,9 @@ class WorkOrdersTable extends Component {
             filterValue: 0,
             startDate: '',
             endDate: '',
-            endDateDisabled: true
+            endDateDisabled: true,
+            states: [],
+            state: 0
         }
     }
 
@@ -70,29 +72,40 @@ class WorkOrdersTable extends Component {
         this.getWorkOrders();
         this.getRecruiter();
         this.getHotel();
+        this.getState();
 
     }
+
 
     getDateFilters = () => {
         var variables;
         variables = null;
+        var workOrder = [];
+        var workOrderCompany = [];
         if (this.state.startDate != "" && this.state.endDate != "") {
-            variables = {
+            workOrder = {
                 startDate: this.state.startDate,
                 endDate: this.state.endDate,
-                ...variables
             }
         }
         if (this.state.status != "") {
-            variables = {
+            workOrder = {
                 status: this.state.status,
-                ...variables,
+                ...workOrder
             }
         }
-        if (this.state.id != null) {
+
+        if (this.state.state != 0) {
+            workOrderCompany = {
+                State: this.state.state
+            }
+        }
+
+        if (this.state.endDate != "" || this.state.status != "" || this.state.state != 0) {
             variables = {
-                id: this.state.id,
-                ...variables,
+                workOrder,
+                workOrderCompany,
+                ...variables
             }
         }
 
@@ -113,7 +126,9 @@ class WorkOrdersTable extends Component {
                     data: data.workOrder
                 });
             })
-            .catch();
+            .catch(error => {
+                console.log(error)
+            });
     }
 
     handleDelete = (id) => {
@@ -129,7 +144,6 @@ class WorkOrdersTable extends Component {
             this.getHotel();
             this.props.handleOpenSnackbar('success', 'Record Deleted!');
             this.setState({ openConfirm: false, removing: false });
-            //window.location.reload();
         }).catch((error) => {
             this.setState({ removing: false })
             this.props.handleOpenSnackbar('error', 'Error: ' + error);
@@ -266,6 +280,20 @@ class WorkOrdersTable extends Component {
             .catch();
     };
 
+    getState = () => {
+        this.props.client
+            .query({
+                query: GET_STATE_QUERY,
+                variables: {}
+            })
+            .then(({ data }) => {
+                this.setState({
+                    states: data.catalogitem
+                });
+            })
+            .catch();
+    };
+
     componentWillReceiveProps(nextProps) {
         this.setState({
             filterValue: nextProps.filter
@@ -340,16 +368,18 @@ class WorkOrdersTable extends Component {
                 <div className="card-header bg-light">
                     <div className="row">
                         <div className="col-md-2">
-                            <select name="" id="" className="form-control" onChange={(e) => {
+                            <select name="state" id="" className="form-control" onChange={(e) => {
                                 this.setState({
-                                    filterValue: parseInt(e.target.value)
-                                })
+                                    state: parseInt(e.target.value)
+                                }, () => { this.getWorkOrders() })
                             }}>
                                 <option value="0">State</option>
-                                <option value="1">Canceled Work Orders</option>
+                                {this.state.states.map(state => {
+                                    return <option value={state.Id} key={state.Id}>{state.Name}</option>
+                                })}
                             </select>
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-4">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">From</span>
@@ -366,7 +396,7 @@ class WorkOrdersTable extends Component {
                                 <i class="fas fa-filter"></i> Clear
                             </button>
                         </div>
-                        <div className="col-md-2 offset-md-1">
+                        <div className="col-md-2">
                             <select name="filterValue" id="" className="form-control" onChange={this.handleFilterValue}>
                                 <option value="3">Status (All)</option>
                                 <option value="1">Open</option>
@@ -393,9 +423,9 @@ class WorkOrdersTable extends Component {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell className={"Table-head text-center"} style={{width: '80px' }}>Actions</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"} style={{width: '80px' }}>No.</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"} style={{width: '220px' }}>Property</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"} style={{ width: '80px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"} style={{ width: '80px' }}>No.</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"} style={{ width: '220px' }}>Property</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
@@ -409,7 +439,7 @@ class WorkOrdersTable extends Component {
                                     if (this.state.filterValue === 0) {
                                         return (
                                             <TableRow style={{ background: backgroundColor }}>
-                                                <CustomTableCell className={'text-center'} style={{width: '80px' }}>
+                                                <CustomTableCell className={'text-center'} style={{ width: '80px' }}>
                                                     <Tooltip title="Life Cycle">
                                                         <button
                                                             className="btn btn-success mr-1 float-left"
@@ -454,8 +484,8 @@ class WorkOrdersTable extends Component {
                                                             )
                                                     }
                                                 </CustomTableCell>
-                                                <CustomTableCell style={{width: '80px' }}>{row.id}</CustomTableCell>
-                                                <CustomTableCell style={{width: '220px' }}>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
+                                                <CustomTableCell style={{ width: '80px' }}>{row.id}</CustomTableCell>
+                                                <CustomTableCell style={{ width: '220px' }}>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
                                                 <CustomTableCell >{row.position != null ? row.position.Position : ''}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
