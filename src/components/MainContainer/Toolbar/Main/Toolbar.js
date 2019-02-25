@@ -3,6 +3,7 @@ import './index.css';
 import onClickOutside from 'react-onclickoutside';
 import { withRouter } from 'react-router-dom';
 import HotelDialog from './HotelDialog';
+import { GET_ROLES_FORMS } from '../../../Nav/MobileMenu/Queries';
 
 class Toolbar extends Component {
 	constructor(props) {
@@ -62,7 +63,44 @@ class Toolbar extends Component {
 		submenu.classList.toggle('show');
 	};
 
+	getRolesFormsInfo = () => {
+		this.setState(
+			{
+				loading: true
+			},
+			() => {
+				this.props.client
+					.query({
+						query: GET_ROLES_FORMS,
+						variables: {
+							IdRoles: localStorage.getItem('IdRoles')
+						}
+					})
+					.then(({ data }) => {
+
+						this.setState({
+							dataRolForm: data.rolesforms,
+							loading: false
+						});
+					})
+					.catch((error) => {
+						this.setState({
+							loading: false
+						});
+
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error to get data. Please, try again!',
+							'bottom',
+							'right'
+						);
+					});
+			}
+		);
+	};
+
 	render() {
+		let items = this.state.dataRolForm;
 		return (
 			<div className="toolbar__main">
 				<ul className="RightMenu-list">
@@ -91,6 +129,7 @@ class Toolbar extends Component {
 								<div className="row app-shortcuts">
 									{localStorage.getItem('showMenu') == "true" ?
 										<React.Fragment>
+
 											<a className="col-4 app-shortcuts__item" href="/home/work-orders">
 												<i className="fas fa-briefcase" />
 												<small>Work Orders</small>

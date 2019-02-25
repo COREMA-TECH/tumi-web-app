@@ -20,6 +20,7 @@ import Filters from './Filters';
 import CardTemplate from './CardTemplate';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withRouter } from "react-router-dom";
+import { red } from '@material-ui/core/es/colors';
 
 const CustomCard = props => {
     return (
@@ -102,7 +103,7 @@ class BoardManager extends Component {
             state: 0,
             city: 0,
             region: 0,
-            status: null,
+            status: 1,
             loadingCountries: false,
             loadingCities: false,
             loadingStates: false,
@@ -423,10 +424,14 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
-        let needEnglish, needExperience, Position;
 
-        if (laneId.trim() == "lane1" && cardId > 0) {
+        console.log("onCardClick ", cardId, metadata, laneId)
 
+        let needEnglish, needExperience, Position, state;
+
+        state = this.state.workOrders.find((item) => { return item.id == cardId })
+
+        if (laneId.trim() == "lane1" && cardId > 0 && state.Status != 0) {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
 
@@ -816,8 +821,6 @@ class BoardManager extends Component {
     };
 
     getDataFilters = () => {
-
-        console.log("getDataFilters ", this.state.status)
         var variables;
 
         if (this.state.status == 0) {
@@ -869,13 +872,15 @@ class BoardManager extends Component {
     }
 
     getWorkOrders = async () => {
+
         let getworkOrders = [];
         let datas = [];
 
 
         await this.props.client.query({
             query: GET_BOARD_SHIFT,
-            variables: { ...this.getDataFilters() }
+            variables: { ...this.getDataFilters() },
+            fetchPolicy: 'no-cache'
         }).then(({ data }) => {
             let _id = data.ShiftBoard.length === 0 ? 0 : data.ShiftBoard[0].workOrderId;
             let count = 1;
@@ -894,14 +899,15 @@ class BoardManager extends Component {
                     dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
-                    cardStyle: { borderRadius: 6, marginBottom: 15 },
+                    cardStyle: { borderRadius: 6, marginBottom: 15, color: red },
                     needExperience: ShiftBoard.needExperience,
                     needEnglish: ShiftBoard.needEnglish,
                     PositionApplyfor: ShiftBoard.Id_positionApplying,
                     Position: ShiftBoard.positionName,
                     Zipcode: ShiftBoard.zipCode,
                     WorkOrderId: ShiftBoard.workOrderId,
-                    isOpening: ShiftBoard.isOpening
+                    isOpening: ShiftBoard.isOpening,
+                    Status: ShiftBoard.status
                 };
                 getworkOrders.push(datas);
 
@@ -1119,8 +1125,8 @@ class BoardManager extends Component {
                                                             value={this.state.status}
                                                             showNone={false}
                                                         >
-                                                            <option value={null}>All work orders</option>
                                                             <option value={1}>Active work orders</option>
+                                                            <option value={null}>All work orders</option>
                                                             <option value={0}>Closed work orders</option>
                                                         </select>
                                                     </div>
@@ -1140,7 +1146,7 @@ class BoardManager extends Component {
                                                                     hotel: 0,
                                                                     state: 0,
                                                                     city: 0,
-                                                                    status: null
+                                                                    status: 1
                                                                 }, () => {
                                                                     this.getWorkOrders();
                                                                 })
