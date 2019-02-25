@@ -894,7 +894,7 @@ class Application extends Component {
                                             </div>
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[15].label}
+                                                    {formSpanish[15].label}
                                                 </span>
                                                 <input
                                                     onChange={(event) => {
@@ -906,7 +906,6 @@ class Application extends Component {
                                                     name="expireDateId"
                                                     type="date"
                                                     className="form-control"
-                                                    required
                                                     disabled={!this.state.editing}
                                                     min="0"
                                                     maxLength="50"

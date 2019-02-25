@@ -5,7 +5,7 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import renderHTML from 'react-render-html';
 import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO } from "./Queries";
-import { ADD_ANTI_HARASSMENT } from "./Mutations";
+import {ADD_W4} from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
@@ -25,7 +25,8 @@ class FormsW4 extends Component {
             date: '',
             applicantName: '',
             companyPhoneNumber: '',
-            ApplicationId: this.props.applicationId
+            ApplicationId: this.props.applicationId,
+            isCreated: false
         }
     }
 
@@ -45,127 +46,59 @@ class FormsW4 extends Component {
             .query({
                 query: GET_APPLICANT_INFO,
                 variables: {
-                    id: id
-                }
-            })
-            .then(({ data }) => {
-                if (data.applications[0] !== null) {
-                    this.setState({
-                        applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
-                    });
-                }
-            })
-            .catch(error => {
-
-            })
-    };
-
-    getHarrasmentInformation = (id) => {
-        this.props.client
-            .query({
-                query: GET_ANTI_HARRASMENT_INFO,
-                variables: {
-                    id: id
+                    ApplicationId: id
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                console.log("esta es la data ", data);
-                if (data.applications[0].harassmentPolicy !== null) {
+                if(data.applicantW4.length > 0) {
                     this.setState({
-                        id: data.applications[0].harassmentPolicy.id,
-                        signature: data.applications[0].harassmentPolicy.signature,
-                        content: data.applications[0].harassmentPolicy.content,
-                        applicantName: data.applications[0].harassmentPolicy.applicantName,
-                        date: data.applications[0].harassmentPolicy.date,
+                        isCreated: true
                     });
                 }
             })
             .catch(error => {
-                // If there's an error show a snackbar with a error message
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to get conduct code information. Please, try again!',
-                    'bottom',
-                    'right'
-                );
+
             })
     };
 
-    insertAntiHarrasment = (item) => {
-        let harassmentObject = Object.assign({}, item);
-        delete harassmentObject.openSignature;
-        delete harassmentObject.id;
-        delete harassmentObject.accept;
-
-        this.props.client
-            .mutate({
-                mutation: ADD_ANTI_HARASSMENT,
-                variables: {
-                    harassmentPolicy: harassmentObject
-                }
-            })
-            .then(({ data }) => {
-                console.log("entro al data ", data);
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Successfully signed!',
-                    'bottom',
-                    'right'
-                );
-
-                this.setState({
-                    id: data.addHarassmentPolicy[0].id
-                })
-            })
-            .catch(error => {
-                // If there's an error show a snackbar with a error message
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to sign Anti Harrasment information. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            });
-    };
-
-    insertW4 = (item) => {
-        let harassmentObject = Object.assign({}, item);
-        delete harassmentObject.openSignature;
-        delete harassmentObject.id;
-        delete harassmentObject.accept;
-
-
-        this.props.client
-            .mutate({
-                mutation: ADD_ANTI_HARASSMENT,
-                variables: {
-                    harassmentPolicy: harassmentObject
-                }
-            })
-            .then(({ data }) => {
-                console.log("entro al data ", data);
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Successfully signed!',
-                    'bottom',
-                    'right'
-                );
-
-                this.setState({
-                    id: data.addHarassmentPolicy[0].id
-                })
-            })
-            .catch(error => {
-                // If there's an error show a snackbar with a error message
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to sign Anti Harrasment information. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            });
-    };
+    // insertW4 = (item) => {
+    //     let harassmentObject = Object.assign({}, item);
+    //     delete harassmentObject.openSignature;
+    //     delete harassmentObject.id;
+    //     delete harassmentObject.accept;
+    //
+    //
+    //     this.props.client
+    //         .mutate({
+    //             mutation: ADD_ANTI_HARASSMENT,
+    //             variables: {
+    //                 harassmentPolicy: harassmentObject
+    //             }
+    //         })
+    //         .then(({ data }) => {
+    //             console.log("entro al data ", data);
+    //             this.props.handleOpenSnackbar(
+    //                 'success',
+    //                 'Successfully signed!',
+    //                 'bottom',
+    //                 'right'
+    //             );
+    //
+    //             this.setState({
+    //                 id: data.addHarassmentPolicy[0].id
+    //             })
+    //         })
+    //         .catch(error => {
+    //             // If there's an error show a snackbar with a error message
+    //             this.props.handleOpenSnackbar(
+    //                 'error',
+    //                 'Error to sign Anti Harrasment information. Please, try again!',
+    //                 'bottom',
+    //                 'right'
+    //             );
+    //         });
+    // };
 
     createDocumentsPDF = () => {
         this.setState(
@@ -213,7 +146,7 @@ class FormsW4 extends Component {
         this.getApplicantInformation(this.props.applicationId);
     }
 
-    saveW4 = () => {
+    validateW4 = () => {
         let firstName = document.getElementById('firstName');
         let lastName = document.getElementById('lastName');
         let socialSecurityNumber = document.getElementById('socialSecurityNumber');
@@ -227,38 +160,51 @@ class FormsW4 extends Component {
         let postalCode = document.getElementById('postalCode');
         let socialSecurityExtention = document.getElementById('socialSecurityExtention');
 
-        console.log(firstName.value);
-        console.log(lastName.value);
-        console.log(socialSecurityNumber.value);
-        console.log(idNumber.value);
-        console.log(firstEmployeeDate.value);
-        console.log(employeer.value);
-        console.log(excention.value);
-        console.log(payCheck.value);
-        console.log(excentionYear.value);
-        console.log(address.value);
-        console.log(postalCode.value);
-        console.log(socialSecurityExtention.value);
+        // GET html by id
+        let html = document.getElementById('w4Html');
+        console.log(html.outerHTML);
 
+        if(firstName.value.length > 0 &&
+            lastName.value.length > 0 &&
+            socialSecurityNumber.value.length > 0) {
 
-        // TODO - Mutation to save
-        // this.props.client
-        //     .mutate({
-        //         mutation: ,
-        //         variables:
-        //     })
-        //     .then(({ data }) => {
-        //
-        //     })
-        //     .catch(error => {
-        //         // If there's an error show a snackbar with a error message
-        //         this.props.handleOpenSnackbar(
-        //             'error',
-        //             'Error to save W4. Please, try again!',
-        //             'bottom',
-        //             'right'
-        //         );
-        //     });
+            this.props.client
+                .mutate({
+                    mutation: ADD_W4,
+                    variables: {
+                        html: html.outerHTML,
+                        ApplicantId: this.props.applicationId
+                    }
+                })
+                .then(({ data }) => {
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Created successfully',
+                        'bottom',
+                        'right'
+                    );
+                    this.getApplicantInformation(this.props.applicationId)
+                })
+                .catch(error => {
+                    // If there's an error show a snackbar with a error message
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to save W4. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+
+                    console.log(error);
+                });
+        } else {
+            // TODO: show a snackbar
+            this.props.handleOpenSnackbar(
+                'warning',
+                'Complete all the fields and try again!',
+                'bottom',
+                'right'
+            );
+        }
     };
 
     sleep() {
@@ -305,7 +251,7 @@ class FormsW4 extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[9].label}</span>
                                 {
-                                    this.state.id !== null ? (
+                                    this.state.isCreated ? (
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.createDocumentsPDF();
                                             this.sleep().then(() => {
@@ -322,13 +268,13 @@ class FormsW4 extends Component {
                                         </button>
                                     ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
-                                                this.saveW4()
+                                                this.validateW4();
                                             }}>{actions[4].label} <i className="far fa-save" />
                                             </button>
                                         )
                                 }
                             </div>
-                            <div className="row pdf-container--i9-w4">
+                            <div className="row pdf-container--i9-w4" id="w4Html">
                                 <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(`<div style="width: 800px; margin:0 auto">
                                     <table style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px; border: 0px #FFF; border-collapse: collapse; width: 100%;" border="1">
