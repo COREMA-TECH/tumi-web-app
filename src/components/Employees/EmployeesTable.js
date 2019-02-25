@@ -192,13 +192,14 @@ class EmployeesTable extends React.Component {
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
-                            <CustomTableCell className={"Table-head"}>Actions</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{width: '110px' }}>Actions</CustomTableCell>
                             <CustomTableCell style={{width: '60px' }} className={"Table-head"}>First Name</CustomTableCell>
-                            <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{width: '60px' }}>Last Name</CustomTableCell>
                             <CustomTableCell style={{width: '90px' }} className={"Table-head"}>Email</CustomTableCell>
-                            <CustomTableCell className={"Table-head"}>Phone Number</CustomTableCell>
-                            <CustomTableCell className={"Table-head"}>Department</CustomTableCell>
-                            <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{width: '100px' }}>Phone Number</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{width: '60px' }}>Department</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{width: '60px' }}>Position</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{width: '150px' }}></CustomTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -212,7 +213,7 @@ class EmployeesTable extends React.Component {
                                         this.props.update(row.id, row)
                                     }}
                                 >
-                                    <CustomTableCell>
+                                    <CustomTableCell style={{width: '110px' }}>
                                         <Tooltip title="Edit">
                                             <button
                                                 className="btn btn-success float-left ml-1"
@@ -257,10 +258,10 @@ class EmployeesTable extends React.Component {
                                         }
                                     </CustomTableCell>
                                     <CustomTableCell style={{width: '60px' }}>{row.firstName}</CustomTableCell>
-                                    <CustomTableCell>{row.lastName}</CustomTableCell>
+                                    <CustomTableCell style={{width: '60px' }}>{row.lastName}</CustomTableCell>
                                     <CustomTableCell style={{width: '90px' }} >{row.electronicAddress}</CustomTableCell>
-                                    <CustomTableCell>{row.mobileNumber}</CustomTableCell>
-                                    <CustomTableCell>
+                                    <CustomTableCell style={{width: '100px' }}>{row.mobileNumber}</CustomTableCell>
+                                    <CustomTableCell style={{width: '60px' }}>
                                         {
                                             this.props.departments.map(item => {
                                                 if (item.Id === row.Id_Deparment) {
@@ -269,7 +270,7 @@ class EmployeesTable extends React.Component {
                                             })
                                         }
                                     </CustomTableCell>
-                                    <CustomTableCell>
+                                    <CustomTableCell style={{width: '60px' }}>
                                         {
                                             this.props.titles.map(item => {
                                                 if (item.Id === row.Contact_Title) {
@@ -278,6 +279,7 @@ class EmployeesTable extends React.Component {
                                             })
                                         }
                                     </CustomTableCell>
+                                    <CustomTableCell style={{width: '150px' }}></CustomTableCell>
                                 </TableRow>
                             );
                         })}
