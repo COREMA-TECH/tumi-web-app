@@ -60,7 +60,7 @@ class Application extends Component {
         streetAddress: '',
         aptNumber: '',
         city: 0,
-        state: 419,
+        state: 0,
         zipCode: '',
         homePhone: '',
         cellPhone: '',
@@ -855,7 +855,7 @@ class Application extends Component {
 
                                 {spanishActions[2].label}
                             </button>
-                            {!this.state.searchigZipcode && <button type="submit"
+                            <button type="submit"
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -865,9 +865,10 @@ class Application extends Component {
                                         this.updateApplicationInformation(this.props.applicationId);
                                     }
                                 }}
-                                className="applicant-card__save-button">
+                                className="applicant-card__save-button" disabled={this.state.searchigZipcode}>
                                 {spanishActions[4].label}
-                            </button>}
+
+                            </button>
                         </div>
                     ) : (
                             <div className="applicant-card__footer">
@@ -895,6 +896,5 @@ class Application extends Component {
     }
 }
 
-export default withStyles(styles)(withApollo(Application));
+export default withStyles(styles)(withApollo(withGlobalContent(Application)));
 
-//export default withApollo(withGlobalContent(Application));
