@@ -102,7 +102,7 @@ class BoardManager extends Component {
             state: 0,
             city: 0,
             region: 0,
-            status: null,
+            status: 1,
             loadingCountries: false,
             loadingCities: false,
             loadingStates: false,
@@ -423,10 +423,15 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
-        let needEnglish, needExperience, Position;
+        let needEnglish, needExperience, Position, state;
 
-        if (laneId.trim() == "lane1" && cardId > 0) {
+        state = this.state.workOrders.find((item) => { return item.id == cardId }).Status
 
+
+        console.log("onCardClick ", state)
+        console.log("onCardClick 1 ", this.state.workOrders)
+
+        if (laneId.trim() == "lane1" && cardId > 0 && state != 0) {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
 
@@ -816,8 +821,6 @@ class BoardManager extends Component {
     };
 
     getDataFilters = () => {
-
-        console.log("getDataFilters ", this.state.status)
         var variables;
 
         if (this.state.status == 0) {
@@ -901,7 +904,8 @@ class BoardManager extends Component {
                     Position: ShiftBoard.positionName,
                     Zipcode: ShiftBoard.zipCode,
                     WorkOrderId: ShiftBoard.workOrderId,
-                    isOpening: ShiftBoard.isOpening
+                    isOpening: ShiftBoard.isOpening,
+                    Status: ShiftBoard.status
                 };
                 getworkOrders.push(datas);
 
@@ -1119,8 +1123,8 @@ class BoardManager extends Component {
                                                             value={this.state.status}
                                                             showNone={false}
                                                         >
-                                                            <option value={null}>All work orders</option>
                                                             <option value={1}>Active work orders</option>
+                                                            <option value={null}>All work orders</option>
                                                             <option value={0}>Closed work orders</option>
                                                         </select>
                                                     </div>
@@ -1140,7 +1144,7 @@ class BoardManager extends Component {
                                                                     hotel: 0,
                                                                     state: 0,
                                                                     city: 0,
-                                                                    status: null
+                                                                    status: 1
                                                                 }, () => {
                                                                     this.getWorkOrders();
                                                                 })
