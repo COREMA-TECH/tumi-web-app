@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import renderHTML from 'react-render-html';
-import {CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO} from "./Queries";
-import {ADD_ANTI_HARASSMENT} from "./Mutations";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO } from "./Queries";
+import { ADD_ANTI_HARASSMENT } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
@@ -25,7 +25,8 @@ class AntiHarassment extends Component {
             date: '',
             applicantName: '',
             companyPhoneNumber: '',
-            ApplicationId: this.props.applicationId
+            ApplicationId: this.props.applicationId,
+            completed: false
 
         }
     }
@@ -35,7 +36,8 @@ class AntiHarassment extends Component {
         this.setState({
             signature: value,
             openSignature: false,
-            date: new Date().toISOString().substring(0, 10)
+            date: new Date().toISOString().substring(0, 10),
+            completed: true
         }, () => {
             this.insertAntiHarrasment(this.state);
         });
@@ -49,7 +51,7 @@ class AntiHarassment extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.applications[0] !== null) {
                     this.setState({
                         applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
@@ -70,7 +72,7 @@ class AntiHarassment extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 console.log("esta es la data ", data);
                 if (data.applications[0].harassmentPolicy !== null) {
                     this.setState({
@@ -106,7 +108,7 @@ class AntiHarassment extends Component {
                     harassmentPolicy: harassmentObject
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 console.log("entro al data ", data);
                 this.props.handleOpenSnackbar(
                     'success',
@@ -154,12 +156,12 @@ class AntiHarassment extends Component {
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({loadingData: false, downloading: false});
+                    this.setState({ loadingData: false, downloading: false });
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({loadingData: false, downloading: false});
+                this.setState({ loadingData: false, downloading: false });
             });
     };
 
@@ -167,7 +169,7 @@ class AntiHarassment extends Component {
     downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + '/public/Documents/' + "Anti-Harrasment-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
-        this.setState({downloading: false});
+        this.setState({ downloading: false });
     };
 
 
@@ -226,23 +228,23 @@ class AntiHarassment extends Component {
                                             this.sleep().then(() => {
                                                 this.downloadDocumentsHandler();
                                             }).catch(error => {
-                                                this.setState({downloading: false})
+                                                this.setState({ downloading: false })
                                             })
                                         }}>{this.state.downloading && (
-                                            <React.Fragment>Downloading <i class="fas fa-spinner fa-spin"/></React.Fragment>)}
+                                            <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
                                             {!this.state.downloading && (
                                                 <React.Fragment>{actions[9].label} <i
-                                                    className="fas fa-download"/></React.Fragment>)}
+                                                    className="fas fa-download" /></React.Fragment>)}
 
                                         </button>
                                     ) : (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                openSignature: true
-                                            })
-                                        }}>{actions[8].label} <i className="far fa-edit" />
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    openSignature: true
+                                                })
+                                            }}>{actions[8].label} <i className="far fa-edit" />
+                                            </button>
+                                        )
                                 }
                             </div>
                             <div className="row pdf-container">

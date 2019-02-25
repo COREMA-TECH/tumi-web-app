@@ -26,6 +26,7 @@ class NonDisclosure extends Component {
             applicantName: '',
             ApplicationId: this.props.applicationId,
             openSignature: false,
+            completed: false
         }
     }
 

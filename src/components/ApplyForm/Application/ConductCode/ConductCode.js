@@ -27,7 +27,8 @@ class ConductCode extends Component {
 			date: '',
 			applicantName: '',
 			ApplicationId: this.props.applicationId,
-			openSignature: false
+			openSignature: false,
+			completed: false
 		};
 	}
 
@@ -36,7 +37,8 @@ class ConductCode extends Component {
 			{
 				signature: value,
 				openSignature: false,
-				date: new Date().toISOString().substring(0, 10)
+				date: new Date().toISOString().substring(0, 10),
+				completed: true
 			},
 			() => {
 				this.insertConductCode(this.state);
