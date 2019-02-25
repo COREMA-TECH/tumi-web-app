@@ -1407,6 +1407,7 @@ class NewContract extends Component {
                                             <div className="col-md-6 col-lg-6">
                                                 <label>* Contract Owner</label>
                                                 <InputForm
+                                                    disabled={true}
                                                     value={this.state.Contrat_Owner}
                                                     change={(text) => {
                                                         this.setState(
