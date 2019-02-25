@@ -86,6 +86,7 @@ class Toolbar extends Component {
 							>
 								<i className="fas fa-ellipsis-v" />
 							</button>
+
 							<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<div className="row app-shortcuts">
 									{localStorage.getItem('showMenu') == "true" ?

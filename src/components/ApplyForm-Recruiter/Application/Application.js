@@ -2,15 +2,8 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import {
-    GET_APPLICATION_BY_ID,
-    GET_POSITIONS_QUERY,
-    GET_POSITIONS_CATALOG,
-    getCompaniesQuery
-} from '../Queries';
-
+import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_POSITIONS_CATALOG, getCompaniesQuery } from '../Queries';
 import { CREATE_APPLICATION, UPDATE_APPLICATION } from '../Mutations';
-
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
 import withGlobalContent from '../../Generic/Global';
@@ -20,6 +13,8 @@ import makeAnimated from 'react-select/lib/animated';
 import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
 import LocationForm from '../../ui-components/LocationForm'
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -29,92 +24,114 @@ const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageFor
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const formSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/formSpanish`);
 
+const styles = (theme) => ({
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative'
+    },
+    buttonSuccess: {},
+    buttonProgress: {
+        //color: ,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12
+    },
+    row: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default
+        },
+        '&:hover': {
+            cursor: 'pointer'
+        }
+    }
+
+});
+
 class Application extends Component {
+    DEFAULT_STATE = {
+        activeStep: 0,
+        open: false,
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        lastName2: '',
+        streetAddress: '',
+        aptNumber: '',
+        city: 0,
+        state: 419,
+        zipCode: '',
+        homePhone: '',
+        cellPhone: '',
+        socialSecurityNumber: '',
+        birthDay: '',
+        car: false,
+        typeOfId: '',
+        expireDateId: '',
+        emailAddress: '',
+        positionApplyingFor: 1,
+        idealJob: '',
+        dateAvailable: '',
+        scheduleRestrictions: '',
+        scheduleExplain: '',
+        convicted: '',
+        convictedExplain: '',
+        socialNetwork: '',
+        comment: '',
+        generalComment: '',
+        // Military Service state fields
+        branch: '',
+        startDateMilitaryService: '',
+        endDateMilitaryService: '',
+        rankAtDischarge: '',
+        typeOfDischarge: '',
+
+        companyName: '',
+        companyPhone: '',
+        companyAddress: '',
+        companySupervisor: '',
+        companyJobTitle: '',
+        companyPayRate: '',
+        companyStartDate: '',
+        companyEndDate: '',
+        companyReasonForLeaving: '',
+
+        percent: 50,
+        insertDialogLoading: false,
+        graduated: false,
+        previousEmploymentPhone: '',
+
+        // Application id property state is used to save languages, education, mulitary services, skills
+        applicationId: null,
+        // Editing state properties - To edit general info
+        editing: false,
+
+        loading: false,
+        idRecruiter: localStorage.getItem('LoginId'),
+        date: new Date().toISOString().substring(0, 10),
+
+
+    }
     constructor(props) {
         super(props);
 
         this.state = {
-            activeStep: 0,
-            open: false,
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            lastName2: '',
-            date: new Date().toISOString().substring(0, 10),
-            streetAddress: '',
-            aptNumber: '',
-            city: 0,
-            state: 419,
-            zipCode: '',
-            homePhone: '',
-            cellPhone: '',
-            socialSecurityNumber: '',
-            birthDay: '',
-            car: false,
-            typeOfId: '',
-            expireDateId: '',
-            emailAddress: '',
-            positionApplyingFor: 1,
-            idealJob: '',
-            dateAvailable: '',
-            scheduleRestrictions: '',
-            scheduleExplain: '',
-            convicted: '',
-            convictedExplain: '',
-            socialNetwork: '',
-            comment: '',
-            generalComment: '',
-
             // Languages array
             languages: [],
-
             // Skills array
             skills: [],
-
             // Schools array
             schools: [],
-
             //Hotel array
             hotels: [],
-
-            // Military Service state fields
-            branch: '',
-            startDateMilitaryService: '',
-            endDateMilitaryService: '',
-            rankAtDischarge: '',
-            typeOfDischarge: '',
-
             // Previous Employment
             previousEmployment: [],
-            companyName: '',
-            companyPhone: '',
-            companyAddress: '',
-            companySupervisor: '',
-            companyJobTitle: '',
-            companyPayRate: '',
-            companyStartDate: '',
-            companyEndDate: '',
-            companyReasonForLeaving: '',
-
-            percent: 50,
-            insertDialogLoading: false,
-            graduated: false,
-            previousEmploymentPhone: '',
-
-            // Application id property state is used to save languages, education, mulitary services, skills
-            applicationId: null,
-
             // Languages catalog
             languagesLoaded: [],
-
-            // Editing state properties - To edit general info
-            editing: false,
-
-            loading: false,
-            idRecruiter: localStorage.getItem('LoginId'),
-
             // React tag input with suggestions
             positionsTags: [],
+            ...this.DEFAULT_STATE
         };
     }
 
@@ -123,20 +140,16 @@ class Application extends Component {
         this.setState({ positionsTags });
     };
 
-    handleChange = (positionsTags) => {
-        this.setState({ positionsTags });
-    };
-
-    handleTextChange = (event) => {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        this.setState({
-            [name]: value
-        });
-
-    };
+    /* handleChange = (event) => {
+         const target = event.target;
+         const value = target.type === 'checkbox' ? target.checked : target.value;
+         const name = target.name;
+ 
+         this.setState({
+             [name]: value
+         });
+ 
+     };*/
 
     // BUG
 
@@ -382,7 +395,7 @@ class Application extends Component {
                                     editing: false
                                 },
                                 () => {
-                                    this.removeSkeletonAnimation();
+                                    // this.removeSkeletonAnimation();
                                     this.getIdealJobsByApplicationId();
                                 }
                             );
@@ -442,7 +455,7 @@ class Application extends Component {
     };
 
     // To validate all the inputs and set a red border when the input is invalid
-    validateInvalidInput = () => {
+    /*validateInvalidInput = () => {
         if (document.addEventListener) {
             document.addEventListener(
                 'invalid',
@@ -452,10 +465,10 @@ class Application extends Component {
                 true
             );
         }
-    };
+    };*/
 
     // To show skeleton animation in css
-    removeSkeletonAnimation = () => {
+    /*removeSkeletonAnimation = () => {
         let inputs, index;
 
         inputs = document.getElementsByTagName('span');
@@ -463,14 +476,14 @@ class Application extends Component {
             inputs[index].classList.remove('skeleton');
         }
     };
-
+*/
     componentWillMount() {
         if (this.props.applicationId > 0) {
             this.getHotels(() => {
                 this.getApplicationById(this.props.applicationId);
             });
         }
-        this.removeSkeletonAnimation();
+        //this.removeSkeletonAnimation();
 
         if (this.props.applicationId == 0) {
             this.setState({
@@ -503,9 +516,9 @@ class Application extends Component {
     }
 
     render() {
+
         return (
             <div className="Apply-container-application">
-
                 <div className="applicant-card">
                     <div className="applicant-card__header">
                         <span className="applicant-card__title">{menuSpanish[0].label}</span>
@@ -602,7 +615,11 @@ class Application extends Component {
                                             * {formSpanish[0].label}
                                         </span>
                                         <input
-                                            onChange={this.handleTextChange}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    firstName: event.target.value
+                                                });
+                                            }}
                                             value={this.state.firstName}
                                             name="firstName"
                                             type="text"
@@ -619,7 +636,11 @@ class Application extends Component {
                                             {formSpanish[1].label}
                                         </span>
                                         <input
-                                            onChange={this.handleTextChange}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    middleName: event.target.value
+                                                });
+                                            }}
                                             value={this.state.middleName}
                                             name="middleName"
                                             type="text"
@@ -635,7 +656,11 @@ class Application extends Component {
                                             * {formSpanish[2].label}
                                         </span>
                                         <input
-                                            onChange={this.handleTextChange}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    lastName: event.target.value
+                                                });
+                                            }}
                                             value={this.state.lastName}
                                             name="lastName"
                                             type="text"
@@ -652,7 +677,11 @@ class Application extends Component {
                                             {formSpanish[24].label}
                                         </span>
                                         <input
-                                            onChange={this.handleTextChange}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    lastName2: event.target.value
+                                                });
+                                            }}
                                             value={this.state.lastName2}
                                             id="lastName2"
                                             name="lastName2"
@@ -695,7 +724,11 @@ class Application extends Component {
                                             <input
                                                 id="carSwitch"
                                                 className="onoffswitch-checkbox"
-                                                onChange={this.handleTextChange}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        car: event.target.checked
+                                                    });
+                                                }}
                                                 checked={this.state.car}
                                                 value={this.state.car}
                                                 name="car"
@@ -727,7 +760,11 @@ class Application extends Component {
                                             value={this.state.homePhone}
                                             className="form-control"
                                             disabled={!this.state.editing}
-                                            onChange={this.handleTextChange}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    homePhone: event.target.value
+                                                });
+                                            }}
                                             placeholder="+(___) ___-____"
                                             minLength="15"
                                         />
@@ -744,7 +781,11 @@ class Application extends Component {
                                             value={this.state.cellPhone}
                                             className="form-control"
                                             disabled={!this.state.editing}
-                                            onChange={this.handleTextChange}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    cellPhone: event.target.value
+                                                });
+                                            }}
                                             placeholder="+(___) ___-____"
                                             minLength="15"
                                         />
@@ -754,7 +795,11 @@ class Application extends Component {
                                             {formSpanish[13].label}
                                         </span>
                                         <input
-                                            onChange={this.handleTextChange}
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    emailAddress: event.target.value
+                                                });
+                                            }}
                                             value={this.state.emailAddress}
                                             name="emailAddress"
                                             type="email"
@@ -765,18 +810,25 @@ class Application extends Component {
                                             maxLength="50"
                                             minLength="8"
                                         />
+
                                     </div>
+
                                     <div className="col-md-12">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[21].label}
                                         </span>
                                         <textarea
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    generalComment: event.target.value
+                                                });
+                                            }}
                                             name="generalComment"
-                                            id="generalComment"
-                                            onChange={this.handleTextChange}
-                                            value={this.state.generalComment}
+                                            className="form-control"
+                                            id=""
                                             cols="60"
                                             rows="3"
+                                            value={this.state.generalComment}
                                             disabled={!this.state.editing}
                                             className="form-control textarea-apply-form"
                                         />
@@ -794,7 +846,7 @@ class Application extends Component {
                                         window.location.href = '/home/Recruiter'
                                     }
 
-                                    this.removeSkeletonAnimation();
+                                    //this.removeSkeletonAnimation();
                                     this.setState({
                                         loading: false, editing: false
                                     });
@@ -838,10 +890,11 @@ class Application extends Component {
                         )}
                 </div>
 
-
             </div>
         );
     }
 }
 
-export default withApollo(withGlobalContent(Application));
+export default withStyles(styles)(withApollo(Application));
+
+//export default withApollo(withGlobalContent(Application));

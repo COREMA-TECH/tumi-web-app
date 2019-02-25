@@ -39,12 +39,15 @@ tbody[class^="MuiTableBody-"] {
         padding-right: 0 !important;
         text-align: center;
         width: 25px;
-            .fa, .fas {
-                font-weight: 900;
-                font-size: 10px;
-            }
+        .fa, .fas {
+            font-weight: 900;
+            font-size: 10px;
+        }
+    }
+    tr {
+        height: 35px !important;
     }
     td, th {
-        padding: 4px 5px 4px 5px !important;
+        padding: 0px 5px 0px 5px !important;
     }
 }
