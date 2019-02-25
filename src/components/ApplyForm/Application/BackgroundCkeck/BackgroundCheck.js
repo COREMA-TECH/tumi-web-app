@@ -228,7 +228,8 @@ class BackgroundCheck extends Component {
                 content: "".trim(),
                 date: new Date().toISOString(),
                 applicantName: "".trim(),
-                ApplicationId: this.props.applicationId
+                ApplicationId: this.props.applicationId,
+                completed: true
             };
         } else {
             backgroundCheckItem = {
@@ -243,7 +244,8 @@ class BackgroundCheck extends Component {
                 content: "".trim(),
                 date: new Date().toISOString(),
                 applicantName: "".trim(),
-                ApplicationId: this.props.applicationId
+                ApplicationId: this.props.applicationId,
+                completed: true
             };
         }
 
@@ -253,7 +255,6 @@ class BackgroundCheck extends Component {
             this.insertBackgroundCheck(backgroundCheckItem);
         } else {
             backgroundCheckItem.id = this.state.id;
-            console.table(backgroundCheckItem);
             this.updateBackgroundCheck(backgroundCheckItem);
         }
     };
