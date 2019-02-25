@@ -20,6 +20,7 @@ import Filters from './Filters';
 import CardTemplate from './CardTemplate';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withRouter } from "react-router-dom";
+import { red } from '@material-ui/core/es/colors';
 
 const CustomCard = props => {
     return (
@@ -423,15 +424,14 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
+
+        console.log("onCardClick ", cardId, metadata, laneId)
+
         let needEnglish, needExperience, Position, state;
 
-        state = this.state.workOrders.find((item) => { return item.id == cardId }).Status
+        state = this.state.workOrders.find((item) => { return item.id == cardId })
 
-
-        console.log("onCardClick ", state)
-        console.log("onCardClick 1 ", this.state.workOrders)
-
-        if (laneId.trim() == "lane1" && cardId > 0 && state != 0) {
+        if (laneId.trim() == "lane1" && cardId > 0 && state.Status != 0) {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
 
@@ -872,13 +872,15 @@ class BoardManager extends Component {
     }
 
     getWorkOrders = async () => {
+
         let getworkOrders = [];
         let datas = [];
 
 
         await this.props.client.query({
             query: GET_BOARD_SHIFT,
-            variables: { ...this.getDataFilters() }
+            variables: { ...this.getDataFilters() },
+            fetchPolicy: 'no-cache'
         }).then(({ data }) => {
             let _id = data.ShiftBoard.length === 0 ? 0 : data.ShiftBoard[0].workOrderId;
             let count = 1;
@@ -897,7 +899,7 @@ class BoardManager extends Component {
                     dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
-                    cardStyle: { borderRadius: 6, marginBottom: 15 },
+                    cardStyle: { borderRadius: 6, marginBottom: 15, color: red },
                     needExperience: ShiftBoard.needExperience,
                     needEnglish: ShiftBoard.needEnglish,
                     PositionApplyfor: ShiftBoard.Id_positionApplying,

@@ -95,7 +95,6 @@ class CardTemplate extends Component {
                 fncUpdateProgress(false);
                 this.setState(() => { return { showConfirmToOpening: false, showConfirmToWorkOrder: false, showCancelWorkOrder: false } }, () => {
                     this.props.getWorkOrders();
-                    window.location.reload();
                 })
 
             })
@@ -165,7 +164,7 @@ class CardTemplate extends Component {
                 </button>
                 <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogCancelToWorkOrder}>
                     Cancel
-            </button>
+              </button>
             </DialogActions>
         </Dialog>
     }
@@ -215,7 +214,7 @@ class CardTemplate extends Component {
                 <div
                     title="View Application"
                     className="interview-title ml-1"
-                    style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}
+                    style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: this.props.Status == 0 ? '#808080' : '#3CA2C8' }}
                     onClick={() => this.goToEmployeePackage(this.props.id)}
                 >
                     {this.props.name}
@@ -223,17 +222,11 @@ class CardTemplate extends Component {
                 {/*<i className={["fas fa-circle", "ml-auto", this.props.statusCompleted ? "text-info" : "text-danger"].join(" ")} style={{ marginTop: '7px', fontSize: '10px' }}></i>*/}
                 <i className={["fas fa-pen", "ml-auto", this.props.statusCompleted ? "text-info" : "text-danger"].join(" ")} style={{ marginTop: '7px', fontSize: '10px' }}></i>
             </React.Fragment>
-        else if (this.props.laneId === "lane1") { return <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}><i onClick={() => { this.setState({ showCancelWorkOrder: true }) }} style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#c83c3c' }} className="fas fa-ban"></i> {this.props.name}</div> }
-        else return <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{this.props.name}</div>
+        else if (this.props.laneId === "lane1") { return <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: this.props.Status == 0 ? '#808080' : '#3CA2C8' }}><i onClick={() => { this.setState({ showCancelWorkOrder: true }) }} style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: this.props.Status == 0 ? '#808080' : '#c83c3c' }} className="fas fa-ban"></i> {this.props.name}</div> }
+        else return <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: this.props.Status == 0 ? '#808080' : '#3CA2C8' }}>{this.props.name}</div>
     }
 
     render() {
-        // console.log(this.props);
-        if (this.props.laneId === "Interview") {
-            console.log("Interview");
-            console.log(this.props);
-        }
-
         return <div>
             <header
                 style={{
@@ -243,13 +236,13 @@ class CardTemplate extends Component {
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    color: this.props.cardColor
+                    color: this.props.Status == 0 ? '#808080' : '#4C4C4C'
                 }}>
                 {this.showTitle()}
                 <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{this.props.dueOn}</div>
             </header>
-            <div style={{ fontSize: 12, color: '#4C4C4C' }}>
-                <div style={{ margin: 2, color: '#4C4C4C', fontWeight: 'bold' }}>{this.props.subTitle}</div>
+            <div style={{ fontSize: 12, color: this.props.Status == 0 ? '#808080' : '#4C4C4C' }}>
+                <div style={{ margin: 2, color: this.props.Status == 0 ? '#808080' : '#4C4C4C', fontWeight: 'bold' }}>{this.props.subTitle}</div>
                 <div style={{ margin: 5, padding: '0px 0px' }}><i>{this.props.body}</i>
                 </div>
                 <header
