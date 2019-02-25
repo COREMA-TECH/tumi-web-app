@@ -18,6 +18,7 @@ class LocationForm extends Component {
         cities: [],
         countryId: 0,
         stateId: 0,
+
     }
     constructor(props) {
         super(props);
@@ -207,6 +208,7 @@ class LocationForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log("componentWillReceiveProps", nextProps)
         //This is to load the datasource for States the first time that this component is loaded
         if (this.state.firstLoadStates && this.state.firstLoadCities &&
             this.props.state != nextProps.state && this.props.city != nextProps.city) {
@@ -218,6 +220,7 @@ class LocationForm extends Component {
     }
 
     componentDidMount() {
+        console.log("componentDidMount", this.props)
         //This is to load the datasource for States the first time that this component is loaded
         if (this.state.firstLoadStates && this.state.firstLoadCities) {
             this.loadFirstStates(this.props.state, this.props.city);

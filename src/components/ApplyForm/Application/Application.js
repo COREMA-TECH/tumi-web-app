@@ -1087,7 +1087,7 @@ class Application extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {this.state.editing && !this.state.searchigZipcode ? (
+                            {this.state.editing ? (
                                 <div className="applicant-card__footer">
                                     <button
                                         className="applicant-card__cancel-button"
@@ -1100,7 +1100,7 @@ class Application extends Component {
                                     >
                                         {spanishActions[2].label}
                                     </button>
-                                    <button type="submit" className="applicant-card__save-button">
+                                    <button type="submit" className="applicant-card__save-button" disabled={ this.state.searchigZipcode}>
                                         {spanishActions[4].label}
                                     </button>
                                 </div>
