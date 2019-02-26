@@ -815,10 +815,11 @@ class FormsW4 extends Component {
                                                                     reemplazo. ▶
                                                                     <input
                                                                         disabled={this.state.isCreated}
-                                                                        type="checkbox" id="socialSecurityExtention"
+                                                                        type="checkbox"
+                                                                        id="socialSecurityExtention"
                                                                         value={this.state.socialSecurityExtention}
                                                                         checked={this.state.socialSecurityExtention}
-                                                                        onChange={(e) => {
+                                                                        onClick={(e) => {
                                                                             console.log(e.target.checked);
                                                                             this.setState({socialSecurityExtention: e.target.checked})
                                                                         }}
