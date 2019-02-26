@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@material-ui/core/IconButton';
 import LastPageIcon from '@material-ui/icons/LastPage';
@@ -18,7 +18,7 @@ import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import Tooltip from '@material-ui/core/Tooltip';
-import {GET_COMPLETED_STATUS} from "./Queries";
+import { GET_COMPLETED_STATUS } from "./Queries";
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -50,29 +50,29 @@ class TablePaginationActions extends React.Component {
     };
 
     render() {
-        const {classes, count, page, rowsPerPage, theme} = this.props;
+        const { classes, count, page, rowsPerPage, theme } = this.props;
 
         return (
             <div className={classes.root}>
                 <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
-                    {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
+                    {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
                 </IconButton>
                 <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
-                    {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
+                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
                 </IconButton>
                 <IconButton
                     onClick={this.handleNextButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="Next Page"
                 >
-                    {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
+                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
                 </IconButton>
                 <IconButton
                     onClick={this.handleLastPageButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="Last Page"
                 >
-                    {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
+                    {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
                 </IconButton>
             </div>
         );
@@ -88,13 +88,13 @@ TablePaginationActions.propTypes = {
     theme: PropTypes.object.isRequired
 };
 
-const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(TablePaginationActions);
+const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(TablePaginationActions);
 
 let counter = 0;
 
 function createData(name, calories, fat) {
     counter += 1;
-    return {id: counter, name, calories, fat};
+    return { id: counter, name, calories, fat };
 }
 
 const CustomTableCell = withStyles((theme) => ({
@@ -149,11 +149,11 @@ class ApplicationTable extends React.Component {
         completed: false
     };
     handleChangePage = (event, page) => {
-        this.setState({page});
+        this.setState({ page });
     };
 
     handleChangeRowsPerPage = (event) => {
-        this.setState({rowsPerPage: event.target.value});
+        this.setState({ rowsPerPage: event.target.value });
     };
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -163,8 +163,8 @@ class ApplicationTable extends React.Component {
         if (
             this.state.page !== nextState.page ||
             this.state.rowsPerPage !== nextState.rowsPerPage //||
-        //	this.state.order !== nextState.order ||
-        //this.state.orderBy !== nextState.orderBy
+            //	this.state.order !== nextState.order ||
+            //this.state.orderBy !== nextState.orderBy
         ) {
             return true;
         }
@@ -172,23 +172,23 @@ class ApplicationTable extends React.Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
         let items = this.props.data;
-        const {rowsPerPage, page} = this.state;
+        const { rowsPerPage, page } = this.state;
 
         if (this.state.loadingRemoving) {
-            return <LinearProgress/>;
+            return <LinearProgress />;
         }
 
         return (
             <Route
-                render={({history}) => (
+                render={({ history }) => (
                     <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
                                     <CustomTableCell padding="none" className={"Table-head text-center"}
-                                                     style={{width: '50px'}}>Actions</CustomTableCell>
+                                        style={{ width: '50px' }}>Actions</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
@@ -209,7 +209,7 @@ class ApplicationTable extends React.Component {
                                             onClick={() => {
                                                 history.push({
                                                     pathname: '/home/application/info',
-                                                    state: {ApplicationId: row.id}
+                                                    state: { ApplicationId: row.id }
                                                 });
                                             }}
                                         >
