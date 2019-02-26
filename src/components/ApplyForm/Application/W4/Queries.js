@@ -8,6 +8,7 @@ export const GET_APPLICANT_INFO = gql`
     query applicantW4($ApplicationId: Int!){
           applicantW4(ApplicationId: $ApplicationId){
                 id
+                html
           }
     }
 `;
