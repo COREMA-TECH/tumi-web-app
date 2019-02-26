@@ -111,62 +111,66 @@ class CardTemplate extends Component {
 
 
     printDialogConfirmConvertToOpening = ({ id, WorkOrderId }) => {
-        return <Dialog maxWidth="xl" open={this.state.showConfirmToOpening} onClose={this.handleCloseConfirmDialogToOpening}>
-            <DialogContent>
-                <h2 className="text-center">Send Work Order to a recruiter</h2>
-            </DialogContent>
-            <DialogActions>
-                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToOpening({ WorkOrderId })}>
-                    {ALL_ITEM_MESSAGE_OPENING}{this.state.convertingAllItems && <i className="fas fa-spinner fa-spin ml-1" />}
-                </button>
-                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToOpening({ id })}>
-                    {ONE_ITEM_MESSAGE_OPENING}{this.state.convertingOneItem && <i className="fas fa-spinner fa-spin ml-1" />}
-                </button>
-                <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToOpening}>
-                    Cancel
+        if (this.props.Status != 0) {
+            return <Dialog maxWidth="xl" open={this.state.showConfirmToOpening} onClose={this.handleCloseConfirmDialogToOpening}>
+                <DialogContent>
+                    <h2 className="text-center">Send Work Order to a recruiter</h2>
+                </DialogContent>
+                <DialogActions>
+                    <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToOpening({ WorkOrderId })}>
+                        {ALL_ITEM_MESSAGE_OPENING}{this.state.convertingAllItems && <i className="fas fa-spinner fa-spin ml-1" />}
+                    </button>
+                    <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToOpening({ id })}>
+                        {ONE_ITEM_MESSAGE_OPENING}{this.state.convertingOneItem && <i className="fas fa-spinner fa-spin ml-1" />}
+                    </button>
+                    <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToOpening}>
+                        Cancel
             </button>
-            </DialogActions>
-        </Dialog>
+                </DialogActions>
+            </Dialog>
+        }
     }
-
     printDialogConfirmConvertToWO = ({ id, WorkOrderId }) => {
-
-        return <Dialog maxWidth="xl" open={this.state.showConfirmToWorkOrder} onClose={this.handleCloseConfirmDialogToWorkOrder}>
-            <DialogContent>
-                <h2 className="text-center">Recall Work Order From Recruiting</h2>
-            </DialogContent>
-            <DialogActions>
-                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToWorkOrder({ WorkOrderId })}>
-                    {ALL_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
-                </button>
-                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToWorkOrder({ id })}>
-                    {ONE_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
-                </button>
-                <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToWorkOrder}>
-                    Cancel
+        if (this.props.Status != 0) {
+            return <Dialog maxWidth="xl" open={this.state.showConfirmToWorkOrder} onClose={this.handleCloseConfirmDialogToWorkOrder}>
+                <DialogContent>
+                    <h2 className="text-center">Recall Work Order From Recruiting</h2>
+                </DialogContent>
+                <DialogActions>
+                    <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToWorkOrder({ WorkOrderId })}>
+                        {ALL_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
+                    </button>
+                    <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToWorkOrder({ id })}>
+                        {ONE_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
+                    </button>
+                    <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToWorkOrder}>
+                        Cancel
             </button>
-            </DialogActions>
-        </Dialog>
+                </DialogActions>
+            </Dialog>
+        }
     }
-
 
     printDialogCancelWO = ({ id, WorkOrderId }) => {
-        return <Dialog maxWidth="xl" open={this.state.showCancelWorkOrder} onClose={this.handleCloseConfirmDialogCancelToWorkOrder}>
-            <DialogContent>
-                <h2 className="text-center">Cancel Work Order?</h2>
-            </DialogContent>
-            <DialogActions>
-                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleCancelAllItemToWorkOrder({ WorkOrderId })}>
-                    Cancel All Items on this Work Order {this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
-                </button>
-                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCancelThisItemToWorkOrder({ id })}>
-                    Cancel Only this Item {this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
-                </button>
-                <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogCancelToWorkOrder}>
-                    Cancel
+
+        if (this.props.Status != 0) {
+            return <Dialog maxWidth="xl" open={this.state.showCancelWorkOrder} onClose={this.handleCloseConfirmDialogCancelToWorkOrder}>
+                <DialogContent>
+                    <h2 className="text-center">Cancel Work Order?</h2>
+                </DialogContent>
+                <DialogActions>
+                    <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleCancelAllItemToWorkOrder({ WorkOrderId })}>
+                        Cancel All Items on this Work Order {this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
+                    </button>
+                    <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCancelThisItemToWorkOrder({ id })}>
+                        Cancel Only this Item {this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
+                    </button>
+                    <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogCancelToWorkOrder}>
+                        Cancel
               </button>
-            </DialogActions>
-        </Dialog>
+                </DialogActions>
+            </Dialog>
+        }
     }
 
     printButtons = ({ id, laneId }) => {
@@ -188,14 +192,16 @@ class CardTemplate extends Component {
 
     handleCheckedChange = (event) => {
         const target = event.target;
-        this.setState((prevState) => {
-            return {
-                currentStatus: target.checked,
-                prevStatus: prevState.currentStatus,
-                showConfirmToOpening: target.checked,
-                showConfirmToWorkOrder: !target.checked
-            }
-        });
+        if (this.props.Status != 0) {
+            this.setState((prevState) => {
+                return {
+                    currentStatus: target.checked,
+                    prevStatus: prevState.currentStatus,
+                    showConfirmToOpening: target.checked,
+                    showConfirmToWorkOrder: !target.checked
+                }
+            });
+        }
     };
 
     goToEmployeePackage = (id) => {
