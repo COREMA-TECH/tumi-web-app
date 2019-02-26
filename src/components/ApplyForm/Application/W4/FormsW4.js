@@ -25,7 +25,21 @@ class FormsW4 extends Component {
             applicantName: '',
             companyPhoneNumber: '',
             ApplicationId: this.props.applicationId,
-            isCreated: false
+            isCreated: false,
+
+            // FORM Fields
+            firstName: '',
+            lastName: '',
+            socialSecurityNumber: '',
+            idNumber: '',
+            firstEmployeeDate: '',
+            employeer: '',
+            excention: '',
+            payCheck: '',
+            excentionYear: '',
+            address: '',
+            postalCode: '',
+            socialSecurityExtention: '',
         }
     }
 
@@ -99,7 +113,9 @@ class FormsW4 extends Component {
     //         });
     // };
 
-    createDocumentsPDF = () => {
+    createDocumentsPDF = (random) => {
+        console.log(document.getElementById('DocumentPDF').outerHTML);
+
         this.setState(
             {
                 downloading: true
@@ -109,8 +125,8 @@ class FormsW4 extends Component {
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
                 variables: {
-                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
-                    Name: "Anti-Harrasment-" + this.state.applicantName
+                    contentHTML: document.getElementById('DocumentPDF').outerHTML,
+                    Name: "W4-" + random +  this.state.applicantName
                 },
                 fetchPolicy: 'no-cache'
             })
@@ -133,8 +149,8 @@ class FormsW4 extends Component {
     };
 
 
-    downloadDocumentsHandler = () => {
-        var url = this.context.baseUrl + '/public/Documents/' + "Anti-Harrasment-" + this.state.applicantName + '.pdf';
+    downloadDocumentsHandler = (random) => {
+        var url = this.context.baseUrl + '/public/Documents/' + "W4-" + random + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
         this.setState({downloading: false});
     };
@@ -252,9 +268,9 @@ class FormsW4 extends Component {
                                 {
                                     this.state.isCreated ? (
                                         <button className="applicant-card__edit-button" onClick={() => {
-                                            this.createDocumentsPDF();
+                                            this.createDocumentsPDF('1251515');
                                             this.sleep().then(() => {
-                                                this.downloadDocumentsHandler();
+                                                this.downloadDocumentsHandler('1251515');
                                             }).catch(error => {
                                                 this.setState({downloading: false})
                                             })
@@ -434,7 +450,7 @@ class FormsW4 extends Component {
                                                     1 Su primer nombre e inicial del segundo
                                                     <input
                                                         type="text"
-                                                        style={{width: '10%', border: 0, color: '#FFF'}}
+                                                        style={{width: '100%', border: 0}}
                                                         id="firstName"
                                                         value={this.state.firstName}
                                                         onChange={(e) => {
@@ -442,7 +458,7 @@ class FormsW4 extends Component {
                                                             this.setState({firstName: e.target.value})
                                                         }}
                                                     />
-                                                    
+
                                                 </td>
                                                 <td style={{
                                                     fontSize: '11px',
@@ -451,8 +467,16 @@ class FormsW4 extends Component {
                                                     verticalAlign: 'top'
                                                 }}>
                                                     Apellido
-                                                    <input type="text" style={{width: '100%', border: 0}}
-                                                           id="lastName"/>
+                                                    <input
+                                                        type="text"
+                                                        style={{width: '100%', border: 0}}
+                                                        id="lastName"
+                                                        value={this.state.lastName}
+                                                        onChange={(e) => {
+                                                            console.log(e.target.value);
+                                                            this.setState({lastName: e.target.value})
+                                                        }}
+                                                    />
                                                 </td>
                                                 <td style={{
                                                     fontSize: '11px',
@@ -462,7 +486,13 @@ class FormsW4 extends Component {
                                                 }}>
                                                     2 Su número de Seguro Social
                                                     <input type="text" style={{width: '100%', border: 0}}
-                                                           id="socialSecurityNumber"/>
+                                                           id="socialSecurityNumber"
+                                                           value={this.state.socialSecurityNumber}
+                                                           onChange={(e) => {
+                                                               console.log(e.target.value);
+                                                               this.setState({socialSecurityNumber: e.target.value})
+                                                           }}
+                                                    />
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -547,7 +577,13 @@ class FormsW4 extends Component {
                                                                 borderBottom: 'solid 1px #000'
                                                             }}>
                                                                 <input type="text" style={{border: 0, height: '16.5px'}}
-                                                                       id="excention"/>
+                                                                       id="excention"
+                                                                       value={this.state.excention}
+                                                                       onChange={(e) => {
+                                                                           console.log(e.target.value);
+                                                                           this.setState({excention: e.target.value})
+                                                                       }}
+                                                                />
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -557,7 +593,13 @@ class FormsW4 extends Component {
                                                                 borderBottom: 'solid 1px #000'
                                                             }}>
                                                                 <input type="text" style={{border: 0, height: '16.5px'}}
-                                                                       id="payCheck"/>
+                                                                       id="payCheck"
+                                                                       value={this.state.payCheck}
+                                                                       onChange={(e) => {
+                                                                           console.log(e.target.value);
+                                                                           this.setState({payCheck: e.target.value})
+                                                                       }}
+                                                                />
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -572,7 +614,13 @@ class FormsW4 extends Component {
                                                         <tr>
                                                             <td style={{verticalAlign: 'top'}}>
                                                                 <input type="text" style={{border: 0, height: '16.5px'}}
-                                                                       id="excention-year"/>
+                                                                       id="excention-year"
+                                                                       value={this.state.excentionYear}
+                                                                       onChange={(e) => {
+                                                                           console.log(e.target.value);
+                                                                           this.setState({excentionYear: e.target.value})
+                                                                       }}
+                                                                />
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -599,7 +647,17 @@ class FormsW4 extends Component {
                                                 }}>
                                                     Dirección (número de casa y
                                                     calle o ruta rural)
-                                                    <input type="text" style={{width: '100%', border: 0}} id="address"/>
+                                                    <input
+                                                        type="text"
+                                                        style={{width: '100%', border: 0}}
+                                                        id="address"
+                                                        value={this.state.address}
+                                                        onChange={(e) => {
+                                                            this.setState({
+                                                                address: e.target.value
+                                                            })
+                                                        }}
+                                                    />
                                                 </td>
                                                 <td style={{
                                                     fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
@@ -622,8 +680,17 @@ class FormsW4 extends Component {
                                                     <div data-font-name="g_d8_f3" data-angle={0}
                                                          data-canvas-width="218.47000000000006">Ciudad o pueblo,
                                                         estado y código postal (ZIP)
-                                                        <input type="text" style={{width: '100%', border: 0}}
-                                                               id="postalCode"/>
+                                                        <input
+                                                            type="text"
+                                                            style={{width: '100%', border: 0}}
+                                                            id="postalCode"
+                                                            value={this.state.postalCode}
+                                                            onChange={(e) => {
+                                                                this.setState({
+                                                                    postalCode: e.target.value
+                                                                })
+                                                            }}
+                                                        />
                                                     </div>
                                                 </td>
                                                 <td style={{
@@ -640,7 +707,13 @@ class FormsW4 extends Component {
                                                         Social, marque este recuadro.
                                                         Debe llamar al 800-772-1213 para recibir una tarjeta de
                                                         reemplazo. ▶
-                                                        <input type="checkbox" id="socialSecurityExtention"/>
+                                                        <input type="checkbox" id="socialSecurityExtention"
+                                                               value={this.state.socialSecurityExtention}
+                                                               onChange={(e) => {
+                                                                   console.log(e.target.value);
+                                                                   this.setState({socialSecurityExtention: e.target.value})
+                                                               }}
+                                                        />
                                                     </strong></div>
                                                 </td>
                                             </tr>
@@ -664,7 +737,13 @@ class FormsW4 extends Component {
                                                     (Directorio
                                                     estatal de personas recién empleadas).
                                                     <input type="text" style={{width: '100%', border: 0}}
-                                                           id="employeer"/>
+                                                           id="employeer"
+                                                           value={this.state.employeer}
+                                                           onChange={(e) => {
+                                                               console.log(e.target.value);
+                                                               this.setState({employeer: e.target.value})
+                                                           }}
+                                                    />
                                                 </td>
                                                 <td style={{
                                                     fontSize: '11px',
@@ -675,7 +754,13 @@ class FormsW4 extends Component {
                                                     9 Primera fecha de empleo
                                                     <input type="text"
                                                            style={{width: '100%', border: 0, height: '65px'}}
-                                                           id="firstEmployeeDate"/>
+                                                           id="firstEmployeeDate"
+                                                           value={this.state.firstEmployeeDate}
+                                                           onChange={(e) => {
+                                                               console.log(e.target.value);
+                                                               this.setState({firstEmployeeDate: e.target.value})
+                                                           }}
+                                                    />
                                                 </td>
                                                 <td style={{
                                                     fontSize: '11px',
@@ -686,7 +771,13 @@ class FormsW4 extends Component {
                                                     10 Número de identificación del empleador(EIN)
                                                     <input type="text"
                                                            style={{width: '100%', border: 0, height: '65px'}}
-                                                           id="idNumber"/>
+                                                           id="idNumber"
+                                                           value={this.state.idNumber}
+                                                           onChange={(e) => {
+                                                               console.log(e.target.value);
+                                                               this.setState({idNumber: e.target.value})
+                                                           }}
+                                                    />
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -849,3 +940,6 @@ class FormsW4 extends Component {
 }
 
 export default withApollo(withGlobalContent(FormsW4));
+
+
+
