@@ -423,7 +423,7 @@ class WorkOrdersTable extends Component {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell className={"Table-head text-center"} style={{ width: '80px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"} style={{ width: '150px' }}>Actions</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '80px' }}>No.</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '220px' }}>Property</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
