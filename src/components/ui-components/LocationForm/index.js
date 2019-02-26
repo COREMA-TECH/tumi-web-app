@@ -18,6 +18,7 @@ class LocationForm extends Component {
         cities: [],
         countryId: 0,
         stateId: 0,
+
     }
     constructor(props) {
         super(props);

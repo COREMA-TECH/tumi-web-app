@@ -1271,9 +1271,9 @@ class VerticalLinearStepper extends Component {
                     <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
                         Back
                     </Button>
-                    {!this.state.searchigZipcode && <Button type="submit" variant="contained" color="primary" className={classes.button}>
+                    <Button type="submit" variant="contained" color="primary" className={classes.button} disabled={this.state.searchigZipcode}>
                         {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>}
+                    </Button>
                 </div>
             </div>
         );

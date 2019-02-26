@@ -39,6 +39,7 @@ class WorkerCompensation extends Component {
             initialNotification: false,
             injuryNotification: false,
             injuryDate: '',
+            completed: false
         }
     }
 
@@ -46,6 +47,7 @@ class WorkerCompensation extends Component {
         this.setState({
             signature: value,
             date: new Date().toISOString(),
+            completed: true
         });
     };
 
