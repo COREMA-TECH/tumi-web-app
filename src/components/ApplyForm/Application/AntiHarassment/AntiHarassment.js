@@ -82,6 +82,10 @@ class AntiHarassment extends Component {
                         applicantName: data.applications[0].harassmentPolicy.applicantName,
                         date: data.applications[0].harassmentPolicy.date,
                     });
+                } else {
+                    this.setState({
+                        id: null
+                    });
                 }
             })
             .catch(error => {
