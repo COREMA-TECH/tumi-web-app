@@ -95,20 +95,25 @@ class WorkOrdersTable extends Component {
             }
         }
 
+        if (this.state.id)
+            workOrder = {
+                id: this.state.id,
+                ...workOrder
+            }
+
         if (this.state.state != 0) {
             workOrderCompany = {
                 State: this.state.state
             }
         }
 
-        if (this.state.endDate != "" || this.state.status != "" || this.state.state != 0) {
-            variables = {
-                workOrder,
-                workOrderCompany,
-                ...variables
-            }
+        //  if (this.state.endDate != "" || this.state.status != "" || this.state.state != 0 ) {
+        variables = {
+            workOrder,
+            workOrderCompany
         }
-
+        //}
+        console.log(variables, this.state.id)
         return variables;
     }
 
@@ -327,7 +332,10 @@ class WorkOrdersTable extends Component {
         this.setState({
             startDate: '',
             endDate: '',
-            endDateDisabled: true
+            endDateDisabled: true,
+            state: 0,
+            status: '',
+            id: ''
         }, () => {
             this.getWorkOrders();
         })
@@ -368,7 +376,7 @@ class WorkOrdersTable extends Component {
                 <div className="card-header bg-light">
                     <div className="row">
                         <div className="col-md-2">
-                            <select name="state" id="" className="form-control" onChange={(e) => {
+                            <select name="state" id="" value={this.state.state} className="form-control" onChange={(e) => {
                                 this.setState({
                                     state: parseInt(e.target.value)
                                 }, () => { this.getWorkOrders() })
@@ -397,7 +405,7 @@ class WorkOrdersTable extends Component {
                             </button>
                         </div>
                         <div className="col-md-2">
-                            <select name="filterValue" id="" className="form-control" onChange={this.handleFilterValue}>
+                            <select name="filterValue" id="" className="form-control" onChange={this.handleFilterValue} value={this.state.status}>
                                 <option value="3">Status (All)</option>
                                 <option value="1">Open</option>
                                 <option value="2">Completed</option>
@@ -406,7 +414,7 @@ class WorkOrdersTable extends Component {
                         </div>
                         <div className="col-md-2">
                             <div class="input-group">
-                                <input type="text" name="id" className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
+                                <input type="text" name="id" value={this.state.id} className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">
                                         <i class="fas fa-search"></i>
