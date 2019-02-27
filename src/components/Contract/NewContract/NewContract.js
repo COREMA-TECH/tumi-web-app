@@ -1232,7 +1232,6 @@ class NewContract extends Component {
 
     updateManagement = (id) => {
         this.geManagementbyId(id);
-        console.log("updateManagement")
     }
 
     updateEntity = (id) => {
@@ -1240,13 +1239,6 @@ class NewContract extends Component {
     }
 
     updateAddress = () => {
-        console.log("updateAddress ")
-        console.log("this.state.city ", this.state.city)
-        console.log("this.state.Management_Billing_City  ", this.state.Management_Billing_City)
-        console.log("Compana  ", this.state.Management_Billing_City)
-
-
-
         if (document.getElementById("correctAddress").checked) {
             this.setState({
                 Old_Billing_City: this.state.Id_Entity == "0" ? this.state.Management_Billing_City : this.state.city,
@@ -1269,7 +1261,9 @@ class NewContract extends Component {
                 Billing_Street: this.state.Old_Billing_Street,
                 Billing_Zip_Code: this.state.Old_Billing_Zip_Code,
                 Disable_Billing_Street: false,
-                Disable_Billing_Zip_Code: false
+                Disable_Billing_Zip_Code: false,
+                Billing_Street:'',
+                Billing_StreetValid:true
 
             });
         }
@@ -1559,7 +1553,6 @@ class NewContract extends Component {
                                                         );
                                                     }}
                                                     updateTypeContact={(value) => {
-                                                        // console.log('updateTypeContact ', value),
                                                         this.setState(
                                                             {
 
