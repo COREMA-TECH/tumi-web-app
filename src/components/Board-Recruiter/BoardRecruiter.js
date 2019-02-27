@@ -861,19 +861,33 @@ class BoardRecruiter extends Component {
     getDataFilters = () => {
         var variables;
 
-        if (this.state.status !== null) {
+        if (this.state.status == 0) {
             variables = {
                 shift: {
-                    status: [this.state.status]
+                    status: [0]
                 },
             };
-        } else {
+        } else if (this.state.status == 1) {
             variables = {
                 shift: {
                     status: [1, 2]
                 },
             };
+        } else if (this.state.status == 2) {
+            variables = {
+                shift: {
+                    status: [3]
+                },
+            };
         }
+        else {
+            variables = {
+                shift: {
+                    status: [1, 2, 0]
+                },
+            };
+        }
+
         var shiftEntity = {};
         if (this.state.hotel != 0) {
             shiftEntity = {
@@ -1106,9 +1120,10 @@ class BoardRecruiter extends Component {
                                                         showNone={false}
                                                     >
 
-                                                        <option value={0}>Active work orders</option>
-                                                        <option value={1}>Closed work orders</option>
-                                                        <option value={2}>All work orders</option>
+                                                        <option value={1}>Open</option>
+                                                        <option value={null}>Status (All)</option>
+                                                        <option value={2}>Completed</option>
+                                                        <option value={0}>Canceled</option>
                                                     </select>
                                                 </div>
                                                 <div className="col-md-4">
