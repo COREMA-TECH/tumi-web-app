@@ -28,6 +28,12 @@ export const ADD_APPLICATION_PHASES = gql`
 	}
 `;
 
+export const DELETE_WORK_ORDER = gql`
+mutation delete_WorkOrder($id: Int) {
+	deleteWorkOrder(id: $id) 
+}
+`;
+
 export const CONVERT_TO_OPENING = gql`
 	mutation convertShiftToOpening($shiftWorkOrder:filterShiftWOConvertToOpening, 
 		$shift: filterShiftConvertToOpening, 
