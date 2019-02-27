@@ -106,11 +106,12 @@
 
 .company-card {
     @include media-breakpoint-up(lg) {
-        width: 15% !important;
+        width: 12% !important;
     }
     @include media-breakpoint-up(sm) {
         .company-card__title {
             font-size: 1.1rem;
+            text-align: center;
         }
     }
 }
