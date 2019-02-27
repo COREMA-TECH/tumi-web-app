@@ -857,7 +857,7 @@ class GeneralInfoProperty extends Component {
                 type="text"
                 className={'form-control input-file-name'}
                 max="120"
-                placeholder="Name File"
+                placeholder="File Name"
                 value={this.state[property]}
                 onChange={(e) => {
                     this.setState({
