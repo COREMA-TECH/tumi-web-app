@@ -237,7 +237,7 @@ class EmployeeInputRow extends Component {
                         }}
                         value={this.state.hotelEdit}
                     >
-                        <option value="null">Select a option</option>
+                        <option value="null">Select option</option>
                         {
                             this.props.hotels.map(item => {
                                 return (
@@ -262,7 +262,7 @@ class EmployeeInputRow extends Component {
                             this.props.onchange(department, e.target.value);
                         }}
                     >
-                        <option value="">Select a option</option>
+                        <option value="">Select option</option>
                         {
                             this.state.arrayDepartment.map(item => (
                                 <option value={item.Id}>{item.Name.trim()}</option>
@@ -286,7 +286,7 @@ class EmployeeInputRow extends Component {
                             this.props.onchange(contactTitle, e.target.value);
                         }}
                     >
-                        <option value="">Select a option</option>
+                        <option value="">Select option</option>
                         {
                             this.state.arraytitles.map(item => {
                                 if (this.state.hotelEdit == item.Id_Entity) {

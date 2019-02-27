@@ -1126,7 +1126,7 @@ class Employees extends Component {
                                         value={this.state.idRol}
                                         disabled
                                     >
-                                        <option value="">Select a role</option>
+                                        <option value="">Select role</option>
                                         {this.state.roles.map((item) => (
                                             <option key={item.Id} value={item.Id}>
                                                 {item.Name}
@@ -1149,7 +1149,7 @@ class Employees extends Component {
                                         }}
                                         value={this.state.idLanguage}
                                     >
-                                        <option value="">Select a language</option>
+                                        <option value="">Select language</option>
                                         {this.state.languages.map((item) => (
                                             <option key={item.Id} value={item.Id}>
                                                 {item.Name}
@@ -1373,7 +1373,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.hotelEdit}
                                         >
-                                            <option value="">Select a option</option>
+                                            <option value="">Select option</option>
                                             {
                                                 this.state.hotels.map(item => {
                                                     return (
@@ -1396,7 +1396,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.departmentEdit}
                                         >
-                                            <option value="">Select a option</option>
+                                            <option value="">Select option</option>
                                             {
 
                                                 this.state.departments.map(item => {
@@ -1418,7 +1418,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.contactTitleEdit}
                                         >
-                                            <option value="">Select a option</option>
+                                            <option value="">Select option</option>
                                             {
                                                 this.state.titles.map(item => {
                                                     if (this.state.hotelEdit == item.Id_Entity) {
