@@ -30,6 +30,17 @@ class MainContainer extends Component {
 		if(str === "/home/application/info") {
 			title = 'Employee Package'
 		}
+
+        if(str === "/home/company/edit") {
+            title = 'Edit Management Company'
+        }
+
+        if(str === "/home/Company") {
+            title = 'Management Company'
+        }
+
+
+
 		return title;
 	};
 

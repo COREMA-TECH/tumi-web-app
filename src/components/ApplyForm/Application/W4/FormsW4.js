@@ -69,9 +69,13 @@ class FormsW4 extends Component {
                 if (data.applicantW4.length > 0) {
                     this.setState({
                         isCreated: true,
-                        html: data.applicantW4[0].html
+                        html: data.applicantW4[0].html != null ? data.applicantW4[0].html : ''
                     }, () => {
-                        let pdf = document.getElementById('pdf-ready').innerHTML = this.state.html;
+                        console.log("HTML: ", this.state.html);
+
+                        if(this.state.html.length > 0){
+                            let pdf = document.getElementById('pdf-ready').innerHTML = this.state.html;
+                        }
                     });
                 } else {
                     this.setState({

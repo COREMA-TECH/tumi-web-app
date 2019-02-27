@@ -400,9 +400,13 @@ class WorkOrdersTable extends Component {
                             </div>
                         </div>
                         <div className="col-md-2">
-                            <button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>
-                                <i class="fas fa-filter"></i> Clear
-                            </button>
+                            <a
+                                className="link-board" onClick={this.clearInputDates}>
+                                Clear <i className="fas fa-filter link-icon-filter"></i><i className="fas fa-times-circle text-danger clear-filter"/>
+                            </a>
+                            {/*<button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>*/}
+                                {/*<i class="fas fa-filter"></i> Clear*/}
+                            {/*</button>*/}
                         </div>
                         <div className="col-md-2">
                             <select name="filterValue" id="" className="form-control" onChange={this.handleFilterValue} value={this.state.status}>
