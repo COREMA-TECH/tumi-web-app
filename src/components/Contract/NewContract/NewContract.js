@@ -838,55 +838,70 @@ class NewContract extends Component {
     };
 
     geManagementbyId = (id) => {
-        this.props.client
-            .query({
-                query: this.getbusinesscompaniesbyIdQuery,
-                variables: {
-                    Id: id
-                }
-            })
-            .then(({ data }) => {
+        if (id <= 0) {
+            this.setState({
+                Management_Billing_Street: '',
+                Management_Billing_Zip_Code: '',
+                Management_Billing_State: 0,
+                Management_Billing_City: 0,
 
-                this.setState({
-
-                    Management_Billing_Street: this.getString(data.getbusinesscompanies[0].Location),
-                    Management_Billing_Zip_Code: this.getString(data.getbusinesscompanies[0].Zipcode),
-                    Management_Billing_State: data.getbusinesscompanies[0].State,
-                    Management_Billing_City: data.getbusinesscompanies[0].City,
-
-                }, () => { });
-            })
-            .catch((error) => {
-                console.log(error);
             });
-
+        }
+        else {
+            this.props.client
+                .query({
+                    query: this.getbusinesscompaniesbyIdQuery,
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                        Id: id <= 0 ? -2 : id
+                    }
+                })
+                .then(({ data }) => {
+                    this.setState({
+                        Management_Billing_Street: this.getString(data.getbusinesscompanies[0].Location),
+                        Management_Billing_Zip_Code: this.getString(data.getbusinesscompanies[0].Zipcode),
+                        Management_Billing_State: data.getbusinesscompanies[0].State,
+                        Management_Billing_City: data.getbusinesscompanies[0].City
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
 
     };
 
     getBusinessCompaniesbyId = (id) => {
-        this.props.client
-            .query({
-                query: this.getbusinesscompaniesbyIdQuery,
-                variables: {
-                    Id: id
-                }
-            })
-            .then(({ data }) => {
-
-                this.setState({
-                    // IdManagement: (data.getbusinesscompanies[0].Id_Parent),
-                    // Management: this.getString(data.getbusinesscompanies[0].Parent),
-                    address: this.getString(data.getbusinesscompanies[0].Location),
-                    zipCode: this.getString(data.getbusinesscompanies[0].Zipcode),
-                    state: data.getbusinesscompanies[0].State,
-                    city: data.getbusinesscompanies[0].City,
-
-                }, () => { });
-            })
-            .catch((error) => {
-                console.log(error);
+        if (id <= 0) {
+            this.setState({
+                address: '',
+                zipCode: '',
+                state: 0,
+                city: 0
             });
+        } else {
+            this.props.client
+                .query({
+                    query: this.getbusinesscompaniesbyIdQuery,
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                        Id: id
+                    }
+                })
+                .then(({ data }) => {
 
+                    this.setState({
+                        address: this.getString(data.getbusinesscompanies[0].Location),
+                        zipCode: this.getString(data.getbusinesscompanies[0].Zipcode),
+                        state: data.getbusinesscompanies[0].State,
+                        city: data.getbusinesscompanies[0].City,
+
+                    }, () => { });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
 
     };
 
@@ -1262,8 +1277,8 @@ class NewContract extends Component {
                 Billing_Zip_Code: this.state.Old_Billing_Zip_Code,
                 Disable_Billing_Street: false,
                 Disable_Billing_Zip_Code: false,
-                Billing_Street:'',
-                Billing_StreetValid:true
+                Billing_Street: '',
+                Billing_StreetValid: true
 
             });
         }
@@ -1476,11 +1491,18 @@ class NewContract extends Component {
 
                                                                     disabled={!this.state.editing}
                                                                     onChange={(e) => {
+                                                                        const value = e.target.value;
                                                                         this.setState({
-                                                                            IdManagement: e.target.value,
-                                                                            Id_Entity: 0
+                                                                            IdManagement: value,
+                                                                            Id_Entity: 0,
+                                                                            Management_Billing_Street: '',
+                                                                            Management_Billing_Zip_Code: '',
+                                                                            Management_Billing_State: 0,
+                                                                            Management_Billing_City: 0,
+                                                                        }, () => {
+                                                                            this.updateManagement(value);
                                                                         });
-                                                                        this.updateManagement(e.target.value);
+
                                                                     }}
                                                                     value={this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.IdManagement}
                                                                 >
@@ -1512,10 +1534,16 @@ class NewContract extends Component {
                                                                 required
                                                                 className="form-control"
                                                                 onChange={(e) => {
+                                                                    const value = e.target.value;
                                                                     this.setState({
-                                                                        Id_Entity: e.target.value
+                                                                        Id_Entity: value,
+                                                                        address: '',
+                                                                        zipCode: '',
+                                                                        state: 0,
+                                                                        city: 0,
+                                                                    }, () => {
+                                                                        this.updateEntity(value);
                                                                     });
-                                                                    this.updateEntity(e.target.value);
                                                                 }}
 
                                                                 value={this.state.Id_Entity}
@@ -1527,8 +1555,7 @@ class NewContract extends Component {
                                                                 ))}
                                                             </select>
                                                         );
-                                                        //}
-                                                        // return  <option value="">Select a Hotel</option>;
+
                                                     }}
                                                 </Query>
                                             </div>
