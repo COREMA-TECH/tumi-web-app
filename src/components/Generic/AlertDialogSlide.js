@@ -71,9 +71,9 @@ class AlertDialogSlide extends React.Component {
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
 			>
-				<DialogTitle id="alert-dialog-slide-title">{'Confirm action?'}</DialogTitle>
+				<DialogTitle id="alert-dialog-slide-title">{'Delete this record?'}</DialogTitle>
 				<DialogContent>
-					<DialogContentText id="alert-dialog-slide-description">{this.props.content}</DialogContentText>
+					<DialogContentText id="alert-dialog-slide-description">Once you delete the record, it can not be undone</DialogContentText>
 				</DialogContent>
 				<DialogActions>
 					<div className={classes.wrapper}>
@@ -83,7 +83,7 @@ class AlertDialogSlide extends React.Component {
 							className={classes.buttonSuccess}
 							disabled={this.props.loadingConfirm}
 						>
-							Accept
+							Delete
 						</Button>
 
 						{this.props.loadingConfirm && <CircularProgress size={24} className={classes.buttonProgress} />}

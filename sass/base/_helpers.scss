@@ -7,7 +7,15 @@
 }
 
 .main-container__title {
-	text-transform: capitalize;
+	text-transform: capitalize;	
+}
+
+.main-container__title-user {
+	color: #ffffff;
+    font-size: 1.1em;
+    font-weight: 300;
+    font-family: "Segoe UI";
+    padding-left: 3rem;
 }
 
 .table-elements {
