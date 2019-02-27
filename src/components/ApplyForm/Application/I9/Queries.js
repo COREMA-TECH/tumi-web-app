@@ -4,14 +4,15 @@ import gql from 'graphql-tag';
 /**
  * To get basic info about the applicant
  */
+/**
+ * To get basic info about the applicant
+ */
 export const GET_APPLICANT_INFO = gql`
-    query applications($id: Int!) {
-        applications(id: $id) {
-            id
-            firstName
-            middleName
-            lastName
-        }
+    query applicantI9($ApplicationId: Int!){
+          applicantI9(ApplicationId: $ApplicationId){
+                id
+                html
+          }
     }
 `;
 
