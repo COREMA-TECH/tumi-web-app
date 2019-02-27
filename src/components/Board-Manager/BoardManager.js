@@ -835,6 +835,12 @@ class BoardManager extends Component {
                     status: [1, 2]
                 },
             };
+        } else if (this.state.status == 2) {
+            variables = {
+                shift: {
+                    status: [3]
+                },
+            };
         }
         else {
             variables = {
@@ -1125,9 +1131,10 @@ class BoardManager extends Component {
                                                             value={this.state.status}
                                                             showNone={false}
                                                         >
-                                                            <option value={1}>Active work orders</option>
-                                                            <option value={null}>All work orders</option>
-                                                            <option value={0}>Closed work orders</option>
+                                                            <option value={1}>Open</option>
+                                                            <option value={null}>Status (All)</option>
+                                                            <option value={2}>Completed</option>
+                                                            <option value={0}>Canceled</option>
                                                         </select>
                                                     </div>
                                                     <div className="col-md-4">
