@@ -5,7 +5,7 @@ import UsersTable from './UsersTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
-import {Query, withApollo} from 'react-apollo';
+import { Query, withApollo } from 'react-apollo';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -170,7 +170,7 @@ class Catalogs extends React.Component {
     `;
     GET_USERS_QUERY = gql`
         {
-            getusers(IsActive: 1) {
+            user(IsActive: 1) {
                 Id
                 Id_Contact
                 Id_Roles
@@ -728,11 +728,11 @@ class Catalogs extends React.Component {
                     fetchPolicy: 'no-cache'
                 })
                 .then((data) => {
-                    if (data.data.getusers != null) {
+                    if (data.data.user != null) {
                         this.setState(
                             {
-                                data: data.data.getusers,
-                                allData: data.data.getusers,
+                                data: data.data.user,
+                                allData: data.data.user,
                                 loadingData: false
                             },
                             func
@@ -742,7 +742,7 @@ class Catalogs extends React.Component {
                             loadingData: false,
                             firstLoad: false,
                             indexView: 2,
-                            errorMessage: 'Error: Loading users: getusers not exists in query data'
+                            errorMessage: 'Error: Loading users: user not exists in query data'
                         });
                     }
                 })
@@ -751,7 +751,7 @@ class Catalogs extends React.Component {
                         loadingData: false,
                         firstLoad: false,
                         indexView: 2,
-                        errorMessage: 'Error: Loading users: ' + error
+                        errorMessage: 'Error: Loading user: ' + error
                     });
                 });
         });
@@ -1131,7 +1131,7 @@ class Catalogs extends React.Component {
         const { loading, success } = this.state;
         const { classes } = this.props;
         const { fullScreen } = this.props;
-
+console.log("User:::", this.state.data);
         const isLoading =
             this.state.loadingData ||
             this.state.loadingContacts ||
@@ -1667,7 +1667,7 @@ class Catalogs extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <Query query={ this.GET_USERS_QUERY} pollInterval={300}>
+                        <Query query={this.GET_USERS_QUERY} pollInterval={300}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 if (this.state.filterText === '') {
                                     if (loading) return <LinearProgress />;
