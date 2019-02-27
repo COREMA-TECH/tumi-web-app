@@ -90,7 +90,7 @@ class BoardRecruiter extends Component {
             state: 0,
             city: 0,
             region: 0,
-            status: 2,
+            status: 1,
             loadingCountries: false,
             loadingCities: false,
             loadingStates: false,
@@ -433,22 +433,13 @@ class BoardRecruiter extends Component {
     updateStatus = (id) => {
         this.setState(
             {
-                state: id
+                status: id
             },
             () => {
                 this.getOpenings();
             }
         );
     };
-
-    validateInvalidInput = () => {
-    };
-
-    shouldReceiveNewData = nextData => {
-    }
-
-    handleCardAdd = (card, laneId) => {
-    }
 
     clearArray() {
         this.setState({
@@ -870,7 +861,7 @@ class BoardRecruiter extends Component {
         } else if (this.state.status == 1) {
             variables = {
                 shift: {
-                    status: [1, 2]
+                    status: [2]
                 },
             };
         } else if (this.state.status == 2) {
@@ -883,7 +874,7 @@ class BoardRecruiter extends Component {
         else {
             variables = {
                 shift: {
-                    status: [1, 2, 0]
+                    status: [2, 0]
                 },
             };
         }
@@ -1105,25 +1096,24 @@ class BoardRecruiter extends Component {
                                                 </div>
                                                 <div className="col-md-2">
                                                     <select
-                                                        name="city"
+                                                        name="status"
                                                         className={'form-control'}
-                                                        // disabled={this.state.loadingCities}
                                                         onChange={(event) => {
                                                             if (event.target.value == "null") {
+                                                                console.log("event.target.value ", event.target.value)
                                                                 this.updateStatus(null);
                                                             } else {
+                                                                console.log("event.target.value ", event.target.value)
                                                                 this.updateStatus(event.target.value);
                                                             }
                                                         }}
-                                                        //error={!this.state.cityValid}
-                                                        value={this.state.city}
+                                                        value={this.state.status}
                                                         showNone={false}
                                                     >
-
                                                         <option value={1}>Open</option>
                                                         <option value={null}>Status (All)</option>
                                                         <option value={2}>Completed</option>
-                                                        <option value={0}>Canceled</option>
+                                                        <option value={0}>Cancelled</option>
                                                     </select>
                                                 </div>
                                                 <div className="col-md-4">

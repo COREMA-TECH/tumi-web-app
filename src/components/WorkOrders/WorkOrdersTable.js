@@ -13,7 +13,7 @@ import { withApollo } from 'react-apollo';
 import { GET_WORKORDERS_QUERY, GET_RECRUITER, GET_HOTEL_QUERY, GET_STATE_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import { DELETE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING } from './mutations';
+import { DELETE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_ALL_SHIFT } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -136,14 +136,15 @@ class WorkOrdersTable extends Component {
             });
     }
 
-    handleDelete = (id) => {
+    handleDelete = (WorkOrderId) => {
         this.setState({ removing: true })
         this.props.client.mutate({
             mutation: DELETE_WORKORDER,
             variables: {
-                id: id
+                id: WorkOrderId
             }
         }).then((data) => {
+            this.CancelAllShift({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 1, targetStatus: 0 });
             this.getWorkOrders();
             this.getRecruiter();
             this.getHotel();
@@ -153,6 +154,27 @@ class WorkOrdersTable extends Component {
             this.setState({ removing: false })
             this.props.handleOpenSnackbar('error', 'Error: ' + error);
         });
+    }
+
+
+    CancelAllShift = (args) => {
+        this.props.client
+            .mutate({
+                mutation: DELETE_ALL_SHIFT,
+                variables: { ...args }
+            })
+            .then(({ data }) => {
+
+
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    `Error to with operation . Please, try again!`,
+                    'bottom',
+                    'right'
+                );
+            });
     }
 
     handleConvertToOpening = (event, data) => {
@@ -409,7 +431,7 @@ class WorkOrdersTable extends Component {
                                 <option value="3">Status (All)</option>
                                 <option value="1">Open</option>
                                 <option value="2">Completed</option>
-                                <option value="0">Canceled</option>
+                                <option value="0">Cancelled</option>
                             </select>
                         </div>
                         <div className="col-md-2">

@@ -5,7 +5,7 @@ import UsersTable from './UsersTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
-import {Query, withApollo} from 'react-apollo';
+import { Query, withApollo } from 'react-apollo';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -1010,7 +1010,7 @@ class Catalogs extends React.Component {
                         }
                     })
                     .then((data) => {
-                        this.props.handleOpenSnackbar('success', 'Email Send!');
+                        this.props.handleOpenSnackbar('success', 'Email Sent!');
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);
@@ -1667,7 +1667,7 @@ class Catalogs extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <Query query={ this.GET_USERS_QUERY} pollInterval={300}>
+                        <Query query={this.GET_USERS_QUERY} pollInterval={300}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 if (this.state.filterText === '') {
                                     if (loading) return <LinearProgress />;
