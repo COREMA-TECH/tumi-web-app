@@ -208,12 +208,12 @@ class CustomizedTabs extends React.Component {
 							label="Positions and Rates"
 							disabled={!this.state.activateTabs}
 						/>
-						<Tab
-							disableRipple
-							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Preferences"
-							disabled={!this.state.activateTabs}
-						/>
+						{/*<Tab*/}
+							{/*disableRipple*/}
+							{/*classes={{ root: "Tab-item", selected: "Tab-selected" }}*/}
+							{/*label="Preferences"*/}
+							{/*disabled={!this.state.activateTabs}*/}
+						{/*/>*/}
 					</Tabs>
 					{this.showSelectedTab(value)}
 				</MuiThemeProvider>

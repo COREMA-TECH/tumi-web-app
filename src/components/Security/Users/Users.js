@@ -5,7 +5,7 @@ import UsersTable from './UsersTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
-import { withApollo } from 'react-apollo';
+import {Query, withApollo} from 'react-apollo';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -22,6 +22,8 @@ import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import withGlobalContent from 'Generic/Global';
+import ErrorMessageComponent from "../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
+import TablesContracts from "../../Contract/Main/MainContract/TablesContracts";
 
 const styles = (theme) => ({
     container: {
@@ -1103,38 +1105,32 @@ class Catalogs extends React.Component {
     };
 
     searchUsers = () => {
-        this.setState(prevState => ({
-            items: []
-        }), () => {
-            let allUser = this.state.allData.filter((_, i) => {
-                if (this.state.filterText === "") {
-                    return true;
-                }
+        let allUser = this.state.allData.filter((_, i) => {
+            if (this.state.filterText === "") {
+                return true;
+            }
 
-                if (
-                    _.Code_User.indexOf(this.state.filterText) > -1 ||
-                    _.Code_User
-                        .toLocaleLowerCase()
-                        .indexOf(this.state.filterText) > -1 ||
-                    _.Code_User
-                        .toLocaleUpperCase()
-                        .indexOf(this.state.filterText) > -1
-                ) {
-                    return true;
-                }
-            });
-            this.setState(prevState => ({
-                data: [...prevState.data, allUser]
-            }));
+            if (
+                _.Code_User.indexOf(this.state.filterText) > -1 ||
+                _.Code_User
+                    .toLocaleLowerCase()
+                    .indexOf(this.state.filterText) > -1 ||
+                _.Code_User
+                    .toLocaleUpperCase()
+                    .indexOf(this.state.filterText) > -1
+            ) {
+                return true;
+            }
         });
+        this.setState(prevState => ({
+            data: [...prevState.data, allUser]
+        }));
     };
 
     render() {
         const { loading, success } = this.state;
         const { classes } = this.props;
         const { fullScreen } = this.props;
-
-        this.searchUsers();
 
         const isLoading =
             this.state.loadingData ||
@@ -1651,6 +1647,8 @@ class Catalogs extends React.Component {
                                 onChange={text => {
                                     this.setState({
                                         filterText: text.target.value
+                                    }, () => {
+                                        //this.searchUsers();
                                     });
                                 }}
                                 value={this.state.filterText}
@@ -1669,15 +1667,67 @@ class Catalogs extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <UsersTable
-                            data={this.state.data}
-                            contacts={this.state.contacts}
-                            roles={this.state.roles}
-                            languages={this.state.languages}
-                            loading={this.state.showCircularLoading && isLoading}
-                            onEditHandler={this.onEditHandler}
-                            onDeleteHandler={this.onDeleteHandler}
-                        />
+                        <Query query={ this.GET_USERS_QUERY} pollInterval={300}>
+                            {({ loading, error, data, refetch, networkStatus }) => {
+                                if (this.state.filterText === '') {
+                                    if (loading) return <LinearProgress />;
+                                }
+
+                                if (error)
+                                    return (
+                                        <ErrorMessageComponent
+                                            title="Oops!"
+                                            message={'Error loading contracts'}
+                                            type="Error-danger"
+                                            icon="danger"
+                                        />
+                                    );
+                                if (data.getusers != null && data.getusers.length > 0) {
+                                    let dataUsers = data.getusers.filter((_, i) => {
+                                        if (this.state.filterText === '') {
+                                            return true;
+                                        }
+
+                                        if (
+                                            _.Code_User.indexOf(this.state.filterText) > -1 ||
+                                            _.Code_User.toLocaleLowerCase().indexOf(this.state.filterText) > -1 ||
+                                            _.Code_User.toLocaleUpperCase().indexOf(this.state.filterText) > -1
+                                        ) {
+                                            return true;
+                                        }
+                                    });
+
+                                    return (
+                                        <div className="">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div className="">
+                                                        <UsersTable
+                                                            data={dataUsers}
+                                                            contacts={this.state.contacts}
+                                                            roles={this.state.roles}
+                                                            languages={this.state.languages}
+                                                            loading={this.state.showCircularLoading && isLoading}
+                                                            onEditHandler={this.onEditHandler}
+                                                            onDeleteHandler={this.onDeleteHandler}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                                return (
+                                    <NothingToDisplay
+                                        title="Oops!"
+                                        message={'There are no users'}
+                                        type="Error-success"
+                                        icon="wow"
+                                    />
+                                );
+                            }}
+                        </Query>
+
                     </div>
                 </div>
             </div>
