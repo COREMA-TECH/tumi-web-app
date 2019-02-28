@@ -138,6 +138,7 @@ class DashboardManager extends React.Component {
             <div className="row WorkOrder">
                 <div className="col-md-12">
                     <WorkOrdersTable
+                        status={1}
                         filter={this.state.filterValue}
                         onEditHandler={this.onEditHandler}
                         onLifeHandler={this.onLifeHandler}

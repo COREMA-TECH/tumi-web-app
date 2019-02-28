@@ -122,7 +122,7 @@ class MobileMenu extends Component {
                             </li> : ""
                     })}
                     {items.map(item => {
-                        return item.Forms.Value == "HotelManager" ?
+                        return item.Forms.Value == "Operations" ?
                             <li className="MainMenu-option">
                                 <Link
                                     to={`/home/application`}
