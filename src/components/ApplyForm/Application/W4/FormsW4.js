@@ -52,7 +52,7 @@ class FormsW4 extends Component {
             openSignature: false,
             date: new Date().toISOString().substring(0, 10)
         }, () => {
-            this.insertAntiHarrasment(this.state);
+           //this.insertAntiHarrasment(this.state);
         });
     };
 
@@ -69,9 +69,13 @@ class FormsW4 extends Component {
                 if (data.applicantW4.length > 0) {
                     this.setState({
                         isCreated: true,
-                        html: data.applicantW4[0].html
+                        html: data.applicantW4[0].html != null ? data.applicantW4[0].html : ''
                     }, () => {
-                        let pdf = document.getElementById('pdf-ready').innerHTML = this.state.html;
+                        console.log("HTML: ", this.state.html);
+
+                        if(this.state.html.length > 0){
+                            let pdf = document.getElementById('pdf-ready').innerHTML = this.state.html;
+                        }
                     });
                 } else {
                     this.setState({
@@ -821,7 +825,7 @@ class FormsW4 extends Component {
                                                                                             id="excention-year"
                                                                                             value={this.state.excentionYear}
                                                                                             onChange={(e) => {
-                                                                                                console.log(e.target.value);
+                                                                                                // console.log(e.target.value);
                                                                                                 this.setState({ excentionYear: e.target.value })
                                                                                             }}
                                                                                         />
@@ -834,54 +838,67 @@ class FormsW4 extends Component {
                                                                 <tr>
                                                                     <td colSpan="3">
                                                                         Bajo pena de perjurio, declaro haber examinado este certificado y que a mi leal saber y entender, es verídico, correcto y completo.  Firma del empleado
-                                                                        (Este formulario no es válido a menos que usted lo firme).  ▶  (aqui va chatel) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fecha  ▶
+                                                                        (Este formulario no es válido a menos que usted lo firme).  ▶ <img style={{
+                                                                            width: '100px',
+                                                                            height: '30px',
+                                                                            display: 'inline-block',
+                                                                            backgroundColor: '#f9f9f9',
+                                                                            cursor: 'pointer'
+                                                                    }} onClick={() => {
+                                                                        if(this.state.isCreated === false){
+                                                                            this.setState({
+                                                                                openSignature: true,
+                                                                            })
+                                                                        }
+                                                                    }}
+                                                                    src={this.state.signature} alt=""/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fecha  ▶
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
-                                                        <table style={{
-                                                            borderCollapse: 'collapse',
-                                                            width: '100%',
-                                                            height: '51px',
-                                                            borderTop: 0
-                                                        }} border={1}>
-                                                            <tbody>
-                                                                <tr style={{ height: '17px' }}>
-                                                                    <td style={{
-                                                                        fontSize: '11px',
-                                                                        fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                        verticalAlign: 'top',
-                                                                        width: '50%',
-                                                                        borderTop: '0px #ffffff',
-                                                                        height: '17px'
-                                                                    }}>
-                                                                        Dirección (número de casa y
-                                                                        calle o ruta rural)
-                                                                <input
-                                                                            disabled={this.state.isCreated}
-                                                                            type="text"
-                                                                            style={{ width: '100%', border: 0 }}
-                                                                            id="address"
-                                                                            value={this.state.address}
-                                                                            onChange={(e) => {
-                                                                                this.setState({
-                                                                                    address: e.target.value
-                                                                                })
-                                                                            }}
-                                                                        />
-                                                                    </td>
-                                                                    <td style={{
-                                                                        fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                        verticalAlign: 'top',
-                                                                        width: '50%',
-                                                                        borderTop: '0px #ffffff',
-                                                                        height: '17px'
-                                                                    }}>
-                                                                        &nbsp;</td>
-                                                                </tr>
+                                                        {/*<table style={{*/}
+                                                            {/*borderCollapse: 'collapse',*/}
+                                                            {/*width: '100%',*/}
+                                                            {/*height: '51px',*/}
+                                                            {/*borderTop: 0*/}
+                                                        {/*}} border={1}>*/}
+                                                            {/*<tbody>*/}
+                                                                {/*<tr style={{ height: '17px' }}>*/}
+                                                                    {/*<td style={{*/}
+                                                                        {/*fontSize: '11px',*/}
+                                                                        {/*fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',*/}
+                                                                        {/*verticalAlign: 'top',*/}
+                                                                        {/*width: '50%',*/}
+                                                                        {/*borderTop: '0px #ffffff',*/}
+                                                                        {/*height: '17px'*/}
+                                                                    {/*}}>*/}
+                                                                        {/*Dirección (número de casa y*/}
+                                                                        {/*calle o ruta rural)*/}
+                                                                {/*<input*/}
+                                                                            {/*disabled={this.state.isCreated}*/}
+                                                                            {/*type="text"*/}
+                                                                            {/*style={{ width: '100%', border: 0 }}*/}
+                                                                            {/*id="address"*/}
+                                                                            {/*value={this.state.address}*/}
+                                                                            {/*onChange={(e) => {*/}
+                                                                                {/*this.setState({*/}
+                                                                                    {/*address: e.target.value*/}
+                                                                                {/*})*/}
+                                                                            {/*}}*/}
+                                                                        {/*/>*/}
+                                                                    {/*</td>*/}
+                                                                    {/*<td style={{*/}
+                                                                        {/*fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',*/}
+                                                                        {/*verticalAlign: 'top',*/}
+                                                                        {/*width: '50%',*/}
+                                                                        {/*borderTop: '0px #ffffff',*/}
+                                                                        {/*height: '17px'*/}
+                                                                    {/*}}>*/}
+                                                                        {/*&nbsp;</td>*/}
+                                                                {/*</tr>*/}
 
-                                                            </tbody>
-                                                        </table>
+                                                            {/*</tbody>*/}
+                                                        {/*</table>*/}
                                                         <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                             <tbody>
                                                                 <tr>
