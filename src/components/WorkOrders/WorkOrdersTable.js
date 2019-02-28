@@ -94,9 +94,14 @@ class WorkOrdersTable extends Component {
                 ...workOrder
             }
         }
+<<<<<<< .merge_file_a02724
 
         if (this.state.id)
             workOrder = {
+=======
+        if (this.state.id != null) {
+            variables = {
+>>>>>>> .merge_file_a14204
                 id: this.state.id,
                 ...workOrder
             }
