@@ -35,7 +35,7 @@ class WorkOrdersTable extends Component {
         this.state = {
             data: [],
             Hotels: [],
-            rowsPerPage: props.rowsPerPage || 25,
+            rowsPerPage: 25,
             page: 0,
             openConfirm: false,
             ShiftsData: ShiftsData,
@@ -128,7 +128,7 @@ class WorkOrdersTable extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                    data: data.workOrder
+                    data: data.ShiftBoard
                 });
             })
             .catch(error => {
