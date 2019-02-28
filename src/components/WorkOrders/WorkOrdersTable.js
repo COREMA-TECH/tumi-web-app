@@ -98,7 +98,7 @@ class WorkOrdersTable extends Component {
                 }
             }
         }
-        else if (this.state.status == 1) {
+        if (this.state.id == 1) {
             variables = {
                 shift: {
                     status: [1, 2]
