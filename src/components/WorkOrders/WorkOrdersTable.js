@@ -67,7 +67,29 @@ class WorkOrdersTable extends Component {
             states: [],
             state: 0,
             loading: false,
+            propsStatus: false
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps) {
+            console.log("nextProps ", nextProps)
+            this.setState({
+                filterValue: nextProps.filter
+            })
+            if (nextProps.status == 4) {
+                this.setState({
+                    status: 4,
+                    propsStatus: true
+                })
+            }
+        }
+
+        this.getWorkOrders();
+        this.getRecruiter();
+        this.getHotel();
+        this.getState();
+
     }
 
     componentWillMount() {
@@ -81,72 +103,66 @@ class WorkOrdersTable extends Component {
 
     getDateFilters = () => {
         var variables;
-
+        var shift = [];
+        var workOrder = [];
         if (this.state.startDate != "" && this.state.endDate != "") {
-            variables = {
-                shift: {
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
-                }
+            console.log("Entro aqui")
+            workOrder = {
+                startDate: this.state.startDate,
+                endDate: this.state.endDate,
             }
         }
         if (this.state.status == 0) {
-            variables = {
-                shift: {
-                    status: [0]
-                    // ...workOrder
-                }
+            shift = {
+                status: [0],
+                ...shift
+
             }
         }
-        if (this.state.id == 1) {
-            variables = {
-                shift: {
-                    status: [1, 2]
-                    //   , ...workOrder
-                }
+        else if (this.state.status == 1) {
+            shift = {
+                status: [1, 2]
+                , ...shift
             }
         }
         else if (this.state.status == 2) {
-            variables = {
-                shift: {
-                    status: [3]
-                    //, ...workOrder
-                }
+            shift = {
+                status: [3]
+                , ...shift
+            }
+        }
+        else if (this.state.status == 4) {
+            shift = {
+                status: [2]
+                , ...shift
             }
         }
         else {
-            variables = {
-                shift: {
-                    status: [1, 2, 0]
-                    // , ...workOrder
-                }
+            shift = {
+                status: [1, 2, 0]
+                , ...shift
             }
         }
 
         if (this.state.id)
-            variables = {
-                shift: {
-                    id: this.state.workOrderId
-                    // ...workOrder
-                }
+            workOrder = {
+                id: this.state.id,
+                ...workOrder
             }
 
-        /* if (this.state.state != 0) {
-             workOrderCompany = {
-                 State: this.state.state
-             }
-         }*/
 
-        /*variables = {
-            workOrder,
-            workOrderCompany
-        }*/
+
+        variables = {
+            shift,
+            workOrder
+        }
         //}
         console.log(variables, this.state.id)
         return variables;
     }
 
     getWorkOrders = () => {
+        console.log("getWorkOrders entro aqui ", this.state.status)
         this.setState(
             {
                 loading: true
@@ -356,11 +372,7 @@ class WorkOrdersTable extends Component {
             .catch();
     };
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            filterValue: nextProps.filter
-        })
-    }
+
 
     handleChangeDate = (event) => {
         const target = event.target;
@@ -470,7 +482,7 @@ class WorkOrdersTable extends Component {
                             </button>
                         </div>
                         <div className="col-md-2">
-                            <select name="filterValue" id="" className="form-control" onChange={(event) => {
+                            <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control" onChange={(event) => {
                                 if (event.target.value == "null") {
                                     this.handleFilterValue(null);
                                 } else {
@@ -483,6 +495,8 @@ class WorkOrdersTable extends Component {
                                 <option value={null}>Status (All)</option>
                                 <option value={2}>Completed</option>
                                 <option value={0}>Cancelled</option>
+                                <option value={4}>Openings</option>
+
                             </select>
                         </div>
                         <div className="col-md-2">

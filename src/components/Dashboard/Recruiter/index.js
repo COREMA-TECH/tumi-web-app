@@ -5,6 +5,9 @@ import WorkOrdersPositionForm from 'WorkOrdersPosition/WorkOrdersPositionForm';
 import withGlobalContent from 'Generic/Global';
 import { timeElapsed } from '../HotelManager/Queries';
 import withApollo from "react-apollo/withApollo";
+import WorkOrdersTable from 'WorkOrders/WorkOrdersTable';
+import WorkOrdersForm from 'WorkOrders/WorkOrdersForm';
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const data = {
 	datasets: [
@@ -98,23 +101,38 @@ class DashboardRecruiter extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			timeElapsed: [],
 			showAll: false,
 			openModal: false,
-			timeElapsed: []
+			openLife: false,
+			catalogs: [],
+			phases: [],
+			notShow: 0,
+			disqualified: 0,
+			filterValue: 0
 		};
 	}
 
 	handleClickOpenModal = (event) => {
 		event.preventDefault();
-		this.setState({ openModal: true, item: null });
+		this.setState({ openModal: true, openLife: false, item: null });
 	};
 	handleCloseModal = (e) => {
 		e.preventDefault();
-		this.setState({ openModal: false });
+		this.setState({ openModal: false, openLife: false });
 	};
 	onEditHandler = (item) => {
 		this.setState({
 			openModal: true,
+			openLife: false,
+			item: item
+		});
+	};
+
+	onLifeHandler = (item) => {
+		this.setState({
+			openModal: false,
+			openLife: true,
 			item: item
 		});
 	};
@@ -139,49 +157,23 @@ class DashboardRecruiter extends React.Component {
 	}
 
 	render() {
+		if (this.state.loading) {
+			return (
+				<LinearProgress />
+			)
+		}
 		return (
 			<div className="row WorkOrder">
 				<div className="col-md-12">
-					<div className="card">
-						<div className="card-body">
-							<div className="row">
-								<div className="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
-									<div className="row p-0">
-										<div className="col-sm-6 col-xs-12">
-											<label> Start Date</label>
-											<input
-												type="date"
-												className="form-control"
-												placeholder="2018-10-30"
-												value="2018-10-30"
-											/>
-										</div>
-										<div className="col-sm-6 col-xs-12">
-											<label> End Date</label>
-											<input
-												type="date"
-												className="form-control"
-												placeholder="2018-10-30"
-												value="2018-10-30"
-											/>
-										</div>
-									</div>
-								</div>
-								<div className="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
-									<div className="btnWrapper-centered pb-1">
-										<button className="btn btn-success" type="submit">
-											Filter<i className="fas fa-filter ml2" />
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<WorkOrdersPositionTable
+					<WorkOrdersTable
+						status={4}
+						filter={this.state.filterValue}
 						onEditHandler={this.onEditHandler}
+						onLifeHandler={this.onLifeHandler}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
+						rowsPerPage={5}
 					/>
+
 				</div>
 
 				<div className="col-md-12 col-lg-4">
@@ -224,12 +216,14 @@ class DashboardRecruiter extends React.Component {
 						</div>
 					</div>
 				</div>
-				<WorkOrdersPositionForm
+				<WorkOrdersForm
+
 					item={this.state.item}
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					openModal={this.state.openModal}
 					handleCloseModal={this.handleCloseModal}
 				/>
+
 			</div>
 		);
 	}
