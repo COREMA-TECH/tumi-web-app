@@ -41,7 +41,11 @@ class FormsW4 extends Component {
             excentionYear: '',
             address: '',
             postalCode: '',
-            socialSecurityExtention: '',
+            socialSecurityExtention: false,
+
+            estadoCivil: false,
+            estadoCivil1: false,
+            estadoCivil2: false,
         }
     }
 
@@ -598,11 +602,11 @@ class FormsW4 extends Component {
                                                                                 disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0 }}
-                                                                                id="postalCode"
-                                                                                value={this.state.dir}
+                                                                                id="address"
+                                                                                value={this.state.address}
                                                                                 onChange={(e) => {
                                                                                     this.setState({
-                                                                                        postalCode: e.target.value
+                                                                                        address: e.target.value
                                                                                     })
                                                                                 }}
                                                                             />
@@ -619,9 +623,45 @@ class FormsW4 extends Component {
                                                                         colSpan="2">
                                                                         <div data-font-name="g_d8_f2" data-angle={0}
                                                                             data-canvas-width="408.9536499999999">
-                                                                            3. <input type="checkbox" /> Soltero
-                                                                            <input type="checkbox" /> Casado
-                                                                            <input type="checkbox" /> Casado, pero retiene con la tasa mayor de Solter
+                                                                            3. <input
+                                                                            type="radio"
+                                                                            name="estadoCivil"
+                                                                            value={this.state.estadoCivil}
+                                                                            defaultChecked={this.state.estadoCivil}
+                                                                            onChange={(e) => {
+                                                                                this.setState({
+                                                                                    estadoCivil: e.target.checked,
+                                                                                    estadoCivil1: false,
+                                                                                    estadoCivil2: false,
+                                                                                })
+                                                                            }}
+                                                                        /> Soltero
+                                                                            <input
+                                                                                type="radio"
+                                                                                name="estadoCivil"
+                                                                                value={this.state.estadoCivil1}
+                                                                                defaultChecked={this.state.estadoCivil1}
+                                                                                onChange={(e) => {
+                                                                                    this.setState({
+                                                                                        estadoCivil1: e.target.checked,
+                                                                                        estadoCivil: false,
+                                                                                        estadoCivil2: false,
+                                                                                    })
+                                                                                }}
+                                                                            /> Casado
+                                                                            <input
+                                                                                type="radio"
+                                                                                name="estadoCivil"
+                                                                                value={this.state.estadoCivil2}
+                                                                                defaultChecked={this.state.estadoCivil2}
+                                                                                onChange={(e) => {
+                                                                                    this.setState({
+                                                                                        estadoCivil2: e.target.checked,
+                                                                                        estadoCivil: false,
+                                                                                        estadoCivil1: false,
+                                                                                    })
+                                                                                }}
+                                                                            /> Casado, pero retiene con la tasa mayor de Solter
                                                                             <strong> Nota: </strong> <br />
                                                                             Si es casado, pero está legalmente separado, marque el recuadro “Casado, pero retiene con la tasa mayor de Soltero”.
                                                                         </div>
@@ -676,7 +716,7 @@ class FormsW4 extends Component {
                                                                                     type="checkbox"
                                                                                     id="socialSecurityExtention"
                                                                                     value={this.state.socialSecurityExtention}
-                                                                                    checked={this.state.socialSecurityExtention}
+                                                                                    defaultChecked={this.state.socialSecurityExtention}
                                                                                     onClick={(e) => {
                                                                                         console.log(e.target.checked);
                                                                                         this.setState({ socialSecurityExtention: e.target.checked })
@@ -851,7 +891,7 @@ class FormsW4 extends Component {
                                                                             })
                                                                         }
                                                                     }}
-                                                                    src={this.state.signature} alt=""/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fecha  ▶
+                                                                    src={this.state.signature} alt=""/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fecha  ▶ {new Date().toDateString()}
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
