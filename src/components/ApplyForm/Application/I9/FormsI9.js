@@ -31,6 +31,11 @@ class FormsI9 extends Component {
 
             isCreated: null,
             html: '',
+
+            oneCheck: false,
+            oneCheck1: false,
+            oneCheck2: false,
+            oneCheck3: false,
         }
     }
 
@@ -132,7 +137,8 @@ class FormsI9 extends Component {
                     mutation: ADD_I9,
                     variables: {
                         html: html.outerHTML,
-                        ApplicantId: this.props.applicationId
+                        ApplicantId: this.props.applicationId,
+                        filename: 'i9'
                     }
                 })
                 .then(({data}) => {
@@ -493,12 +499,18 @@ class FormsI9 extends Component {
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
-                                                            }}> <input value={this.state.oneCheck}
+                                                            }}> <input
+                                                                    name="status"
+                                                                    value={this.state.oneCheck}
+                                                                       defaultChecked={this.state.oneCheck}
                                                                        onChange={(e) => {
                                                                            this.setState({
-                                                                               oneCheck: e.target.value
+                                                                               oneCheck: e.target.checked,
+                                                                               oneCheck1: false,
+                                                                               oneCheck2: false,
+                                                                               oneCheck3: false,
                                                                            })
-                                                                       }} type="checkbox" id="citizen"/> 1. A citizen of the United States</span>
+                                                                       }} type="radio" id="citizen"/> 1. A citizen of the United States</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -507,11 +519,16 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}> <input value={this.state.oneCheck1}
+                                                                       defaultChecked={this.state.oneCheck1}
+                                                                       name="status"
                                                                        onChange={(e) => {
                                                                            this.setState({
-                                                                               oneCheck1: e.target.value
+                                                                               oneCheck1: e.target.checked,
+                                                                               oneCheck: false,
+                                                                               oneCheck2: false,
+                                                                               oneCheck3: false,
                                                                            })
-                                                                       }} type="checkbox" id="non-citizen"/> 2. A noncitizen national of the United States (See
+                                                                       }} type="radio" id="non-citizen"/> 2. A noncitizen national of the United States (See
                     instructions)</span></td>
                                                         </tr>
                                                         <tr>
@@ -520,16 +537,23 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}> <input value={this.state.oneCheck2}
+                                                                       defaultChecked={this.state.oneCheck2}
+                                                                       name="status"
                                                                        onChange={(e) => {
                                                                            this.setState({
-                                                                               oneCheck2: e.target.value
+                                                                               oneCheck2: e.target.checked,
+                                                                               oneCheck: false,
+                                                                               oneCheck1: false,
+                                                                               oneCheck3: false,
                                                                            })
-                                                                       }} type="checkbox" id="lowful-permanent-resident"/> 3. A lawful permanent resident (Alien Registration Number/USCIS
+                                                                       }} type="radio" id="lowful-permanent-resident"/> 3. A lawful permanent resident (Alien Registration Number/USCIS
                     Number):&nbsp; &nbsp; <input
-                                                                    value={this.state.oneCheck3}
+                                                                    name="status"
+                                                                    // defaultChecked={this.state.oneCheck3Explain}
+                                                                    value={this.state.oneCheck3Explain}
                                                                     onChange={(e) => {
                                                                         this.setState({
-                                                                            oneCheck3: e.target.value
+                                                                            oneCheck3Explain: e.target.value,
                                                                         })
                                                                     }}
                                                                     id="resident-explain"
@@ -558,11 +582,15 @@ class FormsI9 extends Component {
                                                                     fontSize: '10pt'
                                                                 }}>
                       <input value={this.state.oneCheck3}
+                             name="status"
                              onChange={(e) => {
                                  this.setState({
-                                     oneCheck3: e.target.value
+                                     oneCheck3: e.target.checked,
+                                     oneCheck: false,
+                                     oneCheck1: false,
+                                     oneCheck2: false,
                                  })
-                             }} type="checkbox" id="alien"/> 4. An alien authorized to work until (expiration date, if
+                             }} type="radio" id="alien"/> 4. An alien authorized to work until (expiration date, if
                       applicable, mm/dd/yyyy): <input
                                                                     value={this.state.alienExplain}
                                                                     onChange={(e) => {
@@ -699,14 +727,30 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}>Signature
-                    of Employee<input
-                                                                    value={this.state.signature}
-                                                                    onChange={(e) => {
+                    of Employee:
+                                                                {/*<input*/}
+                                                                    {/*value={this.state.signature}*/}
+                                                                    {/*onChange={(e) => {*/}
+                                                                        {/*this.setState({*/}
+                                                                            {/*signature: e.target.value*/}
+                                                                        {/*})*/}
+                                                                    {/*}}*/}
+                                                                    {/*style={{border: 0, width: '100%'}} type="text" id="signature"/>*/}
+                                                                <img style={{
+                                                                    width: '100px',
+                                                                    height: '30px',
+                                                                    display: 'inline-block',
+                                                                    backgroundColor: '#f9f9f9',
+                                                                    cursor: 'pointer'
+                                                                }} onClick={() => {
+                                                                    if(this.state.isCreated === false){
                                                                         this.setState({
-                                                                            signature: e.target.value
+                                                                            openSignature: true,
                                                                         })
-                                                                    }}
-                                                                    style={{border: 0, width: '100%'}} type="text" id="signature"/></span></td>
+                                                                    }
+                                                                }}
+                                                                     src={this.state.signature} alt=""/>
+                                                            </span></td>
                                                             <td style={{width: '50%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
