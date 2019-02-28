@@ -16,10 +16,13 @@ import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialo
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import renderHTML from "react-render-html";
+import {CREATE_DOCUMENTS_PDF_QUERY} from "../W4/Queries";
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const backgroundCheckJson = require(`../languagesJSON/${localStorage.getItem('languageForm')}/backgroundCheck`);
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
+
+const uuidv4 = require('uuid/v4');
 
 class BackgroundCheck extends Component {
     constructor(props) {
@@ -41,7 +44,8 @@ class BackgroundCheck extends Component {
 
             // If the background check info exist show a edit button
             loadedBackgroundCheckById: false,
-            editing: false
+            editing: false,
+            isCreated: false,
         }
     }
 
@@ -75,7 +79,8 @@ class BackgroundCheck extends Component {
                             date: data.applications[0].backgroundCheck.date.substring(0, 10),
                             loadedBackgroundCheckById: true,
                             editing: true,
-                            accept: true
+                            accept: true,
+                            isCreated: true
                         });
                     } else {
                         this.setState({
@@ -264,6 +269,50 @@ class BackgroundCheck extends Component {
         this.getBackgroundCheckById(this.props.applicationId);
     }
 
+    createDocumentsPDF = (random) => {
+
+        this.setState(
+            {
+                downloading: true
+            }
+        )
+        this.props.client
+            .query({
+                query: CREATE_DOCUMENTS_PDF_QUERY,
+                variables: {
+                    contentHTML: document.getElementById('DocumentPDF').outerHTML,
+                    Name: "background-check-" + random + this.state.applicantName
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.createdocumentspdf != null) {
+
+                } else {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error: Loading agreement: createdocumentspdf not exists in query data'
+                    );
+                    this.setState({ loadingData: false, downloading: false });
+                }
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
+                this.setState({ loadingData: false, downloading: false });
+            });
+    };
+
+
+    downloadDocumentsHandler = (random) => {
+        var url = this.context.baseUrl + '/public/Documents/' + "background-check-" + random + this.state.applicantName + '.pdf';
+        window.open(url, '_blank');
+        this.setState({ downloading: false });
+    };
+
+    sleep() {
+        return new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+
     render() {
         const { fullScreen } = this.props;
 
@@ -324,20 +373,50 @@ class BackgroundCheck extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[1].label}</span>
-                                {
-                                    this.state.editing ? (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                editing: false
-                                            })
-                                        }}>Edit <i className="far fa-edit"></i>
-                                        </button>
-                                    ) : (
+                                <div>
+                                    {
+                                        this.state.isCreated ? (
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                let random = uuidv4();
+
+                                                this.createDocumentsPDF(random);
+                                                this.sleep().then(() => {
+                                                    this.downloadDocumentsHandler(random);
+                                                }).catch(error => {
+                                                    this.setState({downloading: false})
+                                                })
+                                            }}>{this.state.downloading && (
+                                                <React.Fragment>Downloading <i
+                                                    className="fas fa-spinner fa-spin"/></React.Fragment>)}
+                                                {!this.state.downloading && (
+                                                    <React.Fragment>{spanishActions[9].label} <i
+                                                        className="fas fa-download"/></React.Fragment>)}
+
+                                            </button>
+                                        ) : (
                                             ''
                                         )
-                                }
+                                    }
+                                    {
+                                        this.state.editing ? (
+                                            <button
+                                                style={{
+                                                    marginLeft: '5px'
+                                                }}
+                                                className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    editing: false
+                                                })
+                                            }}>Edit <i className="far fa-edit"></i>
+                                            </button>
+                                        ) : (
+                                            ''
+                                        )
+                                    }
+                                </div>
+
                             </div>
-                            <div className="row">
+                            <div className="row" id="DocumentPDF">
                                 <div className="col-md-8 offset-md-2">
                                     {renderHTML(`
                                             <p dir="ltr">In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</p>

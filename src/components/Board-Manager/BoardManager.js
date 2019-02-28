@@ -410,19 +410,6 @@ class BoardManager extends Component {
         );
     };
 
-    validateInvalidInput = () => {
-    };
-
-    shouldReceiveNewData = nextData => {
-    }
-
-    handleCardAdd = (card, laneId) => {
-    }
-
-    addCardLink = (cardId, metadata, laneId) => {
-    }
-
-
     onCardClick = (cardId, metadata, laneId) => {
 
         console.log("onCardClick ", cardId, metadata, laneId)
@@ -1134,7 +1121,7 @@ class BoardManager extends Component {
                                                             <option value={1}>Open</option>
                                                             <option value={null}>Status (All)</option>
                                                             <option value={2}>Completed</option>
-                                                            <option value={0}>Canceled</option>
+                                                            <option value={0}>Cancelled</option>
                                                         </select>
                                                     </div>
                                                     <div className="col-md-4">

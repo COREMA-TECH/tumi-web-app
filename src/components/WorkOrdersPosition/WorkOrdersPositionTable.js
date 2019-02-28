@@ -32,23 +32,103 @@ class WorkOrdersPositionTable extends Component {
 		super(props);
 		this.state = {
 			data: [],
-			rowsPerPage: 10,
+			rowsPerPage: props.rowsPerPage || 25,
 			page: 0,
-			openConfirm: false
+			openConfirm: false,
+			Hotels: [],
+
+			ShiftsData: ShiftsData,
+			id: null,
+			hotel: 0,
+			IdEntity: null,
+			date: '',
+			quantity: 0,
+			status: 2,
+			shift: '',
+			startDate: '',
+			endDate: '',
+			needExperience: false,
+			needEnglish: false,
+			comment: '',
+			position: 0,
+			PositionRateId: null,
+			RecruiterId: null,
+			userId: localStorage.getItem('LoginId'),
+			ShiftsData: ShiftsData,
+			saving: false,
+			recruiters: [],
+			contactId: null,
+			filterValue: 0,
+			startDate: '',
+			endDate: '',
+			endDateDisabled: true,
+			states: [],
+			state: 0
 		};
 	}
 
 	componentWillMount() {
+
+		this.getWorkOrders();
+	}
+
+	getDateFilters = () => {
+		var variables;
+		variables = null;
+		var workOrder = [];
+		var workOrderCompany = [];
+		if (this.state.startDate != "" && this.state.endDate != "") {
+			workOrder = {
+				startDate: this.state.startDate,
+				endDate: this.state.endDate,
+			}
+		}
+		if (this.state.status != "") {
+			workOrder = {
+				status: this.state.status,
+				...workOrder
+			}
+		}
+
+		if (this.state.id)
+			workOrder = {
+				id: this.state.id,
+				...workOrder
+			}
+
+		if (this.state.state != 0) {
+			workOrderCompany = {
+				State: this.state.state
+			}
+		}
+
+		//  if (this.state.endDate != "" || this.state.status != "" || this.state.state != 0 ) {
+		variables = {
+			workOrder,
+			workOrderCompany
+		}
+		//}
+		console.log(variables, this.state.id)
+		return variables;
+	}
+
+	getWorkOrders = () => {
 		this.props.client
 			.query({
-				query: GET_WORKORDERS_QUERY
+				query: GET_WORKORDERS_QUERY,
+				fetchPolicy: 'no-cache',
+				variables: {
+					...this.getDateFilters()
+				}
 			})
 			.then(({ data }) => {
 				this.setState({
 					data: data.workOrder
 				});
 			})
-			.catch();
+			.catch(error => {
+				console.log(error)
+			});
 	}
 
 	handleDelete = (id) => {

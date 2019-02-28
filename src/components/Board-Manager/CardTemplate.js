@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import { CONVERT_TO_OPENING } from './Mutations';
+import { CONVERT_TO_OPENING, DELETE_WORK_ORDER } from './Mutations';
+import { GET_BOARD_SHIFT } from "./Queries";
 import withApollo from 'react-apollo/withApollo';
 
 const ONE_ITEM_MESSAGE_OPENING = "Send ONLY this item", ALL_ITEM_MESSAGE_OPENING = "Send All Items on this Work Order"
@@ -25,6 +26,7 @@ class CardTemplate extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log("this.props ", this.props)
         if (nextProps.isOpening != this.props.isOpening)
             this.setState(() => {
                 return {
@@ -66,6 +68,7 @@ class CardTemplate extends Component {
     }
 
     handleCancelAllItemToWorkOrder = ({ WorkOrderId }) => {
+        this.CancelWorkOrder()
         this.convertToOpeningOrWorkOrder({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 1, targetStatus: 0 }, "Cancel All Items on this Work Order", this.updateProgressAllItems)
     }
 
@@ -110,6 +113,24 @@ class CardTemplate extends Component {
     }
 
 
+    CancelWorkOrder = () => {
+        this.props.client
+            .mutate({
+                mutation: DELETE_WORK_ORDER,
+                variables: { id: this.props.WorkOrderId }
+            })
+            .then(({ data }) => {
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    `Error to with operation . Please, try again!`,
+                    'bottom',
+                    'right'
+                );
+            });
+    }
+
     printDialogConfirmConvertToOpening = ({ id, WorkOrderId }) => {
         if (this.props.Status != 0) {
             return <Dialog maxWidth="xl" open={this.state.showConfirmToOpening} onClose={this.handleCloseConfirmDialogToOpening}>
@@ -152,7 +173,6 @@ class CardTemplate extends Component {
     }
 
     printDialogCancelWO = ({ id, WorkOrderId }) => {
-
         if (this.props.Status != 0) {
             return <Dialog maxWidth="xl" open={this.state.showCancelWorkOrder} onClose={this.handleCloseConfirmDialogCancelToWorkOrder}>
                 <DialogContent>

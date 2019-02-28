@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const GET_WORKORDERS_QUERY = gql`
+/*export const GET_WORKORDERS_QUERY = gql`
 query workOrder($workOrder: inputQueryWorkOrder, $workOrderCompany: inputInsertWorkOrderCompany) {
 	workOrder(workOrder: $workOrder, workOrderCompany: $workOrderCompany) {
 			id
@@ -30,6 +30,46 @@ query workOrder($workOrder: inputQueryWorkOrder, $workOrderCompany: inputInsertW
 			}
 		}
 	}
+`;*/
+
+export const GET_WORKORDERS_QUERY = gql`
+query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
+	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity)  {
+		id,
+		title,
+		quantity,
+		workOrderId,
+		CompanyName,
+		needExperience,
+		needEnglish,
+		zipCode,
+		Id_positionApplying,
+		positionName
+		status
+		isOpening
+		shift
+		endShift
+		startDate
+		endDate
+		count
+		date
+		comment
+		EspecialComment
+		dayWeek
+		IdEntity
+		contactId
+		PositionRateId
+	}
+	getusers(Id: null,IsActive: 1) {
+		Id
+		Id_Contact
+	}
+	getcontacts(Id: null,IsActive: 1) {
+		Id
+		First_Name
+		Last_Name
+	}
+}
 `;
 
 export const GET_SHIFTS = gql`

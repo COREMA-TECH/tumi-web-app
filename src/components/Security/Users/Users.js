@@ -1006,7 +1006,7 @@ class Catalogs extends React.Component {
                         }
                     })
                     .then((data) => {
-                        this.props.handleOpenSnackbar('success', 'Email Send!');
+                        this.props.handleOpenSnackbar('success', 'Email Sent!');
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);
