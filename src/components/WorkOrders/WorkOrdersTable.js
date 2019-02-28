@@ -403,7 +403,7 @@ class WorkOrdersTable extends Component {
             endDate: '',
             endDateDisabled: true,
             state: 0,
-            status: '',
+            status: 1,
             id: ''
         }, () => {
             this.getWorkOrders();
