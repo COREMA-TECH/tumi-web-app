@@ -150,24 +150,6 @@ class Catalogs extends React.Component {
             }
         }
     `;
-
-    GET_ROLES_QUERY = gql`
-        {
-            getroles(IsActive: 1) {
-                Id
-                Name: Description
-            }
-        }
-    `;
-    GET_LANGUAGES_QUERY = gql`
-        {
-            getcatalogitem(IsActive: 1, Id_Catalog: 9) {
-                Id
-                Name
-                IsActive
-            }
-        }
-    `;
     GET_USERS_QUERY = gql`
         {
             user(IsActive: 1) {
@@ -723,11 +705,7 @@ class Catalogs extends React.Component {
         this.setState({ firstLoad: true }, () => {
             this.loadUsers(() => {
                 this.loadContacts(() => {
-                    this.loadRoles(() => {
-                        this.loadLanguages(() => {
-                            this.setState({ indexView: 1, firstLoad: false });
-                        });
-                    });
+                    this.setState({ indexView: 1, firstLoad: false,loading:false });
                 });
             });
         });
@@ -786,13 +764,15 @@ class Catalogs extends React.Component {
                                 contacts: data.data.catalogitem,
                                 regions: data.data.getcatalogitem,
                                 RegionName: data.data.getcatalogitem[0].Name,
-                                loadingContacts: false
+                                loadingContacts: false,
+                                loading:false,
                             },
                             func
                         );
                     } else {
                         this.setState({
                             loadingContacts: false,
+                            loading:false,
                             firstLoad: false,
                             indexView: 2,
                             errorMessage: 'Error: Loading contacts: object doesn´t exists in query'
@@ -804,81 +784,8 @@ class Catalogs extends React.Component {
                         loadingContacts: false,
                         firstLoad: false,
                         indexView: 2,
+                        loading:false,
                         errorMessage: 'Error: Loading contacts: ' + error
-                    });
-                });
-        });
-    };
-    loadRoles = (func = () => {
-    }) => {
-        this.setState({ loadingRoles: true }, () => {
-            this.props.client
-                .query({
-                    query: this.GET_ROLES_QUERY,
-                    fetchPolicy: 'no-cache'
-                })
-                .then((data) => {
-                    if (data.data.getroles != null) {
-                        this.setState(
-                            {
-                                roles: data.data.getroles,
-                                loadingRoles: false
-                            },
-                            func
-                        );
-                    } else {
-                        this.setState({
-                            loadingRoles: false,
-                            firstLoad: false,
-                            indexView: 2,
-                            errorMessage: 'Error: Loading roles: getroles not exists in query data'
-                        });
-                    }
-                })
-                .catch((error) => {
-                    this.setState({
-                        loadingRoles: false,
-                        firstLoad: false,
-                        indexView: 2,
-                        errorMessage: 'Error: Loading roles: ' + error
-                    });
-                });
-        });
-    };
-
-    loadLanguages = (func = () => {
-    }) => {
-        this.setState({ loadingLanguages: true }, () => {
-            this.props.client
-                .query({
-                    query: this.GET_LANGUAGES_QUERY,
-                    fetchPolicy: 'no-cache'
-                })
-                .then((data) => {
-                    if (data.data.getcatalogitem != null) {
-                        this.setState(
-                            {
-                                languages: data.data.getcatalogitem,
-                                idLanguage: data.data.getcatalogitem[0].Id,
-                                loadingLanguages: false
-                            },
-                            func
-                        );
-                    } else {
-                        this.setState({
-                            loadingLanguages: false,
-                            firstLoad: false,
-                            indexView: 2,
-                            errorMessage: 'Error: Loading languages: getcatalogitem not exists in query data'
-                        });
-                    }
-                })
-                .catch((error) => {
-                    this.setState({
-                        loadingLanguages: false,
-                        firstLoad: false,
-                        indexView: 2,
-                        errorMessage: 'Error: Loading languages: ' + error
                     });
                 });
         });
@@ -945,11 +852,7 @@ class Catalogs extends React.Component {
 
                         this.setState({ openModal: false, showCircularLoading: true }, () => {
                             this.loadUsers(() => {
-                                this.loadContacts(() => {
-                                    this.loadRoles(() => {
-                                        this.loadLanguages(this.resetState);
-                                    });
-                                });
+                                this.loadContacts(() => { });
                             });
                         });
                     })
@@ -985,12 +888,8 @@ class Catalogs extends React.Component {
                             () => {
                                 this.loadUsers(() => {
                                     this.loadContacts(() => {
-                                        this.loadRoles(() => {
-                                            this.loadLanguages(() => {
-                                                this.resetState(() => {
-                                                    this.setState({ indexView: 1, firstLoad: false });
-                                                });
-                                            });
+                                        this.resetState(() => {
+                                            this.setState({ indexView: 1, firstLoad: false });
                                         });
                                     });
                                 });
@@ -1438,8 +1337,6 @@ class Catalogs extends React.Component {
                                     <div className="">
                                         <UsersTable
                                             data={this.state.data}
-                                            roles={this.state.roles}
-                                            languages={this.state.languages}
                                             loading={this.state.showCircularLoading && isLoading}
                                             onEditHandler={this.onEditHandler}
                                             onDeleteHandler={this.onDeleteHandler}
