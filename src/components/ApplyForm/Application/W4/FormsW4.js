@@ -191,7 +191,14 @@ class FormsW4 extends Component {
         let socialSecurityExtention = document.getElementById('socialSecurityExtention');
 
 
-        if (firstName.value.length > 0 &&
+        if(this.state.signature.length === 0) {
+            this.props.handleOpenSnackbar(
+                'warning',
+                'You must sign the document!',
+                'bottom',
+                'right'
+            );
+        } else if (firstName.value.length > 0 &&
             lastName.value.length > 0 &&
             socialSecurityNumber.value.length > 0) {
 
