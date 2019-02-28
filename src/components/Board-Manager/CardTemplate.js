@@ -26,7 +26,6 @@ class CardTemplate extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("this.props ", this.props)
         if (nextProps.isOpening != this.props.isOpening)
             this.setState(() => {
                 return {

@@ -105,7 +105,6 @@ class WorkOrdersTable extends Component {
         var shift = [];
         var workOrder = [];
         if (this.state.startDate != "" && this.state.endDate != "") {
-            console.log("Entro aqui")
             workOrder = {
                 startDate: this.state.startDate,
                 endDate: this.state.endDate,
@@ -156,12 +155,10 @@ class WorkOrdersTable extends Component {
             workOrder
         }
         //}
-        console.log(variables, this.state.id)
         return variables;
     }
 
     getWorkOrders = () => {
-        console.log("getWorkOrders entro aqui ", this.state.status)
         this.setState(
             {
                 loading: true
@@ -224,7 +221,6 @@ class WorkOrdersTable extends Component {
     }
 
     CancelWO = (workOrderId) => {
-        console.log("CancelWO  ", workOrderId)
         this.props.client
             .query({
                 query: GET_WORKORDERS_QUERY,

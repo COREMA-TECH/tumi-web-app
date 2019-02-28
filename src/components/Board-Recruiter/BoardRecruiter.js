@@ -166,7 +166,6 @@ class BoardRecruiter extends Component {
                     IdLane = 30460
             }
 
-            console.log(this.state.openReason)
             if (!this.state.openReason) {
                 if (targetLaneId != sourceLaneId) {
                     this.addApplicationPhase(cardId, IdLane);
@@ -524,13 +523,10 @@ class BoardRecruiter extends Component {
                 needExperience = this.state.Openings.find((item) => { return item.id == cardId }).needExperience;
                 Position = this.state.Openings.find((item) => { return item.id == cardId }).Position;
 
-                console.log(this.state.Openings.find((item) => { return item.id == cardId }))
 
                 this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
 
-
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    console.log("Estoy aqui con los nuevos filtros");
                     this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
                 } else {
                     this.getMatches(needEnglish, needExperience, 30, laneId, Position);
@@ -1100,10 +1096,8 @@ class BoardRecruiter extends Component {
                                                         className={'form-control'}
                                                         onChange={(event) => {
                                                             if (event.target.value == "null") {
-                                                                console.log("event.target.value ", event.target.value)
                                                                 this.updateStatus(null);
                                                             } else {
-                                                                console.log("event.target.value ", event.target.value)
                                                                 this.updateStatus(event.target.value);
                                                             }
                                                         }}
@@ -1137,7 +1131,7 @@ class BoardRecruiter extends Component {
                                                                 this.getOpenings();
                                                             })
                                                         }}>
-                                                        Clear <i className="fas fa-filter link-icon-filter"></i><i className="fas fa-times-circle text-danger clear-filter"/>
+                                                        Clear <i className="fas fa-filter link-icon-filter"></i><i className="fas fa-times-circle text-danger clear-filter" />
                                                     </a>
 
                                                 </div>
