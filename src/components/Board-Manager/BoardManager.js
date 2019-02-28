@@ -1109,10 +1109,8 @@ class BoardManager extends Component {
                                                             // disabled={this.state.loadingCities}
                                                             onChange={(event) => {
                                                                 if (event.target.value == "null") {
-                                                                    console.log("event.target.value ", event.target.value)
                                                                     this.updateStatus(null);
                                                                 } else {
-                                                                    console.log("event.target.value ", event.target.value)
                                                                     this.updateStatus(event.target.value);
                                                                 }
                                                             }}
