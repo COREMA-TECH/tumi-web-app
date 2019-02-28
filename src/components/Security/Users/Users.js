@@ -150,32 +150,16 @@ class Catalogs extends React.Component {
             }
         }
     `;
-
-    GET_ROLES_QUERY = gql`
-        {
-            getroles(IsActive: 1) {
-                Id
-                Name: Description
-            }
-        }
-    `;
-    GET_LANGUAGES_QUERY = gql`
-        {
-            getcatalogitem(IsActive: 1, Id_Catalog: 9) {
-                Id
-                Name
-                IsActive
-            }
-        }
-    `;
     GET_USERS_QUERY = gql`
         {
-            getusers(IsActive: 1) {
+            user(IsActive: 1) {
                 Id
                 Id_Contact
                 Id_Roles
                 Code_User
                 Full_Name
+                firstName
+                lastName
                 Electronic_Address
                 Phone_Number
                 Password
@@ -191,6 +175,14 @@ class Catalogs extends React.Component {
                 IsActive
                 IdSchedulesEmployees
                 IdSchedulesManager
+                role {
+                    Id
+                    Description
+                  }
+                  language {
+                    Id
+                    DisplayLabel
+                  }
             }
         }
     `;
@@ -651,6 +643,8 @@ class Catalogs extends React.Component {
         IsActive,
         IdSchedulesEmployees,
         IdSchedulesManager,
+        firstName,
+        lastName
     }) => {
         this.setState({ showCircularLoading: false }, () => {
             this.setState(
@@ -660,6 +654,8 @@ class Catalogs extends React.Component {
                     idRol: Id_Roles,
                     username: Code_User.trim(),
                     fullname: Full_Name.trim(),
+                    firstName: firstName || '',
+                    lastName: lastName || '',
                     email: Electronic_Address.trim(),
                     number: Phone_Number.trim(),
                     password: Password.trim(),
@@ -709,11 +705,7 @@ class Catalogs extends React.Component {
         this.setState({ firstLoad: true }, () => {
             this.loadUsers(() => {
                 this.loadContacts(() => {
-                    this.loadRoles(() => {
-                        this.loadLanguages(() => {
-                            this.setState({ indexView: 1, firstLoad: false });
-                        });
-                    });
+                    this.setState({ indexView: 1, firstLoad: false, loading: false });
                 });
             });
         });
@@ -728,11 +720,11 @@ class Catalogs extends React.Component {
                     fetchPolicy: 'no-cache'
                 })
                 .then((data) => {
-                    if (data.data.getusers != null) {
+                    if (data.data.user != null) {
                         this.setState(
                             {
-                                data: data.data.getusers,
-                                allData: data.data.getusers,
+                                data: data.data.user,
+                                allData: data.data.user,
                                 loadingData: false
                             },
                             func
@@ -742,7 +734,7 @@ class Catalogs extends React.Component {
                             loadingData: false,
                             firstLoad: false,
                             indexView: 2,
-                            errorMessage: 'Error: Loading users: getusers not exists in query data'
+                            errorMessage: 'Error: Loading users: user not exists in query data'
                         });
                     }
                 })
@@ -751,7 +743,7 @@ class Catalogs extends React.Component {
                         loadingData: false,
                         firstLoad: false,
                         indexView: 2,
-                        errorMessage: 'Error: Loading users: ' + error
+                        errorMessage: 'Error: Loading user: ' + error
                     });
                 });
         });
@@ -772,15 +764,15 @@ class Catalogs extends React.Component {
                                 contacts: data.data.catalogitem,
                                 regions: data.data.getcatalogitem,
                                 RegionName: data.data.getcatalogitem[0].Name,
-                                //email: data.data.Electronic_Address,
-                                //number: data.data.Phone_Number,
-                                loadingContacts: false
+                                loadingContacts: false,
+                                loading: false,
                             },
                             func
                         );
                     } else {
                         this.setState({
                             loadingContacts: false,
+                            loading: false,
                             firstLoad: false,
                             indexView: 2,
                             errorMessage: 'Error: Loading contacts: object doesn´t exists in query'
@@ -792,81 +784,8 @@ class Catalogs extends React.Component {
                         loadingContacts: false,
                         firstLoad: false,
                         indexView: 2,
+                        loading: false,
                         errorMessage: 'Error: Loading contacts: ' + error
-                    });
-                });
-        });
-    };
-    loadRoles = (func = () => {
-    }) => {
-        this.setState({ loadingRoles: true }, () => {
-            this.props.client
-                .query({
-                    query: this.GET_ROLES_QUERY,
-                    fetchPolicy: 'no-cache'
-                })
-                .then((data) => {
-                    if (data.data.getroles != null) {
-                        this.setState(
-                            {
-                                roles: data.data.getroles,
-                                loadingRoles: false
-                            },
-                            func
-                        );
-                    } else {
-                        this.setState({
-                            loadingRoles: false,
-                            firstLoad: false,
-                            indexView: 2,
-                            errorMessage: 'Error: Loading roles: getroles not exists in query data'
-                        });
-                    }
-                })
-                .catch((error) => {
-                    this.setState({
-                        loadingRoles: false,
-                        firstLoad: false,
-                        indexView: 2,
-                        errorMessage: 'Error: Loading roles: ' + error
-                    });
-                });
-        });
-    };
-
-    loadLanguages = (func = () => {
-    }) => {
-        this.setState({ loadingLanguages: true }, () => {
-            this.props.client
-                .query({
-                    query: this.GET_LANGUAGES_QUERY,
-                    fetchPolicy: 'no-cache'
-                })
-                .then((data) => {
-                    if (data.data.getcatalogitem != null) {
-                        this.setState(
-                            {
-                                languages: data.data.getcatalogitem,
-                                idLanguage: data.data.getcatalogitem[0].Id,
-                                loadingLanguages: false
-                            },
-                            func
-                        );
-                    } else {
-                        this.setState({
-                            loadingLanguages: false,
-                            firstLoad: false,
-                            indexView: 2,
-                            errorMessage: 'Error: Loading languages: getcatalogitem not exists in query data'
-                        });
-                    }
-                })
-                .catch((error) => {
-                    this.setState({
-                        loadingLanguages: false,
-                        firstLoad: false,
-                        indexView: 2,
-                        errorMessage: 'Error: Loading languages: ' + error
                     });
                 });
         });
@@ -896,6 +815,8 @@ class Catalogs extends React.Component {
                     Id_Roles: this.state.idRol,
                     Code_User: this.state.username,
                     Full_Name: this.state.firstName + ' ' + this.state.lastName,
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
                     Electronic_Address: this.state.email,
                     Phone_Number: this.state.number,
                     Id_Language: this.state.idLanguage,
@@ -931,11 +852,7 @@ class Catalogs extends React.Component {
 
                         this.setState({ openModal: false, showCircularLoading: true }, () => {
                             this.loadUsers(() => {
-                                this.loadContacts(() => {
-                                    this.loadRoles(() => {
-                                        this.loadLanguages(this.resetState);
-                                    });
-                                });
+                                this.loadContacts(() => { });
                             });
                         });
                     })
@@ -971,12 +888,8 @@ class Catalogs extends React.Component {
                             () => {
                                 this.loadUsers(() => {
                                     this.loadContacts(() => {
-                                        this.loadRoles(() => {
-                                            this.loadLanguages(() => {
-                                                this.resetState(() => {
-                                                    this.setState({ indexView: 1, firstLoad: false });
-                                                });
-                                            });
+                                        this.resetState(() => {
+                                            this.setState({ indexView: 1, firstLoad: false });
                                         });
                                     });
                                 });
@@ -1104,31 +1017,39 @@ class Catalogs extends React.Component {
         this.setState({ openModal: false });
     };
 
-    searchUsers = () => {
+    searchUsers = (filterText) => {
         let allUser = this.state.allData.filter((_, i) => {
-            if (this.state.filterText === "") {
+            if (filterText === "") {
                 return true;
             }
 
             if (
-                _.Code_User.indexOf(this.state.filterText) > -1 ||
+                _.Code_User.indexOf(filterText) > -1 ||
                 _.Code_User
                     .toLocaleLowerCase()
-                    .indexOf(this.state.filterText) > -1 ||
+                    .indexOf(filterText) > -1 ||
                 _.Code_User
                     .toLocaleUpperCase()
-                    .indexOf(this.state.filterText) > -1
+                    .indexOf(filterText) > -1
             ) {
                 return true;
             }
         });
         this.setState(prevState => ({
-            data: [...prevState.data, allUser]
+            data: allUser
         }));
     };
 
+    filterChangeHandler = (e) => {
+        let value = e.target.value;
+        this.setState({
+            filterText: value
+        }, () => {
+            this.searchUsers(value);
+        });
+    }
+
     render() {
-        const { loading, success } = this.state;
         const { classes } = this.props;
         const { fullScreen } = this.props;
 
@@ -1192,34 +1113,7 @@ class Catalogs extends React.Component {
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div className="row">
-                                        {/* <div className="col-md-12 col-lg-6">
-                                            <label>* Contact</label>
-                                            <select
-                                                name="idContact"
-                                                className={[
-                                                    'form-control',
-                                                    this.state.idContactValid ? '' : '_invalid'
-                                                ].join(' ')}
-                                                disabled={this.state.loadingContacts}
-                                                onChange={(event) => {
-                                                    this.updateSelect(event.target.value, 'idContact');
-                                                    this.SelectContac(event.target.value);
-                                                }}
-                                                value={this.state.idContact}
 
-                                            >
-                                                <option value={undefined}>Select a contact</option>
-                                                {this.state.contacts.map((item) => (
-                                                    <optgroup label={item.DisplayLabel}>
-                                                        {item.contacts.map((contact) => (
-                                                            <option key={contact.Id} value={contact.Id}>
-                                                                {contact.First_Name + ' ' + contact.Middle_Name}
-                                                            </option>
-                                                        ))}
-                                                    </optgroup>
-                                                ))}
-                                            </select>
-                                        </div> */}
                                         <div className="col-md-12 col-lg-6">
                                             <label>* First Name</label>
                                             <InputForm
@@ -1328,60 +1222,7 @@ class Catalogs extends React.Component {
                                             </select>
                                         </div>
 
-                                        {/* <div className="col-md-3 col-lg-3">
-                                            <label>Recruiter?</label>
 
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.IsRecruiter}
-                                                    name="IsRecruiter"
-                                                    onChange={this.handleCheckedChange('IsRecruiter')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="IsRecruiter"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="IsRecruiter">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
-                                                </label>
-                                            </div>
-
-                                            <label>Manage app?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.manageApp}
-                                                    name="manageApp"
-                                                    onChange={this.handleCheckedChange('manageApp')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="manageApp"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="manageApp">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
-                                                </label>
-                                            </div>
-                                        </div> */}
-
-                                        {/* <div className="col-md-3 col-lg-3">
-                                            <label>Is Field Employees?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.isEmployee}
-                                                    name="isEmployee"
-                                                    onChange={this.handleCheckedChange('isEmployee')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="isEmployee"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="isEmployee">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
-                                                </label>
-                                            </div>
-                                        </div> */}
 
                                         <div className="col-md-9 col-lg-6">
                                             <label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
@@ -1399,182 +1240,11 @@ class Catalogs extends React.Component {
                                                     this.updateSelect(value, 'RegionName');
                                                 }}
                                             />
-                                            {/*
-										<select
-											name="IdRegion"
-											className={[
-												'form-control',
-												this.state.IdRegionValid ? '' : '_invalid'
-											].join(' ')}
-											disabled={!this.state.IsRecruiter}
-											onChange={(event) => {
-												this.updateSelect(event.target.value, 'IdRegion');
-											}}
-											value={this.state.IdRegion}
-										>
-											<option value="">Select a region</option>
-											{this.state.regions.map((item) => (
-												<option key={item.Id} value={item.Id}>
-													{item.Name}
-												</option>
-											))}
-										</select>
-										*/}
+
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className="col-lg-4">
-                                    <div className="card">
-                                        <div className="card-header info">Permissions</div>
-                                        <div className="card-body p-0">
-                                            <ul className="row w-100 bg-light CardPermissions">
-                                                <li className="col-md-4 col-sm-4 col-lg-6">
-                                                    <label>Active?</label>
 
-                                                    <div className="onoffswitch">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={this.state.IsActive}
-                                                            name="IsActive"
-                                                            onChange={this.handleCheckedChange('IsActive')}
-                                                            className="onoffswitch-checkbox"
-                                                            id="IsActive"
-                                                        />
-                                                        <label className="onoffswitch-label" htmlFor="IsActive">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <li className="col-md-4 col-sm-4 col-lg-6">
-                                                    <label>Admin?</label>
-
-                                                    <div className="onoffswitch">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={this.state.isAdmin}
-                                                            name="isAdmin"
-                                                            onChange={this.handleCheckedChange('isAdmin')}
-                                                            className="onoffswitch-checkbox"
-                                                            id="isAdmin"
-                                                        />
-                                                        <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <li className="col-md-4 col-sm-4 col-lg-6">
-                                                    <label>Insert?</label>
-
-                                                    <div className="onoffswitch">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={this.state.allowInsert}
-                                                            name="allowInsert"
-                                                            onChange={this.handleCheckedChange('allowInsert')}
-                                                            className="onoffswitch-checkbox"
-                                                            id="allowInsert"
-                                                        />
-                                                        <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <li className="col-md-4 col-sm-4 col-lg-6">
-                                                    <label>Edit?</label>
-
-                                                    <div className="onoffswitch">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={this.state.allowEdit}
-                                                            name="allowEdit"
-                                                            onChange={this.handleCheckedChange('allowEdit')}
-                                                            className="onoffswitch-checkbox"
-                                                            id="allowEdit"
-                                                        />
-                                                        <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <li className="col-md-4 col-sm-4 col-lg-6">
-                                                    <label>Delete?</label>
-
-                                                    <div className="onoffswitch">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={this.state.allowDelete}
-                                                            name="allowDelete"
-                                                            onChange={this.handleCheckedChange('allowDelete')}
-                                                            className="onoffswitch-checkbox"
-                                                            id="allowDelete"
-                                                        />
-                                                        <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <li className="col-md-4 col-sm-4 col-lg-6">
-                                                    <label>Export?</label>
-
-                                                    <div className="onoffswitch">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={this.state.allowExport}
-                                                            name="allowExport"
-                                                            onChange={this.handleCheckedChange('allowExport')}
-                                                            className="onoffswitch-checkbox"
-                                                            id="allowExport"
-                                                        />
-                                                        <label className="onoffswitch-label" htmlFor="allowExport">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                                <br /><br />
-                                                <li className="col-md-4 col-sm-12 col-lg-12">
-                                                    <label>Employees can see schedules for:</label>
-                                                    <br />
-                                                    <select
-                                                        value={this.state.IdSchedulesEmployees}
-                                                        onChange={e => {
-                                                            this.setState({
-                                                                IdSchedulesEmployees: e.target.value
-                                                            })
-                                                        }}
-                                                        className="form-control">
-                                                        <option value="">Select a option</option>
-                                                        <option value="0">The company</option>
-                                                        <option value="1">Their group</option>
-                                                        <option value="2">Just themselves</option>
-                                                    </select>
-                                                </li>
-                                                <li className="col-md-6 col-sm-12 col-lg-12">
-                                                    <label>Managers can add, edit or delete shifts for:</label>
-                                                    <br />
-                                                    <select
-                                                        value={this.state.IdSchedulesManager}
-                                                        onChange={e => {
-                                                            this.setState({
-                                                                IdSchedulesManager: e.target.value
-                                                            })
-                                                        }}
-                                                        className="form-control">
-                                                        <option value="">Select a option</option>
-                                                        <option value="0">The company</option>
-                                                        <option value="1">Their employees</option>
-                                                    </select>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                             */}
                             </div>
                         </div>
                     </DialogContent>
@@ -1644,13 +1314,7 @@ class Catalogs extends React.Component {
                                 </span>
                             </div>
                             <input
-                                onChange={text => {
-                                    this.setState({
-                                        filterText: text.target.value
-                                    }, () => {
-                                        //this.searchUsers();
-                                    });
-                                }}
+                                onChange={this.filterChangeHandler}
                                 value={this.state.filterText}
                                 type="text"
                                 placeholder="Search users"
@@ -1667,66 +1331,20 @@ class Catalogs extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <Query query={this.GET_USERS_QUERY} pollInterval={300}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
-                                if (this.state.filterText === '') {
-                                    if (loading) return <LinearProgress />;
-                                }
-
-                                if (error)
-                                    return (
-                                        <ErrorMessageComponent
-                                            title="Oops!"
-                                            message={'Error loading contracts'}
-                                            type="Error-danger"
-                                            icon="danger"
+                        <div className="">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <div className="">
+                                        <UsersTable
+                                            data={this.state.data}
+                                            loading={this.state.showCircularLoading && isLoading}
+                                            onEditHandler={this.onEditHandler}
+                                            onDeleteHandler={this.onDeleteHandler}
                                         />
-                                    );
-                                if (data.getusers != null && data.getusers.length > 0) {
-                                    let dataUsers = data.getusers.filter((_, i) => {
-                                        if (this.state.filterText === '') {
-                                            return true;
-                                        }
-
-                                        if (
-                                            _.Code_User.indexOf(this.state.filterText) > -1 ||
-                                            _.Code_User.toLocaleLowerCase().indexOf(this.state.filterText) > -1 ||
-                                            _.Code_User.toLocaleUpperCase().indexOf(this.state.filterText) > -1
-                                        ) {
-                                            return true;
-                                        }
-                                    });
-
-                                    return (
-                                        <div className="">
-                                            <div className="row">
-                                                <div className="col-md-12">
-                                                    <div className="">
-                                                        <UsersTable
-                                                            data={dataUsers}
-                                                            contacts={this.state.contacts}
-                                                            roles={this.state.roles}
-                                                            languages={this.state.languages}
-                                                            loading={this.state.showCircularLoading && isLoading}
-                                                            onEditHandler={this.onEditHandler}
-                                                            onDeleteHandler={this.onDeleteHandler}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                }
-                                return (
-                                    <NothingToDisplay
-                                        title="Oops!"
-                                        message={'There are no users'}
-                                        type="Error-success"
-                                        icon="wow"
-                                    />
-                                );
-                            }}
-                        </Query>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
