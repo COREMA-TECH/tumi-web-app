@@ -47,8 +47,18 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 		positionName
 		status
 		isOpening
+		shift
+		endShift
 		startDate
 		endDate
+		count
+		date
+		comment
+		EspecialComment
+		dayWeek
+		IdEntity
+		contactId
+		PositionRateId
 	}
 	getusers(Id: null,IsActive: 1) {
 		Id

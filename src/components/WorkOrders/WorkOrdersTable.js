@@ -17,6 +17,7 @@ import { DELETE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_ALL_SHIF
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -44,7 +45,7 @@ class WorkOrdersTable extends Component {
             IdEntity: null,
             date: '',
             quantity: 0,
-            status: "",
+            status: 1,
             shift: '',
             startDate: '',
             endDate: '',
@@ -64,7 +65,8 @@ class WorkOrdersTable extends Component {
             endDate: '',
             endDateDisabled: true,
             states: [],
-            state: 0
+            state: 0,
+            loading: false,
         }
     }
 
@@ -79,60 +81,93 @@ class WorkOrdersTable extends Component {
 
     getDateFilters = () => {
         var variables;
-        variables = null;
-        var workOrder = [];
-        var workOrderCompany = [];
+
         if (this.state.startDate != "" && this.state.endDate != "") {
-            workOrder = {
-                startDate: this.state.startDate,
-                endDate: this.state.endDate,
+            variables = {
+                shift: {
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                }
             }
         }
-        if (this.state.status != "") {
-            workOrder = {
-                status: this.state.status,
-                ...workOrder
+        if (this.state.status == 0) {
+            variables = {
+                shift: {
+                    status: [0]
+                    // ...workOrder
+                }
+            }
+        }
+        else if (this.state.status == 1) {
+            variables = {
+                shift: {
+                    status: [1, 2]
+                    //   , ...workOrder
+                }
+            }
+        }
+        else if (this.state.status == 2) {
+            variables = {
+                shift: {
+                    status: [3]
+                    //, ...workOrder
+                }
+            }
+        }
+        else {
+            variables = {
+                shift: {
+                    status: [1, 2, 0]
+                    // , ...workOrder
+                }
             }
         }
 
         if (this.state.id)
-            workOrder = {
-                id: this.state.id,
-                ...workOrder
+            variables = {
+                shift: {
+                    id: this.state.workOrderId
+                    // ...workOrder
+                }
             }
 
-        if (this.state.state != 0) {
-            workOrderCompany = {
-                State: this.state.state
-            }
-        }
+        /* if (this.state.state != 0) {
+             workOrderCompany = {
+                 State: this.state.state
+             }
+         }*/
 
-        //  if (this.state.endDate != "" || this.state.status != "" || this.state.state != 0 ) {
-        variables = {
+        /*variables = {
             workOrder,
             workOrderCompany
-        }
+        }*/
         //}
         console.log(variables, this.state.id)
         return variables;
     }
 
     getWorkOrders = () => {
-        this.props.client
-            .query({
-                query: GET_WORKORDERS_QUERY,
-                fetchPolicy: 'no-cache',
-                variables: {
-                    ...this.getDateFilters()
-                }
-            })
-            .then(({ data }) => {
-                this.setState({
-                    data: data.ShiftBoard
-                });
-            })
-            .catch(error => {
-                console.log(error)
+        this.setState(
+            {
+                loading: true
+            }, () => {
+                this.props.client
+                    .query({
+                        query: GET_WORKORDERS_QUERY,
+                        fetchPolicy: 'no-cache',
+                        variables: {
+                            ...this.getDateFilters()
+                        }
+                    })
+                    .then(({ data }) => {
+                        this.setState({
+                            data: data.ShiftBoard,
+                            loading: false
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
             });
     }
 
@@ -363,8 +398,16 @@ class WorkOrdersTable extends Component {
         })
     }
 
-    handleFilterValue = (event) => {
-        const target = event.target;
+    handleFilterValue = (id) => {
+        this.setState(
+            {
+                status: id
+            },
+            () => {
+                this.getWorkOrders();
+            }
+        );
+        /* const target = event.target;
         var value = target.value;
         const name = target.name;
 
@@ -375,7 +418,7 @@ class WorkOrdersTable extends Component {
             status: value
         }, () => {
             this.getWorkOrders()
-        });
+        });*/
     }
 
     handleChangeId = (event) => {
@@ -392,9 +435,11 @@ class WorkOrdersTable extends Component {
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
+        let isLoading = this.state.loading;
 
         return (
             <div className="card">
+                {isLoading && <LinearProgress />}
                 <div className="card-header bg-light">
                     <div className="row">
                         <div className="col-md-2">
@@ -427,11 +472,19 @@ class WorkOrdersTable extends Component {
                             </button>
                         </div>
                         <div className="col-md-2">
-                            <select name="filterValue" id="" className="form-control" onChange={this.handleFilterValue} value={this.state.status}>
-                                <option value="3">Status (All)</option>
-                                <option value="1">Open</option>
-                                <option value="2">Completed</option>
-                                <option value="0">Cancelled</option>
+                            <select name="filterValue" id="" className="form-control" onChange={(event) => {
+                                if (event.target.value == "null") {
+                                    this.handleFilterValue(null);
+                                } else {
+                                    this.handleFilterValue(event.target.value);
+                                }
+                                // this.handleFilterValue
+                            }}
+                                value={this.state.status}>
+                                <option value={1}>Open</option>
+                                <option value={null}>Status (All)</option>
+                                <option value={2}>Completed</option>
+                                <option value={0}>Cancelled</option>
                             </select>
                         </div>
                         <div className="col-md-2">
@@ -514,10 +567,10 @@ class WorkOrdersTable extends Component {
                                                             )
                                                     }
                                                 </CustomTableCell>
-                                                <CustomTableCell style={{ width: '80px' }}>{row.id}</CustomTableCell>
-                                                <CustomTableCell style={{ width: '220px' }}>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
-                                                <CustomTableCell >{row.position != null ? row.position.Position : ''}</CustomTableCell>
-                                                <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
+                                                <CustomTableCell style={{ width: '80px' }}>{row.workOrderId}</CustomTableCell>
+                                                <CustomTableCell style={{ width: '220px' }}>{row.CompanyName != null ? row.CompanyName : ''}</CustomTableCell>
+                                                <CustomTableCell >{row.positionName != null ? row.positionName : ''}</CustomTableCell>
+                                                <CustomTableCell className={'text-center'}>{row.count + '/' + row.quantity}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
