@@ -53,7 +53,6 @@ function getSorting(order, orderBy) {
 
 const rows = [
 	{ id: 'Delete', numeric: false, disablePadding: true, label: 'Actions' },
-	{ id: 'Id_Contact', numeric: false, disablePadding: false, label: 'Contact' },
 	{ id: 'Code_User', numeric: false, disablePadding: false, label: 'User Name' },
 	//{ id: 'Full_Name', numeric: false, disablePadding: false, label: 'Full Name' },
 	{ id: 'Electronic_Address', numeric: false, disablePadding: false, label: 'Email' },
@@ -378,7 +377,6 @@ class UsersTable extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (
 			this.props.data !== nextProps.data ||
-			this.props.contacts !== nextProps.contacts ||
 			this.props.roles !== nextProps.roles ||
 			this.props.languages !== nextProps.languages ||
 			this.props.loading !== nextProps.loading
@@ -470,61 +468,12 @@ class UsersTable extends React.Component {
 												</button>
 											</Tooltip>
 										</CustomTableCell>
-										<CustomTableCell>
-											<Select
-												id="Id_Contact"
-												name="Id_Contact"
-												value={row.Id_Contact == null ? 0 : row.Id_Contact}
-												disabled
-												IconComponent="div"
-												disableUnderline={true}
-											>
-												{' '}
-												<MenuItem key={0} value={0} name="None">
-													<em />
-												</MenuItem>
-												{this.props.contacts.map(({ Id, Name }) => (
-													<MenuItem key={Id} value={Id} name={NamedNodeMap}>
-														{Name}
-													</MenuItem>
-												))}
-											</Select>
-										</CustomTableCell>
+
 										<CustomTableCell>{row.Code_User}</CustomTableCell>
 										<CustomTableCell>{row.Electronic_Address}</CustomTableCell>
 										<CustomTableCell>{row.Phone_Number}</CustomTableCell>
-										<CustomTableCell>
-											<Select
-												id="Id_Roles"
-												name="Id_Roles"
-												value={row.Id_Roles}
-												disabled
-												IconComponent="div"
-												disableUnderline={true}
-											>
-												{this.props.roles.map(({ Id, Name }) => (
-													<MenuItem key={Id} value={Id} name={Name}>
-														{Name}
-													</MenuItem>
-												))}
-											</Select>
-										</CustomTableCell>
-										<CustomTableCell>
-											<Select
-												id="Id_Language"
-												name="Id_Language"
-												value={row.Id_Language}
-												disabled
-												IconComponent="div"
-												disableUnderline={true}
-											>
-												{this.props.languages.map(({ Id, Name }) => (
-													<MenuItem key={Id} value={Id} name={Name}>
-														{Name}
-													</MenuItem>
-												))}
-											</Select>
-										</CustomTableCell>
+										<CustomTableCell>{row.role ? row.role.Description : ''}</CustomTableCell>
+										<CustomTableCell>{row.language ? row.language.DisplayLabel : ''}</CustomTableCell>
 									</TableRow>
 								);
 							})}
