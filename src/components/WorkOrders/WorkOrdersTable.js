@@ -13,7 +13,7 @@ import { withApollo } from 'react-apollo';
 import { GET_WORKORDERS_QUERY, GET_RECRUITER, GET_HOTEL_QUERY, GET_STATE_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import { DELETE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_ALL_SHIFT } from './mutations';
+import { DELETE_WORKORDER, DELETE_SHIFT, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_ALL_SHIFT } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -73,7 +73,6 @@ class WorkOrdersTable extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps) {
-            console.log("nextProps ", nextProps)
             this.setState({
                 filterValue: nextProps.filter
             })
@@ -187,15 +186,16 @@ class WorkOrdersTable extends Component {
             });
     }
 
-    handleDelete = (WorkOrderId) => {
+    handleDelete = (ShiftId, WorkOrderId) => {
         this.setState({ removing: true })
         this.props.client.mutate({
-            mutation: DELETE_WORKORDER,
+            mutation: DELETE_SHIFT,
             variables: {
-                id: WorkOrderId
+                id: ShiftId
             }
         }).then((data) => {
-            this.CancelAllShift({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 1, targetStatus: 0 });
+            this.CancelWO(WorkOrderId);
+            //this.CancelAllShift({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 1, targetStatus: 0 });
             this.getWorkOrders();
             this.getRecruiter();
             this.getHotel();
@@ -207,6 +207,46 @@ class WorkOrdersTable extends Component {
         });
     }
 
+
+    DeleteWo = (WorkOrderId) => {
+        this.setState({ removing: true })
+        this.props.client.mutate({
+            mutation: DELETE_WORKORDER,
+            variables: {
+                id: WorkOrderId
+            }
+        }).then((data) => {
+
+        }).catch((error) => {
+            this.setState({ removing: false })
+            this.props.handleOpenSnackbar('error', 'Error: ' + error);
+        });
+    }
+
+    CancelWO = (workOrderId) => {
+        console.log("CancelWO  ", workOrderId)
+        this.props.client
+            .query({
+                query: GET_WORKORDERS_QUERY,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    shift: {
+                        status: [1, 2]
+                    },
+                    workOrder: {
+                        id: workOrderId,
+                    }
+                }
+            })
+            .then(({ data }) => {
+                if (data.ShiftBoard.length == 0) {
+                    this.DeleteWo(workOrderId)
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
 
     CancelAllShift = (args) => {
         this.props.client
@@ -568,7 +608,7 @@ class WorkOrdersTable extends Component {
                                                                     disabled={this.props.loading}
                                                                     onClick={(e) => {
                                                                         e.preventDefault();
-                                                                        this.setState({ openConfirm: true, idToDelete: row.id });
+                                                                        this.setState({ openConfirm: true, idToDelete: row.id, idWoToDelete: row.workOrderId });
                                                                     }}
                                                                 >
                                                                     <i className="fas fa-ban"></i>
@@ -613,7 +653,7 @@ class WorkOrdersTable extends Component {
                                 this.setState({ openConfirm: false });
                             }}
                             confirmAction={() => {
-                                this.handleDelete(this.state.idToDelete);
+                                this.handleDelete(this.state.idToDelete, this.state.idWoToDelete);
                             }}
                             title={'are you sure you want to cancel this record?'}
                             loading={this.state.removing}

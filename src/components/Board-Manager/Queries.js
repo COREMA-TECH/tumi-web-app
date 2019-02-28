@@ -168,8 +168,8 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 
 
 export const GET_BOARD_SHIFT = gql`
-query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
-	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity)  {
+query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany,$workOrder: inputQueryWorkOrder,) {
+	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity,workOrder:$workOrder)  {
 		id,
 		title,
 		quantity,

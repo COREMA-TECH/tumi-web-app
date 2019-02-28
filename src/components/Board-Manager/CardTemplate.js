@@ -94,6 +94,8 @@ class CardTemplate extends Component {
                 variables: { ...args }
             })
             .then(({ data }) => {
+
+                this.CancelWO(this.props.WorkOrderId);
                 this.props.handleOpenSnackbar('success', `${message} successful`, 'bottom', 'right');
                 fncUpdateProgress(false);
                 this.setState(() => { return { showConfirmToOpening: false, showConfirmToWorkOrder: false, showCancelWorkOrder: false } }, () => {
@@ -112,6 +114,29 @@ class CardTemplate extends Component {
             });
     }
 
+    CancelWO = (workOrderId) => {
+        this.props.client
+            .query({
+                query: GET_BOARD_SHIFT,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    shift: {
+                        status: [1, 2]
+                    },
+                    workOrder: {
+                        id: workOrderId,
+                    }
+                }
+            })
+            .then(({ data }) => {
+                if (data.ShiftBoard.length == 0) {
+                    this.CancelWorkOrder()
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
 
     CancelWorkOrder = () => {
         this.props.client
