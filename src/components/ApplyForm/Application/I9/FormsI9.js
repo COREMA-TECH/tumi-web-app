@@ -3,12 +3,12 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
-import {CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO} from "./Queries";
+import {CREATE_DOCUMENTS_PDF_QUERY, GET_APPLICANT_INFO} from "./Queries";
 import {ADD_ANTI_HARASSMENT, ADD_I9} from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
-import {ADD_W4} from "../W4/Mutations";
+
 const uuidv4 = require('uuid/v4');
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -20,6 +20,13 @@ class FormsI9 extends Component {
 
         this.state = {
             signature: '',
+            signature1: '',
+            signature2: '',
+            signature3: '',
+            signature4: '',
+
+            signType: null,
+
             openSignature: false,
             id: null,
             content: '',
@@ -31,18 +38,59 @@ class FormsI9 extends Component {
 
             isCreated: null,
             html: '',
+
+            oneCheck: false,
+            oneCheck1: false,
+            oneCheck2: false,
+            oneCheck3: false,
         }
     }
 
 
     handleSignature = (value) => {
-        this.setState({
-            signature: value,
-            openSignature: false,
-            date: new Date().toISOString().substring(0, 10)
-        }, () => {
-            //this.insertAntiHarrasment(this.state);
-        });
+        let signType = this.state.signType;
+
+        if (signType == 0) {
+            this.setState({
+                signature: value,
+                openSignature: false,
+                date: new Date().toISOString().substring(0, 10)
+            }, () => {
+                //this.insertAntiHarrasment(this.state);
+            });
+        }  else if (signType == 1) {
+            this.setState({
+                signature1: value,
+                openSignature: false,
+                date: new Date().toISOString().substring(0, 10)
+            }, () => {
+                //this.insertAntiHarrasment(this.state);
+            });
+        } else if (signType == 2) {
+            this.setState({
+                signature2: value,
+                openSignature: false,
+                date: new Date().toISOString().substring(0, 10)
+            }, () => {
+                //this.insertAntiHarrasment(this.state);
+            });
+        } else if (signType == 3) {
+            this.setState({
+                signature3: value,
+                openSignature: false,
+                date: new Date().toISOString().substring(0, 10)
+            }, () => {
+                //this.insertAntiHarrasment(this.state);
+            });
+        } else if (signType == 4) {
+            this.setState({
+                signature4: value,
+                openSignature: false,
+                date: new Date().toISOString().substring(0, 10)
+            }, () => {
+                //this.insertAntiHarrasment(this.state);
+            });
+        }
     };
 
     getApplicantInformation = (id) => {
@@ -125,36 +173,42 @@ class FormsI9 extends Component {
 
 
     validateI9 = () => {
-            let html = document.getElementById('i9Html');
+        let inputs = document.getElementsByTagName('input')
 
-            this.props.client
-                .mutate({
-                    mutation: ADD_I9,
-                    variables: {
-                        html: html.outerHTML,
-                        ApplicantId: this.props.applicationId
-                    }
-                })
-                .then(({data}) => {
-                    this.props.handleOpenSnackbar(
-                        'success',
-                        'Created successfully',
-                        'bottom',
-                        'right'
-                    );
-                    this.getApplicantInformation(this.props.applicationId)
-                })
-                .catch(error => {
-                    // If there's an error show a snackbar with a error message
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to save I9. Please, try again!',
-                        'bottom',
-                        'right'
-                    );
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].disabled = true;
+        }
 
-                    console.log(error);
-                });
+        let html = document.getElementById('i9Html');
+
+        this.props.client
+            .mutate({
+                mutation: ADD_I9,
+                variables: {
+                    html: html.outerHTML,
+                    ApplicantId: this.props.applicationId,
+                }
+            })
+            .then(({data}) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Created successfully',
+                    'bottom',
+                    'right'
+                );
+                this.getApplicantInformation(this.props.applicationId)
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to save I9. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+
+                console.log(error);
+            });
     };
 
     render() {
@@ -228,7 +282,7 @@ class FormsI9 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{width: '800px', margin: '0 auto'}}>
+                                    <div id="pdf-ready" style={{width: '1000px', margin: '0 auto'}}>
                                     </div>
                                 ) : (
                                     <div className="row pdf-container--i9-w4" id="i9Html">
@@ -269,11 +323,12 @@ class FormsI9 extends Component {
                                                         <tr style={{height: '17px'}}>
                                                             <td style={{width: '100%', height: '17px'}}>
                                                                 <div data-font-name="Helvetica" data-angle={0}
-                                                                     data-canvas-width="422.76666666666665"><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>Section
+                                                                     data-canvas-width="422.76666666666665"><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>Section
                       <strong>1. Employee Information and Attestation</strong>&nbsp;(Employees must complete
                       and sign Section 1 of Form I-9 no later than the<em><strong> first day of
                           employment</strong> </em>, but not before accepting a job offer.)</span></div>
@@ -281,23 +336,26 @@ class FormsI9 extends Component {
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '25%'}}>
                                                                 <div data-font-name="g_d0_f5" data-angle={0}
-                                                                     data-canvas-width="68.17333333333332"><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>Last
+                                                                     data-canvas-width="68.17333333333332"><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>Last
                       Name&nbsp;(Family Name) <input
                                                                         value={this.state.lastName}
                                                                         onChange={(e) => {
                                                                             this.setState({
                                                                                 lastName: e.target.value
                                                                             })
-                                                                        }} style={{border: 0, width: '100%'}} type="text"
+                                                                        }} style={{border: 0, width: '100%'}}
+                                                                        type="text"
                                                                         id="lastName"/></span>
                                                                 </div>
                                                             </td>
@@ -311,7 +369,8 @@ class FormsI9 extends Component {
                                                  this.setState({
                                                      firstName: e.target.value
                                                  })
-                                             }}  style={{border: 0, width: '100%'}} type="text" id="firstName"/></span></td>
+                                             }} style={{border: 0, width: '100%'}} type="text" id="firstName"/></span>
+                                                            </td>
                                                             <td style={{width: '25%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -333,28 +392,38 @@ class FormsI9 extends Component {
                                                         this.setState({
                                                             otherLastName: e.target.value
                                                         })
-                                                    }} style={{border: 0, width: '100%'}} type="text" id="otherLastName"/></span>
+                                                    }} style={{border: 0, width: '100%'}} type="text"
+                                                    id="otherLastName"/></span>
                                                             </td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%', height: '17px'}}
+                                                    <table style={{
+                                                        borderCollapse: 'collapse',
+                                                        width: '100%',
+                                                        height: '17px'
+                                                    }}
                                                            border={1}>
                                                         <tbody>
                                                         <tr style={{height: '17px'}}>
-                                                            <td style={{width: '20%', height: '17px', verticalAlign: 'top'}}>
+                                                            <td style={{
+                                                                width: '20%',
+                                                                height: '17px',
+                                                                verticalAlign: 'top'
+                                                            }}>
                                                                 <div data-font-name="g_d0_f5" data-angle={0}
-                                                                     data-canvas-width="52.61333333333333"><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>Address
+                                                                     data-canvas-width="52.61333333333333"><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>Address
                       (Street Number and Name) <input value={this.state.streetNumber}
                                                       onChange={(e) => {
                                                           this.setState({
                                                               streetNumber: e.target.value
                                                           })
-                                                      }}  style={{border: 0, width: '100%'}} type="text"
+                                                      }} style={{border: 0, width: '100%'}} type="text"
                                                       id="address"/></span>
                                                                 </div>
                                                             </td>
@@ -421,7 +490,8 @@ class FormsI9 extends Component {
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '25%'}}><span style={{
@@ -434,7 +504,8 @@ class FormsI9 extends Component {
                                                   this.setState({
                                                       dateOfBirth: e.target.value
                                                   })
-                                              }} style={{border: 0, width: '100%'}} type="text" id="dateOfBirth"/></span>
+                                              }} style={{border: 0, width: '100%'}} type="text"
+                                              id="dateOfBirth"/></span>
                                                             </td>
                                                             <td style={{width: '25%'}}><span style={{
                                                                 color: '#000000',
@@ -469,7 +540,8 @@ class FormsI9 extends Component {
                                                 this.setState({
                                                     telephone: e.target.value
                                                 })
-                                            }} style={{border: 0, width: '100%'}} type="text" id="telephone"/></span></td>
+                                            }} style={{border: 0, width: '100%'}} type="text" id="telephone"/></span>
+                                                            </td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -486,19 +558,26 @@ class FormsI9 extends Component {
                                                         fontSize: '10pt'
                                                     }}><strong>I attest,
                 under penalty of perjury, that I am (check one of the following boxes):</strong></span></p>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '100%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
-                                                            }}> <input value={this.state.oneCheck}
-                                                                       onChange={(e) => {
-                                                                           this.setState({
-                                                                               oneCheck: e.target.value
-                                                                           })
-                                                                       }} type="checkbox" id="citizen"/> 1. A citizen of the United States</span>
+                                                            }}> <input
+                                                                name="status"
+                                                                value={this.state.oneCheck}
+                                                                defaultChecked={this.state.oneCheck}
+                                                                onChange={(e) => {
+                                                                    this.setState({
+                                                                        oneCheck: e.target.checked,
+                                                                        oneCheck1: false,
+                                                                        oneCheck2: false,
+                                                                        oneCheck3: false,
+                                                                    })
+                                                                }} type="radio" id="citizen"/> 1. A citizen of the United States</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -507,11 +586,16 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}> <input value={this.state.oneCheck1}
+                                                                       defaultChecked={this.state.oneCheck1}
+                                                                       name="status"
                                                                        onChange={(e) => {
                                                                            this.setState({
-                                                                               oneCheck1: e.target.value
+                                                                               oneCheck1: e.target.checked,
+                                                                               oneCheck: false,
+                                                                               oneCheck2: false,
+                                                                               oneCheck3: false,
                                                                            })
-                                                                       }} type="checkbox" id="non-citizen"/> 2. A noncitizen national of the United States (See
+                                                                       }} type="radio" id="non-citizen"/> 2. A noncitizen national of the United States (See
                     instructions)</span></td>
                                                         </tr>
                                                         <tr>
@@ -520,16 +604,23 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}> <input value={this.state.oneCheck2}
+                                                                       defaultChecked={this.state.oneCheck2}
+                                                                       name="status"
                                                                        onChange={(e) => {
                                                                            this.setState({
-                                                                               oneCheck2: e.target.value
+                                                                               oneCheck2: e.target.checked,
+                                                                               oneCheck: false,
+                                                                               oneCheck1: false,
+                                                                               oneCheck3: false,
                                                                            })
-                                                                       }} type="checkbox" id="lowful-permanent-resident"/> 3. A lawful permanent resident (Alien Registration Number/USCIS
+                                                                       }} type="radio" id="lowful-permanent-resident"/> 3. A lawful permanent resident (Alien Registration Number/USCIS
                     Number):&nbsp; &nbsp; <input
-                                                                    value={this.state.oneCheck3}
+                                                                    name="status"
+                                                                    // defaultChecked={this.state.oneCheck3Explain}
+                                                                    value={this.state.oneCheck3Explain}
                                                                     onChange={(e) => {
                                                                         this.setState({
-                                                                            oneCheck3: e.target.value
+                                                                            oneCheck3Explain: e.target.value,
                                                                         })
                                                                     }}
                                                                     id="resident-explain"
@@ -558,11 +649,15 @@ class FormsI9 extends Component {
                                                                     fontSize: '10pt'
                                                                 }}>
                       <input value={this.state.oneCheck3}
+                             name="status"
                              onChange={(e) => {
                                  this.setState({
-                                     oneCheck3: e.target.value
+                                     oneCheck3: e.target.checked,
+                                     oneCheck: false,
+                                     oneCheck1: false,
+                                     oneCheck2: false,
                                  })
-                             }} type="checkbox" id="alien"/> 4. An alien authorized to work until (expiration date, if
+                             }} type="radio" id="alien"/> 4. An alien authorized to work until (expiration date, if
                       applicable, mm/dd/yyyy): <input
                                                                     value={this.state.alienExplain}
                                                                     onChange={(e) => {
@@ -571,7 +666,8 @@ class FormsI9 extends Component {
                                                                         })
                                                                     }}
                                                                     id="alien-explain"
-                                                                    style={{border: 0, borderBottom: '1px solid #000'}} type="text"/></span>
+                                                                    style={{border: 0, borderBottom: '1px solid #000'}}
+                                                                    type="text"/></span>
                                                                 </p>
                                                                 <p><span style={{
                                                                     color: '#000000',
@@ -600,8 +696,12 @@ class FormsI9 extends Component {
                                                                                 alienRegister: e.target.value
                                                                             })
                                                                         }}
-                                                                        style={{border: 0, borderBottom: '1px solid #000'}}
-                                                                        type="text" id="alien-register-number"/></span></p>
+                                                                        style={{
+                                                                            border: 0,
+                                                                            borderBottom: '1px solid #000'
+                                                                        }}
+                                                                        type="text" id="alien-register-number"/></span>
+                                                                </p>
                                                                 <p style={{paddingLeft: '80px'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -620,7 +720,10 @@ class FormsI9 extends Component {
                                                                                 admissionNumber: e.target.value
                                                                             })
                                                                         }}
-                                                                        style={{border: 0, borderBottom: '1px solid #000'}} type="text"
+                                                                        style={{
+                                                                            border: 0,
+                                                                            borderBottom: '1px solid #000'
+                                                                        }} type="text"
                                                                         id="admision-number"/></span></p>
                                                                 <p style={{paddingLeft: '80px'}}><span style={{
                                                                     color: '#000000',
@@ -640,7 +743,10 @@ class FormsI9 extends Component {
                                                                                 foreignPassport: e.target.value
                                                                             })
                                                                         }}
-                                                                        style={{border: 0, borderBottom: '1px solid #000'}} type="text"
+                                                                        style={{
+                                                                            border: 0,
+                                                                            borderBottom: '1px solid #000'
+                                                                        }} type="text"
                                                                         id="foreign-passport-number"/></span></p>
                                                                 <p><span style={{
                                                                     color: '#000000',
@@ -654,7 +760,10 @@ class FormsI9 extends Component {
                                                                                 countryIssuance: e.target.value
                                                                             })
                                                                         }}
-                                                                        style={{border: 0, borderBottom: '1px solid #000'}}
+                                                                        style={{
+                                                                            border: 0,
+                                                                            borderBottom: '1px solid #000'
+                                                                        }}
                                                                         type="text" id="country-issuance"/></span></p>
                                                                 <p>&nbsp;</p>
                                                             </td>
@@ -691,7 +800,8 @@ class FormsI9 extends Component {
                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                         fontSize: '10pt'
                                                     }}>&nbsp;</span></p>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '50%'}}><span style={{
@@ -699,14 +809,34 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}>Signature
-                    of Employee<input
-                                                                    value={this.state.signature}
-                                                                    onChange={(e) => {
+                    of Employee:
+                                                                {/*<input*/}
+                                                                {/*value={this.state.signature}*/}
+                                                                {/*onChange={(e) => {*/}
+                                                                {/*this.setState({*/}
+                                                                {/*signature: e.target.value*/}
+                                                                {/*})*/}
+                                                                {/*}}*/}
+                                                                {/*style={{border: 0, width: '100%'}} type="text" id="signature"/>*/}
+                                                                <img style={{
+                                                                    width: '100px',
+                                                                    height: '30px',
+                                                                    display: 'inline-block',
+                                                                    backgroundColor: '#f9f9f9',
+                                                                    cursor: 'pointer'
+                                                                }} onClick={() => {
+                                                                    if (this.state.isCreated === false) {
                                                                         this.setState({
-                                                                            signature: e.target.value
-                                                                        })
-                                                                    }}
-                                                                    style={{border: 0, width: '100%'}} type="text" id="signature"/></span></td>
+                                                                            signType: 0
+                                                                        }, () => {
+                                                                            this.setState({
+                                                                                openSignature: true,
+                                                                            })
+                                                                        });
+                                                                    }
+                                                                }}
+                                                                     src={this.state.signature} alt=""/>
+                                                            </span></td>
                                                             <td style={{width: '50%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -719,7 +849,8 @@ class FormsI9 extends Component {
                                                                             todayDate: e.target.value
                                                                         })
                                                                     }}
-                                                                    id="today-date" style={{border: 0, width: '100%'}} type="text"/></span>
+                                                                    id="today-date" style={{border: 0, width: '100%'}}
+                                                                    type="text"/></span>
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -783,7 +914,8 @@ class FormsI9 extends Component {
                                                     }}><strong>I attest,
                 under penalty of perjury, that I have assisted in the completion of Section 1 of this form and that
                 to the best of my knowledge the information is true and correct.</strong></span></p>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '65.2979%'}}><span style={{
@@ -791,14 +923,24 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}>Signature
-                    of Preparer or Translator <input
-                                                                    value={this.state.signaturePrep}
-                                                                    onChange={(e) => {
+                    of Preparer or Translator <img style={{
+                                                                    width: '100px',
+                                                                    height: '30px',
+                                                                    display: 'inline-block',
+                                                                    backgroundColor: '#f9f9f9',
+                                                                    cursor: 'pointer'
+                                                                }} onClick={() => {
+                                                                    if (this.state.isCreated === false) {
                                                                         this.setState({
-                                                                            signaturePrep: e.target.value
-                                                                        })
-                                                                    }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                            signType: 1
+                                                                        }, () => {
+                                                                            this.setState({
+                                                                                openSignature: true,
+                                                                            })
+                                                                        });
+                                                                    }
+                                                                }}
+                                                   src={this.state.signature1} alt=""/></span></td>
                                                             <td style={{width: '34.7021%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -811,7 +953,8 @@ class FormsI9 extends Component {
                                                                             todayDate2: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -835,7 +978,8 @@ class FormsI9 extends Component {
                                                                             lastName2: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '50%', height: '17px'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -848,11 +992,16 @@ class FormsI9 extends Component {
                                                                             firstName2: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%', borderTop: 0}}
+                                                    <table style={{
+                                                        borderCollapse: 'collapse',
+                                                        width: '100%',
+                                                        borderTop: 0
+                                                    }}
                                                            border={1}>
                                                         <tbody>
                                                         <tr>
@@ -868,7 +1017,8 @@ class FormsI9 extends Component {
                                                                             address2: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '41.2641%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -881,7 +1031,8 @@ class FormsI9 extends Component {
                                                                             city2: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '6.80349%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -941,7 +1092,8 @@ class FormsI9 extends Component {
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '18.438%'}}><span style={{
@@ -978,13 +1130,18 @@ class FormsI9 extends Component {
                                                         </tbody>
                                                     </table>
                                                     <p>&nbsp;</p>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%', height: '98px'}}
+                                                    <table style={{
+                                                        borderCollapse: 'collapse',
+                                                        width: '100%',
+                                                        height: '98px'
+                                                    }}
                                                            border={1}>
                                                         <tbody>
                                                         <tr style={{height: '98px'}}>
                                                             <td style={{width: '33.3333%', height: '98px'}}>
-                                                                <table style={{borderCollapse: 'collapse', width: '100%'}}
-                                                                       border={1}>
+                                                                <table
+                                                                    style={{borderCollapse: 'collapse', width: '100%'}}
+                                                                    border={1}>
                                                                     <tbody>
                                                                     <tr>
                                                                         <td style={{width: '100%'}}><span style={{
@@ -999,7 +1156,8 @@ class FormsI9 extends Component {
                                                                                         docTitle: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td style={{width: '100%'}}><span style={{
@@ -1014,7 +1172,8 @@ class FormsI9 extends Component {
                                                                                         Issuing: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td style={{width: '100%'}}><span style={{
@@ -1029,7 +1188,8 @@ class FormsI9 extends Component {
                                                                                         docNumber: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td style={{width: '100%'}}><span style={{
@@ -1044,7 +1204,8 @@ class FormsI9 extends Component {
                                                                                     expireDate2: e.target.value
                                                                                 })
                                                                             }}
-                                                                            style={{width: '100%', border: 0}} type="text"/></span>
+                                                                            style={{width: '100%', border: 0}}
+                                                                            type="text"/></span>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
@@ -1056,7 +1217,10 @@ class FormsI9 extends Component {
                                                                 }} border={1}>
                                                                     <tbody>
                                                                     <tr style={{height: '18px'}}>
-                                                                        <td style={{width: '100%', height: '18px'}}><span
+                                                                        <td style={{
+                                                                            width: '100%',
+                                                                            height: '18px'
+                                                                        }}><span
                                                                             style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1069,10 +1233,14 @@ class FormsI9 extends Component {
                                                                                         docTitle2: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '18px'}}>
-                                                                        <td style={{width: '100%', height: '18px'}}><span
+                                                                        <td style={{
+                                                                            width: '100%',
+                                                                            height: '18px'
+                                                                        }}><span
                                                                             style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1085,10 +1253,14 @@ class FormsI9 extends Component {
                                                                                         Issuing2: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '18px'}}>
-                                                                        <td style={{width: '100%', height: '18px'}}><span
+                                                                        <td style={{
+                                                                            width: '100%',
+                                                                            height: '18px'
+                                                                        }}><span
                                                                             style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1101,10 +1273,14 @@ class FormsI9 extends Component {
                                                                                         docNumb3: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '18px'}}>
-                                                                        <td style={{width: '100%', height: '18px'}}><span
+                                                                        <td style={{
+                                                                            width: '100%',
+                                                                            height: '18px'
+                                                                        }}><span
                                                                             style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1117,7 +1293,8 @@ class FormsI9 extends Component {
                                                                                     expDate3: e.target.value
                                                                                 })
                                                                             }}
-                                                                            style={{width: '100%', border: 0}} type="text"/></span>
+                                                                            style={{width: '100%', border: 0}}
+                                                                            type="text"/></span>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
@@ -1129,7 +1306,10 @@ class FormsI9 extends Component {
                                                                 }} border={1}>
                                                                     <tbody>
                                                                     <tr style={{height: '18px'}}>
-                                                                        <td style={{width: '100%', height: '18px'}}><span
+                                                                        <td style={{
+                                                                            width: '100%',
+                                                                            height: '18px'
+                                                                        }}><span
                                                                             style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1142,10 +1322,14 @@ class FormsI9 extends Component {
                                                                                         docT15: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '18px'}}>
-                                                                        <td style={{width: '100%', height: '18px'}}><span
+                                                                        <td style={{
+                                                                            width: '100%',
+                                                                            height: '18px'
+                                                                        }}><span
                                                                             style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1158,10 +1342,14 @@ class FormsI9 extends Component {
                                                                                         IssuingT15: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '18px'}}>
-                                                                        <td style={{width: '100%', height: '18px'}}><span
+                                                                        <td style={{
+                                                                            width: '100%',
+                                                                            height: '18px'
+                                                                        }}><span
                                                                             style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1174,10 +1362,14 @@ class FormsI9 extends Component {
                                                                                         docT16: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                                style={{width: '100%', border: 0}}
+                                                                                type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '18px'}}>
-                                                                        <td style={{width: '100%', height: '18px'}}><span
+                                                                        <td style={{
+                                                                            width: '100%',
+                                                                            height: '18px'
+                                                                        }}><span
                                                                             style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1190,7 +1382,8 @@ class FormsI9 extends Component {
                                                                                     docT17: e.target.value
                                                                                 })
                                                                             }}
-                                                                            style={{width: '100%', border: 0}} type="text"/></span>
+                                                                            style={{width: '100%', border: 0}}
+                                                                            type="text"/></span>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
@@ -1226,7 +1419,11 @@ class FormsI9 extends Component {
                                                                                         docT18: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0, borderBottom: 'solid 1px #000'}}
+                                                                                style={{
+                                                                                    width: '100%',
+                                                                                    border: 0,
+                                                                                    borderBottom: 'solid 1px #000'
+                                                                                }}
                                                                                 type="text"/></span></td>
                                                                         <td style={{width: '50%', height: '17px'}}><span
                                                                             style={{
@@ -1241,7 +1438,11 @@ class FormsI9 extends Component {
                                                                                         docT19: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0, borderBottom: 'solid 1px #000'}}
+                                                                                style={{
+                                                                                    width: '100%',
+                                                                                    border: 0,
+                                                                                    borderBottom: 'solid 1px #000'
+                                                                                }}
                                                                                 type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '17px'}}>
@@ -1258,7 +1459,11 @@ class FormsI9 extends Component {
                                                                                         docT20: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0, borderBottom: 'solid 1px #000'}}
+                                                                                style={{
+                                                                                    width: '100%',
+                                                                                    border: 0,
+                                                                                    borderBottom: 'solid 1px #000'
+                                                                                }}
                                                                                 type="text"/></span></td>
                                                                         <td style={{width: '50%', height: '17px'}}><span
                                                                             style={{
@@ -1273,7 +1478,11 @@ class FormsI9 extends Component {
                                                                                         docT21: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0, borderBottom: 'solid 1px #000'}}
+                                                                                style={{
+                                                                                    width: '100%',
+                                                                                    border: 0,
+                                                                                    borderBottom: 'solid 1px #000'
+                                                                                }}
                                                                                 type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '17px'}}>
@@ -1290,7 +1499,11 @@ class FormsI9 extends Component {
                                                                                         docT22: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0, borderBottom: 'solid 1px #000'}}
+                                                                                style={{
+                                                                                    width: '100%',
+                                                                                    border: 0,
+                                                                                    borderBottom: 'solid 1px #000'
+                                                                                }}
                                                                                 type="text"/></span></td>
                                                                         <td style={{width: '50%', height: '17px'}}><span
                                                                             style={{
@@ -1305,7 +1518,11 @@ class FormsI9 extends Component {
                                                                                         docL1: e.target.value
                                                                                     })
                                                                                 }}
-                                                                                style={{width: '100%', border: 0, borderBottom: 'solid 1px #000'}}
+                                                                                style={{
+                                                                                    width: '100%',
+                                                                                    border: 0,
+                                                                                    borderBottom: 'solid 1px #000'
+                                                                                }}
                                                                                 type="text"/></span></td>
                                                                     </tr>
                                                                     <tr style={{height: '17px'}}>
@@ -1406,7 +1623,8 @@ class FormsI9 extends Component {
                                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (See instructions for exemptions)</strong></span>
                                                     </p>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '39.6135%'}}><span style={{
@@ -1414,15 +1632,24 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}>Signature
-                    of Employer or Authorized Representative <input
-                                                                    value={this.state.docL4}
-                                                                    onChange={(e) => {
+                    of Employer or Authorized Representative <img style={{
+                                                                    width: '100px',
+                                                                    height: '30px',
+                                                                    display: 'inline-block',
+                                                                    backgroundColor: '#f9f9f9',
+                                                                    cursor: 'pointer'
+                                                                }} onClick={() => {
+                                                                    if (this.state.isCreated === false) {
                                                                         this.setState({
-                                                                            docL4: e.target.value
-                                                                        })
-                                                                    }}
-                                                                    style={{width: '100%', border: 0}}
-                                                                    type="text"/></span></td>
+                                                                            signType: 2
+                                                                        }, () => {
+                                                                            this.setState({
+                                                                                openSignature: true,
+                                                                            })
+                                                                        });
+                                                                    }
+                                                                }}
+                                                                  src={this.state.signature2} alt=""/></span></td>
                                                             <td style={{width: '19.431%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1435,7 +1662,8 @@ class FormsI9 extends Component {
                                                                             docL5: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '40.9554%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1448,12 +1676,14 @@ class FormsI9 extends Component {
                                                                             docL6: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span>
                                                             </td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '33.3333%'}}><span style={{
@@ -1501,7 +1731,8 @@ class FormsI9 extends Component {
                                                         </tr>
                                                         </tbody>
                                                     </table>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '35.5207%'}}>
@@ -1564,7 +1795,11 @@ class FormsI9 extends Component {
                                                         </tbody>
                                                     </table>
                                                     <p>&nbsp;</p>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%', height: '51px'}}
+                                                    <table style={{
+                                                        borderCollapse: 'collapse',
+                                                        width: '100%',
+                                                        height: '51px'
+                                                    }}
                                                            border={1}>
                                                         <tbody>
                                                         <tr style={{height: '17px'}}>
@@ -1609,7 +1844,8 @@ class FormsI9 extends Component {
                                                                             docL9: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '25%', height: '17px'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1622,7 +1858,8 @@ class FormsI9 extends Component {
                                                                             docP1: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '25%', height: '17px'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1635,7 +1872,8 @@ class FormsI9 extends Component {
                                                                             docP2: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '25%', height: '17px'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1648,7 +1886,8 @@ class FormsI9 extends Component {
                                                                             docP3: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                         </tr>
                                                         </tbody>
                                                     </table>
@@ -1657,7 +1896,8 @@ class FormsI9 extends Component {
                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                         fontSize: '10pt'
                                                     }}>&nbsp;</span></p>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '99.9999%', backgroundColor: '#bec1c3'}}
@@ -1676,15 +1916,24 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}>Signature
-                    of Employer or Authorized Representative <input
-                                                                    value={this.state.signRepresentative}
-                                                                    onChange={(e) => {
+                    of Employer or Authorized Representative <img style={{
+                                                                    width: '100px',
+                                                                    height: '30px',
+                                                                    display: 'inline-block',
+                                                                    backgroundColor: '#f9f9f9',
+                                                                    cursor: 'pointer'
+                                                                }} onClick={() => {
+                                                                    if (this.state.isCreated === false) {
                                                                         this.setState({
-                                                                            signRepresentative: e.target.value
-                                                                        })
-                                                                    }}
-                                                                    style={{width: '100%', border: 0}}
-                                                                    type="text"/></span></td>
+                                                                            signType: 3
+                                                                        }, () => {
+                                                                            this.setState({
+                                                                                openSignature: true,
+                                                                            })
+                                                                        });
+                                                                    }
+                                                                }}
+                                                                  src={this.state.signature3} alt=""/></span></td>
                                                             <td style={{width: '28.3386%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1697,7 +1946,8 @@ class FormsI9 extends Component {
                                                                             tdayDate: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '34.0772%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1710,7 +1960,8 @@ class FormsI9 extends Component {
                                                                             employeerAuth2: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span>
                                                             </td>
                                                         </tr>
                                                         </tbody>
@@ -1723,7 +1974,8 @@ class FormsI9 extends Component {
                 under penalty of perjury, that to the best of my knowledge, this employee is authorized to work in
                 the United States, and if the employee presented document(s), the document(s) I have examined appear
                 to be genuine and to relate to the individual.</strong></span></p>
-                                                    <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
+                                                    <table style={{borderCollapse: 'collapse', width: '100%'}}
+                                                           border={1}>
                                                         <tbody>
                                                         <tr>
                                                             <td style={{width: '37.5841%'}}><span style={{
@@ -1731,15 +1983,24 @@ class FormsI9 extends Component {
                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                 fontSize: '10pt'
                                                             }}>Signature
-                    of Employer or Authorized Representative <input
-                                                                    value={this.state.sign10}
-                                                                    onChange={(e) => {
+                    of Employer or Authorized Representative <img style={{
+                                                                    width: '100px',
+                                                                    height: '30px',
+                                                                    display: 'inline-block',
+                                                                    backgroundColor: '#f9f9f9',
+                                                                    cursor: 'pointer'
+                                                                }} onClick={() => {
+                                                                    if (this.state.isCreated === false) {
                                                                         this.setState({
-                                                                            sign10: e.target.value
-                                                                        })
-                                                                    }}
-                                                                    style={{width: '100%', border: 0}}
-                                                                    type="text"/></span></td>
+                                                                            signType: 4
+                                                                        }, () => {
+                                                                            this.setState({
+                                                                                openSignature: true,
+                                                                            })
+                                                                        });
+                                                                    }
+                                                                }}
+                                                                  src={this.state.signature4} alt=""/></span></td>
                                                             <td style={{width: '27.0634%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1752,7 +2013,8 @@ class FormsI9 extends Component {
                                                                             todayDateDay1: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span></td>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span></td>
                                                             <td style={{width: '35.3524%'}}><span style={{
                                                                 color: '#000000',
                                                                 fontFamily: 'arial, helvetica, sans-serif',
@@ -1765,7 +2027,8 @@ class FormsI9 extends Component {
                                                                             empAuth15: e.target.value
                                                                         })
                                                                     }}
-                                                                    style={{width: '100%', border: 0}} type="text"/></span>
+                                                                    style={{width: '100%', border: 0}}
+                                                                    type="text"/></span>
                                                             </td>
                                                         </tr>
                                                         </tbody>

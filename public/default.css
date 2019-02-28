@@ -9487,11 +9487,12 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 @media (min-width: 992px) {
   .company-card {
-    width: 15% !important; } }
+    width: 12% !important; } }
 
 @media (min-width: 576px) {
   .company-card .company-card__title {
-    font-size: 1.1rem; } }
+    font-size: 1.1rem;
+    text-align: center; } }
 
 .row.CardPermissions {
   margin-left: 0 !important; }
@@ -9507,8 +9508,7 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     min-width: auto !important; } }
 
 .company-card {
-  height: 250px;
-  min-width: 250px; }
+  height: 220px; }
 
 @media only screen and (max-width: 480px) {
   .department__header {
