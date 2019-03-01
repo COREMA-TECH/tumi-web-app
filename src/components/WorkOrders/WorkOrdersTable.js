@@ -71,35 +71,24 @@ class WorkOrdersTable extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        console.log("   componentWillReceiveProps ", nextProps)
-        if (nextProps) {
+    componentWillMount() {
+        if (this.props) {
             this.setState({
-                filterValue: nextProps.filter,
-                status: nextProps.status
+                filterValue: this.props.filter,
+                status: this.props.status
             })
-            if (nextProps.status == 4) {
+            if (this.props.status == 4) {
                 this.setState({
                     status: 4,
                     propsStatus: true
                 })
             }
         }
-
         this.getWorkOrders();
         this.getRecruiter();
         this.getHotel();
         this.getState();
-
     }
-
-    /*  componentWillMount() {
-          this.getWorkOrders();
-          this.getRecruiter();
-          this.getHotel();
-          this.getState();
-  
-      }*/
 
 
     getDateFilters = () => {
