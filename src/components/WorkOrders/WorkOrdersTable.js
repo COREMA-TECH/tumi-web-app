@@ -157,7 +157,15 @@ class WorkOrdersTable extends Component {
                 State: this.state.state
             }
         }
+        
+        if (this.state.id) {
+            shiftEntity = {
+                ...shiftEntity,
+                Code: this.state.id
+            }
+        }
 
+        
         variables = {
             shift,
             shiftEntity,
