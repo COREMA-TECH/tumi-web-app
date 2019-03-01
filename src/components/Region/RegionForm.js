@@ -25,7 +25,7 @@ import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
 
-import { GET_HOTEL_QUERY, GET_RECRUITER, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
+import { GET_HOTEL_QUERY, GET_USERS, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
 import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY, UPDATE_RECRUITERS_BY_REGIONS_QUERY, UPDATE_HOTELS_BY_REGIONS_QUERY } from './mutations';
 
 
@@ -85,7 +85,6 @@ class RegionForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log("Comienzo en el props ")
         if (nextProps.item && nextProps.openModal) {
             this.setState(
                 {
@@ -121,11 +120,6 @@ class RegionForm extends Component {
 
         } else {
 
-            // this.getConfigRegions();
-            //this.getRecruiter();
-            // this.getEmployeesWithoutEntity();
-            //this.gethotelbyregion();
-            //this.getrecruiterbyregion();
         }
         this.setState({
             openModal: nextProps.openModal,
@@ -147,14 +141,16 @@ class RegionForm extends Component {
     getrecruiterbyregion = () => {
         this.props.client
             .query({
-                query: GET_RECRUITER,
+                query: GET_USERS,
                 variables: {
+                    Id_Roles: 4,
                     IdRegion: this.state.id
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                let dataAPI = data.getusers;
+                console.log("getrecruiterbyregion ", data)
+                let dataAPI = data.user;
 
                 dataAPI.map(item => {
                     this.setState(prevState => ({
@@ -229,12 +225,15 @@ class RegionForm extends Component {
     getRecruiter = () => {
         this.props.client
             .query({
-                query: GET_RECRUITER,
-                variables: {}
+                query: GET_USERS,
+                variables: {
+                    Id_Roles: 4
+                },
             })
             .then(({ data }) => {
+                console.log("getRecruiter ", data)
                 this.setState({
-                    recruiters: data.getusers
+                    recruiters: data.user
                 });
             })
             .catch();
@@ -270,20 +269,20 @@ class RegionForm extends Component {
     getRegionalDirector = (idEmployee) => {
         this.props.client
             .query({
-                query: GET_EMPLOYEES_WITHOUT_ENTITY,
-                variables: { id: idEmployee }
+                query: GET_USERS,
+                variables: { Id: idEmployee }
             })
             .then(({ data }) => {
-                let dataAPI = data.employees;
+                let dataAPI = data.user;
                 dataAPI.map(item => {
                     this.setState(prevState => ({
                         directorTags: [...prevState.directorTags, {
-                            value: item.id,
-                            label: item.firstName + ' ' + item.lastName
+                            value: item.Id,
+                            label: item.Full_Name
                         }],
                         Old_directorTags: [...prevState.directorTags, {
-                            value: item.id,
-                            label: item.firstName + ' ' + item.lastName
+                            value: item.Id,
+                            label: item.Full_Name
                         }],
 
                     }))
@@ -295,20 +294,20 @@ class RegionForm extends Component {
     getRegionalManager = (idEmployee) => {
         this.props.client
             .query({
-                query: GET_EMPLOYEES_WITHOUT_ENTITY,
-                variables: { id: idEmployee }
+                query: GET_USERS,
+                variables: { Id: idEmployee }
             })
             .then(({ data }) => {
-                let dataAPI = data.employees;
+                let dataAPI = data.user;
                 dataAPI.map(item => {
                     this.setState(prevState => ({
                         managerTags: [...prevState.managerTags, {
-                            value: item.id,
-                            label: item.firstName + ' ' + item.lastName
+                            value: item.Id,
+                            label: item.Full_Name
                         }],
                         Old_managerTags: [...prevState.managerTags, {
-                            value: item.id,
-                            label: item.firstName + ' ' + item.lastName
+                            value: item.Id,
+                            label: item.Full_Name
                         }],
 
                     }))
@@ -412,22 +411,6 @@ class RegionForm extends Component {
                             this.state.recruitersTags.map((itemrecruiter) => {
                                 this.addregionusers(identificador, itemrecruiter.value)
                             });
-
-                            /*this.state.Old_managerTags.map((itemmanager) => {
-                                this.addregionusers(0, itemmanager.value)
-                            });
-
-                            this.state.managerTags.map((itemmanager) => {
-                                this.addregionusers(identificador, itemmanager.value)
-                            });
-
-                            this.state.Old_directorTags.map((itemdirector) => {
-                                this.addregionusers(0, itemdirector.value)
-                            });
-
-                            this.state.directorTags.map((itemdirector) => {
-                                this.addregionusers(identificador, itemdirector.value)
-                            });*/
 
                             if (isEdition) {
                                 this.addConfig(isEdition, id);
@@ -638,28 +621,15 @@ class RegionForm extends Component {
                                         />
                                     </div>
                                     <div className="col-md-4">
-                                        <label htmlFor="">* Regional Director</label>
-                                        {/* <select
-                                            required
-                                            name="IdRegionalDirector"
-                                            className="form-control"
-                                            id="IdRegionalDirector"
-                                            onChange={this.handleChange}
-                                            value={this.state.IdRegionalDirector}
-                                        >
-                                            <option value={0}>Select a Regional Director</option>
-                                            {this.state.employees.map((recruiter) => (
-                                                <option value={recruiter.id}>{recruiter.firstName} - {recruiter.lastName}</option>
-                                            ))}
-                                        </select> */}
-                                        <Query query={GET_EMPLOYEES_WITHOUT_ENTITY}>
+                                        <label htmlFor="">* Regional Manager</label>
+                                        <Query query={GET_USERS} variables={{ Id_Roles: 15 }}>
                                             {({ loading, error, data, refetch, networkStatus }) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                 if (error) return <p>Error </p>;
-                                                if (data.employees != null && data.employees.length > 0) {
+                                                if (data.user != null && data.user.length > 0) {
                                                     let options = [];
-                                                    data.employees.map((item) => (
-                                                        options.push({ value: item.id, label: item.firstName + '' + item.lastName })
+                                                    data.user.map((item) => (
+                                                        options.push({ value: item.Id, label: item.Full_Name })
                                                     ));
 
                                                     return (
@@ -691,29 +661,15 @@ class RegionForm extends Component {
                                     <div className="">
                                         <div className="">
                                             <div className="col-md-6">
-                                                <label htmlFor="">* Regional Manager</label>
-                                                { /*
-                                                <select
-                                                    required
-                                                    name="IdRegionalManager"
-                                                    className="form-control"
-                                                    id="IdRegionalManager"
-                                                    onChange={this.handleChange}
-                                                    value={this.state.IdRegionalManager}
-                                                >
-                                                    <option value={0}>Select a Regional Manager</option>
-                                                    {this.state.employees.map((recruiter) => (
-                                                        <option value={recruiter.id}>{recruiter.firstName} {recruiter.lastName}</option>
-                                                    ))}
-                                                    </select>*/}
-                                                <Query query={GET_EMPLOYEES_WITHOUT_ENTITY}>
+                                                <label htmlFor="">* Operation Manager</label>
+                                                <Query query={GET_USERS} variables={{ Id_Roles: 3 }} >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
-                                                        if (data.employees != null && data.employees.length > 0) {
+                                                        if (data.user != null && data.user.length > 0) {
                                                             let options = [];
-                                                            data.employees.map((item) => (
-                                                                options.push({ value: item.id, label: item.firstName + '' + item.lastName })
+                                                            data.user.map((item) => (
+                                                                options.push({ value: item.Id, label: item.Full_Name })
                                                             ));
 
                                                             return (
@@ -740,13 +696,13 @@ class RegionForm extends Component {
                                         <div className="">
                                             <div className="col-lg-12">
                                                 <label htmlFor="">Regional Recruiter</label>
-                                                <Query query={GET_RECRUITER}>
+                                                <Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
-                                                        if (data.getusers != null && data.getusers.length > 0) {
+                                                        if (data.user != null && data.user.length > 0) {
                                                             let options = [];
-                                                            data.getusers.map((item) => (
+                                                            data.user.map((item) => (
                                                                 options.push({ value: item.Id, label: item.Full_Name })
                                                             ));
 

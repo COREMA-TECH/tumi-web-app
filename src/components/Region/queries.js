@@ -28,9 +28,9 @@ export const GET_HOTEL_QUERY = gql`
 
 
 
-export const GET_RECRUITER = gql`
-    query getUsers($IdRegion:Int) {
-		getusers(Id: null,IsActive: 1 ,IsRecruiter:1, IdRegion:$IdRegion) {
+export const GET_USERS = gql`
+    query getUsers($Id:Int, $IdRegion:Int,$Id_Roles:Int) {
+			user(IsActive: 1,Id: $Id, IdRegion:$IdRegion, Id_Roles: $Id_Roles) {
             Id
 			Id_Contact
 			Full_Name
