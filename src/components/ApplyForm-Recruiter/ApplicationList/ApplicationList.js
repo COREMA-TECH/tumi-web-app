@@ -157,7 +157,7 @@ class ApplicationList extends Component {
 							}}
 							value={this.state.filterText}
 							type="text"
-							placeholder="Search application form"
+							placeholder="Lead Search"
 							className="form-control"
 						/>
 					</div>
@@ -169,7 +169,7 @@ class ApplicationList extends Component {
 							this.redirectToCreateApplication();
 						}}
 					>
-						Add Applicant
+						Add Lead
 						</button>
 				</div>
 			</div>
