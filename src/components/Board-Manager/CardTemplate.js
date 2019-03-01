@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import { CONVERT_TO_OPENING } from './Mutations';
+import { CONVERT_TO_OPENING, DELETE_WORK_ORDER } from './Mutations';
+import { GET_BOARD_SHIFT } from "./Queries";
 import withApollo from 'react-apollo/withApollo';
 
 const ONE_ITEM_MESSAGE_OPENING = "Send ONLY this item", ALL_ITEM_MESSAGE_OPENING = "Send All Items on this Work Order"
@@ -66,6 +67,7 @@ class CardTemplate extends Component {
     }
 
     handleCancelAllItemToWorkOrder = ({ WorkOrderId }) => {
+        this.CancelWorkOrder()
         this.convertToOpeningOrWorkOrder({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 1, targetStatus: 0 }, "Cancel All Items on this Work Order", this.updateProgressAllItems)
     }
 
@@ -91,6 +93,8 @@ class CardTemplate extends Component {
                 variables: { ...args }
             })
             .then(({ data }) => {
+
+                this.CancelWO(this.props.WorkOrderId);
                 this.props.handleOpenSnackbar('success', `${message} successful`, 'bottom', 'right');
                 fncUpdateProgress(false);
                 this.setState(() => { return { showConfirmToOpening: false, showConfirmToWorkOrder: false, showCancelWorkOrder: false } }, () => {
@@ -109,6 +113,47 @@ class CardTemplate extends Component {
             });
     }
 
+    CancelWO = (workOrderId) => {
+        this.props.client
+            .query({
+                query: GET_BOARD_SHIFT,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    shift: {
+                        status: [1, 2]
+                    },
+                    workOrder: {
+                        id: workOrderId,
+                    }
+                }
+            })
+            .then(({ data }) => {
+                if (data.ShiftBoard.length == 0) {
+                    this.CancelWorkOrder()
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
+    CancelWorkOrder = () => {
+        this.props.client
+            .mutate({
+                mutation: DELETE_WORK_ORDER,
+                variables: { id: this.props.WorkOrderId }
+            })
+            .then(({ data }) => {
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    `Error to with operation . Please, try again!`,
+                    'bottom',
+                    'right'
+                );
+            });
+    }
 
     printDialogConfirmConvertToOpening = ({ id, WorkOrderId }) => {
         if (this.props.Status != 0) {
@@ -152,7 +197,6 @@ class CardTemplate extends Component {
     }
 
     printDialogCancelWO = ({ id, WorkOrderId }) => {
-
         if (this.props.Status != 0) {
             return <Dialog maxWidth="xl" open={this.state.showCancelWorkOrder} onClose={this.handleCloseConfirmDialogCancelToWorkOrder}>
                 <DialogContent>

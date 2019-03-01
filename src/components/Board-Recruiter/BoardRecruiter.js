@@ -90,7 +90,7 @@ class BoardRecruiter extends Component {
             state: 0,
             city: 0,
             region: 0,
-            status: 2,
+            status: 1,
             loadingCountries: false,
             loadingCities: false,
             loadingStates: false,
@@ -166,7 +166,6 @@ class BoardRecruiter extends Component {
                     IdLane = 30460
             }
 
-            console.log(this.state.openReason)
             if (!this.state.openReason) {
                 if (targetLaneId != sourceLaneId) {
                     this.addApplicationPhase(cardId, IdLane);
@@ -433,22 +432,13 @@ class BoardRecruiter extends Component {
     updateStatus = (id) => {
         this.setState(
             {
-                state: id
+                status: id
             },
             () => {
                 this.getOpenings();
             }
         );
     };
-
-    validateInvalidInput = () => {
-    };
-
-    shouldReceiveNewData = nextData => {
-    }
-
-    handleCardAdd = (card, laneId) => {
-    }
 
     clearArray() {
         this.setState({
@@ -533,13 +523,10 @@ class BoardRecruiter extends Component {
                 needExperience = this.state.Openings.find((item) => { return item.id == cardId }).needExperience;
                 Position = this.state.Openings.find((item) => { return item.id == cardId }).Position;
 
-                console.log(this.state.Openings.find((item) => { return item.id == cardId }))
 
                 this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
 
-
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    console.log("Estoy aqui con los nuevos filtros");
                     this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
                 } else {
                     this.getMatches(needEnglish, needExperience, 30, laneId, Position);
@@ -870,7 +857,7 @@ class BoardRecruiter extends Component {
         } else if (this.state.status == 1) {
             variables = {
                 shift: {
-                    status: [1, 2]
+                    status: [2]
                 },
             };
         } else if (this.state.status == 2) {
@@ -883,7 +870,7 @@ class BoardRecruiter extends Component {
         else {
             variables = {
                 shift: {
-                    status: [1, 2, 0]
+                    status: [2, 0]
                 },
             };
         }
@@ -1105,9 +1092,8 @@ class BoardRecruiter extends Component {
                                                 </div>
                                                 <div className="col-md-2">
                                                     <select
-                                                        name="city"
+                                                        name="status"
                                                         className={'form-control'}
-                                                        // disabled={this.state.loadingCities}
                                                         onChange={(event) => {
                                                             if (event.target.value == "null") {
                                                                 this.updateStatus(null);
@@ -1115,15 +1101,13 @@ class BoardRecruiter extends Component {
                                                                 this.updateStatus(event.target.value);
                                                             }
                                                         }}
-                                                        //error={!this.state.cityValid}
-                                                        value={this.state.city}
+                                                        value={this.state.status}
                                                         showNone={false}
                                                     >
-
                                                         <option value={1}>Open</option>
                                                         <option value={null}>Status (All)</option>
                                                         <option value={2}>Completed</option>
-                                                        <option value={0}>Canceled</option>
+                                                        <option value={0}>Cancelled</option>
                                                     </select>
                                                 </div>
                                                 <div className="col-md-4">
@@ -1147,7 +1131,7 @@ class BoardRecruiter extends Component {
                                                                 this.getOpenings();
                                                             })
                                                         }}>
-                                                        Clear <i className="fas fa-filter link-icon-filter"></i><i className="fas fa-times-circle text-danger clear-filter"/>
+                                                        Clear <i className="fas fa-filter link-icon-filter"></i><i className="fas fa-times-circle text-danger clear-filter" />
                                                     </a>
 
                                                 </div>

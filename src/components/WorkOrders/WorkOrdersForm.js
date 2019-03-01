@@ -127,6 +127,7 @@ class WorkOrdersForm extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.item && nextProps.openModal) {
 
+            console.log("nextProps.item ", nextProps.item)
             this.setState(
                 {
                     id: nextProps.item.id,
@@ -146,7 +147,7 @@ class WorkOrdersForm extends Component {
                     userId: localStorage.getItem('LoginId'),
                     openModal: nextProps.openModal,
                     EspecialComment: nextProps.item.EspecialComment,
-                    PositionName: nextProps.item.position.Position,
+                    PositionName: nextProps.item.positionName,
                     dayWeeks: nextProps.item.dayWeek
                 },
                 () => {

@@ -1652,15 +1652,17 @@ class NewContract extends Component {
                                                                         Contract_Start_Date: text
                                                                     },
                                                                     () => {
-                                                                        this.validateField('Contract_Start_Date', text);
+                                                                        if (this.state.Contract_Start_Date != '') {
+                                                                            this.validateField('Contract_Start_Date', text);
 
-                                                                        let contractTerm = document.getElementById('contract-terms-month');
-                                                                        let contractTermText = contractTerm.options[contractTerm.selectedIndex].text;
-                                                                        let expireDate = new Date(new Date(this.state.Contract_Start_Date).setMonth(new Date(this.state.Contract_Start_Date).getMonth() + parseInt(contractTermText)));
+                                                                            let contractTerm = document.getElementById('contract-terms-month');
+                                                                            let contractTermText = contractTerm.options[contractTerm.selectedIndex].text;
+                                                                            let expireDate = new Date(new Date(this.state.Contract_Start_Date).setMonth(new Date(this.state.Contract_Start_Date).getMonth() + parseInt(contractTermText)));
 
-                                                                        this.setState({
-                                                                            contractExpiration: expireDate.toISOString().substring(0, 10)
-                                                                        })
+                                                                            this.setState({
+                                                                                contractExpiration: expireDate.toISOString().substring(0, 10)
+                                                                            })
+                                                                        }
                                                                     }
                                                                 );
                                                             }}
@@ -1687,13 +1689,16 @@ class NewContract extends Component {
                                                                                 this.setState({
                                                                                     Contract_Term: event.target.value
                                                                                 }, () => {
-                                                                                    let contractTerm = document.getElementById('contract-terms-month');
-                                                                                    let contractTermText = contractTerm.options[contractTerm.selectedIndex].text;
-                                                                                    let expireDate = new Date(new Date(this.state.Contract_Start_Date).setMonth(new Date(this.state.Contract_Start_Date).getMonth() + parseInt(contractTermText)));
+                                                                                    console.log("this.state.Contract_Start_Date ", this.state.Contract_Start_Date)
+                                                                                    if (this.state.Contract_Start_Date != '') {
+                                                                                        let contractTerm = document.getElementById('contract-terms-month');
+                                                                                        let contractTermText = contractTerm.options[contractTerm.selectedIndex].text;
+                                                                                        let expireDate = new Date(new Date(this.state.Contract_Start_Date).setMonth(new Date(this.state.Contract_Start_Date).getMonth() + parseInt(contractTermText)));
 
-                                                                                    this.setState({
-                                                                                        contractExpiration: expireDate.toISOString().substring(0, 10)
-                                                                                    })
+                                                                                        this.setState({
+                                                                                            contractExpiration: expireDate.toISOString().substring(0, 10)
+                                                                                        })
+                                                                                    }
                                                                                 });
                                                                             }}
                                                                             value={this.state.Contract_Term}

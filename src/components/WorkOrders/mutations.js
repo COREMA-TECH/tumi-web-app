@@ -41,3 +41,26 @@ export const DELETE_WORKORDER = gql`
 		deleteWorkOrder(id: $id)
 	}
 `;
+
+export const DELETE_SHIFT = gql`
+	mutation deleteShift($id: Int) {
+		deleteShift(id: $id)
+		{id}
+	}
+`;
+
+export const DELETE_ALL_SHIFT = gql`
+	mutation convertShiftToOpening($shiftWorkOrder:filterShiftWOConvertToOpening, 
+		$shift: filterShiftConvertToOpening, 
+		$sourceStatus: Int!,
+		$targetStatus: Int! ){
+		convertShiftToOpening(shiftWorkOrder:$shiftWorkOrder, shift:$shift, 
+			sourceStatus: $sourceStatus,
+			targetStatus: $targetStatus ){
+		id
+		entityId
+		title
+		color
+		}
+	}
+`;

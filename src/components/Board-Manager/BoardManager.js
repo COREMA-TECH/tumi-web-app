@@ -410,23 +410,7 @@ class BoardManager extends Component {
         );
     };
 
-    validateInvalidInput = () => {
-    };
-
-    shouldReceiveNewData = nextData => {
-    }
-
-    handleCardAdd = (card, laneId) => {
-    }
-
-    addCardLink = (cardId, metadata, laneId) => {
-    }
-
-
     onCardClick = (cardId, metadata, laneId) => {
-
-        console.log("onCardClick ", cardId, metadata, laneId)
-
         let needEnglish, needExperience, Position, state;
 
         state = this.state.workOrders.find((item) => { return item.id == cardId })
@@ -614,9 +598,6 @@ class BoardManager extends Component {
                                 const { getDistance } = this.context;
                                 const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
-
-                                console.log("esta es la distancia de ", wo.id, " nombre ", wo.firstName + ' ' + wo.lastName, " distancias ", distance, " fase ", Phases)
-
                                 if (distance >= location) {
                                     distances = 0;
                                 } else {
@@ -689,8 +670,6 @@ class BoardManager extends Component {
                                     interview: getinterview,
                                     accepted: getaccepted
                                 });
-
-                                console.log();
 
                                 this.setState(
                                     {
@@ -1014,7 +993,6 @@ class BoardManager extends Component {
         let interviews = interview.querySelectorAll('header > div:first-child');
         let elements = Array.from(interviews);
 
-        console.log(this.state.interview.length);
         this.state.interview.map(item => {
             console.log(item.id);
         });
@@ -1134,7 +1112,7 @@ class BoardManager extends Component {
                                                             <option value={1}>Open</option>
                                                             <option value={null}>Status (All)</option>
                                                             <option value={2}>Completed</option>
-                                                            <option value={0}>Canceled</option>
+                                                            <option value={0}>Cancelled</option>
                                                         </select>
                                                     </div>
                                                     <div className="col-md-4">
@@ -1158,7 +1136,7 @@ class BoardManager extends Component {
                                                                     this.getWorkOrders();
                                                                 })
                                                             }}>
-                                                            Clear <i className="fas fa-filter link-icon-filter"></i><i className="fas fa-times-circle text-danger clear-filter"/>
+                                                            Clear <i className="fas fa-filter link-icon-filter"></i><i className="fas fa-times-circle text-danger clear-filter" />
                                                         </a>
 
                                                     </div>

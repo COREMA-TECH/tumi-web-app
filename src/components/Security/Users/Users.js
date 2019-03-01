@@ -150,6 +150,24 @@ class Catalogs extends React.Component {
             }
         }
     `;
+    GET_ROLES_QUERY = gql`	
+    {	
+        getroles(IsActive: 1) {	
+            Id	
+            Name: Description	
+        }	
+    }	
+`;
+    GET_LANGUAGES_QUERY = gql`	
+    {	
+        getcatalogitem(IsActive: 1, Id_Catalog: 9) {	
+            Id	
+            Name	
+            IsActive	
+        }	
+    }	
+`;
+
     GET_USERS_QUERY = gql`
         {
             user(IsActive: 1) {
@@ -476,9 +494,7 @@ class Catalogs extends React.Component {
     }
 
     validateField(fieldName, value) {
-        let idContactValid = this.state.idContactValid;
         let usernameValid = this.state.usernameValid;
-        //let fullnameValid = this.state.fullnameValid;
         let firstNameValid = this.state.firstNameValid;
         let lastNameValid = this.state.lastNameValid;
 
@@ -488,9 +504,7 @@ class Catalogs extends React.Component {
         let idRolValid = this.state.idRolValid;
         let idLanguageValid = this.state.idLanguageValid;
 
-        let idContactHasValue = this.state.idContactHasValue;
         let usernameHasValue = this.state.usernameHasValue;
-        //let fullnameHasValue = this.state.fullnameHasValue;
 
         let firstNameHasValue = this.state.firstNameHasValue;
         let lastNameHasValue = this.state.lastNameHasValue;
@@ -503,10 +517,7 @@ class Catalogs extends React.Component {
         let IdRegionValid = true;
 
         switch (fieldName) {
-            case 'idContact':
-                idContactValid = value !== -1 && value !== '';
-                idContactHasValue = value !== -1 && value !== '';
-                break;
+
             case 'username':
                 usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
                 usernameHasValue = value != '';
@@ -519,10 +530,6 @@ class Catalogs extends React.Component {
                 lastNameValid = this.state.lasttName.trim().length >= 3 && this.state.lasttName.trim().indexOf(' ') < 0;
                 lastNameHasValue = value != '';
                 break;
-            //case 'fullname':
-            //	fullnameValid = value.trim().length >= 10;
-            //	fullnameHasValue = value != '';
-            //	break;
             case 'email':
                 emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
                 emailHasValue = value != '';
@@ -554,9 +561,7 @@ class Catalogs extends React.Component {
         }
         this.setState(
             {
-                idContactValid,
                 usernameValid,
-                //fullnameValid,
                 firstNameValid,
                 lastNameValid,
 
@@ -566,9 +571,7 @@ class Catalogs extends React.Component {
                 idRolValid,
                 idLanguageValid,
 
-                idContactHasValue,
                 usernameHasValue,
-                //fullnameHasValue,
                 firstNameHasValue,
                 lastNameHasValue,
                 emailHasValue,
@@ -587,31 +590,24 @@ class Catalogs extends React.Component {
         this.setState(
             {
                 formValid:
-                    this.state.idContactValid &&
+                    this.state.firstNameValid &&
+                    this.state.lastNameValid &&
                     this.state.usernameValid &&
-                    //this.state.fullnameValid &&
                     this.state.emailValid &&
                     this.state.numberValid &&
                     this.state.passwordValid &&
                     this.state.idRolValid &&
                     this.state.idLanguageValid &&
-                    this.state.IdRegionValid &&
-                    this.state.firstNameHasValue &&
-                    this.state.lastNameValid,
+                    this.state.IdRegionValid,
                 enableCancelButton:
-                    this.state.idContactHasValue ||
                     this.state.usernameHasValue ||
-                    //this.state.fullnameHasValue ||
                     this.state.emailHasValue ||
                     this.state.numberHasValue ||
                     this.state.passwordHasValue ||
                     this.state.idRolHasValue ||
                     this.state.idLanguageHasValue ||
-                    this.state.isAdmin ||
-                    this.state.allowInsert ||
-                    this.state.allowEdit ||
-                    this.state.allowDelete ||
-                    this.state.allowExport
+                    this.state.firstNameHasValue ||
+                    this.state.lastNameHasValue
             },
             func
         );
@@ -705,7 +701,11 @@ class Catalogs extends React.Component {
         this.setState({ firstLoad: true }, () => {
             this.loadUsers(() => {
                 this.loadContacts(() => {
-                    this.setState({ indexView: 1, firstLoad: false,loading:false });
+                    this.loadRoles(() => {
+                        this.loadLanguages(() => {
+                            this.setState({ indexView: 1, firstLoad: false });
+                        });
+                    });
                 });
             });
         });
@@ -764,15 +764,14 @@ class Catalogs extends React.Component {
                                 contacts: data.data.catalogitem,
                                 regions: data.data.getcatalogitem,
                                 RegionName: data.data.getcatalogitem[0].Name,
-                                loadingContacts: false,
-                                loading:false,
+                                loadingContacts: false
                             },
                             func
                         );
                     } else {
                         this.setState({
                             loadingContacts: false,
-                            loading:false,
+                            loading: false,
                             firstLoad: false,
                             indexView: 2,
                             errorMessage: 'Error: Loading contacts: object doesn´t exists in query'
@@ -784,12 +783,88 @@ class Catalogs extends React.Component {
                         loadingContacts: false,
                         firstLoad: false,
                         indexView: 2,
-                        loading:false,
+                        loading: false,
                         errorMessage: 'Error: Loading contacts: ' + error
                     });
                 });
         });
     };
+
+    loadRoles = (func = () => {
+    }) => {
+        this.setState({ loadingRoles: true }, () => {
+            this.props.client
+                .query({
+                    query: this.GET_ROLES_QUERY,
+                    fetchPolicy: 'no-cache'
+                })
+                .then((data) => {
+                    if (data.data.getroles != null) {
+                        this.setState(
+                            {
+                                roles: data.data.getroles,
+                                loadingRoles: false
+                            },
+                            func
+                        );
+                    } else {
+                        this.setState({
+                            loadingRoles: false,
+                            firstLoad: false,
+                            indexView: 2,
+                            errorMessage: 'Error: Loading roles: getroles not exists in query data'
+                        });
+                    }
+                })
+                .catch((error) => {
+                    this.setState({
+                        loadingRoles: false,
+                        firstLoad: false,
+                        indexView: 2,
+                        errorMessage: 'Error: Loading roles: ' + error
+                    });
+                });
+        });
+    };
+
+    loadLanguages = (func = () => {
+    }) => {
+        this.setState({ loadingLanguages: true }, () => {
+            this.props.client
+                .query({
+                    query: this.GET_LANGUAGES_QUERY,
+                    fetchPolicy: 'no-cache'
+                })
+                .then((data) => {
+                    if (data.data.getcatalogitem != null) {
+                        this.setState(
+                            {
+                                languages: data.data.getcatalogitem,
+                                idLanguage: data.data.getcatalogitem[0].Id,
+                                loadingLanguages: false
+                            },
+                            func
+                        );
+                    } else {
+                        this.setState({
+                            loadingLanguages: false,
+                            firstLoad: false,
+                            indexView: 2,
+                            errorMessage: 'Error: Loading languages: getcatalogitem not exists in query data'
+                        });
+                    }
+                })
+                .catch((error) => {
+                    this.setState({
+                        loadingLanguages: false,
+                        firstLoad: false,
+                        indexView: 2,
+                        errorMessage: 'Error: Loading languages: ' + error
+                    });
+                });
+        });
+    };
+
 
     getObjectToInsertAndUpdate = () => {
         let id = 0;
@@ -852,7 +927,11 @@ class Catalogs extends React.Component {
 
                         this.setState({ openModal: false, showCircularLoading: true }, () => {
                             this.loadUsers(() => {
-                                this.loadContacts(() => { });
+                                this.loadContacts(() => {
+                                    this.loadRoles(() => {
+                                        this.loadLanguages(this.resetState);
+                                    });
+                                });
                             });
                         });
                     })
@@ -888,8 +967,12 @@ class Catalogs extends React.Component {
                             () => {
                                 this.loadUsers(() => {
                                     this.loadContacts(() => {
-                                        this.resetState(() => {
-                                            this.setState({ indexView: 1, firstLoad: false });
+                                        this.loadRoles(() => {
+                                            this.loadLanguages(() => {
+                                                this.resetState(() => {
+                                                    this.setState({ indexView: 1, firstLoad: false });
+                                                });
+                                            });
                                         });
                                     });
                                 });
@@ -923,7 +1006,7 @@ class Catalogs extends React.Component {
                         }
                     })
                     .then((data) => {
-                        this.props.handleOpenSnackbar('success', 'Email Send!');
+                        this.props.handleOpenSnackbar('success', 'Email Sent!');
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);
