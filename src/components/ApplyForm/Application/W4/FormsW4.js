@@ -340,10 +340,10 @@ class FormsW4 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{ width: '800px', margin: '0 auto' }}>
+                                    <div id="pdf-ready" style={{ width: '1000px', margin: '0 auto' }}>
                                     </div>
                                 ) : (
-                                        <div style={{ width: '800px', margin: '0 auto' }}>
+                                        <div style={{ width: '1000px', margin: '0 auto' }}>
                                             <div className="row pdf-container--i9-w4" id="w4Html">
                                                 <div id="DocumentPDF" className="signature-information">
                                                     <div>
