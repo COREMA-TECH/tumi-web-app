@@ -669,65 +669,154 @@ class WorkOrdersForm extends Component {
                         <div className="modal-header">
                             <h5 className="modal-title">Work Order</h5>
                         </div>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <select
+                                        required
+                                        name="IdEntity"
+                                        className="form-control"
+                                        id=""
+                                        onChange={this.handleChange}
+                                        value={this.state.IdEntity}
+                                        disabled={!isAdmin}
+                                        onBlur={this.handleValidate}
+                                    >
+                                        <option value={0}>Select a Property</option>
+                                        {this.state.hotels.map((hotel) => (
+                                            <option value={hotel.Id}>{hotel.Name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-md-3">
+                                    <input
+                                        required
+                                        type="date"
+                                        className="form-control"
+                                        name="endDate"
+                                        disabled={this.state.sameContractDate}
+                                        onChange={this.handleChange}
+                                        value={this.state.endDate.substring(0, 10)}
+                                        onBlur={this.handleValidate}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent style={{ backgroundColor: "#f5f5f5" }}>
+                        <div className="card">
+                            <div className="card-header bg-light">
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <select
+                                            required
+                                            name="contactId"
+                                            className="form-control"
+                                            id=""
+                                            onChange={this.handleChange}
+                                            value={this.state.contactId}
+                                            disabled={!isAdmin}
+                                            onBlur={this.handleValidate}
+                                        >
+                                            <option value={0}>Select a Contact</option>
+                                            {this.state.contacts.map((contact) => (
+                                                <option value={contact.Id}>{contact.First_Name + contact.Last_Name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <a href="" className="btn btn-link">New +</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-md-2">
+                                        <input
+                                            required
+                                            type="number"
+                                            maxLength="10"
+                                            min={0}
+                                            className="form-control"
+                                            name="quantity"
+                                            placeholder="Qty"
+                                            onChange={this.handleChange}
+                                            value={this.state.quantity == 0 ? '' : this.state.quantity}
+                                            onBlur={this.handleValidate}
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <select
+                                            required
+                                            name="PositionRateId"
+                                            className="form-control"
+                                            id=""
+                                            onChange={this.handleChange}
+                                            value={this.state.PositionRateId}
+                                            onBlur={this.handleValidate}
+                                        >
+                                            <option value="0">Select a Position</option>
+                                            {this.state.positions.map((position) => (
+                                                <option value={position.Id}>{position.Position} </option>
+
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                    </div>
+                                    <div className="col-md-1">
+                                        <input type="text" className="form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <button className="btn btn-link">
+                                            Advanced
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-7">
+                                        <div className="btn-group" role="group" aria-label="Basic example">
+                                            <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
+                                            <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
+                                            <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
+                                            <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
+                                            <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
+                                            <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
+                                            <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-5">
+                                        <input
+                                            type="text"
+                                            onChange={this.handleChange}
+                                            name="comment"
+                                            className="form-control"
+                                            value={this.state.comment}
+                                            placeholder="Comment"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <form action="" onSubmit={this.handleSubmit}>
                             <div className="row pl-0 pr-0">
                                 <div className="col-md-7 col-7">
                                     <div className="row">
                                         <div className="col-md-6">
                                             <label htmlFor="">* Property</label>
-                                            <select
-                                                required
-                                                name="IdEntity"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdEntity}
-                                                disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Property</option>
-                                                {this.state.hotels.map((hotel) => (
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
-                                                ))}
-                                            </select>
+
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">* Requested by</label>
-                                            <select
-                                                required
-                                                name="contactId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.contactId}
-                                                disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Contact</option>
-                                                {this.state.contacts.map((contact) => (
-                                                    <option value={contact.Id}>{contact.First_Name + contact.Last_Name}</option>
-                                                ))}
-                                            </select>
+
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">* Position</label>
-                                            <select
-                                                required
-                                                name="PositionRateId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.PositionRateId}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value="0">Select a Position</option>
-                                                {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position} </option>
 
-                                                ))}
-                                            </select>
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Requested on Date</label>
@@ -744,15 +833,15 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+
                                             {/* <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} /> */}
                                             <label htmlFor="">Shift End</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
+
                                             {/* <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} /> */}
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Duration</label>
-                                            <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
+
                                         </div>
                                         <div className="col-md-6">
 
@@ -769,50 +858,19 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">* Quantity</label>
-                                            <input
-                                                required
-                                                type="number"
-                                                maxLength="10"
-                                                min={0}
-                                                className="form-control"
-                                                name="quantity"
-                                                placeholder="0"
-                                                onChange={this.handleChange}
-                                                value={this.state.quantity == 0 ? '' : this.state.quantity}
-                                                onBlur={this.handleValidate}
-                                            />
+
                                         </div>
 
                                         <div className="col-md-6">
                                             <label htmlFor="">* To Date </label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="endDate"
-                                                disabled={this.state.sameContractDate}
-                                                onChange={this.handleChange}
-                                                value={this.state.endDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
+
                                             <input type="checkbox" id="materialUnchecked" onClick={(e) => { this.TakeDateContract(); }} />
                                             <label htmlFor="">  <font color="grey">&nbsp; Same as contract end date?</font> </label>
                                         </div>
                                         <div className="col-md-6">
                                         </div>
 
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Workdays</label>
-                                            <div className="btn-group" role="group" aria-label="Basic example">
-                                                <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
-                                            </div>
-                                        </div>
+
 
                                     </div>
                                 </div>
@@ -857,15 +915,7 @@ class WorkOrdersForm extends Component {
 
                                         <div className="col-md-12">
                                             <label htmlFor="">Comments</label>
-                                            <textarea
-                                                onChange={this.handleChange}
-                                                name="comment"
-                                                className="form-control"
-                                                id=""
-                                                cols="30"
-                                                rows="3"
-                                                value={this.state.comment}
-                                            />
+
                                         </div>
                                         <div className="col-md-12">
                                             <label htmlFor="">Special Comments</label>
