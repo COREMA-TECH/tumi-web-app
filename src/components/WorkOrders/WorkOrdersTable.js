@@ -75,7 +75,8 @@ class WorkOrdersTable extends Component {
         if (this.props) {
             this.setState({
                 filterValue: this.props.filter,
-                status: this.props.status
+                status: this.props.status,
+                rowsPerPage: this.props.rowsPerPage
             })
             if (this.props.status == 4) {
                 this.setState({
@@ -178,7 +179,7 @@ class WorkOrdersTable extends Component {
                         }
                     })
                     .then(({ data }) => {
-                        this.setState(()=>({
+                        this.setState(() => ({
                             data: data.ShiftBoard,
                             loading: false
                         }));
@@ -421,7 +422,7 @@ class WorkOrdersTable extends Component {
         const value = target.value;
         const name = target.name;
 
-        this.setState(()=>({
+        this.setState(() => ({
             [name]: value,
             endDateDisabled: false
         }));

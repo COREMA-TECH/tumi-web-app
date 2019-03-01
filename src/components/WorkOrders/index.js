@@ -62,6 +62,7 @@ class WorkOrders extends Component {
 							onEditHandler={this.onEditHandler}
 							onLifeHandler={this.onLifeHandler}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
+							rowsPerPage={25}
 						/>
 					</div>
 				</div>
