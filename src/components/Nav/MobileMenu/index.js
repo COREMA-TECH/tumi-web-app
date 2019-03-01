@@ -128,7 +128,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/employees" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/employees">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Employees
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Quick Add
                                                 </a>
                                             </li> : ""
                                     })}
