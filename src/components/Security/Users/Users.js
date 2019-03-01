@@ -258,7 +258,6 @@ class Catalogs extends React.Component {
         email: '',
         number: '',
         idRol: '',
-        idLanguage: '',
         isAdmin: false,
         allowInsert: false,
         allowEdit: false,
@@ -317,6 +316,7 @@ class Catalogs extends React.Component {
             roles: [{ Id: 0, Name: 'Nothing' }],
             languages: [{ Id: 0, Name: 'Nothing' }],
             regions: [{ Id: 0, Name: 'Nothing' }],
+            idLanguage: '',
             loadingData: false,
             loadingContacts: false,
             loadingRoles: false,
@@ -458,8 +458,8 @@ class Catalogs extends React.Component {
         let idContactValid = this.state.idContact !== -1 && this.state.idContact !== '';
         let usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
 
-        let firstNameValid = this.state.firstName.trim().length >= 3 && this.state.firstName.trim().indexOf(' ') < 0;
-        let lastNameValid = this.state.lastName.trim().length >= 3 && this.state.lastName.trim().indexOf(' ') < 0;
+        let firstNameValid = this.state.firstName.trim().length >= 3;
+        let lastNameValid = this.state.lastName.trim().length >= 3;
 
         //let fullnameValid = this.state.fullname.trim().length >= 10;
         let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
@@ -477,7 +477,6 @@ class Catalogs extends React.Component {
             {
                 idContactValid,
                 usernameValid,
-                //fullnameValid,
                 firstNameValid,
                 lastNameValid,
                 emailValid,
@@ -523,11 +522,11 @@ class Catalogs extends React.Component {
                 usernameHasValue = value != '';
                 break;
             case 'firstName':
-                firstNameValid = this.state.firstName.trim().length >= 3 && this.state.firstName.trim().indexOf(' ') < 0;
+                firstNameValid = this.state.firstName.trim().length >= 3;
                 firstNameHasValue = value != '';
                 break;
-            case 'lasttName':
-                lastNameValid = this.state.lasttName.trim().length >= 3 && this.state.lasttName.trim().indexOf(' ') < 0;
+            case 'lastName':
+                lastNameValid = this.state.lastName.trim().length >= 3;
                 lastNameHasValue = value != '';
                 break;
             case 'email':
