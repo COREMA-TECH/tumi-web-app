@@ -32,7 +32,9 @@ class DashboardManager extends React.Component {
             phases: [],
             notShow: 0,
             disqualified: 0,
-            filterValue: 0
+            filterValue: 0,
+            timeElapsed: [],
+
         };
     }
 
@@ -136,7 +138,7 @@ class DashboardManager extends React.Component {
 
         return (
             <div className="row WorkOrder">
-                <div className="col-md-12">
+                { /* <div className="col-md-12">
 
                     <WorkOrdersTable
                         status={1}
@@ -148,6 +150,17 @@ class DashboardManager extends React.Component {
                         showRecruiter
                     />
 
+
+        </div>*/}
+                <div className="col-md-12">
+                    <WorkOrdersTable
+                        status={1}
+                        filter={this.state.filterValue}
+                        onEditHandler={this.onEditHandler}
+                        onLifeHandler={this.onLifeHandler}
+                        handleOpenSnackbar={this.props.handleOpenSnackbar}
+                        rowsPerPage={5}
+                    />
 
                 </div>
                 <div className="col-md-12">
