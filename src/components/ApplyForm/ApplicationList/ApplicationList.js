@@ -188,7 +188,7 @@ class ApplicationList extends Component {
 							}}
 							value={this.state.filterText}
 							type="text"
-							placeholder="Search application form"
+							placeholder="Applicant Search"
 							className="form-control"
 						/>
 					</div>
