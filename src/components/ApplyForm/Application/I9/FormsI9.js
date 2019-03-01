@@ -58,7 +58,7 @@ class FormsI9 extends Component {
             }, () => {
                 //this.insertAntiHarrasment(this.state);
             });
-        }  else if (signType == 1) {
+        } else if (signType == 1) {
             this.setState({
                 signature1: value,
                 openSignature: false,
@@ -282,33 +282,33 @@ class FormsI9 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{width: '1000px', margin: '0 auto'}}>
+                                    <div id="pdf-ready" style={{width: '1800px', margin: '0 auto'}}>
                                     </div>
                                 ) : (
-                                    <div style={{ width: '1000px', margin: '0 auto' }}>
+                                    <div style={{width: '800px', margin: '0 auto'}}>
                                         <div className="row pdf-container--i9-w4" id="i9Html">
                                             <div id="DocumentPDF" className="signature-information">
-                                                <div style={{width: '800px', margin: '0 auto'}}>
+                                                <div>
                                                     <img src="https://i.imgur.com/EXoWtMF.png" width="100%" alt/>
                                                     <div data-font-name="g_d0_f3" data-angle={0}
                                                          data-canvas-width="16.334999999999997"><span style={{
                                                         color: '#000000',
                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                         fontSize: '10pt'
-                                                    }}><strong>►&nbsp;START
-              HERE:</strong> Read instructions carefully before completing this form. The instructions must be
-            available, either in paper or electronically, during completion of this form. Employers are liable for
-            errors in the completion of this form.</span></div>
+                                                                                            }}><strong>►&nbsp;START
+                                                      HERE:</strong> Read instructions carefully before completing this form. The instructions must be
+                                                    available, either in paper or electronically, during completion of this form. Employers are liable for
+                                                    errors in the completion of this form.</span></div>
                                                     <div data-font-name="Helvetica" data-angle={0}
                                                          data-canvas-width="234.99000000000004"><span style={{
                                                         color: '#000000',
                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                         fontSize: '10pt'
                                                     }}><strong>ANTI-DISCRIMINATION
-              NOTICE:&nbsp;</strong>It is illegal to discriminate against work-authorized individuals. Employers
-            <strong>CANNOT</strong> specify which document(s) an employee may present to establish employment
-            authorization and identity. The refusal to hire or continue to employ an individual because the
-            documentation presented has a future expiration date may also constitute illegal discrimination.</span>
+                                                      NOTICE:&nbsp;</strong>It is illegal to discriminate against work-authorized individuals. Employers
+                                                    <strong>CANNOT</strong> specify which document(s) an employee may present to establish employment
+                                                    authorization and identity. The refusal to hire or continue to employ an individual because the
+                                                    documentation presented has a future expiration date may also constitute illegal discrimination.</span>
                                                     </div>
                                                     <div data-font-name="Helvetica" data-angle={0}
                                                          data-canvas-width="234.99000000000004">&nbsp;</div>
@@ -614,7 +614,8 @@ class FormsI9 extends Component {
                                                                                    oneCheck1: false,
                                                                                    oneCheck3: false,
                                                                                })
-                                                                           }} type="radio" id="lowful-permanent-resident"/> 3. A lawful permanent resident (Alien Registration Number/USCIS
+                                                                           }} type="radio"
+                                                                           id="lowful-permanent-resident"/> 3. A lawful permanent resident (Alien Registration Number/USCIS
                     Number):&nbsp; &nbsp; <input
                                                                         name="status"
                                                                         // defaultChecked={this.state.oneCheck3Explain}
@@ -625,7 +626,10 @@ class FormsI9 extends Component {
                                                                             })
                                                                         }}
                                                                         id="resident-explain"
-                                                                        style={{border: 0, borderBottom: '1px solid #000'}}
+                                                                        style={{
+                                                                            border: 0,
+                                                                            borderBottom: '1px solid #000'
+                                                                        }}
                                                                         type="text"/></span></td>
                                                             </tr>
                                                             </tbody>
@@ -667,7 +671,10 @@ class FormsI9 extends Component {
                                                                             })
                                                                         }}
                                                                         id="alien-explain"
-                                                                        style={{border: 0, borderBottom: '1px solid #000'}}
+                                                                        style={{
+                                                                            border: 0,
+                                                                            borderBottom: '1px solid #000'
+                                                                        }}
                                                                         type="text"/></span>
                                                                     </p>
                                                                     <p><span style={{
@@ -701,7 +708,8 @@ class FormsI9 extends Component {
                                                                                 border: 0,
                                                                                 borderBottom: '1px solid #000'
                                                                             }}
-                                                                            type="text" id="alien-register-number"/></span>
+                                                                            type="text"
+                                                                            id="alien-register-number"/></span>
                                                                     </p>
                                                                     <p style={{paddingLeft: '80px'}}><span style={{
                                                                         color: '#000000',
@@ -765,7 +773,8 @@ class FormsI9 extends Component {
                                                                                 border: 0,
                                                                                 borderBottom: '1px solid #000'
                                                                             }}
-                                                                            type="text" id="country-issuance"/></span></p>
+                                                                            type="text" id="country-issuance"/></span>
+                                                                    </p>
                                                                     <p>&nbsp;</p>
                                                                 </td>
                                                                 <td style={{
@@ -850,7 +859,8 @@ class FormsI9 extends Component {
                                                                                 todayDate: e.target.value
                                                                             })
                                                                         }}
-                                                                        id="today-date" style={{border: 0, width: '100%'}}
+                                                                        id="today-date"
+                                                                        style={{border: 0, width: '100%'}}
                                                                         type="text"/></span>
                                                                 </td>
                                                             </tr>
@@ -967,11 +977,12 @@ class FormsI9 extends Component {
                                                         }} border={1}>
                                                             <tbody>
                                                             <tr style={{height: '17px'}}>
-                                                                <td style={{width: '50%', height: '17px'}}><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>Last
+                                                                <td style={{width: '50%', height: '17px'}}><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>Last
                     Name (Family Name) <input
                                                                         value={this.state.lastName2}
                                                                         onChange={(e) => {
@@ -981,11 +992,12 @@ class FormsI9 extends Component {
                                                                         }}
                                                                         style={{width: '100%', border: 0}}
                                                                         type="text"/></span></td>
-                                                                <td style={{width: '50%', height: '17px'}}><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>First
+                                                                <td style={{width: '50%', height: '17px'}}><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>First
                     Name (Given Name) <input
                                                                         value={this.state.firstName2}
                                                                         onChange={(e) => {
@@ -1141,7 +1153,10 @@ class FormsI9 extends Component {
                                                             <tr style={{height: '98px'}}>
                                                                 <td style={{width: '33.3333%', height: '98px'}}>
                                                                     <table
-                                                                        style={{borderCollapse: 'collapse', width: '100%'}}
+                                                                        style={{
+                                                                            borderCollapse: 'collapse',
+                                                                            width: '100%'
+                                                                        }}
                                                                         border={1}>
                                                                         <tbody>
                                                                         <tr>
@@ -1407,7 +1422,10 @@ class FormsI9 extends Component {
                                                                     }} border={0}>
                                                                         <tbody>
                                                                         <tr style={{height: '17px'}}>
-                                                                            <td style={{width: '50%', height: '17px'}}><span
+                                                                            <td style={{
+                                                                                width: '50%',
+                                                                                height: '17px'
+                                                                            }}><span
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -1426,7 +1444,10 @@ class FormsI9 extends Component {
                                                                                         borderBottom: 'solid 1px #000'
                                                                                     }}
                                                                                     type="text"/></span></td>
-                                                                            <td style={{width: '50%', height: '17px'}}><span
+                                                                            <td style={{
+                                                                                width: '50%',
+                                                                                height: '17px'
+                                                                            }}><span
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -1447,7 +1468,10 @@ class FormsI9 extends Component {
                                                                                     type="text"/></span></td>
                                                                         </tr>
                                                                         <tr style={{height: '17px'}}>
-                                                                            <td style={{width: '50%', height: '17px'}}><span
+                                                                            <td style={{
+                                                                                width: '50%',
+                                                                                height: '17px'
+                                                                            }}><span
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -1466,7 +1490,10 @@ class FormsI9 extends Component {
                                                                                         borderBottom: 'solid 1px #000'
                                                                                     }}
                                                                                     type="text"/></span></td>
-                                                                            <td style={{width: '50%', height: '17px'}}><span
+                                                                            <td style={{
+                                                                                width: '50%',
+                                                                                height: '17px'
+                                                                            }}><span
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -1487,7 +1514,10 @@ class FormsI9 extends Component {
                                                                                     type="text"/></span></td>
                                                                         </tr>
                                                                         <tr style={{height: '17px'}}>
-                                                                            <td style={{width: '50%', height: '17px'}}><span
+                                                                            <td style={{
+                                                                                width: '50%',
+                                                                                height: '17px'
+                                                                            }}><span
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -1506,7 +1536,10 @@ class FormsI9 extends Component {
                                                                                         borderBottom: 'solid 1px #000'
                                                                                     }}
                                                                                     type="text"/></span></td>
-                                                                            <td style={{width: '50%', height: '17px'}}><span
+                                                                            <td style={{
+                                                                                width: '50%',
+                                                                                height: '17px'
+                                                                            }}><span
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -1527,7 +1560,10 @@ class FormsI9 extends Component {
                                                                                     type="text"/></span></td>
                                                                         </tr>
                                                                         <tr style={{height: '17px'}}>
-                                                                            <td style={{width: '50%', height: '17px'}}><span
+                                                                            <td style={{
+                                                                                width: '50%',
+                                                                                height: '17px'
+                                                                            }}><span
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -1545,7 +1581,10 @@ class FormsI9 extends Component {
                                                                                         border: 0,
                                                                                         borderBottom: 'solid 1px #000'
                                                                                     }} type="text"/></span></td>
-                                                                            <td style={{width: '50%', height: '17px'}}><span
+                                                                            <td style={{
+                                                                                width: '50%',
+                                                                                height: '17px'
+                                                                            }}><span
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -1572,8 +1611,14 @@ class FormsI9 extends Component {
                                                                         height: '297px'
                                                                     }} border={0}>
                                                                         <tbody>
-                                                                        <tr style={{height: '297px', verticalAlign: 'top'}}>
-                                                                            <td style={{width: '62.476%', height: '297px'}}>
+                                                                        <tr style={{
+                                                                            height: '297px',
+                                                                            verticalAlign: 'top'
+                                                                        }}>
+                                                                            <td style={{
+                                                                                width: '62.476%',
+                                                                                height: '297px'
+                                                                            }}>
                                                                                 <div style={{
                                                                                     width: '250px',
                                                                                     height: '250px',
@@ -1585,7 +1630,10 @@ class FormsI9 extends Component {
                                                                                 }}>Additional
                               Information</span></div>
                                                                             </td>
-                                                                            <td style={{width: '37.524%', height: '297px'}}>
+                                                                            <td style={{
+                                                                                width: '37.524%',
+                                                                                height: '297px'
+                                                                            }}>
                                                                                 <div style={{
                                                                                     width: '150px',
                                                                                     height: '150px',
@@ -1817,7 +1865,8 @@ class FormsI9 extends Component {
                       representative.)</strong></span></td>
                                                             </tr>
                                                             <tr style={{height: '17px'}}>
-                                                                <td style={{width: '25%', height: '17px'}} colSpan={2}><span
+                                                                <td style={{width: '25%', height: '17px'}}
+                                                                    colSpan={2}><span
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
@@ -1825,19 +1874,21 @@ class FormsI9 extends Component {
                                                                     }}><strong>A.</strong>
                     New Name (if applicable)</span></td>
                                                                 <td style={{width: '25%', height: '17px'}}>&nbsp;</td>
-                                                                <td style={{width: '25%', height: '17px'}}><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}><strong>B.</strong>
+                                                                <td style={{width: '25%', height: '17px'}}><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>B.</strong>
                     Date of Rehire (if applicable)</span></td>
                                                             </tr>
                                                             <tr style={{height: '17px'}}>
-                                                                <td style={{width: '25%', height: '17px'}}><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>Last
+                                                                <td style={{width: '25%', height: '17px'}}><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>Last
                     Name (Family Name) <input
                                                                         value={this.state.docL9}
                                                                         onChange={(e) => {
@@ -1847,11 +1898,12 @@ class FormsI9 extends Component {
                                                                         }}
                                                                         style={{width: '100%', border: 0}}
                                                                         type="text"/></span></td>
-                                                                <td style={{width: '25%', height: '17px'}}><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>First
+                                                                <td style={{width: '25%', height: '17px'}}><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>First
                     Name (Given Name) <input
                                                                         value={this.state.docP1}
                                                                         onChange={(e) => {
@@ -1861,11 +1913,12 @@ class FormsI9 extends Component {
                                                                         }}
                                                                         style={{width: '100%', border: 0}}
                                                                         type="text"/></span></td>
-                                                                <td style={{width: '25%', height: '17px'}}><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>Middle
+                                                                <td style={{width: '25%', height: '17px'}}><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>Middle
                     Initial <input
                                                                         value={this.state.docP2}
                                                                         onChange={(e) => {
@@ -1875,11 +1928,12 @@ class FormsI9 extends Component {
                                                                         }}
                                                                         style={{width: '100%', border: 0}}
                                                                         type="text"/></span></td>
-                                                                <td style={{width: '25%', height: '17px'}}><span style={{
-                                                                    color: '#000000',
-                                                                    fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '10pt'
-                                                                }}>Date
+                                                                <td style={{width: '25%', height: '17px'}}><span
+                                                                    style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}>Date
                     (mm/dd/yyyy) <input
                                                                         value={this.state.docP3}
                                                                         onChange={(e) => {
@@ -1901,7 +1955,10 @@ class FormsI9 extends Component {
                                                                border={1}>
                                                             <tbody>
                                                             <tr>
-                                                                <td style={{width: '99.9999%', backgroundColor: '#bec1c3'}}
+                                                                <td style={{
+                                                                    width: '99.9999%',
+                                                                    backgroundColor: '#bec1c3'
+                                                                }}
                                                                     colSpan={3}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
