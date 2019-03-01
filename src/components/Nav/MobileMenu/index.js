@@ -112,13 +112,36 @@ class MobileMenu extends Component {
                             </li> : ""
                     })}
                     {items.map(item => {
-                        return item.Forms.Value == "/home/employees" ?
+                        return item.Forms.Value == "Employee" ?
                             <li className="MainMenu-option">
-                                <Link to={`/home/employees`} className="MenuMobile-link"
-                                    onClick={this.props.handleCloseMenu}>
-                                    <i className={'far fa-handshake MenuMobile-icon'} title={'Employees'} />
+                                <Link
+                                    to={`/home/application`}
+                                    className="MenuMobile-link"
+                                    onClick={this.handleItemMenuAction}
+                                    data-submenu="1"
+                                >
+                                    <i className="fas fa-users MenuMobile-icon" title={'Employee'} />
                                     <span>Employees</span>
                                 </Link>
+                                <ul className="SubMenu" id="1">
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/employees" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/employees">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Quick Add
+                                                </a>
+                                            </li> : ""
+                                    })}
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/application" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/application">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> New
+                                                    Employees Package
+                                                </a>
+                                            </li> : ""
+                                    })}
+                                </ul>
                             </li> : ""
                     })}
                     {items.map(item => {
@@ -147,15 +170,6 @@ class MobileMenu extends Component {
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/board/manager">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Board
-                                                </a>
-                                            </li> : ""
-                                    })}
-                                    {items.map(item => {
-                                        return item.Forms.Value == "/home/application" ?
-                                            <li className="SubMenu-item">
-                                                <a className="SubMenu-link" href="/home/application">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> New
-                                                    Employees Package
                                                 </a>
                                             </li> : ""
                                     })}
@@ -205,14 +219,6 @@ class MobileMenu extends Component {
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/hotel">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
-                                                </a>
-                                            </li> : ""
-                                    })}
-                                    {items.map(item => {
-                                        return item.Forms.Value == "/home/board/manager" ?
-                                            <li className="SubMenu-item">
-                                                <a className="SubMenu-link" href="/home/board/manager">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Board
                                                 </a>
                                             </li> : ""
                                     })}
@@ -279,7 +285,7 @@ class MobileMenu extends Component {
                                     data-submenu="1"
 
                                 >
-                                    <i className="far fa-address-card MenuMobile-icon" title={'Recruiter'} />
+                                    <i className="fas fa-user-lock MenuMobile-icon" title={'Recruiter'} />
                                     <span>Admin</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">

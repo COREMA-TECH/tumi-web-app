@@ -27,7 +27,7 @@ class MainContainer extends Component {
 
 		title = title == 'Company' ? 'Management' : title;
 
-		if(str === "/home/application/info") {
+		if(str === "/home/application/info" || str === "/home/application") {
 			title = 'Employee Package'
 		}
 
@@ -36,8 +36,13 @@ class MainContainer extends Component {
         }
 
         if(str === "/home/Company") {
-            title = 'Management Company'
+            title = 'Add Management Company'
         }
+
+		if(str === "/home/Recruiter") {
+            title = 'New Lead'
+        }
+
 
 
 

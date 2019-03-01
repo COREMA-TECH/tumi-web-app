@@ -30,7 +30,14 @@ const CustomTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 class WorkOrdersTable extends Component {
-
+    INITIAL_FILTER = {
+        state: 0,
+        startDate: '',
+        endDate: '',
+        status: 1,
+        id: '',
+        endDateDisabled: true
+    }
     constructor(props) {
         super(props);
         this.state = {
@@ -40,15 +47,11 @@ class WorkOrdersTable extends Component {
             page: 0,
             openConfirm: false,
             ShiftsData: ShiftsData,
-            id: null,
             hotel: 0,
             IdEntity: null,
             date: '',
             quantity: 0,
-            status: 1,
             shift: '',
-            startDate: '',
-            endDate: '',
             needExperience: false,
             needEnglish: false,
             comment: '',
@@ -61,45 +64,31 @@ class WorkOrdersTable extends Component {
             recruiters: [],
             contactId: null,
             filterValue: 0,
-            startDate: '',
-            endDate: '',
-            endDateDisabled: true,
             states: [],
-            state: 0,
             loading: false,
-            propsStatus: false
+            propsStatus: false,
+            ...this.INITIAL_FILTER
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        console.log("   componentWillReceiveProps ", nextProps)
-        if (nextProps) {
+    componentWillMount() {
+        if (this.props) {
             this.setState({
-                filterValue: nextProps.filter,
-                status: nextProps.status
+                filterValue: this.props.filter,
+                status: this.props.status
             })
-            if (nextProps.status == 4) {
+            if (this.props.status == 4) {
                 this.setState({
                     status: 4,
                     propsStatus: true
                 })
             }
         }
-
         this.getWorkOrders();
         this.getRecruiter();
         this.getHotel();
         this.getState();
-
     }
-
-    /*  componentWillMount() {
-          this.getWorkOrders();
-          this.getRecruiter();
-          this.getHotel();
-          this.getState();
-  
-      }*/
 
 
     getDateFilters = () => {
@@ -158,6 +147,14 @@ class WorkOrdersTable extends Component {
             }
         }
 
+        if (this.state.id) {
+            shiftEntity = {
+                ...shiftEntity,
+                Code: this.state.id
+            }
+        }
+
+
         variables = {
             shift,
             shiftEntity,
@@ -181,10 +178,10 @@ class WorkOrdersTable extends Component {
                         }
                     })
                     .then(({ data }) => {
-                        this.setState({
+                        this.setState(()=>({
                             data: data.ShiftBoard,
                             loading: false
-                        });
+                        }));
                     })
                     .catch(error => {
                         console.log(error)
@@ -424,10 +421,10 @@ class WorkOrdersTable extends Component {
         const value = target.value;
         const name = target.name;
 
-        this.setState({
+        this.setState(()=>({
             [name]: value,
             endDateDisabled: false
-        });
+        }));
     }
 
     handleEndDate = (event) => {
@@ -435,45 +432,32 @@ class WorkOrdersTable extends Component {
         const value = target.value;
         const name = target.name;
 
-        this.setState({
+        this.setState(() => ({
             [name]: value
-        }, () => {
+        }), () => {
             this.getWorkOrders()
         });
     }
 
     clearInputDates = () => {
-        this.setState({
-            startDate: '',
-            endDate: '',
-            endDateDisabled: true,
-            state: 1,
-            status: '',
-            id: ''
-        }, () => {
+        this.setState(() => ({
+            ...this.INITIAL_FILTER
+
+        }), () => {
             this.getWorkOrders();
         })
     }
 
     handleFilterValue = (id) => {
-        this.setState(
-            {
+        this.setState(() =>
+            ({
                 status: id
-            },
+            }),
             () => {
                 this.getWorkOrders();
             }
         );
-        /* const target = event.target;
-        var value = target.value;
-        const name = target.name;
-        if (value == 3)
-            value = "";
-        this.setState({
-            status: value
-        }, () => {
-            this.getWorkOrders()
-        });*/
+
     }
 
     handleChangeId = (event) => {

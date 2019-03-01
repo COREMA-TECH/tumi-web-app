@@ -1,12 +1,11 @@
 import React from 'react';
-import WorkOrdersPositionTable from 'WorkOrdersPosition/WorkOrdersPositionTable';
 import { Bar } from 'react-chartjs-2';
-import WorkOrdersPositionForm from 'WorkOrdersPosition/WorkOrdersPositionForm';
 import withGlobalContent from 'Generic/Global';
 import { timeElapsed } from '../HotelManager/Queries';
 import withApollo from "react-apollo/withApollo";
 import WorkOrdersTable from 'WorkOrders/WorkOrdersTable';
 import WorkOrdersForm from 'WorkOrders/WorkOrdersForm';
+import LifeCycleWorkOrdersTable from 'WorkOrders/LifeCycleWorkOrdersTable';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const data = {
@@ -217,13 +216,17 @@ class DashboardRecruiter extends React.Component {
 					</div>
 				</div>
 				<WorkOrdersForm
-
 					item={this.state.item}
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					openModal={this.state.openModal}
 					handleCloseModal={this.handleCloseModal}
 				/>
-
+				<LifeCycleWorkOrdersTable
+					item={this.state.item}
+					handleOpenSnackbar={this.props.handleOpenSnackbar}
+					openLife={this.state.openLife}
+					handleCloseModal={this.handleCloseModal}
+				/>
 			</div>
 		);
 	}
