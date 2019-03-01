@@ -202,7 +202,7 @@ class hotels extends Component {
                                 <CloseIcon />
                             </IconButton>
                             <Typography variant="title" color="inherit">
-                                Properties without assign
+                                Orphan Properties
                             </Typography>
                         </Toolbar>
                     </AppBar>
