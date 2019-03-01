@@ -9594,20 +9594,21 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   display: -ms-flexbox;
   display: flex;
   margin-top: 1rem;
-  padding: 1rem; }
+  padding: 0.5rem; }
   .HotelCard-item.bg-gd-danger {
     background: -webkit-gradient(linear, right top, left top, from(#ffc2d8), color-stop(#FFF), color-stop(#FFF), color-stop(#FFF), to(#ffc2d8));
     background: -webkit-linear-gradient(right, #ffc2d8, #FFF, #FFF, #FFF, #ffc2d8);
     background: -o-linear-gradient(right, #ffc2d8, #FFF, #FFF, #FFF, #ffc2d8);
     background: linear-gradient(to left, #ffc2d8, #FFF, #FFF, #FFF, #ffc2d8);
     border-color: #ffc2d8; }
+  .HotelCard-item.border-dark {
+    border: solid 3px #d2d2d2 !important; }
 
 .HotelCard-controls {
   position: absolute;
-  top: -5px;
-  right: -5px; }
+  top: 5px;
+  right: 5px; }
   .HotelCard-controls .btn {
-    background: #f50057;
     border-radius: 20px;
     color: #FFF;
     height: 20px;
@@ -9615,6 +9616,7 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     padding: 0;
     width: 20px; }
     .HotelCard-controls .btn .fas {
+      color: #FFF;
       font-size: .7rem;
       line-height: 20px; }
 
@@ -9646,6 +9648,8 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 .HotelCard-wrapper {
   position: relative; }
+  .HotelCard-wrapper:hover .btn .fas {
+    color: #999; }
 
 .main-contract__content {
   width: 100% !important; }
