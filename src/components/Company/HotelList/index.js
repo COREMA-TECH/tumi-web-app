@@ -4,6 +4,7 @@ import withApollo from 'react-apollo/withApollo';
 import HotelDialog from '../../MainContainer/Toolbar/Main/HotelDialog';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
+import TextTruncate from 'react-text-truncate';
 
 class HotelList extends Component {
     constructor() {
@@ -221,14 +222,20 @@ class HotelList extends Component {
                                         <i className="fas fa-trash"></i>
                                     </button>
                                 </div>
-                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard-item bg-gd-danger" : "HotelCard-item"}>
+                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
                                     <div className="HotelCard-img">
                                         <figure>
                                             <img src={`${hotel.ImageURL}`} alt="" />
                                         </figure>
                                     </div>
                                     <div className="HotelCard-info">
-                                        <span className="HotelCard-title">{hotel.Name}</span>
+                                        <span className="HotelCard-title">
+                                            <TextTruncate
+                                                line={3}
+                                                truncateText="…"
+                                                text={hotel.Name}
+                                            />
+                                        </span>
                                     </div>
                                 </a>
                             </div>
