@@ -137,17 +137,18 @@ class DashboardManager extends React.Component {
         return (
             <div className="row WorkOrder">
                 <div className="col-md-12">
-                   
-                            <WorkOrdersTable
-                                filter={this.state.filterValue}
-                                onEditHandler={this.onEditHandler}
-                                onLifeHandler={this.onLifeHandler}
-                                handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                rowsPerPage={5}
-                                showRecruiter
-                            />
 
-                       
+                    <WorkOrdersTable
+                        status={1}
+                        filter={this.state.filterValue}
+                        onEditHandler={this.onEditHandler}
+                        onLifeHandler={this.onLifeHandler}
+                        handleOpenSnackbar={this.props.handleOpenSnackbar}
+                        rowsPerPage={5}
+                        showRecruiter
+                    />
+
+
                 </div>
                 <div className="col-md-12">
 

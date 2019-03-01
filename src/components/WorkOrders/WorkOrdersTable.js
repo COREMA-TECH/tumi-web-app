@@ -72,9 +72,11 @@ class WorkOrdersTable extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log("   componentWillReceiveProps ", nextProps)
         if (nextProps) {
             this.setState({
-                filterValue: nextProps.filter
+                filterValue: nextProps.filter,
+                status: nextProps.status
             })
             if (nextProps.status == 4) {
                 this.setState({
@@ -91,19 +93,21 @@ class WorkOrdersTable extends Component {
 
     }
 
-    componentWillMount() {
-        this.getWorkOrders();
-        this.getRecruiter();
-        this.getHotel();
-        this.getState();
-
-    }
+    /*  componentWillMount() {
+          this.getWorkOrders();
+          this.getRecruiter();
+          this.getHotel();
+          this.getState();
+  
+      }*/
 
 
     getDateFilters = () => {
         var variables;
         var shift = [];
         var workOrder = [];
+        var shiftEntity = [];
+
         if (this.state.startDate != "" && this.state.endDate != "") {
             workOrder = {
                 startDate: this.state.startDate,
@@ -148,10 +152,15 @@ class WorkOrdersTable extends Component {
                 ...workOrder
             }
 
-
+        if (this.state.state != 0) {
+            shiftEntity = {
+                State: this.state.state
+            }
+        }
 
         variables = {
             shift,
+            shiftEntity,
             workOrder
         }
         //}
@@ -438,7 +447,7 @@ class WorkOrdersTable extends Component {
             startDate: '',
             endDate: '',
             endDateDisabled: true,
-            state: 0,
+            state: 1,
             status: '',
             id: ''
         }, () => {
