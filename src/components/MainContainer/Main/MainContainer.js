@@ -36,8 +36,9 @@ class MainContainer extends Component {
         }
 
         if(str === "/home/Company") {
-            title = 'Management Company'
+            title = 'Add Management Company'
         }
+
 
 
 
