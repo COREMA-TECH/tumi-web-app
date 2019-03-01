@@ -72,8 +72,6 @@ class WorkOrdersTable extends Component {
     }
 
     componentWillMount() {
-        console.log("componentWillMount ", this.props)
-
         if (this.props) {
             this.setState({
                 filterValue: this.props.filter,
