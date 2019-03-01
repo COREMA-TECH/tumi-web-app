@@ -282,10 +282,10 @@ class FormsI9 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{width: '1800px', margin: '0 auto'}}>
+                                    <div id="pdf-ready" style={{width: '1600px', margin: '0 auto'}}>
                                     </div>
                                 ) : (
-                                    <div style={{width: '800px', margin: '0 auto'}}>
+                                    <div style={{width: '1200px', margin: '0 auto'}}>
                                         <div className="row pdf-container--i9-w4" id="i9Html">
                                             <div id="DocumentPDF" className="signature-information">
                                                 <div style={{ width: '100%'}}>
