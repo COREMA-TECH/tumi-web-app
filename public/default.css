@@ -9588,7 +9588,7 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   background: -o-linear-gradient(right, #dddddd, #FFF, #FFF, #FFF, #dddddd);
   background: linear-gradient(to left, #dddddd, #FFF, #FFF, #FFF, #dddddd);
   border-radius: 5px;
-  border: solid 3px #dbeef5;
+  border: solid 3px #8cc8de;
   color: #7e7e7e;
   display: -webkit-box;
   display: -ms-flexbox;
