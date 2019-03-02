@@ -11,7 +11,11 @@ class RecruiterReport extends Component {
 
     DEFAULT_STATE = {
         data: [],
-        recruiters: []
+        recruiters: [],
+        frequency: "D",
+        date: new Date().toISOString().substring(0, 10),
+        recruiter: ''
+
     }
 
     constructor(props) {
@@ -27,7 +31,6 @@ class RecruiterReport extends Component {
 
     getFilters = () => {
         var { recruiter, frequency, date } = this.state;
-        console.log(this.state);
         var filter = {}, startDate, endDate;
         //Add filter by recruiter
         if (recruiter)
@@ -38,9 +41,18 @@ class RecruiterReport extends Component {
             startDate = moment(date).startOf(frequency).format('MM/DD/YYYY');
             endDate = moment(date).endOf(frequency).format('MM/DD/YYYY');
 
-            console.log({ startDate, endDate })
-            //  filter = { ...filter, startDate, endDate }
+            // console.log({ startDate, endDate })
+            filter = { ...filter, startDate, endDate }
         }
+        return filter;
+    }
+
+    getRecruiterFilter = () => {
+        let userId = localStorage.getItem('LoginId');
+        let roleId = localStorage.getItem('IdRoles');
+        var filter = {};
+        if (userId && roleId == 4)
+            filter = { ...filter, Id: userId }
         return filter;
     }
 
@@ -54,7 +66,7 @@ class RecruiterReport extends Component {
                 })
                 .then(({ data }) => {
                     this.setState(() => ({
-                        data: data.applications,
+                        data: data.recruiterReport,
                         loadingReport: false
                     }));
                 })
@@ -69,12 +81,15 @@ class RecruiterReport extends Component {
         this.setState(() => ({ loadingRecruiter: true }), () => {
             this.props.client
                 .query({
-                    query: GET_RECRUITER_QUERY
+                    query: GET_RECRUITER_QUERY,
+                    fetchPolicy: 'no-cache',
+                    variables: this.getRecruiterFilter()
                 })
                 .then(({ data }) => {
                     this.setState(() => ({
                         recruiters: data.user,
-                        loadingRecruiter: false
+                        loadingRecruiter: false,
+                        recruiter: data.user.length == 1 ? data.user[0].Id : ''
                     }));
                 })
                 .catch(error => {
@@ -96,7 +111,7 @@ class RecruiterReport extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <div className="card">
-                        <Filter recruiters={this.state.recruiters} updateFilter={this.updateFilter} />
+                        <Filter {...this.state} updateFilter={this.updateFilter} />
                         <Table data={this.state.data} />
                     </div>
                 </div>

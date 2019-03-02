@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_APPLICATION_QUERY = gql`
-query applications($UserId: Int){
-    applications(isActive: true,isLead:true, UserId: $UserId) {
+query applications($UserId: Int, $startDate: Date, $endDate: Date){
+    recruiterReport(isActive: true,isLead:true, UserId: $UserId, startDate: $startDate, endDate: $endDate) {
         id
         firstName
         middleName
@@ -40,8 +40,8 @@ query applications($UserId: Int){
 `;
 
 export const GET_RECRUITER_QUERY = gql`
-{
-    user(IsActive:1,Id_Roles:[12,4]){
+query user($Id: Int){
+    user(IsActive:1,Id_Roles:[4], Id: $Id){
       Id
       Full_Name
     }

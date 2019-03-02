@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
 
 class RecruiterReportFilter extends Component {
-    DEFAULT_STATE = {
-        frequency: "D",
-        date: new Date().toISOString().substring(0, 10),
-        recruiter: ''
-    }
 
     constructor(props) {
         super(props);
-        this.state = {
-            ...this.DEFAULT_STATE
-        }
+        var { recruiter, date, frequency } = props;
+        this.state = { recruiter, date, frequency }
     }
 
     renderRecruiters = () => {
@@ -29,11 +23,19 @@ class RecruiterReportFilter extends Component {
             })
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.recruiter != this.props.recruiter)
+            this.setState(() => ({ recruiter: nextProps.recruiter }))
+    }
+
     render() {
+        let rol = localStorage.getItem('IdRoles');
+        let disableRecruiter = rol == 4;
+
         return <div className="card-header bg-light">
             <div className="row">
                 <div className="col-md-3 mt-1">
-                    <select name="recruiter" className="form-control" value={this.state.recruiter} onChange={this.updateFilter}>
+                    <select name="recruiter" className="form-control" value={this.state.recruiter} onChange={this.updateFilter} disabled={disableRecruiter}>
                         <option value="">Recruiters(All)</option>
                         {this.renderRecruiters()}
                     </select>

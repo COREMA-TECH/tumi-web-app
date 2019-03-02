@@ -150,7 +150,7 @@ class RecruiterReportTable extends React.Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.data.join() !== nextProps.data.join() ||
+        if (this.props.data !== nextProps.data ||
             this.props.loading !== nextProps.loading) {
             return true;
         }
