@@ -4,13 +4,15 @@ import onClickOutside from 'react-onclickoutside';
 import { withRouter } from 'react-router-dom';
 import HotelDialog from './HotelDialog';
 import { GET_ROLES_FORMS } from '../../../Nav/MobileMenu/Queries';
+import withApollo from 'react-apollo/withApollo';
 
 class Toolbar extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			languageIcon: '',
-			open: false
+			open: false,
+			dataRolForm: []
 		};
 	}
 
@@ -51,9 +53,12 @@ class Toolbar extends Component {
 	};
 
 	componentWillMount() {
+		//this.getRolesFormsInfo();
 		this.setState({
 			languageIcon: localStorage.getItem('languageForm')
 		});
+
+		this.getRolesFormsInfo();
 	}
 
 	handleDropDown = (event) => {
@@ -82,6 +87,13 @@ class Toolbar extends Component {
 							dataRolForm: data.rolesforms,
 							loading: false
 						});
+
+
+						console.log("Aqui esta roles forms ", data)
+						console.log("Aqui esta roles forms WWWWooooOOO ", this.state.dataRolForm)
+
+
+
 					})
 					.catch((error) => {
 						this.setState({
@@ -101,6 +113,23 @@ class Toolbar extends Component {
 
 	render() {
 		let items = this.state.dataRolForm;
+		let WO = false;
+		let Manager = false;
+		let Property = false;
+		let Contract = false;
+
+		items.forEach((wo) => {
+			if (wo.Forms.Value == '/home/work-orders') { WO = true }
+			if (wo.Forms.Value == '/home/company/add') { Manager = true }
+			if (wo.Forms.Value == '/home/Properties') { Property = true }
+			if (wo.Forms.Value == '/home/contract/add') { Contract = true }
+		})
+
+
+
+
+		console.log("Permisos ", " WO ", WO, " Manager ", Manager, " Property ", Property, " Contract ", Contract)
+
 		return (
 			<div className="toolbar__main">
 				<ul className="RightMenu-list">
@@ -129,13 +158,12 @@ class Toolbar extends Component {
 								<div className="row app-shortcuts">
 									{localStorage.getItem('showMenu') == "true" ?
 										<React.Fragment>
-
-											<a className="col-4 app-shortcuts__item" href="/home/work-orders">
+											<a className={WO ? "col-4 app-shortcuts__item" : "col-4 isDisabled"} href="/home/work-orders">
 												<i className="fas fa-briefcase" />
 												<small>Work Orders</small>
 												<span className="app-shortcuts__helper bg-gd-danger" />
 											</a>
-											<a className="col-4 app-shortcuts__item" href="" onClick={(e) => {
+											<a className={Manager ? "col-4 app-shortcuts__item" : "col-4 isDisabled"} href="" onClick={(e) => {
 												e.preventDefault();
 												document.getElementById('dropdownMenuButton').click();
 												this.props.history.push({
@@ -148,13 +176,13 @@ class Toolbar extends Component {
 												<small>Add Management</small>
 												<span className="app-shortcuts__helper bg-gd-primary" />
 											</a>
-											<a className="col-4 app-shortcuts__item" href="" onClick={(e) => this.handleClickOpen(e)}>
+											<a className={Property ? "col-4 app-shortcuts__item" : "col-4 isDisabled"} href="" onClick={(e) => this.handleClickOpen(e)}>
 												<i className="fas fa-building" />
 												<small>Add New Property</small>
 												<span className="app-shortcuts__helper bg-gd-primary" />
 											</a>
 											<a
-												className="col-4 app-shortcuts__item"
+												className={Contract ? "col-4 app-shortcuts__item" : "col-4 isDisabled"}
 												href=""
 												onClick={(e) => {
 													e.preventDefault();
@@ -195,4 +223,4 @@ class Toolbar extends Component {
 	}
 }
 
-export default withRouter(onClickOutside(Toolbar));
+export default withApollo(withRouter(onClickOutside(Toolbar)));
