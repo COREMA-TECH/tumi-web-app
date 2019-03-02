@@ -39,8 +39,7 @@ import Property_Schedules from "../../ManagerHotel/Schedules"
 import SchedulesAccept from '../../Schedules/SchedulesAccept';
 import Region from "../../Region";
 import RegionTable from "../../Region/RegionTable";
-import LocationForm from '../../ui-components/LocationForm';
-
+import RecruiteReport from '../../RecruiterReport';
 
 class Container extends Component {
 	constructor(props) {
@@ -152,6 +151,7 @@ class Container extends Component {
 				<Route exact path="/home/calendar" component={Calendar} />
 				<Route exact path="/home/application/info" component={ApplicationTabs} />
 				<Route exact path="/home/recruiter" component={ApplicationRecruiter} />
+				<Route exact path="/home/recruiter/report" component={RecruiteReport} />
 				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />
 				<Route exact path="/home/contract/add" component={Contract} />
 				<Route exact path="/home/contract/edit" component={Contract} />
