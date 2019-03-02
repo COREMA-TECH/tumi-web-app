@@ -1191,7 +1191,8 @@ class General extends Component {
          * If the emails match, the user already has a profile created
          */
         this.state.dataEmail.map(item => {
-            if (item.Electronic_Address.trim() === this.state.email.trim()) {
+            var email = this.state.email || '';
+            if (item.Electronic_Address.trim() === email.trim()) {
                 userExist = true;
             }
         });
