@@ -1206,7 +1206,7 @@ class General extends Component {
                 open={this.state.openUserModal}
                 onClose={this.handleCloseUserModal}
                 aria-labelledby="responsive-dialog-title"
-                maxWidth="md"
+                maxWidth="sm"
             >
                 <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
                     <div className="modal-header">
@@ -1223,7 +1223,7 @@ class General extends Component {
                 </DialogTitle>
                 <DialogContent style={{ minWidth: 600 }}>
                     <div className="row">
-                        <div className="col-lg-7">
+                        <div className="col-lg-12">
                             <div className="row">
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Username</label>
@@ -1310,122 +1310,6 @@ class General extends Component {
                                 </div>
 
                                 <div className="col-md-9 col-lg-9">
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-5">
-                            <div className="card">
-                                <div className="card-header info">Permissions</div>
-                                <div className="card-body p-0">
-                                    <ul className="row w-100 bg-light CardPermissions">
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Active?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.IsActive}
-                                                    name="IsActive"
-                                                    onChange={this.handleCheckedChange('IsActive')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="IsActive"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Admin?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.isAdmin}
-                                                    name="isAdmin"
-                                                    onChange={this.handleCheckedChange('isAdmin')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="isAdmin"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Insert?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowInsert}
-                                                    name="allowInsert"
-                                                    onChange={this.handleCheckedChange('allowInsert')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowInsert"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Edit?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowEdit}
-                                                    name="allowEdit"
-                                                    onChange={this.handleCheckedChange('allowEdit')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowEdit"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Delete?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowDelete}
-                                                    name="allowDelete"
-                                                    onChange={this.handleCheckedChange('allowDelete')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowDelete"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Export?</label>
-
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowExport}
-                                                    name="allowExport"
-                                                    onChange={this.handleCheckedChange('allowExport')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowExport"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowExport">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
