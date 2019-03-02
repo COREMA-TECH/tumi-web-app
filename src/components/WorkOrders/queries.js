@@ -196,3 +196,14 @@ export const GET_STATE_QUERY = gql`
 			}
 		} 
 `;
+
+export const GET_DEPARTMENTS_QUERY = gql`
+	query getcatalogitem ($Id_Entity:Int){
+			getcatalogitem(IsActive: 1, Id_Catalog: 8,  Id_Entity:$Id_Entity) {
+				Id
+				Code: Name
+				Description
+				IsActive
+			}
+		}
+	`;
