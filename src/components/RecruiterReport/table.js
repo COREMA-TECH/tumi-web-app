@@ -14,7 +14,7 @@ import TableBody from '@material-ui/core/TableBody/TableBody';
 import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
-import Tooltip from '@material-ui/core/Tooltip';
+import moment from 'moment';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -169,18 +169,20 @@ class RecruiterReportTable extends React.Component {
         const { rowsPerPage, page } = this.state;
 
         return (
-            <div className="card-body">
+            <div className="card-body pt-0">
                 <Paper className={classes.root}>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
                                 <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
+                                <CustomTableCell className={"Table-head"}>Phone Number</CustomTableCell>
+                                <CustomTableCell className={"Table-head"}>City</CustomTableCell>
+                                <CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
+                                <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
+                                <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
+                                <CustomTableCell className={"Table-head"}>Date Recruited</CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Transportation</CustomTableCell>
+                                <CustomTableCell className={"Table-head"}>Comments</CustomTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -190,15 +192,15 @@ class RecruiterReportTable extends React.Component {
                                         className={classes.row}
                                         key={uuidv4()}
                                     >
-                                        <CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
-                                        <CustomTableCell>
-                                            {row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
-                                        </CustomTableCell>
-                                        <CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
-                                        <CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
-                                        <CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
                                         <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
-                                        <CustomTableCell>{row.emailAddress}</CustomTableCell>
+                                        <CustomTableCell>{row.cellPhone}</CustomTableCell>
+                                        <CustomTableCell>{row.cityInfo ? row.cityInfo.DisplayLabel : ''}</CustomTableCell>
+                                        <CustomTableCell>{row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}</CustomTableCell>
+                                        <CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
+                                        <CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
+                                        <CustomTableCell>{moment(row.createdAt).format('MM/DD/YYYY')}</CustomTableCell>
+                                        <CustomTableCell className={"text-center"} >{row.car ? 'Yes' : 'No'}</CustomTableCell>
+                                        <CustomTableCell>{row.comment}</CustomTableCell>
                                     </TableRow>
 
 
