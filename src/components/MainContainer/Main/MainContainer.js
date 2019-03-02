@@ -12,8 +12,6 @@ class MainContainer extends Component {
 	};
 
 	setTitle = (str) => {
-		console.log(str);
-
 		var pathname = str.split('/');
 		var title;
 		if (pathname[3] != undefined) {
@@ -27,21 +25,21 @@ class MainContainer extends Component {
 
 		title = title == 'Company' ? 'Management' : title;
 
-		if(str === "/home/application/info" || str === "/home/application") {
+		if (str === "/home/application/info" || str === "/home/application") {
 			title = 'Employee Package'
 		}
 
-        if(str === "/home/company/edit") {
-            title = 'Edit Management Company'
-        }
+		if (str === "/home/company/edit") {
+			title = 'Edit Management Company'
+		}
 
-        if(str === "/home/Company") {
-            title = 'Add Management Company'
-        }
+		if (str === "/home/Company") {
+			title = 'Add Management Company'
+		}
 
-		if(str === "/home/Recruiter") {
-            title = 'New Lead'
-        }
+		if (str === "/home/Recruiter") {
+			title = 'New Lead'
+		}
 
 
 

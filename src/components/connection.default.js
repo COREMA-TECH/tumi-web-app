@@ -5,6 +5,4 @@ const url = {
     local: 'http://localhost:5000'
 }
 
-
-
 export const connection = url['local'];
