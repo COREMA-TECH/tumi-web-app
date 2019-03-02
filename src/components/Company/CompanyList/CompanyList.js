@@ -202,7 +202,12 @@ class CompanyList extends Component {
 						);
 					}
 					return (
-						<NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />
+						<React.Fragment>
+							<Route render={({ history }) => (
+								<div className="">{this.renderHeaderContent({ history })}</div>
+							)} />
+							<NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />
+						</React.Fragment>
 					);
 				}}
 			</Query>
