@@ -1123,7 +1123,7 @@ class Employees extends Component {
                                         onChange={(event) => {
                                             this.updateSelect(event.target.value, 'idRol');
                                         }}
-                                        value={this.state.idRol}
+                                        value={13}
                                         disabled
                                     >
                                         <option value="">Select role</option>

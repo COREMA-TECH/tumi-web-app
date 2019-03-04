@@ -1164,6 +1164,7 @@ class BoardRecruiter extends Component {
                                                     <button
                                                         className="btn btn-outline-info btn-sm float-right"
                                                         onClick={() => {
+                                                            localStorage.setItem('idApplication', 0);
                                                             this.props.history.push({
                                                                 pathname: '/home/application/Form',
                                                                 state: { ApplicationId: 0 }

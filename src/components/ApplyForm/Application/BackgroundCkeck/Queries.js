@@ -43,3 +43,29 @@ export const GET_APPLICATION_CHECK_ID = gql`
         }
     }
 `;
+
+/**
+ * Query to get states
+ */
+export const GET_STATES_QUERY = gql`
+	query States($parent: Int!, $value: String) {
+		getcatalogitem( IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $value) {
+			Id
+			Name
+			IsActive
+		}
+	}
+`;
+
+/**
+ * Query to get cities
+ */
+export const GET_CITIES_QUERY = gql`
+	query Cities($parent: Int!) {
+		getcatalogitem( IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
+			Id
+			Name
+			IsActive
+		}
+	}
+`;
