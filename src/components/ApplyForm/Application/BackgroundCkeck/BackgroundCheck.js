@@ -925,7 +925,7 @@ class BackgroundCheck extends Component {
                                     this.state.isCreated ? (
                                         <div className="row" id="DocumentPDF">
                                             <div style={{width: '600px', margin: '0 auto'}}>
-                                                <p><img style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}} src="https://i.imgur.com/fSpWZzj.png" alt width={600} height={270} /></p>
+                                                <p><img style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}} src="https://i.imgur.com/fSpWZzj.png" alt width={600} height={170} /></p>
                                                 <div title="Page 1">
                                                     <table style={{borderCollapse: 'collapse', width: '96.9636%', height: '59px'}} border={0}>
                                                         <tbody>
@@ -948,7 +948,7 @@ class BackgroundCheck extends Component {
                                                     <p>&nbsp;</p>
                                                 </div>
                                                 <table style={{
-                                                    marginTop: '0px',
+                                                    marginTop: '220px',
                                                     backgroundColor: '#ddd',
                                                     borderCollapse: 'collapse', width: '97.0648%', height: '35px'}} border={1}>
                                                     <tbody>
