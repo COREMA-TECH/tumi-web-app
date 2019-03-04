@@ -804,7 +804,6 @@ class BackgroundCheck extends Component {
                                 </div>
                             </div>
                             <div style={{position: 'relative', display: 'block', width: '1200px',
-                                visibility: 'hidden',
                                 margin: 'auto'}}>
                                 <div className="row" id="DocumentPDF">
                                         <div style={{width: '600px', margin: '0 auto'}}>
@@ -941,7 +940,36 @@ class BackgroundCheck extends Component {
                                                 <tbody>
                                                 <tr style={{height: '42px'}}>
                                                     <td style={{width: '100%', height: '42px'}}>
-                                                        <div title="Page 1"><span style={{color: '#000000'}}><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>WILL A MOTOR VEHICLE REPORT BE REQUIRED?: </strong></span></span></div>
+                                                        <div title="Page 1" style={{
+                                                            display:'flex',
+                                                            flexDirection:'row',
+                                                        }}><span style={{color: '#000000'}}><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>WILL A MOTOR VEHICLE REPORT BE REQUIRED?: </strong></span></span><span style={{
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                            marginLeft: '10px',
+                                                            position: 'relative',
+                                                            top: '-5px'
+                                                        }}>
+                                                            <div style={{
+                                                                width: '20px',
+                                                                display: 'inline',
+                                                                marginRight: '5px'
+                                                            }}>
+                                                                <label htmlFor="" style={{
+                                                                    width: '100%'
+                                                                }}>Yes</label>
+                                                                <input type="checkbox" defaultChecked={this.state.vehicleReportRequired}/>
+                                                            </div>
+                                                            <div style={{
+                                                                width: '20px',
+                                                                display: 'inline',
+                                                            }}>
+                                                                <label htmlFor="" style={{
+                                                                    width: '100%'
+                                                                }}>No</label>
+                                                                <input type="checkbox" defaultChecked={!this.state.vehicleReportRequired}/>
+                                                            </div>
+                                                        </span></div>
                                                         <div title="Page 1"><br /><br /></div>
                                                     </td>
                                                 </tr>
@@ -955,7 +983,11 @@ class BackgroundCheck extends Component {
                                                         <div title="Page 1">{this.state.driverLicenseNumber}</div>
                                                     </td>
                                                     <td style={{width: '28.7453%', height: '44px'}}>
-                                                        <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>STATE:</strong></span></div>
+                                                        <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>STATE: </strong></span><span>
+                                                            {
+
+                                                            }
+                                                        </span></div>
                                                         <div title="Page 1">test</div>
                                                     </td>
                                                     <td style={{width: '18.4013%', height: '44px'}}>
@@ -969,7 +1001,7 @@ class BackgroundCheck extends Component {
                                                 <table style={{borderCollapse: 'collapse', width: '97.0648%', height: '45px'}} border={1}>
                                                     <tbody>
                                                     <tr style={{height: '45px'}}>
-                                                        <td style={{width: '100%', height: '45px'}}><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>IS THIS A COMMERCIAL DRIVERS LICENSE?:<br /><br /><br /></strong></span></td>
+                                                        <td style={{width: '100%', height: '45px'}}><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>IS THIS A COMMERCIAL DRIVERS LICENSE?: <span>{this.state.commercialDriverLicense}</span></strong></span></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
