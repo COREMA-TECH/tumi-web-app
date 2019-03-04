@@ -919,13 +919,13 @@ class BackgroundCheck extends Component {
                                     {/*`)}*/}
                                 </div>
                             </div>
-                            <div style={{position: 'relative', display: 'block', width: '1200px',
+                            <div style={{position: 'relative', display: 'none', width: '1200px',
                                 margin: 'auto'}}>
                                 {
                                     this.state.isCreated ? (
                                         <div className="row" id="DocumentPDF">
                                             <div style={{width: '600px', margin: '0 auto'}}>
-                                                <p><img style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}} src="https://i.imgur.com/fSpWZzj.png" alt width={600} height={170} /></p>
+                                                <p><img style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}} src="https://i.imgur.com/bHDSsLu.png" alt width={600} height={140} /></p>
                                                 <div title="Page 1">
                                                     <table style={{borderCollapse: 'collapse', width: '96.9636%', height: '59px'}} border={0}>
                                                         <tbody>
