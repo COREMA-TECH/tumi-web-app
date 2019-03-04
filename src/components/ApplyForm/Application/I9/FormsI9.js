@@ -173,7 +173,9 @@ class FormsI9 extends Component {
 
 
     validateI9 = () => {
-        let inputs = document.getElementsByTagName('input')
+
+        let documentPDF = document.getElementById('DocumentPDF');
+        let inputs = documentPDF.getElementsByTagName('input');
 
         for (let i = 0; i < inputs.length; i++) {
             inputs[i].disabled = true;
