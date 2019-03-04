@@ -15,6 +15,8 @@ export const GET_APPLICANT_INFO = gql`
             birthDay
             socialSecurityNumber
             zipCode
+            state
+            city
         }
     }
 `;

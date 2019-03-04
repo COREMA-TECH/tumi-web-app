@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './index.css';
+import gql from 'graphql-tag';
 import withApollo from "react-apollo/withApollo";
 import { ADD_BACKGROUND_CHECK, UPDATE_BACKGROUND_CHECK } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
@@ -57,7 +58,18 @@ class BackgroundCheck extends Component {
             streetAddress: '',
             birthDay: '',
             socialSecurityNumber: '',
-            zipCode: ''
+            zipCode: '',
+
+            stateSelected: '',
+            citySelected: '',
+
+            stateName: '',
+            cityName: '',
+            licenseStateName: '',
+            statesCompletes: [],
+
+
+            loadingApplicantData: false
         }
     }
 
@@ -79,11 +91,109 @@ class BackgroundCheck extends Component {
                         birthDay:  data.applications[0].birthDay == null ? '' : data.applications[0].birthDay,
                         socialSecurityNumber:  data.applications[0].socialSecurityNumber == null ? '' : data.applications[0].socialSecurityNumber,
                         zipCode:  data.applications[0].zipCode == null ? '' : data.applications[0].zipCode,
+                        stateSelected: data.applications[0].state,
+                        citySelected: data.applications[0].city,
+                    }, () => {
+                        //this.getStates(this.state.stateSelected);
+                        this.getCities(this.state.stateSelected, this.state.citySelected);
                     });
                 }
             })
             .catch(error => {
+                this.setState({
+                    loading: false
+                });
+            })
+    };
 
+    getStatesQuery = gql`
+        {
+            getcatalogitem(IsActive: 1, Id_Parent: 6, Id_Catalog: 3) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
+
+    getStates = (stateId) => {
+        this.props.client
+            .query({
+                query: this.getStatesQuery,
+            })
+            .then(({data}) => {
+                let dataInfo = data.getcatalogitem;
+
+                let stateSelect = dataInfo.find((element) => {
+                    return element.Id == stateId;
+                });
+
+                let stateLicenseSelected = dataInfo.find((element) => {
+                    return element.Id == this.state.licenseState;
+                });
+
+                if(stateSelect != undefined && stateLicenseSelected != undefined) {
+                    this.setState({
+                        stateName: stateSelect.Name,
+                        licenseStateName: stateLicenseSelected.Name,
+                    })
+                }
+
+                this.setState({
+                    loadingApplicantData: false,
+                    statesCompletes: dataInfo
+                })
+            })
+    };
+
+
+    updateStateInPDF = () => {
+        let stateSelect = this.state.statesCompletes.find((element) => {
+            return element.Id == this.state.licenseState;
+        });
+
+        if(stateSelect != undefined) {
+            this.setState({
+                licenseStateName: stateSelect.Name
+            });
+        }
+    };
+
+    GET_CITIES_QUERY = gql`
+        query Cities($parent: Int!) {
+            getcatalogitem( IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
+
+    getCities = (stateId, cityId) => {
+        this.props.client
+            .query({
+                query: this.GET_CITIES_QUERY,
+                variables: {
+                    parent: stateId
+                }
+            })
+            .then(({data}) => {
+                let dataInfo = data.getcatalogitem;
+
+                let citySelect = dataInfo.find((element) => {
+                    return element.Id == cityId;
+                });
+
+
+
+
+                if(citySelect != undefined) {
+                    this.setState({
+                        cityName: citySelect.Name
+                    })
+                }
+
+                this.getStates(stateId)
             })
     };
 
@@ -305,7 +415,11 @@ class BackgroundCheck extends Component {
     componentWillMount() {
         // FIXME: pass dynamic id
         this.getBackgroundCheckById(this.props.applicationId);
-        this.getApplicantInformation(this.props.applicationId);
+        this.setState({
+            loadingApplicantData: true
+        }, () => {
+            this.getApplicantInformation(this.props.applicationId);
+        });
     }
 
     createDocumentsPDF = (random) => {
@@ -416,7 +530,7 @@ class BackgroundCheck extends Component {
                                 <span className="applicant-card__title">{applyTabs[1].label}</span>
                                 <div>
                                     {
-                                        this.state.isCreated ? (
+                                        this.state.isCreated && !this.state.loadingApplicantData ? (
                                             <button className="applicant-card__edit-button" onClick={() => {
                                                 let random = uuidv4();
 
@@ -597,6 +711,8 @@ class BackgroundCheck extends Component {
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             licenseState: e.target.value
+                                                                        }, () => {
+                                                                            this.updateStateInPDF(this.state.licenseState)
                                                                         })
                                                                     }}
                                                                     value={this.state.licenseState}
@@ -803,8 +919,8 @@ class BackgroundCheck extends Component {
                                     {/*`)}*/}
                                 </div>
                             </div>
-                            <div style={{position: 'relative', display: 'block', width: '1200px',
-                                margin: 'auto'}}>7
+                            <div style={{position: 'relative', display: 'none', width: '1200px',
+                                margin: 'auto'}}>
                                 {
                                     this.state.isCreated ? (
                                         <div className="row" id="DocumentPDF">
@@ -832,7 +948,7 @@ class BackgroundCheck extends Component {
                                                     <p>&nbsp;</p>
                                                 </div>
                                                 <table style={{
-                                                    marginTop: '250px',
+                                                    marginTop: '0px',
                                                     backgroundColor: '#ddd',
                                                     borderCollapse: 'collapse', width: '97.0648%', height: '35px'}} border={1}>
                                                     <tbody>
@@ -884,7 +1000,7 @@ class BackgroundCheck extends Component {
                                                         <td style={{width: '33.3333%', height: '17px'}}>
                                                             <div title="Page 1">
                                                                 <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>DATE OF BIRTH:</strong></span></div>
-                                                                <div title="Page 1">{this.state.birthDay}</div>
+                                                                <div title="Page 1">{this.state.birthDay.substring(0, 10)}</div>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -904,11 +1020,11 @@ class BackgroundCheck extends Component {
                                                     <tbody>
                                                     <tr style={{height: '41px'}}>
                                                         <td style={{width: '50.0173%', height: '41px'}}>
-                                                            <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>CITY:</strong></span></div>
-                                                            <div title="Page 1">{}</div>
+                                                            <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>CITY:</strong></span><span>{this.state.cityName}</span></div>
+                                                            {/*<div title="Page 1">{this.state.cityName}</div>*/}
                                                         </td>
                                                         <td style={{width: '28.7453%', height: '41px'}}>
-                                                            <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>STATE:</strong></span></div>
+                                                            <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>STATE:</strong></span><span>{this.state.stateName}</span></div>
                                                             <div title="Page 1">{}</div>
                                                         </td>
                                                         <td style={{width: '18.4013%', height: '41px'}}>
@@ -1031,12 +1147,13 @@ class BackgroundCheck extends Component {
                                                             <div title="Page 1">{this.state.driverLicenseNumber}</div>
                                                         </td>
                                                         <td style={{width: '28.7453%', height: '44px'}}>
-                                                            <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>STATE: </strong></span><span>
+                                                            <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>STATE: </strong></span><span>{this.state.licenseStateName}</span><span>
+                                                            </span><span>
                                                             {
 
                                                             }
                                                         </span></div>
-                                                            <div title="Page 1">test</div>
+                                                            <div title="Page 1"></div>
                                                         </td>
                                                         <td style={{width: '18.4013%', height: '44px'}}>
                                                             <div title="Page 1"><span style={{color: '#000000',    fontWeight: '400', marginLeft: '2px'}}><strong>EXPIRATION:</strong></span></div>
