@@ -79,6 +79,11 @@ class VerticalLinearStepper extends Component {
         });
     };
 
+    componentWillUnmount() {
+        this.setState({
+            applicationId: this.props.location.state.ApplicationId
+        });
+    }
 
     componentWillMount() {
         // Get id of the application and pass to the components

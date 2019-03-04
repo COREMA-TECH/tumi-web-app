@@ -111,6 +111,9 @@ class Application extends Component {
         idRecruiter: localStorage.getItem('LoginId'),
         date: new Date().toISOString().substring(0, 10),
 
+        positions: [],
+        positionsCatalogs: []
+
 
     }
     constructor(props) {
@@ -454,6 +457,63 @@ class Application extends Component {
             })
     };
 
+    getPositions = () => {
+        this.props.client
+            .query({
+                query: GET_POSITIONS_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    positions: data.workOrder
+                }, () => {
+                    this.setState({
+                        loading: false
+                    })
+                });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
+
+    getPositionsCatalogs = () => {
+        this.props.client
+            .query({
+                query: GET_POSITIONS_CATALOG,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    positionsCatalogs: data.getcatalogitem
+                }, () => {
+                    let options = [];
+                    this.state.positionsCatalogs.map((item) => (
+                        options.push({ value: item.Id, label: item.Description, key: item.Id })
+                    ));
+                    this.setState({
+                        positionCatalogTag: options
+                    });
+                    this.setState({
+                        loading: false
+                    })
+                });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
+
     // To validate all the inputs and set a red border when the input is invalid
     /*validateInvalidInput = () => {
         if (document.addEventListener) {
@@ -490,6 +550,8 @@ class Application extends Component {
                 editing: true
             });
         }
+        this.getPositions();
+        this.getPositionsCatalogs();
     }
 
     updateCity = (city) => {
@@ -544,69 +606,40 @@ class Application extends Component {
                                         <span className="primary applicant-card__label">
                                             {formSpanish[16].label}
                                         </span>
-                                        <Query query={GET_POSITIONS_QUERY}>
-                                            {({ loading, error, data, refetch, networkStatus }) => {
-                                                if (error) return <p>Error </p>;
-                                                if (data.workOrder != null && data.workOrder.length > 0) {
-                                                    return (
-                                                        <select
-                                                            name="positionApply"
-                                                            id="positionApply"
-                                                            onChange={(event) => {
-                                                                this.setState({
-                                                                    positionApplyingFor: event.target.value
-                                                                });
-                                                            }}
-                                                            value={this.state.positionApplyingFor}
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                        >
-                                                            <option value="">Select a position</option>
-                                                            <option value="0">Open Position</option>
-                                                            {data.workOrder.map((item) => (
-                                                                <option
-                                                                    value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
-                                                            ))}
-                                                        </select>
-                                                    );
-                                                }
-                                                return <SelectNothingToDisplay />;
+                                        <select
+                                            name="positionApply"
+                                            id="positionApply"
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    positionApplyingFor: event.target.value
+                                                });
                                             }}
-                                        </Query>
+                                            value={this.state.positionApplyingFor}
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+                                        >
+                                            <option value="">Select a position</option>
+                                            <option value="0">Open Position</option>
+                                            {this.state.positions.map((item) => (
+                                                <option
+                                                    value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">
                                             {formSpanish[17].label}
                                         </span>
-                                        <Query query={GET_POSITIONS_CATALOG}>
-                                            {({ loading, error, data, refetch, networkStatus }) => {
-                                                if (error) return <p>Error </p>;
-                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                    let options = [];
-                                                    data.getcatalogitem.map((item) => (
-                                                        options.push({ value: item.Id, label: item.Description })
-                                                    ));
+                                        <Select
+                                            isDisabled={!this.state.editing}
+                                            options={this.state.positionCatalogTag}
+                                            value={this.state.positionsTags}
+                                            onChange={this.handleChangePositionTag}
+                                            closeMenuOnSelect={false}
+                                            components={makeAnimated()}
+                                            isMulti
+                                        />
 
-                                                    return (
-                                                        <div style={{
-                                                            paddingTop: '0px',
-                                                            paddingBottom: '2px',
-                                                        }}>
-                                                            <Select
-                                                                isDisabled={!this.state.editing}
-                                                                options={options}
-                                                                value={this.state.positionsTags}
-                                                                onChange={this.handleChangePositionTag}
-                                                                closeMenuOnSelect={false}
-                                                                components={makeAnimated()}
-                                                                isMulti
-                                                            />
-                                                        </div>
-                                                    );
-                                                }
-                                                return <SelectNothingToDisplay />;
-                                            }}
-                                        </Query>
                                     </div>
                                 </div>
                                 <div className="row">
