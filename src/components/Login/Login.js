@@ -162,27 +162,27 @@ class Login extends Component {
 							if (user.IsAdmin == 1) {
 								localStorage.setItem('IsAdmin', true);
 							} else {
-								localStorage.setItem('IsAdmin', false);
+								localStorage.setItem('IsAdmin', true);
 							}
 							if (user.AllowEdit == 1) {
 								localStorage.setItem('AllowEdit', true);
 							} else {
-								localStorage.setItem('AllowEdit', false);
+								localStorage.setItem('AllowEdit', true);
 							}
 							if (user.AllowDelete == 1) {
 								localStorage.setItem('AllowDelete', true);
 							} else {
-								localStorage.setItem('AllowDelete', false);
+								localStorage.setItem('AllowDelete', true);
 							}
 							if (user.AllowInsert == 1) {
 								localStorage.setItem('AllowInsert', true);
 							} else {
-								localStorage.setItem('AllowInsert', false);
+								localStorage.setItem('AllowInsert', true);
 							}
 							if (user.AllowExport == 1) {
 								localStorage.setItem('AllowExport', true);
 							} else {
-								localStorage.setItem('AllowExport', false);
+								localStorage.setItem('AllowExport', true);
 							}
 
 							window.location.href = '/home';
