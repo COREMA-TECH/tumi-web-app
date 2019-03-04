@@ -701,28 +701,45 @@ class BoardRecruiter extends Component {
                     }).then(({ data }) => {
                         data.applicationsByMatches.forEach((wo) => {
 
+                            console.log("applicationsByMatches ", wo)
+
                             const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
 
-                            this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-                                const { getDistance } = this.context;
-                                const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+                            if (wo.zipCode != null) {
+                                this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+                                    const { getDistance } = this.context;
+                                    const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
-                                if (distance >= location) {
-                                    distances = 0;
-                                } else {
-                                    distances = 1;
-                                }
+                                    if (distance >= location) {
+                                        distances = 0;
+                                    } else {
+                                        distances = 1;
+                                    }
 
-                                if (distances >= 1) {
+                                    if (distances >= 1) {
 
-                                    if (typeof Phases == undefined || Phases == null) {
-                                        varphase = 30460;
-                                    } else { varphase = Phases.StageId }
+                                        if (typeof Phases == undefined || Phases == null) {
+                                            varphase = 30460;
+                                        } else { varphase = Phases.StageId }
 
-                                    switch (varphase) {
-                                        case 30460:
-                                            if (wo.isLead === true) {
-                                                getleads.push({
+
+
+                                        switch (varphase) {
+                                            case 30460:
+                                                if (wo.isLead === true) {
+                                                    getleads.push({
+                                                        id: wo.id,
+                                                        name: wo.firstName + ' ' + wo.lastName,
+                                                        subTitle: wo.cellPhone,
+                                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                        escalationTextLeftLead: wo.generalComment,
+                                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                    });
+                                                }
+                                                break;
+                                            case 30461:
+                                                getApplied.push({
                                                     id: wo.id,
                                                     name: wo.firstName + ' ' + wo.lastName,
                                                     subTitle: wo.cellPhone,
@@ -731,98 +748,88 @@ class BoardRecruiter extends Component {
                                                     escalationTextRightLead: wo.car == true ? " Yes" : " No",
                                                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                                                 });
-                                            }
-                                            break;
-                                        case 30461:
-                                            getApplied.push({
-                                                id: wo.id,
-                                                name: wo.firstName + ' ' + wo.lastName,
-                                                subTitle: wo.cellPhone,
-                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                escalationTextLeftLead: wo.generalComment,
-                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                            });
-                                            break;
-                                        case 30462, 30464:
-                                            getCandidate.push({
-                                                id: wo.id,
-                                                name: wo.firstName + ' ' + wo.lastName,
-                                                subTitle: wo.cellPhone,
-                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                escalationTextLeftLead: wo.generalComment,
-                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                            });
-                                            break;
-                                        case 30463, 30465:
-                                            getPlacement.push({
-                                                id: wo.id,
-                                                name: wo.firstName + ' ' + wo.lastName,
-                                                subTitle: wo.cellPhone,
-                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                escalationTextLeftLead: wo.generalComment,
-                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                            });
-                                            break;
+                                                break;
+                                            case 30462, 30464:
+                                                getCandidate.push({
+                                                    id: wo.id,
+                                                    name: wo.firstName + ' ' + wo.lastName,
+                                                    subTitle: wo.cellPhone,
+                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                    escalationTextLeftLead: wo.generalComment,
+                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                });
+                                                break;
+                                            case 30463, 30465:
+                                                getPlacement.push({
+                                                    id: wo.id,
+                                                    name: wo.firstName + ' ' + wo.lastName,
+                                                    subTitle: wo.cellPhone,
+                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                    escalationTextLeftLead: wo.generalComment,
+                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                });
+                                                break;
+                                        }
                                     }
-                                }
 
-                                this.setState({
-                                    leads: getleads,
-                                    Applied: getApplied,
-                                    Candidate: getCandidate,
-                                    Placement: getPlacement
-                                });
-
-                                this.setState(
-                                    {
-                                        Opening: this.state.Openings,
-                                        lane: [
-                                            {
-                                                id: 'lane1',
-                                                title: 'Openings',
-                                                label: ' ',
-                                                cards: this.state.Openings,
-                                                droppable: false,
-                                                draggable: false,
-                                                editable: false
-                                            },
-                                            {
-                                                id: 'Leads',
-                                                title: 'Leads',
-                                                label: ' ',
-                                                cards: getleads
-                                            },
-                                            {
-                                                id: 'Applied',
-                                                title: 'Sent to Interview',
-                                                label: ' ',
-                                                cards: getApplied
-                                            },
-                                            {
-                                                id: 'Candidate',
-                                                title: 'Candidate',
-                                                label: ' ',
-                                                cards: getCandidate,
-                                                droppable: false,
-                                                draggable: false,
-                                                editable: false
-                                            },
-                                            {
-                                                id: 'Placement',
-                                                title: 'Placement',
-                                                label: ' ',
-                                                cards: getPlacement,
-                                                droppable: false,
-                                                draggable: false,
-                                                editable: false
-                                            }
-                                        ],
-                                        loading: false
+                                    this.setState({
+                                        leads: getleads,
+                                        Applied: getApplied,
+                                        Candidate: getCandidate,
+                                        Placement: getPlacement
                                     });
-                            });
+
+                                    this.setState(
+                                        {
+                                            Opening: this.state.Openings,
+                                            lane: [
+                                                {
+                                                    id: 'lane1',
+                                                    title: 'Openings',
+                                                    label: ' ',
+                                                    cards: this.state.Openings,
+                                                    droppable: false,
+                                                    draggable: false,
+                                                    editable: false
+                                                },
+                                                {
+                                                    id: 'Leads',
+                                                    title: 'Leads',
+                                                    label: ' ',
+                                                    cards: getleads
+                                                },
+                                                {
+                                                    id: 'Applied',
+                                                    title: 'Sent to Interview',
+                                                    label: ' ',
+                                                    cards: getApplied
+                                                },
+                                                {
+                                                    id: 'Candidate',
+                                                    title: 'Candidate',
+                                                    label: ' ',
+                                                    cards: getCandidate,
+                                                    droppable: false,
+                                                    draggable: false,
+                                                    editable: false
+                                                },
+                                                {
+                                                    id: 'Placement',
+                                                    title: 'Placement',
+                                                    label: ' ',
+                                                    cards: getPlacement,
+                                                    droppable: false,
+                                                    draggable: false,
+                                                    editable: false
+                                                }
+                                            ],
+                                            loading: false
+                                        });
+
+                                });
+                            }
                         });
 
                         if (data.applicationsByMatches.length === 0) {
@@ -917,17 +924,18 @@ class BoardRecruiter extends Component {
             let count = 1;
             let begin = true;
             data.ShiftBoard.forEach((ShiftBoard) => {
-                if (_id == ShiftBoard.workOrderId)
-                    count++;
-                else {
-                    count = 1;
-                }
+                /* if (_id == ShiftBoard.workOrderId)
+                     count++;
+                 else {
+                     count = 1;
+                 }*/
 
-                if (begin) count = 1;
+                //if (begin) count = 1;
+                console.log("ShiftBoard ", ShiftBoard)
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
-                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
+                    dueOn: 'Q: ' + ShiftBoard.count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
                     cardStyle: { borderRadius: 6, marginBottom: 15 },
