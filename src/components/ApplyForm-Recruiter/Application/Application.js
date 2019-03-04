@@ -70,7 +70,7 @@ class Application extends Component {
         typeOfId: '',
         expireDateId: '',
         emailAddress: '',
-        positionApplyingFor: 1,
+        positionApplyingFor: 0,
         idealJob: '',
         dateAvailable: '',
         scheduleRestrictions: '',
