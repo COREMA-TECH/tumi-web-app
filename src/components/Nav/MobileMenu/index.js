@@ -17,10 +17,14 @@ class MobileMenu extends Component {
 
     componentWillMount() {
         this.getRolesFormsInfo();
-
+        localStorage.setItem('permissionWO', false);
+        localStorage.setItem('permissionManager', false);
+        localStorage.setItem('permissionProperty', false);
+        localStorage.setItem('permissionContract', false);
     }
 
     getRolesFormsInfo = () => {
+        let WO;
         this.setState(
             {
                 loading: true

@@ -393,7 +393,7 @@ class NewContract extends Component {
                     },
                     () => {
                         this.getBusinessCompaniesbyId(this.state.Id_Entity);
-
+                        this.geManagementbyId(this.state.IdManagement);
                         this.props.getContractName(this.state.Contract_Name);
                         this.props.updateCompanyId(this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity)
 
@@ -1255,16 +1255,18 @@ class NewContract extends Component {
 
     updateAddress = () => {
         if (document.getElementById("correctAddress").checked) {
-            this.setState({
-                Old_Billing_City: this.state.Id_Entity == "0" ? this.state.Management_Billing_City : this.state.city,
-                Old_Billing_State: this.state.Id_Entity == "0" ? this.state.Management_Billing_State : this.state.state,
-                Old_Billing_Street: this.state.Id_Entity == "0" ? this.state.Management_Billing_Street : this.state.address,
-                Old_Billing_Zip_Code: this.state.Id_Entity == "0" ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
+            const isManagement = this.state.IdManagement && this.state.IdManagement!=0;
 
-                Billing_City: this.state.Id_Entity == "0" ? this.state.Management_Billing_City : this.state.city,
-                Billing_State: this.state.Id_Entity == "0" ? this.state.Management_Billing_State : this.state.state,
-                Billing_Street: this.state.Id_Entity == "0" ? this.state.Management_Billing_Street : this.state.address,
-                Billing_Zip_Code: this.state.Id_Entity == "0" ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
+            this.setState({
+                Old_Billing_City: isManagement  ? this.state.Management_Billing_City : this.state.city,
+                Old_Billing_State: isManagement ? this.state.Management_Billing_State : this.state.state,
+                Old_Billing_Street: isManagement ? this.state.Management_Billing_Street : this.state.address,
+                Old_Billing_Zip_Code: isManagement ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
+
+                Billing_City: isManagement ? this.state.Management_Billing_City : this.state.city,
+                Billing_State: isManagement ? this.state.Management_Billing_State : this.state.state,
+                Billing_Street: isManagement ? this.state.Management_Billing_Street : this.state.address,
+                Billing_Zip_Code: isManagement ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
                 Disable_Billing_Street: true,
                 Disable_Billing_Zip_Code: true
 
@@ -1819,7 +1821,7 @@ class NewContract extends Component {
                                     <div className="col-md-6 col-lg-4">
                                         <label>* Billing Street</label>
                                         <span className="float-right">
-                                            <input type="checkbox" id="correctAddress" name="correctAddress" onChange={() => { this.updateAddress() }} />
+                                            <input type="checkbox" id="correctAddress" name="correctAddress" onChange={this.updateAddress} />
                                             <label htmlFor="">&nbsp; Same as mailing address?</label>
                                         </span>
                                         <InputForm
