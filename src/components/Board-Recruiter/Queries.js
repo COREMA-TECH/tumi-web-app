@@ -68,6 +68,7 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 		id,
 		title,
 		quantity,
+		count,
 		workOrderId,
 		CompanyName,
 		needExperience,

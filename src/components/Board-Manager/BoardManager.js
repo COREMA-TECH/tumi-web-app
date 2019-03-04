@@ -594,28 +594,54 @@ class BoardManager extends Component {
                                 return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId
                             });
 
-                            this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-                                const { getDistance } = this.context;
-                                const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+                            if (wo.zipCode != null) {
+                                this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+                                    const { getDistance } = this.context;
+                                    const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
-                                if (distance >= location) {
-                                    distances = 0;
-                                } else {
-                                    distances = 1;
-                                }
-
-                                if (distances >= 1) {
-
-                                    if (typeof Phases == undefined || Phases == null) {
-                                        varphase = 30469;
+                                    if (distance >= location) {
+                                        distances = 0;
                                     } else {
-                                        varphase = Phases.StageId
+                                        distances = 1;
                                     }
 
-                                    switch (varphase) {
-                                        case 30469:
-                                            if (wo.isLead === false) {
-                                                getmatches.push({
+                                    if (distances >= 1) {
+
+                                        if (typeof Phases == undefined || Phases == null) {
+                                            varphase = 30469;
+                                        } else {
+                                            varphase = Phases.StageId
+                                        }
+
+                                        switch (varphase) {
+                                            case 30469:
+                                                if (wo.isLead === false) {
+                                                    getmatches.push({
+                                                        id: wo.id,
+                                                        name: wo.firstName + ' ' + wo.lastName,
+                                                        subTitle: wo.cellPhone,
+                                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                        escalationTextLeftLead: wo.generalComment,
+                                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                    });
+                                                }
+                                                break;
+                                            case 30461:
+                                                getinterview.push({
+                                                    id: wo.id,
+                                                    name: wo.firstName + ' ' + wo.lastName,
+                                                    subTitle: wo.cellPhone,
+                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                    escalationTextLeftLead: wo.generalComment,
+                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                    cardStyle: { borderRadius: 6, marginBottom: 15 },
+                                                    statusCompleted: wo.statusCompleted
+                                                });
+                                                break;
+                                            case 30464:
+
+                                                getnotify.push({
                                                     id: wo.id,
                                                     name: wo.firstName + ' ' + wo.lastName,
                                                     subTitle: wo.cellPhone,
@@ -624,102 +650,78 @@ class BoardManager extends Component {
                                                     escalationTextRightLead: wo.car == true ? " Yes" : " No",
                                                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                                                 });
-                                            }
-                                            break;
-                                        case 30461:
-                                            getinterview.push({
-                                                id: wo.id,
-                                                name: wo.firstName + ' ' + wo.lastName,
-                                                subTitle: wo.cellPhone,
-                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                escalationTextLeftLead: wo.generalComment,
-                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: { borderRadius: 6, marginBottom: 15 },
-                                                statusCompleted: wo.statusCompleted
-                                            });
-                                            break;
-                                        case 30464:
-
-                                            getnotify.push({
-                                                id: wo.id,
-                                                name: wo.firstName + ' ' + wo.lastName,
-                                                subTitle: wo.cellPhone,
-                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                escalationTextLeftLead: wo.generalComment,
-                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                            });
-                                            break;
-                                        case 30463, 30465:
-                                            getaccepted.push({
-                                                id: wo.id,
-                                                name: wo.firstName + ' ' + wo.lastName,
-                                                subTitle: wo.cellPhone,
-                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                escalationTextLeftLead: wo.generalComment,
-                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                            });
-                                            break;
+                                                break;
+                                            case 30463, 30465:
+                                                getaccepted.push({
+                                                    id: wo.id,
+                                                    name: wo.firstName + ' ' + wo.lastName,
+                                                    subTitle: wo.cellPhone,
+                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                    escalationTextLeftLead: wo.generalComment,
+                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                });
+                                                break;
+                                        }
                                     }
-                                }
 
-                                this.setState({
-                                    matches: getmatches,
-                                    notify: getnotify,
-                                    interview: getinterview,
-                                    accepted: getaccepted
-                                });
-
-                                this.setState(
-                                    {
-                                        lane: [
-                                            {
-                                                id: 'lane1',
-                                                title: 'Work Orders',
-                                                label: ' ',
-                                                cards: this.state.workOrders,
-                                                laneStyle: { borderRadius: 50, marginBottom: 15 },
-                                                droppable: false,
-                                                draggable: false
-                                            },
-                                            {
-                                                id: 'Matches',
-                                                title: 'Matches',
-                                                label: ' ',
-                                                cards: this.state.matches,
-                                                droppable: true,
-                                                draggable: true
-                                            },
-                                            {
-                                                id: 'Interview',
-                                                title: 'Interview',
-                                                label: ' ',
-                                                cards: this.state.interview,
-                                                droppable: false,
-                                                draggable: true
-                                            },
-                                            {
-                                                id: 'Notify',
-                                                title: 'Notify',
-                                                label: ' ',
-                                                cards: this.state.notify,
-                                                droppable: true,
-                                                draggable: true
-                                            },
-                                            {
-                                                id: 'Accepted',
-                                                title: 'Accepted',
-                                                label: ' ',
-                                                cards: this.state.accepted,
-                                                droppable: true,
-                                                draggable: true
-                                            }
-                                        ],
-                                        loading: false
-
+                                    this.setState({
+                                        matches: getmatches,
+                                        notify: getnotify,
+                                        interview: getinterview,
+                                        accepted: getaccepted
                                     });
-                            });
+
+                                    this.setState(
+                                        {
+                                            lane: [
+                                                {
+                                                    id: 'lane1',
+                                                    title: 'Work Orders',
+                                                    label: ' ',
+                                                    cards: this.state.workOrders,
+                                                    laneStyle: { borderRadius: 50, marginBottom: 15 },
+                                                    droppable: false,
+                                                    draggable: false
+                                                },
+                                                {
+                                                    id: 'Matches',
+                                                    title: 'Matches',
+                                                    label: ' ',
+                                                    cards: this.state.matches,
+                                                    droppable: true,
+                                                    draggable: true
+                                                },
+                                                {
+                                                    id: 'Interview',
+                                                    title: 'Interview',
+                                                    label: ' ',
+                                                    cards: this.state.interview,
+                                                    droppable: false,
+                                                    draggable: true
+                                                },
+                                                {
+                                                    id: 'Notify',
+                                                    title: 'Notify',
+                                                    label: ' ',
+                                                    cards: this.state.notify,
+                                                    droppable: true,
+                                                    draggable: true
+                                                },
+                                                {
+                                                    id: 'Accepted',
+                                                    title: 'Accepted',
+                                                    label: ' ',
+                                                    cards: this.state.accepted,
+                                                    droppable: true,
+                                                    draggable: true
+                                                }
+                                            ],
+                                            loading: false
+
+                                        });
+                                });
+                            }
                         });
 
                         if (data.applicationsByMatches.length === 0) {
