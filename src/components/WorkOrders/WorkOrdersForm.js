@@ -291,7 +291,7 @@ class WorkOrdersForm extends Component {
                 //this.getWorkOrders();
                 //                this.props.handleCloseModal
                 //this.props.toggleRefresh();
-                window.location.reload();
+                // window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true });
