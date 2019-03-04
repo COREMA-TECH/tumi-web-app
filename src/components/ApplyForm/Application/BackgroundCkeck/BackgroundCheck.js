@@ -948,7 +948,7 @@ class BackgroundCheck extends Component {
                                                     <p>&nbsp;</p>
                                                 </div>
                                                 <table style={{
-                                                    marginTop: '220px',
+                                                    marginTop: '240px',
                                                     backgroundColor: '#ddd',
                                                     borderCollapse: 'collapse', width: '97.0648%', height: '35px'}} border={1}>
                                                     <tbody>
