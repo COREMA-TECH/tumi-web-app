@@ -919,7 +919,7 @@ class BackgroundCheck extends Component {
                                     {/*`)}*/}
                                 </div>
                             </div>
-                            <div style={{position: 'relative', display: 'none', width: '1200px',
+                            <div style={{position: 'relative', display: 'block', width: '1200px',
                                 margin: 'auto'}}>
                                 {
                                     this.state.isCreated ? (
@@ -1034,11 +1034,7 @@ class BackgroundCheck extends Component {
                                                     </tr>
                                                     </tbody>
                                                 </table>
-                                                <p>&nbsp;</p>
-                                                <p>&nbsp;</p>
-                                                <div title="Page 1">
-                                                    <p>&nbsp;</p>
-                                                </div>
+                                                <br/>
                                                 <table style={{backgroundColor: '#ddd', borderCollapse: 'collapse', width: '97.0648%', height: '35px'}} border={1}>
                                                     <tbody>
                                                     <tr style={{height: '35px'}}>
