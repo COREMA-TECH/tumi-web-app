@@ -883,7 +883,7 @@ class BoardManager extends Component {
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
-                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
+                    dueOn: 'Q: ' + ShiftBoard.count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
                     cardStyle: { borderRadius: 6, marginBottom: 15, color: red },

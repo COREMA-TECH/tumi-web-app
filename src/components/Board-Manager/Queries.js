@@ -173,6 +173,7 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany,$w
 		id,
 		title,
 		quantity,
+		count,
 		workOrderId,
 		CompanyName,
 		needExperience,
