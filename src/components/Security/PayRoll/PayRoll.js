@@ -1,15 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import {withApollo} from 'react-apollo';
-import Tooltip from '@material-ui/core/Tooltip';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import 'ui-components/InputForm/index.css';
 import './index.css';
@@ -172,9 +164,6 @@ class PayRoll extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
-
         return (
             <div className="users_tab">
                 <div className="row">
@@ -187,7 +176,9 @@ class PayRoll extends React.Component {
                                             {
                                                 this.state.edit ? (
                                                     <div className="float-right">
-                                                        <button className="btn btn-success" onClick={this.handleEdit}>Edit <i className="far fa-edit"></i></button>
+                                                        <button className="btn btn-success"
+                                                                onClick={this.handleEdit}>Edit <i
+                                                            className="far fa-edit"></i></button>
                                                     </div>
                                                 ) : (
                                                     ''
@@ -235,7 +226,9 @@ class PayRoll extends React.Component {
                                                             }}>
                                                             Save <i className="far fa-save"></i>
                                                         </button>
-                                                        <button className="btn btn-danger ml-1" onClick={this.handleEdit}>Cancel <i className="fas fa-ban"></i></button>
+                                                        <button className="btn btn-danger ml-1"
+                                                                onClick={this.handleEdit}>Cancel <i
+                                                            className="fas fa-ban"></i></button>
                                                     </div>
                                                 </div>
                                             ) : (
@@ -253,11 +246,6 @@ class PayRoll extends React.Component {
         );
     }
 }
-
-PayRoll.propTypes = {
-    fullScreen: PropTypes.bool.isRequired,
-    classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(PayRoll))));
 
