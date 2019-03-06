@@ -116,25 +116,60 @@ class PayRoll extends React.Component {
 
             edit: false,
 
-            ...this.DEFAULT_STATE
+            ...this.PAYROLL_STATE
         };
     }
 
-    DEFAULT_STATE = {
+    PAYROLL_STATE = {
         weekStartDay: null,
         payPeriod: null,
         payPeriodFinishDate: null
     };
-
-    componentWillMount() {
-
-    }
 
     handleEdit = () => {
         this.setState({
             edit: !this.state.edit
         })
     };
+
+    /**
+     * Returns a mutation to create if a record has never been created,
+     * otherwise a mutation returns to update the record
+     */
+    getMutation = () => {
+
+    };
+
+    /**
+     * To save a payroll with default PAYROLL_STATE
+     */
+    savePayRoll = () => {
+        // TODO: create mutation and implement with apollo client
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .mutate()
+                .then()
+                .catch()
+        });
+    };
+
+    fetchPayRoll = () => {
+        // TODO: create query and implement with apollo client
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .mutate()
+                .then()
+                .catch()
+        });
+    };
+
+    componentWillMount() {
+        // TODO: this.fetchPayRoll()
+    }
 
     render() {
         const {classes} = this.props;
@@ -193,7 +228,13 @@ class PayRoll extends React.Component {
                                             !this.state.edit ? (
                                                 <div className="card-footer">
                                                     <div className="d-flex justify-content-center">
-                                                        <button className="btn btn-success mr-1">Save <i className="far fa-save"></i></button>
+                                                        <button
+                                                            className="btn btn-success mr-1"
+                                                            onClick={() => {
+                                                                // TODO: this.savePayRoll()
+                                                            }}>
+                                                            Save <i className="far fa-save"></i>
+                                                        </button>
                                                         <button className="btn btn-danger ml-1" onClick={this.handleEdit}>Cancel <i className="fas fa-ban"></i></button>
                                                     </div>
                                                 </div>
