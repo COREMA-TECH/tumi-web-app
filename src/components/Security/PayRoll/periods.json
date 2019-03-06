@@ -1,0 +1,26 @@
+[
+	{
+		"id": 0,
+		"name": "Weekly"
+	},
+	{
+		"id": 1,
+		"name": "Bi-Weekly (every two weeks)"
+	},
+	{
+		"id": 2,
+		"name": "Semi-Monthly (twice a month)"
+	},
+	{
+		"id": 3,
+		"name": "Every 4 Weeks"
+	},
+	{
+		"id": 4,
+		"name": "Monthly"
+	},
+	{
+		"id": 5,
+		"name": "No predefined pay periods"
+	}
+]

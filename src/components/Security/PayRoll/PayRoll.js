@@ -14,6 +14,8 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import 'ui-components/InputForm/index.css';
 import './index.css';
 import withGlobalContent from 'Generic/Global';
+import days from './days.json';
+import periods from './periods.json';
 
 const styles = (theme) => ({
     container: {
@@ -111,28 +113,27 @@ class PayRoll extends React.Component {
         this.state = {
             data: [],
             filterText: '',
+
+            edit: false,
+
+            ...this.DEFAULT_STATE
         };
     }
+
+    DEFAULT_STATE = {
+        weekStartDay: null,
+        payPeriod: null,
+        payPeriodFinishDate: null
+    };
 
     componentWillMount() {
 
     }
 
-    filterPayRoll = (filterText) => {
-
-    };
-
-    filterChangeHandler = (e) => {
-        let value = e.target.value;
+    handleEdit = () => {
         this.setState({
-            filterText: value
-        }, () => {
-            this.filterPayRoll(value);
-        });
-    };
-
-    handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+            edit: !this.state.edit
+        })
     };
 
     render() {
@@ -141,108 +142,66 @@ class PayRoll extends React.Component {
 
         return (
             <div className="users_tab">
-
-                <AlertDialogSlide
-                    handleClose={this.handleCloseAlertDialog}
-                    handleConfirm={this.handleConfirmAlertDialog}
-                    open={this.state.opendialog}
-                    loadingConfirm={this.state.loadingConfirm}
-                    content="Do you really want to continue whit this operation?"
-                />
-
-                <Dialog
-                    fullScreen={fullScreen}
-                    open={this.state.openModal}
-                    onClose={this.cancelUserHandler}
-                    aria-labelledby="responsive-dialog-title"
-                    maxWidth="sm"
-                >
-                    <DialogTitle id="responsive-dialog-title" style={{padding: '0px'}}>
-                        <div className="modal-header">
-                            <h5 className="modal-title">
-                                {this.state.idToEdit != null &&
-                                this.state.idToEdit != '' &&
-                                this.state.idToEdit != 0 ? (
-                                    'Edit Payroll'
-                                ) : (
-                                    'Add Payroll'
-                                )}
-                            </h5>
-                        </div>
-                    </DialogTitle>
-                    <DialogContent maxWidth="md">
-                        <div className="card-body">
-                            <div className="row">
-                                <div className="col-lg-12">
-
-                                </div>
-                            </div>
-                        </div>
-                    </DialogContent>
-                    <DialogActions style={{margin: '16px 10px'}}>
-                        <div className={classes.root}>
-                            <div className={classes.wrapper}>
-                                <Tooltip
-                                    title="Save"
-                                >
-                                    <div>
-                                        <button
-                                            // disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-                                            className="btn btn-success"
-                                            onClick={this.addUserHandler}
-                                        >
-                                            Save
-                                            {/*{isLoading && <i className="fas fa-spinner fa-spin ml-1"/>}*/}
-                                        </button>
-                                    </div>
-                                </Tooltip>
-                                <Tooltip
-                                    title="Cancel"
-                                >
-                                    <div>
-                                        <button
-                                            className="btn btn-default"
-                                            onClick={() => {
-                                            }}
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </Tooltip>
-                            </div>
-                        </div>
-                    </DialogActions>
-                </Dialog>
-
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text" id="basic-addon1">
-                                    <i className="fa fa-search icon"/>
-                                </span>
-                            </div>
-                            <input
-                                onChange={this.filterChangeHandler}
-                                value={this.state.filterText}
-                                type="text"
-                                placeholder="Payroll search"
-                                className="form-control"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="float-right btn btn-success mr-1" onClick={this.handleClickOpenModal}>
-                            Add PayRoll<i className="fas fa-plus ml-2"/>
-                        </button>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="">
                             <div className="row">
-                                <div className="col-md-12">
-
+                                <div className="col-md-6">
+                                    <div className="card">
+                                        <div className="card-header">How do you run payroll?
+                                            {
+                                                this.state.edit ? (
+                                                    <div className="float-right">
+                                                        <button className="btn btn-success" onClick={this.handleEdit}>Edit <i className="far fa-edit"></i></button>
+                                                    </div>
+                                                ) : (
+                                                    ''
+                                                )
+                                            }
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <label className="">What is your week start day (for calculating
+                                                        overtime)?</label>
+                                                    <select name="week-start" id="week-start" className="form-control">
+                                                        <option value="">Select day</option>
+                                                        {
+                                                            days.map(item => (
+                                                                <option value={item.id}>{item.name}</option>))
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="">How often do you payroll?</label>
+                                                    <select name="week-start" id="week-start" className="form-control">
+                                                        <option value="">Select pay period</option>
+                                                        {
+                                                            periods.map(item => (
+                                                                <option value={item.id}>{item.name}</option>))
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="">What was your last pay period closing
+                                                        date?</label>
+                                                    <input type="date" className="form-control"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {
+                                            !this.state.edit ? (
+                                                <div className="card-footer">
+                                                    <div className="d-flex justify-content-center">
+                                                        <button className="btn btn-success mr-1">Save <i className="far fa-save"></i></button>
+                                                        <button className="btn btn-danger ml-1" onClick={this.handleEdit}>Cancel <i className="fas fa-ban"></i></button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                ''
+                                            )
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
