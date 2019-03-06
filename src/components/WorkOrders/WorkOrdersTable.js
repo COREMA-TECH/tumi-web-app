@@ -127,22 +127,9 @@ class WorkOrdersTable extends Component {
             variables = {
                 shift: {
                     id: this.state.workOrderId
-                    // ...workOrder
                 }
             }
 
-        /* if (this.state.state != 0) {
-             workOrderCompany = {
-                 State: this.state.state
-             }
-         }*/
-
-        /*variables = {
-            workOrder,
-            workOrderCompany
-        }*/
-        //}
-        console.log(variables, this.state.id)
         return variables;
     }
 

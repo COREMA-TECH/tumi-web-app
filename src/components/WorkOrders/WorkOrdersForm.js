@@ -108,7 +108,8 @@ class WorkOrdersForm extends Component {
         departmentId: 0,
         dayWeeks: '',
         openModal: false,
-        departments: []
+        departments: [],
+        isEditing: false
 
     };
 
@@ -132,36 +133,40 @@ class WorkOrdersForm extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.item && nextProps.openModal) {
 
-            console.log("nextProps.item ", nextProps.item)
             this.setState(
                 {
                     id: nextProps.item.id,
+                    dataToEdit: {
+                        quantity: nextProps.item.quantity,
+                        shift: nextProps.item.shift,
+                        endShift: nextProps.item.endShift,
+                        dayWeeks: nextProps.item.dayWeek,
+                        comment: nextProps.item.comment,
+                        needExperience: nextProps.item.needExperience,
+                        needEnglish: nextProps.item.needEnglish,
+                        PositionRateId: nextProps.item.PositionRateId,
+                        departmentId: nextProps.item.departmentId
+                    },
+                    sameContractDate: nextProps.item.endDate,
+                    endDate: nextProps.item.endDate,
                     contactId: nextProps.item.contactId,
                     IdEntity: nextProps.item.IdEntity,
                     date: nextProps.item.date,
-                    quantity: nextProps.item.quantity,
                     status: nextProps.item.status,
-                    shift: nextProps.item.shift,
-                    endShift: nextProps.item.endShift,
                     startDate: nextProps.item.startDate,
-                    endDate: nextProps.item.endDate,
-                    sameContractDate: nextProps.item.endDate,
-                    needExperience: nextProps.item.needExperience,
-                    needEnglish: nextProps.item.needEnglish,
-                    comment: nextProps.item.comment,
                     userId: localStorage.getItem('LoginId'),
                     openModal: nextProps.openModal,
                     EspecialComment: nextProps.item.EspecialComment,
                     PositionName: nextProps.item.positionName,
-                    dayWeeks: nextProps.item.dayWeek
+                    isEditing: true
                 },
                 () => {
                     this.getEmployees();
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
                     this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
-                    this.calculateHours();
-
+                    this.getDepartment(nextProps.item.IdEntity);
+                    this.newWorkOrder();
                     this.ReceiveStatus = true;
                 }
             );
@@ -472,10 +477,8 @@ class WorkOrdersForm extends Component {
                 variables: { id: id }
             })
             .then(({ data }) => {
-
                 this.setState({
-                    positions: data.getposition,
-                    PositionRateId: PositionId
+                    positions: data.getposition
                 });
             })
             .catch();
@@ -580,21 +583,6 @@ class WorkOrdersForm extends Component {
 
     }
 
-    handleCalculatedByDuration = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const startHour = this.state.shift;
-
-        var endHour = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(parseFloat(value), 'hours').format('HH:mm');
-        var _moment = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(8, 'hours').format('HH:mm');
-        var _endHour = (value == 0) ? _moment : endHour;
-
-        this.setState({
-            endShift: _endHour,
-            duration: value
-        });
-    }
-
     TakeDateContract = () => {
         const DateExpiration = this.state.hotels.find((item) => { return item.Id == this.state.IdEntity })
         if (this.state.IdEntity == 0) {
@@ -620,14 +608,11 @@ class WorkOrdersForm extends Component {
         });
         this.setState((prevState) => ({
             form: dataFiltered.concat(postData)
-        }), () => {
-            console.log(this.state.form);
-        });
+        }));
 
     }
 
-    newWorkOrder = (event) => {
-        event.preventDefault();
+    newWorkOrder = () => {
         var form = {
             id: uuidv4(),
             quantity: 0,
@@ -641,6 +626,13 @@ class WorkOrdersForm extends Component {
         this.setState((prevState) =>
             ({ form: prevState.form.concat(form) })
         );
+    }
+
+    handleCloseModal = (event) => {
+        this.setState({
+            ...this.DEFAULT_STATE
+        });
+        this.props.handleCloseModal(event);
     }
 
     render() {
@@ -680,7 +672,7 @@ class WorkOrdersForm extends Component {
                                         type="date"
                                         className="form-control"
                                         name="endDate"
-                                        disabled={this.state.sameContractDate}
+                                        disabled={this.state.isEditing}
                                         onChange={this.handleChange}
                                         value={this.state.endDate.substring(0, 10)}
                                         onBlur={this.handleValidate}
@@ -712,7 +704,9 @@ class WorkOrdersForm extends Component {
                                             </select>
                                         </div>
                                         <div className="col-md-2">
-                                            <a href="" className="btn btn-link" onClick={this.newWorkOrder}>New +</a>
+                                            {!this.state.isEditing &&
+                                                <button type="button" className="btn btn-link" onClick={this.newWorkOrder}>New +</button>
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -727,53 +721,10 @@ class WorkOrdersForm extends Component {
                                         form={item}
                                         positions={this.state.positions}
                                         handleChangePostData={this.handleChangePostData}
+                                        dataToEdit={this.state.dataToEdit}
                                     />
                                 )
                             })}
-                            {/* <div className="row pl-0 pr-0">
-                                <div className="col-md-5 col-5">
-                                    <div className="row">
-                                        <div className="col-md-5">
-                                            <label>Needs Experience?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    name="needExperience"
-                                                    onClick={this.toggleState}
-                                                    onChange={this.handleChange}
-                                                    className="onoffswitch-checkbox"
-                                                    id="myonoffswitch"
-                                                    checked={this.state.needExperience}
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="myonoffswitch">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-7">
-                                            <label>Needs to Speak English?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    name="needEnglish"
-                                                    onClick={this.toggleState}
-                                                    onChange={this.handleChange}
-                                                    className="onoffswitch-checkbox"
-                                                    id="myonoffswitchSpeak"
-                                                    checked={this.state.needEnglish}
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="myonoffswitchSpeak">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
- */}
 
                             <div className='row'>
                                 {this.state.id && (
@@ -794,23 +745,16 @@ class WorkOrdersForm extends Component {
 
                                                                 this.state.employees.map((item) => {
 
-                                                                    // if (item.detailEmployee) {
                                                                     return (
                                                                         <TableRow
                                                                             hover
                                                                             className={classes.row}
                                                                             key={item.id}
-                                                                        //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
                                                                         >
                                                                             <CustomTableCell>
                                                                                 <Tooltip title="Delete">
                                                                                     <button
                                                                                         className="btn btn-danger float-left"
-                                                                                        /* onClick={(e) => {
-                                                                                             e.preventDefault();
-                                                                                             this.deleteEmployee(item.detailEmployee.ShiftDetailId)
-                                                                                         }}*/
-
                                                                                         onClick={(e) => {
                                                                                             e.preventDefault();
                                                                                             this.setState({ openConfirm: true, idToDelete: item.EmployeeId });
@@ -823,7 +767,6 @@ class WorkOrdersForm extends Component {
                                                                             <CustomTableCell>{item.Employees}</CustomTableCell>
                                                                         </TableRow>
                                                                     )
-                                                                    //}
                                                                 })
 
                                                             }
@@ -835,7 +778,6 @@ class WorkOrdersForm extends Component {
                                                             this.setState({ openConfirm: false });
                                                         }}
                                                         confirmAction={() => {
-                                                            //  this.handleDelete(this.state.idToDelete);
                                                             this.deleteEmployee(this.state.idToDelete)
                                                         }}
                                                         title={'are you sure you want to delete this record?'}
@@ -854,7 +796,7 @@ class WorkOrdersForm extends Component {
                                     <button
                                         type="button"
                                         className="btn btn-danger ml-1 float-right"
-                                        onClick={this.props.handleCloseModal}
+                                        onClick={this.handleCloseModal}
                                     >
                                         Cancel<i className="fas fa-ban ml-2" />
                                     </button>

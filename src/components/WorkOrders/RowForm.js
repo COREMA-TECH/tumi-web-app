@@ -104,6 +104,35 @@ class RowForm extends Component {
         this.props.handleChangePostData(form);
     }
 
+    componentWillMount() {
+        this.setState({
+            quantity: this.props.dataToEdit.quantity,
+            shift: this.props.dataToEdit.shift,
+            endShift: this.props.dataToEdit.endShift,
+            comment: this.props.dataToEdit.comment,
+            dayWeeks: this.props.dataToEdit.dayWeeks,
+            PositionRateId: this.props.dataToEdit.PositionRateId,
+            departmentId: this.props.dataToEdit.departmentId
+        }, () => {
+            this.calculateHours();
+        })
+    }
+
+    handleCalculatedByDuration = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const startHour = this.state.shift;
+
+        var endHour = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(parseFloat(value), 'hours').format('HH:mm');
+        var _moment = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(8, 'hours').format('HH:mm');
+        var _endHour = (value == 0) ? _moment : endHour;
+
+        this.setState({
+            endShift: _endHour,
+            duration: value
+        });
+    }
+
     render() {
         const isAdmin = localStorage.getItem('IsAdmin') == "true";
         return (
