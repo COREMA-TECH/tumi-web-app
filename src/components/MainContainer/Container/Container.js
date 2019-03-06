@@ -40,6 +40,7 @@ import SchedulesAccept from '../../Schedules/SchedulesAccept';
 import Region from "../../Region";
 import RegionTable from "../../Region/RegionTable";
 import RecruiteReport from '../../RecruiterReport';
+import PayRoll from "../../Security/PayRoll/PayRoll";
 
 class Container extends Component {
 	constructor(props) {
@@ -148,6 +149,7 @@ class Container extends Component {
 				<Route exact path="/home/Forms" component={CreateForms} />
 				<Route exact path="/home/RolesForms" component={CreateRolesForms} />
 				<Route exact path="/home/Users" component={CreateUsers} />
+				<Route exact path="/home/payroll" component={PayRoll} />
 				<Route exact path="/home/calendar" component={Calendar} />
 				<Route exact path="/home/application/info" component={ApplicationTabs} />
 				<Route exact path="/home/recruiter" component={ApplicationRecruiter} />
