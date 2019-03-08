@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
+import { GET_DEPARTMENTS_QUERY, GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_EMPLOYEE } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
@@ -24,6 +24,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
+import RowForm from './RowForm';
+
+const uuidv4 = require('uuid/v4');
 
 
 const styles = (theme) => ({
@@ -68,6 +71,7 @@ class WorkOrdersForm extends Component {
         hotel: 0,
         IdEntity: null,
         date: new Date().toISOString().substring(0, 10),
+        form: [],
         quantity: 0,
         status: 1,
         shift: '',
@@ -104,13 +108,26 @@ class WorkOrdersForm extends Component {
         departmentId: 0,
         dayWeeks: '',
         openModal: false,
+        departments: [],
+        isEditing: false,
+        dataToEdit: {
+            quantity: 0,
+            shift: 0,
+            endShift: '',
+            dayWeeks: '',
+            comment: '',
+            needExperience: false,
+            needEnglish: false,
+            PositionRateId: 0,
+            departmentId: 0
+        }
 
     };
 
     constructor(props) {
         super(props);
         this.state = {
-
+            rowsInput: [1],
             hotels: [],
             positions: [],
             recruiters: [],
@@ -127,36 +144,40 @@ class WorkOrdersForm extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.item && nextProps.openModal) {
 
-            console.log("nextProps.item ", nextProps.item)
             this.setState(
                 {
                     id: nextProps.item.id,
+                    dataToEdit: {
+                        quantity: nextProps.item.quantity,
+                        shift: nextProps.item.shift,
+                        endShift: nextProps.item.endShift,
+                        dayWeeks: nextProps.item.dayWeek,
+                        comment: nextProps.item.comment,
+                        needExperience: nextProps.item.needExperience,
+                        needEnglish: nextProps.item.needEnglish,
+                        PositionRateId: nextProps.item.PositionRateId,
+                        departmentId: nextProps.item.departmentId
+                    },
+                    sameContractDate: nextProps.item.endDate,
+                    endDate: nextProps.item.endDate,
                     contactId: nextProps.item.contactId,
                     IdEntity: nextProps.item.IdEntity,
                     date: nextProps.item.date,
-                    quantity: nextProps.item.quantity,
                     status: nextProps.item.status,
-                    shift: nextProps.item.shift,
-                    endShift: nextProps.item.endShift,
                     startDate: nextProps.item.startDate,
-                    endDate: nextProps.item.endDate,
-                    sameContractDate: nextProps.item.endDate,
-                    needExperience: nextProps.item.needExperience,
-                    needEnglish: nextProps.item.needEnglish,
-                    comment: nextProps.item.comment,
                     userId: localStorage.getItem('LoginId'),
                     openModal: nextProps.openModal,
                     EspecialComment: nextProps.item.EspecialComment,
                     PositionName: nextProps.item.positionName,
-                    dayWeeks: nextProps.item.dayWeek
+                    isEditing: true
                 },
                 () => {
                     this.getEmployees();
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
                     this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
-                    this.calculateHours();
-
+                    this.getDepartment(nextProps.item.IdEntity);
+                    this.newWorkOrder();
                     this.ReceiveStatus = true;
                 }
             );
@@ -233,33 +254,25 @@ class WorkOrdersForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if (
-            this.state.IdEntity == 0 ||
-            this.state.PositionRateId == 0 ||
-            this.state.PositionRateId == null ||
-            this.state.quantity == '' ||
-            this.state.quantity == 0 ||
-            this.state.date == '' ||
-            this.state.startDate == '' ||
-            this.state.endDate == '' ||
-            this.state.contactId == 0 ||
-            this.state.contactId == null ||
-            this.state.dayWeeks == ''
-        ) {
-
-            this.props.handleOpenSnackbar('error', 'Error all fields are required');
-        } else {
-            this.setState({ saving: true });
-            if (this.state.id == null) this.add();
-            else {
-                //alert(this.state.employees.detailEmployee)
-                if (this.state.employees.length > 0) {
-                    //  this.setState({ openConfirm: true, idToDelete: row.id });
-                    this.props.handleOpenSnackbar('error', 'This work order has assigned employees, to update them you must eliminate them');
-                    this.setState({ saving: false });
-                } else {
-                    this.update();
-                }
+        this.setState({ saving: true });
+        var evens = [];
+        if (this.state.id == null) {
+            evens = this.state.form.map((item) => {
+                delete item.id
+                return item;
+            });
+            this.setState({
+                form: evens
+            }, () => this.add());
+        }
+        else {
+            //alert(this.state.employees.detailEmployee)
+            if (this.state.employees.length > 0) {
+                //  this.setState({ openConfirm: true, idToDelete: row.id });
+                this.props.handleOpenSnackbar('error', 'This work order has assigned employees, to update them you must eliminate them');
+                this.setState({ saving: false });
+            } else {
+                this.update();
             }
         }
     };
@@ -269,44 +282,7 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CREATE_WORKORDER,
                 variables: {
-                    Electronic_Address: this.state.Electronic_Address,
-                    startshift: this.state.shift,
-                    endshift: this.state.endShift,
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
-                    quantity: this.state.quantity,
-                    workOrder: {
-                        IdEntity: this.state.IdEntity,
-                        date: this.state.date,
-                        quantity: this.state.quantity,
-                        status: 1,
-                        shift: this.state.shift,
-                        endShift: this.state.endShift,
-                        startDate: this.state.startDate,
-                        endDate: this.state.endDate,
-                        needExperience: this.state.needExperience,
-                        needEnglish: this.state.needEnglish,
-                        comment: this.state.comment,
-                        EspecialComment: this.state.EspecialComment,
-                        PositionRateId: this.state.PositionRateId,
-                        contactId: this.state.contactId,
-                        userId: this.state.userId,
-                        dayWeek: this.state.dayWeeks
-                        //  dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
-                    },
-                    shift: {
-                        entityId: this.state.IdEntity,
-                        title: this.state.PositionName,
-                        color: '#96989A',
-                        status: 1,
-                        idPosition: this.state.PositionRateId,
-                        startDate: this.state.startDate,
-                        endDate: this.state.endDate,
-                        //dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
-                        dayWeek: this.state.dayWeeks,
-                        departmentId: this.state.departmentId
-
-                    }
+                    workOrder: this.state.form
                 }
             })
             .then((data) => {
@@ -316,7 +292,7 @@ class WorkOrdersForm extends Component {
                 //this.getWorkOrders();
                 //                this.props.handleCloseModal
                 //this.props.toggleRefresh();
-                window.location.reload();
+                // window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true });
@@ -397,6 +373,20 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
+    getDepartment = (id) => {
+        this.props.client
+            .query({
+                query: GET_DEPARTMENTS_QUERY,
+                variables: { Id_Entity: id }
+            })
+            .then(({ data }) => {
+                this.setState({
+                    departments: data.getcatalogitem
+                });
+            })
+            .catch();
+    };
+
     handleChangeState = (event) => {
         event.preventDefault();
         if (
@@ -453,11 +443,11 @@ class WorkOrdersForm extends Component {
             [name]: value
         });
 
-        if (name === 'contactId') {
-            request = this.state.contacts.find((item) => { return item.Id == value })
+        if (name == "endDate") {
+            let startDate;
+            startDate = moment(value).subtract(7, 'days').format();
             this.setState({
-                Electronic_Address: request != null ? request.Electronic_Address : '',
-                departmentId: request != null ? request.Id_Deparment : 0
+                startDate: startDate
             });
         }
 
@@ -472,6 +462,7 @@ class WorkOrdersForm extends Component {
         if (name === 'IdEntity') {
             this.getPositions(value);
             this.getContacts(value);
+            this.getDepartment(value);
         }
     };
 
@@ -482,10 +473,8 @@ class WorkOrdersForm extends Component {
                 variables: { id: id }
             })
             .then(({ data }) => {
-
                 this.setState({
-                    positions: data.getposition,
-                    PositionRateId: PositionId
+                    positions: data.getposition
                 });
             })
             .catch();
@@ -580,13 +569,6 @@ class WorkOrdersForm extends Component {
         }
     };
 
-    handleTimeChange = (name) => (text) => {
-        this.setState({
-            [name]: moment(text, "HH:mm:ss").format("HH:mm")
-        }, () => {
-            this.calculateHours()
-        })
-    }
 
     handleValidate = (event) => {
         let selfHtml = event.currentTarget;
@@ -595,48 +577,6 @@ class WorkOrdersForm extends Component {
         else
             selfHtml.classList.remove("is-invalid");
 
-    }
-
-    handleCalculatedByDuration = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const startHour = this.state.shift;
-
-        var endHour = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(parseFloat(value), 'hours').format('HH:mm');
-        var _moment = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(8, 'hours').format('HH:mm');
-        var _endHour = (value == 0) ? _moment : endHour;
-
-        this.setState({
-            endShift: _endHour,
-            duration: value
-        });
-    }
-
-    calculateHours = () => {
-        let startHour = this.state.shift;
-        let endHour = this.state.endShift;
-
-        var duration = moment.duration(moment.utc(moment(endHour, "HH:mm:ss").diff(moment(startHour, "HH:mm:ss"))).format("HH:mm")).asHours();
-        duration = parseFloat(duration).toFixed(2);
-
-        this.setState({
-            duration: duration
-        });
-    }
-
-    getWeekDayStyle = (dayName) => {
-        return `btn btn-secondary ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
-    }
-
-    selectWeekDay = (dayName) => {
-        if (this.state.dayWeeks.includes(dayName))
-            this.setState((prevState) => {
-                return { dayWeeks: prevState.dayWeeks.replace(dayName, '') }
-            })
-        else
-            this.setState((prevState) => {
-                return { dayWeeks: prevState.dayWeeks.concat(dayName) }
-            })
     }
 
     TakeDateContract = () => {
@@ -657,6 +597,40 @@ class WorkOrdersForm extends Component {
         }
     }
 
+    handleChangePostData = (postData) => {
+
+        var dataFiltered = this.state.form.filter((item) => {
+            return item.id != postData.id
+        });
+        this.setState((prevState) => ({
+            form: dataFiltered.concat(postData)
+        }));
+
+    }
+
+    newWorkOrder = () => {
+        var form = {
+            id: uuidv4(),
+            quantity: 0,
+            PositionRateId: 0,
+            shift: '',
+            duration: 0,
+            endShift: '',
+            comment: '',
+            dayWeek: ''
+        }
+        this.setState((prevState) =>
+            ({ form: prevState.form.concat(form) })
+        );
+    }
+
+    handleCloseModal = (event) => {
+        this.setState({
+            ...this.DEFAULT_STATE
+        });
+        this.props.handleCloseModal(event);
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -669,221 +643,84 @@ class WorkOrdersForm extends Component {
                         <div className="modal-header">
                             <h5 className="modal-title">Work Order</h5>
                         </div>
-                    </DialogTitle>
-                    <DialogContent>
-                        <form action="" onSubmit={this.handleSubmit}>
-                            <div className="row pl-0 pr-0">
-                                <div className="col-md-7 col-7">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Property</label>
-                                            <select
-                                                required
-                                                name="IdEntity"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdEntity}
-                                                disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Property</option>
-                                                {this.state.hotels.map((hotel) => (
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Requested by</label>
-                                            <select
-                                                required
-                                                name="contactId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.contactId}
-                                                disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Contact</option>
-                                                {this.state.contacts.map((contact) => (
-                                                    <option value={contact.Id}>{contact.First_Name + contact.Last_Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Position</label>
-                                            <select
-                                                required
-                                                name="PositionRateId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.PositionRateId}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value="0">Select a Position</option>
-                                                {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position} </option>
-
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Requested on Date</label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="date"
-                                                disabled={true}
-                                                onChange={this.handleChange}
-                                                value={this.state.date.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Shift Start</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
-                                            {/* <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} /> */}
-                                            <label htmlFor="">Shift End</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
-                                            {/* <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} /> */}
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Duration</label>
-                                            <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
-                                        </div>
-                                        <div className="col-md-6">
-
-                                            <label htmlFor="">* From Date</label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="startDate"
-                                                onChange={this.handleChange}
-                                                value={this.state.startDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Quantity</label>
-                                            <input
-                                                required
-                                                type="number"
-                                                maxLength="10"
-                                                min={0}
-                                                className="form-control"
-                                                name="quantity"
-                                                placeholder="0"
-                                                onChange={this.handleChange}
-                                                value={this.state.quantity == 0 ? '' : this.state.quantity}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* To Date </label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="endDate"
-                                                disabled={this.state.sameContractDate}
-                                                onChange={this.handleChange}
-                                                value={this.state.endDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                            <input type="checkbox" id="materialUnchecked" onClick={(e) => { this.TakeDateContract(); }} />
-                                            <label htmlFor="">  <font color="grey">&nbsp; Same as contract end date?</font> </label>
-                                        </div>
-                                        <div className="col-md-6">
-                                        </div>
-
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Workdays</label>
-                                            <div className="btn-group" role="group" aria-label="Basic example">
-                                                <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <select
+                                        required
+                                        name="IdEntity"
+                                        className="form-control"
+                                        id=""
+                                        onChange={this.handleChange}
+                                        value={this.state.IdEntity}
+                                        disabled={!isAdmin}
+                                        onBlur={this.handleValidate}
+                                    >
+                                        <option value={0}>Select a Property</option>
+                                        {this.state.hotels.map((hotel) => (
+                                            <option value={hotel.Id}>{hotel.Name}</option>
+                                        ))}
+                                    </select>
                                 </div>
-                                <div className="col-md-5 col-5">
+                                <div className="col-md-3">
+                                    <input
+                                        required
+                                        type="date"
+                                        className="form-control"
+                                        name="endDate"
+                                        disabled={this.state.isEditing}
+                                        onChange={this.handleChange}
+                                        value={this.state.endDate.substring(0, 10)}
+                                        onBlur={this.handleValidate}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </DialogTitle>
+                    <DialogContent className="minWidth-empty-modal" style={{ backgroundColor: "#f5f5f5" }}>
+                        <form action="" onSubmit={this.handleSubmit}>
+                            <div className="card">
+                                <div className="card-header bg-light">
                                     <div className="row">
-                                        <div className="col-md-5">
-                                            <label>Needs Experience?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    name="needExperience"
-                                                    onClick={this.toggleState}
-                                                    onChange={this.handleChange}
-                                                    className="onoffswitch-checkbox"
-                                                    id="myonoffswitch"
-                                                    checked={this.state.needExperience}
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="myonoffswitch">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-7">
-                                            <label>Needs to Speak English?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    name="needEnglish"
-                                                    onClick={this.toggleState}
-                                                    onChange={this.handleChange}
-                                                    className="onoffswitch-checkbox"
-                                                    id="myonoffswitchSpeak"
-                                                    checked={this.state.needEnglish}
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="myonoffswitchSpeak">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Comments</label>
-                                            <textarea
-                                                onChange={this.handleChange}
-                                                name="comment"
+                                        <div className="col-md-3">
+                                            <select
+                                                required
+                                                name="departmentId"
                                                 className="form-control"
                                                 id=""
-                                                cols="30"
-                                                rows="3"
-                                                value={this.state.comment}
-                                            />
-                                        </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Special Comments</label>
-                                            <textarea
                                                 onChange={this.handleChange}
-                                                name="EspecialComment"
-                                                className="form-control"
-                                                id=""
-                                                cols="30"
-                                                rows="3 "
-                                                disabled={true}
-                                                value={this.state.EspecialComment}
-                                            />
+                                                value={this.state.departmentId}
+                                                disabled={!isAdmin}
+                                                onBlur={this.handleValidate}
+                                            >
+                                                <option value={0}>Select a Department</option>
+                                                {this.state.departments.map((department) => (
+                                                    <option value={department.Id}>{department.Description}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="col-md-2">
+                                            {!this.state.isEditing &&
+                                                <button type="button" className="btn btn-link" onClick={this.newWorkOrder}>New +</button>
+                                            }
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                            {this.state.form.map((item, index) => {
+                                return (
+                                    <RowForm
+                                        startDate={this.state.startDate}
+                                        endDate={this.state.endDate}
+                                        departmentId={this.state.departmentId}
+                                        IdEntity={this.state.IdEntity}
+                                        form={item}
+                                        positions={this.state.positions}
+                                        handleChangePostData={this.handleChangePostData}
+                                        dataToEdit={this.state.dataToEdit}
+                                    />
+                                )
+                            })}
 
                             <div className='row'>
                                 {this.state.id && (
@@ -904,23 +741,16 @@ class WorkOrdersForm extends Component {
 
                                                                 this.state.employees.map((item) => {
 
-                                                                    // if (item.detailEmployee) {
                                                                     return (
                                                                         <TableRow
                                                                             hover
                                                                             className={classes.row}
                                                                             key={item.id}
-                                                                        //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
                                                                         >
                                                                             <CustomTableCell>
                                                                                 <Tooltip title="Delete">
                                                                                     <button
                                                                                         className="btn btn-danger float-left"
-                                                                                        /* onClick={(e) => {
-                                                                                             e.preventDefault();
-                                                                                             this.deleteEmployee(item.detailEmployee.ShiftDetailId)
-                                                                                         }}*/
-
                                                                                         onClick={(e) => {
                                                                                             e.preventDefault();
                                                                                             this.setState({ openConfirm: true, idToDelete: item.EmployeeId });
@@ -933,7 +763,6 @@ class WorkOrdersForm extends Component {
                                                                             <CustomTableCell>{item.Employees}</CustomTableCell>
                                                                         </TableRow>
                                                                     )
-                                                                    //}
                                                                 })
 
                                                             }
@@ -945,7 +774,6 @@ class WorkOrdersForm extends Component {
                                                             this.setState({ openConfirm: false });
                                                         }}
                                                         confirmAction={() => {
-                                                            //  this.handleDelete(this.state.idToDelete);
                                                             this.deleteEmployee(this.state.idToDelete)
                                                         }}
                                                         title={'are you sure you want to delete this record?'}
@@ -964,7 +792,7 @@ class WorkOrdersForm extends Component {
                                     <button
                                         type="button"
                                         className="btn btn-danger ml-1 float-right"
-                                        onClick={this.props.handleCloseModal}
+                                        onClick={this.handleCloseModal}
                                     >
                                         Cancel<i className="fas fa-ban ml-2" />
                                     </button>
