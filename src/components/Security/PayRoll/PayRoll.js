@@ -112,7 +112,11 @@ class PayRoll extends React.Component {
             edit: false,
 
             payrollId: null,
-            ...this.PAYROLL_STATE
+            ...this.PAYROLL_STATE,
+
+            loading: false,
+            saving: false,
+            updating: false
         };
     }
 
@@ -132,7 +136,9 @@ class PayRoll extends React.Component {
      * Call a mutation to create if a record has never been created,
      * otherwise a mutation returns to update the record
      */
-    executeMutation = () => {
+    executeMutation = (e) => {
+        e.preventDefault();
+
         if (this.state.data.length > 0) {
             this.updatePayRoll();
         } else {
@@ -145,19 +151,24 @@ class PayRoll extends React.Component {
      */
     savePayRoll = () => {
         this.setState({
-            loading: true
+            saving: true
         }, () => {
             this.props.client
                 .mutate({
                     mutation: ADD_PAYROLL,
                     variables: {
                         payroll: {
-                            ...this.PAYROLL_STATE
+                            ...this.state.PAYROLL_STATE
                         }
                     }
                 })
-                .then()
-                .catch()
+                .then(() => {
+                    this.props.handleOpenSnackbar('success', 'Payroll inserted!');
+                    this.executePayrollQuery();
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar('error', 'Error to insert payroll!');
+                })
         });
     };
 
@@ -166,7 +177,7 @@ class PayRoll extends React.Component {
      */
     updatePayRoll = () => {
         this.setState({
-            loading: true
+            updating: true
         }, () => {
             this.props.client
                 .mutate({
@@ -174,12 +185,19 @@ class PayRoll extends React.Component {
                     variables: {
                         payroll: {
                             id: this.state.payrollId,
-                            ...this.PAYROLL_STATE
+                            weekStart: parseInt(this.state.weekStart),
+                            payPeriod: parseInt(this.state.payPeriod),
+                            lastPayPeriod: this.state.lastPayPeriod.substring(0, 10),
                         }
                     }
                 })
-                .then()
-                .catch()
+                .then(() => {
+                    this.props.handleOpenSnackbar('success', 'Payroll updated!');
+                    this.executePayrollQuery();
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar('error', 'Error to update payroll!');
+                })
         });
     };
 
@@ -191,23 +209,36 @@ class PayRoll extends React.Component {
         this.setState({
             loading: true
         }, () => {
-            this.props.client
-                .query({
-                    query: LIST_PAYROLLS
-                })
-                .then(({data}) => {
+            this.executePayrollQuery();
+        });
+    };
+
+    executePayrollQuery = () => {
+        this.props.client
+            .query({
+                query: LIST_PAYROLLS,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({data}) => {
+                this.setState({
+                    data: data.listPayrolls,
+                    payrollId: data.listPayrolls[0].id,
+                    weekStart: data.listPayrolls[0].weekStart,
+                    payPeriod: data.listPayrolls[0].payPeriod,
+                    lastPayPeriod: data.listPayrolls[0].lastPayPeriod.substring(0, 10),
+                    edit: true,
+                }, () => {
                     this.setState({
-                        data: data.listPayrolls,
-                        id: data.listPayrolls[0].id,
+                        loading: false,
+                        saving: false,
+                        updating: false,
                         edit: true
-                    }, () => {
-                        this.setState({
-                            loading: false
-                        })
                     })
                 })
-                .catch()
-        });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar('error', 'Error to show payroll. Please, try again!');
+            })
     };
 
     componentWillMount() {
@@ -233,7 +264,7 @@ class PayRoll extends React.Component {
                                             {
                                                 this.state.edit ? (
                                                     <div className="float-right">
-                                                        <button className="btn btn-success"
+                                                        <button className="btn btn-outline-success"
                                                                 onClick={this.handleEdit}>Edit <i
                                                             className="far fa-edit"></i></button>
                                                     </div>
@@ -247,8 +278,21 @@ class PayRoll extends React.Component {
                                                 <div className="col-md-6">
                                                     <label className="">What is your week start day (for calculating
                                                         overtime)?</label>
-                                                    <select name="week-start" id="week-start" className="form-control"
-                                                            required={true}>
+                                                    <select
+                                                        name="week-start"
+                                                        id="week-start"
+                                                        className="form-control"
+                                                        required={true}
+                                                        disabled={this.state.edit}
+                                                        value={this.state.weekStart}
+                                                        onChange={(e) => {
+                                                            console.log(e.target.value);
+
+                                                            this.setState({
+                                                                weekStart: e.target.value
+                                                            })
+                                                        }}
+                                                    >
                                                         <option value="">Select day</option>
                                                         {
                                                             days.map(item => (
@@ -258,8 +302,21 @@ class PayRoll extends React.Component {
                                                 </div>
                                                 <div className="col-md-6">
                                                     <label className="">How often do you payroll?</label>
-                                                    <select name="week-start" id="week-start" className="form-control"
-                                                            required={true}>
+                                                    <select
+                                                        name="week-start"
+                                                        id="week-start"
+                                                        className="form-control"
+                                                        required={true}
+                                                        disabled={this.state.edit}
+                                                        value={this.state.payPeriod}
+                                                        onChange={(e) => {
+                                                            console.log(e.target.value);
+
+                                                            this.setState({
+                                                                payPeriod: e.target.value
+                                                            })
+                                                        }}
+                                                    >
                                                         <option value="">Select pay period</option>
                                                         {
                                                             periods.map(item => (
@@ -270,7 +327,21 @@ class PayRoll extends React.Component {
                                                 <div className="col-md-6">
                                                     <label className="">What was your last pay period closing
                                                         date?</label>
-                                                    <input type="date" className="form-control" required={true}/>
+                                                    <input
+                                                        type="date"
+                                                        className="form-control"
+                                                        required={true}
+                                                        disabled={this.state.edit}
+                                                        value={this.state.lastPayPeriod}
+                                                        onChange={(e) => {
+                                                            console.log(e.target.value);
+                                                            console.table(this.state.PAYROLL_STATE);
+
+                                                            this.setState({
+                                                                lastPayPeriod: e.target.value
+                                                            })
+                                                        }}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
@@ -282,7 +353,7 @@ class PayRoll extends React.Component {
                                                             className="btn btn-success mr-1"
                                                             type="submit"
                                                         >
-                                                            Save <i className="far fa-save"/>
+                                                            Save {(this.state.updating || this.state.saving) && <i className="fas fa-spinner fa-spin ml-1" />}
                                                         </button>
                                                         <button
                                                             type="reset"
