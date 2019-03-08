@@ -109,7 +109,18 @@ class WorkOrdersForm extends Component {
         dayWeeks: '',
         openModal: false,
         departments: [],
-        isEditing: false
+        isEditing: false,
+        dataToEdit: {
+            quantity: 0,
+            shift: 0,
+            endShift: '',
+            dayWeeks: '',
+            comment: '',
+            needExperience: false,
+            needEnglish: false,
+            PositionRateId: 0,
+            departmentId: 0
+        }
 
     };
 
@@ -263,21 +274,6 @@ class WorkOrdersForm extends Component {
             } else {
                 this.update();
             }
-        }
-        if (
-            this.state.IdEntity == 0 ||
-            this.state.PositionRateId == 0 ||
-            this.state.PositionRateId == null ||
-            this.state.quantity == '' ||
-            this.state.quantity == 0 ||
-            this.state.date == '' ||
-            this.state.startDate == '' ||
-            this.state.endDate == '' ||
-            this.state.dayWeeks == ''
-        ) {
-
-            this.props.handleOpenSnackbar('error', 'Error all fields are required');
-        } else {
         }
     };
 
