@@ -353,7 +353,12 @@ class PayRoll extends React.Component {
                                                             className="btn btn-success mr-1"
                                                             type="submit"
                                                         >
-                                                            Save {(this.state.updating || this.state.saving) && <i className="fas fa-spinner fa-spin ml-1" />}
+                                                            Save {this.state.saving || this.state.updating ? (
+                                                            <i className="fas fa-spinner fa-spin ml-1"/>
+                                                        ) : (
+                                                            <i className="fas fa-save ml-1" />
+                                                        )}
+                                                            {/*{(this.state.updating || this.state.saving) && <i className="fas fa-spinner fa-spin ml-1" />}*/}
                                                         </button>
                                                         <button
                                                             type="reset"
