@@ -10,6 +10,7 @@ import days from './days.json';
 import periods from './periods.json';
 import {LIST_PAYROLLS} from "./queries";
 import {ADD_PAYROLL, UPDATE_PAYROLL} from "./mutations";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const styles = (theme) => ({
     container: {
@@ -128,18 +129,21 @@ class PayRoll extends React.Component {
     };
 
     /**
-     * Returns a mutation to create if a record has never been created,
+     * Call a mutation to create if a record has never been created,
      * otherwise a mutation returns to update the record
      */
-    getMutation = () => {
-
+    executeMutation = () => {
+        if (this.state.data.length > 0) {
+            this.updatePayRoll();
+        } else {
+            this.savePayRoll()
+        }
     };
 
     /**
      * To save a payroll with default PAYROLL_STATE
      */
     savePayRoll = () => {
-        // TODO: create mutation and implement with apollo client
         this.setState({
             loading: true
         }, () => {
@@ -161,7 +165,6 @@ class PayRoll extends React.Component {
      * To update a payroll with default PAYROLL_STATE
      */
     updatePayRoll = () => {
-        // TODO: create mutation and implement with apollo client
         this.setState({
             loading: true
         }, () => {
@@ -185,7 +188,6 @@ class PayRoll extends React.Component {
      * Method to fetch a list of payrolls
      */
     fetchPayrolls = () => {
-        // TODO: create query and implement with apollo client
         this.setState({
             loading: true
         }, () => {
@@ -195,7 +197,9 @@ class PayRoll extends React.Component {
                 })
                 .then(({data}) => {
                     this.setState({
-                        data: data.listPayrolls
+                        data: data.listPayrolls,
+                        id: data.listPayrolls[0].id,
+                        edit: true
                     }, () => {
                         this.setState({
                             loading: false
@@ -211,13 +215,19 @@ class PayRoll extends React.Component {
     }
 
     render() {
+        const {loading} = this.state;
+
+        // If the query is loading return a LinearProgress
+        if (loading) return <LinearProgress/>;
+
+        // When the data finishes loading, show it in the form
         return (
             <div className="users_tab">
                 <div className="row">
                     <div className="col-md-12">
                         <div className="">
                             <div className="row">
-                                <div className="col-md-6">
+                                <form className="col-md-6" onSubmit={this.executeMutation}>
                                     <div className="card">
                                         <div className="card-header">How do you run payroll?
                                             {
@@ -237,7 +247,8 @@ class PayRoll extends React.Component {
                                                 <div className="col-md-6">
                                                     <label className="">What is your week start day (for calculating
                                                         overtime)?</label>
-                                                    <select name="week-start" id="week-start" className="form-control">
+                                                    <select name="week-start" id="week-start" className="form-control"
+                                                            required={true}>
                                                         <option value="">Select day</option>
                                                         {
                                                             days.map(item => (
@@ -247,7 +258,8 @@ class PayRoll extends React.Component {
                                                 </div>
                                                 <div className="col-md-6">
                                                     <label className="">How often do you payroll?</label>
-                                                    <select name="week-start" id="week-start" className="form-control">
+                                                    <select name="week-start" id="week-start" className="form-control"
+                                                            required={true}>
                                                         <option value="">Select pay period</option>
                                                         {
                                                             periods.map(item => (
@@ -258,7 +270,7 @@ class PayRoll extends React.Component {
                                                 <div className="col-md-6">
                                                     <label className="">What was your last pay period closing
                                                         date?</label>
-                                                    <input type="date" className="form-control"/>
+                                                    <input type="date" className="form-control" required={true}/>
                                                 </div>
                                             </div>
                                         </div>
@@ -268,14 +280,15 @@ class PayRoll extends React.Component {
                                                     <div className="d-flex justify-content-center">
                                                         <button
                                                             className="btn btn-success mr-1"
-                                                            onClick={() => {
-                                                                // TODO: this.savePayRoll()
-                                                            }}>
-                                                            Save <i className="far fa-save"></i>
+                                                            type="submit"
+                                                        >
+                                                            Save <i className="far fa-save"/>
                                                         </button>
-                                                        <button className="btn btn-danger ml-1"
-                                                                onClick={this.handleEdit}>Cancel <i
-                                                            className="fas fa-ban"></i></button>
+                                                        <button
+                                                            type="reset"
+                                                            className="btn btn-danger ml-1"
+                                                            onClick={this.handleEdit}>Cancel <i className="fas fa-ban"/>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             ) : (
@@ -283,7 +296,7 @@ class PayRoll extends React.Component {
                                             )
                                         }
                                     </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
 
