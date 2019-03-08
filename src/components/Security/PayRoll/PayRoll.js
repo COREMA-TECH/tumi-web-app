@@ -8,6 +8,8 @@ import './index.css';
 import withGlobalContent from 'Generic/Global';
 import days from './days.json';
 import periods from './periods.json';
+import {LIST_PAYROLLS} from "./queries";
+import {ADD_PAYROLL, UPDATE_PAYROLL} from "./mutations";
 
 const styles = (theme) => ({
     container: {
@@ -108,14 +110,15 @@ class PayRoll extends React.Component {
 
             edit: false,
 
+            payrollId: null,
             ...this.PAYROLL_STATE
         };
     }
 
     PAYROLL_STATE = {
-        weekStartDay: null,
+        weekStart: null,
         payPeriod: null,
-        payPeriodFinishDate: null
+        lastPayPeriod: null
     };
 
     handleEdit = () => {
@@ -141,26 +144,70 @@ class PayRoll extends React.Component {
             loading: true
         }, () => {
             this.props.client
-                .mutate()
+                .mutate({
+                    mutation: ADD_PAYROLL,
+                    variables: {
+                        payroll: {
+                            ...this.PAYROLL_STATE
+                        }
+                    }
+                })
                 .then()
                 .catch()
         });
     };
 
-    fetchPayRoll = () => {
+    /**
+     * To update a payroll with default PAYROLL_STATE
+     */
+    updatePayRoll = () => {
+        // TODO: create mutation and implement with apollo client
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .mutate({
+                    mutation: UPDATE_PAYROLL,
+                    variables: {
+                        payroll: {
+                            id: this.state.payrollId,
+                            ...this.PAYROLL_STATE
+                        }
+                    }
+                })
+                .then()
+                .catch()
+        });
+    };
+
+
+    /**
+     * Method to fetch a list of payrolls
+     */
+    fetchPayrolls = () => {
         // TODO: create query and implement with apollo client
         this.setState({
             loading: true
         }, () => {
             this.props.client
-                .mutate()
-                .then()
+                .query({
+                    query: LIST_PAYROLLS
+                })
+                .then(({data}) => {
+                    this.setState({
+                        data: data.listPayrolls
+                    }, () => {
+                        this.setState({
+                            loading: false
+                        })
+                    })
+                })
                 .catch()
         });
     };
 
     componentWillMount() {
-        // TODO: this.fetchPayRoll()
+        this.fetchPayrolls();
     }
 
     render() {
