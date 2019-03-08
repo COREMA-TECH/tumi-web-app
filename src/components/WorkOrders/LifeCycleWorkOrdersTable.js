@@ -143,7 +143,6 @@ class LifeCycleWorkOrdersTable extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("component unsafe ", data.phaseworkOrder);
                 this.setState({
                     data: data.phaseworkOrder
                 });
@@ -157,7 +156,6 @@ class LifeCycleWorkOrdersTable extends Component {
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
-        console.log("component items ", items);
         return (
 
             <div>

@@ -1,0 +1,5 @@
+.minWidth-empty-modal {
+    @include media-breakpoint-up(lg) {
+        min-width: 960px;
+    }
+}
