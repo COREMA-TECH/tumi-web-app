@@ -40,6 +40,8 @@ import SchedulesAccept from '../../Schedules/SchedulesAccept';
 import Region from "../../Region";
 import RegionTable from "../../Region/RegionTable";
 import RecruiteReport from '../../RecruiterReport';
+import TimeCardTable from '../../TimeCard/TimeCardTable';
+import TimeCard from '../../TimeCard';
 
 class Container extends Component {
 	constructor(props) {
@@ -164,6 +166,8 @@ class Container extends Component {
 				<Route exact path="/home/region" component={Region} />
 				<Route exact path="/home/regiontable" component={RegionTable} />
 				<Route exact path="/home/notfound" component={NotFound} />
+				<Route exact path="/home/timecard" component={TimeCard} />
+				<Route exact path="/home/timecardtable" component={TimeCardTable} />
 			</div>
 		);
 	}
