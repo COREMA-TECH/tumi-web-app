@@ -350,6 +350,14 @@ class MobileMenu extends Component {
                                                 </a>
                                             </li> : ""
                                     })}
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/payroll" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/payroll">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> PayRoll
+                                                </a>
+                                            </li> : ""
+                                    })}
                                 </ul>
                             </li> : ''
                     })}
