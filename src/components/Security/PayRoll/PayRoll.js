@@ -1,19 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import {withApollo} from 'react-apollo';
-import Tooltip from '@material-ui/core/Tooltip';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import 'ui-components/InputForm/index.css';
 import './index.css';
 import withGlobalContent from 'Generic/Global';
+import days from './days.json';
+import periods from './periods.json';
+import {LIST_PAYROLLS} from "./queries";
+import {ADD_PAYROLL, UPDATE_PAYROLL} from "./mutations";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const styles = (theme) => ({
     container: {
@@ -111,139 +108,271 @@ class PayRoll extends React.Component {
         this.state = {
             data: [],
             filterText: '',
+
+            edit: false,
+
+            payrollId: null,
+            ...this.PAYROLL_STATE,
+
+            loading: false,
+            saving: false,
+            updating: false
         };
     }
 
-    componentWillMount() {
-
-    }
-
-    filterPayRoll = (filterText) => {
-
+    PAYROLL_STATE = {
+        weekStart: null,
+        payPeriod: null,
+        lastPayPeriod: null
     };
 
-    filterChangeHandler = (e) => {
-        let value = e.target.value;
+    handleEdit = () => {
         this.setState({
-            filterText: value
+            edit: !this.state.edit
+        })
+    };
+
+    /**
+     * Call a mutation to create if a record has never been created,
+     * otherwise a mutation returns to update the record
+     */
+    executeMutation = (e) => {
+        e.preventDefault();
+
+        if (this.state.data.length > 0) {
+            this.updatePayRoll();
+        } else {
+            this.savePayRoll()
+        }
+    };
+
+    /**
+     * To save a payroll with default PAYROLL_STATE
+     */
+    savePayRoll = () => {
+        this.setState({
+            saving: true
         }, () => {
-            this.filterPayRoll(value);
+            this.props.client
+                .mutate({
+                    mutation: ADD_PAYROLL,
+                    variables: {
+                        payroll: {
+                            ...this.state.PAYROLL_STATE
+                        }
+                    }
+                })
+                .then(() => {
+                    this.props.handleOpenSnackbar('success', 'Payroll inserted!');
+                    this.executePayrollQuery();
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar('error', 'Error to insert payroll!');
+                })
         });
     };
 
-    handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+    /**
+     * To update a payroll with default PAYROLL_STATE
+     */
+    updatePayRoll = () => {
+        this.setState({
+            updating: true
+        }, () => {
+            this.props.client
+                .mutate({
+                    mutation: UPDATE_PAYROLL,
+                    variables: {
+                        payroll: {
+                            id: this.state.payrollId,
+                            weekStart: parseInt(this.state.weekStart),
+                            payPeriod: parseInt(this.state.payPeriod),
+                            lastPayPeriod: this.state.lastPayPeriod.substring(0, 10),
+                        }
+                    }
+                })
+                .then(() => {
+                    this.props.handleOpenSnackbar('success', 'Payroll updated!');
+                    this.executePayrollQuery();
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar('error', 'Error to update payroll!');
+                })
+        });
     };
 
-    render() {
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
 
+    /**
+     * Method to fetch a list of payrolls
+     */
+    fetchPayrolls = () => {
+        this.setState({
+            loading: true
+        }, () => {
+            this.executePayrollQuery();
+        });
+    };
+
+    executePayrollQuery = () => {
+        this.props.client
+            .query({
+                query: LIST_PAYROLLS,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({data}) => {
+                this.setState({
+                    data: data.listPayrolls,
+                    payrollId: data.listPayrolls[0].id,
+                    weekStart: data.listPayrolls[0].weekStart,
+                    payPeriod: data.listPayrolls[0].payPeriod,
+                    lastPayPeriod: data.listPayrolls[0].lastPayPeriod.substring(0, 10),
+                    edit: true,
+                }, () => {
+                    this.setState({
+                        loading: false,
+                        saving: false,
+                        updating: false,
+                        edit: true
+                    })
+                })
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar('error', 'Error to show payroll. Please, try again!');
+            })
+    };
+
+    componentWillMount() {
+        this.fetchPayrolls();
+    }
+
+    render() {
+        const {loading} = this.state;
+
+        // If the query is loading return a LinearProgress
+        if (loading) return <LinearProgress/>;
+
+        // When the data finishes loading, show it in the form
         return (
             <div className="users_tab">
-
-                <AlertDialogSlide
-                    handleClose={this.handleCloseAlertDialog}
-                    handleConfirm={this.handleConfirmAlertDialog}
-                    open={this.state.opendialog}
-                    loadingConfirm={this.state.loadingConfirm}
-                    content="Do you really want to continue whit this operation?"
-                />
-
-                <Dialog
-                    fullScreen={fullScreen}
-                    open={this.state.openModal}
-                    onClose={this.cancelUserHandler}
-                    aria-labelledby="responsive-dialog-title"
-                    maxWidth="sm"
-                >
-                    <DialogTitle id="responsive-dialog-title" style={{padding: '0px'}}>
-                        <div className="modal-header">
-                            <h5 className="modal-title">
-                                {this.state.idToEdit != null &&
-                                this.state.idToEdit != '' &&
-                                this.state.idToEdit != 0 ? (
-                                    'Edit Payroll'
-                                ) : (
-                                    'Add Payroll'
-                                )}
-                            </h5>
-                        </div>
-                    </DialogTitle>
-                    <DialogContent maxWidth="md">
-                        <div className="card-body">
-                            <div className="row">
-                                <div className="col-lg-12">
-
-                                </div>
-                            </div>
-                        </div>
-                    </DialogContent>
-                    <DialogActions style={{margin: '16px 10px'}}>
-                        <div className={classes.root}>
-                            <div className={classes.wrapper}>
-                                <Tooltip
-                                    title="Save"
-                                >
-                                    <div>
-                                        <button
-                                            // disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-                                            className="btn btn-success"
-                                            onClick={this.addUserHandler}
-                                        >
-                                            Save
-                                            {/*{isLoading && <i className="fas fa-spinner fa-spin ml-1"/>}*/}
-                                        </button>
-                                    </div>
-                                </Tooltip>
-                                <Tooltip
-                                    title="Cancel"
-                                >
-                                    <div>
-                                        <button
-                                            className="btn btn-default"
-                                            onClick={() => {
-                                            }}
-                                        >
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </Tooltip>
-                            </div>
-                        </div>
-                    </DialogActions>
-                </Dialog>
-
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="input-group mb-3">
-                            <div className="input-group-prepend">
-                                <span className="input-group-text" id="basic-addon1">
-                                    <i className="fa fa-search icon"/>
-                                </span>
-                            </div>
-                            <input
-                                onChange={this.filterChangeHandler}
-                                value={this.state.filterText}
-                                type="text"
-                                placeholder="Payroll search"
-                                className="form-control"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="float-right btn btn-success mr-1" onClick={this.handleClickOpenModal}>
-                            Add PayRoll<i className="fas fa-plus ml-2"/>
-                        </button>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="">
                             <div className="row">
-                                <div className="col-md-12">
+                                <form className="col-md-6" onSubmit={this.executeMutation}>
+                                    <div className="card">
+                                        <div className="card-header">How do you run payroll?
+                                            {
+                                                this.state.edit ? (
+                                                    <div className="float-right">
+                                                        <button className="btn btn-outline-success"
+                                                                onClick={this.handleEdit}>Edit <i
+                                                            className="far fa-edit"></i></button>
+                                                    </div>
+                                                ) : (
+                                                    ''
+                                                )
+                                            }
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <label className="">What is your week start day (for calculating
+                                                        overtime)?</label>
+                                                    <select
+                                                        name="week-start"
+                                                        id="week-start"
+                                                        className="form-control"
+                                                        required={true}
+                                                        disabled={this.state.edit}
+                                                        value={this.state.weekStart}
+                                                        onChange={(e) => {
+                                                            console.log(e.target.value);
 
-                                </div>
+                                                            this.setState({
+                                                                weekStart: e.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select day</option>
+                                                        {
+                                                            days.map(item => (
+                                                                <option value={item.id}>{item.name}</option>))
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="">How often do you payroll?</label>
+                                                    <select
+                                                        name="week-start"
+                                                        id="week-start"
+                                                        className="form-control"
+                                                        required={true}
+                                                        disabled={this.state.edit}
+                                                        value={this.state.payPeriod}
+                                                        onChange={(e) => {
+                                                            console.log(e.target.value);
+
+                                                            this.setState({
+                                                                payPeriod: e.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select pay period</option>
+                                                        {
+                                                            periods.map(item => (
+                                                                <option value={item.id}>{item.name}</option>))
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <label className="">What was your last pay period closing
+                                                        date?</label>
+                                                    <input
+                                                        type="date"
+                                                        className="form-control"
+                                                        required={true}
+                                                        disabled={this.state.edit}
+                                                        value={this.state.lastPayPeriod}
+                                                        onChange={(e) => {
+                                                            console.log(e.target.value);
+                                                            console.table(this.state.PAYROLL_STATE);
+
+                                                            this.setState({
+                                                                lastPayPeriod: e.target.value
+                                                            })
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {
+                                            !this.state.edit ? (
+                                                <div className="card-footer">
+                                                    <div className="d-flex justify-content-center">
+                                                        <button
+                                                            className="btn btn-success mr-1"
+                                                            type="submit"
+                                                        >
+                                                            Save {this.state.saving || this.state.updating ? (
+                                                            <i className="fas fa-spinner fa-spin ml-1"/>
+                                                        ) : (
+                                                            <i className="fas fa-save ml-1" />
+                                                        )}
+                                                            {/*{(this.state.updating || this.state.saving) && <i className="fas fa-spinner fa-spin ml-1" />}*/}
+                                                        </button>
+                                                        <button
+                                                            type="reset"
+                                                            className="btn btn-danger ml-1"
+                                                            onClick={this.handleEdit}>Cancel <i className="fas fa-ban"/>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                ''
+                                            )
+                                        }
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
@@ -253,11 +382,6 @@ class PayRoll extends React.Component {
         );
     }
 }
-
-PayRoll.propTypes = {
-    fullScreen: PropTypes.bool.isRequired,
-    classes: PropTypes.object.isRequired
-};
 
 export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(PayRoll))));
 

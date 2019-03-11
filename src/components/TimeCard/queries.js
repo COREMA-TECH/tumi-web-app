@@ -1,36 +1,51 @@
 import gql from 'graphql-tag';
 
-/*export const GET_WORKORDERS_QUERY = gql`
-query workOrder($workOrder: inputQueryWorkOrder, $workOrderCompany: inputInsertWorkOrderCompany) {
-	workOrder(workOrder: $workOrder, workOrderCompany: $workOrderCompany) {
-			id
-			quantity
-			shift
-			endShift
-			needExperience
-			needEnglish
-			startDate
-			endDate
-			comment
-			date
-			IdEntity
-			contactId
-			PositionRateId
-			status
-			EspecialComment
-			dayWeek
-			position {
-				Position
-				Shift
-			}
-			BusinessCompany
-			{
-				Id
-				Name
-			}
-		}
+export const GET_REGION_QUERY = gql`
+{
+	getcatalogitem( IsActive: 1,Id_Catalog: 4) {
+		Id
+		Name
+		DisplayLabel
+		IsActive
 	}
-`;*/
+}
+`;
+
+export const GET_USERS = gql`
+    query getUsers($Id:Int, $IdRegion:Int,$Id_Roles:[Int]) {
+			user(IsActive: 1,Id: $Id, IdRegion:$IdRegion, Id_Roles: $Id_Roles) {
+            Id
+			Id_Contact
+			Full_Name
+        }
+    }
+	`;
+
+export const GET_CONFIGREGIONS = gql`
+	query configregions($regionId:Int){
+		configregions(regionId:$regionId) {
+		  id
+		  regionId
+		  regionalManagerId
+		  regionalDirectorId
+		} 
+	  }
+	`;
+
+
+export const GET_EMPLOYEES = gql`
+query employees($id:Int){
+	employees (id:$id,isActive:true)
+		{
+		  id
+		  firstName
+		  lastName
+		  electronicAddress
+		  isActive
+		  idEntity
+		}
+	  }
+	`;
 
 export const GET_WORKORDERS_QUERY = gql`
 query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany,$workOrder: inputQueryWorkOrder,) {
@@ -197,13 +212,6 @@ export const GET_STATE_QUERY = gql`
 		} 
 `;
 
-export const GET_DEPARTMENTS_QUERY = gql`
-	query getcatalogitem ($Id_Entity:Int){
-			getcatalogitem(IsActive: 1, Id_Catalog: 8,  Id_Entity:$Id_Entity) {
-				Id
-				Code: Name
-				Description
-				IsActive
-			}
-		}
-	`;
+
+
+
