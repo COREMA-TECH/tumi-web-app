@@ -11,7 +11,8 @@ class PreFilter extends Component {
         super(props);
         this.state = {
             properties: [],
-            openModal: true
+            openModal: true,
+            property: 0
         }
     }
 
@@ -47,8 +48,22 @@ class PreFilter extends Component {
         this.getUser();
     }
 
-    changeFilter = () => {
-        this.props.changeFilter();
+    changeFilter = (event) => {
+        event.preventDefault();
+        this.props.changeFilter(this.state.property);
+        this.setState({
+            openModal: false
+        });
+    }
+
+    handleChange = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value,
+        });
     }
 
     render() {
@@ -62,13 +77,13 @@ class PreFilter extends Component {
                 <DialogContent>
                     <div className="card-body">
                         <form action="" onSubmit={this.changeFilter}>
-                            <select type="text" className="form-control">
-                                <option value="0">Select a Property</option>
+                            <select type="text" className="form-control" name="property" required onChange={this.handleChange}>
+                                <option value="">Select a Property</option>
                                 {this.state.properties.map((property) => {
                                     return <option value={property.Id}>{property.Name}</option>
                                 })}
                             </select>
-                            <button type="submit" className="btn btn-success">
+                            <button type="submit" className="btn btn-success mt-2 float-right">
                                 Filter
                             </button>
                         </form>
