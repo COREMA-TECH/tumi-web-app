@@ -41,6 +41,7 @@ import Region from "../../Region";
 import RegionTable from "../../Region/RegionTable";
 import RecruiteReport from '../../RecruiterReport';
 import PayRoll from "../../Security/PayRoll/PayRoll";
+import PunchesReport from '../../PunchesReport';
 
 class Container extends Component {
 	constructor(props) {
@@ -165,6 +166,7 @@ class Container extends Component {
 				<Route exact path="/home/schedules-accept/:accept/:id" component={SchedulesAccept} />
 				<Route exact path="/home/region" component={Region} />
 				<Route exact path="/home/regiontable" component={RegionTable} />
+				<Route exact path="/home/punches/report" component={PunchesReport} />
 				<Route exact path="/home/notfound" component={NotFound} />
 			</div>
 		);
