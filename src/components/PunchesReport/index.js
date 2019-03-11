@@ -7,6 +7,8 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import { GET_REPORT_QUERY } from './queries';
 
+import PreFilter from './PreFilter';
+
 class PunchesReport extends Component {
 
     DEFAULT_STATE = {
@@ -42,12 +44,18 @@ class PunchesReport extends Component {
         })
 
     }
+
+    changeFilter = () => {
+
+    }
+
     render() {
         const { loadingReport } = this.state;
         const loading = loadingReport;
 
         return <React.Fragment>
             {loading && <LinearProgress />}
+            <PreFilter changeFilter={this.changeFilter} />
             <div className="row">
                 <div className="col-md-12">
                     <div className="card">
