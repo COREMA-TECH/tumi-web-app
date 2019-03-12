@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import TimeCardForm from '../TimeCard/TimeCardForm'
+import withGlobalContent from 'Generic/Global';
 
 class PunchesReportFilter extends Component {
 
     DEFAULT_STATE = {
-        endDateDisabled: true
+        endDateDisabled: true,
+        openModal: false,
     }
 
     constructor(props) {
@@ -33,6 +36,10 @@ class PunchesReportFilter extends Component {
             })
     }
 
+    toggleRefresh = () => {
+        this.setState((prevState) => { return { refresh: !prevState.refresh } })
+    }
+
     handleChangeDate = (event) => {
         const target = event.target;
         const value = target.value;
@@ -47,6 +54,10 @@ class PunchesReportFilter extends Component {
                     this.props.updateFilter(this.state)
             });
     }
+
+    handleClickOpenModal = () => {
+        this.setState({ openModal: true });
+    };
 
     render() {
         return <div className="card-header bg-light">
@@ -86,11 +97,23 @@ class PunchesReportFilter extends Component {
                     </div>
                 </div>
                 <div className="col-md-2 mt-1">
-                    <button class="btn btn-success float-right">Add Time<i class="fas fa-plus ml-1"></i></button>
+                    <button class="btn btn-success float-right" onClick={this.handleClickOpenModal}>Add Time<i class="fas fa-plus ml-1"></i></button>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-12">
+                    <TimeCardForm
+                        openModal={this.state.openModal}
+                        handleOpenSnackbar={this.props.handleOpenSnackbar}
+                        onEditHandler={this.onEditHandler}
+                        toggleRefresh={this.toggleRefresh}
+                        handleCloseModal={this.handleCloseModal}
+                    />
                 </div>
             </div>
         </div>
     }
 }
 
-export default PunchesReportFilter;
+//export default PunchesReportFilter;
+export default withGlobalContent(PunchesReportFilter);

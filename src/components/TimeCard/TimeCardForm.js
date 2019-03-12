@@ -233,8 +233,14 @@ class TimeCardForm extends Component {
         });
     }
 
+    handleCloseModal = (event) => {
+        this.setState({
+            ...this.DEFAULT_STATE
+        });
+        // this.props.handleCloseModal(event);
+    }
+
     handleSubmit = (event) => {
-        alert("Aqui estoy")
         event.preventDefault();
         if (
             this.state.IdEntity == 0 ||
@@ -249,7 +255,7 @@ class TimeCardForm extends Component {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
             this.setState({ saving: true });
-            if (this.state.id == null) this.add();
+            if (this.state.id == null) this.addIn();
             else {
                 //alert(this.state.employees.detailEmployee)
                 if (this.state.employees.length > 0) {
@@ -263,29 +269,25 @@ class TimeCardForm extends Component {
         }
     };
 
-    add = () => {
+    addIn = () => {
         this.props.client
             .mutate({
                 mutation: ADD_MARCKED,
                 variables: {
                     MarkedEmployees: {
                         entityId: this.state.IdEntity,
-                        typeMarkedId: this.state.typeMarkedId,
+                        typeMarkedId: 30570,
                         markedDate: this.state.startDate,
                         markedTime: this.state.shift,
                         imageMarked: "https://www.elheraldo.co/sites/default/files/articulo/2017/11/16/un-gato-bebe-433.jpg",
-                        EmployeeId: this.state.contactId
+                        EmployeeId: this.state.employeeId,
+                        ShiftId: 1132,
+                        notes: this.state.comment
                     }
                 }
             })
             .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
-                this.setState({ openModal: false, saving: false });
-                //this.getWorkOrders();
-                //                this.props.handleCloseModal
-                //this.props.toggleRefresh();
-                window.location.reload();
+                this.addOut();
             })
             .catch((error) => {
                 this.setState({ saving: true });
@@ -293,60 +295,34 @@ class TimeCardForm extends Component {
             });
     };
 
-    /*update = (status = 1) => {
+    addOut = () => {
         this.props.client
             .mutate({
-                mutation: UPDATE_WORKORDER,
+                mutation: ADD_MARCKED,
                 variables: {
-                    startshift: this.state.shift,
-                    endshift: this.state.endShift,
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
-                    quantity: this.state.quantity,
-                    workOrder: {
-                        id: this.state.id,
-                        IdEntity: this.state.IdEntity,
-                        date: this.state.date,
-                        quantity: this.state.quantity,
-                        status: status,
-                        shift: this.state.shift,
-                        endShift: this.state.endShift,
-                        startDate: this.state.startDate,
-                        endDate: this.state.endDate,
-                        needExperience: this.state.needExperience,
-                        needEnglish: this.state.needEnglish,
-                        comment: this.state.comment,
-                        EspecialComment: this.state.EspecialComment,
-                        PositionRateId: this.state.PositionRateId,
-                        userId: this.state.userId,
-                        contactId: this.state.contactId,
-                        dayWeek: this.state.dayWeeks
-                    },
-                    shift: {
+                    MarkedEmployees: {
                         entityId: this.state.IdEntity,
-                        title: this.state.PositionName,
-                        color: "#96989A",
-                        status: 1,
-                        idPosition: this.state.PositionRateId,
-                        startDate: this.state.startDate,
-                        endDate: this.state.endDate,
-                        dayWeek: this.state.dayWeeks,
-                        departmentId: this.state.departmentId
+                        typeMarkedId: 30571,
+                        markedDate: this.state.endDate,
+                        markedTime: this.state.endShift,
+                        imageMarked: "https://www.elheraldo.co/sites/default/files/articulo/2017/11/16/un-gato-bebe-433.jpg",
+                        EmployeeId: this.state.employeeId,
+                        ShiftId: 1132,
+                        notes: this.state.comment
                     }
                 }
             })
             .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Record Updated!');
-                this.setState({ openModal: false, saving: false, converting: false });
-                //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
-                window.location.reload();
+                this.props.handleOpenSnackbar('success', 'Record Inserted!');
+                this.props.toggleRefresh();
+                    this.setState({ openModal: false, saving: false });
+                // window.location.reload();
             })
             .catch((error) => {
-                this.setState({ saving: true, converting: false });
+                this.setState({ saving: true });
                 this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
-
-    };*/
+    };
 
     getContacts = (id) => {
         this.props.client
@@ -390,26 +366,6 @@ class TimeCardForm extends Component {
             this.CONVERT_TO_OPENING();
         }
     };
-
-    /*  CONVERT_TO_OPENING = () => {
-          this.props.client
-              .mutate({
-                mutation: CONVERT_TO_OPENING,
-                  variables: {
-                      id: this.state.id,
-                      userId: this.state.userId,
-                  }
-              })
-              .then((data) => {
-                  this.props.handleOpenSnackbar('success', 'Record Updated!');
-                  this.setState({ openModal: false, saving: false, converting: false });
-                  window.location.reload();
-              })
-              .catch((error) => {
-                  this.setState({ saving: true, converting: false });
-                  this.props.handleOpenSnackbar('error', 'Error: ' + error);
-              });
-      };*/
 
     handleChange = (event) => {
         const target = event.target;
@@ -472,56 +428,9 @@ class TimeCardForm extends Component {
                 console.log(" data.employees  ", data.employees)
                 this.setState({ employees: data.employees })
 
-                /* data.ShiftWorkOrder.map((item) => {
-                     this.props.client
-                         .query({
-                             query: GET_DETAIL_SHIFT,
-                             variables: { ShiftId: item.ShiftId }
-                         })
-                         .then(({ data }) => {
-                             data.ShiftDetailbyShift.sort().map((itemDetails) => {
-                                 if (itemDetails.detailEmployee != null) {
-                                     if (itemDetails.detailEmployee.EmployeeId != employeeIdTemp) {
-                                         employeesList.push({
-                                             WorkOrderId: item.WorkOrderId,
-                                             ShiftId: item.ShiftId,
-                                             ShiftDetailId: itemDetails.id,
-                                             EmployeeId: itemDetails.detailEmployee.EmployeeId,
-                                             Employees: itemDetails.detailEmployee.Employees.firstName + ' ' + itemDetails.detailEmployee.Employees.lastName
-                                         })
- 
-                                         employeeIdTemp = itemDetails.detailEmployee.EmployeeId;
-                                     }
-                                 }
-                             })
-                             this.setState({ employees: employeesList })
-                         })
-                         .catch();
-                 })*/
             })
             .catch();
     };
-
-    /*  deleteEmployee = (id) => {
-          this.props.client
-              .mutate({
-                  mutation: DELETE_EMPLOYEE,
-                  variables: {
-                      id: id,
-  
-                  }
-              })
-              .then((data) => {
-                  this.props.handleOpenSnackbar('success', 'Employee deleted!');
-                  this.setState({ saving: false, converting: false });
-                  window.location.reload();
-              })
-              .catch((error) => {
-                  this.setState({ saving: true, converting: false });
-                  this.props.handleOpenSnackbar('error', 'Error: ' + error);
-              });
-      };*/
-
 
     validateInvalidInput = () => {
         if (document.addEventListener) {
@@ -661,8 +570,8 @@ class TimeCardForm extends Component {
                                                 onBlur={this.handleValidate}
                                             >
                                                 <option value={0}>Select a employee</option>
-                                                {this.state.employees.map((contact) => (
-                                                    <option value={contact.Id}>{contact.electronicAddress + "(" + contact.lastName + ", " + contact.firstName + ")"}</option>
+                                                {this.state.employees.map((employee) => (
+                                                    <option value={employee.id}>{employee.electronicAddress + "(" + employee.lastName + ", " + employee.firstName + ")"}</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -725,7 +634,7 @@ class TimeCardForm extends Component {
                                         </div>
 
                                         <div className="col-md-12">
-                                            <label htmlFor="">Comments</label>
+                                            <label htmlFor="">Notes</label>
                                             <textarea
                                                 onChange={this.handleChange}
                                                 name="comment"
@@ -744,7 +653,7 @@ class TimeCardForm extends Component {
                                     <button
                                         type="button"
                                         className="btn btn-danger ml-1 float-right"
-                                        onClick={this.props.handleCloseModal}
+                                        onClick={this.handleCloseModal}
                                     >
                                         Cancel<i className="fas fa-ban ml-2" />
                                     </button>
@@ -758,7 +667,6 @@ class TimeCardForm extends Component {
                         </form >
                     </DialogContent >
                 </Dialog >
-
             </div >
         );
     }

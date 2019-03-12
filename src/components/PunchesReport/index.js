@@ -18,7 +18,8 @@ class PunchesReport extends Component {
         department: 0,
         employee: '',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        openModal: false
     }
 
     constructor(props) {
@@ -32,6 +33,10 @@ class PunchesReport extends Component {
         this.getDepartments();
         this.getProperties();
     }
+
+    handleClickOpenModal = () => {
+        this.setState({ openModal: true });
+    };
 
     getReport = () => {
         this.setState(() => ({ loadingReport: true }), () => {
@@ -142,7 +147,10 @@ class PunchesReport extends Component {
                 <div className="col-md-12">
                     <div className="card">
                         <Filter {...this.state} updateFilter={this.updateFilter} />
-                        <Table data={this.state.data} />
+                        <Table
+                            openModal={this.state.openModal}
+                            handleCloseModal={this.handleCloseModal}
+                            data={this.state.data} />
                     </div>
                 </div>
             </div>

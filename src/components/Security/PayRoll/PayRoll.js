@@ -1,15 +1,15 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import {withApollo} from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import 'ui-components/InputForm/index.css';
 import './index.css';
 import withGlobalContent from 'Generic/Global';
 import days from './days.json';
 import periods from './periods.json';
-import {LIST_PAYROLLS} from "./queries";
-import {ADD_PAYROLL, UPDATE_PAYROLL} from "./mutations";
+import { LIST_PAYROLLS } from "./queries";
+import { ADD_PAYROLL, UPDATE_PAYROLL } from "./mutations";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const styles = (theme) => ({
@@ -29,9 +29,9 @@ const styles = (theme) => ({
         margin: theme.spacing.unit
         //width: '100px'
     },
-    contactControl: {width: '535px', paddingRight: '0px'},
-    rolControl: {width: '260px', paddingRight: '0px'},
-    languageControl: {width: '260px', paddingRight: '0px'},
+    contactControl: { width: '535px', paddingRight: '0px' },
+    rolControl: { width: '260px', paddingRight: '0px' },
+    languageControl: { width: '260px', paddingRight: '0px' },
     usernameControl: {
         width: '150px'
     },
@@ -219,7 +219,7 @@ class PayRoll extends React.Component {
                 query: LIST_PAYROLLS,
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     data: data.listPayrolls,
                     payrollId: data.listPayrolls[0].id,
@@ -246,10 +246,10 @@ class PayRoll extends React.Component {
     }
 
     render() {
-        const {loading} = this.state;
+        const { loading } = this.state;
 
         // If the query is loading return a LinearProgress
-        if (loading) return <LinearProgress/>;
+        if (loading) return <LinearProgress />;
 
         // When the data finishes loading, show it in the form
         return (
@@ -265,12 +265,12 @@ class PayRoll extends React.Component {
                                                 this.state.edit ? (
                                                     <div className="float-right">
                                                         <button className="btn btn-outline-success"
-                                                                onClick={this.handleEdit}>Edit <i
-                                                            className="far fa-edit"></i></button>
+                                                            onClick={this.handleEdit}>Edit <i
+                                                                className="far fa-edit"></i></button>
                                                     </div>
                                                 ) : (
-                                                    ''
-                                                )
+                                                        ''
+                                                    )
                                             }
                                         </div>
                                         <div className="card-body">
@@ -354,22 +354,22 @@ class PayRoll extends React.Component {
                                                             type="submit"
                                                         >
                                                             Save {this.state.saving || this.state.updating ? (
-                                                            <i className="fas fa-spinner fa-spin ml-1"/>
-                                                        ) : (
-                                                            <i className="fas fa-save ml-1" />
-                                                        )}
+                                                                <i className="fas fa-spinner fa-spin ml-1" />
+                                                            ) : (
+                                                                    <i className="fas fa-save ml-1" />
+                                                                )}
                                                             {/*{(this.state.updating || this.state.saving) && <i className="fas fa-spinner fa-spin ml-1" />}*/}
                                                         </button>
                                                         <button
                                                             type="reset"
                                                             className="btn btn-danger ml-1"
-                                                            onClick={this.handleEdit}>Cancel <i className="fas fa-ban"/>
+                                                            onClick={this.handleEdit}>Cancel <i className="fas fa-ban" />
                                                         </button>
                                                     </div>
                                                 </div>
                                             ) : (
-                                                ''
-                                            )
+                                                    ''
+                                                )
                                         }
                                     </div>
                                 </form>

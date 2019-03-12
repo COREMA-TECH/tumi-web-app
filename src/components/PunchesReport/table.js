@@ -15,6 +15,9 @@ import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import moment from 'moment';
+import Route from 'react-router-dom/es/Route';
+import TimeCardForm from '../TimeCard/TimeCardForm'
+import withGlobalContent from 'Generic/Global';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -138,7 +141,8 @@ class PunchesReportTable extends React.Component {
         super(props);
         this.state = {
             page: 0,
-            rowsPerPage: 25
+            rowsPerPage: 25,
+            openModal: false
         };
     }
     handleChangePage = (event, page) => {
@@ -163,75 +167,100 @@ class PunchesReportTable extends React.Component {
         return false;
     }
 
+    handleClickOpenModal = () => {
+        this.setState({ openModal: true });
+    };
+
     render() {
         const { classes } = this.props;
         let items = this.props.data || [];
         const { rowsPerPage, page } = this.state;
 
         return (
-            <div className="card-body pt-0">
-                <Paper className={classes.root}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <CustomTableCell className={"Table-head"}>Employee Id</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Name</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Hour Category</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Hours Worked</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Pay Rate</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Date</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Clock In</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Lunch In</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Lunch Out</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Clock Out</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Hotel Code</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Position Code</CustomTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                return (
-                                    <TableRow
-                                        className={classes.row}
-                                        key={uuidv4()}>
-                                        <CustomTableCell>{row.employeeId}</CustomTableCell>
-                                        <CustomTableCell>{row.name}</CustomTableCell>
-                                        <CustomTableCell>{row.hourCategory}</CustomTableCell>
-                                        <CustomTableCell>{row.hoursWorked}</CustomTableCell>
-                                        <CustomTableCell>{row.payRate}</CustomTableCell>
-                                        <CustomTableCell>{row.date}</CustomTableCell>
-                                        <CustomTableCell>{row.clockIn || ''}</CustomTableCell>
-                                        <CustomTableCell>{row.lunchIn || ''}</CustomTableCell>
-                                        <CustomTableCell>{row.lunchOut || ''}</CustomTableCell>
-                                        <CustomTableCell>{row.clockOut || ''}</CustomTableCell>
-                                        <CustomTableCell>{row.hotelCode}</CustomTableCell>
-                                        <CustomTableCell>{row.positionCode}</CustomTableCell>
+            <Route
+                render={({ history }) => (
+                    <div className="card-body pt-0">
+                        <Paper className={classes.root}>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <CustomTableCell className={"Table-head"}>Employee Id</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Name</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Hour Category</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Hours Worked</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Pay Rate</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Date</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Clock In</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Lunch In</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Lunch Out</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Clock Out</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Hotel Code</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Position Code</CustomTableCell>
                                     </TableRow>
-                                );
-                            })}
+                                </TableHead>
+                                <TableBody>
+                                    {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                        return (
+
+                                            <TableRow
+                                                className={classes.row}
+                                                key={uuidv4()}
+                                                onClick={() => {
+                                                    //   e.stopPropagation();
+                                                    //                                                    alert("Aqui estoy")
+                                                    this.handleClickOpenModal();
+                                                }}>
+                                                <CustomTableCell>{row.employeeId}</CustomTableCell>
+                                                <CustomTableCell>{row.name}</CustomTableCell>
+                                                <CustomTableCell>{row.hourCategory}</CustomTableCell>
+                                                <CustomTableCell>{row.hoursWorked}</CustomTableCell>
+                                                <CustomTableCell>{row.payRate}</CustomTableCell>
+                                                <CustomTableCell>{row.date}</CustomTableCell>
+                                                <CustomTableCell>{row.clockIn || ''}</CustomTableCell>
+                                                <CustomTableCell>{row.lunchIn || ''}</CustomTableCell>
+                                                <CustomTableCell>{row.lunchOut || ''}</CustomTableCell>
+                                                <CustomTableCell>{row.clockOut || ''}</CustomTableCell>
+                                                <CustomTableCell>{row.hotelCode}</CustomTableCell>
+                                                <CustomTableCell>{row.positionCode}</CustomTableCell>
+                                            </TableRow>
+                                        );
+                                    })}
 
 
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                {items.length > 0 && (
-                                    <TablePagination
-                                        colSpan={3}
-                                        count={items.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        onChangePage={this.handleChangePage}
-                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                        ActionsComponent={TablePaginationActionsWrapped}
-                                    />
-                                )}
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
-                </Paper>
+                                </TableBody>
+                                <TableFooter>
+                                    <TableRow>
+                                        {items.length > 0 && (
+                                            <TablePagination
+                                                colSpan={3}
+                                                count={items.length}
+                                                rowsPerPage={rowsPerPage}
+                                                page={page}
+                                                onChangePage={this.handleChangePage}
+                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                                ActionsComponent={TablePaginationActionsWrapped}
+                                            />
+                                        )}
+                                    </TableRow>
+                                </TableFooter>
+                            </Table>
+                        </Paper>
 
+                        <div className="row">
+                            <div className="col-md-12">
+                                <TimeCardForm
+                                    openModal={this.state.openModal}
+                                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                    onEditHandler={this.onEditHandler}
+                                    toggleRefresh={this.toggleRefresh}
+                                    handleCloseModal={this.handleCloseModal}
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-            </div>
+                )}
+            />
         );
     }
 }
