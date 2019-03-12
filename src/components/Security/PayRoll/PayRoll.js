@@ -145,7 +145,6 @@ class PayRoll extends React.Component {
             this.savePayRoll()
         }
     };
-
     /**
      * To save a payroll with default PAYROLL_STATE
      */
