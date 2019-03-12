@@ -314,7 +314,8 @@ class TimeCardForm extends Component {
             })
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                this.setState({ openModal: false, saving: false });
+                this.props.toggleRefresh();
+                    this.setState({ openModal: false, saving: false });
                 // window.location.reload();
             })
             .catch((error) => {
@@ -372,10 +373,6 @@ class TimeCardForm extends Component {
         const name = target.name;
         let comments = '';
         let request = '';
-
-        console.log("handleChange target.name ", target.name)
-        console.log("handleChange target.value ", target.value)
-
 
         this.setState({
             [name]: value
