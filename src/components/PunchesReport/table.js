@@ -18,6 +18,11 @@ import Route from 'react-router-dom/es/Route';
 import TimeCardForm from '../TimeCard/TimeCardForm'
 import './index.css';
 
+import Tooltip from '@material-ui/core/Tooltip';
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
     root: {
@@ -141,7 +146,7 @@ class PunchesReportTable extends React.Component {
         this.state = {
             page: 0,
             rowsPerPage: 25,
-            openModal: false
+            openModalPicture: true
         };
     }
 
@@ -168,18 +173,37 @@ class PunchesReportTable extends React.Component {
     }
 
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({openModalPicture: true});
     };
+
+    handleCloseModal = () => {
+        alert("Error");
+        this.setState({openModalPicture: false});
+    };
+
+
 
     render() {
         const {classes} = this.props;
         let items = this.props.data || [];
         const {rowsPerPage, page} = this.state;
 
+        let renderDialogPicture = () => (
+            <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModal}>
+                {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
+                    <img src="https://i.imgur.com/VJRRwvC.jpg" className="avatar-lg" />
+                {/*</DialogTitle>*/}
+            </Dialog>
+        );
+
+
         return (
             <Route
                 render={({history}) => (
                     <div className="card-body pt-0">
+                        {
+                            renderDialogPicture()
+                        }
                         <Paper className={classes.root}>
                             <Table className={classes.table}>
                                 <TableHead>
@@ -209,7 +233,7 @@ class PunchesReportTable extends React.Component {
                                                 onClick={() => {
                                                     //   e.stopPropagation();
                                                     //                                                    alert("Aqui estoy")
-                                                    this.handleClickOpenModal();
+                                                    //this.handleClickOpenModal();
                                                 }}>
                                                 <CustomTableCell>{row.employeeId}</CustomTableCell>
                                                 <CustomTableCell>{row.name}</CustomTableCell>
@@ -223,8 +247,15 @@ class PunchesReportTable extends React.Component {
                                                 <CustomTableCell>{row.clockOut || ''}</CustomTableCell>
                                                 <CustomTableCell>{row.hotelCode}</CustomTableCell>
                                                 <CustomTableCell>{row.positionCode}</CustomTableCell>
-                                                <CustomTableCell>
-                                                    <div className="avatar"></div>
+                                                <CustomTableCell style={{position: 'relative'}}>
+                                                    <img className="avatar" src={row.imageMarked} onClick={() => {
+                                                        alert("Alert!");
+                                                        this.setState({
+                                                            openModalPicture: true
+                                                        }, ()  => {
+                                                            console.log(this.state.openModalPicture)
+                                                        })
+                                                    }} />
                                                 </CustomTableCell>
                                             </TableRow>
                                         );
@@ -262,6 +293,7 @@ class PunchesReportTable extends React.Component {
                             </div>
                         </div>
                     </div>
+
 
                 )}
             />

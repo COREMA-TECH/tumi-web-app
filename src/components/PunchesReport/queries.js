@@ -2,20 +2,21 @@ import gql from 'graphql-tag';
 
 export const GET_REPORT_QUERY = gql`
   query punches($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date ){
-    punches(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate){
-      employeeId
-      name
-      hourCategory
-      hoursWorked
-      payRate
-      date
-      clockIn
-      clockOut
-      lunchIn
-      lunchOut
-      hotelCode
-      positionCode
-    }
+        punches(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate){
+              employeeId
+              name
+              imageMarked
+              hourCategory
+              hoursWorked
+              payRate
+              date
+              clockIn
+              clockOut
+              lunchIn
+              lunchOut
+              hotelCode
+              positionCode
+        }
   }
 `;
 
