@@ -104,6 +104,7 @@ class TimeCardForm extends Component {
         departmentId: 0,
         dayWeeks: '',
         openModal: false,
+        statusTimeOut: false
 
     };
 
@@ -151,33 +152,40 @@ class TimeCardForm extends Component {
                     dayWeeks: nextProps.item.dayWeek
                 },
                 () => {
-                    this.getEmployees();
-                    this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
-                    this.getContacts(nextProps.item.IdEntity);
-                    this.getRecruiter();
-                    this.calculateHours();
 
                     this.ReceiveStatus = true;
                 }
             );
         } else if (!nextProps.openModal) {
             this.setState({
-                IdEntity: 0,
+                id: null,
+                hotel: 0,
+                IdEntity: null,
                 date: new Date().toISOString().substring(0, 10),
                 quantity: 0,
-                status: 0,
-                shift: moment('08:00', "HH:mm").format("HH:mm"),
-                endShift: moment('16:00', "HH:mm").format("HH:mm"),
+                status: 1,
+                shift: '',
+                endShift: '',
                 startDate: '',
                 endDate: '',
                 needExperience: false,
                 needEnglish: false,
                 comment: '',
                 EspecialComment: '',
+                Electronic_Address: '',
+                position: 0,
                 PositionRateId: 0,
+                PositionName: '',
+                RecruiterId: 0,
                 contactId: 0,
                 userId: localStorage.getItem('LoginId'),
+                ShiftsData: ShiftsData,
+                saving: false,
                 isAdmin: Boolean(localStorage.getItem('IsAdmin')),
+                employees: [],
+                employeesarray: [],
+                openConfirm: false,
+                idToDelete: 0,
                 Monday: 'MO,',
                 Tuesday: 'TU,',
                 Wednesday: 'WE,',
@@ -186,15 +194,19 @@ class TimeCardForm extends Component {
                 Saturday: 'SA,',
                 Sunday: 'SU,',
                 dayWeek: '',
-                duration: '8',
+                DateContract: '',
+                departmentId: 0,
+                dayWeeks: '',
                 openModal: false,
-
-
+                statusTimeOut: false
             });
         }
         this.setState({
             openModal: nextProps.openModal
         });
+
+        this.getHotels();
+        this.getEmployees();
     }
 
     getWorkOrders = () => {
@@ -213,23 +225,11 @@ class TimeCardForm extends Component {
 
 
     componentWillMount() {
-
-        this.props.client
-            .query({
-                query: GET_HOTEL_QUERY
-            })
-            .then(({ data }) => {
-                this.setState({
-                    hotels: data.getbusinesscompanies
-                });
-
-                this.getEmployees();
-            })
-            .catch();
+        this.getHotels();
+        this.getEmployees();
 
         this.setState({
             openModal: this.props.openModal
-
         });
     }
 
@@ -237,8 +237,10 @@ class TimeCardForm extends Component {
         this.setState({
             ...this.DEFAULT_STATE
         });
-        // this.props.handleCloseModal(event);
+        this.props.handleCloseModal(event);
     }
+
+
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -287,7 +289,12 @@ class TimeCardForm extends Component {
                 }
             })
             .then((data) => {
-                this.addOut();
+                if (!this.state.statusTimeOut) { this.addOut(); } else {
+                    this.props.handleOpenSnackbar('success', 'Record Inserted!');
+                    this.props.toggleRefresh();
+                    this.setState({ openModal: false, saving: false });
+                }
+
             })
             .catch((error) => {
                 this.setState({ saving: true });
@@ -315,7 +322,7 @@ class TimeCardForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.props.toggleRefresh();
-                    this.setState({ openModal: false, saving: false });
+                this.setState({ openModal: false, saving: false });
                 // window.location.reload();
             })
             .catch((error) => {
@@ -418,16 +425,26 @@ class TimeCardForm extends Component {
     };
 
     getEmployees = () => {
-        // this.setState({ employees: [] })
         this.props.client
             .query({
                 query: GET_EMPLOYEES
-                //variables: { WorkOrderId: this.state.id }
             })
             .then(({ data }) => {
-                console.log(" data.employees  ", data.employees)
                 this.setState({ employees: data.employees })
+            })
+            .catch();
+    };
 
+
+    getHotels = () => {
+        this.props.client
+            .query({
+                query: GET_HOTEL_QUERY
+            })
+            .then(({ data }) => {
+                this.setState({
+                    hotels: data.getbusinesscompanies
+                });
             })
             .catch();
     };
@@ -521,6 +538,27 @@ class TimeCardForm extends Component {
         }
     }
 
+    DisabledTimeOut = () => {
+        console.log("statusTimeOut ", document.getElementById("disabledTimeOut").checked)
+        if (document.getElementById("disabledTimeOut").checked) {
+            this.setState(
+                {
+                    statusTimeOut: true,
+                    endDate: "CCC",
+                    endShift: "CCC"
+                })
+        } else {
+            this.setState(
+                {
+                    statusTimeOut: false,
+                    endDate: "",
+                    endShift: ""
+                })
+        }
+
+        console.log("statusTimeOut ", this.state.statusTimeOut)
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -531,7 +569,7 @@ class TimeCardForm extends Component {
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
-                            <h5 className="modal-title">Work Order</h5>
+                            <h5 className="modal-title">Add Time +</h5>
                         </div>
                     </DialogTitle>
                     <DialogContent>
@@ -575,6 +613,17 @@ class TimeCardForm extends Component {
                                                 ))}
                                             </select>
                                         </div>
+
+                                        <div className="col-md-3">
+                                        </div>
+                                        <div className="col-md-3">
+                                            <span className="float-left">
+                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} />
+                                                <label htmlFor="">&nbsp; Currently working</label>
+                                            </span>
+                                        </div>
+                                        <div className="col-md-6">
+                                        </div>
                                         <div className="col-md-3">
                                             <label htmlFor="">* Date In</label>
                                             <input
@@ -587,13 +636,13 @@ class TimeCardForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
 
-                                            <label htmlFor="">* Date Out</label>
+                                            <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""}  Date Out</label>
                                             <input
-                                                required
+                                                required={!this.state.statusTimeOut}
                                                 type="date"
                                                 className="form-control"
                                                 name="endDate"
-                                                disabled={this.state.sameContractDate}
+                                                disabled={this.state.statusTimeOut}
                                                 onChange={this.handleChange}
                                                 value={this.state.endDate.substring(0, 10)}
                                                 onBlur={this.handleValidate}
@@ -603,8 +652,8 @@ class TimeCardForm extends Component {
                                             <label htmlFor="">* Time In</label>
                                             <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
 
-                                            <label htmlFor="">* Time Out</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
+                                            <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
+                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
                                         </div>
 
 
