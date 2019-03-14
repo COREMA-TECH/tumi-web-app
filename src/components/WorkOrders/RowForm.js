@@ -112,7 +112,8 @@ class RowForm extends Component {
             comment: this.props.dataToEdit.comment,
             dayWeeks: this.props.dataToEdit.dayWeeks,
             PositionRateId: this.props.dataToEdit.PositionRateId,
-            departmentId: this.props.dataToEdit.departmentId
+            departmentId: this.props.dataToEdit.departmentId,
+            duration: this.props.dataToEdit.duration
         }, () => {
             this.calculateHours();
         })
@@ -180,7 +181,7 @@ class RowForm extends Component {
                             <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
                         </div>
                         <div className="col-md-2">
-                            <button className="btn btn-link">
+                            <button className="btn btn-link" type="button">
                                 Advanced
                         </button>
                         </div>

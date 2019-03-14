@@ -1745,7 +1745,7 @@ pre {
   .table-responsive > .table-bordered {
     border: 0; }
 
-.form-control {
+.form-control, .react-datepicker__input-container input, .react-datepicker-ignore-onclickoutside {
   display: block;
   width: 100%;
   height: calc(2.1rem + 2px);
@@ -1764,37 +1764,37 @@ pre {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out; }
   @media screen and (prefers-reduced-motion: reduce) {
-    .form-control {
+    .form-control, .react-datepicker__input-container input, .react-datepicker-ignore-onclickoutside {
       -webkit-transition: none;
       -o-transition: none;
       transition: none; } }
-  .form-control::-ms-expand {
+  .form-control::-ms-expand, .react-datepicker__input-container input::-ms-expand, .react-datepicker-ignore-onclickoutside::-ms-expand {
     background-color: transparent;
     border: 0; }
-  .form-control:focus {
+  .form-control:focus, .react-datepicker__input-container input:focus, .react-datepicker-ignore-onclickoutside:focus {
     color: #495057;
     background-color: #FFF;
     border-color: #80bdff;
     outline: 0;
     -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); }
-  .form-control::-webkit-input-placeholder {
+  .form-control::-webkit-input-placeholder, .react-datepicker__input-container input::-webkit-input-placeholder, .react-datepicker-ignore-onclickoutside::-webkit-input-placeholder {
     color: #6c757d;
     opacity: 1; }
-  .form-control:-ms-input-placeholder {
+  .form-control:-ms-input-placeholder, .react-datepicker__input-container input:-ms-input-placeholder, .react-datepicker-ignore-onclickoutside:-ms-input-placeholder {
     color: #6c757d;
     opacity: 1; }
-  .form-control::-ms-input-placeholder {
+  .form-control::-ms-input-placeholder, .react-datepicker__input-container input::-ms-input-placeholder, .react-datepicker-ignore-onclickoutside::-ms-input-placeholder {
     color: #6c757d;
     opacity: 1; }
-  .form-control::placeholder {
+  .form-control::placeholder, .react-datepicker__input-container input::placeholder, .react-datepicker-ignore-onclickoutside::placeholder {
     color: #6c757d;
     opacity: 1; }
-  .form-control:disabled, .form-control[readonly] {
+  .form-control:disabled, .react-datepicker__input-container input:disabled, .react-datepicker-ignore-onclickoutside:disabled, .form-control[readonly], .react-datepicker__input-container input[readonly], .react-datepicker-ignore-onclickoutside[readonly] {
     background-color: #e9ecef;
     opacity: 1; }
 
-select.form-control:focus::-ms-value {
+select.form-control:focus::-ms-value, select.react-datepicker-ignore-onclickoutside:focus::-ms-value {
   color: #495057;
   background-color: #FFF; }
 
@@ -1851,10 +1851,10 @@ select.form-control:focus::-ms-value {
   line-height: 1.5;
   border-radius: 0.3rem; }
 
-select.form-control[size], select.form-control[multiple] {
+select.form-control[size], select.react-datepicker-ignore-onclickoutside[size], select.form-control[multiple], select.react-datepicker-ignore-onclickoutside[multiple] {
   height: auto; }
 
-textarea.form-control {
+textarea.form-control, textarea.react-datepicker-ignore-onclickoutside {
   height: auto; }
 
 .form-group {
@@ -1928,23 +1928,28 @@ textarea.form-control {
   background-color: rgba(60, 162, 200, 0.9);
   border-radius: 0.25rem; }
 
-.was-validated .form-control:valid, .form-control.is-valid {
+.was-validated .form-control:valid, .was-validated .react-datepicker__input-container input:valid, .react-datepicker__input-container .was-validated input:valid, .was-validated .react-datepicker-ignore-onclickoutside:valid, .form-control.is-valid, .react-datepicker__input-container input.is-valid, .is-valid.react-datepicker-ignore-onclickoutside {
   border-color: #3ca2c8;
   padding-right: 2.1rem;
   background-repeat: no-repeat;
   background-position: center right calc(2.1rem / 4);
   background-size: calc(2.1rem / 2) calc(2.1rem / 2);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%233ca2c8' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e"); }
-  .was-validated .form-control:valid:focus, .form-control.is-valid:focus {
+  .was-validated .form-control:valid:focus, .was-validated .react-datepicker__input-container input:valid:focus, .react-datepicker__input-container .was-validated input:valid:focus, .was-validated .react-datepicker-ignore-onclickoutside:valid:focus, .form-control.is-valid:focus, .react-datepicker__input-container input.is-valid:focus, .is-valid.react-datepicker-ignore-onclickoutside:focus {
     border-color: #3ca2c8;
     -webkit-box-shadow: 0 0 0 0.2rem rgba(60, 162, 200, 0.25);
     box-shadow: 0 0 0 0.2rem rgba(60, 162, 200, 0.25); }
-  .was-validated .form-control:valid ~ .valid-feedback,
-  .was-validated .form-control:valid ~ .valid-tooltip, .form-control.is-valid ~ .valid-feedback,
-  .form-control.is-valid ~ .valid-tooltip {
+  .was-validated .form-control:valid ~ .valid-feedback, .was-validated .react-datepicker__input-container input:valid ~ .valid-feedback, .react-datepicker__input-container .was-validated input:valid ~ .valid-feedback, .was-validated .react-datepicker-ignore-onclickoutside:valid ~ .valid-feedback,
+  .was-validated .form-control:valid ~ .valid-tooltip,
+  .was-validated .react-datepicker__input-container input:valid ~ .valid-tooltip,
+  .react-datepicker__input-container .was-validated input:valid ~ .valid-tooltip,
+  .was-validated .react-datepicker-ignore-onclickoutside:valid ~ .valid-tooltip, .form-control.is-valid ~ .valid-feedback, .react-datepicker__input-container input.is-valid ~ .valid-feedback, .is-valid.react-datepicker-ignore-onclickoutside ~ .valid-feedback,
+  .form-control.is-valid ~ .valid-tooltip,
+  .react-datepicker__input-container input.is-valid ~ .valid-tooltip,
+  .is-valid.react-datepicker-ignore-onclickoutside ~ .valid-tooltip {
     display: block; }
 
-.was-validated textarea.form-control:valid, textarea.form-control.is-valid {
+.was-validated textarea.form-control:valid, .was-validated textarea.react-datepicker-ignore-onclickoutside:valid, textarea.form-control.is-valid, textarea.is-valid.react-datepicker-ignore-onclickoutside {
   padding-right: 2.1rem;
   background-position: top calc(2.1rem / 4) right calc(2.1rem / 4); }
 
@@ -2029,23 +2034,28 @@ textarea.form-control {
   background-color: rgba(245, 0, 87, 0.9);
   border-radius: 0.25rem; }
 
-.was-validated .form-control:invalid, .form-control.is-invalid {
+.was-validated .form-control:invalid, .was-validated .react-datepicker__input-container input:invalid, .react-datepicker__input-container .was-validated input:invalid, .was-validated .react-datepicker-ignore-onclickoutside:invalid, .form-control.is-invalid, .react-datepicker__input-container input.is-invalid, .is-invalid.react-datepicker-ignore-onclickoutside {
   border-color: #f50057;
   padding-right: 2.1rem;
   background-repeat: no-repeat;
   background-position: center right calc(2.1rem / 4);
   background-size: calc(2.1rem / 2) calc(2.1rem / 2);
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f50057' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E"); }
-  .was-validated .form-control:invalid:focus, .form-control.is-invalid:focus {
+  .was-validated .form-control:invalid:focus, .was-validated .react-datepicker__input-container input:invalid:focus, .react-datepicker__input-container .was-validated input:invalid:focus, .was-validated .react-datepicker-ignore-onclickoutside:invalid:focus, .form-control.is-invalid:focus, .react-datepicker__input-container input.is-invalid:focus, .is-invalid.react-datepicker-ignore-onclickoutside:focus {
     border-color: #f50057;
     -webkit-box-shadow: 0 0 0 0.2rem rgba(245, 0, 87, 0.25);
     box-shadow: 0 0 0 0.2rem rgba(245, 0, 87, 0.25); }
-  .was-validated .form-control:invalid ~ .invalid-feedback,
-  .was-validated .form-control:invalid ~ .invalid-tooltip, .form-control.is-invalid ~ .invalid-feedback,
-  .form-control.is-invalid ~ .invalid-tooltip {
+  .was-validated .form-control:invalid ~ .invalid-feedback, .was-validated .react-datepicker__input-container input:invalid ~ .invalid-feedback, .react-datepicker__input-container .was-validated input:invalid ~ .invalid-feedback, .was-validated .react-datepicker-ignore-onclickoutside:invalid ~ .invalid-feedback,
+  .was-validated .form-control:invalid ~ .invalid-tooltip,
+  .was-validated .react-datepicker__input-container input:invalid ~ .invalid-tooltip,
+  .react-datepicker__input-container .was-validated input:invalid ~ .invalid-tooltip,
+  .was-validated .react-datepicker-ignore-onclickoutside:invalid ~ .invalid-tooltip, .form-control.is-invalid ~ .invalid-feedback, .react-datepicker__input-container input.is-invalid ~ .invalid-feedback, .is-invalid.react-datepicker-ignore-onclickoutside ~ .invalid-feedback,
+  .form-control.is-invalid ~ .invalid-tooltip,
+  .react-datepicker__input-container input.is-invalid ~ .invalid-tooltip,
+  .is-invalid.react-datepicker-ignore-onclickoutside ~ .invalid-tooltip {
     display: block; }
 
-.was-validated textarea.form-control:invalid, textarea.form-control.is-invalid {
+.was-validated textarea.form-control:invalid, .was-validated textarea.react-datepicker-ignore-onclickoutside:invalid, textarea.form-control.is-invalid, textarea.is-invalid.react-datepicker-ignore-onclickoutside {
   padding-right: 2.1rem;
   background-position: top calc(2.1rem / 4) right calc(2.1rem / 4); }
 
@@ -2149,7 +2159,7 @@ textarea.form-control {
       -ms-flex-align: center;
       align-items: center;
       margin-bottom: 0; }
-    .form-inline .form-control {
+    .form-inline .form-control, .form-inline .react-datepicker__input-container input, .react-datepicker__input-container .form-inline input, .form-inline .react-datepicker-ignore-onclickoutside {
       display: inline-block;
       width: auto;
       vertical-align: middle; }
@@ -3005,7 +3015,7 @@ input[type="button"].btn-block {
   -ms-flex-align: stretch;
   align-items: stretch;
   width: 100%; }
-  .input-group > .form-control,
+  .input-group > .form-control, .react-datepicker__input-container .input-group > input, .input-group > .react-datepicker-ignore-onclickoutside,
   .input-group > .form-control-plaintext,
   .input-group > .custom-select,
   .input-group > .custom-file {
@@ -3015,30 +3025,40 @@ input[type="button"].btn-block {
     flex: 1 1 auto;
     width: 1%;
     margin-bottom: 0; }
-    .input-group > .form-control + .form-control,
+    .input-group > .form-control + .form-control, .react-datepicker__input-container .input-group > input + .form-control, .input-group > .react-datepicker-ignore-onclickoutside + .form-control, .react-datepicker__input-container .input-group > .form-control + input, .react-datepicker__input-container .input-group > input + input, .react-datepicker__input-container .input-group > .react-datepicker-ignore-onclickoutside + input, .input-group > .form-control + .react-datepicker-ignore-onclickoutside, .react-datepicker__input-container .input-group > input + .react-datepicker-ignore-onclickoutside, .input-group > .react-datepicker-ignore-onclickoutside + .react-datepicker-ignore-onclickoutside,
     .input-group > .form-control + .custom-select,
+    .react-datepicker__input-container .input-group > input + .custom-select,
+    .input-group > .react-datepicker-ignore-onclickoutside + .custom-select,
     .input-group > .form-control + .custom-file,
+    .react-datepicker__input-container .input-group > input + .custom-file,
+    .input-group > .react-datepicker-ignore-onclickoutside + .custom-file,
     .input-group > .form-control-plaintext + .form-control,
+    .react-datepicker__input-container .input-group > .form-control-plaintext + input,
+    .input-group > .form-control-plaintext + .react-datepicker-ignore-onclickoutside,
     .input-group > .form-control-plaintext + .custom-select,
     .input-group > .form-control-plaintext + .custom-file,
     .input-group > .custom-select + .form-control,
+    .react-datepicker__input-container .input-group > .custom-select + input,
+    .input-group > .custom-select + .react-datepicker-ignore-onclickoutside,
     .input-group > .custom-select + .custom-select,
     .input-group > .custom-select + .custom-file,
     .input-group > .custom-file + .form-control,
+    .react-datepicker__input-container .input-group > .custom-file + input,
+    .input-group > .custom-file + .react-datepicker-ignore-onclickoutside,
     .input-group > .custom-file + .custom-select,
     .input-group > .custom-file + .custom-file {
       margin-left: -1px; }
-  .input-group > .form-control:focus,
+  .input-group > .form-control:focus, .react-datepicker__input-container .input-group > input:focus, .input-group > .react-datepicker-ignore-onclickoutside:focus,
   .input-group > .custom-select:focus,
   .input-group > .custom-file .custom-file-input:focus ~ .custom-file-label {
     z-index: 3; }
   .input-group > .custom-file .custom-file-input:focus {
     z-index: 4; }
-  .input-group > .form-control:not(:last-child),
+  .input-group > .form-control:not(:last-child), .react-datepicker__input-container .input-group > input:not(:last-child), .input-group > .react-datepicker-ignore-onclickoutside:not(:last-child),
   .input-group > .custom-select:not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0; }
-  .input-group > .form-control:not(:first-child),
+  .input-group > .form-control:not(:first-child), .react-datepicker__input-container .input-group > input:not(:first-child), .input-group > .react-datepicker-ignore-onclickoutside:not(:first-child),
   .input-group > .custom-select:not(:first-child) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0; }
@@ -3107,11 +3127,11 @@ input[type="button"].btn-block {
   .input-group-text input[type="checkbox"] {
     margin-top: 0; }
 
-.input-group-lg > .form-control:not(textarea),
+.input-group-lg > .form-control:not(textarea), .react-datepicker__input-container .input-group-lg > input:not(textarea), .input-group-lg > .react-datepicker-ignore-onclickoutside:not(textarea),
 .input-group-lg > .custom-select {
   height: calc(2.6875rem + 2px); }
 
-.input-group-lg > .form-control,
+.input-group-lg > .form-control, .react-datepicker__input-container .input-group-lg > input, .input-group-lg > .react-datepicker-ignore-onclickoutside,
 .input-group-lg > .custom-select,
 .input-group-lg > .input-group-prepend > .input-group-text,
 .input-group-lg > .input-group-append > .input-group-text,
@@ -3122,11 +3142,11 @@ input[type="button"].btn-block {
   line-height: 1.5;
   border-radius: 0.3rem; }
 
-.input-group-sm > .form-control:not(textarea),
+.input-group-sm > .form-control:not(textarea), .react-datepicker__input-container .input-group-sm > input:not(textarea), .input-group-sm > .react-datepicker-ignore-onclickoutside:not(textarea),
 .input-group-sm > .custom-select {
   height: calc(1.68125rem + 2px); }
 
-.input-group-sm > .form-control,
+.input-group-sm > .form-control, .react-datepicker__input-container .input-group-sm > input, .input-group-sm > .react-datepicker-ignore-onclickoutside,
 .input-group-sm > .custom-select,
 .input-group-sm > .input-group-prepend > .input-group-text,
 .input-group-sm > .input-group-append > .input-group-text,
@@ -8222,44 +8242,6 @@ label:not(.custom-file-label):not(.form-check-label) {
     transition: transform .5s,-webkit-transform .5s;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden; }
-    .isDisabled {
-      color: currentColor;
-      cursor: not-allowed;
-      opacity: 0.5;
-      text-decoration: none;
-      pointer-events: none;
-      padding: 1rem 0;
-      border-radius: 2px;
-      position: relative;
-      overflow: hidden;
-      -webkit-transition: background-color .3s;
-      -o-transition: background-color .3s;
-      transition: background-color .3s;
-      text-align: center;
-    }
-    .isDisabled > i {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      color: #FFF;
-      line-height: 39px;
-      font-size: 1.5rem;
-      -webkit-transition: background-color .5s;
-      -o-transition: background-color .5s;
-      transition: background-color .5s; }
-    .isDisabled > small {
-      display: block;
-      margin-top: .5rem;
-      color: #9c9c9c;
-      -webkit-transition: color .5s;
-      -o-transition: color .5s;
-      transition: color .5s; }
-    .isDisabled:hover .isDisabled__helper {
-      -webkit-transform: scale(3.5);
-      -ms-transform: scale(3.5);
-      transform: scale(3.5); }
-    .isDisabled:hover > small {
-      color: #FFF; }
   .app-shortcuts__item {
     padding: 1rem 0;
     border-radius: 2px;
@@ -8497,10 +8479,10 @@ label:not(.custom-file-label):not(.form-check-label) {
 .form-actions .btn {
   margin-left: 10px; }
 
-.form-control .arrow-combo {
+.form-control .arrow-combo, .react-datepicker__input-container input .arrow-combo, .react-datepicker-ignore-onclickoutside .arrow-combo {
   float: right; }
 
-.form-control:disabled {
+.form-control:disabled, .react-datepicker__input-container input:disabled, .react-datepicker-ignore-onclickoutside:disabled {
   background: #dddddd; }
 
 .form-control-dialogSelect {
@@ -9108,6 +9090,10 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 @media (min-width: 992px) {
   .minWidth-empty-modal {
     min-width: 960px; } }
+
+.input-group .react-datepicker__input-container input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0; }
 
 .login-container {
   width: 100%;
@@ -11155,12 +11141,12 @@ button.rbc-input::-moz-focus-inner {
     transform: scale(0.5, 0.5);
     width: 86px; }
 
-.PropertiesTags-item .btn, .PropertiesTags-item .form-control {
+.PropertiesTags-item .btn, .PropertiesTags-item .form-control, .PropertiesTags-item .react-datepicker__input-container input, .react-datepicker__input-container .PropertiesTags-item input, .PropertiesTags-item .react-datepicker-ignore-onclickoutside {
   background-color: #dddddd;
   border-color: #dddddd;
   color: #7e7e7e; }
 
-.PropertiesTags-item .form-control {
+.PropertiesTags-item .form-control, .PropertiesTags-item .react-datepicker__input-container input, .react-datepicker__input-container .PropertiesTags-item input, .PropertiesTags-item .react-datepicker-ignore-onclickoutside {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   font-weight: 700 !important; }
@@ -11277,6 +11263,9 @@ button.rbc-input::-moz-focus-inner {
 .MasterShiftSummary-line {
   display: block;
   width: 100%; }
+
+label.input-group-text {
+  margin-top: 0 !important; }
 
 .MasterShift-btn i {
   color: #7e7e7e;

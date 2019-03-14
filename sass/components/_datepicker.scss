@@ -1,0 +1,13 @@
+.react-datepicker__input-container {
+    input {
+        @extend %react-datepicker;
+        .input-group & {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0; 
+        }
+    }
+}
+
+.react-datepicker-ignore-onclickoutside {
+    @extend %react-datepicker;
+}
