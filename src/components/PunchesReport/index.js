@@ -83,9 +83,9 @@ class PunchesReport extends Component {
     }
 
     changeFilter = (property) => {
-        this.setState({
-            property: property
-        }, () => {
+        this.setState(() => ({
+            property
+        }), () => {
             this.getReport();
         });
     }
@@ -148,7 +148,7 @@ class PunchesReport extends Component {
     };
 
     handleCloseModalPicture = () => {
-        this.setState({openModalPicture: false});
+        this.setState({ openModalPicture: false });
     };
 
     render() {
@@ -178,7 +178,7 @@ class PunchesReport extends Component {
                         <Table
                             openModal={this.state.openModal}
                             openModalPicture={this.handleClickOpenModalPicture}
-                            closeModalPicture={this.handleCloseModalPicture }
+                            closeModalPicture={this.handleCloseModalPicture}
                             handleCloseModal={this.handleCloseModal}
                             data={this.state.data} />
                     </div>
