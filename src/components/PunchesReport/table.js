@@ -228,9 +228,15 @@ class PunchesReportTable extends React.Component {
                                                 <CustomTableCell>{row.hotelCode}</CustomTableCell>
                                                 <CustomTableCell>{row.positionCode}</CustomTableCell>
                                                 <CustomTableCell style={{position: 'relative'}}>
-                                                    <img className="avatar" src={row.imageMarked} onClick={() => {
-                                                        this.props.openModalPicture(row.imageMarked)
-                                                    }} />
+                                                    <div className="avatar-container">
+                                                        <img className="avatar" src={row.imageMarked} />
+                                                        <div className="avatar-container-pic">
+                                                            <img className="avatar avatar-lg" src={row.imageMarked} onClick={() => {
+                                                                this.props.openModalPicture(row.imageMarked)
+                                                            }} />
+                                                            <div className="arrow-up"/>
+                                                        </div>
+                                                    </div>
                                                 </CustomTableCell>
                                             </TableRow>
                                         );
