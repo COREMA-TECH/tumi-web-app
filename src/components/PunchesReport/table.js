@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@material-ui/core/IconButton';
 import LastPageIcon from '@material-ui/icons/LastPage';
@@ -14,10 +14,14 @@ import TableBody from '@material-ui/core/TableBody/TableBody';
 import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
-import moment from 'moment';
 import Route from 'react-router-dom/es/Route';
 import TimeCardForm from '../TimeCard/TimeCardForm'
-import withGlobalContent from 'Generic/Global';
+import './index.css';
+
+import Tooltip from '@material-ui/core/Tooltip';
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import Dialog from "@material-ui/core/Dialog/Dialog";
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -49,29 +53,29 @@ class TablePaginationActions extends React.Component {
     };
 
     render() {
-        const { classes, count, page, rowsPerPage, theme } = this.props;
+        const {classes, count, page, rowsPerPage, theme} = this.props;
 
         return (
             <div className={classes.root}>
                 <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
-                    {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+                    {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
                 </IconButton>
                 <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
-                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                    {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
                 </IconButton>
                 <IconButton
                     onClick={this.handleNextButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="Next Page"
                 >
-                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                    {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
                 </IconButton>
                 <IconButton
                     onClick={this.handleLastPageButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="Last Page"
                 >
-                    {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+                    {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
                 </IconButton>
             </div>
         );
@@ -87,7 +91,7 @@ TablePaginationActions.propTypes = {
     theme: PropTypes.object.isRequired
 };
 
-const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(TablePaginationActions);
+const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(TablePaginationActions);
 
 let counter = 0;
 
@@ -142,15 +146,16 @@ class PunchesReportTable extends React.Component {
         this.state = {
             page: 0,
             rowsPerPage: 25,
-            openModal: false
+            openModalPicture: true
         };
     }
+
     handleChangePage = (event, page) => {
-        this.setState({ page });
+        this.setState({page});
     };
 
     handleChangeRowsPerPage = (event) => {
-        this.setState({ rowsPerPage: event.target.value });
+        this.setState({rowsPerPage: event.target.value});
     };
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -167,18 +172,17 @@ class PunchesReportTable extends React.Component {
         return false;
     }
 
-    handleClickOpenModal = () => {
-        this.setState({ openModal: true });
-    };
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         let items = this.props.data || [];
-        const { rowsPerPage, page } = this.state;
+        const {rowsPerPage, page} = this.state;
+
+
 
         return (
             <Route
-                render={({ history }) => (
+                render={({history}) => (
                     <div className="card-body pt-0">
                         <Paper className={classes.root}>
                             <Table className={classes.table}>
@@ -196,6 +200,7 @@ class PunchesReportTable extends React.Component {
                                         <CustomTableCell className={"Table-head"}>Clock Out</CustomTableCell>
                                         <CustomTableCell className={"Table-head"}>Hotel Code</CustomTableCell>
                                         <CustomTableCell className={"Table-head"}>Position Code</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Avatar</CustomTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -208,7 +213,7 @@ class PunchesReportTable extends React.Component {
                                                 onClick={() => {
                                                     //   e.stopPropagation();
                                                     //                                                    alert("Aqui estoy")
-                                                    this.handleClickOpenModal();
+                                                    //this.handleClickOpenModal();
                                                 }}>
                                                 <CustomTableCell>{row.employeeId}</CustomTableCell>
                                                 <CustomTableCell>{row.name}</CustomTableCell>
@@ -222,6 +227,17 @@ class PunchesReportTable extends React.Component {
                                                 <CustomTableCell>{row.clockOut || ''}</CustomTableCell>
                                                 <CustomTableCell>{row.hotelCode}</CustomTableCell>
                                                 <CustomTableCell>{row.positionCode}</CustomTableCell>
+                                                <CustomTableCell style={{position: 'relative'}}>
+                                                    <div className="avatar-container">
+                                                        <img className="avatar" src={row.imageMarked} />
+                                                        <div className="avatar-container-pic">
+                                                            <img className="avatar avatar-lg" src={row.imageMarked} onClick={() => {
+                                                                this.props.openModalPicture(row.imageMarked)
+                                                            }} />
+                                                            <div className="arrow-up"/>
+                                                        </div>
+                                                    </div>
+                                                </CustomTableCell>
                                             </TableRow>
                                         );
                                     })}
@@ -258,6 +274,7 @@ class PunchesReportTable extends React.Component {
                             </div>
                         </div>
                     </div>
+
 
                 )}
             />

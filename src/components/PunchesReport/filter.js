@@ -59,6 +59,11 @@ class PunchesReportFilter extends Component {
         this.setState({ openModal: true });
     };
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.property != nextProps.property)
+            this.setState(() => ({ property: nextProps.property }));
+    }
+
     render() {
         return <div className="card-header bg-light">
             <div className="row">
