@@ -5,8 +5,10 @@ import Filter from './filter';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import { GET_REPORT_QUERY, GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY } from './queries';
+import './index.css';
 
 import PreFilter from './PreFilter';
+import Dialog from "@material-ui/core/Dialog/Dialog";
 
 class PunchesReport extends Component {
 
@@ -19,7 +21,9 @@ class PunchesReport extends Component {
         employee: '',
         startDate: '',
         endDate: '',
-        openModal: false
+        openModal: false,
+        openModalPicture: false,
+        urlPicture: ''
     }
 
     constructor(props) {
@@ -136,12 +140,36 @@ class PunchesReport extends Component {
         });
     }
 
+    handleClickOpenModalPicture = (urlPicture) => {
+        this.setState({
+            openModalPicture: true,
+            urlPicture: urlPicture
+        });
+    };
+
+    handleCloseModalPicture = () => {
+        this.setState({openModalPicture: false});
+    };
+
     render() {
         const { loadingReport } = this.state;
         const loading = loadingReport;
 
+
+        let renderDialogPicture = () => (
+            <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModalPicture}>
+                {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
+                <img src={this.state.urlPicture} className="avatar-lg" />
+                {/*</DialogTitle>*/}
+            </Dialog>
+        );
+
+
         return <React.Fragment>
             {loading && <LinearProgress />}
+            {
+                renderDialogPicture()
+            }
             <PreFilter changeFilter={this.changeFilter} />
             <div className="row">
                 <div className="col-md-12">
@@ -149,6 +177,8 @@ class PunchesReport extends Component {
                         <Filter {...this.state} updateFilter={this.updateFilter} />
                         <Table
                             openModal={this.state.openModal}
+                            openModalPicture={this.handleClickOpenModalPicture}
+                            closeModalPicture={this.handleCloseModalPicture }
                             handleCloseModal={this.handleCloseModal}
                             data={this.state.data} />
                     </div>

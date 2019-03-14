@@ -172,38 +172,18 @@ class PunchesReportTable extends React.Component {
         return false;
     }
 
-    handleClickOpenModal = () => {
-        this.setState({openModalPicture: true});
-    };
-
-    handleCloseModal = () => {
-        alert("Error");
-        this.setState({openModalPicture: false});
-    };
-
-
 
     render() {
         const {classes} = this.props;
         let items = this.props.data || [];
         const {rowsPerPage, page} = this.state;
 
-        let renderDialogPicture = () => (
-            <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModal}>
-                {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
-                    <img src="https://i.imgur.com/VJRRwvC.jpg" className="avatar-lg" />
-                {/*</DialogTitle>*/}
-            </Dialog>
-        );
 
 
         return (
             <Route
                 render={({history}) => (
                     <div className="card-body pt-0">
-                        {
-                            renderDialogPicture()
-                        }
                         <Paper className={classes.root}>
                             <Table className={classes.table}>
                                 <TableHead>
@@ -249,12 +229,7 @@ class PunchesReportTable extends React.Component {
                                                 <CustomTableCell>{row.positionCode}</CustomTableCell>
                                                 <CustomTableCell style={{position: 'relative'}}>
                                                     <img className="avatar" src={row.imageMarked} onClick={() => {
-                                                        alert("Alert!");
-                                                        this.setState({
-                                                            openModalPicture: true
-                                                        }, ()  => {
-                                                            console.log(this.state.openModalPicture)
-                                                        })
+                                                        this.props.openModalPicture(row.imageMarked)
                                                     }} />
                                                 </CustomTableCell>
                                             </TableRow>
