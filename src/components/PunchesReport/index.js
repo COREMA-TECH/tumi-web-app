@@ -10,14 +10,17 @@ import './index.css';
 import PreFilter from './PreFilter';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 
+const PROPERTY_DEFAULT = { value: '', label: 'Property(All)' };
+const DEPARTMENT_DEFAULT = { value: '', label: 'Department(All)' };
+
 class PunchesReport extends Component {
 
     DEFAULT_STATE = {
         data: [],
         properties: [],
         departments: [],
-        property: 0,
-        department: 0,
+        property: PROPERTY_DEFAULT,
+        department: DEPARTMENT_DEFAULT,
         employee: '',
         startDate: '',
         endDate: '',
@@ -64,15 +67,30 @@ class PunchesReport extends Component {
 
     getDepartments = () => {
         this.setState(() => ({ loadingDepartments: true }), () => {
+            var variables = {};
+
+            if (this.state.property.value)
+                variables = { Id_Entity: this.state.property.value };
+
             this.props.client
                 .query({
                     query: GET_DEPARTMENTS_QUERY,
-                    variables: { Id_Entity: this.state.property },
+                    variables,
                     fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
+                    let options = [];
+
+                    //Add first record
+                    options.push({ value: '', label: 'Department(All)' });
+
+                    //Create structure based on department data
+                    data.catalogitem.map(({ Id, DisplayLabel }) => {
+                        options.push({ value: Id, label: DisplayLabel })
+                    });
+
                     this.setState(() => ({
-                        departments: data.catalogitem,
+                        departments: options,
                         loadingDepartments: false
                     }));
                 })
@@ -98,10 +116,22 @@ class PunchesReport extends Component {
                     fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
+                    let options = [];
+
+                    //Add first record
+                    options.push({ value: '', label: 'Property(All)' });
+
+                    //Create structure based on property data
+                    data.getbusinesscompanies.map((property) => {
+                        options.push({ value: property.Id, label: property.Code + " | " + property.Name });
+                    });
+
+                    //Set values to state
                     this.setState(() => ({
-                        properties: data.getbusinesscompanies,
+                        properties: options,
                         loadingProperties: false
                     }));
+
                 })
                 .catch(error => {
                     this.setState(() => ({ loadingProperties: false }));
@@ -112,10 +142,10 @@ class PunchesReport extends Component {
     getFilters = () => {
         var filters = {}, { property, department, employee, startDate, endDate } = this.state;
 
-        if (property)
-            filters = { ...filters, idEntity: property };
-        if (department)
-            filters = { ...filters, Id_Department: department };
+        if (property.value)
+            filters = { ...filters, idEntity: property.value };
+        if (department.value)
+            filters = { ...filters, Id_Department: department.value };
         if (employee)
             filters = { ...filters, employee };
         if (startDate)
@@ -129,12 +159,13 @@ class PunchesReport extends Component {
     updateFilter = ({ property, department, employee, startDate, endDate }) => {
         this.setState((prevState) => ({
             property,
-            department: prevState.property != property ? 0 : department,
+            department: prevState.property.value != property.value ? DEPARTMENT_DEFAULT : department,
             employee,
             startDate,
             endDate,
-            departments: prevState.property != property ? [] : prevState.departments
+            departments: prevState.property.value != property.value ? [] : prevState.departments
         }), () => {
+            console.log(this.state);
             this.getDepartments();
             this.getReport();
         });
