@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import TimeCardForm from '../TimeCard/TimeCardForm'
 import withGlobalContent from 'Generic/Global';
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
 
 class PunchesReportFilter extends Component {
 
@@ -11,8 +13,8 @@ class PunchesReportFilter extends Component {
 
     constructor(props) {
         super(props);
-        var { property, deparment, employee, startDate, endDate } = props;
-        this.state = { property, deparment, employee, startDate, endDate, ...this.DEFAULT_STATE };
+        var { property, department, employee, startDate, endDate } = props;
+        this.state = { property, department, employee, startDate, endDate, ...this.DEFAULT_STATE };
     }
 
     renderProperties = () => {
@@ -35,6 +37,23 @@ class PunchesReportFilter extends Component {
                     this.props.updateFilter(this.state)
             })
     }
+
+    handlePropertyChange = (property) => {
+        this.setState(() => ({ property }),
+            () => {
+                if (this.props.updateFilter)
+                    this.props.updateFilter(this.state)
+            });
+    };
+
+    handleDepartmentChange = (department) => {
+        this.setState(() => ({ department }),
+            () => {
+                if (this.props.updateFilter)
+                    this.props.updateFilter(this.state)
+            });
+    };
+
 
     toggleRefresh = () => {
         this.setState((prevState) => { return { refresh: !prevState.refresh } })
@@ -68,24 +87,34 @@ class PunchesReportFilter extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.property != nextProps.property)
+        if (this.props.property.value != nextProps.property.value)
             this.setState(() => ({ property: nextProps.property }));
+        if (this.props.department.value != nextProps.department.value)
+            this.setState(() => ({ department: nextProps.department }));
     }
 
     render() {
         return <div className="card-header bg-light">
             <div className="row">
                 <div className="col-md-2 mt-1 pl-0">
-                    <select name="property" className="form-control" onChange={this.updateFilter} value={this.state.property}>
-                        <option value="">Property(All)</option>
-                        {this.renderProperties()}
-                    </select>
+                    <Select
+                        name="property"
+                        options={this.props.properties}
+                        value={this.state.property}
+                        onChange={this.handlePropertyChange}
+                        components={makeAnimated()}
+                        closeMenuOnSelect
+                    />
                 </div>
                 <div className="col-md-2 mt-1 pl-0">
-                    <select name="department" className="form-control" onChange={this.updateFilter} value={this.state.deparment} disabled={this.props.loadingDepartments}>
-                        <option value="">Department(All)</option>
-                        {this.renderDepartments()}
-                    </select>
+                    <Select
+                        name="department"
+                        options={this.props.departments}
+                        value={this.state.department}
+                        onChange={this.handleDepartmentChange}
+                        components={makeAnimated()}
+                        closeMenuOnSelect
+                    />
                 </div>
                 <div className="col-md-2 mt-1 pl-0">
                     <div className="input-group">
