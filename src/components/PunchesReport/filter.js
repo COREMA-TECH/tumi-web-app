@@ -55,6 +55,14 @@ class PunchesReportFilter extends Component {
             });
     }
 
+    handleCloseModal = (event) => {
+        event.preventDefault();
+        this.setState({
+            openModal: false
+
+        });
+    };
+
     handleClickOpenModal = () => {
         this.setState({ openModal: true });
     };
