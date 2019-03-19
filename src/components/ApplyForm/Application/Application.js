@@ -788,7 +788,6 @@ class Application extends Component {
                                                     }}
                                                     value={this.state.socialSecurityNumber}
                                                     placeholder="___-__-____"
-                                                    required
                                                     minLength="11"
                                                 />
                                             </div>
@@ -1099,7 +1098,7 @@ class Application extends Component {
                                     >
                                         {spanishActions[2].label}
                                     </button>
-                                    <button type="submit" className="applicant-card__save-button" disabled={ this.state.searchigZipcode}>
+                                    <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode}>
                                         {spanishActions[4].label}
                                     </button>
                                 </div>
