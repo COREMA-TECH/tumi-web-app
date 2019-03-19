@@ -107,7 +107,7 @@ class CustomizedTabs extends React.Component {
             if (this.props.location.state.ApplicationId === undefined)
                 window.location.href = "/home/application";
 
-            localStorage.setItem('languageForm', 'en');
+            //localStorage.setItem('languageForm', 'en');
 
             this.setState({
                 applicationId: this.props.location.state.ApplicationId

@@ -44,25 +44,23 @@ class Toolbar extends Component {
 		event.preventDefault();
 	};
 
-	changeLanguage = (event) => {
-        localStorage.getItem('languageForm', (value) => {
-        	console.log("Language VALUE is -->", value)
-		});
+	changeLanguage = async (e) => {
+		e.preventDefault();
+		let initialValue = localStorage.getItem('languageForm');
 
 		if (this.state.languageIcon == 'en') {
 			console.log("IF | Languages is --> ", localStorage.getItem('languageForm'));
-			localStorage.setItem('languageForm', 'es');
-        }
-
-        if (this.state.languageIcon == 'es'){
+			await localStorage.setItem('languageForm', 'es');
+            console.log("New value is --> ", localStorage.getItem('languageForm'));
+        } else {
             console.log("ELSE | Languages is --> ", localStorage.getItem('languageForm', () => {
 
 			}));
-			localStorage.setItem('languageForm', 'en');
+			await localStorage.setItem('languageForm', 'en');
+            console.log("New value is --> ", localStorage.getItem('languageForm'));
         }
 
-        event.preventDefault();
-		window.location.reload(true);
+		//window.location.reload();
 	};
 
 	componentWillMount() {
@@ -70,7 +68,7 @@ class Toolbar extends Component {
 		this.setState({
 			languageIcon: localStorage.getItem('languageForm')
 		}, () => {
-			console.log("Language --> ", this.state.languageIcon);
+			console.log("Language --> ", localStorage.getItem('languageForm'));
 		});
 
 		this.getRolesFormsInfo();
