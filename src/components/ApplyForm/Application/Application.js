@@ -205,12 +205,25 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to update applicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
+                        if (error = 'Error: "GraphQL error: Validation error') {
+                            this.setState({
+                                socialSecurityNumber: ''
+                            });
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Social Security Number Duplicated!',
+                                'bottom',
+                                'right'
+                            );
+                        } else {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to update applicant information. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
+                        }
+
                     });
             }
         );
@@ -1099,7 +1112,7 @@ class Application extends Component {
                                     >
                                         {spanishActions[2].label}
                                     </button>
-                                    <button type="submit" className="applicant-card__save-button" disabled={ this.state.searchigZipcode}>
+                                    <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode}>
                                         {spanishActions[4].label}
                                     </button>
                                 </div>

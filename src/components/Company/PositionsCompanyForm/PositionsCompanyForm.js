@@ -1041,6 +1041,7 @@ query getposition ($Id_Entity:Int){
 										value={this.state.payrate}
 										placeholder={"$"}
 										type="number"
+										step="0.01"
 										allowZero={true}
 										change={(text) => this.onNumberChangeHandler(text, 'payrate')}
 									/>
@@ -1055,6 +1056,7 @@ query getposition ($Id_Entity:Int){
 									error={!this.state.billrateValid}
 									value={this.state.billrate}
 									type="number"
+									step="0.01"
 									placeholder={"$"}
 									allowZero={true}
 									change={(text) => this.onNumberChangeHandler(text, 'billrate')}
