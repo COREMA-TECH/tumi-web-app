@@ -234,6 +234,13 @@ class PunchesReportTable extends React.Component {
                                                             <img className="avatar avatar-lg" src={row.imageMarked} onClick={() => {
                                                                 this.props.openModalPicture(row.imageMarked)
                                                             }} />
+                                                            <div className="avatar-description">
+                                                                <h6 className="text-success ml-1 mt-3">{row.name}</h6>
+                                                                <button className="btn avatar--flag" onClick={(e) => {
+                                                                    // document.getElementById('')
+                                                                    e.target.classList.toggle('unflag');
+                                                                }}><i className="fas fa-flag flag"/></button>
+                                                            </div>
                                                             <div className="arrow-up"/>
                                                         </div>
                                                     </div>

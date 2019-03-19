@@ -25,6 +25,7 @@ export const GET_PROPERTIES_QUERY = gql`
     getbusinesscompanies( IsActive: 1, Contract_Status: "'C'", Id_Parent : -1) {
       Id
       Id_Parent
+      Code
       Name
       Country
       State

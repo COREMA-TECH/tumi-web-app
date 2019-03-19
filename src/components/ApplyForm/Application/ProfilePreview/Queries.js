@@ -47,6 +47,22 @@ query getcatalogitem ($Id_Entity:Int){
     }
 `;
 
+export const GET_APPLICATION_EMPLOYEES_QUERY = gql`
+query ApplicationEmployees($ApplicationId: Int)
+{
+  applicationEmployees(ApplicationId: $ApplicationId){
+Employees
+    {
+      Id_Deparment
+      Deparment
+      {
+        DisplayLabel
+      }
+      
+    }
+  }
+}
+`;
 
 export const GET_CONTACTS_QUERY = gql`
     query getcontacts($IdEntity: Int) {

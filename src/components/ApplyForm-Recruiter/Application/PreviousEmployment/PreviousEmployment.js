@@ -211,7 +211,7 @@ class PreviousEmployment extends Component {
 												previousEmploymentPhone: event.target.value
 											});
 										}}
-                                        placeholder="+(___) ___-____"
+										placeholder="+(___) ___-____"
 										minLength="15"
 									/>
 								</div>
@@ -262,6 +262,7 @@ class PreviousEmployment extends Component {
 										form="form-previous-employment"
 										name="payRateEmployment"
 										type="number"
+										step="0.01"
 										className="form-control"
 										min="0"
 										maxLength="50"

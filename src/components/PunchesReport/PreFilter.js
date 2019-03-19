@@ -53,7 +53,7 @@ class PreFilter extends Component {
                 properties: data.getbusinesscompanies
             }, () => {
                 this.state.properties.map((property) => {
-                    options.push({ value: property.Id, label: property.Id + " | " + property.Name })
+                    options.push({ value: property.Id, label: property.Code + " | " + property.Name });
                 });
                 this.setState({ options: options });
             });
@@ -82,14 +82,8 @@ class PreFilter extends Component {
         });
     }
 
-    handleChangePreFilter = (properties) => {
-        this.setState({
-            properties
-        }, () => {
-            this.setState({
-                property: properties.value
-            })
-        });
+    handleChangePreFilter = (property) => {
+        this.setState({ property });
     };
 
     render() {
@@ -104,18 +98,12 @@ class PreFilter extends Component {
                 <DialogContent style={{ overflowY: "unset" }}>
                     <div className="card-body" style={{ minWidth: "300px" }}>
                         <form action="" onSubmit={this.changeFilter}>
-                            {/* <select type="text" className="form-control" name="property" required onChange={this.handleChange}>
-                                <option value="">Select a Property</option>
-                                {this.state.properties.map((property) => {
-                                    return <option value={property.Id}>{property.Name}</option>
-                                })}
-                            </select> */}
                             <Select
                                 options={this.state.options}
-                                value={""}
+                                value={this.state.property}
                                 onChange={this.handleChangePreFilter}
-                                closeMenuOnSelect={false}
                                 components={makeAnimated()}
+                                closeMenuOnSelect
                             />
                             <button type="submit" className="btn btn-success mt-2 float-right">
                                 Filter
