@@ -44,18 +44,31 @@ class Toolbar extends Component {
 		event.preventDefault();
 	};
 
-	changeLanguage = (event) => {
-		if (this.state.languageIcon == 'en') localStorage.setItem('languageForm', 'es');
-		else localStorage.setItem('languageForm', 'en');
-		window.location.reload();
-		event.preventDefault();
+	changeLanguage = async (e) => {
+		e.preventDefault();
+		let initialValue = localStorage.getItem('languageForm');
 
+		if (this.state.languageIcon == 'en') {
+			console.log("IF | Languages is --> ", localStorage.getItem('languageForm'));
+			await localStorage.setItem('languageForm', 'es');
+            console.log("New value is --> ", localStorage.getItem('languageForm'));
+        } else {
+            console.log("ELSE | Languages is --> ", localStorage.getItem('languageForm', () => {
+
+			}));
+			await localStorage.setItem('languageForm', 'en');
+            console.log("New value is --> ", localStorage.getItem('languageForm'));
+        }
+
+		//window.location.reload();
 	};
 
 	componentWillMount() {
 		//this.getRolesFormsInfo();
 		this.setState({
 			languageIcon: localStorage.getItem('languageForm')
+		}, () => {
+			console.log("Language --> ", localStorage.getItem('languageForm'));
 		});
 
 		this.getRolesFormsInfo();
@@ -87,13 +100,6 @@ class Toolbar extends Component {
 							dataRolForm: data.rolesforms,
 							loading: false
 						});
-
-
-						console.log("Aqui esta roles forms ", data)
-						console.log("Aqui esta roles forms WWWWooooOOO ", this.state.dataRolForm)
-
-
-
 					})
 					.catch((error) => {
 						this.setState({
@@ -124,11 +130,6 @@ class Toolbar extends Component {
 			if (wo.Forms.Value == '/home/Properties') { Property = true }
 			if (wo.Forms.Value == '/home/contract/add') { Contract = true }
 		})
-
-
-
-
-		console.log("Permisos ", " WO ", WO, " Manager ", Manager, " Property ", Property, " Contract ", Contract)
 
 		return (
 			<div className="toolbar__main">

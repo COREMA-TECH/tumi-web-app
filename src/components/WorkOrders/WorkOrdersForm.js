@@ -25,6 +25,8 @@ import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
 import RowForm from './RowForm';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const uuidv4 = require('uuid/v4');
 
@@ -112,14 +114,15 @@ class WorkOrdersForm extends Component {
         isEditing: false,
         dataToEdit: {
             quantity: 0,
-            shift: 0,
-            endShift: '',
+            shift: moment('08:00', "HH:mm").format("HH:mm"),
+            endShift: moment('16:00', "HH:mm").format("HH:mm"),
             dayWeeks: '',
             comment: '',
             needExperience: false,
             needEnglish: false,
             PositionRateId: 0,
-            departmentId: 0
+            departmentId: 0,
+            duration: '8',
         }
 
     };
@@ -460,9 +463,13 @@ class WorkOrdersForm extends Component {
         }
 
         if (name === 'IdEntity') {
-            this.getPositions(value);
-            this.getContacts(value);
             this.getDepartment(value);
+            this.getContacts(value);
+        }
+
+        if (name === 'departmentId') {
+            console.log('entra');
+            this.getPositions(value);
         }
     };
 
@@ -470,14 +477,19 @@ class WorkOrdersForm extends Component {
         this.props.client
             .query({
                 query: GET_POSITION_BY_QUERY,
-                variables: { id: id }
+                fetchPolicy: 'no-cache',
+                variables: {
+                    Id_Department: id
+                }
             })
             .then(({ data }) => {
                 this.setState({
                     positions: data.getposition
                 });
             })
-            .catch();
+            .catch(error => {
+                console.log(error);
+            });
     };
 
     getRecruiter = () => {
@@ -631,6 +643,12 @@ class WorkOrdersForm extends Component {
         this.props.handleCloseModal(event);
     }
 
+    handleChangeDate = (date) => {
+        this.setState({
+            endDate: date
+        });
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -663,7 +681,20 @@ class WorkOrdersForm extends Component {
                                     </select>
                                 </div>
                                 <div className="col-md-3">
-                                    <input
+                                    <div class="input-group flex-nowrap">
+                                        <DatePicker
+                                            selected={this.state.endDate}
+                                            onChange={this.handleChangeDate}
+                                            placeholderText="Week Ending"
+                                            id="datepicker"
+                                        />
+                                        <div class="input-group-append">
+                                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                                <i class="far fa-calendar"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {/* <input
                                         required
                                         type="date"
                                         className="form-control"
@@ -672,7 +703,8 @@ class WorkOrdersForm extends Component {
                                         onChange={this.handleChange}
                                         value={this.state.endDate.substring(0, 10)}
                                         onBlur={this.handleValidate}
-                                    />
+                                        placeholder="Week Ending"
+                                    /> */}
                                 </div>
                             </div>
                         </div>

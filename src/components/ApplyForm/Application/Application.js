@@ -18,6 +18,9 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import LocationForm from '../../ui-components/LocationForm'
 import { withRouter } from "react-router-dom";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -128,7 +131,10 @@ class Application extends Component {
 
             positionCatalog: [],
             positionCatalogTag: [],
-            dataWorkOrder: []
+            dataWorkOrder: [],
+
+
+            openSSNDialog: false
         };
     }
 
@@ -471,40 +477,49 @@ class Application extends Component {
         e.preventDefault();
         e.stopPropagation();
 
-        if (!this.state.zipCode.trim().replace("-", ""))
-            this.props.handleOpenSnackbar(
-                'warning',
-                'ZipCode needed!',
-                'bottom',
-                'right'
-            );
-        else if (!this.state.city)
-            this.props.handleOpenSnackbar(
-                'warning',
-                'City needed!',
-                'bottom',
-                'right'
-            );
-        else if (!this.state.state)
-            this.props.handleOpenSnackbar(
-                'warning',
-                'State needed!',
-                'bottom',
-                'right'
-            );
-        else {
-            if (
-                this.state.homePhoneNumberValid ||
-                this.state.cellPhoneNumberValid
-            ) {
-                this.updateApplicationInformation(this.props.applicationId);
-            } else {
+
+
+        if (this.state.socialSecurityNumber.length === 0){
+            // Show dialog
+            this.setState({
+                openSSNDialog: true
+            })
+        } else {
+            if (!this.state.zipCode.trim().replace("-", ""))
                 this.props.handleOpenSnackbar(
                     'warning',
-                    'Complete all the fields and try again!',
+                    'ZipCode needed!',
                     'bottom',
                     'right'
                 );
+            else if (!this.state.city)
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    'City needed!',
+                    'bottom',
+                    'right'
+                );
+            else if (!this.state.state)
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    'State needed!',
+                    'bottom',
+                    'right'
+                );
+            else {
+                if (
+                    this.state.homePhoneNumberValid ||
+                    this.state.cellPhoneNumberValid
+                ) {
+                    this.updateApplicationInformation(this.props.applicationId);
+                } else {
+                    this.props.handleOpenSnackbar(
+                        'warning',
+                        'Complete all the fields and try again!',
+                        'bottom',
+                        'right'
+                    );
+                }
             }
         }
     }
@@ -515,12 +530,46 @@ class Application extends Component {
         })
     }
 
+    handleCloseSSNDialog = () => {
+        this.setState({
+            openSSNDialog: false
+        })
+    };
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
 
+        let renderSSNDialog = () => (
+            <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
+                <DialogTitle style={{ width: '600px', height: '300px'}}>
+                    <h5 className="modal-title">RECONOCIMIENTO DE CONTRATO INDEPENDIENTE</h5>
+                </DialogTitle>
+                <DialogActions>
+                    <div className="applicant-card__footer">
+                        <button
+                            className="applicant-card__cancel-button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                this.handleCloseSSNDialog();
+                            }}
+                        >
+                            {spanishActions[2].label}
+                        </button>
+                        <button type="submit" className="applicant-card__save-button">
+                            Accept
+                        </button>
+                    </div>
+                </DialogActions>
+            </Dialog>
+        );
+        
         return (
             <div className="Apply-container--application">
+                {
+                    renderSSNDialog()
+                }
                 <form
                     className="general-info-apply-form"
                     id="general-info-form"
@@ -801,7 +850,6 @@ class Application extends Component {
                                                     }}
                                                     value={this.state.socialSecurityNumber}
                                                     placeholder="___-__-____"
-                                                    required
                                                     minLength="11"
                                                 />
                                             </div>

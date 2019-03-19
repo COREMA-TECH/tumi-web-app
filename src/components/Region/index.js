@@ -54,28 +54,6 @@ class Region extends Component {
         };
     }
 
-
-    /* getRegions = () => {
-         this.props.client
-             .query({
-                 query: GET_REGION_QUERY,
-                 variables: {},
-                 fetchPolicy: 'no-cache'
-             })
-             .then(({ data }) => {
-                 this.setState({
-                     data: data.getcatalogitem
- 
-                 });
-             })
-             .catch();
-     };*/
-
-
-    /*componentWillMount() {
-        this.getRegions();
-    }*/
-
     handleClickOpenModal = () => {
         this.setState({ openModal: true, item: null });
     };
@@ -96,16 +74,7 @@ class Region extends Component {
         });
     };
 
-    /*toggleRefresh = () => {
-        this.getRegions();
-        this.setState({
-            openModal: false
-
-        });
-        this.setState((prevState) => { return { refresh: !prevState.refresh } })
-    }*/
     toggleRefresh = () => {
-        console.log("Aqui estamos en el toggle")
         this.setState((prevState) => { return { refresh: !prevState.refresh } })
     }
 

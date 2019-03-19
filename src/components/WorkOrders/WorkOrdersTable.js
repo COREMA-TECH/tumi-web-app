@@ -396,8 +396,6 @@ class WorkOrdersTable extends Component {
             .catch();
     };
 
-
-
     handleChangeDate = (event) => {
         const target = event.target;
         const value = target.value;
