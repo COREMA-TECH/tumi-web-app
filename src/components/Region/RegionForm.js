@@ -455,6 +455,12 @@ class RegionForm extends Component {
                             }
                         })
                         .then((data) => {
+                            console.log("aqui vamos ", data.updateConfigRegions)
+                            if (data.updateConfigRegions == undefined) {
+                                console.log("entro en el if ", data)
+                                this.addConfig(false, regionId);
+                            }
+
                             this.props.toggleRefresh();
                             this.props.handleCloseModal();
                             this.props.handleOpenSnackbar(

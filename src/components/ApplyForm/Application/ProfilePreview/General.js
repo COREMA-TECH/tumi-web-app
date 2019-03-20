@@ -434,39 +434,12 @@ class General extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                  DeparmentTitle:data.applicationEmployees[0].Employees.Deparment.DisplayLabel
+                    DeparmentTitle: data.applicationEmployees[0].Employees.Deparment.DisplayLabel
                 })
             })
             .catch(error => { console.log("Informacion de las error  ", error) })
     };
-    /* getApplicationEmployees = (id) => {
-         console.log("getApplicationEmployees ", id)
-         this.props.client
-             .query({
-                 query: GET_APPLICATION_EMPLOYEES_QUERY,
-                 variables: {
-                     ApplicationId: id
-                 }
-             })
-             .then(({ data }) => {
-                 this.setState({
-                   
-                 }, () => {
-                     console.log("data ", data)
-                 });
-             })
-             .catch(error => {
-                 this.setState({
-                     loading: false,
-                     error: true
-                 })
-             })
-     };*/
 
-
-    /**
-     * Fetch hotels
-     */
     getHotels = () => {
         this.props.client
             .query({
