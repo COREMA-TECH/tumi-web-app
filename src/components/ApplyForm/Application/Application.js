@@ -21,6 +21,7 @@ import { withRouter } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -542,9 +543,12 @@ class Application extends Component {
 
         let renderSSNDialog = () => (
             <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
-                <DialogTitle style={{ width: '600px', height: '300px'}}>
-                    <h5 className="modal-title">RECONOCIMIENTO DE CONTRATO INDEPENDIENTE</h5>
+                <DialogTitle>
+                    <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
                 </DialogTitle>
+                <DialogContent>
+                    You must sign an Independent Contract Recognition
+                </DialogContent>
                 <DialogActions>
                     <div className="applicant-card__footer">
                         <button

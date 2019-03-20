@@ -16,6 +16,7 @@ import FormsI9 from './I9/FormsI9';
 import FormsW4 from "./W4/FormsW4";
 import { GET_APPLICATION_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
+import IndependentContract from "./IndependentContract";
 
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -78,7 +79,8 @@ class CustomizedTabs extends React.Component {
         value: 0,
         applicationId: null,
         openSignature: false,
-        applicationStatus: []
+        applicationStatus: [],
+        independentContract: true
     };
 
     handleChange = (event, value) => {
@@ -145,6 +147,8 @@ class CustomizedTabs extends React.Component {
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
                 case 9:
                     return <ProfilePreview applicationId={this.state.applicationId} />;
+                case 10:
+                    return <IndependentContract/>
 
             }
         };
@@ -164,6 +168,7 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon` }}
                             label={applyTabs[0].label}
                         />
+
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
@@ -209,6 +214,18 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[8].label}
                         />
+                        {
+                            this.state.independentContract ? (
+                                <Tab
+                                    disableRipple
+                                    classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                                    label={'Independent Contract'}
+                                />
+                            ) : (
+                                ''
+                            )
+                        }
+
                     </Tabs>
                     {getTabContent(value)}
                 </MuiThemeProvider>
