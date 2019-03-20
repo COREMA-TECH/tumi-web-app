@@ -8,6 +8,7 @@ import ContactCompanyForm from '../ContactCompanyForm/ContactCompanyForm';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm/DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm/PositionsCompanyForm';
+import User from '../User';
 
 
 const theme = createMuiTheme({
@@ -138,6 +139,12 @@ class CustomizedTabs extends Component {
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
 							label="Positions and Rates"
 						/>
+						<Tab
+							disabled={this.state.idProperty === null}
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Username and Password"
+						/>
 					</Tabs>
 					{value === 0 && (
 						<GeneralInforProperty
@@ -193,6 +200,13 @@ class CustomizedTabs extends Component {
 							toggleStepper={this.toggleStepper}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
 							showPayRate={true}
+						/>
+					)}
+					{value === 4 && (
+						<User
+							handleOpenSnackbar={this.props.handleOpenSnackbar}
+							item={this.state.item}
+							idCompany={this.state.idProperty}
 						/>
 					)}
 				</MuiThemeProvider>

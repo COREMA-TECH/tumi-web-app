@@ -197,6 +197,16 @@ class GeneralInfoProperty extends Component {
             }
         }
     `;
+    GET_PROPERTIES_QUERY = gql`
+        query getproperties {
+            getbusinesscompanies(Id: 0, IsActive: 1, Contract_Status: "'C'", Id_Parent: -1) {
+                Id
+                Id_Parent	
+                Code
+                Name
+            }
+        }
+    `;
 
 
     /**********************************************************
@@ -682,12 +692,16 @@ class GeneralInfoProperty extends Component {
                 }
 
                 if (validated) {
-                    //Show loading component
-                    if (this.props.idProperty === null) {
-                        this.insertCompany(this.props.idManagement);
-                    } else {
-                        this.updateCompany(this.props.idManagement, this.props.idProperty, buttonName);
-                    }
+                    //Load companies is used to validate if the code of the company exists in the database 
+                    this.loadProperties(() => {
+                        //Show loading component
+                        if (this.props.idProperty === null) {
+                            this.insertCompany(this.props.idManagement);
+                        } else {
+                            this.updateCompany(this.props.idManagement, this.props.idProperty, buttonName);
+                        }
+                    });
+
                 } else {
                     // Show snackbar warning
                     this.props.handleOpenSnackbar(
@@ -788,6 +802,35 @@ class GeneralInfoProperty extends Component {
                     .catch();
             }
         );
+    };
+
+
+    loadProperties = (execMutation = () => { }) => {
+
+        this.props.client
+            .query({
+                query: this.GET_PROPERTIES_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.getbusinesscompanies != null) {
+
+                    var found = data.data.getbusinesscompanies.find(company => {
+                        return company.Id != this.props.idProperty && company.Code.trim().toUpperCase() == this.state.Code.trim().toUpperCase()
+                    });
+
+                    if (found) {
+                        this.setState(() => ({ loadingUpdate: false }));
+                        this.props.handleOpenSnackbar('warning', 'This Code already exists in the data bases!');
+                    }
+                    else execMutation();
+
+                }
+            })
+            .catch((error) => {
+                this.setState(() => ({ loadingUpdate: false }));
+                this.props.handleOpenSnackbar('error', 'Error loading Companies Data!');
+            });
     };
 
     getParentCompanyInfo = () => {
@@ -1043,6 +1086,8 @@ class GeneralInfoProperty extends Component {
         if (this.state.linearProgress) {
             return <LinearProgress />;
         }
+        var loading = this.state.linearProgress || this.state.searchigZipcode;
+
         return <form >
             <div className="row">
                 <ConfirmDialog
@@ -1075,12 +1120,12 @@ class GeneralInfoProperty extends Component {
 
 
 
-                        {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success" name="save" id="save" onClick={this.handleFormSubmit('save')}>
+                        {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success" name="save" id="save" onClick={this.handleFormSubmit('save')} disabled={loading}>
                             Save<i className="fas fa-save ml-2" />
                         </button>
                         }
 
-                        {(this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next">
+                        {(this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next" disabled={loading}>
                             Next <i className="fas fa-chevron-right"></i>
                         </button>}
 

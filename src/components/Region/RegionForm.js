@@ -70,6 +70,7 @@ class RegionForm extends Component {
             ConfigRegions: [],
             hotelsTags: [],
             Old_hotelsTags: [],
+            result: [],
             IdRegionalManager: 0,
             IdRegionalDirector: 0,
             IdRecruiter: 0,
@@ -455,10 +456,8 @@ class RegionForm extends Component {
                             }
                         })
                         .then((data) => {
-                            console.log("aqui vamos ", data.updateConfigRegions)
-                            if (data.updateConfigRegions == undefined) {
-                                console.log("entro en el if ", data)
-                                this.addConfig(false, regionId);
+                            if (data.data.updateConfigRegions == null) {
+                                this.addConfig(false, regionId)
                             }
 
                             this.props.toggleRefresh();
