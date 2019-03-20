@@ -440,13 +440,14 @@ class Employees extends Component {
     /**
      * To open the user modal
      */
-    handleClickOpenUserModal = (email, phoneNumber, idEmployee, fullName) => {
+    handleClickOpenUserModal = (email, phoneNumber, idEmployee, fullName, firstName, lastName) => {
         this.setState({ openUserModal: true });
         this.setState({
             email: email,
             number: phoneNumber,
             employeeId: idEmployee,
-            fullName: fullName
+            fullName: fullName,
+            username: firstName.slice(0, 1) + lastName + Math.floor(Math.random() * 10000)
         });
     };
 
@@ -1082,6 +1083,7 @@ class Employees extends Component {
                                         value={this.state.username}
                                         error={!this.state.usernameValid}
                                         change={(value) => this.onChangeHandler(value, 'username')}
+                                        disabled={true}
                                     />
                                 </div>
                                 <div className="col-md-12 col-lg-6">
@@ -1256,8 +1258,10 @@ class Employees extends Component {
                 </form>
             </Dialog>
         );
+        var loading = this.state.progressEditEmployee || this.state.progressNewEmployee;
 
         return (
+
             <div>
                 <AlertDialogSlide
                     handleClose={this.handleCloseAlertDialog}
@@ -1441,6 +1445,7 @@ class Employees extends Component {
                                         type="submit"
                                         variant="fab"
                                         className="btn btn-success"
+                                        disabled={loading}
                                     >
                                         Save {!this.state.progressEditEmployee && <i class="fas fa-save" />}
                                         {this.state.progressEditEmployee && <i class="fas fa-spinner fa-spin" />}

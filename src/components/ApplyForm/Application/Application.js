@@ -24,7 +24,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
-    localStorage.setItem('languageForm', 'es');
+    localStorage.setItem('languageForm', 'en');
 }
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
@@ -195,7 +195,8 @@ class Application extends Component {
                     })
                     .then(({ data }) => {
                         this.setState({
-                            editing: false
+                            editing: false,
+                            insertDialogLoading:false
                         }, () => {
                             let object = [];
                             this.state.positionsTags.map(item => {
@@ -212,6 +213,7 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
+                        this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.setState({
                                 socialSecurityNumber: ''
@@ -1180,8 +1182,9 @@ class Application extends Component {
                                     >
                                         {spanishActions[2].label}
                                     </button>
-                                    <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode}>
+                                    <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
                                         {spanishActions[4].label}
+                                        {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
                                     </button>
                                 </div>
                             ) : (

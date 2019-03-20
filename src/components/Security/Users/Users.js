@@ -374,7 +374,18 @@ class Catalogs extends React.Component {
     };
 
     onChangeHandler(value, name) {
-        this.setState({ [name]: value }, this.validateField(name, value));
+        let username;
+
+
+        this.setState({
+            [name]: value
+        }, () => {
+            this.validateField(name, value);
+            if (name == "firstName" || name == "lastName") {
+                username = this.state.firstName.slice(0, 1) + this.state.lastName + Math.floor(Math.random() * 10000);
+                this.setState({ username: username });
+            }
+        });
     }
 
     onBlurHandler(e) {
@@ -878,72 +889,71 @@ class Catalogs extends React.Component {
     };
     insertUser = () => {
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
-        this.setState(
-            {
-                loading: true
-            },
-            () => {
-                var user = {
-                    Id_Entity: 1,
-                    Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
-                    Id_Roles: this.state.idRol,
-                    Code_User: this.state.username,
-                    Full_Name: this.state.firstName + ' ' + this.state.lastName,
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    Electronic_Address: this.state.email,
-                    Phone_Number: this.state.number,
-                    Id_Language: this.state.idLanguage,
-                    IsAdmin: this.state.isAdmin ? 1 : 0,
-                    AllowDelete: this.state.allowDelete ? 1 : 0,
-                    AllowInsert: this.state.allowInsert ? 1 : 0,
-                    AllowEdit: this.state.allowEdit ? 1 : 0,
-                    AllowExport: this.state.allowExport ? 1 : 0,
-                    IsRecruiter: this.state.IsRecruiter,
-                    isEmployee: this.state.isEmployee,
-                    IdRegion: this.state.IdRegion,
-                    IsActive: this.state.IsActive ? 1 : 0,
-                    User_Created: 1,
-                    User_Updated: 1,
-                    Date_Created: new Date().toDateString(),
-                    Date_Updated: new Date().toDateString(),
-                    IdSchedulesEmployees: parseInt(this.state.IdSchedulesEmployees),
-                    IdSchedulesManager: parseInt(this.state.IdSchedulesManager),
-                }
-                if (isEdition) user = { ...user, Id: id }
-                this.props.client
-                    .mutate({
-                        mutation: query,
-                        variables: {
-                            user
-                        }
-                    })
-                    .then((data) => {
-                        if (this.state.idToEdit == null) {
-                            this.sendMail();
-                        }
-                        this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
 
-                        this.setState({ openModal: false, showCircularLoading: true }, () => {
-                            this.loadUsers(() => {
-                                this.loadContacts(() => {
-                                    this.loadRoles(() => {
-                                        this.loadLanguages(this.resetState);
-                                    });
+        this.setState({
+            loading: true
+        }, () => {
+            var user = {
+                Id_Entity: 1,
+                Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
+                Id_Roles: this.state.idRol,
+                Code_User: this.state.username,
+                Full_Name: this.state.firstName + ' ' + this.state.lastName,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                Electronic_Address: this.state.email,
+                Phone_Number: this.state.number,
+                Id_Language: this.state.idLanguage,
+                IsAdmin: this.state.isAdmin ? 1 : 0,
+                AllowDelete: this.state.allowDelete ? 1 : 0,
+                AllowInsert: this.state.allowInsert ? 1 : 0,
+                AllowEdit: this.state.allowEdit ? 1 : 0,
+                AllowExport: this.state.allowExport ? 1 : 0,
+                IsRecruiter: this.state.IsRecruiter,
+                isEmployee: this.state.isEmployee,
+                IdRegion: this.state.IdRegion,
+                IsActive: this.state.IsActive ? 1 : 0,
+                User_Created: 1,
+                User_Updated: 1,
+                Date_Created: new Date().toDateString(),
+                Date_Updated: new Date().toDateString(),
+                IdSchedulesEmployees: parseInt(this.state.IdSchedulesEmployees),
+                IdSchedulesManager: parseInt(this.state.IdSchedulesManager),
+            }
+            if (isEdition) user = { ...user, Id: id }
+            this.props.client
+                .mutate({
+                    mutation: query,
+                    variables: {
+                        user
+                    }
+                })
+                .then((data) => {
+                    if (this.state.idToEdit == null) {
+                        this.sendMail();
+                    }
+                    this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
+
+                    this.setState({ openModal: false, showCircularLoading: true }, () => {
+                        this.loadUsers(() => {
+                            this.loadContacts(() => {
+                                this.loadRoles(() => {
+                                    this.loadLanguages(this.resetState);
                                 });
                             });
                         });
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            isEdition ? 'Error: Updating User: ' + error : 'Error: Inserting User: ' + error
-                        );
-                        this.setState({
-                            loading: false
-                        });
                     });
-            }
+                })
+                .catch((error) => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        isEdition ? 'Error: Updating User: ' + error : 'Error: Inserting User: ' + error
+                    );
+                    this.setState({
+                        loading: false
+                    });
+                });
+        }
         );
     };
     deleteUser = () => {
@@ -1210,8 +1220,8 @@ class Catalogs extends React.Component {
                                         <div className="col-md-12 col-lg-6">
                                             <label>* Last Name</label>
                                             <InputForm
-                                                id="firstName"
-                                                name="firstName"
+                                                id="lastName"
+                                                name="lastName"
                                                 maxLength="15"
                                                 value={this.state.lastName}
                                                 error={!this.state.lastNameValid}
@@ -1227,6 +1237,7 @@ class Catalogs extends React.Component {
                                                 value={this.state.username}
                                                 error={!this.state.usernameValid}
                                                 change={(value) => this.onChangeHandler(value, 'username')}
+                                                disabled={true}
                                             />
                                         </div>
                                         <div className="col-md-12 col-lg-6">
