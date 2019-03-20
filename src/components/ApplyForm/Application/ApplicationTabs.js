@@ -80,7 +80,7 @@ class CustomizedTabs extends React.Component {
         applicationId: null,
         openSignature: false,
         applicationStatus: [],
-        independentContract: true
+        independentContract: false
     };
 
     handleChange = (event, value) => {
@@ -121,6 +121,12 @@ class CustomizedTabs extends React.Component {
         }
     }
 
+    handleContract = () => {
+        this.setState({
+            independentContract: true
+        })
+    };
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
@@ -128,7 +134,7 @@ class CustomizedTabs extends React.Component {
         let getTabContent = (step, ) => {
             switch (step) {
                 case 0:
-                    return <ApplicationInfo applicationId={this.state.applicationId} />;
+                    return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract}/>;
                 case 1:
                     return <BackgroundCheck applicationId={this.state.applicationId} />;
                 case 2:
