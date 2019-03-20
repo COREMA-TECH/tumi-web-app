@@ -188,7 +188,8 @@ class Application extends Component {
                     })
                     .then(({ data }) => {
                         this.setState({
-                            editing: false
+                            editing: false,
+                            insertDialogLoading:false
                         }, () => {
                             let object = [];
                             this.state.positionsTags.map(item => {
@@ -205,6 +206,7 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
+                        this.setState(() => ({ insertDialogLoading: false }));
                         this.props.handleOpenSnackbar(
                             'error',
                             'Error to update applicant information. Please, try again!',
@@ -1099,8 +1101,9 @@ class Application extends Component {
                                     >
                                         {spanishActions[2].label}
                                     </button>
-                                    <button type="submit" className="applicant-card__save-button" disabled={ this.state.searchigZipcode}>
+                                    <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
                                         {spanishActions[4].label}
+                                        {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
                                     </button>
                                 </div>
                             ) : (
