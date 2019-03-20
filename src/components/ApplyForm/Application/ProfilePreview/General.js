@@ -292,7 +292,7 @@ class General extends Component {
                             idRole: 1,
                             isActive: true,
                             userCreated: 1,
-                            userUpdated: 1,
+                            userUpdated: 1
                         });
 
                         this.insertEmployees(datos)
@@ -373,7 +373,6 @@ class General extends Component {
      */
     resetUserModalState = () => {
         this.setState({
-            username: '',
             idRol: null,
             idLanguage: null,
             usernameValid: true
@@ -407,6 +406,7 @@ class General extends Component {
                         lastname: this.state.data.lastName,
                         isLead: this.state.data.isLead,
                         loading: false,
+                        username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000)
                     })
                 });
             })
@@ -434,7 +434,7 @@ class General extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                  DeparmentTitle:data.applicationEmployees[0].Employees.Deparment.DisplayLabel
+                    DeparmentTitle: data.applicationEmployees[0].Employees.Deparment.DisplayLabel
                 })
             })
             .catch(error => { console.log("Informacion de las error  ", error) })
@@ -853,7 +853,6 @@ class General extends Component {
                 [name]: id
             },
             () => {
-                console.log("Id de la fila ", id);
                 this.validateField(name, id);
             }
         );
@@ -869,16 +868,11 @@ class General extends Component {
             })
             .then((data) => {
                 if (data.data.getcontacts != null) {
-
-                    this.setState(
-                        {
-
-                            email: data.data.getcontacts[0].Electronic_Address,
-                            number: data.data.getcontacts[0].Phone_Number,
-                            fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
-                        },
-                    );
-                    console.log("Full Name str ", this.state.fullname);
+                    this.setState({
+                        email: data.data.getcontacts[0].Electronic_Address,
+                        number: data.data.getcontacts[0].Phone_Number,
+                        fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
+                    });
                 }
             })
             .catch((error) => {
@@ -1283,6 +1277,7 @@ class General extends Component {
                                         value={this.state.username}
                                         error={!this.state.usernameValid}
                                         change={(value) => this.onChangeHandler(value, 'username')}
+                                        disabled={true}
                                     />
                                 </div>
                                 <div className="col-md-12 col-lg-6">
