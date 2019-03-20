@@ -74,12 +74,21 @@ const styles = (theme) => ({
 
 class DepartmentsCompanyForm extends React.Component {
 	GET_DEPARTMENTS_QUERY = gql`
-	query getcatalogitem ($Id_Entity:Int){
-			getcatalogitem(IsActive: 1, Id_Catalog: 8,  Id_Entity:$Id_Entity) {
+		query getcatalogitem ($Id_Entity:Int, $Name: String){
+			catalogitem(IsActive: 1, Id_Catalog: 8,  Id_Entity:$Id_Entity, Name: $Name) {
 				Id
 				Code: Name
 				Description
 				IsActive
+			}
+		}
+	`;
+	GET_DEPARTMENT_BY_CODE_QUERY = gql`
+		query getcatalogitem($Id: Int, $Name: String, $Id_Entity: Int) {
+			uniquecatalogitem(IsActive: 1, Id_Catalog: 8, Id: $Id,Name: $Name, Id_Entity: $Id_Entity) {
+				Id
+				Code: Name
+				DisplayLabel
 			}
 		}
 	`;
@@ -314,10 +323,10 @@ class DepartmentsCompanyForm extends React.Component {
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
-					if (data.data.getcatalogitem != null) {
+					if (data.data.catalogitem != null) {
 						this.setState(
 							{
-								data: data.data.getcatalogitem,
+								data: data.data.catalogitem,
 								loadingData: false,
 								indexView: 1
 							},
@@ -329,7 +338,7 @@ class DepartmentsCompanyForm extends React.Component {
 						this.setState({
 							loadingData: false,
 							indexView: 2,
-							errorMessage: 'Error: Loading departments: getcatalogitem not exists in query data'
+							errorMessage: 'Error: Loading departments: catalogitem not exists in query data'
 						});
 					}
 				})
@@ -445,7 +454,8 @@ class DepartmentsCompanyForm extends React.Component {
 			},
 			() => {
 				this.validateAllFields(() => {
-					if (this.state.formValid) this.insertDepartment();
+					if (this.state.formValid)
+						this.validateDepartmentCode(this.insertDepartment);
 					else {
 						this.props.handleOpenSnackbar(
 							'warning',
@@ -462,6 +472,33 @@ class DepartmentsCompanyForm extends React.Component {
 
 	cancelDepartmentHandler = () => {
 		this.resetState();
+	};
+
+	validateDepartmentCode = (execMutation = () => { }) => {
+		this.props.client
+			.query({
+				query: this.GET_DEPARTMENT_BY_CODE_QUERY,
+				variables: { Name: this.state.code, Id: this.state.idToEdit, Id_Entity: this.props.idCompany },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.uniquecatalogitem.length > 0) {
+					this.setState(() => ({ loading: false }));
+					this.props.handleOpenSnackbar(
+						'warning',
+						'This code already exist in the database'
+					);
+				}
+				else
+					execMutation();
+			})
+			.catch((error) => {
+				this.setState(() => ({ loading: false }));
+				this.props.handleOpenSnackbar(
+					'warning',
+					'Error validating code'
+				);
+			});
 	};
 
 	render() {

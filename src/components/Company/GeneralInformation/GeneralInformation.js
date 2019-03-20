@@ -120,6 +120,16 @@ class GeneralInformation extends Component {
 	/*****************************************************************
      *             QUERY to get the company information              *
      ****************************************************************/
+	GET_COMPANIES_QUERY = gql`
+		query getcompanies {
+			getbusinesscompanies( IsActive: 1, Contract_Status: "'C'", Id_Parent: 0) {
+				Id
+				Code
+				Name
+			}
+		}
+	`;
+
 	GET_COMPANY_QUERY = gql`
 		query getCompany($id: Int!) {
 			getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'", Id_Parent: null) {
@@ -407,6 +417,34 @@ class GeneralInformation extends Component {
 		);
 	};
 
+	loadCompanies = (execMutation = () => { }) => {
+
+		this.props.client
+			.query({
+				query: this.GET_COMPANIES_QUERY,
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getbusinesscompanies != null) {
+
+					var found = data.data.getbusinesscompanies.find(company => {
+						return company.Id != this.props.idCompany && company.Code.trim().toUpperCase() == this.state.Code.trim().toUpperCase()
+					});
+
+					if (found) {
+						this.setState(() => ({ loadingUpdate: false }));
+						this.props.handleOpenSnackbar('warning', 'This Code already exists in the data bases!');
+					}
+					else execMutation();
+
+				}
+			})
+			.catch((error) => {
+				this.setState(() => ({ loadingUpdate: false }));
+				this.props.handleOpenSnackbar('error', 'Error loading Companies Data!');
+			});
+	};
+
 	/**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION *
      **********************************************************/
@@ -468,80 +506,84 @@ class GeneralInformation extends Component {
 					this.setState({ loadingUpdate: false });
 					return true;
 				}
-				//Create the mutation using apollo global client
-				this.props.client
-					.mutate({
-						// Pass the mutation structure
-						mutation: this.ADD_COMPANY_QUERY,
-						variables: {
-							input: {
-								Id: 0,
-								Rooms: 0,
-								Code: `'${this.state.Code}'`,
-								Code01: `'${this.state.Code}'`,
-								Id_Contract: 1,
-								Id_Company: 1,
-								BusinessType: 1,
-								Location: `'${this.state.address}'`,
-								Location01: `'${this.state.optionalAddress}'`,
-								Name: `'${this.state.name}'`,
-								Description: `'${this.state.description}'`,
-								Start_Week: this.state.startWeek,
-								End_Week: this.state.endWeek,
-								Legal_Name: `'${this.state.legalName}'`,
-								Region: parseInt(this.state.region),
-								Country: parseInt(this.state.country),
-								State: parseInt(this.state.state),
-								City: parseInt(this.state.city),
-								Rate: parseFloat(this.state.rate),
-								Zipcode: `'${this.state.zipCode}'`,
-								Fax: `'${this.state.fax}'`,
-								Primary_Email: `'${this.state.email}'`,
-								Phone_Number: `'${this.state.phoneNumber}'`,
-								Phone_Prefix: `'${this.state.phonePrefix}'`,
-								Id_Parent: 0,
-								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14'",
-								Date_Updated: "'2018-08-14'",
-								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: `'2018-08-14'`,
-								//Start_Date: `'${this.state.startDate}'`,
-								Contract_URL: `'${this.state.contractURL}'`,
-								Contract_File: `'${this.state.contractFile}'`,
+				//Load companies is used to validate if the code of the company exists in the database 
+				this.loadCompanies(() => {
+					//Create the mutation using apollo global client
+					this.props.client
+						.mutate({
+							// Pass the mutation structure
+							mutation: this.ADD_COMPANY_QUERY,
+							variables: {
+								input: {
+									Id: 0,
+									Rooms: 0,
+									Code: `'${this.state.Code}'`,
+									Code01: `'${this.state.Code}'`,
+									Id_Contract: 1,
+									Id_Company: 1,
+									BusinessType: 1,
+									Location: `'${this.state.address}'`,
+									Location01: `'${this.state.optionalAddress}'`,
+									Name: `'${this.state.name}'`,
+									Description: `'${this.state.description}'`,
+									Start_Week: this.state.startWeek,
+									End_Week: this.state.endWeek,
+									Legal_Name: `'${this.state.legalName}'`,
+									Region: parseInt(this.state.region),
+									Country: parseInt(this.state.country),
+									State: parseInt(this.state.state),
+									City: parseInt(this.state.city),
+									Rate: parseFloat(this.state.rate),
+									Zipcode: `'${this.state.zipCode}'`,
+									Fax: `'${this.state.fax}'`,
+									Primary_Email: `'${this.state.email}'`,
+									Phone_Number: `'${this.state.phoneNumber}'`,
+									Phone_Prefix: `'${this.state.phonePrefix}'`,
+									Id_Parent: 0,
+									IsActive: 1,
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-08-14'",
+									Date_Updated: "'2018-08-14'",
+									ImageURL: `'${this.state.avatar}'`,
+									Start_Date: `'2018-08-14'`,
+									//Start_Date: `'${this.state.startDate}'`,
+									Contract_URL: `'${this.state.contractURL}'`,
+									Contract_File: `'${this.state.contractFile}'`,
 
-								Insurance_URL: `'${this.state.insuranceURL}'`,
-								Insurance_File: `'${this.state.insuranceFile}'`,
+									Insurance_URL: `'${this.state.insuranceURL}'`,
+									Insurance_File: `'${this.state.insuranceFile}'`,
 
-								Other_URL: `'${this.state.otherURL}'`,
-								Other_Name: `'${this.state.otherName}'`,
-								Other_File: `'${this.state.otherFile}'`,
+									Other_URL: `'${this.state.otherURL}'`,
+									Other_Name: `'${this.state.otherName}'`,
+									Other_File: `'${this.state.otherFile}'`,
 
-								Other01_URL: `'${this.state.other01URL}'`,
-								Other01_Name: `'${this.state.other01Name}'`,
-								Other01_File: `'${this.state.other01File}'`,
+									Other01_URL: `'${this.state.other01URL}'`,
+									Other01_Name: `'${this.state.other01Name}'`,
+									Other01_File: `'${this.state.other01File}'`,
 
-								Suite: `'${this.state.suite}'`,
-								Contract_Status: "'C'"
+									Suite: `'${this.state.suite}'`,
+									Contract_Status: "'C'"
+								}
 							}
-						}
-					})
-					.then((data) => {
-						var id = data.data.insbusinesscompanies.Id;
-						this.props.updateCompany(id);
-						this.setState({ loadingUpdate: false });
-						this.props.handleOpenSnackbar('success', 'General Information Inserted!');
-						// When the user click Next button, open second tab
-						this.props.toggleStepper();
-						this.props.next();
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar('error', 'Error: Inserting General Information: ' + error);
-						this.setState({
-							loadingUpdate: false
+						})
+						.then((data) => {
+							var id = data.data.insbusinesscompanies.Id;
+							this.props.updateCompany(id);
+							this.setState({ loadingUpdate: false });
+							this.props.handleOpenSnackbar('success', 'General Information Inserted!');
+							// When the user click Next button, open second tab
+							this.props.toggleStepper();
+							this.props.next();
+						})
+						.catch((error) => {
+							this.props.handleOpenSnackbar('error', 'Error: Inserting General Information: ' + error);
+							this.setState({
+								loadingUpdate: false
+							});
 						});
-					});
+				})
+
 			});
 		});
 	};
@@ -573,80 +615,84 @@ class GeneralInformation extends Component {
 					this.setState({ loadingUpdate: false });
 					return true;
 				}
+				//Load companies is used to validate if the code of the company exists in the database 
+				this.loadCompanies(() => {
+					//Create the mutation using apollo global client
+					this.props.client
+						.mutate({
+							// Pass the mutation structure
+							mutation: this.UPDATE_COMPANY,
+							variables: {
+								input: {
+									Id: companyId,
+									Rooms: 0,
+									Code: `'${this.state.Code}'`,
+									Code01: `'${this.state.Code}'`,
+									Id_Contract: 1,
+									Id_Company: 1,
+									BusinessType: 1,
+									Location: `'${this.state.address}'`,
+									Location01: `'${this.state.optionalAddress}'`,
+									Name: `'${this.state.name}'`,
+									Description: `'${this.state.description}'`,
+									Start_Week: this.state.startWeek,
+									End_Week: this.state.endWeek,
+									Legal_Name: `'${this.state.legalName}'`,
+									Region: parseInt(this.state.region),
+									Country: parseInt(this.state.country),
+									State: parseInt(this.state.state),
+									City: parseInt(this.state.city),
+									Rate: parseFloat(this.state.rate),
+									Zipcode: `'${this.state.zipCode}'`,
+									Fax: `'${this.state.fax}'`,
+									Primary_Email: `'${this.state.email}'`,
+									//Primary_Email: `'coreo@gmail.com'`,
+									Phone_Number: `'${this.state.phoneNumber}'`,
+									Phone_Prefix: `'${this.state.phonePrefix}'`,
+									Id_Parent: parseInt(this.state.Id_Parent),
+									IsActive: parseInt(this.state.active),
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-08-14'",
+									Date_Updated: "'2018-08-14'",
+									ImageURL: `'${this.state.avatar}'`,
+									Start_Date: `'2018-08-14'`,
 
-				//Create the mutation using apollo global client
-				this.props.client
-					.mutate({
-						// Pass the mutation structure
-						mutation: this.UPDATE_COMPANY,
-						variables: {
-							input: {
-								Id: companyId,
-								Rooms: 0,
-								Code: `'${this.state.Code}'`,
-								Code01: `'${this.state.Code}'`,
-								Id_Contract: 1,
-								Id_Company: 1,
-								BusinessType: 1,
-								Location: `'${this.state.address}'`,
-								Location01: `'${this.state.optionalAddress}'`,
-								Name: `'${this.state.name}'`,
-								Description: `'${this.state.description}'`,
-								Start_Week: this.state.startWeek,
-								End_Week: this.state.endWeek,
-								Legal_Name: `'${this.state.legalName}'`,
-								Region: parseInt(this.state.region),
-								Country: parseInt(this.state.country),
-								State: parseInt(this.state.state),
-								City: parseInt(this.state.city),
-								Rate: parseFloat(this.state.rate),
-								Zipcode: `'${this.state.zipCode}'`,
-								Fax: `'${this.state.fax}'`,
-								Primary_Email: `'${this.state.email}'`,
-								//Primary_Email: `'coreo@gmail.com'`,
-								Phone_Number: `'${this.state.phoneNumber}'`,
-								Phone_Prefix: `'${this.state.phonePrefix}'`,
-								Id_Parent: parseInt(this.state.Id_Parent),
-								IsActive: parseInt(this.state.active),
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14'",
-								Date_Updated: "'2018-08-14'",
-								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: `'2018-08-14'`,
+									Suite: `'${this.state.suite}'`,
+									Contract_Status: "'C'",
 
-								Suite: `'${this.state.suite}'`,
-								Contract_Status: "'C'",
+									Contract_URL: `'${this.state.contractURL}'`,
+									Contract_File: `'${this.state.contractFile}'`,
 
-								Contract_URL: `'${this.state.contractURL}'`,
-								Contract_File: `'${this.state.contractFile}'`,
+									Insurance_URL: `'${this.state.insuranceURL}'`,
+									Insurance_File: `'${this.state.insuranceFile}'`,
 
-								Insurance_URL: `'${this.state.insuranceURL}'`,
-								Insurance_File: `'${this.state.insuranceFile}'`,
+									Other_URL: `'${this.state.otherURL}'`,
+									Other_Name: `'${this.state.otherName}'`,
+									Other_File: `'${this.state.otherFile}'`,
 
-								Other_URL: `'${this.state.otherURL}'`,
-								Other_Name: `'${this.state.otherName}'`,
-								Other_File: `'${this.state.otherFile}'`,
-
-								Other01_URL: `'${this.state.other01URL}'`,
-								Other01_Name: `'${this.state.other01Name}'`,
-								Other01_File: `'${this.state.other01File}'`
+									Other01_URL: `'${this.state.other01URL}'`,
+									Other01_Name: `'${this.state.other01Name}'`,
+									Other01_File: `'${this.state.other01File}'`
+								}
 							}
-						}
-					})
-					.then((data) => {
-						this.setState({ loadingUpdate: false });
-						this.props.handleOpenSnackbar('success', 'General Information Updated!');
-						// When the user click Next button, open second tab
-						this.props.toggleStepper();
-						this.props.next();
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
-						this.setState({
-							loadingUpdate: false
+						})
+						.then((data) => {
+							this.setState({ loadingUpdate: false });
+							this.props.handleOpenSnackbar('success', 'General Information Updated!');
+							// When the user click Next button, open second tab
+							this.props.toggleStepper();
+							this.props.next();
+						})
+						.catch((error) => {
+							this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
+							this.setState({
+								loadingUpdate: false
+							});
 						});
-					});
+
+				});
+
 			});
 		});
 	};
