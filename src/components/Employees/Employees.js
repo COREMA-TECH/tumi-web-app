@@ -1354,7 +1354,7 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""                                            >Hotelsss</label>
+                                        <label htmlFor="">Hotel</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
