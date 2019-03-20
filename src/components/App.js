@@ -12,6 +12,7 @@ import { setContext } from 'apollo-link-context';
 import ReactDOM from 'react-dom';
 import { connection } from './connection.js';
 
+
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'en');
 }
@@ -118,7 +119,7 @@ class App extends Component {
 	componentWillMount() {
 		window.removeEventListener('scroll', this.handleScroll);
 
-		localStorage.setItem('languageForm', 'en');
+		//localStorage.setItem('languageForm', 'en');
 	}
 
 	render() {
