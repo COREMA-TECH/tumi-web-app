@@ -9095,6 +9095,16 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0; }
 
+.pdf-container, .pdf-container--i9-w4 {
+  height: unset !important;
+  margin: 0 auto;
+  max-width: 66.6%;
+  overflow-y: unset !important;
+  width: 100%; }
+  .pdf-container .signature-information, .pdf-container--i9-w4 .signature-information {
+    height: auto !important;
+    overflow-y: unset !important; }
+
 .login-container {
   width: 100%;
   height: 100%;

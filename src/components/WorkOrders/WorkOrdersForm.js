@@ -468,7 +468,6 @@ class WorkOrdersForm extends Component {
         }
 
         if (name === 'departmentId') {
-            console.log('entra');
             this.getPositions(value);
         }
     };

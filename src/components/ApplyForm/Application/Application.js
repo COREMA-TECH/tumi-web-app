@@ -18,6 +18,10 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import LocationForm from '../../ui-components/LocationForm'
 import { withRouter } from "react-router-dom";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -128,7 +132,10 @@ class Application extends Component {
 
             positionCatalog: [],
             positionCatalogTag: [],
-            dataWorkOrder: []
+            dataWorkOrder: [],
+
+
+            openSSNDialog: false
         };
     }
 
@@ -207,12 +214,25 @@ class Application extends Component {
                     })
                     .catch((error) => {
                         this.setState(() => ({ insertDialogLoading: false }));
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to update applicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
+                        if (error = 'Error: "GraphQL error: Validation error') {
+                            this.setState({
+                                socialSecurityNumber: ''
+                            });
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Social Security Number Duplicated!',
+                                'bottom',
+                                'right'
+                            );
+                        } else {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to update applicant information. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
+                        }
+
                     });
             }
         );
@@ -437,6 +457,10 @@ class Application extends Component {
         this.getApplicationById(this.props.applicationId);
         this.getPositionCatalog();
         this.getPositionCatalog();
+
+        if(this.state.socialSecurityNumber.length === 0){
+            this.props.handleContract();
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -456,10 +480,7 @@ class Application extends Component {
         this.setState(() => { return { zipCode } });
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
+    submitForm = () => {
         if (!this.state.zipCode.trim().replace("-", ""))
             this.props.handleOpenSnackbar(
                 'warning',
@@ -498,18 +519,79 @@ class Application extends Component {
         }
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+
+
+        if (this.state.socialSecurityNumber.length === 0){
+            // Show dialog
+            this.setState({
+                openSSNDialog: true
+            })
+        } else {
+            this.submitForm()
+        }
+    }
+
     updateSearchingZipCodeProgress = (searchigZipcode) => {
         this.setState(() => {
             return { searchigZipcode }
         })
     }
 
+    handleCloseSSNDialog = () => {
+        this.setState({
+            openSSNDialog: false
+        })
+    };
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
 
+        let renderSSNDialog = () => (
+            <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
+                <DialogTitle>
+                    <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
+                </DialogTitle>
+                <DialogContent>
+                    You must sign an Independent Contract Recognition
+                </DialogContent>
+                <DialogActions>
+                    <div className="applicant-card__footer">
+                        <button
+                            className="applicant-card__cancel-button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                this.handleCloseSSNDialog();
+                            }}
+                        >
+                            {spanishActions[2].label}
+                        </button>
+                        <button type="submit"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    this.submitForm();
+                                    this.props.handleContract();
+                                    this.handleCloseSSNDialog();
+                                }}
+                                className="applicant-card__save-button">
+                            Accept
+                        </button>
+                    </div>
+                </DialogActions>
+            </Dialog>
+        );
+        
         return (
             <div className="Apply-container--application">
+                {
+                    renderSSNDialog()
+                }
                 <form
                     className="general-info-apply-form"
                     id="general-info-form"
@@ -790,7 +872,6 @@ class Application extends Component {
                                                     }}
                                                     value={this.state.socialSecurityNumber}
                                                     placeholder="___-__-____"
-                                                    required
                                                     minLength="11"
                                                 />
                                             </div>

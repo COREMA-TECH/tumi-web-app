@@ -6,6 +6,7 @@ import {
     GET_APPLICATION_PROFILE_INFO,
     GET_CONTACTS_IN_USER_DIALOG,
     GET_DEPARTMENTS_QUERY,
+    GET_APPLICATION_EMPLOYEES_QUERY,
     GET_EMAILS_USER,
     GET_HOTELS_QUERY,
     GET_ROLES_QUERY,
@@ -173,7 +174,9 @@ class General extends Component {
             departmentNameValid: false,
             titleNameValid: false,
 
-            properties: []
+            properties: [],
+
+            DeparmentTitle: '',
         }
     }
 
@@ -289,7 +292,7 @@ class General extends Component {
                             idRole: 1,
                             isActive: true,
                             userCreated: 1,
-                            userUpdated: 1,
+                            userUpdated: 1
                         });
 
                         this.insertEmployees(datos)
@@ -370,7 +373,6 @@ class General extends Component {
      */
     resetUserModalState = () => {
         this.setState({
-            username: '',
             idRol: null,
             idLanguage: null,
             usernameValid: true
@@ -394,14 +396,17 @@ class General extends Component {
                 this.setState({
                     data: data.applications[0]
                 }, () => {
-                    this.fetchDepartments();
+                    //this.getApplicationEmployees(id);
+                    //  this.fetchDepartments();
                     this.setState({
                         email: this.state.data.emailAddress,
                         number: this.state.data.cellPhone,
                         firstname: this.state.data.firstName,
                         middlename: this.state.data.middleName,
                         lastname: this.state.data.lastName,
-                        isLead: this.state.data.isLead
+                        isLead: this.state.data.isLead,
+                        loading: false,
+                        username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000)
                     })
                 });
             })
@@ -415,8 +420,26 @@ class General extends Component {
 
 
     /**
-     * Fetch hotels
+     * To get the profile information for applicant
+     * @param id
      */
+
+    getApplicationEmployees = (id) => {
+        this.props.client
+            .query({
+                query: GET_APPLICATION_EMPLOYEES_QUERY,
+                variables: {
+                    ApplicationId: id
+                }
+            })
+            .then(({ data }) => {
+                this.setState({
+                    DeparmentTitle: data.applicationEmployees[0].Employees.Deparment.DisplayLabel
+                })
+            })
+            .catch(error => { console.log("Informacion de las error  ", error) })
+    };
+
     getHotels = () => {
         this.props.client
             .query({
@@ -481,7 +504,6 @@ class General extends Component {
             })
             .then((data) => {
                 if (data.data.getsupervisor != null && data.data.getcatalogitem) {
-                    console.log("data.data.getcatalogitem ", data.data.getcatalogitem);
                     this.setState({
                         contacts: data.data.getsupervisor,
                         regions: data.data.getcatalogitem,
@@ -773,11 +795,13 @@ class General extends Component {
      * Before render fetch user information
      */
     componentWillMount() {
-        this.setState({
-            loading: true
-        }, () => {
-            this.getProfileInformation(this.props.applicationId);
-        })
+        /*  this.setState({
+              loading: true
+          }, () => {*/
+        this.getProfileInformation(this.props.applicationId);
+        this.getApplicationEmployees(this.props.applicationId);
+        // this.getApplicationEmployees(this.props.applicationId);
+        //  })
     }
 
     handleCheckedChange = (name) => (event) => {
@@ -802,14 +826,12 @@ class General extends Component {
                 [name]: id
             },
             () => {
-                console.log("Id de la fila ", id);
                 this.validateField(name, id);
             }
         );
     };
 
     SelectContac = (id) => {
-        console.log("entro al select");
         this.props.client
             .query({
                 query: this.GET_CONTACTS_QUERY_BY_ID,
@@ -818,19 +840,12 @@ class General extends Component {
                 }
             })
             .then((data) => {
-                console.log("este es el data ", data.data.getcontacts[0].Electronic_Address);
-
                 if (data.data.getcontacts != null) {
-
-                    this.setState(
-                        {
-
-                            email: data.data.getcontacts[0].Electronic_Address,
-                            number: data.data.getcontacts[0].Phone_Number,
-                            fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
-                        },
-                    );
-                    console.log("Full Name str ", this.state.fullname);
+                    this.setState({
+                        email: data.data.getcontacts[0].Electronic_Address,
+                        number: data.data.getcontacts[0].Phone_Number,
+                        fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
+                    });
                 }
             })
             .catch((error) => {
@@ -1235,6 +1250,7 @@ class General extends Component {
                                         value={this.state.username}
                                         error={!this.state.usernameValid}
                                         change={(value) => this.onChangeHandler(value, 'username')}
+                                        disabled={true}
                                     />
                                 </div>
                                 <div className="col-md-12 col-lg-6">
@@ -1373,102 +1389,6 @@ class General extends Component {
                                         isMulti
                                     />
                                 </div>
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                {/*<label>* Hotel</label>*/}
-                                {/*<SelectForm*/}
-                                {/*id="type"*/}
-                                {/*name="type"*/}
-                                {/*data={this.state.hotels}*/}
-                                {/*update={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*hotelId: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*hotelValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*showNone={false}*/}
-                                {/*error={this.state.hotelValid}*/}
-                                {/*value={this.state.hotelId}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                {/*<label>* Contact Type</label>*/}
-                                {/*<SelectForm*/}
-                                {/*id="type"*/}
-                                {/*name="type"*/}
-                                {/*data={this.state.contactTypes}*/}
-                                {/*update={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*type: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*typeValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*showNone={false}*/}
-                                {/*error={this.state.typeValid}*/}
-                                {/*value={this.state.type}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                {/*<label>* Department</label>*/}
-                                {/*<AutosuggestInput*/}
-                                {/*id="department"*/}
-                                {/*name="department"*/}
-                                {/*data={this.state.departments}*/}
-                                {/*error={this.state.departmentNameValid}*/}
-                                {/*value={this.state.departmentName}*/}
-                                {/*onChange={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*departmentName: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*departmentNameValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*onSelect={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*departmentName: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*departmentNameValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                {/*<label>* Contact Title</label>*/}
-                                {/*<AutosuggestInput*/}
-                                {/*id="title"*/}
-                                {/*name="title"*/}
-                                {/*data={this.state.titles}*/}
-                                {/*error={this.state.titleNameValid}*/}
-                                {/*value={this.state.titleName}*/}
-                                {/*onChange={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*titleName: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*titleNameValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*onSelect={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*titleName: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*titleNameValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
                             </div>
                         </div>
                     </form>
@@ -1511,7 +1431,7 @@ class General extends Component {
                     <div className="">
                         <div className="applicant-card">
                             <div className="row">
-                                <div className="item col-sm-12 col-md-3 col-user-info">
+                                <div className="item col-sm-12 col-md-2 col-user-info">
                                     <div className="row">
                                         <span
                                             className="username col-sm-12">{this.state.data.firstName + ' ' + this.state.data.lastName}</span>
@@ -1525,7 +1445,13 @@ class General extends Component {
                                             className="col-sm-6 col-lg-12 font-weight-bold">Title</span>
                                         <span
                                             className="col-sm-6 col-lg-12">{this.state.data.position ? this.state.data.position.position.Position.trim() + '(' + this.state.data.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}</span>
-                                        {/*<span className="col-sm-6 col-lg-12">Department: Banquet</span>*/}
+                                    </div>
+                                </div>
+
+                                <div className="item col-12 col-md-2">
+                                    <div className="row">
+                                        <span className="col-sm-12 font-weight-bold">Department</span>
+                                        <span className="col-sm-12">{this.state.DeparmentTitle == '' ? '--' : this.state.DeparmentTitle}</span>
                                     </div>
                                 </div>
                                 <div className="item col-12 col-md-2">
@@ -1554,7 +1480,7 @@ class General extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <div className="row">
                                         <div className="item col-sm-12  col-md-12">
                                             <div className="dropdown">
@@ -1669,7 +1595,7 @@ class General extends Component {
                 {
                     renderUserDialog()
                 }
-            </div>
+            </div >
         );
     }
 }

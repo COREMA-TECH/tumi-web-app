@@ -70,6 +70,7 @@ class RegionForm extends Component {
             ConfigRegions: [],
             hotelsTags: [],
             Old_hotelsTags: [],
+            result: [],
             IdRegionalManager: 0,
             IdRegionalDirector: 0,
             IdRecruiter: 0,
@@ -455,6 +456,10 @@ class RegionForm extends Component {
                             }
                         })
                         .then((data) => {
+                            if (data.data.updateConfigRegions == null) {
+                                this.addConfig(false, regionId)
+                            }
+
                             this.props.toggleRefresh();
                             this.props.handleCloseModal();
                             this.props.handleOpenSnackbar(

@@ -1386,6 +1386,7 @@ class GeneralInformation extends Component {
 										<label className="">* Markup</label>
 										<InputForm
 											type="number"
+											step="0.01"
 											value={this.state.rate}
 											change={(text) => {
 												this.updateInput(text, 'rate');

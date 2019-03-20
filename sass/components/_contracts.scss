@@ -1,0 +1,11 @@
+.pdf-container, .pdf-container--i9-w4 {
+    height: unset !important;
+    margin: 0 auto;
+    max-width: 66.6%;
+    overflow-y: unset !important;
+    width: 100%;
+    .signature-information { 
+        height: auto !important;
+        overflow-y: unset !important;
+    }
+}

@@ -112,7 +112,11 @@ class Application extends Component {
         date: new Date().toISOString().substring(0, 10),
 
         positions: [],
-        positionsCatalogs: []
+        positionsCatalogs: [],
+
+        cellPhoneValid: false,
+        lastNameValid: false,
+        firstNameValid: false,
 
 
     }
@@ -180,9 +184,10 @@ class Application extends Component {
         if (
             this.state.firstName == '' ||
             this.state.lastName == '' ||
-            this.state.zipCode == ''
+            this.state.zipCode == '' ||
+            this.state.cellPhone == ''
         ) {
-            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
+            this.props.handleOpenSnackbar('warning', 'the first name, last name, Zipcode, Cell Phone are required');
         } else {
             this.setState(
                 {
@@ -260,7 +265,8 @@ class Application extends Component {
         if (
             this.state.firstName == '' ||
             this.state.lastName == '' ||
-            this.state.zipCode == ''
+            this.state.zipCode == '' ||
+            this.state.cellPhone == ''
         ) {
             this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
         } else {
@@ -518,36 +524,12 @@ class Application extends Component {
             })
     };
 
-    // To validate all the inputs and set a red border when the input is invalid
-    /*validateInvalidInput = () => {
-        if (document.addEventListener) {
-            document.addEventListener(
-                'invalid',
-                (e) => {
-                    e.target.className += ' invalid-apply-form';
-                },
-                true
-            );
-        }
-    };*/
-
-    // To show skeleton animation in css
-    /*removeSkeletonAnimation = () => {
-        let inputs, index;
-
-        inputs = document.getElementsByTagName('span');
-        for (index = 0; index < inputs.length; ++index) {
-            inputs[index].classList.remove('skeleton');
-        }
-    };
-*/
     componentWillMount() {
         if (this.props.applicationId > 0) {
             this.getHotels(() => {
                 this.getApplicationById(this.props.applicationId);
             });
         }
-        //this.removeSkeletonAnimation();
 
         if (this.props.applicationId == 0) {
             this.setState({
@@ -654,13 +636,14 @@ class Application extends Component {
                                         <input
                                             onChange={(event) => {
                                                 this.setState({
+                                                    firstNameValid: true,
                                                     firstName: event.target.value
                                                 });
                                             }}
                                             value={this.state.firstName}
                                             name="firstName"
                                             type="text"
-                                            className="form-control"
+                                            className={this.state.firstNameValid ? 'form-control' : 'form-control _invalid'}
                                             disabled={!this.state.editing}
                                             required
                                             min="0"
@@ -695,13 +678,14 @@ class Application extends Component {
                                         <input
                                             onChange={(event) => {
                                                 this.setState({
+                                                    lastNameValid: true,
                                                     lastName: event.target.value
                                                 });
                                             }}
                                             value={this.state.lastName}
                                             name="lastName"
                                             type="text"
-                                            className="form-control"
+                                            className={this.state.lastNameValid ? 'form-control' : 'form-control _invalid'}
                                             disabled={!this.state.editing}
                                             required
                                             min="0"
@@ -808,7 +792,7 @@ class Application extends Component {
                                     </div>
                                     <div className="col-md-6 ">
                                         <span className="primary applicant-card__label ">
-                                            {formSpanish[10].label}
+                                            * {formSpanish[10].label}
                                         </span>
                                         <InputMask
                                             id="cell-number"
@@ -816,13 +800,15 @@ class Application extends Component {
                                             mask="+(999) 999-9999"
                                             maskChar=" "
                                             value={this.state.cellPhone}
-                                            className="form-control"
+                                            className={this.state.cellPhoneValid ? 'form-control' : 'form-control _invalid'}
                                             disabled={!this.state.editing}
                                             onChange={(event) => {
                                                 this.setState({
+                                                    cellPhoneValid: true,
                                                     cellPhone: event.target.value
                                                 });
                                             }}
+                                            required
                                             placeholder="+(___) ___-____"
                                             minLength="15"
                                         />
