@@ -52,7 +52,9 @@ class Toolbar extends Component {
 			console.log("IF | Languages is --> ", localStorage.getItem('languageForm'));
 			await localStorage.setItem('languageForm', 'es');
             console.log("New value is --> ", localStorage.getItem('languageForm'));
-        } else {
+        }
+
+        if (this.state.languageIcon == 'es') {
             console.log("ELSE | Languages is --> ", localStorage.getItem('languageForm', () => {
 
 			}));
@@ -60,7 +62,7 @@ class Toolbar extends Component {
             console.log("New value is --> ", localStorage.getItem('languageForm'));
         }
 
-		//window.location.reload();
+		window.location.reload();
 	};
 
 	componentWillMount() {

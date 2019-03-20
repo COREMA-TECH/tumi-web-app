@@ -24,7 +24,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
-    localStorage.setItem('languageForm', 'es');
+    localStorage.setItem('languageForm', 'en');
 }
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
