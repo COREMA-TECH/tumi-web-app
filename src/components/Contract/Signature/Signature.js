@@ -171,7 +171,6 @@ class Signature extends React.Component {
 			this.setState({ openModal: false, disableButtonLetter: true, allowSave: true, empty: false }, () => {
 				this.sigPad.off();
 				this.setState({ signature: this.sigPad.toDataURL() }, () => {
-					this.sigPad.fromDataURL(this.state.signature);
 				});
 			});
 		}
@@ -538,7 +537,7 @@ class Signature extends React.Component {
 											this.state.loading || this.state.disableButtonLetter || this.state.saved
 										}
 										variant="fab"
-										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
+										className={[buttonClassname, classes.buttonSuccess].join(' ')}
 										onClick={this.handleClickOpenModal}
 									>
 										<TitleIcon />
