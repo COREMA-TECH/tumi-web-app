@@ -1256,8 +1256,10 @@ class Employees extends Component {
                 </form>
             </Dialog>
         );
+        var loading = this.state.progressEditEmployee || this.state.progressNewEmployee;
 
         return (
+
             <div>
                 <AlertDialogSlide
                     handleClose={this.handleCloseAlertDialog}
@@ -1440,6 +1442,7 @@ class Employees extends Component {
                                         type="submit"
                                         variant="fab"
                                         className="btn btn-success"
+                                        disabled={loading}
                                     >
                                         Save {!this.state.progressEditEmployee && <i class="fas fa-save" />}
                                         {this.state.progressEditEmployee && <i class="fas fa-spinner fa-spin" />}

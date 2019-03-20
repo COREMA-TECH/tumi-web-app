@@ -1086,7 +1086,7 @@ class GeneralInfoProperty extends Component {
         if (this.state.linearProgress) {
             return <LinearProgress />;
         }
-        var loading = this.state.linearProgress && this.state.searchigZipcode;
+        var loading = this.state.linearProgress || this.state.searchigZipcode;
 
         return <form >
             <div className="row">
