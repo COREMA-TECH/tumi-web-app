@@ -21,6 +21,7 @@ import { withRouter } from "react-router-dom";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -454,6 +455,10 @@ class Application extends Component {
         this.getApplicationById(this.props.applicationId);
         this.getPositionCatalog();
         this.getPositionCatalog();
+
+        if(this.state.socialSecurityNumber.length === 0){
+            this.props.handleContract();
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -473,6 +478,45 @@ class Application extends Component {
         this.setState(() => { return { zipCode } });
     }
 
+    submitForm = () => {
+        if (!this.state.zipCode.trim().replace("-", ""))
+            this.props.handleOpenSnackbar(
+                'warning',
+                'ZipCode needed!',
+                'bottom',
+                'right'
+            );
+        else if (!this.state.city)
+            this.props.handleOpenSnackbar(
+                'warning',
+                'City needed!',
+                'bottom',
+                'right'
+            );
+        else if (!this.state.state)
+            this.props.handleOpenSnackbar(
+                'warning',
+                'State needed!',
+                'bottom',
+                'right'
+            );
+        else {
+            if (
+                this.state.homePhoneNumberValid ||
+                this.state.cellPhoneNumberValid
+            ) {
+                this.updateApplicationInformation(this.props.applicationId);
+            } else {
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    'Complete all the fields and try again!',
+                    'bottom',
+                    'right'
+                );
+            }
+        }
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -485,42 +529,7 @@ class Application extends Component {
                 openSSNDialog: true
             })
         } else {
-            if (!this.state.zipCode.trim().replace("-", ""))
-                this.props.handleOpenSnackbar(
-                    'warning',
-                    'ZipCode needed!',
-                    'bottom',
-                    'right'
-                );
-            else if (!this.state.city)
-                this.props.handleOpenSnackbar(
-                    'warning',
-                    'City needed!',
-                    'bottom',
-                    'right'
-                );
-            else if (!this.state.state)
-                this.props.handleOpenSnackbar(
-                    'warning',
-                    'State needed!',
-                    'bottom',
-                    'right'
-                );
-            else {
-                if (
-                    this.state.homePhoneNumberValid ||
-                    this.state.cellPhoneNumberValid
-                ) {
-                    this.updateApplicationInformation(this.props.applicationId);
-                } else {
-                    this.props.handleOpenSnackbar(
-                        'warning',
-                        'Complete all the fields and try again!',
-                        'bottom',
-                        'right'
-                    );
-                }
-            }
+            this.submitForm()
         }
     }
 
@@ -542,9 +551,12 @@ class Application extends Component {
 
         let renderSSNDialog = () => (
             <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
-                <DialogTitle style={{ width: '600px', height: '300px'}}>
-                    <h5 className="modal-title">RECONOCIMIENTO DE CONTRATO INDEPENDIENTE</h5>
+                <DialogTitle>
+                    <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
                 </DialogTitle>
+                <DialogContent>
+                    You must sign an Independent Contract Recognition
+                </DialogContent>
                 <DialogActions>
                     <div className="applicant-card__footer">
                         <button
@@ -557,7 +569,15 @@ class Application extends Component {
                         >
                             {spanishActions[2].label}
                         </button>
-                        <button type="submit" className="applicant-card__save-button">
+                        <button type="submit"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    this.submitForm();
+                                    this.props.handleContract();
+                                    this.handleCloseSSNDialog();
+                                }}
+                                className="applicant-card__save-button">
                             Accept
                         </button>
                     </div>
