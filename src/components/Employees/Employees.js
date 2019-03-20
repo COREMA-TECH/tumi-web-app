@@ -1347,6 +1347,7 @@ class Employees extends Component {
                                                     numberEdit: e.target.value
                                                 });
                                             }}
+                                            required
                                             value={this.state.numberEdit}
                                             placeholder="+(___) ___-____"
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
