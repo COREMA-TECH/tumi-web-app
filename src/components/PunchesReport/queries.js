@@ -5,7 +5,7 @@ export const GET_REPORT_QUERY = gql`
         punches(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate){
               employeeId
               name
-              imageMarked
+             
               hourCategory
               hoursWorked
               payRate

@@ -612,7 +612,7 @@ class TimeCardForm extends Component {
                                                         >
                                                             <option value={0}>Select a employee</option>
                                                             {this.state.employees.map((employee) => (
-                                                                <option value={employee.id}>{employee.electronicAddress + "(" + employee.lastName + ", " + employee.firstName + ")"}</option>
+                                                                <option value={employee.id}>{employee.lastName + " " + employee.firstName}</option>
                                                             ))}
                                                         </select>
                                                     </div>
