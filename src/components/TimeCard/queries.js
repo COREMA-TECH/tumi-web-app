@@ -169,7 +169,7 @@ export const PHASE_WORK_ORDER = gql`
 
 export const GET_POSITION_BY_QUERY = gql`
 	query getPosition($id: Int) {
-		getposition(Id: null, IsActive: null, Id_Entity: $id) {
+		getposition(Id: null, IsActive: 1, Id_Entity: $id) {
 			Id
 			Position
 			Shift

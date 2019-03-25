@@ -70,8 +70,8 @@ class TimeCardForm extends Component {
         date: new Date().toISOString().substring(0, 10),
         quantity: 0,
         status: 1,
-        shift: '',
-        endShift: '',
+        shift: moment('08:00', "HH:mm").format("HH:mm"),
+        endShift: moment('16:00', "HH:mm").format("HH:mm"),
         startDate: '',
         endDate: '',
         needExperience: false,
@@ -164,8 +164,8 @@ class TimeCardForm extends Component {
                 date: new Date().toISOString().substring(0, 10),
                 quantity: 0,
                 status: 1,
-                shift: '',
-                endShift: '',
+                shift: moment('08:00', "HH:mm").format("HH:mm"),
+                endShift: moment('16:00', "HH:mm").format("HH:mm"),
                 startDate: '',
                 endDate: '',
                 needExperience: false,
@@ -574,143 +574,151 @@ class TimeCardForm extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <form action="" onSubmit={this.handleSubmit}>
-                            <div className="row pl-0">
-                                <div className="">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Property</label>
-                                            <select
-                                                required
-                                                name="IdEntity"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdEntity}
-                                                disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Property</option>
-                                                {this.state.hotels.map((hotel) => (
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Employee</label>
-                                            <select
-                                                required
-                                                name="employeeId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.employeeId}
-                                                disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a employee</option>
-                                                {this.state.employees.map((employee) => (
-                                                    <option value={employee.id}>{employee.electronicAddress + "(" + employee.lastName + ", " + employee.firstName + ")"}</option>
-                                                ))}
-                                            </select>
-                                        </div>
+                            <div className="container-fluid">
+                                <div className="card">
+                                    <div className="">
+                                        <div className="">
+                                            <div className="">
+                                                <div className="row">
+                                                    <div className="col-md-6">
+                                                        <label htmlFor="">* Property</label>
+                                                        <select
+                                                            required
+                                                            name="IdEntity"
+                                                            className="form-control"
+                                                            id=""
+                                                            onChange={this.handleChange}
+                                                            value={this.state.IdEntity}
+                                                            disabled={!isAdmin}
+                                                            onBlur={this.handleValidate}
+                                                        >
+                                                            <option value={0}>Select a Property</option>
+                                                            {this.state.hotels.map((hotel) => (
+                                                                <option value={hotel.Id}>{hotel.Name}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <label htmlFor="">* Employee</label>
+                                                        <select
+                                                            required
+                                                            name="employeeId"
+                                                            className="form-control"
+                                                            id=""
+                                                            onChange={this.handleChange}
+                                                            value={this.state.employeeId}
+                                                            disabled={!isAdmin}
+                                                            onBlur={this.handleValidate}
+                                                        >
+                                                            <option value={0}>Select a employee</option>
+                                                            {this.state.employees.map((employee) => (
+                                                                <option value={employee.id}>{employee.electronicAddress + "(" + employee.lastName + ", " + employee.firstName + ")"}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
 
-                                        <div className="col-md-3">
-                                        </div>
-                                        <div className="col-md-3">
-                                            <span className="float-left">
-                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} />
-                                                <label htmlFor="">&nbsp; Currently working</label>
-                                            </span>
-                                        </div>
-                                        <div className="col-md-6">
-                                        </div>
-                                        <div className="col-md-3">
-                                            <label htmlFor="">* Date In</label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="startDate"
-                                                onChange={this.handleChange}
-                                                value={this.state.startDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
+                                                    <div className="col-md-3">
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                        <span className="float-left">
+                                                            <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} />
+                                                            <label htmlFor="">&nbsp; Currently working</label>
+                                                        </span>
+                                                    </div>
 
-                                            <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""}  Date Out</label>
-                                            <input
-                                                required={!this.state.statusTimeOut}
-                                                type="date"
-                                                className="form-control"
-                                                name="endDate"
-                                                disabled={this.state.statusTimeOut}
-                                                onChange={this.handleChange}
-                                                value={this.state.endDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-                                        <div className="col-md-3">
-                                            <label htmlFor="">* Time In</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                                    <div className="col-md-6">
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                        <label htmlFor="">* Date In</label>
+                                                        <input
+                                                            required
+                                                            type="date"
+                                                            className="form-control"
+                                                            name="startDate"
+                                                            onChange={this.handleChange}
+                                                            value={this.state.startDate.substring(0, 10)}
+                                                            onBlur={this.handleValidate}
+                                                        />
 
-                                            <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
-                                        </div>
+                                                        <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""}  Date Out</label>
+                                                        <input
+                                                            required={!this.state.statusTimeOut}
+                                                            type="date"
+                                                            className="form-control"
+                                                            name="endDate"
+                                                            disabled={this.state.statusTimeOut}
+                                                            onChange={this.handleChange}
+                                                            value={this.state.endDate.substring(0, 10)}
+                                                            onBlur={this.handleValidate}
+                                                        />
+                                                    </div>
+                                                    <div className="col-md-3">
+                                                        <label htmlFor="">* Time In</label>
+                                                        <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
 
-
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Total Hours</label>
-                                            <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
-                                        </div>
+                                                        <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
+                                                        <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
+                                                    </div>
 
 
-                                        <div className="col-md-12">
-                                            <label htmlFor="">* Job</label>
-                                            <select
-                                                required
-                                                name="PositionRateId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.PositionRateId}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value="0">Select a Position</option>
-                                                {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position} </option>
+                                                    <div className="col-md-3">
+                                                        <label htmlFor="">Total Hours</label>
+                                                        <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
+                                                    </div>
 
-                                                ))}
-                                            </select>
-                                        </div>
 
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Notes</label>
-                                            <textarea
-                                                onChange={this.handleChange}
-                                                name="comment"
-                                                className="form-control"
-                                                id=""
-                                                cols="30"
-                                                rows="3"
-                                                value={this.state.comment}
-                                            />
-                                        </div>
-                                        <div className="col-md-12">
+                                                    <div className="col-md-6">
+                                                        <label htmlFor="">* Job</label>
+                                                        <select
+                                                            required
+                                                            name="PositionRateId"
+                                                            className="form-control"
+                                                            id=""
+                                                            onChange={this.handleChange}
+                                                            value={this.state.PositionRateId}
+                                                            onBlur={this.handleValidate}
+                                                        >
+                                                            <option value="0">Select a Position</option>
+                                                            {this.state.positions.map((position) => (
+                                                                <option value={position.Id}>{position.Position} </option>
+
+                                                            ))}
+                                                        </select>
+                                                    </div>
+
+                                                    <div className="col-md-6">
+                                                        <label htmlFor="">Notes</label>
+                                                        <textarea
+                                                            onChange={this.handleChange}
+                                                            name="comment"
+                                                            className="form-control"
+                                                            id=""
+                                                            cols="30"
+                                                            rows="3"
+                                                            value={this.state.comment}
+                                                        />
+                                                    </div>
+                                                    <div className="col-md-9">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-md-12">
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger ml-1 float-right"
-                                        onClick={this.handleCloseModal}
-                                    >
-                                        Cancel<i className="fas fa-ban ml-2" />
-                                    </button>
+                                    <div className="card-footer bg-light">
 
-                                    <button className="btn btn-success ml-1 float-right" type="submit">
-                                        Save {!this.state.saving && <i className="fas fa-save ml2" />}
-                                        {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
-                                    </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger ml-1 float-right"
+                                            onClick={this.handleCloseModal}
+                                        >
+                                            Cancel<i className="fas fa-ban ml-2" />
+                                        </button>
+
+                                        <button className="btn btn-success ml-1 float-right" type="submit">
+                                            Save {!this.state.saving && <i className="fas fa-save ml2" />}
+                                            {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </form >
