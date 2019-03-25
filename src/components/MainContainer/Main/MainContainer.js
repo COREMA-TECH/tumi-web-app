@@ -41,7 +41,13 @@ class MainContainer extends Component {
 			title = 'New Lead'
 		}
 
+		if (str === "/home/punches/report") {
+			title = 'Punches Report'
+		}
 
+		if (str === "/home/approve-punches") {
+			title = 'Approve/Reject Punches'
+		}
 
 
 		return title;
