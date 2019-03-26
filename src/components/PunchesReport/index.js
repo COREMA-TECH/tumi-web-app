@@ -205,6 +205,8 @@ class PunchesReport extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <div className="card">
+                        {/* TODO: add download icon - call query to generate cvs with consolidated punches*/}
+                        {/*<button>Download CSV</button>*/}
                         <Filter {...this.state} updateFilter={this.updateFilter} />
                         <Table
                             openModal={this.state.openModal}
