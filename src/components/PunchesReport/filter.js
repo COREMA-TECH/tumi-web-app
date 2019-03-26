@@ -3,6 +3,9 @@ import TimeCardForm from '../TimeCard/TimeCardForm'
 import withGlobalContent from 'Generic/Global';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import {GET_REPORT_CSV_QUERY} from "./queries";
+import withApollo from "react-apollo/withApollo";
+import PropTypes from 'prop-types';
 
 class PunchesReportFilter extends Component {
 
@@ -93,6 +96,38 @@ class PunchesReportFilter extends Component {
             this.setState(() => ({ department: nextProps.department }));
     }
 
+    getReportCSV = () => {
+        this.setState(() => ({ loadingReport: true }), () => {
+            this.props.client
+                .query({
+                    query: GET_REPORT_CSV_QUERY,
+                    fetchPolicy: 'no-cache',
+                    variables: { ...this.props.getFilters() }
+                })
+                .then(({ data }) => {
+                    // TODO: show a loading icon in download button
+                    console.table("Data ----> ", data);
+
+                    let url = this.context.baseUrl + data.punchesConsolidated;
+                    window.open(url, '_blank');
+
+                    this.setState(() => ({
+                        loadingReport: false
+                    }));
+                })
+                .catch(error => {
+                    console.log("Error ----> ", error);
+                    this.setState(() => ({ loadingReport: false }));
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to download CSV Report. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                });
+        })
+    }
+
     render() {
         return <div className="card-header bg-light">
             <div className="row">
@@ -139,6 +174,11 @@ class PunchesReportFilter extends Component {
                     </div>
                 </div>
                 <div className="col-md-2 mt-1">
+                    {/* TODO: add download icon - call query to generate cvs with consolidated punches*/}
+                    <button className="btn btn-success ml-1 float-right"  onClick={() => {
+                        this.getReportCSV()
+                    }}>CSV {this.state.loadingReport && <i className="fas fa-spinner fa-spin  ml2" />}{!this.state.loadingReport && <i className="fas fa-download  ml2" />}</button>
+
                     <button class="btn btn-success float-right" onClick={this.handleClickOpenModal}>Add Time<i class="fas fa-plus ml-1"></i></button>
                 </div>
             </div>
@@ -155,7 +195,11 @@ class PunchesReportFilter extends Component {
             </div>
         </div>
     }
+
+    static contextTypes = {
+        baseUrl: PropTypes.string
+    };
 }
 
 //export default PunchesReportFilter;
-export default withGlobalContent(PunchesReportFilter);
+export default withGlobalContent(withApollo(PunchesReportFilter));

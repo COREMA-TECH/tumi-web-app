@@ -65,27 +65,6 @@ class PunchesReport extends Component {
         })
     }
 
-    getReportCSV = () => {
-        this.setState(() => ({ loadingReport: true }), () => {
-            this.props.client
-                .query({
-                    query: GET_REPORT_CSV_QUERY,
-                    fetchPolicy: 'no-cache',
-                    variables: { ...this.getFilters() }
-                })
-                .then(({ data }) => {
-                    // TODO: show a loading icon in download button
-
-                    this.setState(() => ({
-                        loadingReport: false
-                    }));
-                })
-                .catch(error => {
-                    this.setState(() => ({ loadingReport: false }));
-                });
-        })
-    }
-
 
 
     getDepartments = () => {
@@ -228,11 +207,7 @@ class PunchesReport extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <div className="card">
-                        {/* TODO: add download icon - call query to generate cvs with consolidated punches*/}
-                        <button onClick={() => {
-                            this.getReportCSV()
-                        }}>Download CSV</button>
-                        <Filter {...this.state} updateFilter={this.updateFilter} />
+                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters}/>
                         <Table
                             openModal={this.state.openModal}
                             openModalPicture={this.handleClickOpenModalPicture}
