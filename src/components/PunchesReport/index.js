@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Table from './table';
 import Filter from './filter';
 
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
-import {GET_REPORT_QUERY, GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY, GET_REPORT_CSV_QUERY} from './queries';
+import {GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY, GET_REPORT_QUERY} from './queries';
 import './index.css';
 
 import PreFilter from './PreFilter';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 
-const PROPERTY_DEFAULT = { value: '', label: 'Property(All)' };
-const DEPARTMENT_DEFAULT = { value: '', label: 'Department(All)' };
+const PROPERTY_DEFAULT = {value: '', label: 'Property(All)'};
+const DEPARTMENT_DEFAULT = {value: '', label: 'Department(All)'};
 
 class PunchesReport extends Component {
 
@@ -35,6 +35,7 @@ class PunchesReport extends Component {
             ...this.DEFAULT_STATE
         }
     }
+
     componentWillMount() {
         this.getReport();
         this.getDepartments();
@@ -42,37 +43,36 @@ class PunchesReport extends Component {
     }
 
     handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+        this.setState({openModal: true});
     };
 
     getReport = () => {
-        this.setState(() => ({ loadingReport: true }), () => {
+        this.setState(() => ({loadingReport: true}), () => {
             this.props.client
                 .query({
                     query: GET_REPORT_QUERY,
                     fetchPolicy: 'no-cache',
-                    variables: { ...this.getFilters() }
+                    variables: {...this.getFilters()}
                 })
-                .then(({ data }) => {
+                .then(({data}) => {
                     this.setState(() => ({
                         data: data.punches,
                         loadingReport: false
                     }));
                 })
                 .catch(error => {
-                    this.setState(() => ({ loadingReport: false }));
+                    this.setState(() => ({loadingReport: false}));
                 });
         })
     }
 
 
-
     getDepartments = () => {
-        this.setState(() => ({ loadingDepartments: true }), () => {
+        this.setState(() => ({loadingDepartments: true}), () => {
             var variables = {};
 
             if (this.state.property.value)
-                variables = { Id_Entity: this.state.property.value };
+                variables = {Id_Entity: this.state.property.value};
 
             this.props.client
                 .query({
@@ -80,15 +80,15 @@ class PunchesReport extends Component {
                     variables,
                     fetchPolicy: 'no-cache'
                 })
-                .then(({ data }) => {
+                .then(({data}) => {
                     let options = [];
 
                     //Add first record
-                    options.push({ value: '', label: 'Department(All)' });
+                    options.push({value: '', label: 'Department(All)'});
 
                     //Create structure based on department data
-                    data.catalogitem.map(({ Id, DisplayLabel }) => {
-                        options.push({ value: Id, label: DisplayLabel })
+                    data.catalogitem.map(({Id, DisplayLabel}) => {
+                        options.push({value: Id, label: DisplayLabel})
                     });
 
                     this.setState(() => ({
@@ -97,7 +97,7 @@ class PunchesReport extends Component {
                     }));
                 })
                 .catch(error => {
-                    this.setState(() => ({ loadingDepartments: false }));
+                    this.setState(() => ({loadingDepartments: false}));
                 });
         })
     }
@@ -111,21 +111,21 @@ class PunchesReport extends Component {
     }
 
     getProperties = () => {
-        this.setState(() => ({ loadingProperties: true }), () => {
+        this.setState(() => ({loadingProperties: true}), () => {
             this.props.client
                 .query({
                     query: GET_PROPERTIES_QUERY,
                     fetchPolicy: 'no-cache'
                 })
-                .then(({ data }) => {
+                .then(({data}) => {
                     let options = [];
 
                     //Add first record
-                    options.push({ value: '', label: 'Property(All)' });
+                    options.push({value: '', label: 'Property(All)'});
 
                     //Create structure based on property data
                     data.getbusinesscompanies.map((property) => {
-                        options.push({ value: property.Id, label: property.Code + " | " + property.Name });
+                        options.push({value: property.Id, label: property.Code + " | " + property.Name});
                     });
 
                     //Set values to state
@@ -136,29 +136,29 @@ class PunchesReport extends Component {
 
                 })
                 .catch(error => {
-                    this.setState(() => ({ loadingProperties: false }));
+                    this.setState(() => ({loadingProperties: false}));
                 });
         })
     }
 
     getFilters = () => {
-        var filters = {}, { property, department, employee, startDate, endDate } = this.state;
+        var filters = {}, {property, department, employee, startDate, endDate} = this.state;
 
         if (property.value)
-            filters = { ...filters, idEntity: property.value };
+            filters = {...filters, idEntity: property.value};
         if (department.value)
-            filters = { ...filters, Id_Department: department.value };
+            filters = {...filters, Id_Department: department.value};
         if (employee)
-            filters = { ...filters, employee };
+            filters = {...filters, employee};
         if (startDate)
-            filters = { ...filters, startDate };
+            filters = {...filters, startDate};
         if (endDate)
-            filters = { ...filters, endDate };
+            filters = {...filters, endDate};
 
         return filters;
     }
 
-    updateFilter = ({ property, department, employee, startDate, endDate }) => {
+    updateFilter = ({property, department, employee, startDate, endDate}) => {
         this.setState((prevState) => ({
             property,
             department: prevState.property.value != property.value ? DEPARTMENT_DEFAULT : department,
@@ -181,29 +181,29 @@ class PunchesReport extends Component {
     };
 
     handleCloseModalPicture = () => {
-        this.setState({ openModalPicture: false });
+        this.setState({openModalPicture: false});
     };
 
     render() {
-        const { loadingReport } = this.state;
+        const {loadingReport} = this.state;
         const loading = loadingReport;
 
 
         let renderDialogPicture = () => (
             <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModalPicture}>
                 {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
-                <img src={this.state.urlPicture} className="avatar-lg" />
+                <img src={this.state.urlPicture} className="avatar-lg"/>
                 {/*</DialogTitle>*/}
             </Dialog>
         );
 
 
         return <React.Fragment>
-            {loading && <LinearProgress />}
+            {loading && <LinearProgress/>}
             {
                 renderDialogPicture()
             }
-            <PreFilter changeFilter={this.changeFilter} />
+            <PreFilter changeFilter={this.changeFilter}/>
             <div className="row">
                 <div className="col-md-12">
                     <div className="card">
@@ -213,7 +213,7 @@ class PunchesReport extends Component {
                             openModalPicture={this.handleClickOpenModalPicture}
                             closeModalPicture={this.handleCloseModalPicture}
                             handleCloseModal={this.handleCloseModal}
-                            data={this.state.data} />
+                            data={this.state.data}/>
                     </div>
                 </div>
             </div>
