@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
 import gql from 'graphql-tag';
 import withApollo from "react-apollo/withApollo";
-import { ADD_BACKGROUND_CHECK, UPDATE_BACKGROUND_CHECK } from "./Mutations";
+import {ADD_BACKGROUND_CHECK, UPDATE_BACKGROUND_CHECK} from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
-import { GET_STATES_QUERY } from "../../Queries";
+import {GET_STATES_QUERY} from "../../Queries";
 import SelectNothingToDisplay
     from "../../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
@@ -12,13 +12,12 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
-import { GET_APPLICATION_CHECK_ID } from "./Queries";
+import {GET_APPLICATION_CHECK_ID} from "./Queries";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import renderHTML from "react-render-html";
 import {CREATE_DOCUMENTS_PDF_QUERY} from "../W4/Queries";
-import IMG from './images/background1.jpg';
 
 import PropTypes from 'prop-types';
 import {GET_APPLICANT_INFO} from "../AntiHarassment/Queries";

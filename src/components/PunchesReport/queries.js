@@ -20,6 +20,12 @@ export const GET_REPORT_QUERY = gql`
   }
 `;
 
+export const GET_REPORT_CSV_QUERY = gql`
+  query punchesConsolidated($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date ){
+      punchesConsolidated(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate)
+  }
+`;
+
 export const GET_PROPERTIES_QUERY = gql`
   query hotels {
     getbusinesscompanies( IsActive: 1, Contract_Status: "'C'", Id_Parent : -1) {

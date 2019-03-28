@@ -64,6 +64,8 @@ class NonDisclosure extends Component {
                 );
 
                 this.getDisclosureInformation(this.props.applicationId);
+
+                this.props.changeTabState("ApplicantDisclosure");
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message

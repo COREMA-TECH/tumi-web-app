@@ -124,6 +124,7 @@ class ConductCode extends Component {
 				this.setState({
 					id: data.addConductCode[0].id
 				});
+				this.props.changeTabState("ApplicantConductCode");
 			})
 			.catch((error) => {
 				// If there's an error show a snackbar with a error message

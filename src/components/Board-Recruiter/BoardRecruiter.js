@@ -1,68 +1,98 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css'
 import withGlobalContent from "../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
-import { ADD_APPLICATION_PHASES, UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE } from "./Mutations";
-import { GET_CITIES_QUERY, GET_COORDENADAS, GET_HOTEL_QUERY, GET_LEAD, GET_OPENING, GET_STATES_QUERY, GET_BOARD_SHIFT } from "./Queries";
+import {ADD_APPLICATION_PHASES, UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE} from "./Mutations";
+import {
+    GET_BOARD_SHIFT,
+    GET_CITIES_QUERY,
+    GET_COORDENADAS,
+    GET_HOTEL_QUERY,
+    GET_LEAD,
+    GET_STATES_QUERY
+} from "./Queries";
 //import Board from 'react-trello'
-import { Board } from 'react-trello'
-import ShiftsData from '../../data/shitfsWorkOrder.json';
+import {Board} from 'react-trello'
 import Filters from './Filters';
 import ApplicationPhasesForm from './ApplicationPhasesForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 
-const CustomCard = props => {
-    return (
-        <div>
-            <header
-                style={{
-                    borderBottom: '1px solid #eee',
-                    paddingBottom: 0,
-                    marginBottom: 0,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    color: props.cardColor
-                }}>
-                <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{props.name}</div>
-                <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{props.dueOn}</div>
-            </header>
-            <div style={{ fontSize: 12, color: '#4C4C4C' }}>
-                <div style={{ margin: 2, color: '#4C4C4C', fontWeight: 'bold' }}>{props.subTitle}</div>
-                <div style={{ margin: 5, padding: '0px 0px' }}><i>{props.body}</i>
+class CustomCard extends Component {
+
+    printButtons = ({id, laneId}) => {
+        if (laneId == "lane1")
+            return (
+                <button style={{ marginLeft: "auto" }} className="btn-assign-me"
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        // TODO: call mutation to update
+                    }}
+                >
+                    Assign To Me
+                </button>
+            );
+    };
+
+
+    render() {
+        let props = this.props;
+
+        return (
+            <div>
+                <header
+                    style={{
+                        borderBottom: '1px solid #eee',
+                        paddingBottom: 0,
+                        marginBottom: 0,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        color: props.cardColor
+                    }}>
+                    <div style={{margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8'}}>{props.name}</div>
+                    <div style={{margin: 2, fontWeight: 'bold', fontSize: 12}}>{props.dueOn}</div>
+                </header>
+                <div style={{fontSize: 12, color: '#4C4C4C'}}>
+                    <div style={{margin: 2, color: '#4C4C4C', fontWeight: 'bold'}}>{props.subTitle}</div>
+                    <div style={{margin: 5, padding: '0px 0px'}}><i>{props.body}</i>
+                    </div>
+                    <header
+                        style={{
+                            paddingBottom: 0,
+                            marginBottom: 0,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            color: props.cardColor
+                        }}>
+                        <div style={{margin: 1, fontSize: 12, fontWeight: 'bold'}}>{props.escalationTextLeft}</div>
+                        <div style={{margin: 1, fontSize: 12, fontWeight: 'bold'}}>{props.escalationTextCenter}</div>
+                        <div style={{margin: 1, fontWeight: 'bold', fontSize: 12}}>{props.escalationTextRight}  </div>
+                    </header>
+                    <header
+                        style={{
+                            paddingBottom: 0,
+                            marginBottom: 0,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            color: props.cardColor
+                        }}>
+                        <div style={{margin: 1, fontSize: 12, fontWeight: 'bold'}}>{props.escalationTextLeftLead}</div>
+                        <div
+                            style={{margin: 1, fontSize: 12, fontWeight: 'bold'}}>{props.escalationTextCenterLead}</div>
+                        {props.escalationTextRightLead && <div style={{margin: 1, fontWeight: 'bold', fontSize: 12}}><i
+                            class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
+                    </header>
+                    <right>
+                        {this.printButtons(this.props)}
+                    </right>
                 </div>
-                <header
-                    style={{
-                        paddingBottom: 0,
-                        marginBottom: 0,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        color: props.cardColor
-                    }}>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeft}</div>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenter}</div>
-                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}  </div>
-                </header>
-                <header
-                    style={{
-                        paddingBottom: 0,
-                        marginBottom: 0,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        color: props.cardColor
-                    }}>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftLead}</div>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
-                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i
-                        class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
-                </header>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 class BoardRecruiter extends Component {
@@ -236,7 +266,7 @@ class BoardRecruiter extends Component {
     };
 
     handleCloseModal = () => {
-        this.setState({ openModal: false });
+        this.setState({openModal: false});
 
 
         this.setState(
@@ -308,7 +338,7 @@ class BoardRecruiter extends Component {
                     StageId: laneId
                 }
             }
-        }).then(({ data }) => {
+        }).then(({data}) => {
             this.setState({
                 editing: false
             });
@@ -341,7 +371,7 @@ class BoardRecruiter extends Component {
             .query({
                 query: GET_HOTEL_QUERY
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 });
@@ -359,7 +389,7 @@ class BoardRecruiter extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     states: data.getcatalogitem
                 });
@@ -377,7 +407,7 @@ class BoardRecruiter extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     cities: data.getcatalogitem
                 });
@@ -515,19 +545,31 @@ class BoardRecruiter extends Component {
 
                 this.setState(
                     {
-                        Intopening: this.state.Openings.find((item) => { return item.id == cardId }).WorkOrderId,
+                        Intopening: this.state.Openings.find((item) => {
+                            return item.id == cardId
+                        }).WorkOrderId,
                         ShiftId: cardId
                     })
 
-                needEnglish = this.state.Openings.find((item) => { return item.id == cardId }).needEnglish;
-                needExperience = this.state.Openings.find((item) => { return item.id == cardId }).needExperience;
-                Position = this.state.Openings.find((item) => { return item.id == cardId }).Position;
+                needEnglish = this.state.Openings.find((item) => {
+                    return item.id == cardId
+                }).needEnglish;
+                needExperience = this.state.Openings.find((item) => {
+                    return item.id == cardId
+                }).needExperience;
+                Position = this.state.Openings.find((item) => {
+                    return item.id == cardId
+                }).Position;
 
 
-                this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+                this.getLatLongHotel(1, this.state.Openings.find((item) => {
+                    return item.id == cardId
+                }).Zipcode);
 
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
+                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => {
+                        return item.id == cardId
+                    }).PositionApplyfor);
                 } else {
                     this.getMatches(needEnglish, needExperience, 30, laneId, Position);
                 }
@@ -603,7 +645,7 @@ class BoardRecruiter extends Component {
                             positionApplyingFor: this.state.Intopening
                         }
                     })
-                    .then(({ data }) => {
+                    .then(({data}) => {
                         this.setState({
                             editing: false
                         });
@@ -638,7 +680,7 @@ class BoardRecruiter extends Component {
 
                         }
                     })
-                    .then(({ data }) => {
+                    .then(({data}) => {
                         this.setState({
                             editing: false
                         });
@@ -658,7 +700,7 @@ class BoardRecruiter extends Component {
     };
 
     getLatLongHotel = async (op, zipcode) => {
-        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
+        await this.props.client.query({query: GET_COORDENADAS, variables: {Zipcode: zipcode}}).then(({data}) => {
             this.setState({
                 latitud1: data.zipcode[0].Lat,
                 longitud1: data.zipcode[0].Long
@@ -669,7 +711,7 @@ class BoardRecruiter extends Component {
 
     getLatLong = async (op, zipcode, fnc = () => {
     }) => {
-        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
+        await this.props.client.query({query: GET_COORDENADAS, variables: {Zipcode: zipcode}}).then(({data}) => {
             this.setState({
                 latitud2: data.zipcode[0].Lat,
                 longitud2: data.zipcode[0].Long
@@ -697,17 +739,26 @@ class BoardRecruiter extends Component {
                 },
                 () => {
                     this.props.client.query({
-                        query: GET_LEAD, variables: { language: language, experience: experience, Position: PositionId, WorkOrderId: this.state.Intopening, ShiftId: this.state.ShiftId }
-                    }).then(({ data }) => {
+                        query: GET_LEAD,
+                        variables: {
+                            language: language,
+                            experience: experience,
+                            Position: PositionId,
+                            WorkOrderId: this.state.Intopening,
+                            ShiftId: this.state.ShiftId
+                        }
+                    }).then(({data}) => {
                         data.applicationsByMatches.forEach((wo) => {
 
                             console.log("applicationsByMatches ", wo)
 
-                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
+                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
+                                return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId
+                            });
 
                             if (wo.zipCode != null) {
                                 this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-                                    const { getDistance } = this.context;
+                                    const {getDistance} = this.context;
                                     const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
                                     if (distance >= location) {
@@ -720,8 +771,9 @@ class BoardRecruiter extends Component {
 
                                         if (typeof Phases == undefined || Phases == null) {
                                             varphase = 30460;
-                                        } else { varphase = Phases.StageId }
-
+                                        } else {
+                                            varphase = Phases.StageId
+                                        }
 
 
                                         switch (varphase) {
@@ -734,7 +786,7 @@ class BoardRecruiter extends Component {
                                                         body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                         escalationTextLeftLead: wo.generalComment,
                                                         escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                        cardStyle: {borderRadius: 6, marginBottom: 15}
                                                     });
                                                 }
                                                 break;
@@ -746,7 +798,7 @@ class BoardRecruiter extends Component {
                                                     body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                     escalationTextLeftLead: wo.generalComment,
                                                     escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                    cardStyle: {borderRadius: 6, marginBottom: 15}
                                                 });
                                                 break;
                                             case 30462, 30464:
@@ -757,7 +809,7 @@ class BoardRecruiter extends Component {
                                                     body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                     escalationTextLeftLead: wo.generalComment,
                                                     escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                    cardStyle: {borderRadius: 6, marginBottom: 15}
                                                 });
                                                 break;
                                             case 30463, 30465:
@@ -768,7 +820,7 @@ class BoardRecruiter extends Component {
                                                     body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
                                                     escalationTextLeftLead: wo.generalComment,
                                                     escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                    cardStyle: {borderRadius: 6, marginBottom: 15}
                                                 });
                                                 break;
                                         }
@@ -918,8 +970,8 @@ class BoardRecruiter extends Component {
 
         await this.props.client.query({
             query: GET_BOARD_SHIFT,
-            variables: { ...this.getDataFilters() }
-        }).then(({ data }) => {
+            variables: {...this.getDataFilters()}
+        }).then(({data}) => {
             let _id = data.ShiftBoard.length === 0 ? 0 : data.ShiftBoard[0].workOrderId;
             let count = 1;
             let begin = true;
@@ -938,7 +990,7 @@ class BoardRecruiter extends Component {
                     dueOn: 'Q: ' + ShiftBoard.count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
-                    cardStyle: { borderRadius: 6, marginBottom: 15 },
+                    cardStyle: {borderRadius: 6, marginBottom: 15},
                     needExperience: ShiftBoard.needExperience,
                     needEnglish: ShiftBoard.needEnglish,
                     PositionApplyfor: ShiftBoard.Id_positionApplying,
@@ -1006,7 +1058,7 @@ class BoardRecruiter extends Component {
     };
 
     handleSwitchView = (event) => {
-        this.setState({ checked: false });
+        this.setState({checked: false});
         window.setTimeout(function () {
 
             // Move to a new location or you can do something else
@@ -1016,12 +1068,12 @@ class BoardRecruiter extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
 
         let isLoading = this.state.loading
         return (
             <div className="App">
-                {isLoading && <LinearProgress />}
+                {isLoading && <LinearProgress/>}
                 <div className="App-header">
                     <div className="row">
                         <div className="col-md-12 col-lg-12">
@@ -1121,25 +1173,26 @@ class BoardRecruiter extends Component {
                                                 <div className="col-md-4">
                                                     <a
                                                         className="link-board" onClick={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
 
-                                                            this.setState({ openModal: true })
-                                                        }}>
+                                                        this.setState({openModal: true})
+                                                    }}>
                                                         Advanced <i className="fas fa-filter link-icon-filter"></i>
                                                     </a>
                                                     <a
                                                         className="link-board" onClick={(e) => {
-                                                            this.setState({
-                                                                hotel: 0,
-                                                                state: 0,
-                                                                city: 0,
-                                                                status: null
-                                                            }, () => {
-                                                                this.getOpenings();
-                                                            })
-                                                        }}>
-                                                        Clear <i className="fas fa-filter link-icon-filter"></i><i className="fas fa-times-circle text-danger clear-filter" />
+                                                        this.setState({
+                                                            hotel: 0,
+                                                            state: 0,
+                                                            city: 0,
+                                                            status: null
+                                                        }, () => {
+                                                            this.getOpenings();
+                                                        })
+                                                    }}>
+                                                        Clear <i className="fas fa-filter link-icon-filter"></i><i
+                                                        className="fas fa-times-circle text-danger clear-filter"/>
                                                     </a>
 
                                                 </div>
@@ -1167,7 +1220,7 @@ class BoardRecruiter extends Component {
                                                             localStorage.setItem('idApplication', 0);
                                                             this.props.history.push({
                                                                 pathname: '/home/application/Form',
-                                                                state: { ApplicationId: 0 }
+                                                                state: {ApplicationId: 0}
                                                             });
                                                         }}>New Lead
                                                     </button>
@@ -1182,7 +1235,7 @@ class BoardRecruiter extends Component {
                 </div>
                 <div className="App-intro">
                     <Board
-                        data={{ lanes: this.state.lane }}
+                        data={{lanes: this.state.lane}}
                         draggable={true}
                         laneDraggable={false}
                         onDataChange={this.shouldReceiveNewData}
@@ -1194,11 +1247,10 @@ class BoardRecruiter extends Component {
                             backgroundColor: '#f5f7f9'
                         }}
                         customCardLayout>
-                        <CustomCard />
-
+                        <CustomCard/>
                     </Board>
                 </div>
-                <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
+                <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal}/>
                 <ApplicationPhasesForm
                     WorkOrderId={this.state.Intopening}
                     ApplicationId={this.state.ApplicationId}
