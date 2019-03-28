@@ -24,8 +24,9 @@ class CustomCard extends Component {
     printButtons = ({id, laneId}) => {
         if (laneId == "lane1")
             return (
-                <button style={{ marginLeft: "auto" }} className="btn btn-outline-success btn-sm"
-                    onClick={() => {
+                <button style={{ marginLeft: "auto" }} className="btn-assign-me"
+                    onClick={(e) => {
+                        e.stopPropagation()
                         // TODO: call mutation to update
                     }}
                 >
