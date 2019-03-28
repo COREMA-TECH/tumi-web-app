@@ -55,7 +55,7 @@ class PunchesReport extends Component {
                 })
                 .then(({ data }) => {
                     this.setState(() => ({
-                        data: data.punches,
+                        data: data.markedEmployeesConsolidate,
                         loadingReport: false
                     }));
                 })

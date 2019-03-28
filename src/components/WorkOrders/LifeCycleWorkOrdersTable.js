@@ -80,7 +80,7 @@ class LifeCycleWorkOrdersTable extends Component {
         if (nextProps.item && !this.state.openLife) {
             this.setState(
                 {
-                    id: nextProps.item.id,
+                    id: nextProps.item.workOrderId,
                     IdEntity: nextProps.item.IdEntity,
                     date: nextProps.item.date,
                     quantity: nextProps.item.quantity,
@@ -96,11 +96,7 @@ class LifeCycleWorkOrdersTable extends Component {
                     //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
-                    this.getPhaseWork(nextProps.item.id);
-                    // this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
-                    // this.getContacts(nextProps.item.IdEntity);
-                    //  this.getRecruiter();
-
+                    this.getPhaseWork(nextProps.item.workOrderId);
                     this.ReceiveStatus = true;
                 }
             );

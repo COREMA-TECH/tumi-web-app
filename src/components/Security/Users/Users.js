@@ -1308,6 +1308,7 @@ class Catalogs extends React.Component {
                                                     <option
                                                         key={item.Id}
                                                         value={item.Id}
+                                                        disabled={item.Id == 199 ? "disabled" : ""}
                                                     >
                                                         {item.Name}
                                                     </option>

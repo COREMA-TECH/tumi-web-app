@@ -1153,7 +1153,7 @@ class Employees extends Component {
                                     >
                                         <option value="">Select language</option>
                                         {this.state.languages.map((item) => (
-                                            <option key={item.Id} value={item.Id}>
+                                            <option key={item.Id} value={item.Id} disabled={item.Id == 199 ? "disabled" : ""}>
                                                 {item.Name}
                                             </option>
                                         ))}

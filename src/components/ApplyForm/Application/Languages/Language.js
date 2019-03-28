@@ -207,8 +207,8 @@ class Language extends Component {
 								className="form-control"
 								form="form-language"
 							>
-								<option value="">{spanishActions[5].label}</option>
-								{this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
+								<option value="" >{spanishActions[5].label}</option>
+								{this.state.languagesLoaded.map((item) => <option value={item.Id} disabled={item.Id == 199 ? "disabled" : ""}>{item.Name}</option>)}
 							</select>
 							<span className="check-icon" />
 						</div>

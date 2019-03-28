@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_REPORT_QUERY = gql`
-  query punches($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date ){
-        punches(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate){
+  query punchesConsolidate($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date ){
+    markedEmployeesConsolidate(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate){
               employeeId
               name
              
