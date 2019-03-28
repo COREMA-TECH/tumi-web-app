@@ -79,7 +79,7 @@ class CustomizedTabs extends React.Component {
         value: 0,
         applicationId: null,
         openSignature: false,
-        applicationStatus: [],
+        applicationStatus: {},
         independentContract: false
     };
 
@@ -127,6 +127,15 @@ class CustomizedTabs extends React.Component {
         })
     };
 
+    changeTabState = (tab) => {
+        this.setState({
+            applicationStatus: {
+                ...this.state.applicationStatus,
+                [tab]: true
+            }
+        });
+    }
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
@@ -134,15 +143,15 @@ class CustomizedTabs extends React.Component {
         let getTabContent = (step, ) => {
             switch (step) {
                 case 0:
-                    return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract}/>;
+                    return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
                 case 1:
                     return <BackgroundCheck applicationId={this.state.applicationId} />;
                 case 2:
-                    return <NonDisclosure applicationId={this.state.applicationId} />;
+                    return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 3:
-                    return <ConductCode applicationId={this.state.applicationId} />;
+                    return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 4:
-                    return <AntiHarassment applicationId={this.state.applicationId} />;
+                    return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 5:
                     return <WorkerCompensation applicationId={this.state.applicationId} />;
                 case 6:
@@ -154,7 +163,7 @@ class CustomizedTabs extends React.Component {
                 case 9:
                     return <ProfilePreview applicationId={this.state.applicationId} />;
                 case 10:
-                    return <IndependentContract/>
+                    return <IndependentContract />
 
             }
         };
@@ -228,8 +237,8 @@ class CustomizedTabs extends React.Component {
                                     label={'Independent Contract'}
                                 />
                             ) : (
-                                ''
-                            )
+                                    ''
+                                )
                         }
 
                     </Tabs>

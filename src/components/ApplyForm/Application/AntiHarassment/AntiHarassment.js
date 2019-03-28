@@ -113,7 +113,6 @@ class AntiHarassment extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("entro al data ", data);
                 this.props.handleOpenSnackbar(
                     'success',
                     'Successfully signed!',
@@ -124,6 +123,7 @@ class AntiHarassment extends Component {
                 this.setState({
                     id: data.addHarassmentPolicy[0].id
                 })
+                this.props.changeTabState("ApplicantHarassmentPolicy");
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message
