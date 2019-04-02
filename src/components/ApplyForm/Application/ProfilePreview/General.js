@@ -124,6 +124,7 @@ class General extends Component {
             number: '',
             type: null,
             idSupervisor: null,
+            directDeposit: 0,
             IsActive: 1,
             User_Created: 1,
             User_Updated: 1,
@@ -202,6 +203,7 @@ class General extends Component {
         IdRegionValid: true,
         RegionName: '',
         IsActive: 1,
+        directDeposit: 0,
         IdRegion: 0,
 
         departmentName: '',
@@ -291,6 +293,7 @@ class General extends Component {
                             mobileNumber: this.state.number,
                             idRole: 1,
                             isActive: true,
+                            directDeposit: this.state.directDeposit,
                             userCreated: 1,
                             userUpdated: 1
                         });
@@ -406,6 +409,7 @@ class General extends Component {
                         lastname: this.state.data.lastName,
                         isLead: this.state.data.isLead,
                         loading: false,
+                        directDeposit: this.state.data.directDeposit,
                         username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000)
                     })
                 });
@@ -1439,7 +1443,9 @@ class General extends Component {
                                             className="username-number col-sm-12">Emp #: TM-0000{this.state.data.id}</span>
                                     </div>
                                 </div>
-                                <div className="item col-sm-12 col-md-2">
+
+                                {/*
+    <div className="item col-sm-12 col-md-2">
                                     <div className="row">
                                         <span
                                             className="col-sm-6 col-lg-12 font-weight-bold">Title</span>
@@ -1447,6 +1453,7 @@ class General extends Component {
                                             className="col-sm-6 col-lg-12">{this.state.data.position ? this.state.data.position.position.Position.trim() + '(' + this.state.data.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}</span>
                                     </div>
                                 </div>
+ */}
 
                                 <div className="item col-12 col-md-2">
                                     <div className="row">
@@ -1473,6 +1480,26 @@ class General extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="item col-sm-12  col-md-2">
+                                    <div className="row">
+                                        <span className="col-12 col-md-12 font-weight-bold">Direct Deposit</span>
+                                        <div className="col-12 col-md-12">
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.directDeposit}
+                                                    name="directDeposit"
+                                                    className="onoffswitch-checkbox"
+                                                    id="directDeposit"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="directDeposit">
                                                     <span className="onoffswitch-inner" />
                                                     <span className="onoffswitch-switch" />
                                                 </label>

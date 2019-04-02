@@ -6,7 +6,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import withGlobalContent from 'Generic/Global';
 import { withApollo } from 'react-apollo';
-import { GET_INITIAL_DATA, GET_CONTACT_BY_QUERY, GET_DEPARTMENTS } from './Queries';
+import { GET_INITIAL_DATA, GET_CONTACT_BY_QUERY, GET_DEPARTMENTS, GET_POSITION } from './Queries';
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 
 class PreFilter extends Component {
 
@@ -16,9 +17,14 @@ class PreFilter extends Component {
             saving: false,
             locations: [],
             departments: [],
+            positions: [],
             contacts: [],
             disabled: true,
-            location: 0
+            location: 0,
+            department: 0,
+            position: 0,
+            loadingPositions: true,
+            loadingDepartments: true,
         }
     }
 
@@ -49,6 +55,34 @@ class PreFilter extends Component {
         })
     }
 
+    getPositions = () => {
+        this.setState({ loadingPositions: true }, () => {
+            this.props.client
+                .query({
+                    query: GET_POSITION,
+                    variables: {
+                        Id_Department: this.state.department
+                    }
+                })
+                .then(({ data }) => {
+                    console.log("getPositions ", data)
+                    this.setState((prevState) => {
+                        return { positions: data.getposition, loadingPositions: false }
+                    })
+
+                }).catch(error => {
+                    this.setState({ loadingPositions: false }, () => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error loading Department list',
+                            'bottom',
+                            'right'
+                        );
+                    });
+                })
+        })
+    }
+
     getLocations = () => {
         this.setState({ loadingLoaction: true }, () => {
             this.props.client
@@ -57,9 +91,8 @@ class PreFilter extends Component {
                 })
                 .then(({ data }) => {
                     this.setState((prevState) => {
-                        return { locations: data.getbusinesscompanies, loadingLoaction: false }
+                        return { locations: data.getbusinesscompanies, loadingLoaction: false, loadingDepartments: false }
                     })
-
                 }).catch(error => {
                     this.setState({ loadingLoaction: false }, () => {
                         this.props.handleOpenSnackbar(
@@ -117,6 +150,11 @@ class PreFilter extends Component {
             return <option key={item.Id} value={item.Id}>{item.Code + ' ' + item.Description}</option>;
         });
     }
+    renderPositionList = () => {
+        return this.state.positions.map((item) => {
+            return <option key={item.Id} value={item.Id}>{item.Position}</option>;
+        });
+    }
 
     handleSelectValueChange = (event) => {
         var index = event.nativeEvent.target.selectedIndex;
@@ -129,9 +167,13 @@ class PreFilter extends Component {
             [element.name + "Name"]: text,
             disabled: false
         }, () => {
+            console.log("element.name  ", element.name)
             if (element.name == 'location') {
                 this.getContacts();
                 this.getDepartments();
+            }
+            if (element.name == 'department') {
+                this.getPositions();
             }
         })
     }
@@ -142,12 +184,24 @@ class PreFilter extends Component {
 
     handleApplyFilters = (event) => {
         event.preventDefault();
-        this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department);
-        this.props.handleGetTextofFilters(this.state.locationName, this.state.requestedName, this.state.departmentName);
+        this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department, this.state.position);
+        this.props.handleGetTextofFilters(this.state.locationName, this.state.requestedName, this.state.departmentName, this.state.positionName);
         this.setState({
             disabled: !this.state.disabled
         });
     }
+
+
+    updateLocationName = (value) => {
+        this.setState(
+            {
+                locationName: value
+            },
+            () => {
+                this.validateField('locationName', value);
+            }
+        );
+    };
 
     render() {
         const disabled = this.state.disabled;
@@ -159,16 +213,36 @@ class PreFilter extends Component {
                             <div className="row">
                                 <div className="col-md-12">
                                     <label htmlFor="">Property</label>
-                                    <select name="location" id="" disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
+                                    {/*  <AutosuggestInput
+                                        id="location"
+                                        name="location"
+                                        data={this.state.locations}
+                                        // required
+                                        //error={!this.state.titleNameValid}
+                                        value={this.props.location}
+                                        onChange={this.updateLocationName}
+                                        onSelect={this.updateLocationName}
+                                    />*/}
+
+
+                                    <select name="location" id="" value={this.props.location} disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderLocationList()}
                                     </select>
+
                                 </div>
                                 <div className="col-md-12">
                                     <label htmlFor="">Department</label>
-                                    <select name="department" id="" disabled={disabled || this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
+                                    <select name="department" id="" value={this.props.department} disabled={this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderDeparmentList()}
+                                    </select>
+                                </div>
+                                <div className="col-md-12">
+                                    <label htmlFor="">Position</label>
+                                    <select name="position" id="" value={this.props.position} disabled={this.state.loadingPositions} required className="form-control" onChange={this.handleSelectValueChange}>
+                                        <option value="">Select a Option</option>
+                                        {this.renderPositionList()}
                                     </select>
                                 </div>
                             </div>

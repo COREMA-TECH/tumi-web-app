@@ -149,7 +149,9 @@ class PunchesReportTable extends React.Component {
             page: 0,
             rowsPerPage: 25,
             //  openModalPicture: true,
-            openModal: false
+            openModal: false,
+            closeModal: false,
+            IdEmployee: 0,
         };
     }
 
@@ -168,7 +170,9 @@ class PunchesReportTable extends React.Component {
         }
         if (
             this.state.page !== nextState.page ||
-            this.state.rowsPerPage !== nextState.rowsPerPage
+            this.state.rowsPerPage !== nextState.rowsPerPage ||
+            this.state.openModal !== nextState.openModal ||
+            this.state.IdEmployee !== nextState.IdEmployee
         ) {
             return true;
         }
@@ -181,130 +185,121 @@ class PunchesReportTable extends React.Component {
         let items = this.props.data || [];
         const { rowsPerPage, page } = this.state;
 
-
-
         return (
-            <Route
-                render={({ history }) => (
-                    <div className="card-body pt-0">
-                        <Paper className={classes.root}>
-                            <Table className={classes.table}>
-                                <TableHead>
-                                    <TableRow>
-                                        <CustomTableCell style={{ width: '30px' }} className={"Table-head"}></CustomTableCell>
-                                        <CustomTableCell style={{ width: '120px' }} className={"Table-head"}>Employees</CustomTableCell>
-                                        <CustomTableCell style={{ width: '50px', textAlign: 'center' }} className={"Table-head"}>Hours Worked</CustomTableCell>
-                                        <CustomTableCell style={{ width: '120px' }} className={"Table-head"}></CustomTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        return (
+            <div className="card-body pt-0">
+                <Paper className={classes.root}>
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow>
+                                <CustomTableCell style={{ width: '30px' }} className={"Table-head"}></CustomTableCell>
+                                <CustomTableCell style={{ width: '120px' }} className={"Table-head"}>Employees</CustomTableCell>
+                                <CustomTableCell style={{ width: '50px', textAlign: 'center' }} className={"Table-head"}>Hours Worked</CustomTableCell>
+                                <CustomTableCell style={{ width: '120px' }} className={"Table-head"}></CustomTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                return (
 
-                                            <TableRow
-                                                className={classes.row}
-                                                key={uuidv4()}
-                                            >
-                                                <CustomTableCell style={{ width: '30px', textAlign: 'center' }}>
-                                                    <Tooltip title="Approve Punches">
-                                                        <button
-                                                            className="btn btn-success ml-1 float-left"
-                                                            disabled={this.props.loading}
-                                                            onClick={() => {
-                                                                history.push({
-                                                                    pathname: '/home/contract/edit',
-                                                                    state: { contract: row.Id }
-                                                                });
-                                                            }}
-                                                        >
-                                                            <i class="fas fa-check"></i>
-                                                        </button>
-                                                    </Tooltip>
-                                                    <Tooltip title="Reject Punches">
-                                                        <button
-                                                            className="btn btn-danger ml-1 float-left"
-                                                            disabled={this.props.loading}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                return this.props.delete(row.Id);
-                                                            }}
-                                                        >
-                                                            <i class="fas fa-ban"></i>
-                                                        </button>
-                                                    </Tooltip>
-                                                </CustomTableCell>
-                                                <CustomTableCell style={{ width: '120px' }}>{row.name}</CustomTableCell>
-                                                <CustomTableCell style={{ width: '50px', textAlign: 'center' }}>{row.hoursWorked}
-                                                    <Tooltip title="View Details">
-                                                        <button
-                                                            className="btn btn-success ml-1 float-right"
-                                                            disabled={this.props.loading}
-                                                            onClick={(e) => {
-                                                                //e.stopPropagation();
-                                                                this.setState({ openModal: true });
-                                                                alert("this.state.openModal " + this.state.openModal)
-                                                            }}
-                                                        >
-                                                            <i class="fas fa-info"></i>
-                                                        </button>
-                                                    </Tooltip>
-                                                </CustomTableCell>
-                                                <CustomTableCell style={{ width: '120' }}> </CustomTableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </TableBody>
-                                <TableFooter>
-                                    <TableRow>
-                                        {items.length > 0 && (
-                                            <TablePagination
-                                                colSpan={3}
-                                                count={items.length}
-                                                rowsPerPage={rowsPerPage}
-                                                page={page}
-                                                onChangePage={this.handleChangePage}
-                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                                ActionsComponent={TablePaginationActionsWrapped}
-                                            />
-                                        )}
-                                    </TableRow>
-                                </TableFooter>
-                            </Table>
-                        </Paper>
+                                    <TableRow
+                                        className={classes.row}
+                                        key={uuidv4()}
+                                    >
+                                        <CustomTableCell style={{ width: '30px', textAlign: 'center' }}>
+                                            <Tooltip title="Approve Punches">
+                                                <button
+                                                    className="btn btn-success ml-1 float-left"
+                                                    disabled={this.props.loading}
 
-                        <div className="row">
+                                                >
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </Tooltip>
+                                            <Tooltip title="Reject Punches">
+                                                <button
+                                                    className="btn btn-danger ml-1 float-left"
+                                                    disabled={this.props.loading}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        return this.props.delete(row.Id);
+                                                    }}
+                                                >
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            </Tooltip>
+                                        </CustomTableCell>
+                                        <CustomTableCell style={{ width: '120px' }}>{row.name}</CustomTableCell>
+                                        <CustomTableCell style={{ width: '50px', textAlign: 'center' }}>{row.hoursWorked}
+                                            <Tooltip title="View Details">
+                                                <button
+                                                    type="button"
+                                                    name="ViewDetails"
+                                                    id="ViewDetails"
+                                                    className="btn btn-success ml-1 float-right"
+                                                    //  disabled={this.props.loading}
+                                                    onClick={(e) => {
+                                                        this.setState(() => ({ openModal: true, IdEmployee: row.employeeId }));
+                                                    }}
+                                                >
+                                                    <i class="fas fa-info"></i>
+                                                </button>
+                                            </Tooltip>
+                                        </CustomTableCell>
+                                        <CustomTableCell style={{ width: '120' }}> </CustomTableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                {items.length > 0 && (
+                                    <TablePagination
+                                        colSpan={3}
+                                        count={items.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        onChangePage={this.handleChangePage}
+                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActionsWrapped}
+                                    />
+                                )}
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </Paper>
+
+                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.state.closeModal}>
+                    <DialogTitle style={{ padding: '0px' }}>
+                        <div className="modal-header">
+                            <h5 className="modal-title">Details punches</h5>
+                        </div>
+                    </DialogTitle>
+                    <DialogContent>
+                        <Table_Punches
+                            openModal={this.state.openModal}
+                            employees={this.state}
+                            openModalPicture={this.handleClickOpenModalPicture}
+                            closeModalPicture={this.handleCloseModalPicture}
+                            handleCloseModal={this.handleCloseModal}
+                            data={this.props.data} />
+
+                        <div className="row pl-0 pr-0">
                             <div className="col-md-12">
-                                <TimeCardForm
-                                    openModal={this.state.openModal}
-                                    handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    onEditHandler={this.onEditHandler}
-                                    toggleRefresh={this.toggleRefresh}
-                                    handleCloseModal={this.handleCloseModal}
-                                />
+                                <button
+                                    className="btn btn-danger ml-1 float-right"
+                                    onClick={(e) => {
+                                        this.setState(() => ({ openModal: false, IdEmployee: 0 }));
+                                    }}
+                                >
+                                    Close<i class="fas fa-ban ml-2" />
+                                </button>
                             </div>
                         </div>
+                    </DialogContent>
+                </Dialog>
 
-                        <Dialog maxWidth="md" open={this.state.openLife} onClose={this.props.handleCloseModal}>
-                            <DialogTitle style={{ padding: '0px' }}>
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Details punches</h5>
-                                </div>
-                            </DialogTitle>
-                            <DialogContent>
-                                <Table_Punches
-                                    openModal={this.state.openModal}
-                                    openModalPicture={this.handleClickOpenModalPicture}
-                                    closeModalPicture={this.handleCloseModalPicture}
-                                    handleCloseModal={this.handleCloseModal}
-                                    data={this.props.data} />
-                            </DialogContent>
-                        </Dialog>
+            </div>
 
-                    </div>
-
-
-                )}
-            />
         );
     }
 }
