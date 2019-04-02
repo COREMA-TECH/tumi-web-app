@@ -105,7 +105,7 @@ class PreviousEmployment extends Component {
 				document.getElementById('form-previous-employment').reset();
 				this.handleClose();
 
-				this.props.handleOpenSnackbar('success', 'Successfully created', 'bottom', 'right');
+				this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
 
 				this.getPreviousEmploymentList(this.state.applicationId);
 			})
