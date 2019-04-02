@@ -63,6 +63,13 @@ class PreviousEmploymentCard extends Component {
                     }}>
                     <i className="fas fa-trash-alt"></i>
                 </span>
+                <span
+                    className="previous-employment-card__edit-button"
+                    onClick={() => {
+                        this.props.handleOpenModal();
+                    }}>
+                    <i className="fas fa-pen"></i>
+                </span>
                 <div className="previous-employment-card__job-title">{this.props.jobTitle}</div>
                 <div className="previous-employment-card__company">
                     <i className="fas fa-building"></i><span> {this.props.company}</span>
