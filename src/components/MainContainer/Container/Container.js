@@ -44,6 +44,7 @@ import TimeCardTable from '../../TimeCard/TimeCardTable';
 import TimeCard from '../../TimeCard';
 import PayRoll from "../../Security/PayRoll/PayRoll";
 import PunchesReport from '../../PunchesReport';
+import PunchesReportDetail from '../../PunchesReportDetail';
 import ApprovePunches from '../../ApprovePunchesReport';
 
 class Container extends Component {
@@ -174,6 +175,7 @@ class Container extends Component {
 				<Route exact path="/home/timecard" component={TimeCard} />
 				<Route exact path="/home/timecardtable" component={TimeCardTable} />
 				<Route exact path="/home/approve-punches" component={ApprovePunches} />
+				<Route exact path="/home/punches/report/detail" component={PunchesReportDetail} />
 			</div>
 		);
 	}
