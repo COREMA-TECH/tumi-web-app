@@ -46,6 +46,14 @@ export const ADD_APLICANT_PREVIOUS_EMPLOYMENT = gql`
 	}
 `;
 
+export const UPDATE_APLICANT_PREVIOUS_EMPLOYMENT = gql`
+    mutation updateApplicantPreviousEmployment($application: inputUpdateApplicantPreviousEmployment) {
+        updateApplicantPreviousEmployment(applicantPreviousEmployment: $application) {
+            id
+        }
+    }
+`;
+
 export const ADD_MILITARY_SERVICES = gql`
 	mutation addMilitaryService($application: [inputInsertApplicantMilitaryService]) {
 		addMilitaryService(militaryService: $application) {
