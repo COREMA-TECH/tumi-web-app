@@ -26,3 +26,12 @@ export const ADD_APPLICATION_PHASES = gql`
 		}
 	}
 `;
+
+export const ASSIGN_RECRUITER_TO_OPENING = gql`
+	mutation addOpeningRecruiter($openingRecruiter: insertOpeningRecruiterType) {
+		addOpeningRecruiter(openingRecruiter: $openingRecruiter) {
+			recruiterId
+			openingId
+		}
+	}
+`;
