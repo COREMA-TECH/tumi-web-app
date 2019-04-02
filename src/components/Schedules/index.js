@@ -112,15 +112,15 @@ class Schedules extends Component {
         });
     }
 
-    handleApplyFilters = (location, requested, department) => {
+    handleApplyFilters = (location, requested, department, position) => {
         this.setState((prevState) => {
-            return { location, requested, openPreFilter: false, filtered: true, department }
+            return { location, requested, openPreFilter: false, filtered: true, department, position }
         })
     }
 
-    handleGetTextofFilters = (locationName, requestedName, departmentName) => {
+    handleGetTextofFilters = (locationName, requestedName, departmentName, positionName) => {
         this.setState((prevState) => {
-            return { locationName, requestedName, departmentName }
+            return { locationName, requestedName, departmentName, positionName }
         })
     }
 
@@ -166,6 +166,9 @@ class Schedules extends Component {
                     templateShifts={this.templateShifts}
                     handleClosePreFilter={this.handleClosePreFilter}
                     isEditFilter={this.state.isEditFilter}
+                    location={this.state.location}
+                    position={this.state.position}
+                    department={this.state.department}
                 />
                 <Filters
                     handleClosePreFilter={this.handleClosePreFilter}
@@ -177,6 +180,7 @@ class Schedules extends Component {
                     locationName={this.state.locationName}
                     requestedName={this.state.requestedName}
                     departmentName={this.state.departmentName}
+                    positionName={this.state.positionName}
                     templateShifts={this.state.templateShifts}
                     templateStartDate={this.state.templateStartDate}
                     templateEndDate={this.state.templateEndDate}
@@ -184,6 +188,7 @@ class Schedules extends Component {
                     viewType={this.state.viewType}
                     location={this.state.location}
                     department={this.state.department}
+                    position={this.state.position}
                     toggleRefresh={this.toggleRefresh}
                     employees={this.state.employees}
                     onSelectedEmployeeChange={this.onSelectedEmployeeChange}
@@ -194,6 +199,7 @@ class Schedules extends Component {
                     isSerie={this.state.isSerie}
                     location={this.state.location}
                     department={this.state.department}
+                    position={this.state.position}
                     requestedBy={this.state.requested}
                     handleCloseForm={this.handleCloseForm}
                     closedForm={this.state.closedForm}
@@ -201,6 +207,7 @@ class Schedules extends Component {
                     toggleRefresh={this.toggleRefresh}
                     hotelManager={this.props.hotelManager}
                     locationName={this.state.locationName}
+                    positionName={this.state.positionName}
                 />
                 <WorkOrdersForm
                     item={this.state.item}
@@ -228,6 +235,7 @@ class Schedules extends Component {
                                             changeViewType={this.changeViewType}
                                             location={this.state.location}
                                             department={this.state.department}
+                                            position={this.state.position}
                                             selectedEmployee={this.state.selectedEmployee}
                                         />
                                     ) : ('')

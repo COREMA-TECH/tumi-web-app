@@ -12,6 +12,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             cellPhone
             isLead
             Urlphoto
+            directDeposit
             position{
                 id
                 position {

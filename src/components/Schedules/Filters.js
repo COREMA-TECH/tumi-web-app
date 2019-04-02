@@ -278,6 +278,7 @@ class Filters extends Component {
                     <div className="col-md-12">
                         Location: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.locationName}</a>,
                         Department: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.departmentName}</a>,
+                        Position: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.positionName}</a>,
                         Employees:
                         <div className="ScheduleWrapper">
                             <Select

@@ -19,8 +19,8 @@ query data($idEntity: Int, $idUsers: Int) {
 `;
 
 export const GET_POSITION = gql`
-  query positions($Id_Entity: Int, $Id: Int){
-    getposition(Id_Entity: $Id_Entity, Id: $Id){
+  query positions($Id_Entity: Int,$Id_Department: Int, $Id: Int){
+    getposition(Id_Entity: $Id_Entity, Id: $Id,Id_Department: $Id_Department){
       Id
       Position      
       Comment

@@ -204,7 +204,6 @@ class LifeCycleWorkOrdersTable extends Component {
 
                         <form action="" onSubmit={this.handleSubmit}>
                             <div className="row pl-0 pr-0">
-
                                 <div className="col-md-12">
                                     <button
                                         className="btn btn-danger ml-1 float-right"
