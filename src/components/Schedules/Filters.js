@@ -287,7 +287,7 @@ class Filters extends Component {
                                 options={this.props.employees}
                                 value={this.props.selectedEmployee}
                                 onChange={this.props.onSelectedEmployeeChange}
-                                closeMenuOnSelect={false}
+                                closeMenuOnSelect={true}
                             />
                         </div>
                     </div>

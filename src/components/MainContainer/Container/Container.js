@@ -44,6 +44,7 @@ import TimeCardTable from '../../TimeCard/TimeCardTable';
 import TimeCard from '../../TimeCard';
 import PayRoll from "../../Security/PayRoll/PayRoll";
 import PunchesReport from '../../PunchesReport';
+import PunchesReportDetail from '../../PunchesReportDetail';
 import ApprovePunches from '../../ApprovePunchesReport';
 import DashBoardSponsor from '../../Dashboard/Sponsor';
 

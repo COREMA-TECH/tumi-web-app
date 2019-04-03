@@ -38,12 +38,28 @@ export const ADD_APLICANT_EDUCATION = gql`
 	}
 `;
 
+export const UPDATE_APLICANT_EDUCATION = gql`
+	mutation updateApplicantEducation($application: inputUpdateApplicantEducation) {
+		updateApplicantEducation(applicantEducation: $application) {
+			id
+		}
+	}
+`;
+
 export const ADD_APLICANT_PREVIOUS_EMPLOYMENT = gql`
 	mutation addApplicantPreviousEmployment($application: [inputInsertApplicantPreviousEmployment]) {
 		addApplicantPreviousEmployment(applicantPreviousEmployment: $application) {
 			id
 		}
 	}
+`;
+
+export const UPDATE_APLICANT_PREVIOUS_EMPLOYMENT = gql`
+    mutation updateApplicantPreviousEmployment($application: inputUpdateApplicantPreviousEmployment) {
+        updateApplicantPreviousEmployment(applicantPreviousEmployment: $application) {
+            id
+        }
+    }
 `;
 
 export const ADD_MILITARY_SERVICES = gql`
