@@ -8552,6 +8552,19 @@ label:not(.custom-file-label):not(.form-check-label) {
   display: flex;
   height: 100%; }
 
+.label-switch-container {
+  background: #c1c1c1;
+  color: #090909;
+  border-radius: 5px;
+  padding: 8px 10px; }
+  .label-switch-container label {
+    margin-top: 0 !important; }
+  .label-switch-container .onoffswitch-container {
+    -webkit-transform: scale(0.7, 0.7);
+    -ms-transform: scale(0.7, 0.7);
+    transform: scale(0.7, 0.7);
+    margin-top: -4px; }
+
 .radio-label {
   margin-right: 10px; }
 
@@ -9104,6 +9117,44 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   .pdf-container .signature-information, .pdf-container--i9-w4 .signature-information {
     height: auto !important;
     overflow-y: unset !important; }
+
+.Stats {
+  position: relative; }
+
+.StatBox {
+  background: #FFF;
+  border: solid 2px #e6e6e6;
+  width: 100%; }
+  .StatBox-amount {
+    display: block;
+    font-size: 2.3rem;
+    font-weight: 700;
+    width: 100%; }
+  .StatBox-body {
+    padding: 1rem;
+    text-align: center; }
+  .StatBox-caption {
+    display: block;
+    width: 100%; }
+  .StatBox-header {
+    border-bottom: solid 1px #e6e6e6;
+    font-size: .8rem;
+    font-weight: 700;
+    padding: 5px 0;
+    text-align: center; }
+  .StatBox-increase {
+    color: #f50057;
+    display: block;
+    width: 100%; }
+
+.FloatingChart {
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  right: 0;
+  position: absolute;
+  top: 40px;
+  z-index: 1; }
 
 .login-container {
   width: 100%;

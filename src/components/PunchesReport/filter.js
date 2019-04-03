@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import TimeCardForm from '../TimeCard/TimeCardForm'
 import withGlobalContent from 'Generic/Global';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
-import {GET_REPORT_CSV_QUERY} from "./queries";
+import { GET_REPORT_CSV_QUERY } from "./queries";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
@@ -12,12 +12,13 @@ class PunchesReportFilter extends Component {
     DEFAULT_STATE = {
         endDateDisabled: true,
         openModal: false,
+        directDeposit: false
     }
 
     constructor(props) {
         super(props);
-        var {property, department, employee, startDate, endDate} = props;
-        this.state = {property, department, employee, startDate, endDate, ...this.DEFAULT_STATE};
+        var { property, department, employee, startDate, endDate } = props;
+        this.state = { property, department, employee, startDate, endDate, ...this.DEFAULT_STATE };
     }
 
     renderProperties = () => {
@@ -34,7 +35,7 @@ class PunchesReportFilter extends Component {
 
     updateFilter = (event) => {
         let object = event.target;
-        this.setState(() => ({[object.name]: object.value}),
+        this.setState(() => ({ [object.name]: object.value }),
             () => {
                 if (this.props.updateFilter)
                     this.props.updateFilter(this.state)
@@ -42,7 +43,7 @@ class PunchesReportFilter extends Component {
     }
 
     handlePropertyChange = (property) => {
-        this.setState(() => ({property}),
+        this.setState(() => ({ property }),
             () => {
                 if (this.props.updateFilter)
                     this.props.updateFilter(this.state)
@@ -50,7 +51,7 @@ class PunchesReportFilter extends Component {
     };
 
     handleDepartmentChange = (department) => {
-        this.setState(() => ({department}),
+        this.setState(() => ({ department }),
             () => {
                 if (this.props.updateFilter)
                     this.props.updateFilter(this.state)
@@ -60,7 +61,7 @@ class PunchesReportFilter extends Component {
 
     toggleRefresh = () => {
         this.setState((prevState) => {
-            return {refresh: !prevState.refresh}
+            return { refresh: !prevState.refresh }
         })
     }
 
@@ -70,9 +71,9 @@ class PunchesReportFilter extends Component {
         const name = target.name;
 
         this.setState(() => ({
-                [name]: value,
-                endDateDisabled: false
-            }),
+            [name]: value,
+            endDateDisabled: false
+        }),
             () => {
                 if (this.props.updateFilter)
                     this.props.updateFilter(this.state)
@@ -88,25 +89,25 @@ class PunchesReportFilter extends Component {
     };
 
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({ openModal: true });
     };
 
     componentWillReceiveProps(nextProps) {
         if (this.props.property.value != nextProps.property.value)
-            this.setState(() => ({property: nextProps.property}));
+            this.setState(() => ({ property: nextProps.property }));
         if (this.props.department.value != nextProps.department.value)
-            this.setState(() => ({department: nextProps.department}));
+            this.setState(() => ({ department: nextProps.department }));
     }
 
     getReportCSV = () => {
-        this.setState(() => ({loadingReport: true}), () => {
+        this.setState(() => ({ loadingReport: true }), () => {
             this.props.client
                 .query({
                     query: GET_REPORT_CSV_QUERY,
                     fetchPolicy: 'no-cache',
-                    variables: {...this.props.getFilters()}
+                    variables: { ...this.props.getFilters(), directDeposit: this.state.directDeposit }
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     // TODO: show a loading icon in download button
                     console.table("Data ----> ", data);
 
@@ -119,7 +120,7 @@ class PunchesReportFilter extends Component {
                 })
                 .catch(error => {
                     console.log("Error ----> ", error);
-                    this.setState(() => ({loadingReport: false}));
+                    this.setState(() => ({ loadingReport: false }));
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error to download CSV Report. Please, try again!',
@@ -128,6 +129,10 @@ class PunchesReportFilter extends Component {
                     );
                 });
         })
+    }
+
+    onCheckedChange = (e) => {
+        this.setState({ [e.target.name]: e.target.checked })
     }
 
     render() {
@@ -161,7 +166,7 @@ class PunchesReportFilter extends Component {
                             </span>
                         </div>
                         <input name="employee" className="form-control" type="text" placeholder='Employee Search'
-                               onChange={this.updateFilter} value={this.state.employee}/>
+                            onChange={this.updateFilter} value={this.state.employee} />
                     </div>
                 </div>
                 <div className="col-md-4 mt-1 pl-0">
@@ -170,23 +175,41 @@ class PunchesReportFilter extends Component {
                             <span class="input-group-text" id="basic-addon1">From</span>
                         </div>
                         <input type="date" className="form-control" placeholder="2018-10-30"
-                               value={this.state.startDate} name="startDate" onChange={this.handleChangeDate}/>
+                            value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">To</span>
                         </div>
                         <input type="date" className="form-control" name="endDate" value={this.state.endDate}
-                               disabled={this.state.endDateDisabled} placeholder="2018-10-30"
-                               onChange={this.updateFilter}/>
+                            disabled={this.state.endDateDisabled} placeholder="2018-10-30"
+                            onChange={this.updateFilter} />
                     </div>
                 </div>
-                <div className="col-md-2 mt-1">
+                <div className="col-md-2 mt-1 pl-0">
                     {/* TODO: add download icon - call query to generate cvs with consolidated punches*/}
-                    <button className="btn btn-success ml-1 float-right" onClick={() => {
-                        this.getReportCSV()
-                    }}>CSV {this.state.loadingReport &&
-                    <i className="fas fa-spinner fa-spin  ml2"/>}{!this.state.loadingReport &&
-                    <i className="fas fa-download  ml2"/>}</button>
-
+                    <div className="label-switch-container">
+                        <label htmlFor="">Direct Deposit?</label>
+                        <div className="float-right onoffswitch-container">
+                            <div className="onoffswitch">
+                                <input
+                                    type="checkbox"
+                                    checked={this.state.directDeposit}
+                                    name="directDeposit"
+                                    className="onoffswitch-checkbox"
+                                    id="directDeposit"
+                                />
+                                <label className="onoffswitch-label" htmlFor="directDeposit">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-12 mt-1">
+                    <button className="btn btn-success ml-1 float-right"
+                        onClick={this.getReportCSV}>CSV {this.state.loadingReport && <i className="fas fa-spinner fa-spin  ml2" />}
+                        {!this.state.loadingReport && <i className="fas fa-download  ml2" />}
+                    </button>
                     <button class="btn btn-success float-right" onClick={this.handleClickOpenModal}>Add Time<i
                         class="fas fa-plus ml-1"></i></button>
                 </div>
