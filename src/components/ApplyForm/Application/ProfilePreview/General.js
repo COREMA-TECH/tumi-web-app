@@ -25,7 +25,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, INSERT_DEPARTMENT, UPDATE_APPLICANT } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, INSERT_DEPARTMENT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -863,7 +863,6 @@ class General extends Component {
     };
 
     onChangeHandler(value, name) {
-        console.log("entro al onchange")
         this.setState({ [name]: value }, this.validateField(name, value));
     }
 
@@ -1103,6 +1102,45 @@ class General extends Component {
             }
         }
     `;
+
+    updateDirectDeposit = () => {
+
+        console.log(this.state.directDeposit)
+
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_DIRECT_DEPOSIT,
+                        variables: {
+
+                            id: this.props.applicationId,
+                            directDeposit: this.state.directDeposit
+
+                        }
+                    })
+                    .then(({ data }) => {
+
+                        this.setState({
+                            loading: false,
+                        });
+
+                        this.props.handleOpenSnackbar('success', 'Candidate was updated!', 'bottom', 'right');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            }
+        );
+    };
 
     /**
      * Insert a user with general information and permissions
@@ -1494,17 +1532,34 @@ class General extends Component {
                                         <div className="col-12 col-md-12">
                                             <div className="onoffswitch">
                                                 <input
-                                                    type="checkbox"
+                                                    id="directDepositInput"
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            directDeposit: event.target.checked
+                                                        }, () => {
+                                                            console.log(this.state.directDeposit)
+                                                            this.updateDirectDeposit()
+                                                        })
+
+
+                                                    }}
+
+
                                                     checked={this.state.directDeposit}
-                                                    name="DirectDeposit"
+                                                    value={this.state.directDeposit}
+                                                    name="directDeposit"
+                                                    type="checkbox"
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="10"
                                                     className="onoffswitch-checkbox"
-                                                    id="DirectDeposit"
                                                 />
-                                                <label className="onoffswitch-label" htmlFor="DirectDeposit">
+                                                <label className="onoffswitch-label" htmlFor="directDepositInput">
                                                     <span className="onoffswitch-inner" />
                                                     <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>

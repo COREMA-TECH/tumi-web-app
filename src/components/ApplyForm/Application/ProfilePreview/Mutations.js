@@ -16,6 +16,16 @@ export const UPDATE_APPLICANT = gql`
 	}
 `;
 
+export const UPDATE_DIRECT_DEPOSIT = gql`
+	mutation updateDirectDeposit($id: Int,$directDeposit: Boolean) {
+		updateDirectDeposit(id: $id,directDeposit: $directDeposit) {
+			id
+		}
+	}
+`;
+
+
+
 export const ADD_EMPLOYEES = gql`
     mutation addEmployees($Employees: [inputInsertEmployees]) {
         addEmployees(Employees: $Employees) {
