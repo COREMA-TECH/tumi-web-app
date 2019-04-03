@@ -103,6 +103,20 @@
     height: 100%;
 }
 
+.label-switch-container {
+    background: #c1c1c1;
+    color: #090909;
+    border-radius: 5px;
+    padding: 8px 10px;
+    label {
+        margin-top: 0 !important;
+    }
+    .onoffswitch-container {
+        transform: scale(0.7, 0.7);
+        margin-top: -4px;
+    }
+}
+
 .radio-label {
     margin-right: 10px; 
 }

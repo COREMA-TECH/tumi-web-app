@@ -21,8 +21,8 @@ export const GET_REPORT_QUERY = gql`
 `;
 
 export const GET_REPORT_CSV_QUERY = gql`
-  query punchesConsolidated($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date ){
-      punchesConsolidated(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate)
+  query punchesConsolidated($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date, $directDeposit: Boolean ){
+      punchesConsolidated(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate, directDeposit:$directDeposit)
   }
 `;
 

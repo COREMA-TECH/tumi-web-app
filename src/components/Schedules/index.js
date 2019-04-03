@@ -7,7 +7,7 @@ import DefaultClient from 'apollo-boost';
 import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
 import withGlobalContent from 'Generic/Global';
 
-const DEFAULT_EMPLOYEE = { value: 0, label: "<No filter applied>" };
+const DEFAULT_EMPLOYEE = { value: 0, label: "Select an employee" };
 
 class Schedules extends Component {
 
