@@ -12,6 +12,7 @@ class PunchesReportFilter extends Component {
     DEFAULT_STATE = {
         endDateDisabled: true,
         openModal: false,
+        directDeposit: false
     }
 
     constructor(props) {
@@ -104,7 +105,7 @@ class PunchesReportFilter extends Component {
                 .query({
                     query: GET_REPORT_CSV_QUERY,
                     fetchPolicy: 'no-cache',
-                    variables: { ...this.props.getFilters() }
+                    variables: { ...this.props.getFilters(), directDeposit: this.state.directDeposit }
                 })
                 .then(({ data }) => {
                     // TODO: show a loading icon in download button
@@ -128,6 +129,10 @@ class PunchesReportFilter extends Component {
                     );
                 });
         })
+    }
+
+    onCheckedChange = (e) => {
+        this.setState({ [e.target.name]: e.target.checked })
     }
 
     render() {
@@ -189,6 +194,7 @@ class PunchesReportFilter extends Component {
                                 name="directDeposit"
                                 className="onoffswitch-checkbox"
                                 id="directDeposit"
+                                onChange={this.onCheckedChange}
                             />
                             <label className="onoffswitch-label" htmlFor="directDeposit">
                                 <span className="onoffswitch-inner" />
