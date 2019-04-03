@@ -179,28 +179,32 @@ class PunchesReportFilter extends Component {
                             onChange={this.updateFilter} />
                     </div>
                 </div>
-                <div className="col-md-2 mt-1">
+                <div className="col-md-2 mt-1 pl-0">
                     {/* TODO: add download icon - call query to generate cvs with consolidated punches*/}
-                    <div className="float-right">
-                        <div className="onoffswitch">
-                            <input
-                                type="checkbox"
-                                checked={this.state.directDeposit}
-                                name="directDeposit"
-                                className="onoffswitch-checkbox"
-                                id="directDeposit"
-                            />
-                            <label className="onoffswitch-label" htmlFor="directDeposit">
-                                <span className="onoffswitch-inner" />
-                                <span className="onoffswitch-switch" />
-                            </label>
+                    <div className="label-switch-container">
+                        <label htmlFor="">Direct Deposit?</label>
+                        <div className="float-right onoffswitch-container">
+                            <div className="onoffswitch">
+                                <input
+                                    type="checkbox"
+                                    checked={this.state.directDeposit}
+                                    name="directDeposit"
+                                    className="onoffswitch-checkbox"
+                                    id="directDeposit"
+                                />
+                                <label className="onoffswitch-label" htmlFor="directDeposit">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div className="col-md-12 mt-1">
                     <button className="btn btn-success ml-1 float-right"
                         onClick={this.getReportCSV}>CSV {this.state.loadingReport && <i className="fas fa-spinner fa-spin  ml2" />}
                         {!this.state.loadingReport && <i className="fas fa-download  ml2" />}
                     </button>
-
                     <button class="btn btn-success float-right" onClick={this.handleClickOpenModal}>Add Time<i
                         class="fas fa-plus ml-1"></i></button>
                 </div>
