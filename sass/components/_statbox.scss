@@ -1,10 +1,14 @@
+.Stats {
+    position: relative;
+}
+
 .StatBox {
     background: $white;
-    border: solid 2px map-get($gray-shades, second-light);
+    border: solid 2px map-get($gray-shades, gray-2);
     width: 100%;
     &-amount {
         display: block;
-        font-size: 2.75rem;
+        font-size: 2.3rem;
         font-weight: 700;
         width: 100%;
     }
@@ -17,7 +21,7 @@
         width: 100%;
     }
     &-header {
-        border-bottom: solid 1px map-get($gray-shades, second-light);
+        border-bottom: solid 1px map-get($gray-shades, gray-2);
         font-size: .8rem;
         font-weight: 700;
         padding: 5px 0;
@@ -28,4 +32,14 @@
         display: block;
         width: 100%;
     }
+}
+
+.FloatingChart {
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    right: 0;
+    position: absolute;
+    top: 40px;
+    z-index: 1;
 }

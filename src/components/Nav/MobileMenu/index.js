@@ -255,6 +255,30 @@ class MobileMenu extends Component {
                             </li> : ''
                     })}
                     {items.map(item => {
+                        return item.Forms.Value == "HotelManager" ?
+                            <li className="MainMenu-option">
+                                <Link
+                                    to={`/home/application`}
+                                    className="MenuMobile-link"
+                                    onClick={this.handleItemMenuAction}
+                                    data-submenu="1"
+                                >
+                                    <i className="fas fa-chalkboard-teacher MenuMobile-icon" title={'Hotel Manager'} />
+                                    <span>Sponsor</span>
+                                </Link>
+                                <ul className="SubMenu" id="1">
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/dashboard/sponsor" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/dashboard/sponsor">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
+                                                </a>
+                                            </li> : ""
+                                    })}
+                                </ul>
+                            </li> : ''
+                    })}
+                    {items.map(item => {
                         return item.Forms.Value == "Recruiter" ?
                             <li className="MainMenu-option">
                                 <Link
