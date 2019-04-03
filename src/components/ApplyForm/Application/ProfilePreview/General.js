@@ -124,7 +124,7 @@ class General extends Component {
             number: '',
             type: null,
             idSupervisor: null,
-            directDeposit: 0,
+            directDeposit: 1,
             IsActive: 1,
             User_Created: 1,
             User_Updated: 1,
@@ -203,7 +203,7 @@ class General extends Component {
         IdRegionValid: true,
         RegionName: '',
         IsActive: 1,
-        directDeposit: 0,
+        directDeposit: 1,
         IdRegion: 0,
 
         departmentName: '',
@@ -863,6 +863,7 @@ class General extends Component {
     };
 
     onChangeHandler(value, name) {
+        console.log("entro al onchange")
         this.setState({ [name]: value }, this.validateField(name, value));
     }
 
@@ -1495,11 +1496,11 @@ class General extends Component {
                                                 <input
                                                     type="checkbox"
                                                     checked={this.state.directDeposit}
-                                                    name="directDeposit"
+                                                    name="DirectDeposit"
                                                     className="onoffswitch-checkbox"
-                                                    id="directDeposit"
+                                                    id="DirectDeposit"
                                                 />
-                                                <label className="onoffswitch-label" htmlFor="directDeposit">
+                                                <label className="onoffswitch-label" htmlFor="DirectDeposit">
                                                     <span className="onoffswitch-inner" />
                                                     <span className="onoffswitch-switch" />
                                                 </label>
