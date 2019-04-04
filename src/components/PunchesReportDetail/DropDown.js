@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import DropDownBody from './DropDownBody';
 
 const uuidv4 = require('uuid/v4');
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -36,17 +37,16 @@ class PunchesDetailDropDown extends Component {
 
     render() {
         const { classes, data } = this.props;
-
         return <div className={classes.root}>
             {data.map(item => {
-                return <ExpansionPanel key={item.key} className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
+                return <ExpansionPanel className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>{item.date} {item.name}</Typography>
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className="panel-body">
                         <Typography>
-                         <DropDownBody data={item.punches}></DropDownBody>
+                            <DropDownBody data={item.punches}></DropDownBody>
                         </Typography>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>

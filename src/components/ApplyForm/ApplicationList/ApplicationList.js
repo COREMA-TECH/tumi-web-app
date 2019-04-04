@@ -13,6 +13,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
+import makeAnimated from 'react-select/lib/animated';
+import Select from 'react-select';
+import { GET_PROPERTIES_QUERY, GET_DEPARTMENTS_QUERY } from './Queries';
+
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1
@@ -24,6 +28,9 @@ const styles = (theme) => ({
 	}
 });
 
+const DEFAULT_PROPERTY = { value: '', label: 'Property(All)' };
+const DEFAULT_DEPARTMENT = { value: '', label: 'Department(All)' };
+
 class ApplicationList extends Component {
 	constructor(props) {
 		super(props);
@@ -32,7 +39,11 @@ class ApplicationList extends Component {
 			loadingContracts: false,
 			data: [],
 			filterText: '',
-			opendialog: false
+			opendialog: false,
+			property: DEFAULT_PROPERTY,
+			department: DEFAULT_DEPARTMENT,
+			properties: [],
+			departments: []
 		};
 	}
 
@@ -47,8 +58,8 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-		query applicationsByUser($idUsers: Int){
-			applicationsByUser(idUsers: $idUsers) {
+		query applicationsByUser($idUsers: Int,$Id_Department: Int, $idEntity: Int){
+			applicationsByUser(idUsers: $idUsers, Id_Department: $Id_Department, idEntity: $idEntity) {
 				id
 				firstName
 				middleName
@@ -79,39 +90,7 @@ class ApplicationList extends Component {
 			}
 		}
 	`;
-	// GET_APPLICATION_QUERY = gql`
-	// query applications{
-	// 	applications(isActive: true) {
-	// 			id
-	// 			firstName
-	// 			middleName
-	// 			lastName
-	// 			socialSecurityNumber
-	// 			emailAddress
-	// 			cellPhone
-	// 			isLead
-	// 			idWorkOrder
-	//         	statusCompleted
-	// 			recruiter{
-	// 				Full_Name
-	// 			}
-	// 			user{
-	// 				Full_Name
-	// 			}
-	// 			position{
-	// 				id
-	// 				position {
-	// 						Position
-	// 					}
-	// 				BusinessCompany {
-	// 						Id
-	// 						Code
-	// 						Name
-	// 					}
-	// 			}
-	// 		}
-	// 	}
-	// `;
+
 	DELETE_APPLICATION_QUERY = gql`
 		mutation disableApplication($id: Int!) {
 			disableApplication(id: $id) {
@@ -120,6 +99,7 @@ class ApplicationList extends Component {
 			}
 		}
 	`;
+
 	deleteApplication = () => {
 		this.setState(
 			{
@@ -156,24 +136,115 @@ class ApplicationList extends Component {
 	handleConfirmAlertDialog = () => {
 		this.deleteApplication();
 	};
+	handlePropertyChange = (property) => {
+		this.setState((prevState) => ({
+			property,
+			department: prevState.property.value != property.value ? DEFAULT_DEPARTMENT : prevState.department,
+			departments: prevState.property.value != property.value ? [] : prevState.departments
+		}), () => {
+			this.getDepartments();
+		});
+	}
+	handleDepartmentChange = (department) => {
+		this.setState(() => ({ department }));
+	}
 
+	getProperties = () => {
+		this.setState(() => ({ loadingProperties: true }), () => {
+			this.props.client
+				.query({
+					query: GET_PROPERTIES_QUERY,
+					fetchPolicy: 'no-cache'
+				})
+				.then(({ data }) => {
+					let options = [];
+
+					//Add first record
+					options.push(DEFAULT_PROPERTY);
+
+					//Create structure based on property data
+					data.getbusinesscompanies.map((property) => {
+						options.push({ value: property.Id, label: property.Code + " | " + property.Name });
+					});
+
+					//Set values to state
+					this.setState(() => ({
+						properties: options,
+						loadingProperties: false
+					}));
+
+				})
+				.catch(error => {
+					this.setState(() => ({ loadingProperties: false }));
+				});
+		})
+	}
+
+	getDepartments = () => {
+		this.setState(() => ({ loadingDepartments: true }), () => {
+			var variables = {};
+
+			if (this.state.property.value)
+				variables = { Id_Entity: this.state.property.value };
+
+			this.props.client
+				.query({
+					query: GET_DEPARTMENTS_QUERY,
+					variables,
+					fetchPolicy: 'no-cache'
+				})
+				.then(({ data }) => {
+					let options = [];
+
+					//Add first record
+					options.push({ value: '', label: 'Department(All)' });
+
+					//Create structure based on department data
+					data.catalogitem.map(({ Id, DisplayLabel }) => {
+						options.push({ value: Id, label: DisplayLabel })
+					});
+
+					this.setState(() => ({
+						departments: options,
+						loadingDepartments: false
+					}));
+				})
+				.catch(error => {
+					this.setState(() => ({ loadingDepartments: false }));
+				});
+		})
+	}
+
+	componentWillMount() {
+		this.getProperties();
+		this.getDepartments();
+	}
 	render() {
+		var loading = this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
+		var variables = {};
 
-		const { classes } = this.props;
+		/**
+		 * Start - Define variables for application query
+		 */
+		if (localStorage.getItem('isEmployee') == 'true')
+			variables = { idUsers: localStorage.getItem('LoginId') };
+		if (this.state.property.value != '')
+			variables = { ...variables, idEntity: this.state.property.value };
+		if (this.state.department.value != '')
+			variables = { ...variables, Id_Department: this.state.department.value };
+		/**
+		 * End - Define variables for application query
+		 */
 
-		var variables = null;
-		if (localStorage.getItem('isEmployee') == 'true') {
-			variables = { idUsers: localStorage.getItem('LoginId') }
-		}
 		// If contracts query is loading, show a progress component
-		if (this.state.loadingContracts) {
+		if (loading) {
 			return <LinearProgress />;
 		}
 
 		// To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="row">
-				<div className="col-md-6">
+				<div className="col-md-3">
 					<div className="input-group mb-3">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="basic-addon1">
@@ -193,7 +264,27 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				{localStorage.getItem('isEmployee') == 'false' && <div className="col-md-6">
+				<div className="col-md-3">
+					<Select
+						name="property"
+						options={this.state.properties}
+						value={this.state.property}
+						onChange={this.handlePropertyChange}
+						components={makeAnimated()}
+						closeMenuOnSelect
+					/>
+				</div>
+				<div className="col-md-3">
+					<Select
+						name="department"
+						options={this.state.departments}
+						value={this.state.department}
+						onChange={this.handleDepartmentChange}
+						components={makeAnimated()}
+						closeMenuOnSelect
+					/>
+				</div>
+				{localStorage.getItem('isEmployee') == 'false' && <div className="col-md-3">
 					<button
 						className="btn btn-success float-right"
 						onClick={() => {
