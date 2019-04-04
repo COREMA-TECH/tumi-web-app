@@ -9,6 +9,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import DropDownBody from './DropDownBody';
+import moment from 'moment';
 
 const uuidv4 = require('uuid/v4');
 const styles = theme => ({
@@ -41,12 +42,12 @@ class PunchesDetailDropDown extends Component {
             {data.map(item => {
                 return <ExpansionPanel key={item.key} className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography className={classes.heading}>{item.date} {item.name}</Typography>
+                        <Typography className={classes.heading}>{moment(item.date).format('MMMM Do YYYY')}</Typography>
 
                     </ExpansionPanelSummary>
-                    <ExpansionPanelDetails className="panel-body">
+                    <ExpansionPanelDetails className="panel-dropdown-body">
                         <Typography>
-                         <DropDownBody data={item.punches}></DropDownBody>
+                            <DropDownBody data={item.punches}></DropDownBody>
                         </Typography>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>

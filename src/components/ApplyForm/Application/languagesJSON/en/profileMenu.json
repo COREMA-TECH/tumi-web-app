@@ -9,18 +9,22 @@
   },
   {
     "id": 2,
-    "label": "Documents"
+    "label": "Punches"
   },
   {
     "id": 3,
-    "label": "Benefits"
+    "label": "Documents"
   },
   {
     "id": 4,
-    "label": "Time"
+    "label": "Benefits"
   },
   {
     "id": 5,
+    "label": "Time"
+  },
+  {
+    "id": 6,
     "label": "Resources"
   }
 ]

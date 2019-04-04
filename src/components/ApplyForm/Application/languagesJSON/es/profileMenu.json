@@ -9,18 +9,22 @@
   },
   {
     "id": 2,
-    "label": "Documentos"
+    "label": "Marcas"
   },
   {
     "id": 3,
-    "label": "Beneficios"
+    "label": "Documentos"
   },
   {
     "id": 4,
-    "label": "Tiempo libre y baja por enfermedad"
+    "label": "Beneficios"
   },
   {
     "id": 5,
+    "label": "Tiempo libre y baja por enfermedad"
+  },
+  {
+    "id": 6,
     "label": "Recursos"
   }
 ]
