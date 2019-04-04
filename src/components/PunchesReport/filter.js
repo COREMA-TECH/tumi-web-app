@@ -196,6 +196,7 @@ class PunchesReportFilter extends Component {
                                     name="directDeposit"
                                     className="onoffswitch-checkbox"
                                     id="directDeposit"
+                                    onChange={this.onCheckedChange}
                                 />
                                 <label className="onoffswitch-label" htmlFor="directDeposit">
                                     <span className="onoffswitch-inner" />
