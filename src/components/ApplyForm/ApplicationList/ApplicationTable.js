@@ -17,8 +17,15 @@ import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
-import Tooltip from '@material-ui/core/Tooltip';
+
 import { GET_COMPLETED_STATUS } from "./Queries";
+
+import Tooltip from '@material-ui/core/Tooltip';
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+
+import ProfilePreview from "../Application/ProfilePreview/ProfilePreview"; //"./ProfilePreview/ProfilePreview";
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -146,7 +153,9 @@ class ApplicationTable extends React.Component {
     state = {
         page: 0,
         rowsPerPage: 25,
-        completed: false
+        completed: false,
+        openModal: false,
+        ApplicationId:0,
     };
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -162,8 +171,9 @@ class ApplicationTable extends React.Component {
         }
         if (
             this.state.page !== nextState.page ||
-            this.state.rowsPerPage !== nextState.rowsPerPage //||
-            //	this.state.order !== nextState.order ||
+            this.state.rowsPerPage !== nextState.rowsPerPage ||
+            this.state.openModal !== nextState.openModal ||
+            this.state.ApplicationId !== nextState.ApplicationId 
             //this.state.orderBy !== nextState.orderBy
         ) {
             return true;
@@ -181,85 +191,126 @@ class ApplicationTable extends React.Component {
         }
 
         return (
+
             <Route
                 render={({ history }) => (
-                    <Paper className={classes.root}>
-                        <Table className={classes.table}>
-                            <TableHead>
-                                <TableRow>
-                                    <CustomTableCell padding="none" className={"Table-head text-center"}
-                                        style={{ width: '50px' }}>Actions</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Completed</CustomTableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    return (
-                                        <TableRow
-                                            hover
-                                            className={classes.row}
-                                            key={uuidv4()}
-                                            onClick={() => {
-                                                history.push({
-                                                    pathname: '/home/application/info',
-                                                    state: { ApplicationId: row.id }
-                                                });
+                    <div className="card-body pt-0">
+                        <Paper className={classes.root}>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <CustomTableCell className={"Table-head text-center"} style={{ width: '150px' }}>Actions</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
+                                        <CustomTableCell className={"Table-head"}>Completed</CustomTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                        return (
+                                            <TableRow
+                                                hover
+                                                className={classes.row}
+                                                key={uuidv4()}
+                                                onClick={() => {
+                                                    history.push({
+                                                        pathname: '/home/application/info',
+                                                        state: { ApplicationId: row.id }
+                                                    });
+                                                }}
+                                            >
+                                                <CustomTableCell className={'text-center'} style={{ width: '80px' }}>
+                                                    <Tooltip title="Delete">
+                                                        <button
+                                                            className="btn btn-danger mr-1 float-left"
+                                                            disabled={this.props.loading}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+
+                                                                return this.props.onDeleteHandler(row.id);
+                                                            }}
+                                                        >
+                                                            <i className="fas fa-trash"></i>
+                                                        </button>
+                                                    </Tooltip>
+                                                    <Tooltip title="Profile">
+                                                        <button
+                                                            className="btn btn-success mr-1 float-left"
+                                                            disabled={this.props.loading}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                this.setState(() => ({ openModal: true ,ApplicationId: row.id}));
+                                                               
+                                                            }}
+                                                        >
+                                                            <i class="fas fa-info"></i>
+                                                        </button>
+                                                    </Tooltip>
+                                                </CustomTableCell>
+                                                <CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
+                                                <CustomTableCell>
+                                                    {row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
+                                                </CustomTableCell>
+                                                <CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
+                                                <CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
+                                                <CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
+                                                <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
+                                                <CustomTableCell>{row.emailAddress}</CustomTableCell>
+                                                <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                                <TableFooter>
+                                    <TableRow>
+                                        {items.length > 0 && (
+                                            <TablePagination
+                                                colSpan={3}
+                                                count={items.length}
+                                                rowsPerPage={rowsPerPage}
+                                                page={page}
+                                                onChangePage={this.handleChangePage}
+                                                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                                ActionsComponent={TablePaginationActionsWrapped}
+                                            />
+                                        )}
+                                    </TableRow>
+                                </TableFooter>
+                            </Table>
+                        </Paper>
+
+                        <Dialog maxWidth="md" open={this.state.openModal} onClose={this.state.closeModal}>
+                            <DialogTitle style={{ padding: '0px' }}>
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Profile Preview</h5>
+                                </div>
+                            </DialogTitle>
+                            <DialogContent>
+                                <ProfilePreview applicationId={this.state.ApplicationId} />;
+
+                                <div className="row pl-0 pr-0">
+                                    <div className="col-md-12">
+                                        <button
+                                            className="btn btn-danger ml-1 float-right"
+                                            onClick={(e) => {
+                                                this.setState(() => ({ openModal: false, IdEmployee: 0 }));
                                             }}
                                         >
-                                            <CustomTableCell>
-                                                <Tooltip title="Delete">
-                                                    <button
-                                                        className="btn btn-danger ml-1"
-                                                        disabled={this.props.loading}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-
-                                                            return this.props.onDeleteHandler(row.id);
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-trash"></i>
-                                                    </button>
-                                                </Tooltip>
-                                            </CustomTableCell>
-                                            <CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
-                                            <CustomTableCell>
-                                                {row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
-                                            </CustomTableCell>
-                                            <CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
-                                            <CustomTableCell>{row.emailAddress}</CustomTableCell>
-                                            <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                            <TableFooter>
-                                <TableRow>
-                                    {items.length > 0 && (
-                                        <TablePagination
-                                            colSpan={3}
-                                            count={items.length}
-                                            rowsPerPage={rowsPerPage}
-                                            page={page}
-                                            onChangePage={this.handleChangePage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            ActionsComponent={TablePaginationActionsWrapped}
-                                        />
-                                    )}
-                                </TableRow>
-                            </TableFooter>
-                        </Table>
-                    </Paper>
+                                            Close<i class="fas fa-ban ml-2" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 )}
+
+
             />
         );
     }
