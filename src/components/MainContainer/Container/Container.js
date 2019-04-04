@@ -172,6 +172,7 @@ class Container extends Component {
 				<Route exact path="/home/region" component={Region} />
 				<Route exact path="/home/regiontable" component={RegionTable} />
 				<Route exact path="/home/punches/report" component={PunchesReport} />
+				<Route exact path="/home/punches/report/detail" component={PunchesReportDetail} />
 				<Route exact path="/home/notfound" component={NotFound} />
 				<Route exact path="/home/timecard" component={TimeCard} />
 				<Route exact path="/home/timecardtable" component={TimeCardTable} />
