@@ -12,17 +12,30 @@ class PunchesReportDetail extends Component {
         this.state = { loadingReport: false, data: [] }
     }
 
+    getFilters = () => {
+        var filters = {}, { startDate, endDate } = this.state, { idUser } = this.props;
+
+        if (startDate)
+            filters = { ...filters, startDate };
+        if (endDate)
+            filters = { ...filters, endDate };
+        if (idUser)
+            filters = { ...filters, idUser };
+
+        return filters;
+    }
+
     getPunchesReport = () => {
         this.setState(() => ({ loadingReport: true }), () => {
             this.props.client
                 .query({
                     query: GET_PUNCHES_REPORT_CONSOLIDATED,
-                    fetchPolicy: 'no-cache',
+                    variables: { ...this.getFilters() },
+                    fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
-                    console.log(data);
                     this.setState(() => ({
-                        data: data.markedEmployeesConsolidate,
+                        data: data.markedEmployeesDetail,
                         loadingReport: false
                     }));
                 })
@@ -30,6 +43,15 @@ class PunchesReportDetail extends Component {
                     this.setState(() => ({ loadingReport: false }));
                 });
         })
+    }
+
+    updateFilter = ({ startDate, endDate }) => {
+        this.setState((prevState) => ({
+            startDate,
+            endDate,
+        }), () => {
+            this.getPunchesReport();
+        });
     }
 
 
@@ -46,7 +68,7 @@ class PunchesReportDetail extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <div className="card">
-                        <Filter />
+                        <Filter updateFilter={this.updateFilter} />
                         <DropDown data={this.state.data}></DropDown>
                     </div>
                 </div>
