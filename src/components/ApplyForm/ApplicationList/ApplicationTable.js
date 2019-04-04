@@ -155,10 +155,14 @@ class ApplicationTable extends React.Component {
         rowsPerPage: 25,
         completed: false,
         openModal: false,
-        ApplicationId:0,
+        ApplicationId: 0,
     };
     handleChangePage = (event, page) => {
         this.setState({ page });
+    };
+
+    handleClose = () => {
+        this.setState({ openModal: false });
     };
 
     handleChangeRowsPerPage = (event) => {
@@ -173,7 +177,7 @@ class ApplicationTable extends React.Component {
             this.state.page !== nextState.page ||
             this.state.rowsPerPage !== nextState.rowsPerPage ||
             this.state.openModal !== nextState.openModal ||
-            this.state.ApplicationId !== nextState.ApplicationId 
+            this.state.ApplicationId !== nextState.ApplicationId
             //this.state.orderBy !== nextState.orderBy
         ) {
             return true;
@@ -244,8 +248,8 @@ class ApplicationTable extends React.Component {
                                                             disabled={this.props.loading}
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
-                                                                this.setState(() => ({ openModal: true ,ApplicationId: row.id}));
-                                                               
+                                                                this.setState(() => ({ openModal: true, ApplicationId: row.id }));
+
                                                             }}
                                                         >
                                                             <i class="fas fa-info"></i>
@@ -284,7 +288,7 @@ class ApplicationTable extends React.Component {
                             </Table>
                         </Paper>
 
-                        <Dialog maxWidth="md" open={this.state.openModal} onClose={this.state.closeModal}>
+                        <Dialog fullWidth maxWidth="xl" open={this.state.openModal} onClose={this.handleClose}>
                             <DialogTitle style={{ padding: '0px' }}>
                                 <div className="modal-header">
                                     <h5 className="modal-title">Profile Preview</h5>

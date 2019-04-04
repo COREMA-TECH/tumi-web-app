@@ -12,6 +12,7 @@ import DropDownBody from './DropDownBody';
 import moment from 'moment';
 
 const uuidv4 = require('uuid/v4');
+
 const styles = theme => ({
     root: {
         width: '100%',
@@ -37,10 +38,9 @@ class PunchesDetailDropDown extends Component {
 
     render() {
         const { classes, data } = this.props;
-
         return <div className={classes.root}>
             {data.map(item => {
-                return <ExpansionPanel key={item.key} className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
+                return <ExpansionPanel className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>{moment(item.date).format('MMMM Do YYYY')}</Typography>
 
