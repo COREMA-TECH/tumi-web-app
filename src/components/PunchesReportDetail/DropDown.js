@@ -37,7 +37,8 @@ class PunchesDetailDropDown extends Component {
     };
 
     render() {
-        const { classes, data } = this.props;
+        const { classes } = this.props;
+        let data = this.props.data || [];
         return <div className={classes.root}>
             {data.map(item => {
                 return <ExpansionPanel className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
