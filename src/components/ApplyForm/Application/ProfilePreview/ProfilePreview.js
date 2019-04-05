@@ -24,7 +24,7 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { ProfilePicture } from 'ui-components/ProfilePicture/'
 import GenericContent from 'Generic/Global'
 import Schedules from '../../../Schedules';
-import DropDown from '../../../PunchesReportDetail/DropDown';
+import PunchesReportDetail from '../../../PunchesReportDetail';
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
 
 
@@ -84,7 +84,7 @@ class VerticalLinearStepper extends Component {
             value: 0,
             username: '',
             Urlphoto: '',
-            employee: []
+            employee: null
         }
     }
 
@@ -172,6 +172,7 @@ class VerticalLinearStepper extends Component {
 
     componentWillMount() {
         // Get id of the application and pass to the components
+
         try {
             this.setState({
                 applicationId: this.props.applicationId
@@ -195,6 +196,13 @@ class VerticalLinearStepper extends Component {
         const steps = getSteps();
         const { activeStep } = this.state;
 
+        let idEntity = null, Id_Department = null, EmployeeId = -1;
+
+
+
+        if (this.state.employee)
+            idEntity = this.state.employee.Employees.idEntity, Id_Department = this.state.employee.Employees.Id_Department, EmployeeId = this.state.employee.Employees.id;
+
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
@@ -205,14 +213,14 @@ class VerticalLinearStepper extends Component {
                             saveTemplateShift={() => { }}
                             openEditConfirm={() => { }}
                             handleOpenSnackbar={this.props.handleOpenSnackbar}
-                            location={this.state.employee.Employees.idEntity}
-                            deparment={this.state.employee.Employees.Id_Department}
-                            selectedEmployee={this.state.employee.Employees.id}
+                            location={idEntity}
+                            deparment={Id_Department}
+                            selectedEmployee={EmployeeId}
                         />
                     </div>
                 case 2:
-                    return <div className="card mt-0">
-                        <DropDown idUser={this.state.employee.Employees.id} />
+                    return <div className="card mt-0 p-2">
+                        <PunchesReportDetail EmployeeId={EmployeeId} />
                     </div>
             }
         };

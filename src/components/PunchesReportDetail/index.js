@@ -13,14 +13,14 @@ class PunchesReportDetail extends Component {
     }
 
     getFilters = () => {
-        var filters = {}, { startDate, endDate } = this.state, { idUser } = this.props;
+        var filters = {}, { startDate, endDate } = this.state, { EmployeeId } = this.props;
 
         if (startDate)
             filters = { ...filters, startDate };
         if (endDate)
             filters = { ...filters, endDate };
-        if (idUser)
-            filters = { ...filters, idUser };
+        if (EmployeeId)
+            filters = { ...filters, EmployeeId };
 
         return filters;
     }
