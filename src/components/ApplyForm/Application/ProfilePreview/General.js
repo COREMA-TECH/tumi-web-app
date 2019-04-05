@@ -388,38 +388,46 @@ class General extends Component {
      * @param id
      */
     getProfileInformation = (id) => {
-        this.props.client
-            .query({
-                query: GET_APPLICATION_PROFILE_INFO,
-                variables: {
-                    id: id
-                }
-            })
-            .then(({ data }) => {
-                this.setState({
-                    data: data.applications[0]
-                }, () => {
-                    //this.getApplicationEmployees(id);
-                    //  this.fetchDepartments();
-                    this.setState({
-                        email: this.state.data.emailAddress,
-                        number: this.state.data.cellPhone,
-                        firstname: this.state.data.firstName,
-                        middlename: this.state.data.middleName,
-                        lastname: this.state.data.lastName,
-                        isLead: this.state.data.isLead,
-                        loading: false,
-                        directDeposit: this.state.data.directDeposit,
-                        username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000)
+
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .query({
+                        query: GET_APPLICATION_PROFILE_INFO,
+                        fetchPolicy: 'no-cache',
+                        variables: {
+                            id: id
+                        }
                     })
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    loading: false,
-                    error: true
-                })
-            })
+                    .then(({ data }) => {
+                        this.setState({
+                            data: data.applications[0]
+                        }, () => {
+                            //this.getApplicationEmployees(id);
+                            //  this.fetchDepartments();
+                            this.setState({
+                                email: this.state.data.emailAddress,
+                                number: this.state.data.cellPhone,
+                                firstname: this.state.data.firstName,
+                                middlename: this.state.data.middleName,
+                                lastname: this.state.data.lastName,
+                                isLead: this.state.data.isLead,
+                                loading: false,
+                                directDeposit: this.state.data.directDeposit,
+                                username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000)
+                            })
+                        });
+                    })
+                    .catch(error => {
+                        this.setState({
+                            loading: false,
+                            error: true
+                        })
+                    })
+            });
     };
 
 
@@ -432,6 +440,7 @@ class General extends Component {
         this.props.client
             .query({
                 query: GET_APPLICATION_EMPLOYEES_QUERY,
+                fetchPolicy: 'no-cache',
                 variables: {
                     ApplicationId: id
                 }
@@ -1105,7 +1114,7 @@ class General extends Component {
 
     updateDirectDeposit = () => {
 
-        console.log(this.state.directDeposit)
+        //console.log(this.state.directDeposit)
 
         this.setState(
             {
@@ -1526,7 +1535,7 @@ class General extends Component {
                                                         this.setState({
                                                             directDeposit: event.target.checked
                                                         }, () => {
-                                                            console.log(this.state.directDeposit)
+                                                            //  console.log(this.state.directDeposit)
                                                             this.updateDirectDeposit()
                                                         })
 
