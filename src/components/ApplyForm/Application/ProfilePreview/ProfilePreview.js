@@ -212,7 +212,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 case 2:
                     return <div className="card mt-0">
-                        <DropDown idUser={localStorage.getItem('LoginId')}/>
+                        <DropDown idUser={this.state.employee.Employees.id} />
                     </div>
             }
         };
