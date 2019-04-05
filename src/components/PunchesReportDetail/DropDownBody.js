@@ -16,7 +16,7 @@ class PunchesDetailDropDownBody extends Component {
         console.log(data)
         return (
             <table className="table">
-                <thead className="thead-dark">
+                {/* <thead className="thead-dark">
                     <tr>
                         <th scope="col">Time in-out</th>
                         <th scope="col">Duration</th>
@@ -25,7 +25,7 @@ class PunchesDetailDropDownBody extends Component {
                         <th scope="col">Faces</th>
                         <th scope="col">Notes</th>
                     </tr>
-                </thead>
+                </thead> */}
                 <tbody>
                     {data.map((item) => {
                         return (

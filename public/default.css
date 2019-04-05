@@ -9156,6 +9156,18 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   top: 40px;
   z-index: 1; }
 
+.panel-dropdown {
+  background-color: #eee !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important; }
+  .panel-dropdown-body {
+    padding: 0 !important;
+    padding-right: 10px !important;
+    background-color: #FFF; }
+    .panel-dropdown-body .table {
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important; }
+
 .login-container {
   width: 100%;
   height: 100%;
