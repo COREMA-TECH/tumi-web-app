@@ -836,6 +836,7 @@ query getposition ($Id_Entity:Int){
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
+				console.log("getRate ", data)
 				if (data.data.getbusinesscompanies != null) {
 					this.setState({
 						companyRate: data.data.getbusinesscompanies[0].Rate
