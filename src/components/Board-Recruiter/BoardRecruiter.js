@@ -23,21 +23,17 @@ import { Board } from 'react-trello'
 import Filters from './Filters';
 import ApplicationPhasesForm from './ApplicationPhasesForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import { conformToMask } from 'react-text-mask';
 
 class CustomCard extends Component {
 
     printButtons = ({ id, laneId, cardId }) => {
-        console.log("ID is: ", id);
-        console.log("LaneID is: ", laneId);
-
-
         if (laneId == "lane1")
             return (
-                <button style={{ marginLeft: "auto" }} className="btn-assign-me"
+                <button style={{ marginLeft: "auto" }} className="btn btn-primary btn-sm"
                     onClick={(e) => {
                         e.stopPropagation();
-                        alert("");
-                        this.props.assignRecruiterToOpening(this.props.recruiter, this.props.opening)
+                        this.props.assignRecruiterToOpening(this.props.recruiter, this.props.id)
                     }}
                 >
                     Assign To Me
@@ -47,7 +43,10 @@ class CustomCard extends Component {
 
     render() {
         let props = this.props;
-
+        let opening;
+        opening = props.openingRecruiter.find(__or => {
+            return __or.recruiterId == localStorage.getItem('LoginId')
+        })
         return (
             <div>
                 <header
@@ -63,7 +62,7 @@ class CustomCard extends Component {
                     <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{props.name}</div>
                     <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{props.dueOn}</div>
                 </header>
-                <div style={{ fontSize: 12, color: '#4C4C4C' }}>
+                <div style={{ fontSize: 12, color: '#4C4C4C', paddingLeft: 5, paddingBottom: 5 }}>
                     <div style={{ margin: 2, color: '#4C4C4C', fontWeight: 'bold' }}>{props.subTitle}</div>
                     <div style={{ margin: 5, padding: '0px 0px' }}><i>{props.body}</i>
                     </div>
@@ -80,7 +79,7 @@ class CustomCard extends Component {
                         <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenter}</div>
                         <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}  </div>
                     </header>
-                    <header
+                    <div
                         style={{
                             paddingBottom: 0,
                             marginBottom: 0,
@@ -94,10 +93,13 @@ class CustomCard extends Component {
                             style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
                         {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i
                             class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
-                    </header>
-                    <right>
-                        {this.printButtons(this.props)}
-                    </right>
+                    </div>
+                    {!opening ?
+                        <right>
+                            {this.printButtons(this.props)}
+                        </right>
+                        : ""
+                    }
                 </div>
             </div>
         )
@@ -160,12 +162,12 @@ class BoardRecruiter extends Component {
                 variables: {
                     openingRecruiter: {
                         recruiterId: parseInt(recruiter),
-                        openingId: 360
+                        openingId: opening
                     }
                 }
             })
             .then(() => {
-                console.log("Success!");
+                this.props.handleOpenSnackbar('success', "You were assigned the work order.", 'bottom', 'right');
             })
             .catch(err => console.log(err))
     };
@@ -380,7 +382,7 @@ class BoardRecruiter extends Component {
         });
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         this.setState(
             {
                 loading: true
@@ -1002,14 +1004,6 @@ class BoardRecruiter extends Component {
             let count = 1;
             let begin = true;
             data.ShiftBoard.forEach((ShiftBoard) => {
-                /* if (_id == ShiftBoard.workOrderId)
-                     count++;
-                 else {
-                     count = 1;
-                 }*/
-
-                //if (begin) count = 1;
-                console.log("ShiftBoard ", ShiftBoard)
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
@@ -1022,7 +1016,8 @@ class BoardRecruiter extends Component {
                     PositionApplyfor: ShiftBoard.Id_positionApplying,
                     Position: ShiftBoard.positionName,
                     Zipcode: ShiftBoard.zipCode,
-                    WorkOrderId: ShiftBoard.workOrderId
+                    WorkOrderId: ShiftBoard.workOrderId,
+                    openingRecruiter: ShiftBoard.OpeningRecruiter
                 };
                 getOpenings.push(datas);
 

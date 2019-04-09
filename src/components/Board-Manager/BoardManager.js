@@ -267,7 +267,7 @@ class BoardManager extends Component {
         });
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         this.setState(
             {
                 loading: true
@@ -995,10 +995,6 @@ class BoardManager extends Component {
         let interviews = interview.querySelectorAll('header > div:first-child');
         let elements = Array.from(interviews);
 
-        this.state.interview.map(item => {
-            console.log(item.id);
-        });
-
         for (let i = 0; i < elements.length; i++) {
             elements[i].classList.add('interview-title');
             elements[i].addEventListener("click", () => {
@@ -1142,19 +1138,6 @@ class BoardManager extends Component {
                                                         </a>
 
                                                     </div>
-                                                    {/*<div className="col-md-1">*/}
-                                                    {/*<button className="btn btn-danger" onClick={() => {*/}
-                                                    {/*this.setState({*/}
-                                                    {/*hotel: 0,*/}
-                                                    {/*state: 0,*/}
-                                                    {/*city: 0,*/}
-                                                    {/*status: null*/}
-                                                    {/*}, () => {*/}
-                                                    {/*this.getWorkOrders();*/}
-                                                    {/*})*/}
-                                                    {/*}}>Clear*/}
-                                                    {/*</button>*/}
-                                                    {/*</div>*/}
                                                 </div>
                                             </div>
                                             <div className="col-12 col-md-2"></div>
