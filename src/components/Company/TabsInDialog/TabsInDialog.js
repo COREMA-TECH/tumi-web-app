@@ -9,7 +9,10 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm/DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm/PositionsCompanyForm';
 import User from '../User';
-
+import { gql } from 'apollo-boost';
+import withApollo from 'react-apollo/withApollo';
+import withGlobalContent from 'Generic/Global';
+import TablesContracts from '../../Contract/Main/MainContract/TablesContracts';//'./TablesContracts';
 
 const theme = createMuiTheme({
 	overrides: {
@@ -82,7 +85,42 @@ class CustomizedTabs extends Component {
 		value: 0,
 		activeTab: false,
 		idProperty: null,
-		idManagement: null
+		idManagement: null,
+		dataContract: [],
+		Id_Entity: null,
+	};
+
+
+	getContractsQuery = gql`
+	query getContractById($Id_Entity: Int!) {
+		getcontracts(Id_Entity: $Id_Entity, IsActive: 1) {
+			Id
+			Contract_Name
+			Contrat_Owner
+			Contract_Status
+			Contract_Expiration_Date
+		}
+	}
+`;
+
+	getContractData = () => {
+		this.props.client
+			.query({
+				query: this.getContractsQuery,
+				variables: {
+					Id_Entity: this.props.idProperty
+				},
+				fetchPolicy: 'no-cache'
+			})
+			.then(({ data }) => {
+				if (data.getcontracts != null && data.getcontracts.length > 0) {
+					this.setState({
+						dataContract: data.getcontracts
+					});
+
+				}
+			})
+			.catch((err) => console.log(err));
 	};
 
 	handleChange = (event, value) => {
@@ -102,6 +140,8 @@ class CustomizedTabs extends Component {
 				idManagement: this.props.idCompany
 			});
 		}
+
+		this.getContractData();
 	}
 
 	render() {
@@ -138,6 +178,12 @@ class CustomizedTabs extends Component {
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
 							label="Positions and Rates"
+						/>
+						<Tab
+							disabled={this.state.idProperty === null}
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Contracts"
 						/>
 						<Tab
 							disabled={this.state.idProperty === null}
@@ -203,6 +249,15 @@ class CustomizedTabs extends Component {
 						/>
 					)}
 					{value === 4 && (
+						<TablesContracts
+							data={this.state.dataContract}
+							acciones={1}
+							delete={(id) => {
+								this.deleteContractById(id);
+							}}
+						/>
+					)}
+					{value === 5 && (
 						<User
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
 							item={this.state.item}
@@ -219,4 +274,5 @@ CustomizedTabs.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(CustomizedTabs);
+export default withStyles(styles)(withApollo(withGlobalContent(CustomizedTabs)));
+//export default withStyles(styles)(CustomizedTabs);

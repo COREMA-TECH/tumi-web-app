@@ -222,6 +222,7 @@ class MainContract extends Component {
 												<div className="">
 													<TablesContracts
 														data={dataContract}
+														acciones={0}
 														delete={(id) => {
 															this.deleteContractById(id);
 														}}

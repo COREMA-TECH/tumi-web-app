@@ -146,7 +146,7 @@ let id = 0;
 class DepartmentsTable extends React.Component {
 	state = {
 		page: 0,
-		rowsPerPage:25,
+		rowsPerPage: 25,
 		loadingRemoving: false
 	};
 	handleChangePage = (event, page) => {
@@ -189,9 +189,9 @@ class DepartmentsTable extends React.Component {
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
-									<CustomTableCell style={{ width: '30px'}} className={"Table-head"}>Actions</CustomTableCell>
-									< CustomTableCell style={{width: '80px' }} className={"Table-head"}>Contract Name</CustomTableCell>
-									<CustomTableCell style={{width: '80px' }} className={"Table-head"}>Contract Owner</CustomTableCell>
+									{this.props.acciones == 0 ? <CustomTableCell style={{ width: '30px' }} className={"Table-head"}>Actions</CustomTableCell> : ''}
+									< CustomTableCell style={{ width: '80px' }} className={"Table-head"}>Contract Name</CustomTableCell>
+									<CustomTableCell style={{ width: '80px' }} className={"Table-head"}>Contract Owner</CustomTableCell>
 									<CustomTableCell style={{ width: '80px' }} className={"Table-head"}>Contract Status</CustomTableCell>
 									<CustomTableCell style={{ width: '80px' }} className={"Table-head"}>Contract Expiration Date</CustomTableCell>
 									<CustomTableCell style={{ width: '120px' }} className={"Table-head"}></CustomTableCell>
@@ -211,7 +211,7 @@ class DepartmentsTable extends React.Component {
 												});
 											}}
 										>
-											<CustomTableCell style={{width: '30px', textAlign: 'center' }}>
+											{this.props.acciones == 0 ? <CustomTableCell style={{ width: '30px', textAlign: 'center' }}>
 												<Tooltip title="Edit">
 													<button
 														className="btn btn-danger ml-1 float-left"
@@ -239,9 +239,10 @@ class DepartmentsTable extends React.Component {
 													</button>
 												</Tooltip>
 											</CustomTableCell>
-											<CustomTableCell style={{width: '80px' }}>{row.Contract_Name.trim()}</CustomTableCell>
-											<CustomTableCell style={{width: '80px' }}>{row.Contrat_Owner}</CustomTableCell>
-											<CustomTableCell style={{width: '80px' }}>
+												: ''}
+											<CustomTableCell style={{ width: '80px' }}>{row.Contract_Name.trim()}</CustomTableCell>
+											<CustomTableCell style={{ width: '80px' }}>{row.Contrat_Owner}</CustomTableCell>
+											<CustomTableCell style={{ width: '80px' }}>
 												{row.Contract_Status == 0 ? 'Draft' : (row.Contract_Status == 1 ? 'Completed' : 'Expired')}
 											</CustomTableCell>
 											<CustomTableCell style={{ width: '80px' }}>

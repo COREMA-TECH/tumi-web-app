@@ -99,6 +99,13 @@ class Contract extends React.Component {
 		});
 	};
 
+
+	updateId_ToRenewedContract = (id) => {
+		this.setState({
+			contractId: id
+		});
+	};
+
 	updateCompanyId = (id) => {
 		console.log("updateCompanyId ", id)
 		this.setState({
@@ -197,6 +204,7 @@ class Contract extends React.Component {
 							Id_Entity={this.state.Id_Entity}
 							Id_Parent={this.state.Id_Parent}
 							updateContractId={this.updateContractId}
+							updateId_ToRenewedContract={this.updateId_ToRenewedContract}
 							updateCompanyId={this.updateCompanyId}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
 							getContractName={this.getContractName}

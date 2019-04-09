@@ -1,4 +1,9 @@
 import React from 'react';
+
+import { gql } from 'apollo-boost';
+import withApollo from 'react-apollo/withApollo';
+import { Route } from "react-router-dom";
+
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -9,9 +14,48 @@ import ContactCompanyForm from '../ContactCompanyForm';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm';
 import Preferences from '../Preferences';
+import TablesContracts from '../../Contract/Main/MainContract/TablesContracts';//'./TablesContracts';
+
+
+
 
 import withGlobalContent from 'Generic/Global';
 import TitleCompanyForm from '../TitleCompanyForm/TitleCompanyForm';
+
+const styles = (theme) => ({
+	wrapper: {
+		margin: theme.spacing.unit,
+		position: 'relative'
+	},
+	buttonSuccess: {
+		background: ' #3da2c7',
+		borderRadius: '5px',
+		padding: '.5em 1em',
+
+		fontWeight: '300',
+		fontFamily: 'Segoe UI',
+		fontSize: '1.1em',
+		color: '#fff',
+		textTransform: 'none',
+		//cursor: pointer;
+		margin: '2px',
+
+		//	backgroundColor: '#357a38',
+		color: 'white',
+		'&:hover': {
+			background: ' #3da2c7'
+		}
+	},
+
+	buttonProgress: {
+		//color: ,
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12
+	}
+});
 
 const theme = createMuiTheme({
 	overrides: {
@@ -35,8 +79,41 @@ class CustomizedTabs extends React.Component {
 			item: 4,
 			activateTabs: true,
 			idCompany: props.idCompany,
-			idManagement: props.idCompany
+			idManagement: props.idCompany,
+			dataContract: []
 		}
+	};
+
+	getContractsQuery = gql`
+	query getContractById($IdManagement: Int!) {
+		getcontracts(IdManagement: $IdManagement, IsActive: 1) {
+			Id
+			Contract_Name
+			Contrat_Owner
+			Contract_Status
+			Contract_Expiration_Date
+		}
+	}
+`;
+
+	getContractData = () => {
+		this.props.client
+			.query({
+				query: this.getContractsQuery,
+				variables: {
+					IdManagement: this.state.idManagement
+				},
+				fetchPolicy: 'no-cache'
+			})
+			.then(({ data }) => {
+				if (data.getcontracts != null && data.getcontracts.length > 0) {
+					this.setState({
+						dataContract: data.getcontracts
+					});
+
+				}
+			})
+			.catch((err) => console.log(err));
 	};
 
 	handleChange = (event, value) => {
@@ -79,6 +156,8 @@ class CustomizedTabs extends React.Component {
 		this.setState({
 			value: this.props.tabSelected
 		});
+
+		this.getContractData();
 	}
 
 	showSelectedTab = (value) => {
@@ -157,11 +236,21 @@ class CustomizedTabs extends React.Component {
 						showPayRate={true}
 					/>
 				);
-			case 4:
+				{/*	case 4:
 				return (
 					<Preferences
 						idCompany={this.state.idCompany}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
+					/>
+				);*/}
+			case 4:
+				return (
+					<TablesContracts
+						data={this.state.dataContract}
+						acciones={1}
+						delete={(id) => {
+							this.deleteContractById(id);
+						}}
 					/>
 				);
 		}
@@ -208,11 +297,17 @@ class CustomizedTabs extends React.Component {
 							label="Positions and Rates"
 							disabled={!this.state.activateTabs}
 						/>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Contracts"
+							disabled={!this.state.activateTabs}
+						/>
 						{/*<Tab*/}
-							{/*disableRipple*/}
-							{/*classes={{ root: "Tab-item", selected: "Tab-selected" }}*/}
-							{/*label="Preferences"*/}
-							{/*disabled={!this.state.activateTabs}*/}
+						{/*disableRipple*/}
+						{/*classes={{ root: "Tab-item", selected: "Tab-selected" }}*/}
+						{/*label="Preferences"*/}
+						{/*disabled={!this.state.activateTabs}*/}
 						{/*/>*/}
 					</Tabs>
 					{this.showSelectedTab(value)}
@@ -226,4 +321,5 @@ CustomizedTabs.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withGlobalContent(CustomizedTabs);
+export default withStyles(styles)(withApollo(withGlobalContent(CustomizedTabs)));
+//export default withGlobalContent(CustomizedTabs);

@@ -613,6 +613,7 @@ class NewContract extends Component {
                                     Id_Company: 1,
                                     Contract_Name: `'${this.state.Contract_Name}'`,
                                     Contrat_Owner: `'${this.state.Contrat_Owner}'`,
+                                    IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
                                     User_Signed_Title: `'${this.state.User_Signed_Title}'`,
@@ -623,12 +624,12 @@ class NewContract extends Component {
                                     Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
                                     Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
                                     Company_Signed: `'${this.state.CompanySignedName}'`,
-                                    Company_Signed_Date: `'${this.getNewDate()}'`,
+                                    Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
                                     Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
                                     Billing_Street: `'${this.state.Billing_Street}'`,
                                     Billing_City: parseInt(this.state.Billing_City),
                                     Billing_State: parseInt(this.state.Billing_State),
-                                    Billing_Zip_Code: parseInt(this.state.Billing_Zip_Code),
+                                    Billing_Zip_Code: `'${this.state.Billing_Zip_Code}'`,
                                     Billing_Country: 6,
                                     Contract_Terms: "''",
                                     Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
@@ -640,22 +641,28 @@ class NewContract extends Component {
                                     IsActive: parseInt(this.state.IsActive),
                                     User_Created: 1,
                                     User_Updated: 1,
-                                    Date_Created: "'2018-08-14'",
-                                    Date_Updated: "'2018-08-14'",
+                                    Date_Created: `'${this.getNewDate()}'`,
+                                    Date_Updated: `'${this.getNewDate()}'`,
                                     Electronic_Address: `'${this.state.Electronic_Address}'`,
-                                    Primary_Email: `'${this.state.Primary_Email}'`
+                                    Primary_Email: `'${this.state.Primary_Email}'`,
+                                    legalName: `'${this.state.Legal_Name}'`
                                 }
                             }
                         })
                         .then(({ data }) => {
+
+
+
                             this.props.updateCompanyId(this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity)
 
                             this.props.getContractName(this.state.Contract_Name);
+                            this.props.updateId_ToRenewedContract(data.inscontracts.Id);
 
-                            this.props.handleOpenSnackbar('success', 'Contract Inserted!');
+                            this.props.handleOpenSnackbar('success', 'Renewed Contract!');
                             this.setState({
                                 loadingInsert: false
                             });
+                            this.getContractData(data.inscontracts.Id);
                             //this.props.update(data.inscontracts.Id);
 
                         })
@@ -1255,10 +1262,10 @@ class NewContract extends Component {
 
     updateAddress = () => {
         if (document.getElementById("correctAddress").checked) {
-            const isManagement = this.state.IdManagement && this.state.IdManagement!=0;
+            const isManagement = this.state.IdManagement && this.state.IdManagement != 0;
 
             this.setState({
-                Old_Billing_City: isManagement  ? this.state.Management_Billing_City : this.state.city,
+                Old_Billing_City: isManagement ? this.state.Management_Billing_City : this.state.city,
                 Old_Billing_State: isManagement ? this.state.Management_Billing_State : this.state.state,
                 Old_Billing_Street: isManagement ? this.state.Management_Billing_Street : this.state.address,
                 Old_Billing_Zip_Code: isManagement ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
@@ -1356,15 +1363,18 @@ class NewContract extends Component {
 
 
                         {parseInt(this.state.Contract_Status) == 2 ? (
-                            <Button
-                                className={classes.buttonSuccess}
+                            <button
+                                style={{
+                                    margin: '5px'
+                                }}
+                                className={'btn btn-success float-right'}
                                 onClick={() => {
                                     this.getcatalogitem(this.state.Contract_Term);
                                 }}
                                 disabled={parseInt(this.state.Contract_Status) == 2 ? false : true}
                             >
-                                Renewal Contract
-                            </Button>
+                                Renewal Contract <i class="far fa-edit"></i>
+                            </button>
                         ) : (
                                 ''
                             )}
