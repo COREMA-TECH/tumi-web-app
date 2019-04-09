@@ -256,7 +256,7 @@ class PreFilter extends Component {
                                         {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
                                 </button>
 
-                                <button className="btn btn-defautl btn-not-rounded ml-1" type="button" onClick={this.props.handleClosePreFilter}>
+                                <button className="btn btn-light btn-not-rounded ml-1" type="button" onClick={this.props.handleClosePreFilter}>
                                     Cancel
                                 </button>
                             </div>

@@ -5,6 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import { CONVERT_TO_OPENING, DELETE_WORK_ORDER } from './Mutations';
 import { GET_BOARD_SHIFT } from "./Queries";
 import withApollo from 'react-apollo/withApollo';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const ONE_ITEM_MESSAGE_OPENING = "Send ONLY this item", ALL_ITEM_MESSAGE_OPENING = "Send All Items on this Work Order"
 const ONE_ITEM_MESSAGE_WORK_ORDER = "Recall Only this Item", ALL_ITEM_MESSAGE_WORK_ORDER = "Recall All Items on this Work Order"
@@ -219,18 +220,33 @@ class CardTemplate extends Component {
 
     printButtons = ({ id, laneId }) => {
         if (laneId == "lane1")
-            return <div className="onoffswitch mb-1 board-switch" style={{ marginLeft: "auto" }} >
-                <input
-                    id={`chkConvert${id}`}
-                    className="onoffswitch-checkbox"
-                    onChange={this.handleCheckedChange}
-                    checked={this.state.currentStatus}
-                    type="checkbox"
-                />
-                <label className="onoffswitch-label" htmlFor={`chkConvert${id}`}>
-                    <span className="onoffswitch-inner" />
-                    <span className="onoffswitch-switch" />
-                </label>
+            return <div>
+                <Tooltip
+                    title={
+                        <React.Fragment>
+                            Tooltip with HTML
+                            <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
+                            {"It's very engaging. Right?"}
+                        </React.Fragment>
+                    }
+                >
+                    <button className="btn btn-link float-left">
+                        <i class="fas fa-users"></i>
+                    </button>
+                </Tooltip>
+                <div className="onoffswitch mb-1 board-switch" style={{ marginLeft: "auto" }} >
+                    <input
+                        id={`chkConvert${id}`}
+                        className="onoffswitch-checkbox"
+                        onChange={this.handleCheckedChange}
+                        checked={this.state.currentStatus}
+                        type="checkbox"
+                    />
+                    <label className="onoffswitch-label" htmlFor={`chkConvert${id}`}>
+                        <span className="onoffswitch-inner" />
+                        <span className="onoffswitch-switch" />
+                    </label>
+                </div>
             </div>
     }
 

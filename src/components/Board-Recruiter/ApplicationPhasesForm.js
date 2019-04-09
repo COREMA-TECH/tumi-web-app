@@ -105,7 +105,6 @@ class ApplicationPhasesForm extends Component {
             this.props.handleCloseModal(event);
             this.props.handleOpenSnackbar('success', "The Candidate was rejected", 'bottom', 'right');
         }).catch((error) => {
-            console.log(error);
             this.props.handleOpenSnackbar(
                 'error',
                 'Error to Add applicant information. Please, try again!',
