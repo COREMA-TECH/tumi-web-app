@@ -196,7 +196,7 @@ class Application extends Component {
                     .then(({ data }) => {
                         this.setState({
                             editing: false,
-                            insertDialogLoading:false
+                            insertDialogLoading: false
                         }, () => {
                             let object = [];
                             this.state.positionsTags.map(item => {
@@ -408,27 +408,27 @@ class Application extends Component {
             })
     };
 
-    getPositionCatalog = () => {
-        this.props.client
-            .query({
-                query: GET_POSITIONS_QUERY,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                this.setState({
-                    dataWorkOrder: data.workOrder,
-                    loading: false
-                })
-            })
-            .catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to show applicant information. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            })
-    };
+    /* getPositionCatalog = () => {
+         this.props.client
+             .query({
+                 query: GET_POSITIONS_QUERY,
+                 fetchPolicy: 'no-cache'
+             })
+             .then(({ data }) => {
+                 this.setState({
+                     dataWorkOrder: data.workOrder,
+                     loading: false
+                 })
+             })
+             .catch(error => {
+                 this.props.handleOpenSnackbar(
+                     'error',
+                     'Error to show applicant information. Please, try again!',
+                     'bottom',
+                     'right'
+                 );
+             })
+     };*/
 
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {
@@ -456,9 +456,9 @@ class Application extends Component {
     componentWillMount() {
         this.getApplicationById(this.props.applicationId);
         this.getPositionCatalog();
-        this.getPositionCatalog();
+        // this.getPositionCatalog();
 
-        if(this.state.socialSecurityNumber.length === 0){
+        if (this.state.socialSecurityNumber.length === 0) {
             this.props.handleContract();
         }
     }
@@ -525,7 +525,7 @@ class Application extends Component {
 
 
 
-        if (this.state.socialSecurityNumber.length === 0){
+        if (this.state.socialSecurityNumber.length === 0) {
             // Show dialog
             this.setState({
                 openSSNDialog: true
@@ -572,21 +572,21 @@ class Application extends Component {
                             {spanishActions[2].label}
                         </button>
                         <button type="submit"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    this.submitForm();
-                                    this.props.handleContract();
-                                    this.handleCloseSSNDialog();
-                                }}
-                                className="applicant-card__save-button">
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                this.submitForm();
+                                this.props.handleContract();
+                                this.handleCloseSSNDialog();
+                            }}
+                            className="applicant-card__save-button">
                             Accept
                         </button>
                     </div>
                 </DialogActions>
             </Dialog>
         );
-        
+
         return (
             <div className="Apply-container--application">
                 {
