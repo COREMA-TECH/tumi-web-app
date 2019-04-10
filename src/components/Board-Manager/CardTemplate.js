@@ -219,14 +219,13 @@ class CardTemplate extends Component {
     }
 
     printButtons = ({ id, laneId }) => {
-        if (laneId == "lane1")
+        if (laneId == "lane1") {
+            let recruiter = this.props.Users[0] ? this.props.Users[0].Full_Name : 'Not Recruiter Assigned';
             return <div>
                 <Tooltip
                     title={
                         <React.Fragment>
-                            Tooltip with HTML
-                            <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
-                            {"It's very engaging. Right?"}
+                            <em>{recruiter}</em> <br />
                         </React.Fragment>
                     }
                 >
@@ -248,6 +247,7 @@ class CardTemplate extends Component {
                     </label>
                 </div>
             </div>
+        }
     }
 
     handleCheckedChange = (event) => {

@@ -170,19 +170,22 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 export const GET_BOARD_SHIFT = gql`
 query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany,$workOrder: inputQueryWorkOrder,) {
 	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity,workOrder:$workOrder)  {
-		id,
-		title,
-		quantity,
-		count,
-		workOrderId,
-		CompanyName,
-		needExperience,
-		needEnglish,
-		zipCode,
-		Id_positionApplying,
+		id
+		title
+		quantity
+		count
+		workOrderId
+		CompanyName
+		needExperience
+		needEnglish
+		zipCode
+		Id_positionApplying
 		positionName
 		status
 		isOpening
+		Users {
+      Full_Name
+    }
 	}
 	getusers(Id: null,IsActive: 1) {
 		Id
