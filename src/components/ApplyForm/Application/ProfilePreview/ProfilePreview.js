@@ -24,7 +24,6 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { ProfilePicture } from 'ui-components/ProfilePicture/'
 import GenericContent from 'Generic/Global'
 import Schedules from '../../../Schedules';
-import PunchesReportDetail from '../../../PunchesReportDetail';
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
 
 
@@ -217,10 +216,6 @@ class VerticalLinearStepper extends Component {
                             deparment={Id_Department}
                             selectedEmployee={EmployeeId}
                         />
-                    </div>
-                case 2:
-                    return <div className="card mt-0 p-2">
-                        <PunchesReportDetail EmployeeId={EmployeeId} />
                     </div>
             }
         };
