@@ -43,6 +43,7 @@ import RecruiteReport from '../../RecruiterReport';
 import TimeCardTable from '../../TimeCard/TimeCardTable';
 import TimeCard from '../../TimeCard';
 import PayRoll from "../../Security/PayRoll/PayRoll";
+import PunchesReportConsolidated from '../../PunchesReportConsolidated';
 import PunchesReport from '../../PunchesReport';
 import PunchesReportDetail from '../../PunchesReportDetail';
 import ApprovePunches from '../../ApprovePunchesReport';
@@ -171,6 +172,7 @@ class Container extends Component {
 				<Route exact path="/home/schedules-accept/:accept/:id" component={SchedulesAccept} />
 				<Route exact path="/home/region" component={Region} />
 				<Route exact path="/home/regiontable" component={RegionTable} />
+				<Route exact path="/home/punches/report/consolidated" component={PunchesReportConsolidated} />
 				<Route exact path="/home/punches/report" component={PunchesReport} />
 				<Route exact path="/home/punches/report/detail" component={PunchesReportDetail} />
 				<Route exact path="/home/notfound" component={NotFound} />
