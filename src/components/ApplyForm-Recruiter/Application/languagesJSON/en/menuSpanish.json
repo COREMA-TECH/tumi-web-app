@@ -1,0 +1,18 @@
+[
+	{
+		"id": 1,
+		"label": "Lead Information"
+	},
+	{
+		"id": 2,
+		"label": "Languages"
+	},
+	{
+		"id": 3,
+		"label": "Previous Employments"
+	},
+	{
+		"id": 4,
+		"label": "Skills"
+	}
+]

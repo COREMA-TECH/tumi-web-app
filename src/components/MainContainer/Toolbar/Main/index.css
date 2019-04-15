@@ -1,0 +1,17 @@
+.toolbar__main {
+	border-color: #293a4a;
+	display: flex;
+	height: 100%;
+	justify-content: flex-end;
+	align-items: center;
+	width: 100%;
+}
+
+.main-container__title {
+	color: #ffffff;
+	font-size: 1.3em;
+	font-weight: 300;
+	font-family: "Segoe UI";
+	padding-left: 3rem;
+	width: 20%;
+}

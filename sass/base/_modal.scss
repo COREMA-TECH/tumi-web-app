@@ -1,0 +1,12 @@
+.modal {
+    &-overflow {
+        overflow-x: scroll;
+        .list-item-container-scroll {
+            min-width: 500px;
+        }
+    }
+}
+
+// div[class*="MuiSnackbar-root-"] {
+//     z-index: 2000 !important;
+// }

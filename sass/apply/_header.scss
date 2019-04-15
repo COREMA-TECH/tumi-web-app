@@ -1,0 +1,19 @@
+.Header {
+    background-color: $brand-primary;
+    color: $white;
+    font-weight: 700;
+    line-height: 50px;
+    height: 50px;
+    padding-left: 1rem;
+    width: 100%;
+    &:before {
+        background-color: lighten($brand-primary,15%);
+        content: " ";
+        -webkit-clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
+        clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
+        display: block;
+        float: right;
+        height: 50px;
+        width: 50%;
+    }
+}

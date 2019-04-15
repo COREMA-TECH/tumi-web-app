@@ -1,0 +1,20 @@
+.menu__item {
+    width: 100%;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 300;
+    font-family: "Segoe UI";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-item__icon {
+    font-size: 1.5em;
+}
+
+.menu__item:hover {
+    cursor: pointer;
+    background: rgba(255, 255, 255, .1);
+}
+

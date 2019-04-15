@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "label": "Are you sure you want to delete the record?"
+  },
+  {
+    "id": 1,
+    "label": "From"
+  },
+  {
+    "id": 2,
+    "label": "To"
+  }
+]

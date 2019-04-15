@@ -1,0 +1,48 @@
+.bg {
+    &-gd {
+        &-primary {
+            background: linear-gradient(to left, $brand-primary, $brand-secondary);
+            border-color: $brand-primary;
+        }
+        &-danger {
+            background: linear-gradient(to left, lighten($red,20),$red);
+            border-color: $red;
+        }
+        &-info {
+            background: -webkit-linear-gradient(to right, $info, lighten($info,20)); /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, $info, lighten($info,20)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+    }
+}
+
+.gradiant-overlay {
+    align-items: center;
+    background: linear-gradient(to left, $brand-primary, $red);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    left: 0;
+    opacity: .8;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+    &-message {
+        color: $white;
+        text-align: center;
+    }
+    .reason-wrapper {
+        max-width: 585px;
+        text-align: center;
+        width: 100%;
+    }
+    textarea {
+        opacity: .5;
+        &:focus {
+            opacity: 1;
+        }
+    }
+}

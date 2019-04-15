@@ -1,0 +1,98 @@
+
+// Body
+$body-bg: #fff;
+
+// Borders
+
+// Brands
+$brand-accent: #cc9933;
+$brand-primary: #3ca2c8;
+$brand-primary-dark: #669900;
+$brand-secondary: #254151;
+$brand-info: var(--info);
+$brand-success: var(--success);
+$brand-warning: var(--warning);
+$brand-danger:  var(--danger);
+$brand-apply-primary: #009ce0;
+$brand-apply-secondary: $brand-primary;
+
+
+//Colors
+$info: #28a745;
+$black: #000;
+$white: #FFF;
+$white-shades: (
+    light: #fbfbfb
+);
+$gray: #dddddd;
+$gray-shades: (
+    gray-1: #d2d2d2,
+    gray-2: #e6e6e6,
+    gray-3: #bdbdbd,
+    light: #f5f7f9,
+    second-light: #999,
+    soft-gray: #eee,
+    blue-gray: #97a8b4,
+    clear-gray: #ebf5fc
+);
+$light-gray: #f5f7f9;
+$second-light-gray: #999;
+$red: #f50057;
+$success: #3ca2c8;
+
+//Brackgrounds 
+$bg-body: $light-gray;
+$bg-tab-selected: $bg-body;
+$bg-card-header: rgba($brand-primary, 0.06);
+
+//Borders 
+$border-standard: $gray;
+$tab-border-selected: $border-standard;
+
+// Typography
+$font-family-sans-serif: 'Nunito Sans', sans-serif;
+$font-family-stand-out: "Michroma", sans-serif;
+$font-family-application: 'Roboto', sans-serif;
+$text-color: #7e7e7e;
+$font-main-title: 36px;
+$font-size-base: 0.9rem;
+
+// Navbar
+$navbar-default-bg: #fff;
+
+// Buttons
+$btn-default-color: $text-color;
+
+// Inputs
+$input-border: lighten($text-color, 40%);
+$input-border-focus: lighten($brand-primary, 25%);
+$input-color-placeholder: lighten($text-color, 30%);
+
+// Panels
+$panel-default-heading-bg: #fff;
+
+
+//Header
+$header-height:  53px;
+
+//MainSection
+$main-section-height: 672px;
+$main-section-height-big: 1050px;
+
+//Services
+$service-header-height: 358px;
+
+//Nearshore vs Offshore section
+$tab-height: 825px;
+$wrapper-svg-width: 1332px;
+
+//Sizes
+$border-radius-wrapper: 30px;
+$border-radius-standar: 5px;
+$border-radius-input: $border-radius-standar;
+$half-vertical-spacing: 5.5rem;
+$vertical-spacing: 11rem;
+$vertical-spacing-underImage: 29rem;
+
+//Routes
+$img-path: "../images";

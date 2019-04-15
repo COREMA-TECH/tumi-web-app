@@ -1,0 +1,13 @@
+.UploadDocument {
+    &-item {
+        display: inline-block;
+        vertical-align: top;
+    }
+    &-wrapper {
+        text-align: left;
+        width: 100%;
+        @include media-breakpoint-down(md) { 
+            text-align: center;
+        }
+    }
+}

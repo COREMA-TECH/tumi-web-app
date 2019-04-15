@@ -1,0 +1,38 @@
+.avatar-wrapper:not(.disabled) {
+    &:hover{
+        .btn-up {
+            cursor: pointer;
+        }
+        .upload-btn-wrapper { 
+            opacity: 1;
+            cursor: pointer;
+        }
+    } 
+}
+
+.upload-image {
+    overflow: hidden;
+    .upload-btn-wrapper {
+        height: 96px;
+        opacity: 0;
+        position: absolute;
+        top: 0; left: 0; bottom: 0; right: 0;
+        width: 96px;
+        transition: all 150ms ease;
+    }
+    .btn-up {
+        cursor: unset;
+        border: 0 !important;
+        background: rgba($brand-primary,0.9) !important;
+        border-radius: 91px;
+        color: $white;
+        height: 96px;
+        width: 96px;
+        &:focus {
+            outline: none;
+        }
+        .fas {
+            font-size: 2.5rem;
+        }
+    }
+}

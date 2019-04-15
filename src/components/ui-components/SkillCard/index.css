@@ -1,0 +1,67 @@
+.skill-card {
+    min-width: 10% !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: .1em 1em;
+
+
+    background: rgba(65, 175, 215, 0.15);
+    border-radius: 50px;
+    /*box-shadow: 1px 1px 15px rgba(200, 200, 200, .3);*/
+    overflow: hidden;
+
+    position: relative;
+
+    box-sizing: border-box;
+    margin: .2em;
+}
+
+@media (max-width: 520px) {
+    .skill-card {
+        min-width: 100% !important;
+    }
+}
+
+.row-skill {
+    width: 100%;
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.skill-card__remove-button {
+    cursor: pointer;
+
+    transition: all .450s;
+    margin-left: .5em;
+    margin-right: .2em;
+
+    color: #0092BD;
+}
+
+.skill-card__remove-button:hover {
+    color: #0092BD;
+}
+
+.skill-card__description {
+    margin-top: .2em;
+    margin-bottom: .1em;
+    color: #0092BD;
+}
+
+.skill-card__level {
+    color: #0092BD;
+    margin: .5em;
+    font-style: italic;
+
+    font-size: .95em;
+    font-weight: 100 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+
+}
+
+

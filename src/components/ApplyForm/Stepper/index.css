@@ -1,0 +1,170 @@
+body {
+    position: relative;
+}
+
+.main-stepper-container {
+    
+}
+
+.main-stepper-nav {
+    background: #ffffff !important;
+
+    color: #3AC5F8;
+}
+
+
+.main-stepper-content {
+    width: 80%;
+    height: calc(100vh - 50px);
+    background: #f5f7f9 !important;
+
+    overflow-y: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding-bottom: 10vh;
+    padding-top: .5em;
+    border-left: 1px solid #eeeeee;
+    z-index: 20;
+}
+
+.label-stepper {
+    color: #41afd7 !important;
+}
+
+.bottom-container-stepper {
+    width: 100%;
+    height: 70px;
+    background: #ffffff;
+    box-shadow: 3px -5px 8px #eeeeee;
+    border-left: 1px solid #eeeeee;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+.disclaimer-text {
+    color: #555555;
+    font-weight: 300;
+    text-align: justify;
+    margin: .3em;
+}
+
+.idealJobItem {
+    width: fit-content;
+    background: rgba(65, 175, 215, 0.10);
+    color: #41afd7;
+
+    padding: .3em 1em;
+    border-radius: 50px;
+    margin-right: 5px;
+}
+
+.idealJobItem i {
+    margin-left: 10px;
+    font-weight: 100;
+    cursor: pointer;
+    position: relative;
+
+    transition: all .450s;
+}
+
+.idealJobItem i:hover {
+    bottom: 1px;
+}
+
+
+.input-container--ideal-job {
+    display: flex;
+}
+
+
+.input-container--ideal-job .add-ideal-job {
+    background: #41afd7;
+    border: 1px solid #41afd7;
+    color: #ffffff;
+    padding: .375rem .75rem;
+    border-radius: 0 5px 5px 0;
+    font-size: 1rem;
+    cursor: pointer;
+
+    outline: none;
+}
+
+
+/**
+ * Switch design
+ */
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: block;
+    width: 60px;
+    height: 25px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 2.5px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #41afd7;
+}
+
+input:disabled:checked + .slider {
+    cursor: not-allowed;
+}
+
+input:disabled + .slider {
+    cursor: not-allowed;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #41afd7;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(31px);
+    -ms-transform: translateX(31px);
+    transform: translateX(31px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 50px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}

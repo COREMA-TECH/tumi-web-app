@@ -1,0 +1,46 @@
+[
+	{
+		"id": 0,
+		"label": "Agregar"
+	},
+	{
+		"id": 1,
+		"label": "Editar"
+	},
+	{
+		"id": 2,
+		"label": "Cancelar"
+	},
+	{
+		"id": 3,
+		"label": "Eliminar"
+	},
+	{
+		"id": 4,
+		"label": "Guardar"
+	},
+	{
+		"id": 5,
+		"label": "Seleccionar una Opción"
+	},
+	{
+		"id": 6,
+		"label": "Agregar documento"
+	},
+	{
+		"id": 7,
+		"label": "Plantilla"
+	},
+	{
+		"id": 8,
+		"label": "Siguiente"
+	},
+	{
+		"id": 9,
+		"label": "Back"
+	},
+	{
+		"id": 10,
+		"label": "Finalizar"
+	}
+]

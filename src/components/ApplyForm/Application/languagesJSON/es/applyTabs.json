@@ -1,0 +1,42 @@
+[
+  {
+    "id": 0,
+    "label": "Información del Aplicante"
+  },
+  {
+    "id": 1,
+    "label": "Verificación de Antecedentes"
+  },
+  {
+    "id": 2,
+    "label": "No Divulgación"
+  },
+  {
+    "id": 3,
+    "label": "Código de Conducta"
+  },
+  {
+    "id": 4,
+    "label": "Anti-Acoso"
+  },
+  {
+    "id": 5,
+    "label": "Compensación del Trabajador"
+  },
+  {
+    "id": 6,
+    "label": "I9"
+  },
+  {
+    "id": 7,
+    "label": "Documentos"
+  },
+  {
+    "id": 8,
+    "label": "Perfil"
+  },
+  {
+    "id": 9,
+    "label": "W4"
+  }
+]

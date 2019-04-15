@@ -1,0 +1,251 @@
+.Header {
+    &-mobileMenu {
+        color: $white;
+        display: block;
+        height: 25px;
+        line-height: 25px;
+        margin-bottom: 0;
+        margin-left: 1rem;
+        margin-top: 0 !important;
+        position: fixed;
+        transition: margin-left .5s ease-out;
+        text-align: center;
+        top: 14px;
+        width: 25px;
+        z-index: 1051;
+    }
+}
+
+.icon-menu {
+    visibility: hidden;
+}
+
+.Language {
+    &-icon {
+        width: 25px;
+    }
+}
+
+.main-container__title {
+    width: 100% !important;
+}
+
+.MainMenu {
+    &-option {
+        box-sizing: border-box;
+        list-style: none;
+        .closeIcon {
+            display: block;
+            color: $white !important;
+            text-align: right;
+            padding-right: 1rem;
+            padding-top: 10px;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+        .menu__item {
+            height: 60.41px !important;
+        }
+    }
+}
+
+.main-container--header {
+    background: linear-gradient(to left, $brand-primary, $brand-secondary); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-bottom: 1px solid $brand-primary;
+    z-index: 1050 !important;
+}
+.MainMenu {
+    &-container {
+        position: relative;
+        z-index: 999;
+    }
+    &-option {
+        border-bottom: solid 1px #44555d;
+        &:first-child, &:last-child {
+            border-bottom: 0;
+        }
+    }
+}
+.MenuMobile {
+    background: transparent; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    clear: both;
+    height: 100%;
+    overflow: hidden;
+    transition: left .5s ease-out;
+    position: fixed;
+    left: -290px;
+    z-index: 9999;
+    width: 290px;
+    &:after {
+        background: url(../images/logo-orion.png) no-repeat bottom left;
+        background-size: contain;
+        display: block;
+        content: " ";
+        position: absolute;
+        bottom: 0;
+        left: 25%;
+        height: 150px;
+        width: 150px;
+    }
+    &::before {
+        background: #0F2027;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background-size: cover;
+        content: " ";
+        display: block;
+        opacity: .9;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+    &-callback {
+        display: none;
+    }
+    &-callback:checked~.MenuMobile {
+        left: 0px;
+        @include media-breakpoint-down(sm) {
+            width: 100%;
+        }
+    }
+    &-callback:checked~.Header-mobileMenu {
+        margin-left: 3rem;
+    }
+    &-callback:checked~&-overlay {
+        background-color: rgba(0,0,0,.5);
+        display: block;
+        height: 100%;
+        position: fixed;
+        width: 100%;
+        z-index: 98;
+    }
+    &-icon {
+        text-align: center;
+        text-decoration: none;
+        width: 45px;
+    }
+    &-link {
+        align-items: center;
+        color: $white;
+        display: flex;
+        justify-content: flex-start;
+        font-family: $font-family-sans-serif;
+        font-size: 0.8rem;
+        padding: 1rem; 
+        text-decoration: none;
+        width: 100%;
+        span {
+            font-weight: 400;
+        }
+        &:hover {
+            color: $white;
+            text-decoration: none;
+        }
+        &.selected {
+            border-left: solid 3px $brand-primary;
+            color: $white;
+        }
+    }
+    &-overlay {
+        display: none;
+    }
+    &-wrapper {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+}
+
+.menu {
+    &__item {
+        font-family: $font-family-sans-serif;
+        padding: 1rem;
+        text-decoration: none !important;
+        .fa, .fas, .far {
+            font-size: 1.75rem;
+            text-align: center;
+            width: 35px;
+        }
+        .nav-expanded & {
+            justify-content: flex-start !important;
+        }
+        .nav-title {
+            margin-left: 1rem;
+            white-space: nowrap;
+        }
+    }
+    &-item__icon {
+        font-size: 1.35rem !important;
+        .nav-expanded & {
+            margin-right: 1.5rem !important;
+        }
+    }
+}
+
+.nav {
+    min-width: 60px !important;
+}
+
+.nav-title {
+    display: none;
+}
+
+.nav-expanded {
+    .nav-title {
+        display: block;
+    }
+    .icon-right {
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+    }
+}
+
+.RightMenu {
+    &-item {
+        display: inline-block;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+    }
+    &-list {
+        align-items: center;
+        display: flex;
+        margin-right: 1.5rem;
+        text-align: right;
+        .dropdown-menu {
+            right: 0;
+            left: auto !important;
+        }
+    }
+}
+
+.SubMenu {
+    background: darken($brand-secondary,5);
+    height: 0;
+    overflow: hidden;
+    padding-bottom: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0;
+    &-icon {
+        text-align: center;
+        width: 45px;
+    }
+    &-item {
+        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    &-link {
+        font-family: $font-family-sans-serif;
+        color: lighten($color: $brand-primary, $amount: 25);
+    }
+    &-show {
+        padding-bottom: 1rem;
+        padding-top: 1rem;
+        height: auto;
+    }
+}

@@ -1,0 +1,14 @@
+.smooth-dnd-container.vertical {
+    min-height: 225px;
+}
+
+.board-switch {
+    .onoffswitch-inner {
+        &::before {
+            content: " "    
+        }
+        &::after {
+            content: " "
+        }
+    }
+}
