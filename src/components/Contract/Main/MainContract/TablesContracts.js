@@ -20,6 +20,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import EditIcon from '@material-ui/icons/Edit';
+import HotelDialog from './HotelDialog';
+
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -144,11 +146,21 @@ const styles = (theme) => ({
 let id = 0;
 
 class DepartmentsTable extends React.Component {
-	state = {
-		page: 0,
-		rowsPerPage: 25,
-		loadingRemoving: false
-	};
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			page: 0,
+			rowsPerPage: 25,
+			loadingRemoving: false,
+			showConfirm:true,
+			showConfirmCompany:false,
+			showConfirmCompanyOrProperty:false,
+			open:false
+		};
+	}
+
+	
 	handleChangePage = (event, page) => {
 		this.setState({ page });
 	};
@@ -163,7 +175,11 @@ class DepartmentsTable extends React.Component {
 		}
 		if (
 			this.state.page !== nextState.page ||
-			this.state.rowsPerPage !== nextState.rowsPerPage //||
+			this.state.rowsPerPage !== nextState.rowsPerPage ||
+			this.state.showConfirm !== nextState.showConfirm ||
+			this.state.showConfirmCompany !== nextState.showConfirmCompany ||
+			this.state.showConfirmCompanyOrProperty !== nextState.showConfirmCompanyOrProperty ||
+			this.state.open  !== nextState.open
 			//	this.state.order !== nextState.order ||
 			//this.state.orderBy !== nextState.orderBy
 		) {
@@ -172,20 +188,36 @@ class DepartmentsTable extends React.Component {
 		return false;
 	}
 
+
+
+
+	redirectToCreateContract = () => {
+		this.props.history.push({
+			pathname: '/home/contract/add',
+			state: { contract: 0 }
+		});
+	};
+	
+
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-
+		
 		if (this.state.loadingRemoving) {
 			return <LinearProgress />;
-		}
+		}	
 
 		return (
 			<Route
 				render={({ history }) => (
 					<Paper className={classes.root}>
+
+					{this.props.printDialogConfirm()}
+					{this.props.printDialogConfirmCompany()}
+					{this.props.printDialogConfirmCompanyOrProperty()}
+
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>

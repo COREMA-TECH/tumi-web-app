@@ -49,7 +49,6 @@ class MainContainer extends Component {
 			title = 'Approve/Reject Punches'
 		}
 
-
 		return title;
 	};
 

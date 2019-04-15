@@ -177,7 +177,6 @@ class Container extends Component {
 				<Route exact path="/home/timecard" component={TimeCard} />
 				<Route exact path="/home/timecardtable" component={TimeCardTable} />
 				<Route exact path="/home/approve-punches" component={ApprovePunches} />
-
 				<Route exact path="/home/dashboard/sponsor" component={DashBoardSponsor} />
 			</div>
 		);
