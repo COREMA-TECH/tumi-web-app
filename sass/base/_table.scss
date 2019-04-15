@@ -7,16 +7,16 @@ table {
     border-radius: $border-radius-standar;
     overflow: hidden;
     &-head {
-        background-color: $brand-primary !important;
-        color: $white !important;
+        background-color: $white !important;
+        color: $black !important;
         font-size: $font-size-base !important;
-        font-weight: 300 !important;
+        font-weight: 500 !important;
         padding: 4px 5px 4px 5px !important;
         &:first-child {
-            border-radius: $border-radius-standar 0 0 0;
+            border-radius: 3px 0 0 0;
         }
         &:last-child {
-            border-radius: 0 $border-radius-standar 0 0;
+            border-radius: 0 3px 0 0;
         }
     }
 }
@@ -30,7 +30,7 @@ table {
 tbody[class^="MuiTableBody-"] {
     .btn {
         align-items: center;
-        border-radius: 25px;
+        border-radius: 3px;
         display: flex;
         height: 25px;
         justify-content: center;
@@ -45,7 +45,7 @@ tbody[class^="MuiTableBody-"] {
         }
     }
     tr {
-        height: 35px !important;
+        height: 40px !important;
     }
     td, th {
         padding: 0px 5px 0px 5px !important;

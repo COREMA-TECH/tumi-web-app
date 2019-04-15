@@ -243,8 +243,8 @@ class ApplicationList extends Component {
 
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className="row">
-				<div className="col-md-3">
+			<div className="row pb-0">
+				<div className="col-md-2">
 					<div className="input-group mb-3">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="basic-addon1">
@@ -264,7 +264,7 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				<div className="col-md-3">
+				<div className="col-md-1 offset-md-7">
 					<Select
 						name="property"
 						options={this.state.properties}
@@ -274,7 +274,7 @@ class ApplicationList extends Component {
 						closeMenuOnSelect
 					/>
 				</div>
-				<div className="col-md-3">
+				<div className="col-md-1">
 					<Select
 						name="department"
 						options={this.state.departments}
@@ -284,16 +284,16 @@ class ApplicationList extends Component {
 						closeMenuOnSelect
 					/>
 				</div>
-				{localStorage.getItem('isEmployee') == 'false' && <div className="col-md-3">
-					<button
-						className="btn btn-success float-right"
-						onClick={() => {
-							this.redirectToCreateApplication();
-						}}
-					>
-						Add Application
-						</button>
-				</div>}
+				<div className="col-md-1">
+					<Select
+						name="department"
+						options={this.state.departments}
+						value={this.state.department}
+						onChange={this.handleDepartmentChange}
+						components={makeAnimated()}
+						closeMenuOnSelect
+					/>
+				</div>
 			</div>
 		);
 
@@ -348,9 +348,20 @@ class ApplicationList extends Component {
 								});
 
 								return (
-									<div className="row">
+									<div className="row pt-0">
+										{localStorage.getItem('isEmployee') == 'false' &&
+											<div className="col-md-12">
+												<button
+													className="btn btn-success float-right"
+													onClick={() => {
+														this.redirectToCreateApplication();
+													}}
+												>
+													Add Application
+														</button>
+											</div>}
 										<div className="col-md-12">
-											<div className="contract_table_wrapper">
+											<div className="card">
 												<ApplicationTable
 													data={dataApplication}
 													onDeleteHandler={this.onDeleteHandler}

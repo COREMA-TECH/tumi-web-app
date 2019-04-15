@@ -32,7 +32,7 @@ import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
-
+import PunchesReportDetail from '../../../PunchesReportDetail';
 
 const styles = (theme) => ({
     container: {
@@ -423,7 +423,8 @@ class General extends Component {
                                 isLead: this.state.data.isLead,
                                 loading: false,
                                 directDeposit: this.state.data.directDeposit,
-                                username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000)
+                                username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
+                                EmployeeId: this.state.data.employee.id
                             })
                         });
                     })
@@ -1352,7 +1353,7 @@ class General extends Component {
                 onClose={this.handleCloseModal}
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
-                classes={{ paper: classes.paper }}s
+                classes={{ paper: classes.paper }} s
             >
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
@@ -1537,36 +1538,7 @@ class General extends Component {
                         <br />
                         <div className="applicant-card general-table-container">
                             <div className="table-responsive">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">First</th>
-                                            <th scope="col">Last</th>
-                                            <th scope="col">Handle</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <PunchesReportDetail EmployeeId={this.state.EmployeeId} />
                             </div>
                             <br />
                             <br />
