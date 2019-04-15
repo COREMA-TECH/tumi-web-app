@@ -205,6 +205,11 @@ class PunchesReportTable extends React.Component {
                                 </TableHead>
                                 <TableBody>
                                     {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                        let file = row.imageMarked;
+                                        let fileSrc = "/images/placeholder.png";
+                                        if (row.imageMarked) {
+                                            fileSrc = row.imageMarked;
+                                        }
                                         return (
 
                                             <TableRow
@@ -229,10 +234,10 @@ class PunchesReportTable extends React.Component {
                                                 <CustomTableCell>{row.positionCode}</CustomTableCell>
                                                 <CustomTableCell style={{ position: 'relative' }}>
                                                     <div className="avatar-container">
-                                                        <img className="avatar" src={row.imageMarked} />
+                                                        <img className="avatar" src={fileSrc} />
                                                         <div className="avatar-container-pic">
-                                                            <img className="avatar avatar-lg" src={row.imageMarked} onClick={() => {
-                                                                this.props.openModalPicture(row.imageMarked)
+                                                            <img className="avatar avatar-lg" src={fileSrc} onClick={() => {
+                                                                this.props.openModalPicture(fileSrc)
                                                             }} />
                                                             <div className="avatar-description">
                                                                 <h6 className="text-success ml-1 mt-3">{row.name}</h6>
