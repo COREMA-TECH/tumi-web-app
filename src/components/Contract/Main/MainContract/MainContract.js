@@ -15,6 +15,13 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+
+import HotelDialog from './HotelDialog';
+
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1
@@ -35,7 +42,11 @@ class MainContract extends Component {
 			data: [],
 			loadingRemoving: false,
 			filterText: '',
-			opendialog: false
+			showConfirm:true,
+			showConfirmCompany:false,
+			showConfirmCompanyOrProperty:false,
+			opendialog: false,
+			open:false
 		};
 	}
 
@@ -48,6 +59,32 @@ class MainContract extends Component {
 			state: { contract: 0 }
 		});
 	};
+
+	redirectToCreateCompany = () => {
+		this.props.history.push({
+			pathname: '/home/company/add',
+			state: { idCompany: 0, idContract: 0 }
+		});
+	};
+
+	redirectToCreateProperty = () => {
+		this.props.history.push({
+			pathname: '/home/company/add',
+			state: { idCompany: 0, idContract: 0 }
+		});
+	};
+
+
+	handleClickOpen = (event) => {
+		event.preventDefault();
+		this.setState({
+			showConfirmCompany: false, 
+			showConfirm: false, 
+			showConfirmCompanyOrProperty:false,
+			open: true
+		});
+	};
+
 
 	getContractsQuery = gql`
 		{
@@ -121,6 +158,85 @@ class MainContract extends Component {
 	handleConfirmAlertDialog = () => {
 		this.deleteContract();
 	};
+
+	handleClose = () => {
+		this.setState({showConfirm: true, open: false });
+	};
+
+	handleOpenConfirmDialog = () => {
+		this.setState({ showConfirmCompany: false, showConfirm: true, showConfirmCompanyOrProperty:false});
+	}
+	
+	handleOpenConfirmDialogCompany = () => {
+		this.setState({ showConfirmCompany: true, showConfirm: false, showConfirmCompanyOrProperty:false });
+	}
+
+	handleOpenConfirmDialogCompanyOrProperty = () => {
+		this.setState({ showConfirmCompany: false, showConfirm: false, showConfirmCompanyOrProperty:true });
+	}
+
+	handleCloseConfirmDialog = () => {
+	this.setState({ showConfirm: false });
+    }
+
+
+	printDialogConfirm = () => {
+	//	console.log("estoy en el dialog ", this.state.showConfirm)
+       
+            return <Dialog maxWidth="xl" open={this.state.showConfirm} >
+                <DialogContent>
+                    <h2 className="text-center">What would you like to do?</h2>
+                </DialogContent>
+                <DialogActions>
+                    <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompany() }>
+                        Create New Contract 
+                    </button>
+                    <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCloseConfirmDialog()}>
+                        View and Renew Contracts 
+                    </button>
+                    
+                </DialogActions>
+            </Dialog>
+	}
+
+	printDialogConfirmCompany = () => {
+		//	console.log("estoy en el dialog ", this.state.showConfirm)
+		   
+				return <Dialog maxWidth="xl" open={this.state.showConfirmCompany} >
+					<DialogContent>
+						<h2 className="text-center">Is this contract for a new or existing company?</h2>
+					</DialogContent>
+					<DialogActions>
+						<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompanyOrProperty() }>
+							New Company
+						</button>
+						<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.redirectToCreateContract()}>
+							Existing Company
+						</button>
+						
+					</DialogActions>
+				</Dialog>
+		}
+
+		printDialogConfirmCompanyOrProperty = () => {
+			//	console.log("estoy en el dialog ", this.state.showConfirm)
+			   
+					return <Dialog maxWidth="xl" open={this.state.showConfirmCompanyOrProperty} >
+						<DialogContent>
+							<h2 className="text-center">Is this contract for Property or a Management Company?</h2>
+						</DialogContent>
+						<DialogActions>
+						<button className="btn btn-success  btn-not-rounded mb-2" type="button" onClick={(e) => this.handleClickOpen(e)}>
+								Property
+							</button>
+							<button className="btn btn-info  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateCompany() }>
+								Management Company
+							</button>
+							
+							
+						</DialogActions>
+					</Dialog>
+			}
 
 	render() {
 		const { classes } = this.props;
@@ -222,12 +338,20 @@ class MainContract extends Component {
 												<div className="">
 													<TablesContracts
 														data={dataContract}
+														printDialogConfirm={this.printDialogConfirm}
+														printDialogConfirmCompany={this.printDialogConfirmCompany}
+														printDialogConfirmCompanyOrProperty={this.printDialogConfirmCompanyOrProperty}
 														acciones={0}
 														delete={(id) => {
 															this.deleteContractById(id);
 														}}
 													/>
+												<HotelDialog
+					open={this.state.open}
+					handleClose={this.handleClose}
+					handleOpenSnackbar={this.props.handleOpenSnackbar} />
 												</div>
+
 											</div>
 										</div>
 									</div>
