@@ -202,13 +202,13 @@ class PunchesReportConsolidated extends Component {
             <PreFilter changeFilter={this.changeFilter} />
             <div className="row">
                 <div className="col-md-12">
-                    <div className="card">
+                    <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} />
                         <DropDown data={this.state.data}></DropDown>
                     </div>
                 </div>
             </div>
-        </React.Fragment>
+        </React.Fragment >
 
     }
 }

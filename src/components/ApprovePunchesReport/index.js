@@ -165,7 +165,6 @@ class PunchesReport extends Component {
             endDate,
             departments: prevState.property.value != property.value ? [] : prevState.departments
         }), () => {
-            console.log(this.state);
             this.getDepartments();
             this.getReport();
         });
