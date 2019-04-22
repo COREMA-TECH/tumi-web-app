@@ -156,8 +156,8 @@ export const GET_EMAILS_USER = gql`
     }
 `;
 
-export const GET_CONTACTS_BY_APP_HOTEL_QUERY=gql`
-    query contacts($ApplicationId: Int, $Id_Entity: Int){
+export const GET_CONTACTS_BY_APP_HOTEL_QUERY = gql`
+    query contacts($ApplicationId: Int, $Id_Entity: [Int]){
     contacts(ApplicationId:$ApplicationId,Id_Entity:$Id_Entity){
         Id
         Id_Entity
@@ -165,7 +165,7 @@ export const GET_CONTACTS_BY_APP_HOTEL_QUERY=gql`
     }
 `;
 
-export const GET_HOTELS_BY_APPLICATION_QUERY=gql`
+export const GET_HOTELS_BY_APPLICATION_QUERY = gql`
     query companiesByApplications($id: Int){
             companiesByApplications(id:$id){
             Id

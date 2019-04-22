@@ -134,9 +134,8 @@ class General extends Component {
             User_Updated: 1,
             Date_Created: "'2018-08-14 16:10:25+00'",
             Date_Updated: "'2018-08-14 16:10:25+00'",
-            hotelId: null,
             isLead: false,
-            property: null,
+            property: [],
             contactTypes: ContactTypesData,
 
             // Functional states
@@ -350,7 +349,7 @@ class General extends Component {
             openModal: false
         }, () => {
             this.setState({
-                hotelId: null,
+                property: [],
                 type: null,
                 departmentName: '',
                 titleName: ''
@@ -595,31 +594,13 @@ class General extends Component {
             });
     };
 
-    /**
-     * To fetch a list of titles
-     */
-    // fetchTitles = () => {
-    //     this.props.client
-    //         .query({
-    //             query: GET_TYPES_QUERY,
-    //             fetchPolicy: 'no-cache'
-    //         })
-    //         .then((data) => {
-    //             if (data.data.getcatalogitem != null) {
-    //                 this.setState({
-    //                     titles: data.data.getcatalogitem,
-    //                 }, () => {
-    //                     this.getHotels()
-    //                 });
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             // TODO: show a SnackBar with error message
-    //             this.setState({
-    //                 loading: false
-    //             })
-    //         });
-    // };
+    getHotelIds = () => {
+        let ids = [];
+        this.state.property.map(prop => {
+            ids.push(prop.value)
+        });
+        return ids;
+    }
 
     /**
      * Count Contacts by Property and Application
@@ -632,12 +613,12 @@ class General extends Component {
                 fetchPolicy: 'no-cache',
                 variables: {
                     ApplicationId: this.props.applicationId,
-                    Id_Entity: this.state.hotelId
+                    Id_Entity: this.getHotelIds()
                 }
             })
             .then(({ data: { contacts } }) => {
                 if (contacts.length > 0) {
-                    this.props.handleOpenSnackbar('warning', 'Contact already exists in this Hotel!');
+                    this.props.handleOpenSnackbar('warning', 'Contact already exists in some Hotel!');
                     this.setState(() => ({ saving: false }));
                 }
                 else execMutation();
@@ -676,7 +657,7 @@ class General extends Component {
    * @param idTitle int value
    */
     insertContacts = () => {
-        if (!this.state.hotelId) {
+        if (!this.state.property.length) {
             this.props.handleOpenSnackbar('warning', 'You have to select the Property!');
             return true;
         }
@@ -684,25 +665,31 @@ class General extends Component {
             this.getContacts(() => {
                 this.setState(() => ({ saving: true }));
                 let date = new Date().toISOString();
+                let ids = this.getHotelIds();
+                let contacts = [];
+
+                ids.map(id => {
+                    contacts.push({
+                        Id_Entity: id,
+                        ApplicationId: this.props.applicationId,
+                        First_Name: this.state.firstname,
+                        Middle_Name: this.state.middlename,
+                        Last_Name: this.state.lastname,
+                        Electronic_Address: this.state.email,
+                        Phone_Number: this.state.number,
+                        Contact_Type: 1,
+                        IsActive: 1,
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: date,
+                        Date_Updated: date
+                    })
+                })
                 this.props.client
                     .mutate({
                         mutation: INSERT_CONTACT,
                         variables: {
-                            contacts: {
-                                Id_Entity: this.state.hotelId,
-                                ApplicationId: this.props.applicationId,
-                                First_Name: this.state.firstname,
-                                Middle_Name: this.state.middlename,
-                                Last_Name: this.state.lastname,
-                                Electronic_Address: this.state.email,
-                                Phone_Number: this.state.number,
-                                Contact_Type: 1,
-                                IsActive: 1,
-                                User_Created: 1,
-                                User_Updated: 1,
-                                Date_Created: date,
-                                Date_Updated: date
-                            }
+                            contacts
                         }
                     })
                     .then((data) => {
@@ -710,8 +697,7 @@ class General extends Component {
                         this.setState(() => ({
                             openModal: false,
                             saving: false,
-                            hotelId: null,
-                            property: null,
+                            property: [],
                             type: null,
                             departmentName: '',
                             titleName: ''
@@ -1170,7 +1156,7 @@ class General extends Component {
     };
 
     handleChangeProperty = (property) => {
-        this.setState(() => ({ property, hotelId: property ? property.value : null }));
+        this.setState(() => ({ property }));
     }
     render() {
         const { classes } = this.props;
@@ -1372,7 +1358,7 @@ class General extends Component {
                                         onChange={this.handleChangeProperty}
                                         closeMenuOnSelect={true}
                                         components={makeAnimated()}
-                                        isMulti={false}
+                                        isMulti={true}
                                     />
                                 </div>
                             </div>
