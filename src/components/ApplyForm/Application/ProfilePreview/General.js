@@ -27,12 +27,16 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
 import PunchesReportDetail from '../../../PunchesReportDetail';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
+
+const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
+
 
 const styles = (theme) => ({
     container: {
@@ -181,7 +185,8 @@ class General extends Component {
             properties: [],
 
             DeparmentTitle: '',
-            myHotels: []
+            myHotels: [],
+            locationAbletoWorkId: 0
         }
     }
 
@@ -338,6 +343,29 @@ class General extends Component {
             .catch(error => {
 
                 this.props.handleOpenSnackbar('error', 'Error to save Employees!');
+
+            })
+    };
+
+    updateContactByHotelApplication = () => {
+        this.setState(() => ({ removingLocationAbleToWork: true }))
+        this.props.client
+            .mutate({
+                mutation: DISABLE_CONTACT_BY_HOTEL_APPLICATION,
+                variables: {
+                    Id_Entity: this.state.locationAbletoWorkId,
+                    ApplicationId: this.props.applicationId
+                }
+            })
+            .then(({ data }) => {
+                this.props.handleOpenSnackbar('success', 'Record deleted!');
+                this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false}), this.getMyHotels)
+
+            })
+            .catch(error => {
+
+                this.props.handleOpenSnackbar('error', 'Error deleting relation!');
+                this.setState(() => ({ removingLocationAbleToWork: false }))
 
             })
     };
@@ -1399,6 +1427,18 @@ class General extends Component {
 
         return (
             <div className="Apply-container--application">
+                <ConfirmDialog
+                    open={this.state.openConfirm}
+                    closeAction={() => {
+                        this.setState({ openConfirm: false, locationAbletoWorkId: 0 });
+                    }}
+                    confirmAction={() => {
+                        this.updateContactByHotelApplication();
+                    }}
+                    title={dialogMessages[0].label}
+                    loading={this.props.removingLocationAbleToWork}
+                />
+
                 <div className="">
                     <div className="">
                         <div className="applicant-card">
@@ -1535,10 +1575,12 @@ class General extends Component {
                                 <div className="col-sm-12">
                                     <div className="row">
                                         <div className="col-sm-12 col-md-6 col-lg-3">
-                                            <div className="btn btn-success btn-margin col text-truncate">
+                                            <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
                                                 Server
                                             </div>
-                                            <div className="btn btn-success btn-margin col text-truncate">
+                                        </div>
+                                        <div className="col-sm-12 col-md-6 col-lg-3">
+                                            <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
                                                 Server
                                             </div>
                                         </div>
@@ -1549,15 +1591,23 @@ class General extends Component {
                                 <div className="col-sm-12">
                                     <h5>Location able to work</h5>
                                 </div>
+                                <div className="col-sm-12">
+                                    <div className="row">
+                                        {this.state.myHotels.map(hotel => {
+                                            return <div className="col-sm-12 col-md-6 col-lg-3">
 
-                                {this.state.myHotels.map(hotel => {
-                                    return <div className="col-sm-12 col-md-6 col-lg-3">
-                                        <div className="btn btn-success btn-margin col text-truncate">
-                                            {hotel.Name}
-                                        </div>
+                                                <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                    {hotel.Name}
+                                                    <button type="button" className="btn btn-link float-right p-0" onClick={() => {
+                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: hotel.Id }))
+                                                    }} >
+                                                        <i className="fas fa-trash text-white"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        })}
                                     </div>
-                                })}
-
+                                </div>
                             </div>
                         </div>
                     </div>
