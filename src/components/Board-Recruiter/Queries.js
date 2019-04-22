@@ -34,7 +34,7 @@ idealJobs
 	description
 	idPosition 
 }
-applicationPhases   {
+Phases   {
 	id
 	StageId
 	ApplicationId
@@ -58,6 +58,12 @@ employments
 {
 id
 }
+Coordenadas
+    {
+      zipCode
+      Lat
+      Long
+    }
 }
 }
 `;

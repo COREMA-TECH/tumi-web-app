@@ -43,8 +43,7 @@ class CustomCard extends Component {
 
     render() {
         let props = this.props;
-        let opening;
-        opening = props.openingRecruiter.find(__or => {
+        let opening = props.openingRecruiter.find(__or => {
             return __or.recruiterId == localStorage.getItem('LoginId')
         })
         return (
@@ -750,6 +749,7 @@ class BoardRecruiter extends Component {
     };
 
     getMatches = async (language, experience, location, laneId, PositionId) => {
+        console.log("getMatches ",language, experience, location, laneId, PositionId)
         let getleads = [];
         let getApplied = [];
         let getCandidate = [];
@@ -767,43 +767,34 @@ class BoardRecruiter extends Component {
                 },
                 () => {
                     this.props.client.query({
-                        query: GET_LEAD,
-                        variables: {
-                            language: language,
-                            experience: experience,
-                            Position: PositionId,
-                            WorkOrderId: this.state.Intopening,
-                            ShiftId: this.state.ShiftId
-                        }
+                        query: GET_LEAD, variables: { language: language, experience: experience, Position: PositionId, WorkOrderId: this.state.Intopening, ShiftId: this.state.ShiftId }
                     }).then(({ data }) => {
-                        data.applicationsByMatches.forEach((wo) => {
+                        let dataAPI = data.applicationsByMatches;
 
-                            console.log("applicationsByMatches ", wo)
+                        dataAPI.map(wo => {
+                        //data.applicationsByMatches.forEach((wo) => {
+                            console.log("dataAPI ",wo)
+                            const Phases = wo.Phases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
+                            
+                            console.log("Phases ",Phases)
 
-                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
-                                return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId
-                            });
-
-                            if (wo.zipCode != null) {
-                                this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+                            if (wo.Coordenadas) {
+                             //   this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+                                console.log("entro aqui ")
                                     const { getDistance } = this.context;
-                                    const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+                                   // const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+                                    const distance = getDistance(this.state.latitud1, this.state.longitud1, wo.Coordenadas.Lat, wo.Coordenadas.Long, 'M')
+                                    console.log("wo.Coordenadas ",distance)
 
+                                    
                                     if (distance >= location) {
-                                        distances = 0;
-                                    } else {
-                                        distances = 1;
-                                    }
-
-                                    if (distances >= 1) {
 
                                         if (typeof Phases == undefined || Phases == null) {
                                             varphase = 30460;
-                                        } else {
-                                            varphase = Phases.StageId
-                                        }
+                                        } else { varphase = Phases.StageId }
 
 
+                                        console.log("Informacion de phases ",wo.id,wo.firstName + ' ' + wo.lastName,varphase)
                                         switch (varphase) {
                                             case 30460:
                                                 if (wo.isLead === true) {
@@ -908,7 +899,7 @@ class BoardRecruiter extends Component {
                                             loading: false
                                         });
 
-                                });
+                               // });
                             }
                         });
 
@@ -931,6 +922,7 @@ class BoardRecruiter extends Component {
                 });
         }
     };
+
 
     getDataFilters = () => {
         var variables;
@@ -1271,7 +1263,8 @@ class BoardRecruiter extends Component {
                         <CustomCard
                             recruiter={this.state.userId}
                             opening={this.state.Intopening}
-                            assignRecruiterToOpening={this.assignRecruiterToOpening} />
+                            assignRecruiterToOpening={this.assignRecruiterToOpening} 
+                            />
                     </Board>
                 </div>
                 <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />

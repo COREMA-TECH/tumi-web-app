@@ -11,7 +11,8 @@ import {
     GET_COORDENADAS,
     GET_HOTEL_QUERY,
     GET_MATCH,
-    GET_STATES_QUERY
+    GET_STATES_QUERY,
+    GET_RESPONSE_QUERY
 } from "./Queries";
 //import Board from 'react-trello'
 import { Board } from 'react-trello'
@@ -133,20 +134,41 @@ class BoardManager extends Component {
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
 
+        let data;
+
         this.setState({
             LaneOrigen: sourceLaneId,
             LaneDestino: targetLaneId
         });
 
-        if (sourceLaneId == "lane1") {
-            this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
-            this.KeepArray();
-            this.onCardClick(this.state.ShiftId, null, 'lane1');
+        if (sourceLaneId == "lane1" || sourceLaneId == "Notify" ) {
+            if (sourceLaneId == "lane1")
+            {
+                this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
+                this.KeepArray();
+                this.onCardClick(this.state.ShiftId, null, 'lane1');
 
-            this.setState({
-                LaneOrigen: '',
-                LaneDestino: ''
-            });
+                this.setState({
+                    LaneOrigen: '',
+                    LaneDestino: ''
+                });
+            }
+            else{
+                
+                data = this.state.notify.find((item) => { return item.id == cardId })
+                if (data.response == 0)
+                { 
+                    this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
+                    this.KeepArray();
+                    this.onCardClick(this.state.ShiftId, null, 'lane1');
+    
+                    this.setState({
+                        LaneOrigen: '',
+                        LaneDestino: ''
+                    });
+                }
+               
+            }
         }
         else {
 
@@ -411,11 +433,13 @@ class BoardManager extends Component {
     };
 
     onCardClick = (cardId, metadata, laneId) => {
+
         let needEnglish, needExperience, Position, state;
 
         state = this.state.workOrders.find((item) => { return item.id == cardId })
-
-        if (laneId.trim() == "lane1" && cardId > 0 && state.Status != 0) {
+   
+        console.log("onCardClick ",state )
+        if ((laneId.trim() == "lane1"  ) && cardId > 0 && state.Status != 0) {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
 
@@ -424,39 +448,37 @@ class BoardManager extends Component {
             });
             cardSelected[0].classList.add("CardBoard-selected");
 
-            if (this.state.LaneOrigen != "lane1") {
+            this.setState(
+                {
+                    Intopening: state.WorkOrderId,
+                    ShiftId: cardId
+                })
+
+
+                console.log("dando a las variables ", this.state.Intopening , this.state.ShiftId)
+
+                console.log("dando a las variables viejas ", state.WorkOrderId , cardId)
+
+            if (this.state.LaneOrigen != "lane1" && this.state.LaneOrigen != "Notify") {
                 this.clearArray();
-                this.setState(
-                    {
-                        Intopening: this.state.workOrders.find((item) => {
-                            return item.id == cardId
-                        }).WorkOrderId,
-                        ShiftId: cardId
-                    })
+               
 
 
-                needEnglish = this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).needEnglish;
-                needExperience = this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).needExperience;
-                Position = this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).Position;
+                needEnglish = state.needEnglish;
+                needExperience =state.needExperience;
+                Position = state.Position;
 
 
-                this.getLatLongHotel(1, this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).Zipcode);
+                this.getLatLongHotel(1,state.Zipcode.substring(0, 5));//, () => {
 
+                    console.log("Vamos al matche ", state.Zipcode.substring(0, 5))
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => {
-                        return item.id == cardId
-                    }).Position);
+                  this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, state.Position,state.WorkOrderId , cardId);
                 } else {
-                    this.getMatches(needEnglish, needExperience, 30, laneId, Position);
+
+                   this.getMatches(needEnglish, needExperience, 30, laneId, Position,state.WorkOrderId , cardId);
                 }
+            //});
             }
         }
     }
@@ -563,12 +585,12 @@ class BoardManager extends Component {
     }
 
 
-    getMatches = async (language, experience, location, laneId, PositionId) => {
+    getMatches = async (language, experience, location, laneId, PositionId, _WOID,_SHID) => {
         let getmatches = [];
         let getnotify = [];
         let getaccepted = [];
         let getinterview = [];
-        let distances;
+        let distances = 0;
         let varphase;
 
         if (laneId == "lane1") {
@@ -583,159 +605,169 @@ class BoardManager extends Component {
                             language: language,
                             experience: experience,
                             Position: PositionId,
-                            WorkOrderId: this.state.Intopening,
-                            ShiftId: this.state.ShiftId
+                            WorkOrderId: _WOID,
+                            ShiftId: _SHID
                         },
                         fetchPolicy: 'no-cache'
                     }).then(({ data }) => {
-                        data.applicationsByMatches.forEach((wo) => {
+                        let dataAPI = data.applicationsByMatches;
 
-                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
-                                return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId
+                        dataAPI.map(item => {
+                            const Phases = item.Phases.sort().slice(-1).find((items) => {
+                                return items.WorkOrderId == _WOID && items.ApplicationId == item.id && items.ShiftId == _SHID
                             });
 
-                            if (wo.zipCode != null) {
-                                this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-                                    const { getDistance } = this.context;
-                                    const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+                            console.log("Informacion del lead ", item)
+                            if (item.Coordenadas) {
+                                const { getDistance } = this.context;
+                                const distance = getDistance(this.state.latitud1, this.state.longitud1, item.Coordenadas.Lat, item.Coordenadas.Long, 'M')
+                                
+                                console.log("Distancia entre el lead y el hotel ", item.id, item.firstName + ' ' + item.lastName,varphase, distance)
 
-                                    if (distance >= location) {
-                                        distances = 0;
+                                if (distance  <= location) {
+
+                                    if (typeof Phases == undefined || Phases == null) {
+                                        varphase = 30469;
                                     } else {
-                                        distances = 1;
+                                        varphase = Phases.StageId
                                     }
+    
+                                    console.log("Informacion del match ", item.id, item.firstName + ' ' + item.lastName,varphase)
 
-                                    if (distances >= 1) {
-
-                                        if (typeof Phases == undefined || Phases == null) {
-                                            varphase = 30469;
-                                        } else {
-                                            varphase = Phases.StageId
-                                        }
-
-                                        switch (varphase) {
-                                            case 30469:
-                                                if (wo.isLead === false) {
-                                                    getmatches.push({
-                                                        id: wo.id,
-                                                        name: wo.firstName + ' ' + wo.lastName,
-                                                        subTitle: wo.cellPhone,
-                                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                        escalationTextLeftLead: wo.generalComment,
-                                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                                    });
-                                                }
-                                                break;
-                                            case 30461:
-                                                getinterview.push({
-                                                    id: wo.id,
-                                                    name: wo.firstName + ' ' + wo.lastName,
-                                                    subTitle: wo.cellPhone,
-                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                    escalationTextLeftLead: wo.generalComment,
-                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 },
-                                                    statusCompleted: wo.statusCompleted
-                                                });
-                                                break;
-                                            case 30464:
-
-                                                getnotify.push({
-                                                    id: wo.id,
-                                                    name: wo.firstName + ' ' + wo.lastName,
-                                                    subTitle: wo.cellPhone,
-                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                    escalationTextLeftLead: wo.generalComment,
-                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                    switch (varphase) {
+                                        case 30469:
+                                            if (item.isLead === false) {
+                                                getmatches.push({
+                                                    id: item.id,
+                                                    name: item.firstName + ' ' + item.lastName,
+                                                    subTitle: item.cellPhone,
+                                                    body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                                    escalationTextLeftLead: item.generalComment,
+                                                    escalationTextRightLead: item.car == true ? " Yes" : " No",
                                                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                                                 });
-                                                break;
-                                            case 30463, 30465:
-                                                getaccepted.push({
-                                                    id: wo.id,
-                                                    name: wo.firstName + ' ' + wo.lastName,
-                                                    subTitle: wo.cellPhone,
-                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                    escalationTextLeftLead: wo.generalComment,
-                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                                });
-                                                break;
-                                        }
-                                    }
-
-                                    this.setState({
-                                        matches: getmatches,
-                                        notify: getnotify,
-                                        interview: getinterview,
-                                        accepted: getaccepted
-                                    });
-
-                                    this.setState(
-                                        {
-                                            lane: [
-                                                {
-                                                    id: 'lane1',
-                                                    title: 'Work Orders',
-                                                    label: ' ',
-                                                    cards: this.state.workOrders,
-                                                    laneStyle: { borderRadius: 50, marginBottom: 15 },
-                                                    droppable: false,
-                                                    draggable: false
-                                                },
-                                                {
-                                                    id: 'Matches',
-                                                    title: 'Matches',
-                                                    label: ' ',
-                                                    cards: this.state.matches,
-                                                    droppable: true,
-                                                    draggable: true
-                                                },
-                                                {
-                                                    id: 'Interview',
-                                                    title: 'Interview',
-                                                    label: ' ',
-                                                    cards: this.state.interview,
-                                                    droppable: false,
-                                                    draggable: true
-                                                },
-                                                {
-                                                    id: 'Notify',
-                                                    title: 'Notify',
-                                                    label: ' ',
-                                                    cards: this.state.notify,
-                                                    droppable: true,
-                                                    draggable: true
-                                                },
-                                                {
-                                                    id: 'Accepted',
-                                                    title: 'Accepted',
-                                                    label: ' ',
-                                                    cards: this.state.accepted,
-                                                    droppable: true,
-                                                    draggable: true
-                                                }
-                                            ],
-                                            loading: false
-
+                                            }
+                                            break;
+                                        case 30461:
+                                            getinterview.push({
+                                                id: item.id,
+                                                name: item.firstName + ' ' + item.lastName,
+                                                subTitle: item.cellPhone,
+                                                body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: item.generalComment,
+                                                escalationTextRightLead: item.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 },
+                                                statusCompleted: item.statusCompleted
+                                            });
+                                            break;
+                                        case 30464:
+    
+    
+                                        getnotify.push({
+                                            id: item.id,
+                                            name: item.firstName + ' ' + item.lastName,
+                                            subTitle: item.cellPhone,
+                                            body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                            escalationTextLeftLead: item.generalComment,
+                                            escalationTextRightLead: item.car == true ? " Yes" : " No",
+                                            cardStyle: { borderRadius: 6, marginBottom: 15 },
+                                            response:0
                                         });
-                                });
+    
+                                       /* this.props.client.query({
+                                            query: GET_RESPONSE_QUERY,
+                                            variables: {
+                                                number: wo.cellPhone, 
+                                                ShiftId: this.state.ShiftId
+                                            },
+                                            fetchPolicy: 'no-cache'
+                                        }).then(({ data }) => {
+                                            data.smsLog.forEach((responseSMS) => {
+                                                console.log("responseSMS ", responseSMS)
+                                            })
+                                        })*/
+    
+                                            break;
+                                        case 30463, 30465:
+                                            getaccepted.push({
+                                                id: item.id,
+                                                name: item.firstName + ' ' + item.lastName,
+                                                subTitle: item.cellPhone,
+                                                body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: item.generalComment,
+                                                escalationTextRightLead: item.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break;
+                                    }
+    
+                                }
+                             
                             }
+                           
                         });
+                       
 
-                        if (data.applicationsByMatches.length === 0) {
-                            this.props.handleOpenSnackbar(
-                                'warning',
-                                'No matches were found',
-                                'bottom',
-                                'right'
-                            );
-                        }
                         this.setState({
-                            loading: false
-                        })
+                            matches: getmatches,
+                            notify: getnotify,
+                            interview: getinterview,
+                            accepted: getaccepted
+});
+
+                       this.setState(
+                                {
+                                    lane: [
+                                        {
+                                            id: 'lane1',
+                                            title: 'Work Orders',
+                                            label: ' ',
+                                            cards: this.state.workOrders,
+                                            laneStyle: { borderRadius: 50, marginBottom: 15 },
+                                            droppable: false,
+                                            draggable: false
+                                        },
+                                        {
+                                            id: 'Matches',
+                                            title: 'Matches',
+                                            label: ' ',
+                                            cards: getmatches,
+                                            droppable: true,
+                                            draggable: true
+                                        },
+                                        {
+                                            id: 'Interview',
+                                            title: 'Interview',
+                                            label: ' ',
+                                            cards:  getinterview,
+                                            droppable: false,
+                                            draggable: true
+                                        },
+                                        {
+                                            id: 'Notify',
+                                            title: 'Notify',
+                                            label: ' ',
+                                            cards: getnotify,
+                                            droppable: true,
+                                            draggable: true
+                                        },
+                                        {
+                                            id: 'Accepted',
+                                            title: 'Accepted',
+                                            label: ' ',
+                                            cards: getaccepted,
+                                            droppable: true,
+                                            draggable: true
+                                        }
+                                    ],
+                                    loading: false
+
+                                });
+
+
+
                     }).catch(error => {
+                        console.log("entre al catch ", error)
                         this.setState({
                             loading: false,
                         })
@@ -781,6 +813,7 @@ class BoardManager extends Component {
 
     getLatLongHotel = async (op, zipcode) => {
         await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
+            console.log("Informa del hotel ", data)
             this.setState({
                 latitud1: data.zipcode[0].Lat,
                 longitud1: data.zipcode[0].Long
@@ -962,24 +995,7 @@ class BoardManager extends Component {
         this.setState({ openModal: false });
     };
 
-    abrirVentana() {
-        document.getElementById("capaFondo1").style.visibility = "visible";
-        /*   document.getElementById("capaFondo2").style.visibility = "visible";
-         document.getElementById("capaFondo3").style.visibility = "hidden";
- 
-         document.getElementById("capaVentana").style.visibility = "visible";*/
-        // alert("abrirVentana")
-
-    }
-
-    cerrarVentana() {
-        document.getElementById("capaFondo1").style.visibility = "hidden";
-        /* document.getElementById("capaFondo2").style.visibility="hidden";
-         document.getElementById("capaFondo3").style.visibility="hidden";
-         document.getElementById("capaVentana").style.visibility="hidden";
-         document.formulario.bAceptar.blur();*/
-        // alert("cerrarVentana")
-    }
+   
 
     goToEmployeePackage = (id) => {
         // window.location.href = '/employment-application';
@@ -1168,6 +1184,7 @@ class BoardManager extends Component {
                                 history={this.props.history}
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
                                 getWorkOrders={this.getWorkOrders}
+                                getnotify={this.getnotify}
                             />
                         </Board>
                     </div>
