@@ -3,90 +3,83 @@
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,900";
 @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
-//External
-
-
-//Utilities
 
 // Variables
 @import "variables";
 
 // Bootstrap
-@import "base/simple-grid";
+@import "vendor/simple-grid";
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 //Reset
 @import "base/reset";
 
 //Helpers
-@import "helpers/placeholders";
-
+@import "utils/placeholders";
+ 
 //Base
-@import "base/bootstrap_modify.scss";
+@import "utils/bootstrap_modify.scss";
 @import "base/buttons";
 @import "base/check-radio";
 @import "base/forms";
-@import "base/helpers";
-@import "base/mixins";
+@import "utils/helpers";
+@import "utils/mixins";
 @import "base/modal";
 @import "base/error";
 @import "base/image-upload";
-@import "base/react-datetime";
+
+// react-datetime external
+@import "vendor/react-datetime";
 @import "base/switch";
 @import "base/table";
 
-
 //Components
-@import "components/tabs";
-@import "components/records-cards";
-@import "components/modal";
-@import "components/datepicker";
-@import "components/contracts";
-@import "components/statbox";
-@import "components/dropdown";
-@import "components/avatar-ballom";
+@import "components/tabs/tabs";
+@import "components/records-cards/records-cards";
+@import "components/modals/modal";
+@import "components/datepicker/datepicker";
+@import "components/contracts/contracts";
+@import "components/stats/statbox";
+@import "components/dropdown/dropdown";
+@import "components/avatar/avatar-ballom";
+@import "components/login/login";
+@import "components/company/company";
+@import "components/contract/contract";
+@import "components/employees/employees";
+@import "components/hotels/hotels";
+@import "components/cards/cards";
 
-//Sections 
-// Default
-@import "default/login";
-@import "default/header";
-@import "default/cards";
-@import "default/company";
-@import "default/contract";
-@import "default/employees";
-@import "default/hotels";
-@import "default/main-section";
-@import "default/preferences";
-@import "default/tabs";
-@import "default/footer";
+// Layout
+@import "layout/header";
+@import "layout/main-section";
+@import "base/preferences";
+@import "base/tabs";
+@import "layout/footer";
 
 //Base override classes
-@import "base/brackgrounds";
-
-//Pages
-@import "pages/employees";
+@import "base/backgrounds";
 
 //Apply
-@import "apply/apply";
-@import "apply/header";
-@import "apply/document";
-@import "apply/profile-picture";
-@import "apply/stepper";
+@import "components/apply/apply";
+@import "components/apply/header";
+@import "components/apply/document";
+@import "components/apply/profile-picture";
+@import "components/apply/stepper";
 
 //Holidays 
-@import "holidays/holidays";
-@import "holidays/calendar";
-@import "holidays/days";
-@import "holidays/months";
-@import "holidays/summary";
-@import "holidays/weeks";
+@import "components/holidays/holidays";
+@import "components/holidays/calendar";
+@import "components/holidays/days";
+@import "components/holidays/months";
+@import "components/holidays/summary";
+@import "components/holidays/weeks";
 
 //Boards 
-@import "boards/columns";
-@import "boards/switch";
+@import "components/boards/columns";
+@import "components/boards/switch";
 
 //Region
-@import "region/region";
+@import "layout/region/region";
 
 //Schedules
 @import "schedules/schedules";

@@ -10,3 +10,9 @@
 %react-datepicker {
     @extend .form-control;
 }
+
+%TagStyle {
+    background-color: $gray;
+    border-color: $gray;
+    color: $text-color;
+}

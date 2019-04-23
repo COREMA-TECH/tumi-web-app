@@ -27,7 +27,13 @@
 }
 
 .main-container__title {
+    line-height: 1;
+    padding-left: 0 !important;
     width: 100% !important;
+
+    @include media-breakpoint-up(md){
+        padding-left: 3rem !important;
+    }
 }
 
 .MainMenu {
@@ -214,10 +220,10 @@
     &-list {
         align-items: center;
         display: flex;
-        margin-right: 1.5rem;
+        // margin-right: 1.5rem;
         text-align: right;
         .dropdown-menu {
-            right: 0;
+            right: -5px;
             left: auto !important;
         }
     }
