@@ -106,7 +106,7 @@ class SimpleDialog extends React.Component {
      * QUERY to get customer (Contact)
      */
     getContactsQuery = gql`
-		query contacts($Id_Entity: Int) {
+		query contacts($Id_Entity: [Int]) {
 			getcontacts(Id: null, IsActive: 1, Id_Entity: $Id_Entity) {
 				Id
 				First_Name

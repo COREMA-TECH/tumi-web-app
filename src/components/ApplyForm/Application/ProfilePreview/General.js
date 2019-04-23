@@ -27,12 +27,16 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
 import PunchesReportDetail from '../../../PunchesReportDetail';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
+
+const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
+
 
 const styles = (theme) => ({
     container: {
@@ -134,9 +138,8 @@ class General extends Component {
             User_Updated: 1,
             Date_Created: "'2018-08-14 16:10:25+00'",
             Date_Updated: "'2018-08-14 16:10:25+00'",
-            hotelId: null,
             isLead: false,
-            property: null,
+            property: [],
             contactTypes: ContactTypesData,
 
             // Functional states
@@ -182,7 +185,8 @@ class General extends Component {
             properties: [],
 
             DeparmentTitle: '',
-            myHotels: []
+            myHotels: [],
+            locationAbletoWorkId: 0
         }
     }
 
@@ -342,6 +346,29 @@ class General extends Component {
 
             })
     };
+
+    updateContactByHotelApplication = () => {
+        this.setState(() => ({ removingLocationAbleToWork: true }))
+        this.props.client
+            .mutate({
+                mutation: DISABLE_CONTACT_BY_HOTEL_APPLICATION,
+                variables: {
+                    Id_Entity: this.state.locationAbletoWorkId,
+                    ApplicationId: this.props.applicationId
+                }
+            })
+            .then(({ data }) => {
+                this.props.handleOpenSnackbar('success', 'Record deleted!');
+                this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false}), this.getMyHotels)
+
+            })
+            .catch(error => {
+
+                this.props.handleOpenSnackbar('error', 'Error deleting relation!');
+                this.setState(() => ({ removingLocationAbleToWork: false }))
+
+            })
+    };
     /**
      * To hide modal and then restart modal state values
      */
@@ -350,7 +377,7 @@ class General extends Component {
             openModal: false
         }, () => {
             this.setState({
-                hotelId: null,
+                property: [],
                 type: null,
                 departmentName: '',
                 titleName: ''
@@ -595,31 +622,13 @@ class General extends Component {
             });
     };
 
-    /**
-     * To fetch a list of titles
-     */
-    // fetchTitles = () => {
-    //     this.props.client
-    //         .query({
-    //             query: GET_TYPES_QUERY,
-    //             fetchPolicy: 'no-cache'
-    //         })
-    //         .then((data) => {
-    //             if (data.data.getcatalogitem != null) {
-    //                 this.setState({
-    //                     titles: data.data.getcatalogitem,
-    //                 }, () => {
-    //                     this.getHotels()
-    //                 });
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             // TODO: show a SnackBar with error message
-    //             this.setState({
-    //                 loading: false
-    //             })
-    //         });
-    // };
+    getHotelIds = () => {
+        let ids = [];
+        this.state.property.map(prop => {
+            ids.push(prop.value)
+        });
+        return ids;
+    }
 
     /**
      * Count Contacts by Property and Application
@@ -632,12 +641,12 @@ class General extends Component {
                 fetchPolicy: 'no-cache',
                 variables: {
                     ApplicationId: this.props.applicationId,
-                    Id_Entity: this.state.hotelId
+                    Id_Entity: this.getHotelIds()
                 }
             })
             .then(({ data: { contacts } }) => {
                 if (contacts.length > 0) {
-                    this.props.handleOpenSnackbar('warning', 'Contact already exists in this Hotel!');
+                    this.props.handleOpenSnackbar('warning', 'Contact already exists in some Hotel!');
                     this.setState(() => ({ saving: false }));
                 }
                 else execMutation();
@@ -676,7 +685,7 @@ class General extends Component {
    * @param idTitle int value
    */
     insertContacts = () => {
-        if (!this.state.hotelId) {
+        if (!this.state.property.length) {
             this.props.handleOpenSnackbar('warning', 'You have to select the Property!');
             return true;
         }
@@ -684,25 +693,31 @@ class General extends Component {
             this.getContacts(() => {
                 this.setState(() => ({ saving: true }));
                 let date = new Date().toISOString();
+                let ids = this.getHotelIds();
+                let contacts = [];
+
+                ids.map(id => {
+                    contacts.push({
+                        Id_Entity: id,
+                        ApplicationId: this.props.applicationId,
+                        First_Name: this.state.firstname,
+                        Middle_Name: this.state.middlename,
+                        Last_Name: this.state.lastname,
+                        Electronic_Address: this.state.email,
+                        Phone_Number: this.state.number,
+                        Contact_Type: 1,
+                        IsActive: 1,
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: date,
+                        Date_Updated: date
+                    })
+                })
                 this.props.client
                     .mutate({
                         mutation: INSERT_CONTACT,
                         variables: {
-                            contacts: {
-                                Id_Entity: this.state.hotelId,
-                                ApplicationId: this.props.applicationId,
-                                First_Name: this.state.firstname,
-                                Middle_Name: this.state.middlename,
-                                Last_Name: this.state.lastname,
-                                Electronic_Address: this.state.email,
-                                Phone_Number: this.state.number,
-                                Contact_Type: 1,
-                                IsActive: 1,
-                                User_Created: 1,
-                                User_Updated: 1,
-                                Date_Created: date,
-                                Date_Updated: date
-                            }
+                            contacts
                         }
                     })
                     .then((data) => {
@@ -710,8 +725,7 @@ class General extends Component {
                         this.setState(() => ({
                             openModal: false,
                             saving: false,
-                            hotelId: null,
-                            property: null,
+                            property: [],
                             type: null,
                             departmentName: '',
                             titleName: ''
@@ -1170,7 +1184,7 @@ class General extends Component {
     };
 
     handleChangeProperty = (property) => {
-        this.setState(() => ({ property, hotelId: property ? property.value : null }));
+        this.setState(() => ({ property }));
     }
     render() {
         const { classes } = this.props;
@@ -1372,7 +1386,7 @@ class General extends Component {
                                         onChange={this.handleChangeProperty}
                                         closeMenuOnSelect={true}
                                         components={makeAnimated()}
-                                        isMulti={false}
+                                        isMulti={true}
                                     />
                                 </div>
                             </div>
@@ -1413,6 +1427,18 @@ class General extends Component {
 
         return (
             <div className="Apply-container--application">
+                <ConfirmDialog
+                    open={this.state.openConfirm}
+                    closeAction={() => {
+                        this.setState({ openConfirm: false, locationAbletoWorkId: 0 });
+                    }}
+                    confirmAction={() => {
+                        this.updateContactByHotelApplication();
+                    }}
+                    title={dialogMessages[0].label}
+                    loading={this.props.removingLocationAbleToWork}
+                />
+
                 <div className="">
                     <div className="">
                         <div className="applicant-card">
@@ -1549,10 +1575,12 @@ class General extends Component {
                                 <div className="col-sm-12">
                                     <div className="row">
                                         <div className="col-sm-12 col-md-6 col-lg-3">
-                                            <div className="btn btn-success btn-margin col text-truncate">
+                                            <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
                                                 Server
                                             </div>
-                                            <div className="btn btn-success btn-margin col text-truncate">
+                                        </div>
+                                        <div className="col-sm-12 col-md-6 col-lg-3">
+                                            <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
                                                 Server
                                             </div>
                                         </div>
@@ -1563,15 +1591,23 @@ class General extends Component {
                                 <div className="col-sm-12">
                                     <h5>Location able to work</h5>
                                 </div>
+                                <div className="col-sm-12">
+                                    <div className="row">
+                                        {this.state.myHotels.map(hotel => {
+                                            return <div className="col-sm-12 col-md-6 col-lg-3">
 
-                                {this.state.myHotels.map(hotel => {
-                                    return <div className="col-sm-12 col-md-6 col-lg-3">
-                                        <div className="btn btn-success btn-margin col text-truncate">
-                                            {hotel.Name}
-                                        </div>
+                                                <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                    {hotel.Name}
+                                                    <button type="button" className="btn btn-link float-right p-0" onClick={() => {
+                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: hotel.Id }))
+                                                    }} >
+                                                        <i className="fas fa-trash text-white"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        })}
                                     </div>
-                                })}
-
+                                </div>
                             </div>
                         </div>
                     </div>

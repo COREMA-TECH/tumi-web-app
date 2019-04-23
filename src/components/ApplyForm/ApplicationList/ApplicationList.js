@@ -43,7 +43,18 @@ class ApplicationList extends Component {
 			property: DEFAULT_PROPERTY,
 			department: DEFAULT_DEPARTMENT,
 			properties: [],
-			departments: []
+			departments: [],
+			statusValue: [{
+				value: '',
+				label: 'Status'
+			}],
+			status: [{
+				value: 0,
+				label: "YES"
+			}, {
+				value: 1,
+				label: "NO"
+			}]
 		};
 	}
 
@@ -148,6 +159,9 @@ class ApplicationList extends Component {
 	handleDepartmentChange = (department) => {
 		this.setState(() => ({ department }));
 	}
+	handleStatusChange = (statusValue) => {
+		this.setState(() => ({ statusValue }));
+	}
 
 	getProperties = () => {
 		this.setState(() => ({ loadingProperties: true }), () => {
@@ -232,6 +246,8 @@ class ApplicationList extends Component {
 			variables = { ...variables, idEntity: this.state.property.value };
 		if (this.state.department.value != '')
 			variables = { ...variables, Id_Department: this.state.department.value };
+		if (this.state.statusValue.value != '')
+			variables = { ...variables, status: this.state.statusValue.value };
 		/**
 		 * End - Define variables for application query
 		 */
@@ -286,9 +302,9 @@ class ApplicationList extends Component {
 				</div>
 				<div className="col-md-1">
 					<Select
-						name="department"
-						options={this.state.departments}
-						value={this.state.department}
+						name="status"
+						options={this.state.status}
+						value={{ value: "", label: "Status" }}
 						onChange={this.handleDepartmentChange}
 						components={makeAnimated()}
 						closeMenuOnSelect

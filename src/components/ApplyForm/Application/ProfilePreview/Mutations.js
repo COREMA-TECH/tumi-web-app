@@ -51,3 +51,11 @@ export const UDPATE_PROFILE_PICTURE = gql`
           }
     }
 `;
+
+export const DISABLE_CONTACT_BY_HOTEL_APPLICATION = gql`
+    mutation disableContactByHotel_Application($Id_Entity: Int!, $ApplicationId: Int!) {
+        disableContactByHotel_Application(Id_Entity:$Id_Entity,ApplicationId:$ApplicationId){
+           Id
+          }
+    }
+`;

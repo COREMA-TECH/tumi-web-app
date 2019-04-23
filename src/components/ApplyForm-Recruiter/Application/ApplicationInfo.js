@@ -58,7 +58,7 @@ class VerticalLinearStepper extends Component {
 
         this.state = {
             activeStep: 0,
-            applicationId: null
+            applicationId: null,
         }
     }
 
@@ -141,6 +141,18 @@ class VerticalLinearStepper extends Component {
                                 });
                             }}>
                             <i className="fas fa-chevron-left" /> Go To Board
+                        </button>
+                        <button
+                            className="btn btn-success btn-sm ml-2"
+                            onClick={() => {
+                                localStorage.setItem('idApplication', 0);
+                                this.props.history.push({
+                                    pathname: '/home/application/Form',
+                                    state: { ApplicationId: 0 }
+                                });
+                                window.location.href = "/home/application/Form";
+                            }}>
+                            <i className="fas fa-plus" /> Add New Lead
                         </button>
                     </div>
                     <div className="col-md-4 col-lg-2">

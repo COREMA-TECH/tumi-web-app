@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import Table from './table';
-import Filter from './filter';
-
+import DropDown from './DropDown';
+import Filter from './Filter';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import { GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY, GET_PUNCHES_REPORT_CONSOLIDATED } from './queries';
 import withApollo from 'react-apollo/withApollo';
-import { GET_REPORT_QUERY, GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY } from './queries';
-import './index.css';
 
 import PreFilter from './PreFilter';
 import Dialog from "@material-ui/core/Dialog/Dialog";
@@ -13,7 +11,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 const PROPERTY_DEFAULT = { value: '', label: 'Property(All)' };
 const DEPARTMENT_DEFAULT = { value: '', label: 'Department(All)' };
 
-class PunchesReport extends Component {
+class PunchesReportConsolidated extends Component {
 
     DEFAULT_STATE = {
         data: [],
@@ -32,11 +30,14 @@ class PunchesReport extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ...this.DEFAULT_STATE
+            ...this.DEFAULT_STATE,
+            loadingReport: false
         }
     }
+
+
     componentWillMount() {
-        this.getReport();
+        this.getPunchesReport();
         this.getDepartments();
         this.getProperties();
     }
@@ -45,17 +46,17 @@ class PunchesReport extends Component {
         this.setState({ openModal: true });
     };
 
-    getReport = () => {
+    getPunchesReport = () => {
         this.setState(() => ({ loadingReport: true }), () => {
             this.props.client
                 .query({
-                    query: GET_REPORT_QUERY,
-                    fetchPolicy: 'no-cache',
-                    variables: { ...this.getFilters() }
+                    query: GET_PUNCHES_REPORT_CONSOLIDATED,
+                    variables: { ...this.getFilters() },
+                    fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
                     this.setState(() => ({
-                        data: data.markedEmployeesConsolidate,
+                        data: data.markedEmployeesConsolidated,
                         loadingReport: false
                     }));
                 })
@@ -104,7 +105,7 @@ class PunchesReport extends Component {
         this.setState(() => ({
             property
         }), () => {
-            this.getReport();
+            this.getPunchesReport();
         });
     }
 
@@ -166,7 +167,7 @@ class PunchesReport extends Component {
             departments: prevState.property.value != property.value ? [] : prevState.departments
         }), () => {
             this.getDepartments();
-            this.getReport();
+            this.getPunchesReport();
         });
     }
 
@@ -194,28 +195,23 @@ class PunchesReport extends Component {
             </Dialog>
         );
 
-
         return <React.Fragment>
             {loading && <LinearProgress />}
-            {
-                renderDialogPicture()
-            }
+            {renderDialogPicture()}
 
+            <PreFilter changeFilter={this.changeFilter} />
             <div className="row">
                 <div className="col-md-12">
-                    <div className="card">
-                        <Filter {...this.state} updateFilter={this.updateFilter} />
-                        <Table
-                            openModal={this.state.openModal}
-                            openModalPicture={this.handleClickOpenModalPicture}
-                            closeModalPicture={this.handleCloseModalPicture}
-                            handleCloseModal={this.handleCloseModal}
-                            data={this.state.data} />
+                    <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
+                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} />
+                        <DropDown data={this.state.data}></DropDown>
                     </div>
                 </div>
             </div>
-        </React.Fragment>
+        </React.Fragment >
+
     }
 }
 
-export default withApollo(PunchesReport);
+
+export default withApollo(PunchesReportConsolidated);
