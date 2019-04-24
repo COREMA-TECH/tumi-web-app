@@ -280,7 +280,7 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				<div className="col-md-1 offset-md-7">
+				<div className="col-md-2 offset-md-4">
 					<Select
 						name="property"
 						options={this.state.properties}
@@ -290,7 +290,7 @@ class ApplicationList extends Component {
 						closeMenuOnSelect
 					/>
 				</div>
-				<div className="col-md-1">
+				<div className="col-md-2">
 					<Select
 						name="department"
 						options={this.state.departments}
@@ -300,7 +300,7 @@ class ApplicationList extends Component {
 						closeMenuOnSelect
 					/>
 				</div>
-				<div className="col-md-1">
+				<div className="col-md-2">
 					<Select
 						name="status"
 						options={this.state.status}
