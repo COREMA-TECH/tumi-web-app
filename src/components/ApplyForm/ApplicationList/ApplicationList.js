@@ -30,6 +30,7 @@ const styles = (theme) => ({
 
 const DEFAULT_PROPERTY = { value: '', label: 'Property(All)' };
 const DEFAULT_DEPARTMENT = { value: '', label: 'Department(All)' };
+const DEFAULT_STATUS = { value: 1 , label: 'Active' };
 
 class ApplicationList extends Component {
 	constructor(props) {
@@ -44,17 +45,22 @@ class ApplicationList extends Component {
 			department: DEFAULT_DEPARTMENT,
 			properties: [],
 			departments: [],
+			statu:DEFAULT_STATUS,
 			statusValue: [{
-				value: '',
+				value: 1,
 				label: 'Status'
 			}],
 			status: [{
-				value: 0,
-				label: "YES"
-			}, {
 				value: 1,
-				label: "NO"
-			}]
+				label: "Active"
+			}, {
+				value: 2,
+				label: "Inactive"
+			},{
+				value:3,
+				label: "All"
+			}],
+			
 		};
 	}
 
@@ -69,8 +75,8 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-		query applicationsByUser($idUsers: Int,$Id_Department: Int, $idEntity: Int){
-			applicationsByUser(idUsers: $idUsers, Id_Department: $Id_Department, idEntity: $idEntity) {
+		query applicationsByUser($idUsers: Int,$Id_Department: Int, $idEntity: Int, $isActive:[Boolean] ){
+			applicationsByUser(idUsers: $idUsers, Id_Department: $Id_Department, idEntity: $idEntity, isActive: $isActive) {
 				id
 				firstName
 				middleName
@@ -159,8 +165,9 @@ class ApplicationList extends Component {
 	handleDepartmentChange = (department) => {
 		this.setState(() => ({ department }));
 	}
-	handleStatusChange = (statusValue) => {
-		this.setState(() => ({ statusValue }));
+	handleStatusChange = (statu) => {
+		console.log("Cambio de status ", statu)
+		this.setState(() => ({ statu }));
 	}
 
 	getProperties = () => {
@@ -246,8 +253,16 @@ class ApplicationList extends Component {
 			variables = { ...variables, idEntity: this.state.property.value };
 		if (this.state.department.value != '')
 			variables = { ...variables, Id_Department: this.state.department.value };
-		if (this.state.statusValue.value != '')
-			variables = { ...variables, status: this.state.statusValue.value };
+		if (this.state.statu.value != '')
+		{	
+			if(this.state.statu.value == 1)
+			{variables = { ...variables, isActive: [true]  };}
+			if(this.state.statu.value == 2)
+			{variables = { ...variables, isActive: [false]  };}
+			if(this.state.statu.value == 3)
+			{variables = { ...variables, isActive: [true,false] };}
+		}
+		
 		/**
 		 * End - Define variables for application query
 		 */
@@ -304,8 +319,8 @@ class ApplicationList extends Component {
 					<Select
 						name="status"
 						options={this.state.status}
-						value={{ value: "", label: "Status" }}
-						onChange={this.handleDepartmentChange}
+						value={ this.state.statu}
+						onChange={this.handleStatusChange}
 						components={makeAnimated()}
 						closeMenuOnSelect
 					/>
@@ -325,7 +340,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={variables} pollInterval={300}>
+					<Query query={this.GET_APPLICATION_QUERY} variables={variables} >
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
