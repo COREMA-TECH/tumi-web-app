@@ -99,45 +99,27 @@ class WorkOrdersTable extends Component {
         var shiftEntity = [];
 
         if (this.state.startDate != "" && this.state.endDate != "") {
-            workOrder = {
-                startDate: this.state.startDate,
-                endDate: this.state.endDate,
+            variables = {
+                ...variables,
+                workOrder: {
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                }
             }
         }
-        if (this.state.status == 0) {
-            shift = {
-                status: [0],
-                ...shift
-
-            }
-        }
-        else if (this.state.status == 1) {
-            shift = {
-                status: [1, 2]
-                , ...shift
-            }
-        }
-        else if (this.state.status == 2) {
-            shift = {
-                status: [3]
-                , ...shift
-            }
-        }
-        else if (this.state.status == 4) {
-            shift = {
-                status: [2]
-                , ...shift
-            }
-        }
-        else {
-            shift = {
-                status: [1, 2, 0]
-                , ...shift
+        if (this.state.status != null && this.state.status != "Status (All)") {
+            variables = {
+                ...variables,
+                shift: {
+                    status: this.state.status,
+                    ...shift
+                }
             }
         }
 
         if (this.state.id)
             variables = {
+                ...variables,
                 shift: {
                     id: this.state.workOrderId
                 }
@@ -429,14 +411,11 @@ class WorkOrdersTable extends Component {
     }
 
     handleFilterValue = (id) => {
-        this.setState(() =>
-            ({
-                status: id
-            }),
-            () => {
-                this.getWorkOrders();
-            }
-        );
+        this.setState({
+            status: id
+        }, () => {
+            this.getWorkOrders();
+        });
 
     }
 

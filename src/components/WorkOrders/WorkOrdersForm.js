@@ -643,7 +643,10 @@ class WorkOrdersForm extends Component {
     }
 
     handleChangeDate = (date) => {
+        let startDate = moment(date).subtract(7, "days").format();
+
         this.setState({
+            startDate: startDate,
             endDate: date
         });
     }
@@ -726,7 +729,7 @@ class WorkOrdersForm extends Component {
                                             >
                                                 <option value={0}>Select a Department</option>
                                                 {this.state.departments.map((department) => (
-                                                    <option value={department.Id}>{department.Description}</option>
+                                                    <option key={department.Id} value={department.Id}>{department.Description}</option>
                                                 ))}
                                             </select>
                                         </div>

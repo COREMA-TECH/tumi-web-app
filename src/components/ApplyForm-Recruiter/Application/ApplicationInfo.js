@@ -96,12 +96,15 @@ class VerticalLinearStepper extends Component {
 
     componentWillMount() {
         // Get id of the application and pass to the components
+        let appID = 0;
         try {
-            if (this.props.location.state.ApplicationId === undefined)
-                window.location.href = "/home/application";
-
+            if (this.props.location.state) {
+                if (this.props.location.state.ApplicationId === undefined)
+                    window.location.href = "/home/application";
+                appID = this.props.location.state.ApplicationId;
+            }
             this.setState({
-                applicationId: this.props.location.state.ApplicationId
+                applicationId: appID
             });
 
             localStorage.setItem('languageForm', 'en');
@@ -152,10 +155,12 @@ class VerticalLinearStepper extends Component {
                             <i className="fas fa-chevron-left" /> Go To Board
                         </button>
                         <button
+                            type="button"
                             className="btn btn-success btn-sm ml-2"
                             onClick={() => {
                                 localStorage.setItem('idApplication', 0);
                                 this.props.history.push({
+                                    //pathname: '/employment-application',
                                     pathname: '/home/application/Form',
                                     state: { ApplicationId: 0 }
                                 });
