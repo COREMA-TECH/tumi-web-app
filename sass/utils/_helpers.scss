@@ -50,3 +50,18 @@
 .social-link {
 	text-decoration: none;
 }
+
+.tumi-row-centered{
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+	justify-content: center;
+	
+	padding: 5px;
+}
+
+// Prevents pagination controls from breaking out and cause a horizontal scroll
+td[class^="MuiTableCell-root-"] > div[class^="MuiToolbar-root-"]{
+	overflow-x: scroll; 
+	overflow-y: hidden;
+}

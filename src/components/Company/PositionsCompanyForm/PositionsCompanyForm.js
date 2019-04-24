@@ -914,7 +914,7 @@ query getposition ($Id_Entity:Int){
 									<Route
 										render={({ history }) => (
 											<button
-												className="btn btn-info float-right"
+												className="btn btn-info float-right add-contract-btn"
 												onClick={() => {
 													// When the user click Next button, open second tab
 													let hrefValue = '/home/company/edit';
@@ -954,7 +954,7 @@ query getposition ($Id_Entity:Int){
 						) : (
 								''
 							)}
-						<button className="btn btn-success float-right mr-1" onClick={this.handleClickOpenModal}>
+						<button className="btn btn-success float-right add-rates-btn" onClick={this.handleClickOpenModal}>
 							Add Rates<i class="fas fa-plus ml-1" />
 						</button>
 					</div>
@@ -1143,15 +1143,19 @@ query getposition ($Id_Entity:Int){
 				</Dialog>
 				<div className="row">
 					<div className="col-md-12">
-						<PositionsTable
-							data={this.state.data}
-							departments={this.state.departments}
-							loading={this.state.showCircularLoading && isLoading}
-							shifts={this.state.shifts}
-							onEditHandler={this.onEditHandler}
-							onDeleteHandler={this.onDeleteHandler}
-							showPayRate={this.props.showPayRate}
-						/>
+						<div className="card">
+							<div className="card-body Table-wrapper">
+								<PositionsTable
+									data={this.state.data}
+									departments={this.state.departments}
+									loading={this.state.showCircularLoading && isLoading}
+									shifts={this.state.shifts}
+									onEditHandler={this.onEditHandler}
+									onDeleteHandler={this.onDeleteHandler}
+									showPayRate={this.props.showPayRate}
+								/>							
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

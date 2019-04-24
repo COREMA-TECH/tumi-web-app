@@ -15,11 +15,16 @@
     }
     &-item {
         background: $white;
+        
         border: solid 1px $second-light-gray;
         border-radius: $border-radius-standar;
+        
         padding: 1rem;
         padding-bottom: calc(1rem + 2px);
         position: relative;
+
+        margin-bottom: 1rem;
+
         &:hover {
             background: $brand-primary;
             border: solid 1px darken($brand-primary, 30%); 
@@ -27,6 +32,7 @@
             color: $white;
             cursor: pointer;
             padding-bottom: 1rem;
+        
             .RecordsCards-btn {
                 background-color: darken($brand-primary, 30%); 
                 color: $brand-primary;

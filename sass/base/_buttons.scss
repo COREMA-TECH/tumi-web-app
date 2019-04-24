@@ -85,7 +85,7 @@
 
 .buttonsGroup {
 	background: transparent;
-	width: 100%;
+	// width: 100%;
 	&-fixed {
 		background: rgba($white, 0.8);
 		position: fixed;
@@ -180,4 +180,23 @@
 		visibility: hidden;
 		transition: visibility 0.5s;
 	}
+}
+
+//Use it on buttons, they will lay on top of each other on sm size
+@include media-breakpoint-down(sm){
+	.tumi{
+		&-buttonWrapper{
+			width: 100%;
+		}
+
+		&-button{
+			display: block;
+		
+			margin-left: 0 !important;
+			margin-right: 0;
+			margin-bottom: 0.5rem;	
+		
+			width: 100%;
+		}
+	}	
 }

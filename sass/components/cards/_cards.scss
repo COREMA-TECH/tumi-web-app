@@ -106,7 +106,7 @@
 
 .company-card {
     @include media-breakpoint-up(lg) {
-        width: 12% !important;
+        width: 20% !important;
     }
     @include media-breakpoint-up(sm) {
         .company-card__title {

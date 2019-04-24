@@ -78,3 +78,24 @@
       visibility: hidden;
     }
 }
+
+.checkbox-wrapper{
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 0.65rem;
+
+  label{
+    font-size: 12px;
+    margin-top: 0 !important;
+    text-indent: 2px;
+  }
+}
+
+@include media-breakpoint-only(lg){
+  .checkbox-wrapper{
+    font-size: 8px;
+    margin-top: 0.9rem;    
+  }
+}

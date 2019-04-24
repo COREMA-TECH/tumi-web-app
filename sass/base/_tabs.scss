@@ -50,3 +50,27 @@
         margin-top: -1px;
     }
 }
+
+.position_tab{ 
+    .add-rates-btn{
+        margin-right: 0.5rem;
+    }
+}
+
+@include media-breakpoint-down(sm){
+    .position_tab{    
+        .add-contract-btn, .add-rates-btn{
+            display: block;
+            width: 100%
+        }
+    
+        .add-contract-btn{
+            margin-bottom: 0.25rem;
+            margin-right: 0;
+        }
+
+        .add-rates-btn{
+            margin-right: 0;
+        }
+    }
+}

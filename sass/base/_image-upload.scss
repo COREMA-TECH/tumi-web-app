@@ -14,11 +14,13 @@
     overflow: hidden;
     .upload-btn-wrapper {
         height: 96px;
+        margin-left: auto;
+        margin-right: auto;
         opacity: 0;
         position: absolute;
+        transition: all 150ms ease;
         top: 0; left: 0; bottom: 0; right: 0;
         width: 96px;
-        transition: all 150ms ease;
     }
     .btn-up {
         cursor: unset;

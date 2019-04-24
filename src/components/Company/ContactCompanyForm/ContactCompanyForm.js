@@ -1348,16 +1348,20 @@ class ContactcontactForm extends React.Component {
 				</Dialog>
 				<div className="row">
 					<div className="col-md-12">
-						<ContactsTable
-							data={this.state.data}
-							titles={this.state.titles}
-							types={this.state.contactTypes}
-							loading={this.state.showCircularLoading && isLoading}
-							supervisors={this.state.allSupervisors}
-							departments={this.state.departments}
-							onEditHandler={this.onEditHandler}
-							onDeleteHandler={this.onDeleteHandler}
-						/>
+						<div className="card">
+							<div className="card-body p-3 Table-wrapper">
+								<ContactsTable
+									data={this.state.data}
+									titles={this.state.titles}
+									types={this.state.contactTypes}
+									loading={this.state.showCircularLoading && isLoading}
+									supervisors={this.state.allSupervisors}
+									departments={this.state.departments}
+									onEditHandler={this.onEditHandler}
+									onDeleteHandler={this.onDeleteHandler}
+								/>							
+							</div>
+						</div>
 					</div>
 				</div>
 
