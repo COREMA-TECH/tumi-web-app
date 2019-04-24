@@ -85,6 +85,15 @@ class VerticalLinearStepper extends Component {
         });
     }
 
+    redirectToCreateApplication = () => {
+		localStorage.setItem('idApplication', 0);
+		this.props.history.push({
+			//pathname: '/employment-application',
+			pathname: '/home/application/Form',
+			state: { ApplicationId: 0 }
+		});
+	};
+
     componentWillMount() {
         // Get id of the application and pass to the components
         try {
