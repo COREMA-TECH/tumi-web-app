@@ -51,13 +51,35 @@
 	text-decoration: none;
 }
 
-.tumi-row-centered{
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-	justify-content: center;
-	
-	padding: 5px;
+.tumi{
+	&-row-centered{
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		
+		padding: 5px;
+	}
+
+	&-col-centered{
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		
+		padding: 5px; 
+	}
+
+	&-noPadding{
+		padding-bottom: 0;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		padding-top: 0;
+	}
+
+	&-xScroll{
+		overflow-x: auto;
+	}
 }
 
 // Prevents pagination controls from breaking out and cause a horizontal scroll

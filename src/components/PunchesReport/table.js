@@ -183,7 +183,7 @@ class PunchesReportTable extends React.Component {
         return (
             <Route
                 render={({ history }) => (
-                    <div className="card-body pt-0">
+                    <div className="card-body Table-wrapper">
                         <Paper className={classes.root}>
                             <Table className={classes.table}>
                                 <TableHead>
@@ -260,7 +260,7 @@ class PunchesReportTable extends React.Component {
                                     <TableRow>
                                         {items.length > 0 && (
                                             <TablePagination
-                                                colSpan={3}
+                                                colSpan={1}
                                                 count={items.length}
                                                 rowsPerPage={rowsPerPage}
                                                 page={page}

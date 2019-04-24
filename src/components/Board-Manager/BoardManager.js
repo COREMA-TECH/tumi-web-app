@@ -1026,7 +1026,7 @@ class BoardManager extends Component {
                                 <div class="card">
                                     <div class="card-header info">
                                         <div className="row">
-                                            <div className="col-md-8">
+                                            <div className="col-md-12">
                                                 <div className="row">
                                                     <div className="col-md-2">
                                                         <select
@@ -1114,7 +1114,7 @@ class BoardManager extends Component {
                                                             <option value={0}>Cancelled</option>
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-4">
+                                                    <div className="col-md-4 tumi-row-centered">
                                                         <a
                                                             className="link-board" onClick={(e) => {
                                                                 e.preventDefault();
@@ -1141,7 +1141,7 @@ class BoardManager extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-md-2"></div>
+                                            {/* <div className="col-12 col-md-2"></div> */}
                                         </div>
                                     </div>
                                 </div>

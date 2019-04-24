@@ -48,19 +48,10 @@
 
 .avatar-container {
     padding: 2px 12px;
-    position: absolute;
-    &:last-child() {
-        right: 121px;
-    }
+   
 }
 
-.arrow-up {
-    /*width: 0;*/
-    /*height: 0;*/
-    /*border-top: 10px solid transparent;*/
-    /*border-bottom: 10px solid transparent;*/
-
-    /*border-left: 10px solid #FFFFFF;*/
+.arrow-up {   
     position: absolute;
     bottom: 10px;
     right: -10.5px;

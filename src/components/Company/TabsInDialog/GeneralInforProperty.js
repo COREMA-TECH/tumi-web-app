@@ -1141,7 +1141,7 @@ class GeneralInfoProperty extends Component {
                         </div>
                         <div class="card-body">
                             <div className="row">
-                                <div className="col-md-12 col-lg-1">
+                                <div className="col-md-12 col-lg-12">
                                     <div className="GeneralInformation-wrapper">
                                         <ImageUpload
                                             id="avatarFilePI"

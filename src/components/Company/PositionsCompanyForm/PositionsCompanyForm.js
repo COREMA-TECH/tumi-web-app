@@ -1096,7 +1096,7 @@ query getposition ($Id_Entity:Int){
 					</DialogContent>
 					<DialogActions style={{ margin: '20px 20px' }}>
 						<div className={classes.root}>
-							<div className={classes.wrapper}>
+							<div className={classes.wrapper} style={{ margin: '0' }}>
 								<Tooltip
 									title={
 										this.state.idToEdit != null &&
@@ -1124,7 +1124,7 @@ query getposition ($Id_Entity:Int){
 						</div>
 
 						<div className={classes.root}>
-							<div className={classes.wrapper}>
+							<div className={classes.wrapper} style={{ margin: '0' }}>
 								<Tooltip title={'Cancel Operation'}>
 									<div>
 										<button

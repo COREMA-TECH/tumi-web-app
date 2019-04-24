@@ -183,10 +183,31 @@
 }
 
 //Use it on buttons, they will lay on top of each other on sm size
+.tumi{
+	&-button{
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+
+	&-modalButton{
+		display: block;
+		
+		margin-left: auto !important;
+		margin-right: auto;
+		margin-bottom: 0.5rem;	
+
+		width: 100%;
+	}
+
+	&-modalButtonWrapper{
+		width: 100% !important;
+	}
+}
+
 @include media-breakpoint-down(sm){
 	.tumi{
 		&-buttonWrapper{
-			width: 100%;
+			width: 100% !important;
 		}
 
 		&-button{

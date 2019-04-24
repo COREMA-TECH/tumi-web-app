@@ -23,6 +23,7 @@ table {
     &-wrapper{
         & > div[class^="MuiPaper-"]{
             box-shadow: none;
+            overflow-x: auto !important;
         }
 
         tbody[class^="MuiTableBody-"] tr{

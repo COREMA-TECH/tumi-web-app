@@ -8391,9 +8391,23 @@ label:not(.custom-file-label):not(.form-check-label) {
   -o-transition: visibility 0.5s;
   transition: visibility 0.5s; }
 
+.tumi-button {
+  margin-left: 5px;
+  margin-right: 5px; }
+
+.tumi-modalButton {
+  display: block;
+  margin-left: auto !important;
+  margin-right: auto;
+  margin-bottom: 0.5rem;
+  width: 100%; }
+
+.tumi-modalButtonWrapper {
+  width: 100% !important; }
+
 @media (max-width: 767.98px) {
   .tumi-buttonWrapper {
-    width: 100%; }
+    width: 100% !important; }
   .tumi-button {
     display: block;
     margin-left: 0 !important;
@@ -8711,6 +8725,31 @@ label:not(.custom-file-label):not(.form-check-label) {
   justify-content: center;
   padding: 5px; }
 
+.tumi-col-centered {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 5px; }
+
+.tumi-noPadding {
+  padding-bottom: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0; }
+
+.tumi-xScroll {
+  overflow-x: auto; }
+
 td[class^="MuiTableCell-root-"] > div[class^="MuiToolbar-root-"] {
   overflow-x: scroll;
   overflow-y: hidden; }
@@ -8756,7 +8795,8 @@ td[class^="MuiTableCell-root-"] > div[class^="MuiToolbar-root-"] {
   cursor: pointer; }
 
 .upload-image {
-  overflow: hidden; }
+  overflow: hidden;
+  width: 100%; }
   .upload-image .upload-btn-wrapper {
     height: 96px;
     margin-left: auto;
@@ -9076,7 +9116,8 @@ table {
       border-radius: 0 3px 0 0; }
   .Table-wrapper > div[class^="MuiPaper-"] {
     -webkit-box-shadow: none;
-    box-shadow: none; }
+    box-shadow: none;
+    overflow-x: auto !important; }
   .Table-wrapper tbody[class^="MuiTableBody-"] tr {
     background-color: #FFF; }
 
@@ -9276,17 +9317,9 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   border: 1px solid #cccccc; }
 
 .avatar-container {
-  padding: 2px 12px;
-  position: absolute; }
-  .avatar-container:last-child {
-    right: 121px; }
+  padding: 2px 12px; }
 
 .arrow-up {
-  /*width: 0;*/
-  /*height: 0;*/
-  /*border-top: 10px solid transparent;*/
-  /*border-bottom: 10px solid transparent;*/
-  /*border-left: 10px solid #FFFFFF;*/
   position: absolute;
   bottom: 10px;
   right: -10.5px;
@@ -11468,9 +11501,7 @@ button.rbc-input::-moz-focus-inner {
     border: dotted 1px #bdbdbd;
     border-radius: 5px;
     bottom: 0;
-    height: 75%;
-    left: 15px;
-    position: absolute;
+    width: 100%;
     text-align: center; }
   .MasterShiftForm-groupButtons {
     display: block;

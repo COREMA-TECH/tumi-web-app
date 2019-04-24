@@ -521,7 +521,7 @@ class WorkOrdersTable extends Component {
                     </div>
 
                 </div>
-                <div className="card-body">
+                <div className="card-body Table-wrapper">
 
                     <Paper style={{ overflowX: 'auto' }}>
                         <Table>

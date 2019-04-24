@@ -188,12 +188,14 @@ class MainContract extends Component {
                     <h2 className="text-center">What would you like to do?</h2>
                 </DialogContent>
                 <DialogActions>
-                    <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompany() }>
-                        Create New Contract 
-                    </button>
-                    <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCloseConfirmDialog()}>
-                        View and Renew Contracts 
-                    </button>
+					<div className="tumi-modalButtonWrapper">
+						<button className="btn btn-success btn-not-rounded tumi-modalButton" type="button" onClick={() => this.handleOpenConfirmDialogCompany() }>
+							Create New Contract 
+						</button>
+						<button className="btn btn-info btn-not-rounded tumi-modalButton" type="button" onClick={() => this.handleCloseConfirmDialog()}>
+							View and Renew Contracts 
+						</button>
+					</div>
                     
                 </DialogActions>
             </Dialog>
@@ -207,12 +209,14 @@ class MainContract extends Component {
 						<h2 className="text-center">Is this contract for a new or existing company?</h2>
 					</DialogContent>
 					<DialogActions>
-						<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompanyOrProperty() }>
-							New Company
-						</button>
-						<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.redirectToCreateContract()}>
-							Existing Company
-						</button>
+						<div className="tumi-modalButtonWrapper">
+							<button className="btn btn-success btn-not-rounded tumi-modalButton" type="button" onClick={() => this.handleOpenConfirmDialogCompanyOrProperty() }>
+								New Company
+							</button>
+							<button className="btn btn-info btn-not-rounded tumi-modalButton" type="button" onClick={() => this.redirectToCreateContract()}>
+								Existing Company
+							</button>
+						</div>
 						
 					</DialogActions>
 				</Dialog>
@@ -226,14 +230,14 @@ class MainContract extends Component {
 							<h2 className="text-center">Is this contract for Property or a Management Company?</h2>
 						</DialogContent>
 						<DialogActions>
-						<button className="btn btn-success  btn-not-rounded mb-2" type="button" onClick={(e) => this.handleClickOpen(e)}>
-								Property
-							</button>
-							<button className="btn btn-info  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateCompany() }>
-								Management Company
-							</button>
-							
-							
+							<div className="tumi-modalButtonWrapper">
+								<button className="btn btn-success btn-not-rounded tumi-modalButton" type="button" onClick={(e) => this.handleClickOpen(e)}>
+									Property
+								</button>
+								<button className="btn btn-info btn-not-rounded tumi-modalButton" type="button" onClick={() => this.redirectToCreateCompany() }>
+									Management Company
+								</button>							
+							</div>
 						</DialogActions>
 					</Dialog>
 			}
@@ -335,21 +339,25 @@ class MainContract extends Component {
 									<div className="">
 										<div className="row">
 											<div className="col-md-12">
-												<div className="">
-													<TablesContracts
-														data={dataContract}
-														printDialogConfirm={this.printDialogConfirm}
-														printDialogConfirmCompany={this.printDialogConfirmCompany}
-														printDialogConfirmCompanyOrProperty={this.printDialogConfirmCompanyOrProperty}
-														acciones={0}
-														delete={(id) => {
-															this.deleteContractById(id);
-														}}
-													/>
-												<HotelDialog
-					open={this.state.open}
-					handleClose={this.handleClose}
-					handleOpenSnackbar={this.props.handleOpenSnackbar} />
+												<div className="card">
+													<div className="card-body Table-wrapper">
+														<TablesContracts
+															data={dataContract}
+															printDialogConfirm={this.printDialogConfirm}
+															printDialogConfirmCompany={this.printDialogConfirmCompany}
+															printDialogConfirmCompanyOrProperty={this.printDialogConfirmCompanyOrProperty}
+															acciones={0}
+															delete={(id) => {
+																this.deleteContractById(id);
+															}}
+														/>
+
+														<HotelDialog
+															open={this.state.open}
+															handleClose={this.handleClose}
+															handleOpenSnackbar={this.props.handleOpenSnackbar}
+														/>													
+													</div>
 												</div>
 
 											</div>
