@@ -638,7 +638,12 @@ class Application extends Component {
                                                 this.setState({
                                                     firstNameValid: true,
                                                     firstName: event.target.value
-                                                });
+                                                },
+                                                ()=>{
+                                                    this.props.SetFirstName(this.state)
+                                                }
+                                                );
+
                                             }}
                                             value={this.state.firstName}
                                             name="firstName"
@@ -680,6 +685,9 @@ class Application extends Component {
                                                 this.setState({
                                                     lastNameValid: true,
                                                     lastName: event.target.value
+                                                },
+                                                ()=>{
+                                                    this.props.SetLastName(this.state)
                                                 });
                                             }}
                                             value={this.state.lastName}
@@ -806,6 +814,9 @@ class Application extends Component {
                                                 this.setState({
                                                     cellPhoneValid: true,
                                                     cellPhone: event.target.value
+                                                },
+                                                ()=>{
+                                                    this.props.SetCellPhone(this.state)
                                                 });
                                             }}
                                             required
