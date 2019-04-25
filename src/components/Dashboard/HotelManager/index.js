@@ -177,13 +177,13 @@ class DashboardManager extends React.Component {
                         <div className="card-header info">Quick Access</div>
                         <div className="row pl-4 pr-4">
                             <div className="col-md-2 col-lg-3 col-xl-2">
-                                <a href="" className="text-center d-block" onClick={this.handleClickOpenModal}>
+                                <a href="" className="text-center d-block mb-2 mt-2" onClick={this.handleClickOpenModal}>
                                     <img src="/icons/actions/list.svg" alt="" className="w-50" />
                                     <span className="d-block">Add Work Order</span>
                                 </a>
                             </div>
                             <div className="col-md-2 col-lg-3 col-xl-2">
-                                <a href="/home/board/manager" className="text-center d-block">
+                                <a href="/home/board/manager" className="text-center d-block mb-2 mt-2">
                                     <img src="/icons/actions/notepad-3.svg" alt="" className="w-50" />
                                     <span className="d-block">Go to board</span>
                                 </a>

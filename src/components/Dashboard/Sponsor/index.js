@@ -31,7 +31,7 @@ class DashBoardSponsor extends Component {
         return (
             <div className="container Stats">
                 <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-lg-12 col-md-12 col-xl-5">
                         <div className="row">
                             <div className="col-md-6 mb-1">
                                 <div className="StatBox">
@@ -97,7 +97,7 @@ class DashBoardSponsor extends Component {
                             }}
                         />
                     </div>
-                    <div className="col-md-12">
+                    <div className="col-lg-12 col-md-12 offset-xl-2 col-xl-5">
                         <div className="row">
                             <div className="col-md-6 mb-1">
                                 <div className="StatBox">
@@ -169,7 +169,7 @@ class DashBoardSponsor extends Component {
                         </div>
                         <div className="StatBox">
                             <div className="StatBox-header">
-                                Work Order Requested Per Category
+                                Work Order Requested Per Region
                             </div>
                             <div className="StatBox-body">
                                 <Doughnut

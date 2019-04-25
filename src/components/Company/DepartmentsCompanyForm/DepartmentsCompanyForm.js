@@ -532,7 +532,7 @@ class DepartmentsCompanyForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className="row">
-					<div className="col-md-4">
+					<div className="col-md-4 mb-2">
 						<InputForm
 							id="code"
 							name="code"
@@ -544,7 +544,7 @@ class DepartmentsCompanyForm extends React.Component {
 							placeholder="* Department Code"
 						/>
 					</div>
-					<div className="col-md-4">
+					<div className="col-md-4 mb-2">
 						<InputForm
 							id="description"
 							name="description"
@@ -555,7 +555,7 @@ class DepartmentsCompanyForm extends React.Component {
 							placeholder="* Department Name"
 						/>
 					</div>
-					<div className="col-md-4">
+					<div className="col-md-4 mb-2">
 						<div className="tumi-row-centered">
 							<button
 								disabled={this.state.loading || !this.Login.AllowEdit || !this.Login.AllowInsert}

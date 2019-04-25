@@ -139,7 +139,7 @@ class PunchesReportConsolidatedFilter extends Component {
     render() {
         return <div className="card-header bg-light">
             <div className="row">
-                <div className="col-md-2 mt-1 pl-0">
+                <div className="col-md-4 mb-2 pl-0">
                     <Select
                         name="property"
                         options={this.props.properties}
@@ -149,7 +149,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         closeMenuOnSelect
                     />
                 </div>
-                <div className="col-md-2 mt-1 pl-0">
+                <div className="col-md-4 mb-2 pl-0">
                     <Select
                         name="department"
                         options={this.props.departments}
@@ -159,7 +159,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         closeMenuOnSelect
                     />
                 </div>
-                <div className="col-md-2 mt-1 pl-0">
+                <div className="col-md-4 mb-2 pl-0">
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <span className="input-group-text">
@@ -170,7 +170,7 @@ class PunchesReportConsolidatedFilter extends Component {
                             onChange={this.updateFilter} value={this.state.employee} />
                     </div>
                 </div>
-                <div className="col-md-4 mt-1 pl-0">
+                <div className="col-md-8 mb-2 pl-0">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">From</span>
@@ -185,7 +185,7 @@ class PunchesReportConsolidatedFilter extends Component {
                             onChange={this.updateFilter} />
                     </div>
                 </div>
-                <div className="col-md-2 mt-1 pl-0">
+                <div className="col-md-4 mb-2 pl-0">
                     {/* TODO: add download icon - call query to generate cvs with consolidated punches*/}
                     <div className="label-switch-container">
                         <label htmlFor="">Direct Deposit?</label>
@@ -207,7 +207,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-12 mt-1">
+                <div className="col-md-12 mb-2">
                     <button className="btn btn-success ml-1 float-right"
                         onClick={this.getReportCSV}>CSV {this.state.loadingReport && <i className="fas fa-spinner fa-spin  ml2" />}
                         {!this.state.loadingReport && <i className="fas fa-download  ml2" />}

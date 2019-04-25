@@ -8212,11 +8212,6 @@ label:not(.custom-file-label):not(.form-check-label) {
   padding-bottom: .8rem;
   padding-top: .8rem; }
 
-@media (max-width: 767.98px) {
-  .card div[class*='col-'] {
-    padding-left: 5px;
-    padding-right: 5px; } }
-
 @media (max-width: 575.98px) {
   .WorkOrder .border-right {
     border-right: 0 !important; } }
@@ -8405,6 +8400,10 @@ label:not(.custom-file-label):not(.form-check-label) {
 .tumi-modalButtonWrapper {
   width: 100% !important; }
 
+.tumi-buttonCentered {
+  display: block;
+  margin: 0 auto; }
+
 @media (max-width: 767.98px) {
   .tumi-buttonWrapper {
     width: 100% !important; }
@@ -8495,7 +8494,7 @@ label:not(.custom-file-label):not(.form-check-label) {
     cursor: pointer;
     visibility: hidden; }
 
-.checkbox-wrapper {
+.tumi-checkbox-wrapper {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
@@ -8506,17 +8505,18 @@ label:not(.custom-file-label):not(.form-check-label) {
   -webkit-box-direction: normal;
   -ms-flex-direction: row;
   flex-direction: row;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
   margin-top: 0.65rem; }
-  .checkbox-wrapper label {
+  .tumi-checkbox-wrapper label {
+    display: inline;
     font-size: 12px;
     margin-top: 0 !important;
-    text-indent: 2px; }
+    text-indent: 5px; }
 
 @media (min-width: 992px) and (max-width: 1199.98px) {
-  .checkbox-wrapper {
+  .tumi-checkbox-wrapper {
     font-size: 8px;
     margin-top: 0.9rem; } }
 
@@ -8749,10 +8749,6 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .tumi-xScroll {
   overflow-x: auto; }
-
-td[class^="MuiTableCell-root-"] > div[class^="MuiToolbar-root-"] {
-  overflow-x: scroll;
-  overflow-y: hidden; }
 
 .modal-overflow {
   overflow-x: scroll; }
@@ -9137,6 +9133,8 @@ tbody[class^="MuiTableBody-"] .btn {
   -ms-flex-pack: center;
   justify-content: center;
   line-height: 0;
+  margin-bottom: 3px;
+  margin-top: 3px;
   padding-left: 0 !important;
   padding-right: 0 !important;
   text-align: center;
@@ -9257,6 +9255,9 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   position: absolute;
   top: 40px;
   z-index: 1; }
+  @media (max-width: 1199.98px) {
+    .FloatingChart {
+      position: inherit; } }
 
 .panel-dropdown {
   background-color: #eee !important;
@@ -9724,6 +9725,73 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   div[class*="MuiDialogContent-root-"] {
     min-width: auto !important; } }
 
+.RowForm-days {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding-bottom: 1rem; }
+
+.RowForm-day {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  max-width: 91px;
+  width: 100%; }
+
+@media (min-width: 768px) {
+  .RowForm-days {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap; }
+  .RowForm-day {
+    max-width: 89px; } }
+
+@media (min-width: 992px) {
+  .RowForm-days {
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap; } }
+
+.RecruiterDash-ffmItem {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  text-align: center; }
+
+@media (min-width: 576px) {
+  .RecruiterDash-ffmItem {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row; } }
+
+.react-trello-board .djewwL {
+  max-height: 60vh; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -10113,6 +10181,7 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     left: -50px;
     padding-left: 1rem;
     position: absolute;
+    text-align: right;
     top: 25px;
     width: 100%; }
     .ApplyBlock-title:after {
@@ -10158,6 +10227,10 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   font-size: .80rem;
   font-family: "Roboto", sans-serif;
   font-weight: 100; }
+
+@media (min-width: 576px) {
+  .ApplyBlock-title {
+    text-align: left; } }
 
 .Header {
   background-color: #3ca2c8;
@@ -11428,6 +11501,12 @@ button.rbc-input::-moz-focus-inner {
     -ms-transform: scale(0.5, 0.5);
     transform: scale(0.5, 0.5);
     width: 86px; }
+
+.RegionForm-header {
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-left: 24px;
+  padding-right: 24px; }
 
 .PropertiesTags-item .form-control, .PropertiesTags-item .react-datepicker__input-container input, .react-datepicker__input-container .PropertiesTags-item input, .PropertiesTags-item .react-datepicker-ignore-onclickoutside {
   border-top-left-radius: 50px;

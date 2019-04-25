@@ -84,6 +84,6 @@
 
 // Prevents pagination controls from breaking out and cause a horizontal scroll
 td[class^="MuiTableCell-root-"] > div[class^="MuiToolbar-root-"]{
-	overflow-x: scroll; 
-	overflow-y: hidden;
+	// overflow-x: scroll; 
+	// overflow-y: hidden;
 }
