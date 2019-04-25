@@ -233,7 +233,7 @@ class RolesTable extends React.Component {
 						<TableRow>
 							{items.length > 0 && (
 								<TablePagination
-									colSpan={3}
+									colSpan={1}
 									count={items.length}
 									rowsPerPage={rowsPerPage}
 									page={page}

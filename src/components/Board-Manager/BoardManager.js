@@ -1041,9 +1041,9 @@ class BoardManager extends Component {
                                 <div class="card">
                                     <div class="card-header info">
                                         <div className="row">
-                                            <div className="col-md-8">
+                                            <div className="col-md-12">
                                                 <div className="row">
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-3 mb-2">
                                                         <select
                                                             required
                                                             name="IdEntity"
@@ -1064,7 +1064,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-3 mb-2">
                                                         <select
                                                             name="state"
                                                             className={'form-control'}
@@ -1086,7 +1086,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-3 mb-2">
                                                         <select
                                                             name="city"
                                                             className={'form-control'}
@@ -1107,7 +1107,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-3 mb-2">
                                                         <select
                                                             name="city"
                                                             className={'form-control'}
@@ -1129,7 +1129,7 @@ class BoardManager extends Component {
                                                             <option value={0}>Cancelled</option>
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-4">
+                                                    <div className="col-md-12 tumi-row-centered">
                                                         <a
                                                             className="link-board" onClick={(e) => {
                                                                 e.preventDefault();
@@ -1156,7 +1156,7 @@ class BoardManager extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-md-2"></div>
+                                            {/* <div className="col-12 col-md-2"></div> */}
                                         </div>
                                     </div>
                                 </div>

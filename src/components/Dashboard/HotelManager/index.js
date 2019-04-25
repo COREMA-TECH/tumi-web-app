@@ -156,13 +156,13 @@ class DashboardManager extends React.Component {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-md-2">
+                                <div className="col-md-3 col-xl-2">
                                     <div className="stat-card">
                                         <div className="stat-description">Not Show</div>
                                         <div className="stat-number">{this.state.notShow}</div>
                                     </div>
                                 </div>
-                                <div className="col-md-2">
+                                <div className="col-md-3 col-xl-2">
                                     <div className="stat-card">
                                         <div className="stat-description">Disqualified</div>
                                         <div className="stat-number stat-number--secondary">{this.state.disqualified}</div>
@@ -175,15 +175,15 @@ class DashboardManager extends React.Component {
                 <div className="col-md-12 col-lg-7">
                     <div className="card">
                         <div className="card-header info">Quick Access</div>
-                        <div className="row">
-                            <div className="col-md-2 col-lg-2">
-                                <a href="" className="text-center d-block" onClick={this.handleClickOpenModal}>
+                        <div className="row pl-4 pr-4">
+                            <div className="col-md-2 col-lg-3 col-xl-2">
+                                <a href="" className="text-center d-block mb-2 mt-2" onClick={this.handleClickOpenModal}>
                                     <img src="/icons/actions/list.svg" alt="" className="w-50" />
                                     <span className="d-block">Add Work Order</span>
                                 </a>
                             </div>
-                            <div className="col-md-2 col-lg-2">
-                                <a href="/home/board/manager" className="text-center d-block">
+                            <div className="col-md-2 col-lg-3 col-xl-2">
+                                <a href="/home/board/manager" className="text-center d-block mb-2 mt-2">
                                     <img src="/icons/actions/notepad-3.svg" alt="" className="w-50" />
                                     <span className="d-block">Go to board</span>
                                 </a>

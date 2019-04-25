@@ -63,7 +63,7 @@ class RowForm extends Component {
 
 
     getWeekDayStyle = (dayName) => {
-        return `btn btn-secondary ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
+        return `btn btn-secondary RowForm-day ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
     }
 
     handleChange = (event) => {
@@ -140,7 +140,7 @@ class RowForm extends Component {
             <div className="card">
                 <div className="card-body">
                     <div className="row">
-                        <div className="col-md-2">
+                        <div className="col-md-4 mb-2">
                             <input
                                 required
                                 type="number"
@@ -154,7 +154,7 @@ class RowForm extends Component {
                                 onBlur={this.handleValidate}
                             />
                         </div>
-                        <div className="col-md-3">
+                        <div className="col-md-4 mb-2">
                             <select
                                 required
                                 name="PositionRateId"
@@ -171,24 +171,24 @@ class RowForm extends Component {
                                 ))}
                             </select>
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-4 mb-2">
                             <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
                         </div>
-                        <div className="col-md-1">
+                        <div className="col-md-4 mb-2">
                             <input type="text" className="form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-4 mb-2">
                             <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
                         </div>
-                        <div className="col-md-2">
-                            <button className="btn btn-link" type="button">
+                        <div className="col-md-4 mb-2">
+                            <button className="btn btn-link tumi-buttonCentered" type="button">
                                 Advanced
-                        </button>
+                            </button>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-md-7">
-                            <div className="btn-group" role="group" aria-label="Basic example">
+                            <div className="btn-group RowForm-days" role="group" aria-label="Basic example">
                                 <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
                                 <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
                                 <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>

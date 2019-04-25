@@ -126,14 +126,16 @@ class Filters extends Component {
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <button
-                                                type="reset" className="btn btn-danger ml-1 float-right" onClick={this.CloseWin}>
-                                                Reset Filters<i className="fas fa-ban ml-2" />
-                                            </button>
-                                            <button className="btn btn-success ml-1 float-right" onClick={this.NewFilters}>
-                                                New Filter {!this.state.saving && <i className="fas fa-filter ml2" />}
-                                                {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
-                                            </button>
+                                            <div className="tumi-buttonWrapper">
+                                                <button
+                                                    type="reset" className="btn btn-danger float-right tumi-button" onClick={this.CloseWin}>
+                                                    Reset Filters<i className="fas fa-ban ml-2" />
+                                                </button>
+                                                <button className="btn btn-success float-right tumi-button" onClick={this.NewFilters}>
+                                                    New Filter {!this.state.saving && <i className="fas fa-filter ml2" />}
+                                                    {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
+                                                </button>                                            
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

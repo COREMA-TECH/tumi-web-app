@@ -16,7 +16,7 @@ import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import Route from 'react-router-dom/es/Route';
 import TimeCardForm from '../TimeCard/TimeCardForm'
-import './index.css';
+// import './index.css';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
@@ -183,7 +183,7 @@ class PunchesReportTable extends React.Component {
         return (
             <Route
                 render={({ history }) => (
-                    <div className="card-body pt-0">
+                    <div className="card-body Table-wrapper">
                         <Paper className={classes.root}>
                             <Table className={classes.table}>
                                 <TableHead>
@@ -260,7 +260,7 @@ class PunchesReportTable extends React.Component {
                                     <TableRow>
                                         {items.length > 0 && (
                                             <TablePagination
-                                                colSpan={3}
+                                                colSpan={1}
                                                 count={items.length}
                                                 rowsPerPage={rowsPerPage}
                                                 page={page}

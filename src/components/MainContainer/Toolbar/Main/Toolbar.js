@@ -136,13 +136,6 @@ class Toolbar extends Component {
 		return (
 			<div className="toolbar__main">
 				<ul className="RightMenu-list">
-					<span className="main-container__title-user">Hi, {localStorage.getItem('FullName') ? (localStorage.getItem('FullName').trim() == '' ? localStorage.getItem('CodeUser').trim() : localStorage.getItem('FullName').trim()) : ''}</span>
-					<li className="RightMenu-item">
-						<a href="" onClick={this.changeLanguage} className="Language-en">
-							<img src={`/languages/${this.state.languageIcon}.png`} className="Language-icon" />
-						</a>
-					</li>
-
 					<li className="RightMenu-item">
 						<div className="dropdown">
 							<button
@@ -160,6 +153,17 @@ class Toolbar extends Component {
 
 							<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<div className="row app-shortcuts">
+					
+								{/* Greeting */}
+								<div className="UserSettings">
+									<span className="main-container__title-user">Hi, {localStorage.getItem('FullName') ? (localStorage.getItem('FullName').trim() == '' ? localStorage.getItem('CodeUser').trim() : localStorage.getItem('FullName').trim()) : ''}</span>
+									<div className="RightMenu-item">
+										<a href="" onClick={this.changeLanguage} className="Language-en">
+											<img src={`/languages/${this.state.languageIcon}.png`} className="Language-icon" />
+										</a>
+									</div>								
+								</div>
+
 									{localStorage.getItem('showMenu') == "true" ?
 										<React.Fragment>
 											<a className={WO ? "col-4 app-shortcuts__item" : "col-4 isDisabled"} href="/home/work-orders">

@@ -440,7 +440,7 @@ class WorkOrdersTable extends Component {
                 {isLoading && <LinearProgress />}
                 <div className="card-header bg-light">
                     <div className="row">
-                        <div className="col-md-2">
+                        <div className="col-md-6 mb-2">
                             <select name="state" id="" value={this.state.state} className="form-control" onChange={(e) => {
                                 this.setState({
                                     state: parseInt(e.target.value)
@@ -452,7 +452,7 @@ class WorkOrdersTable extends Component {
                                 })}
                             </select>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-6 mb-2">
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="basic-addon1">From</span>
@@ -464,12 +464,12 @@ class WorkOrdersTable extends Component {
                                 <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled ? true : false} placeholder="2018-10-30" onChange={this.handleEndDate} />
                             </div>
                         </div>
-                        <div className="col-md-2">
-                            <button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>
+                        <div className="col-md-4 mb-2">
+                            <button class="btn btn-outline-secondary btn-not-rounded d-block w-100" type="button" onClick={this.clearInputDates}>
                                 <i class="fas fa-filter"></i> Clear
                             </button>
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-4 mb-2">
                             <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control" onChange={(event) => {
                                 if (event.target.value == "null") {
                                     this.handleFilterValue(null);
@@ -487,7 +487,7 @@ class WorkOrdersTable extends Component {
 
                             </select>
                         </div>
-                        <div className="col-md-2">
+                        <div className="col-md-4 mb-2">
                             <div class="input-group">
                                 <input type="text" name="id" value={this.state.id} className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
                                 <div class="input-group-prepend">
@@ -500,7 +500,7 @@ class WorkOrdersTable extends Component {
                     </div>
 
                 </div>
-                <div className="card-body">
+                <div className="card-body Table-wrapper">
 
                     <Paper style={{ overflowX: 'auto' }}>
                         <Table>
@@ -580,10 +580,10 @@ class WorkOrdersTable extends Component {
                                 })}
                             </TableBody>
                             <TableFooter>
-                                <TableRow>
+                                
                                     {items.length > 0 && (
                                         <TablePagination
-                                            colSpan={3}
+                                            colSpan={1}
                                             count={items.length}
                                             rowsPerPage={rowsPerPage}
                                             page={page}
@@ -592,7 +592,7 @@ class WorkOrdersTable extends Component {
                                             ActionsComponent={TablePaginationActionsWrapped}
                                         />
                                     )}
-                                </TableRow>
+                                
                             </TableFooter>
                         </Table>
                         <ConfirmDialog

@@ -1,0 +1,15 @@
+
+
+.PropertiesTags {
+    &-item {
+        .btn {
+            @extend %TagStyle;
+        }
+        .form-control {
+            @extend %TagStyle;
+            border-top-left-radius: 50px;
+            border-bottom-left-radius: 50px; 
+            font-weight: 700 !important;
+        }
+    }
+}
