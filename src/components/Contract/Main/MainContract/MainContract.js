@@ -181,9 +181,7 @@ class MainContract extends Component {
 
 
 	printDialogConfirm = () => {
-	//	console.log("estoy en el dialog ", this.state.showConfirm)
-       
-            return <Dialog maxWidth="xl" open={this.state.showConfirm} >
+	        return <Dialog maxWidth="xl" open={this.state.showConfirm} >
                 <DialogContent>
                     <h2 className="text-center">What would you like to do?</h2>
                 </DialogContent>
