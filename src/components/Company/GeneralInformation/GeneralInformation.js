@@ -1369,7 +1369,7 @@ class GeneralInformation extends Component {
 						<div class="card">
 							<div class="card-body">
 								<div className="row">
-									<div className="col-md-6 col-lg-12">
+									<div className="col-md-6 col-lg-3">
 										<ImageUpload
 											id="avatarFileGI"
 											updateAvatar={(url) => {
@@ -1382,7 +1382,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-6 col-lg-4">
+									<div className="col-md-6 col-lg-3">
 										<label className="">* Markup</label>
 										<InputForm
 											type="number"
@@ -1396,7 +1396,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-6 col-lg-4">
+									<div className="col-md-6 col-lg-3">
 										<label className="">* Company Code</label>
 										<InputForm
 											value={this.state.Code}
@@ -1408,7 +1408,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-6 col-lg-4">
+									<div className="col-md-6 col-lg-3">
 										<label>* Company Name</label>
 										<InputForm
 											value={this.state.name}

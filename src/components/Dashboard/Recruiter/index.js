@@ -178,8 +178,8 @@ class DashboardRecruiter extends React.Component {
 				<div className="col-md-12 col-lg-4">
 					<div className="card">
 						<div className="card-header info">Quick Access</div>
-						<div className="row">
-							<div className="col-md-2 col-lg-2">
+						<div className="row pl-4 pr-4">
+							<div className="col-md-2 col-lg-3 col-xl-2">
 								<a href="/home/board/recruiter" className="text-center d-block">
 									<img src="/icons/actions/notepad-3.svg" alt="" className="w-50" />
 									<span className="d-block">Go to board</span>
@@ -205,7 +205,7 @@ class DashboardRecruiter extends React.Component {
 							<ul className="list-group list-group-flush">
 								{this.state.timeElapsed.slice(0, 5).map((timeElapsed) => {
 									return (
-										<li className="list-group-item d-flex justify-content-between align-items-center">
+										<li className="list-group-item RecruiterDash-ffmItem">
 											<span className="font-weight-bold">{timeElapsed.WorkOrderId}</span>	{timeElapsed.Full_Name}
 											<span class="badge badge-primary"> {timeElapsed.TimeElapsed}</span>
 										</li>

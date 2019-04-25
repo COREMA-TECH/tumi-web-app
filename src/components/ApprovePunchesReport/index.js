@@ -5,7 +5,6 @@ import Filter from './filter';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import { GET_REPORT_QUERY, GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY } from './queries';
-import './index.css';
 
 import PreFilter from './PreFilter';
 import Dialog from "@material-ui/core/Dialog/Dialog";
@@ -45,7 +44,7 @@ class PunchesReport extends Component {
         this.setState({ openModal: true });
     };
 
-    getReport = () => {
+    getReport = () => { 
         this.setState(() => ({ loadingReport: true }), () => {
             this.props.client
                 .query({

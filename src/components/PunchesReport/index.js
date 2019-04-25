@@ -5,7 +5,7 @@ import Filter from './filter';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import {GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY, GET_REPORT_QUERY} from './queries';
-import './index.css';
+// import './index.css';
 
 import PreFilter from './PreFilter';
 import Dialog from "@material-ui/core/Dialog/Dialog";

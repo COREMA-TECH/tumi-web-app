@@ -16,7 +16,7 @@ import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import Route from 'react-router-dom/es/Route';
 import TimeCardForm from '../TimeCard/TimeCardForm'
-import './index.css';
+// import './index.css';
 
 import Tooltip from '@material-ui/core/Tooltip';
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";

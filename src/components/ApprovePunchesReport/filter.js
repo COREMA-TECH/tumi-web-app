@@ -122,7 +122,7 @@ class PunchesReportFilter extends Component {
                     </div>
                 </div>
 
-                <div className="col-md-2 mt-1 pl-0">
+                <div className="col-md-4 mt-1 pl-0">
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <span className="input-group-text">

@@ -31,7 +31,7 @@ class DashBoardSponsor extends Component {
         return (
             <div className="container Stats">
                 <div className="row">
-                    <div className="col-md-5">
+                    <div className="col-md-12">
                         <div className="row">
                             <div className="col-md-6 mb-1">
                                 <div className="StatBox">
@@ -97,7 +97,7 @@ class DashBoardSponsor extends Component {
                             }}
                         />
                     </div>
-                    <div className="col-md-5 offset-md-2">
+                    <div className="col-md-12">
                         <div className="row">
                             <div className="col-md-6 mb-1">
                                 <div className="StatBox">

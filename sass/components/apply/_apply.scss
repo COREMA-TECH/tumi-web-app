@@ -38,6 +38,7 @@
         left: -50px;
         padding-left: 1rem;
         position: absolute;
+        text-align: right;
         top: 25px;
         width: 100%;
         &:after {
@@ -88,4 +89,12 @@
     font-size: .80rem;
     font-family: $font-family-application;
     font-weight: 100;
+}
+
+@include media-breakpoint-up(sm){
+    .ApplyBlock{
+        &-title{
+            text-align: left;
+        }
+    }
 }

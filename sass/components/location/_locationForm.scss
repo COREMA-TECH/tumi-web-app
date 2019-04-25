@@ -1,0 +1,9 @@
+@include media-breakpoint-only(lg){
+    .Location{
+        &-changeCityByZip{
+            label{
+                // font-size: 8px;
+            } 
+        }
+    }
+}

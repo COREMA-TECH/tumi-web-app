@@ -1,5 +1,11 @@
 .RegionForm {
     &-header {
         @extend %FormHeader;
+
+        margin-left: -24px;
+        margin-right: -24px;    
+
+        padding-left: 24px;
+        padding-right: 24px;
     }
 }

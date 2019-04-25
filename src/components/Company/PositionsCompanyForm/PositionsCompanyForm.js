@@ -1095,48 +1095,54 @@ query getposition ($Id_Entity:Int){
 						</div>
 					</DialogContent>
 					<DialogActions style={{ margin: '20px 20px' }}>
-						<div className={classes.root}>
-							<div className={classes.wrapper} style={{ margin: '0' }}>
-								<Tooltip
-									title={
-										this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-												'Save Changes'
-											) : (
-												'Insert Record'
-											)
-									}
-								>
-									<div>
-										<button
-											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-											variant="fab"
-											onClick={this.addPositionHandler}
-											className="btn btn-success"
+						<div className="row">
+							<div className="col-12">
+								<div className={classes.root}>
+									<div className={classes.wrapper} style={{ margin: '0', width: '100%' }}>
+										<Tooltip
+											title={
+												this.state.idToEdit != null &&
+													this.state.idToEdit != '' &&
+													this.state.idToEdit != 0 ? (
+														'Save Changes'
+													) : (
+														'Insert Record'
+													)
+											}
 										>
-											Save {!this.state.saving && <i class="fas fa-save ml-1" />}
-											{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
-										</button>
+											<div>
+												<button
+													disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
+													variant="fab"
+													onClick={this.addPositionHandler}
+													className="btn btn-success tumi-modalButton"
+												>
+													Save {!this.state.saving && <i class="fas fa-save ml-1" />}
+													{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
+												</button>
+											</div>
+										</Tooltip>
 									</div>
-								</Tooltip>
+								</div>
 							</div>
-						</div>
 
-						<div className={classes.root}>
-							<div className={classes.wrapper} style={{ margin: '0' }}>
-								<Tooltip title={'Cancel Operation'}>
-									<div>
-										<button
-											//	disabled={this.state.loading || !this.state.enableCancelButton}
-											variant="fab"
-											onClick={this.cancelDepartmentHandler}
-											className="btn btn-danger"
-										>
-											Cancel <i class="fas fa-ban" />
-										</button>
+							<div className="col-12">
+								<div className={classes.root}>
+									<div className={classes.wrapper} style={{ margin: '0', width: '100%' }}>
+										<Tooltip title={'Cancel Operation'}>
+											<div>
+												<button
+													//	disabled={this.state.loading || !this.state.enableCancelButton}
+													variant="fab"
+													onClick={this.cancelDepartmentHandler}
+													className="btn btn-danger tumi-modalButton"
+												>
+													Cancel <i class="fas fa-ban" />
+												</button>
+											</div>
+										</Tooltip>
 									</div>
-								</Tooltip>
+								</div>
 							</div>
 						</div>
 					</DialogActions>
