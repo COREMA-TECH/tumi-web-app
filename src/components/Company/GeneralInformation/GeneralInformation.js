@@ -1369,7 +1369,7 @@ class GeneralInformation extends Component {
 						<div class="card">
 							<div class="card-body">
 								<div className="row">
-									<div className="col-md-6 col-lg-2">
+									<div className="col-md-6 col-lg-3">
 										<ImageUpload
 											id="avatarFileGI"
 											updateAvatar={(url) => {
@@ -1408,7 +1408,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-6 col-lg-4">
+									<div className="col-md-6 col-lg-3">
 										<label>* Company Name</label>
 										<InputForm
 											value={this.state.name}
@@ -1664,7 +1664,7 @@ class GeneralInformation extends Component {
 									</TableBody>
 								</Table>
 								<div className="row">
-									<div className="col-md-6">
+									<div className="col-md-12 mb-1">
 										<button className={this.props.idCompany == 0 ? (
 											'add-property__disabled btn btn-success btn-block mt-1'
 										) : (
@@ -1675,7 +1675,7 @@ class GeneralInformation extends Component {
 											Link Orphan Property <i class="fas fa-plus" />
 										</button>
 									</div>
-									<div className="col-md-6">
+									<div className="col-md-12">
 										<button
 											className={
 												this.props.idCompany == 0 ? (

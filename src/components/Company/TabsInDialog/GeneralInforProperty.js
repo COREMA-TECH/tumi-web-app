@@ -1102,11 +1102,11 @@ class GeneralInfoProperty extends Component {
                     loading={this.state.removing}
                 />
                 <div className="col-md-12">
-                    <div className="form-actions float-right">
+                    <div className="form-actions float-right tumi-buttonWrapper">
                         {this.props.idProperty != null ? (
                             <button
                                 disabled={false}
-                                className="btn btn-danger"
+                                className="btn btn-danger tumi-button"
                                 onClick={() => {
                                     this.setState({ openConfirm: true })
                                 }}
@@ -1120,7 +1120,7 @@ class GeneralInfoProperty extends Component {
 
 
 
-                        {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success" name="save" id="save" onClick={this.handleFormSubmit('save')} disabled={loading}>
+                        {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success tumi-button" name="save" id="save" onClick={this.handleFormSubmit('save')} disabled={loading}>
                             Save<i className="fas fa-save ml-2" />
                         </button>
                         }
@@ -1141,7 +1141,7 @@ class GeneralInfoProperty extends Component {
                         </div>
                         <div class="card-body">
                             <div className="row">
-                                <div className="col-md-12 col-lg-1">
+                                <div className="col-md-12 col-lg-12">
                                     <div className="GeneralInformation-wrapper">
                                         <ImageUpload
                                             id="avatarFilePI"

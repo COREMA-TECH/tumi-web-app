@@ -1,17 +1,39 @@
 .toolbar__main {
+	align-items: center;
 	border-color: #293a4a;
 	display: flex;
 	height: 100%;
 	justify-content: flex-end;
-	align-items: center;
-	width: 100%;
+	padding-left: 5px;
+	padding-right: 5px;
+	width: auto;
 }
 
 .main-container__title {
 	color: #ffffff;
-	font-size: 1.3em;
+	font-size: 1rem;
 	font-weight: 300;
 	font-family: "Segoe UI";
-	padding-left: 3rem;
+	padding-left: 3.5rem;
 	width: 20%;
+}
+
+.UserSettings{
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+
+	background-color: #dddddd;
+	
+	margin-bottom: 0.5rem;
+	margin-left: auto;
+	margin-right: auto;
+
+	padding-bottom: 1rem;
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
+	padding-top: 1rem;
+
+	width: 100%;
 }

@@ -914,7 +914,7 @@ query getposition ($Id_Entity:Int){
 									<Route
 										render={({ history }) => (
 											<button
-												className="btn btn-info float-right"
+												className="btn btn-info float-right add-contract-btn"
 												onClick={() => {
 													// When the user click Next button, open second tab
 													let hrefValue = '/home/company/edit';
@@ -954,7 +954,7 @@ query getposition ($Id_Entity:Int){
 						) : (
 								''
 							)}
-						<button className="btn btn-success float-right mr-1" onClick={this.handleClickOpenModal}>
+						<button className="btn btn-success float-right add-rates-btn" onClick={this.handleClickOpenModal}>
 							Add Rates<i class="fas fa-plus ml-1" />
 						</button>
 					</div>
@@ -1095,63 +1095,73 @@ query getposition ($Id_Entity:Int){
 						</div>
 					</DialogContent>
 					<DialogActions style={{ margin: '20px 20px' }}>
-						<div className={classes.root}>
-							<div className={classes.wrapper}>
-								<Tooltip
-									title={
-										this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-												'Save Changes'
-											) : (
-												'Insert Record'
-											)
-									}
-								>
-									<div>
-										<button
-											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-											variant="fab"
-											onClick={this.addPositionHandler}
-											className="btn btn-success"
+						<div className="row">
+							<div className="col-12">
+								<div className={classes.root}>
+									<div className={classes.wrapper} style={{ margin: '0', width: '100%' }}>
+										<Tooltip
+											title={
+												this.state.idToEdit != null &&
+													this.state.idToEdit != '' &&
+													this.state.idToEdit != 0 ? (
+														'Save Changes'
+													) : (
+														'Insert Record'
+													)
+											}
 										>
-											Save {!this.state.saving && <i class="fas fa-save ml-1" />}
-											{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
-										</button>
+											<div>
+												<button
+													disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
+													variant="fab"
+													onClick={this.addPositionHandler}
+													className="btn btn-success tumi-modalButton"
+												>
+													Save {!this.state.saving && <i class="fas fa-save ml-1" />}
+													{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
+												</button>
+											</div>
+										</Tooltip>
 									</div>
-								</Tooltip>
+								</div>
 							</div>
-						</div>
 
-						<div className={classes.root}>
-							<div className={classes.wrapper}>
-								<Tooltip title={'Cancel Operation'}>
-									<div>
-										<button
-											//	disabled={this.state.loading || !this.state.enableCancelButton}
-											variant="fab"
-											onClick={this.cancelDepartmentHandler}
-											className="btn btn-danger"
-										>
-											Cancel <i class="fas fa-ban" />
-										</button>
+							<div className="col-12">
+								<div className={classes.root}>
+									<div className={classes.wrapper} style={{ margin: '0', width: '100%' }}>
+										<Tooltip title={'Cancel Operation'}>
+											<div>
+												<button
+													//	disabled={this.state.loading || !this.state.enableCancelButton}
+													variant="fab"
+													onClick={this.cancelDepartmentHandler}
+													className="btn btn-danger tumi-modalButton"
+												>
+													Cancel <i class="fas fa-ban" />
+												</button>
+											</div>
+										</Tooltip>
 									</div>
-								</Tooltip>
+								</div>
 							</div>
 						</div>
 					</DialogActions>
 				</Dialog>
 				<div className="row">
 					<div className="col-md-12">
-						<PositionsTable
-							data={this.state.data}
-							departments={this.state.departments}
-							loading={this.state.showCircularLoading && isLoading}
-							shifts={this.state.shifts}
-							onEditHandler={this.onEditHandler}
-							onDeleteHandler={this.onDeleteHandler}
-							showPayRate={this.props.showPayRate}
-						/>
+						<div className="card">
+							<div className="card-body Table-wrapper">
+								<PositionsTable
+									data={this.state.data}
+									departments={this.state.departments}
+									loading={this.state.showCircularLoading && isLoading}
+									shifts={this.state.shifts}
+									onEditHandler={this.onEditHandler}
+									onDeleteHandler={this.onDeleteHandler}
+									showPayRate={this.props.showPayRate}
+								/>							
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

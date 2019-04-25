@@ -660,12 +660,12 @@ class RegionForm extends Component {
                                 </div>
                             </div>
                         </header>
-                        <div className="container-fluid">
-                            <div className="card">
+                        <div className="">
+                            <div className="">
                                 <div className="">
-                                    <div className="">
-                                        <div className="">
-                                            <div className="col-md-6">
+                                    <div className="row">
+                                       
+                                            <div className="col-lg-12">
                                                 <label htmlFor="">* Operation Manager</label>
                                                 <Query query={GET_USERS} variables={{ Id_Roles: 3 }} >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
@@ -697,8 +697,8 @@ class RegionForm extends Component {
                                                     }}
                                                 </Query>
                                             </div>
-                                        </div>
-                                        <div className="">
+                                        
+                                        
                                             <div className="col-lg-12">
                                                 <label htmlFor="">Regional Recruiter</label>
                                                 <Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
@@ -732,8 +732,8 @@ class RegionForm extends Component {
                                                 </Query>
                                             </div>
 
-                                        </div>
-                                        <div className="">
+                                       
+                                        
                                             <div className="col-lg-12">
                                                 <label htmlFor="">Property Name</label>
                                                 <Query query={GET_HOTEL_QUERY} >
@@ -766,22 +766,19 @@ class RegionForm extends Component {
                                                     }}
                                                 </Query>
                                             </div>
-                                        </div>
+                                       
                                     </div>
                                 </div>
 
-                                <div className="row">
-                                </div>
-
-                                <div className="card-footer bg-light">
+                                <div className="bg-light tumi-buttonWrapper">
                                     <button
                                         type="button"
-                                        className="btn btn-danger ml-1 float-right"
+                                        className="btn btn-danger float-right tumi-button"
                                         onClick={this.props.handleCloseModal}
                                     >
                                         Cancel<i className="fas fa-ban ml-2" />
                                     </button>
-                                    <button type="button" className="btn btn-success float-right mr-1"
+                                    <button type="button" className="btn btn-success float-right tumi-button"
                                         onClick={() => {
                                             this.insertCatalogItem();
                                             //  this.addregionbusinescompanies();

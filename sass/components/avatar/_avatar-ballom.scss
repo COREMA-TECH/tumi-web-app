@@ -1,0 +1,100 @@
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #FFFFFF;
+    background: #cccccc;
+    position: relative;
+}
+
+.avatar-description {
+    height: 40px;
+    background: #FFFFFF;
+    position: relative;
+}
+
+.flag {
+    color: #FFFFFF;
+}
+
+.avatar--flag {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    box-shadow: 1px 1px 15px #aaa;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    top: -80%;
+    left: 85%;
+
+    background: orangered;
+}
+
+.unflag {
+    background: #cccccc;
+}
+
+.avatar-lg {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px 5px 0 0;
+    border: 1px solid #cccccc;
+}
+
+.avatar-container {
+    padding: 2px 12px;
+   
+}
+
+.arrow-up {   
+    position: absolute;
+    bottom: 10px;
+    right: -10.5px;
+    z-index: -5;
+}
+
+.arrow-up::after{
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin-left: -0.5em;
+    bottom: -1.5em;
+    left: -5px;
+    box-sizing: border-box;
+
+    border: 8px solid black;
+    border-color: transparent transparent #FFFFFF #FFFFFF;
+
+    transform-origin: 0 0;
+    transform: rotate(-135deg);
+
+    box-shadow: -3px 2px 8px 0 #aaa;
+    z-index: -15;
+}
+
+.avatar-container-pic {
+    content: '';
+    display: none;
+
+    width: 300px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 8px 0 #aaa;
+
+    position: absolute;
+    top: -195px;
+    left: -295px;
+
+    z-index: 1000;
+    background: #FFFFFF;
+    padding: 1px;
+}
+
+.avatar-container:hover .avatar-container-pic {
+    display: block;
+}

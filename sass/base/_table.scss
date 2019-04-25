@@ -19,6 +19,17 @@ table {
             border-radius: 0 3px 0 0;
         }
     }
+
+    &-wrapper{
+        & > div[class^="MuiPaper-"]{
+            box-shadow: none;
+            overflow-x: auto !important;
+        }
+
+        tbody[class^="MuiTableBody-"] tr{
+            background-color: $white;
+        }
+    }
 }
 
 .TableProperties {
@@ -48,6 +59,6 @@ tbody[class^="MuiTableBody-"] {
         height: 40px !important;
     }
     td, th {
-        padding: 0px 5px 0px 5px !important;
+        padding: 5px 5px 5px 5px !important;
     }
 }

@@ -1,0 +1,41 @@
+.RowForm{
+    &-days{
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        padding-bottom: 1rem; 
+    }
+
+    &-day{
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+
+        max-width: 90px;
+        width: 100%;
+    }
+}
+
+@include media-breakpoint-up(md){
+    .RowForm{
+        &-days{           
+            flex-direction: row;           
+            flex-wrap: wrap;
+        }
+
+        &-day{
+            max-width: 89px;
+        }
+    }
+}
+
+@include media-breakpoint-up(lg){
+    .RowForm{
+        &-days{           
+            flex-wrap: nowrap;
+        }
+    }
+}

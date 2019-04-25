@@ -197,7 +197,7 @@ class HotelList extends Component {
                     </div>
                     <div className="col-md-6">
                         <div className="float-right">
-                            <button className="btn btn-success" onClick={this.handleClickOpen}>
+                            <button className="btn btn-success mt-2 mb-1" onClick={this.handleClickOpen}>
                                 Add New Property
                             </button>
                         </div>
@@ -215,7 +215,7 @@ class HotelList extends Component {
                         content="Do you really want to continue whit this operation?"
                     />
                     {this.state.hotels.map((hotel) => (
-                        <li className="col-md-2">
+                        <li className="col-md-4 col-xl-3">
                             <div className="HotelCard-wrapper">
                                 <div className="HotelCard-controls">
                                     <button className="btn btn-link" onClick={(e) => { this.handleAlertOpen(hotel.Id) }}>

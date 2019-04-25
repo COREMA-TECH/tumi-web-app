@@ -96,7 +96,7 @@ class PreFilter extends Component {
                     </div>
                 </DialogTitle>
                 <DialogContent style={{ overflowY: "unset" }}>
-                    <div className="card-body" style={{ minWidth: "300px" }}>
+                    <div className="card-body" style={{ minWidth: "250px", width: "100%" }}>
                         <form action="" onSubmit={this.changeFilter}>
                             <Select
                                 options={this.state.options}

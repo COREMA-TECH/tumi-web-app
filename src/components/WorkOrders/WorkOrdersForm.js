@@ -822,20 +822,18 @@ class WorkOrdersForm extends Component {
                                 )}
 
 
-                                <div className="col-md-12">
+                                <div className="col-12 pull-right">
                                     <button
                                         type="button"
-                                        className="btn btn-danger ml-1 float-right"
+                                        className="btn btn-danger tumi-button float-right"
                                         onClick={this.handleCloseModal}
                                     >
                                         Cancel<i className="fas fa-ban ml-2" />
                                     </button>
-
-                                    <button className="btn btn-success ml-1 float-right" type="submit">
+                                    <button className="btn btn-success tumi-button float-right" type="submit">
                                         Save {!this.state.saving && <i className="fas fa-save ml2" />}
                                         {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
                                     </button>
-
                                 </div>
                             </div>
 

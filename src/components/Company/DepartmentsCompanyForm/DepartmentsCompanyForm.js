@@ -556,24 +556,26 @@ class DepartmentsCompanyForm extends React.Component {
 						/>
 					</div>
 					<div className="col-md-4">
-						<button
-							disabled={this.state.loading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-							className="btn btn-success mr-1"
-							onClick={this.addDepartmenttHandler}
-						>
-							{isEdititing ? 'Save' : 'Add'}
-							{isEdititing && !loading && <i class="fas fa-save ml-1" />}
-							{!isEdititing && !loading && <i class="fas fa-plus ml-1" />}
-							{loading && <i class="fas fa-spinner fa-spin ml-1" />}
-						</button>
+						<div className="tumi-row-centered">
+							<button
+								disabled={this.state.loading || !this.Login.AllowEdit || !this.Login.AllowInsert}
+								className="btn btn-success mr-1"
+								onClick={this.addDepartmenttHandler}
+							>
+								{isEdititing ? 'Save' : 'Add'}
+								{isEdititing && !loading && <i class="fas fa-save ml-1" />}
+								{!isEdititing && !loading && <i class="fas fa-plus ml-1" />}
+								{loading && <i class="fas fa-spinner fa-spin ml-1" />}
+							</button>
 
-						<button
-							disabled={this.state.loading}
-							onClick={this.cancelDepartmentHandler}
-							className="btn btn-danger"
-						>
-							Clear<i class="fas fa-ban ml-1" />
-						</button>
+							<button
+								disabled={this.state.loading}
+								onClick={this.cancelDepartmentHandler}
+								className="btn btn-danger"
+							>
+								Clear<i class="fas fa-ban ml-1" />
+							</button>						
+						</div>
 					</div>
 				</div>
 				<div className="row">
