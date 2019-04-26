@@ -58,7 +58,8 @@
 		flex-direction: row;
 		justify-content: center;
 		
-		padding: 5px;
+		padding-left: 5px;
+		padding-right: 5px;
 	}
 
 	&-col-centered{
@@ -80,10 +81,13 @@
 	&-xScroll{
 		overflow-x: auto;
 	}
-}
 
-// Prevents pagination controls from breaking out and cause a horizontal scroll
-td[class^="MuiTableCell-root-"] > div[class^="MuiToolbar-root-"]{
-	// overflow-x: scroll; 
-	// overflow-y: hidden;
+	// forces the table wrapped by this class to display as block and scroll horizontally
+	&-forcedResponsiveTable{
+		& > table[class^="MuiTable-root-"]{
+			display: block !important;
+			overflow-x: auto;
+			width: 100%;
+		}
+	}
 }

@@ -15,6 +15,18 @@ class DashBoardSponsor extends Component {
         ]
     };
 
+    regionData = {
+        labels: ['North', 'South', 'East', 'West'],
+        datasets: [
+            {
+                label: 'Demand for region',
+                data: [300, 50, 100, 254],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F35A50'],
+                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F35A50']
+            }
+        ]        
+    }
+
     floatingData = {
         labels: ['Banquet', 'Housemen', 'Cook'],
         datasets: [
@@ -173,7 +185,7 @@ class DashBoardSponsor extends Component {
                             </div>
                             <div className="StatBox-body">
                                 <Doughnut
-                                    data={this.data}
+                                    data={this.regionData}
                                     width={200}
                                     height={200}
                                     options={{
