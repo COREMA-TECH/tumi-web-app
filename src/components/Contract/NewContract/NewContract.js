@@ -1052,7 +1052,7 @@ class NewContract extends Component {
 
                 break;
             case 'User_Signed_Title':
-                User_Signed_TitleValid = value.trim().length >= 3;
+                User_Signed_TitleValid = value !== null? value.trim().length >= 3:'';
                 Id_User_SignedValid = true;
                 break;
             case 'Signed_Date':

@@ -133,7 +133,7 @@ class BoardManager extends Component {
     };
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
-
+console.log("sourceLaneId ", sourceLaneId)
         let data;
 
         this.setState({
@@ -142,8 +142,7 @@ class BoardManager extends Component {
         });
 
         if (sourceLaneId == "lane1" || sourceLaneId == "Notify" ) {
-            if (sourceLaneId == "lane1")
-            {
+           
                 this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
                 this.KeepArray();
                 this.onCardClick(this.state.ShiftId, null, 'lane1');
@@ -152,23 +151,7 @@ class BoardManager extends Component {
                     LaneOrigen: '',
                     LaneDestino: ''
                 });
-            }
-            else{
-                
-                data = this.state.notify.find((item) => { return item.id == cardId })
-                if (data.response == 0)
-                { 
-                    this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
-                    this.KeepArray();
-                    this.onCardClick(this.state.ShiftId, null, 'lane1');
-    
-                    this.setState({
-                        LaneOrigen: '',
-                        LaneDestino: ''
-                    });
-                }
-               
-            }
+          
         }
         else {
 
@@ -670,7 +653,7 @@ class BoardManager extends Component {
                                             escalationTextLeftLead: item.generalComment,
                                             escalationTextRightLead: item.car == true ? " Yes" : " No",
                                             cardStyle: { borderRadius: 6, marginBottom: 15 },
-                                            response:0
+                                            response:1
                                         });
     
                                        /* this.props.client.query({
