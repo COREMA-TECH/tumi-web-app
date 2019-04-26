@@ -8723,7 +8723,8 @@ label:not(.custom-file-label):not(.form-check-label) {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  padding: 5px; }
+  padding-left: 5px;
+  padding-right: 5px; }
 
 .tumi-col-centered {
   -webkit-box-align: center;
@@ -8749,6 +8750,11 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .tumi-xScroll {
   overflow-x: auto; }
+
+.tumi-forcedResponsiveTable > table[class^="MuiTable-root-"] {
+  display: block !important;
+  overflow-x: auto;
+  width: 100%; }
 
 .modal-overflow {
   overflow-x: scroll; }

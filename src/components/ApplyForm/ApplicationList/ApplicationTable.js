@@ -198,7 +198,7 @@ class ApplicationTable extends React.Component {
 
             <Route
                 render={({ history }) => (
-                    <div className="card-body p-3">
+                    <div className="card-body p-3 tumi-forcedResponsiveTable">
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>

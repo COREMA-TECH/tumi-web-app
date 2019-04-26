@@ -275,7 +275,7 @@ class ApplicationList extends Component {
 		// To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="row pb-0">
-				<div className="col-md-2">
+				<div className="col-md-3 col-xl-2">
 					<div className="input-group mb-3">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="basic-addon1">
@@ -295,7 +295,7 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				<div className="col-md-2 offset-md-4">
+				<div className="col-md-3 col-xl-2 offset-xl-4">
 					<Select
 						name="property"
 						options={this.state.properties}
@@ -305,7 +305,7 @@ class ApplicationList extends Component {
 						closeMenuOnSelect
 					/>
 				</div>
-				<div className="col-md-2">
+				<div className="col-md-3 col-xl-2">
 					<Select
 						name="department"
 						options={this.state.departments}
@@ -315,7 +315,7 @@ class ApplicationList extends Component {
 						closeMenuOnSelect
 					/>
 				</div>
-				<div className="col-md-2">
+				<div className="col-md-3 col-xl-2">
 					<Select
 						name="status"
 						options={this.state.status}
