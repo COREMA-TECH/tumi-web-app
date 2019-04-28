@@ -219,6 +219,7 @@ class WorkOrdersForm extends Component {
         this.setState({
             openModal: nextProps.openModal
         });
+        return true;
     }
 
     getWorkOrders = () => {
@@ -291,7 +292,11 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
-                this.setState({ openModal: false, saving: false });
+                this.setState({ openModal: false, saving: false }, 
+                    () => {
+                        this.props.toggleRefresh();
+                        this.props.handleCloseModal();
+                    });
                 //this.getWorkOrders();
                 //                this.props.handleCloseModal
                 //this.props.toggleRefresh();

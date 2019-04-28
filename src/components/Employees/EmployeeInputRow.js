@@ -208,7 +208,7 @@ class EmployeeInputRow extends Component {
                         }}
                         placeholder="+(___) ___-____"
                         pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                        required
+                        required={this.props.phoneRequired}
                     />
                 </div>
                 <div className="col">
@@ -259,7 +259,6 @@ class EmployeeInputRow extends Component {
                             this.setState({
                                 department: e.target.value
                             });
-                            console.info("Department ID: ", e.target.value);
                             this.props.onchange(department, e.target.value);
                         }}
                     >

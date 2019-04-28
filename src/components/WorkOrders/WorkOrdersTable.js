@@ -430,6 +430,12 @@ class WorkOrdersTable extends Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.refresh != this.props.refresh) 
+            this.getWorkOrders();
+        return true;
+    }
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;

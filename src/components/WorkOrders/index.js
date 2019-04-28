@@ -13,7 +13,8 @@ class WorkOrders extends Component {
 			data: [],
 			openModal: false,
 			openLife: false,
-			item: null
+			item: null,
+			refresh: false
 		};
 	}
 
@@ -21,7 +22,8 @@ class WorkOrders extends Component {
 		this.setState({ openModal: true, openLife: false, item: null });
 	};
 	handleCloseModal = (event) => {
-		event.preventDefault();
+		if (event)
+			event.preventDefault();
 		this.setState({
 			openModal: false, openLife: false
 
@@ -44,6 +46,10 @@ class WorkOrders extends Component {
 		});
 	};
 
+	toggleRefresh = () => {
+        this.setState((prevState) => { return { refresh: !prevState.refresh } })
+    }
+
 	render() {
 		return (
 			<div>
@@ -63,6 +69,7 @@ class WorkOrders extends Component {
 							onLifeHandler={this.onLifeHandler}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
 							rowsPerPage={25}
+							refresh={this.state.refresh}
 						/>
 					</div>
 				</div>
@@ -71,6 +78,7 @@ class WorkOrders extends Component {
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					openModal={this.state.openModal}
 					handleCloseModal={this.handleCloseModal}
+					toggleRefresh={this.toggleRefresh}
 				/>
 				<LifeCycleWorkOrdersTable
 					item={this.state.item}
