@@ -1043,7 +1043,7 @@ class BoardManager extends Component {
                                         <div className="row">
                                             <div className="col-md-12">
                                                 <div className="row">
-                                                    <div className="col-md-3 mb-2">
+                                                    <div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
                                                         <select
                                                             required
                                                             name="IdEntity"
@@ -1064,7 +1064,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-3 mb-2">
+                                                    <div className="col-md-3 col-xl-2 mb-2">
                                                         <select
                                                             name="state"
                                                             className={'form-control'}
@@ -1086,7 +1086,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-3 mb-2">
+                                                    <div className="col-md-3 col-xl-2 mb-2">
                                                         <select
                                                             name="city"
                                                             className={'form-control'}
@@ -1107,7 +1107,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-3 mb-2">
+                                                    <div className="col-md-3 col-xl-2 mb-2">
                                                         <select
                                                             name="city"
                                                             className={'form-control'}
@@ -1129,9 +1129,9 @@ class BoardManager extends Component {
                                                             <option value={0}>Cancelled</option>
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-12 tumi-row-centered">
+                                                    <div className="col-md-12 Filter-buttons">
                                                         <a
-                                                            className="link-board" onClick={(e) => {
+                                                            className="link-board Filter-button" onClick={(e) => {
                                                                 e.preventDefault();
                                                                 e.stopPropagation();
 
@@ -1140,7 +1140,7 @@ class BoardManager extends Component {
                                                             Advanced <i className="fas fa-filter link-icon-filter"></i>
                                                         </a>
                                                         <a
-                                                            className="link-board" onClick={(e) => {
+                                                            className="link-board Filter-button" onClick={(e) => {
                                                                 this.setState({
                                                                     hotel: 0,
                                                                     state: 0,

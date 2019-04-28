@@ -3,6 +3,8 @@ import TimeCardForm from '../TimeCard/TimeCardForm'
 import withGlobalContent from 'Generic/Global';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class PunchesReportFilter extends Component {
 
@@ -108,21 +110,7 @@ class PunchesReportFilter extends Component {
                     />
                 </div>
             */}
-
-                <div className="col-md-4 mt-1 pl-0">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">From</span>
-                        </div>
-                        <input type="date" className="form-control" placeholder="2018-10-30" value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">To</span>
-                        </div>
-                        <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled} placeholder="2018-10-30" onChange={this.updateFilter} />
-                    </div>
-                </div>
-
-                <div className="col-md-4 mt-1 pl-0">
+                <div className="col-md-4 col-xl-2 mb-2">
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <span className="input-group-text">
@@ -132,10 +120,37 @@ class PunchesReportFilter extends Component {
                         <input name="employee" className="form-control" type="text" placeholder='Employee Search' onChange={this.updateFilter} value={this.state.employee} />
                     </div>
                 </div>
-
-
+                <div className="col-md-2 offset-md-4 col-xl-2 mb-2">
+                    <div class="input-group flex-nowrap">
+                        <DatePicker
+                            selected={this.state.startDate}
+                            onChange={this.handleChangeDate}
+                            placeholderText="Start date"
+                            id="datepicker"
+                        />
+                        <div class="input-group-append">
+                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                <i class="far fa-calendar"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-2 col-xl-2 mb-2">
+                    <div class="input-group flex-nowrap">
+                        <DatePicker
+                            selected={this.state.endDate}
+                            onChange={this.handleChangeDate}
+                            placeholderText="End date"
+                            id="datepicker"
+                        />
+                        <div class="input-group-append">
+                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                <i class="far fa-calendar"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </div>
     }
 }

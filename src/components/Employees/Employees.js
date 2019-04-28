@@ -1013,7 +1013,7 @@ class Employees extends Component {
 
         let renderHeaderContent = () => (
             <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-4 col-xl-2">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">
@@ -1033,7 +1033,7 @@ class Employees extends Component {
                         />
                     </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-8 col-xl-10">
                     <button
                         className="btn btn-success float-right"
                         onClick={this.handleClickOpenModal}

@@ -10,3 +10,23 @@
         }
     }
 }
+
+.Dropdown{
+    &Body{
+        & &-table{
+            display: block !important;
+			overflow-x: auto !important;
+			width: 100%;
+        }
+    }
+
+    @include media-breakpoint-up(sm){
+        &Body{
+            & &-table{
+                display: table !important;
+                overflow-x: inherit;
+                width: inhe;
+            }
+        }
+    }
+}

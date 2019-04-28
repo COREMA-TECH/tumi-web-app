@@ -9277,6 +9277,17 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
       -webkit-box-shadow: none !important;
       box-shadow: none !important; }
 
+.DropdownBody .DropdownBody-table {
+  display: block !important;
+  overflow-x: auto !important;
+  width: 100%; }
+
+@media (min-width: 576px) {
+  .DropdownBody .DropdownBody-table {
+    display: table !important;
+    overflow-x: inherit;
+    width: inhe; } }
+
 .avatar {
   width: 30px;
   height: 30px;
@@ -9324,7 +9335,19 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   border: 1px solid #cccccc; }
 
 .avatar-container {
-  padding: 2px 12px; }
+  padding: 2px 12px;
+  position: relative; }
+  @media (min-width: 576px) {
+    .avatar-container {
+      position: absolute; }
+      .avatar-container:last-child {
+        left: 85.5%; } }
+  @media (min-width: 992px) {
+    .avatar-container:last-child {
+      left: 86%; } }
+  @media (min-width: 1200px) {
+    .avatar-container:last-child {
+      left: 87.5%; } }
 
 .arrow-up {
   position: absolute;
@@ -12190,3 +12213,33 @@ label.input-group-text {
       display: none; }
     .ScheduleWrapper .EmployeeFilter .css-xp4uvy {
       color: #3ca2c8; }
+
+.Filter-buttons {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+
+.Filter-button {
+  font-size: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px; }
+
+@media (min-width: 576px) {
+  .Filter-buttons {
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end; }
+  .Filter-button {
+    font-size: 0.9rem; } }
