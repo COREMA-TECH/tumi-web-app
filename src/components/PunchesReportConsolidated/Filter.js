@@ -186,7 +186,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         closeMenuOnSelect
                     />
                 </div>                
-                <div className="col-md-2 col-xl-2 mb-2">
+                <div className="col-md-2 offset-md-4 col-xl-2 mb-2">
                     <div class="input-group flex-nowrap">
                         <DatePicker
                             selected={this.state.startDate}
