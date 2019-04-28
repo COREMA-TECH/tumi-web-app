@@ -1217,6 +1217,7 @@ class Employees extends Component {
                                         departments={this.state.departments}
                                         titles={this.state.titles}
                                         hotels={this.state.hotels}
+                                        phoneRequired={this.state.rowsInput.length - 1 == index ? false : true}
                                     />
                                 );
                             })}
@@ -1389,7 +1390,7 @@ class Employees extends Component {
                                         </select>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""                                            >Department</label>
+                                        <label htmlFor="">Department</label>
                                         <select
                                             name="departmentEmployee"
                                             className="form-control"
@@ -1413,7 +1414,7 @@ class Employees extends Component {
                                         </select>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""                                            >Position</label>
+                                        <label htmlFor="">Position</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
