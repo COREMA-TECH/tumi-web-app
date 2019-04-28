@@ -43,9 +43,11 @@ class CustomCard extends Component {
 
     render() {
         let props = this.props;
-        let opening = props.openingRecruiter.find(__or => {
+
+        let opening = props.openingRecruiter ? props.openingRecruiter.find(__or => {
             return __or.recruiterId == localStorage.getItem('LoginId')
-        })
+        }) : false;
+
         return (
             <div>
                 <header
@@ -93,6 +95,7 @@ class CustomCard extends Component {
                         {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i
                             class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
                     </div>
+
                     {!opening ?
                         <right>
                             {this.printButtons(this.props)}
