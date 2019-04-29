@@ -3,3 +3,9 @@
         min-width: 960px;
     }
 }
+
+.ShiftRestrictionModal{
+    & .card-body{
+        min-height: 200px;
+    }
+}

@@ -207,12 +207,21 @@
 		display: block;
 		margin: 0 auto;
 	}
+
+	//I used the others to fix already existing buttons with weird placements, this one is for new content, where buttons can be siblings
+	&-buttonRow{
+		align-items: center;
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: flex-end;		
+	}
 }
 
 @include media-breakpoint-down(sm){
 	.tumi{
 		&-buttonWrapper{
-			width: 100% !important;
+			width: 100% !important; 
 		}
 
 		&-button{
@@ -224,5 +233,14 @@
 		
 			width: 100%;
 		}
+
+		//On smaller screens, buttons will pile up
+		&-buttonRow{
+			align-items: center;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: nowrap;
+			justify-content: center;		
+		} 
 	}	
 }

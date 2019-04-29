@@ -8404,6 +8404,23 @@ label:not(.custom-file-label):not(.form-check-label) {
   display: block;
   margin: 0 auto; }
 
+.tumi-buttonRow {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end; }
+
 @media (max-width: 767.98px) {
   .tumi-buttonWrapper {
     width: 100% !important; }
@@ -8412,7 +8429,23 @@ label:not(.custom-file-label):not(.form-check-label) {
     margin-left: 0 !important;
     margin-right: 0;
     margin-bottom: 0.5rem;
-    width: 100%; } }
+    width: 100%; }
+  .tumi-buttonRow {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center; } }
 
 .inputGroup {
   background-color: #fff;
@@ -9210,6 +9243,9 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   .minWidth-empty-modal {
     min-width: 960px; } }
 
+.ShiftRestrictionModal .card-body {
+  min-height: 200px; }
+
 .input-group .react-datepicker__input-container input {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0; }
@@ -9277,6 +9313,17 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
       -webkit-box-shadow: none !important;
       box-shadow: none !important; }
 
+.DropdownBody .DropdownBody-table {
+  display: block !important;
+  overflow-x: auto !important;
+  width: 100%; }
+
+@media (min-width: 576px) {
+  .DropdownBody .DropdownBody-table {
+    display: table !important;
+    overflow-x: inherit;
+    width: inhe; } }
+
 .avatar {
   width: 30px;
   height: 30px;
@@ -9324,7 +9371,19 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   border: 1px solid #cccccc; }
 
 .avatar-container {
-  padding: 2px 12px; }
+  padding: 2px 12px;
+  position: relative; }
+  @media (min-width: 576px) {
+    .avatar-container {
+      position: absolute; }
+      .avatar-container:last-child {
+        left: 85.5%; } }
+  @media (min-width: 992px) {
+    .avatar-container:last-child {
+      left: 86%; } }
+  @media (min-width: 1200px) {
+    .avatar-container:last-child {
+      left: 87.5%; } }
 
 .arrow-up {
   position: absolute;
@@ -9755,6 +9814,16 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   max-width: 91px;
   width: 100%; }
 
+@media (min-width: 576px) {
+  .RowForm-days.in-modal {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-bottom: 0; } }
+
 @media (min-width: 768px) {
   .RowForm-days {
     -webkit-box-orient: horizontal;
@@ -9762,14 +9831,18 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     -ms-flex-direction: row;
     flex-direction: row;
     -ms-flex-wrap: wrap;
-    flex-wrap: wrap; }
+    flex-wrap: wrap;
+    padding-bottom: 0; }
   .RowForm-day {
     max-width: 89px; } }
 
 @media (min-width: 992px) {
   .RowForm-days {
     -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap; } }
+    flex-wrap: nowrap; }
+  .RowForm-days.in-modal {
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap; } }
 
 .RecruiterDash-ffmItem {
   -webkit-box-align: center;
@@ -12190,3 +12263,33 @@ label.input-group-text {
       display: none; }
     .ScheduleWrapper .EmployeeFilter .css-xp4uvy {
       color: #3ca2c8; }
+
+.Filter-buttons {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+
+.Filter-button {
+  font-size: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px; }
+
+@media (min-width: 576px) {
+  .Filter-buttons {
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end; }
+  .Filter-button {
+    font-size: 0.9rem; } }

@@ -18,6 +18,8 @@ import ShiftsData from '../../data/shitfsWorkOrder.json';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -119,9 +121,11 @@ class WorkOrdersTable extends Component {
 
         if (this.state.id)
             variables = {
-                ...variables,
-                shift: {
-                    id: this.state.workOrderId
+                workOrder: {
+                    id: this.state.id
+                },
+                shiftEntity: {
+                    Code: this.state.id
                 }
             }
 
@@ -446,7 +450,17 @@ class WorkOrdersTable extends Component {
                 {isLoading && <LinearProgress />}
                 <div className="card-header bg-light">
                     <div className="row">
-                        <div className="col-md-6 mb-2">
+                        <div className="col-md-4 col-xl-2 mb-2">
+                            <div class="input-group">
+                                <input type="text" name="id" value={this.state.id} className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4 col-xl-2 offset-xl-2 mb-2">
                             <select name="state" id="" value={this.state.state} className="form-control" onChange={(e) => {
                                 this.setState({
                                     state: parseInt(e.target.value)
@@ -458,24 +472,37 @@ class WorkOrdersTable extends Component {
                                 })}
                             </select>
                         </div>
-                        <div className="col-md-6 mb-2">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">From</span>
+                        <div className="col-md-2 col-xl-2 mb-2">
+                            <div class="input-group flex-nowrap">
+                                <DatePicker
+                                    selected={this.state.startDate}
+                                    onChange={this.handleChangeDate}
+                                    placeholderText="Start date"
+                                    id="datepicker"
+                                />
+                                <div class="input-group-append">
+                                    <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                        <i class="far fa-calendar"></i>
+                                    </label>
                                 </div>
-                                <input type="date" className="form-control" placeholder="2018-10-30" value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">To</span>
-                                </div>
-                                <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled ? true : false} placeholder="2018-10-30" onChange={this.handleEndDate} />
                             </div>
                         </div>
-                        <div className="col-md-4 mb-2">
-                            <button class="btn btn-outline-secondary btn-not-rounded d-block w-100" type="button" onClick={this.clearInputDates}>
-                                <i class="fas fa-filter"></i> Clear
-                            </button>
-                        </div>
-                        <div className="col-md-4 mb-2">
+                        <div className="col-md-2 col-xl-2 mb-2">
+                            <div class="input-group flex-nowrap">
+                                <DatePicker
+                                    selected={this.state.endDate}
+                                    onChange={this.handleChangeDate}
+                                    placeholderText="End date"
+                                    id="datepicker"
+                                />
+                                <div class="input-group-append">
+                                    <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                        <i class="far fa-calendar"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div className="col-md-4 offset-md-8 col-xl-2 offset-xl-0 mb-2">
                             <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control" onChange={(event) => {
                                 if (event.target.value == "null") {
                                     this.handleFilterValue(null);
@@ -493,16 +520,11 @@ class WorkOrdersTable extends Component {
 
                             </select>
                         </div>
-                        <div className="col-md-4 mb-2">
-                            <div class="input-group">
-                                <input type="text" name="id" value={this.state.id} className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">
-                                        <i class="fas fa-search"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        <div className="col-md-12 mb-2 Filter-buttons">
+                            <button class="btn btn-outline-secondary btn-not-rounded Filter-button" type="button" onClick={this.clearInputDates}>
+                                <i class="fas fa-filter"></i> Clear
+                            </button>
+                        </div>                        
                     </div>
 
                 </div>

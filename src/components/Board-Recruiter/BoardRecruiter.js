@@ -43,9 +43,11 @@ class CustomCard extends Component {
 
     render() {
         let props = this.props;
-        let opening = props.openingRecruiter.find(__or => {
+
+        let opening = props.openingRecruiter ? props.openingRecruiter.find(__or => {
             return __or.recruiterId == localStorage.getItem('LoginId')
-        })
+        }) : false;
+
         return (
             <div>
                 <header
@@ -93,6 +95,7 @@ class CustomCard extends Component {
                         {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i
                             class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
                     </div>
+
                     {!opening ?
                         <right>
                             {this.printButtons(this.props)}
@@ -1091,155 +1094,131 @@ class BoardRecruiter extends Component {
                     <div className="row">
                         <div className="col-md-12 col-lg-12">
                             <div className="card">
-                                <div className="card-header info">
+                                <div className="card-header info">                                   
                                     <div className="row">
-                                        <div className="col-md-9">
-                                            <div className="row">
-                                                <div className="col-md-2">
-                                                    <select
-                                                        required
-                                                        name="IdEntity"
-                                                        className="form-control"
-                                                        id=""
-                                                        onChange={(event) => {
-                                                            this.updateHotel(event.target.value);
-                                                        }}
-                                                        value={this.state.hotel}
-                                                        //disabled={!isAdmin}
-                                                        onBlur={this.handleValidate}
-                                                    >
-                                                        <option value={0}>Select a Hotel</option>
-                                                        {this.state.hotels.map((hotel) => (
+                                        <div className="col-md-4 col-xl-2 offset-xl-4 mb-2">
+                                            <select
+                                                required
+                                                name="IdEntity"
+                                                className="form-control"
+                                                id=""
+                                                onChange={(event) => {
+                                                    this.updateHotel(event.target.value);
+                                                }}
+                                                value={this.state.hotel}
+                                                //disabled={!isAdmin}
+                                                onBlur={this.handleValidate}
+                                            >
+                                                <option value={0}>Select a Hotel</option>
+                                                {this.state.hotels.map((hotel) => (
 
-                                                            <option value={hotel.Id}>{hotel.Name}</option>
+                                                    <option value={hotel.Id}>{hotel.Name}</option>
 
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <select
-                                                        name="state"
-                                                        className={'form-control'}
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                state: event.target.value,
-                                                                city: 0,
-                                                                cities: []
-                                                            }, () => {
-                                                                this.loadCities();
-                                                                this.getOpenings();
-                                                                this.getMatches();
-                                                            })
-                                                        }}
-                                                        value={this.state.state}
-                                                        showNone={false}
-                                                    >
-                                                        <option value="">Select a state</option>
-                                                        {this.state.states.map((item) => (
-                                                            <option value={item.Id}>{item.Name}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <select
-                                                        name="city"
-                                                        className={'form-control'}
-                                                        // disabled={this.state.loadingCities}
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                city: event.target.value
-                                                            }, () => {
-                                                                this.getOpenings();
-                                                                this.getMatches();
-                                                            })
-                                                        }}
-                                                        //error={!this.state.cityValid}
-                                                        value={this.state.city}
-                                                        showNone={false}
-                                                    >
-                                                        <option value="">Select a city</option>
-                                                        {this.state.cities.map((item) => (
-                                                            <option value={item.Id}>{item.Name}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <select
-                                                        name="status"
-                                                        className={'form-control'}
-                                                        onChange={(event) => {
-                                                            if (event.target.value == "null") {
-                                                                this.updateStatus(null);
-                                                            } else {
-                                                                this.updateStatus(event.target.value);
-                                                            }
-                                                        }}
-                                                        value={this.state.status}
-                                                        showNone={false}
-                                                    >
-                                                        <option value={1}>Open</option>
-                                                        <option value={null}>Status (All)</option>
-                                                        <option value={2}>Completed</option>
-                                                        <option value={0}>Cancelled</option>
-                                                    </select>
-                                                </div>
-                                                <div className="col-md-4">
-                                                    <a
-                                                        className="link-board" onClick={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-
-                                                            this.setState({ openModal: true })
-                                                        }}>
-                                                        Advanced <i className="fas fa-filter link-icon-filter"></i>
-                                                    </a>
-                                                    <a
-                                                        className="link-board" onClick={(e) => {
-                                                            this.setState({
-                                                                hotel: 0,
-                                                                state: 0,
-                                                                city: 0,
-                                                                status: null
-                                                            }, () => {
-                                                                this.getOpenings();
-                                                            })
-                                                        }}>
-                                                        Clear <i className="fas fa-filter link-icon-filter"></i><i
-                                                            className="fas fa-times-circle text-danger clear-filter" />
-                                                    </a>
-
-                                                </div>
-                                                {/*<div className="col-md-1">*/}
-                                                {/*<button className="btn btn-danger" onClick={() => {*/}
-                                                {/*this.setState({*/}
-                                                {/*hotel: 0,*/}
-                                                {/*state: 0,*/}
-                                                {/*city: 0,*/}
-                                                {/*status: null*/}
-                                                {/*}, () => {*/}
-                                                {/*this.getOpenings();*/}
-                                                {/*})*/}
-                                                {/*}}>Clear</button>*/}
-                                                {/*</div>*/}
-                                            </div>
+                                                ))}
+                                            </select>
                                         </div>
-                                        <div className="col-md-3">
-                                            <div className="row">
-                                                <div className="col-sm-0 col-md-2 col-lg-1"></div>
-                                                <div className="col-sm-12 col-md-10 col-lg-11">
-                                                    <button
-                                                        className="btn btn-outline-info btn-sm float-right"
-                                                        onClick={() => {
-                                                            localStorage.setItem('idApplication', 0);
-                                                            this.props.history.push({
-                                                                pathname: '/home/application/Form',
-                                                                state: { ApplicationId: 0 }
-                                                            });
-                                                        }}>New Lead
-                                                    </button>
-                                                </div>
-                                            </div>
+                                        <div className="col-md-4 col-xl-2 mb-2">
+                                            <select
+                                                name="state"
+                                                className={'form-control'}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        state: event.target.value,
+                                                        city: 0,
+                                                        cities: []
+                                                    }, () => {
+                                                        this.loadCities();
+                                                        this.getOpenings();
+                                                        this.getMatches();
+                                                    })
+                                                }}
+                                                value={this.state.state}
+                                                showNone={false}
+                                            >
+                                                <option value="">Select a state</option>
+                                                {this.state.states.map((item) => (
+                                                    <option value={item.Id}>{item.Name}</option>
+                                                ))}
+                                            </select>
                                         </div>
+                                        <div className="col-md-4 col-xl-2 mb-2">
+                                            <select
+                                                name="city"
+                                                className={'form-control'}
+                                                // disabled={this.state.loadingCities}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        city: event.target.value
+                                                    }, () => {
+                                                        this.getOpenings();
+                                                        this.getMatches();
+                                                    })
+                                                }}
+                                                //error={!this.state.cityValid}
+                                                value={this.state.city}
+                                                showNone={false}
+                                            >
+                                                <option value="">Select a city</option>
+                                                {this.state.cities.map((item) => (
+                                                    <option value={item.Id}>{item.Name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="col-md-4 offset-md-8 col-xl-2 offset-xl-0 mb-2">
+                                            <select
+                                                name="status"
+                                                className={'form-control'}
+                                                onChange={(event) => {
+                                                    if (event.target.value == "null") {
+                                                        this.updateStatus(null);
+                                                    } else {
+                                                        this.updateStatus(event.target.value);
+                                                    }
+                                                }}
+                                                value={this.state.status}
+                                                showNone={false}
+                                            >
+                                                <option value={1}>Open</option>
+                                                <option value={null}>Status (All)</option>
+                                                <option value={2}>Completed</option>
+                                                <option value={0}>Cancelled</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-12 Filter-buttons">
+                                            <a
+                                                className="link-board Filter-button" onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+
+                                                    this.setState({ openModal: true })
+                                                }}>
+                                                Advanced <i className="fas fa-filter link-icon-filter"></i>
+                                            </a>
+                                            <a
+                                                className="link-board Filter-button" onClick={(e) => {
+                                                    this.setState({
+                                                        hotel: 0,
+                                                        state: 0,
+                                                        city: 0,
+                                                        status: null
+                                                    }, () => {
+                                                        this.getOpenings();
+                                                    })
+                                                }}>
+                                                Clear <i className="fas fa-filter link-icon-filter"></i><i
+                                                    className="fas fa-times-circle text-danger clear-filter" />
+                                            </a>
+                                            <button
+                                                className="btn btn-outline-info btn-sm Filter-button"
+                                                onClick={() => {
+                                                    localStorage.setItem('idApplication', 0);
+                                                    this.props.history.push({
+                                                        pathname: '/home/application/Form',
+                                                        state: { ApplicationId: 0 }
+                                                    });
+                                                }}>New Lead
+                                            </button>
+                                        </div>                                                
                                     </div>
                                 </div>
                             </div>
