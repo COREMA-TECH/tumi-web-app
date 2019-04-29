@@ -180,6 +180,7 @@ console.log("sourceLaneId ", sourceLaneId)
                         if (targetLaneId != "Matches") {
                             this.updateApplicationInformation(cardId, false, 'candidate was updated!');
                         }
+                        
 
                         if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
                             this.setState({
