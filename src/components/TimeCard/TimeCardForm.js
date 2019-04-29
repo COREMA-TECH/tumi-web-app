@@ -103,7 +103,6 @@ class TimeCardForm extends Component {
         DateContract: '',
         departmentId: 0,
         dayWeeks: '',
-        openModal: false,
         statusTimeOut: false
 
     };
@@ -146,7 +145,6 @@ class TimeCardForm extends Component {
                     needEnglish: nextProps.item.needEnglish,
                     comment: nextProps.item.comment,
                     userId: localStorage.getItem('LoginId'),
-                    openModal: nextProps.openModal,
                     EspecialComment: nextProps.item.EspecialComment,
                     PositionName: nextProps.item.positionName,
                     dayWeeks: nextProps.item.dayWeek
@@ -197,13 +195,10 @@ class TimeCardForm extends Component {
                 DateContract: '',
                 departmentId: 0,
                 dayWeeks: '',
-                openModal: false,
                 statusTimeOut: false
             });
         }
-        this.setState({
-            openModal: nextProps.openModal
-        });
+
 
         this.getHotels();
         this.getEmployees();
@@ -228,9 +223,7 @@ class TimeCardForm extends Component {
         this.getHotels();
         this.getEmployees();
 
-        this.setState({
-            openModal: this.props.openModal
-        });
+
     }
 
     handleCloseModal = (event) => {
@@ -292,7 +285,7 @@ class TimeCardForm extends Component {
                 if (!this.state.statusTimeOut) { this.addOut(); } else {
                     this.props.handleOpenSnackbar('success', 'Record Inserted!');
                     this.props.toggleRefresh();
-                    this.setState({ openModal: false, saving: false });
+                    this.setState({ saving: false }, this.props.handleCloseModal);
                 }
 
             })
@@ -322,7 +315,7 @@ class TimeCardForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.props.toggleRefresh();
-                this.setState({ openModal: false, saving: false });
+                this.setState({ saving: false }, this.props.handleCloseModal);
                 // window.location.reload();
             })
             .catch((error) => {
@@ -566,7 +559,7 @@ class TimeCardForm extends Component {
 
         return (
             <div>
-                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
+                <Dialog maxWidth="md" open={this.props.openModal} onClose={this.props.handleCloseModal}>
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 className="modal-title">Add Time +</h5>

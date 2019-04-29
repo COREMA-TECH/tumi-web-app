@@ -183,6 +183,9 @@ class PunchesReport extends Component {
         this.setState({openModalPicture: false});
     };
 
+    handleCloseModal= () => {
+        this.setState({openMpdal: false});
+    };
     render() {
         const {loadingReport} = this.state;
         const loading = loadingReport;

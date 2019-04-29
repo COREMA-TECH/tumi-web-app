@@ -81,7 +81,8 @@ class PunchesReportFilter extends Component {
     }
 
     handleCloseModal = (event) => {
-        event.preventDefault();
+        if (event)
+            event.preventDefault();
         this.setState({
             openModal: false
 
