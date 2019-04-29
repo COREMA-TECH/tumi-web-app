@@ -8,6 +8,12 @@
         padding-bottom: 1rem; 
     }
 
+    &-days.in-modal{
+        .RowForm-day{
+            max-width: 79px;
+        }
+    }
+
     &-day{
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
@@ -24,7 +30,7 @@
         &-days.in-modal{           
             flex-direction: row;           
             flex-wrap: wrap;
-            padding-bottom: 0; 
+            padding-bottom: 0;            
         }
     }
 }

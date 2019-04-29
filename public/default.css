@@ -9806,6 +9806,9 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   justify-content: center;
   padding-bottom: 1rem; }
 
+.RowForm-days.in-modal .RowForm-day {
+  max-width: 79px; }
+
 .RowForm-day {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
