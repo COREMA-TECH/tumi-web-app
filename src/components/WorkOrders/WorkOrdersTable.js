@@ -121,9 +121,11 @@ class WorkOrdersTable extends Component {
 
         if (this.state.id)
             variables = {
-                ...variables,
-                shift: {
-                    id: this.state.workOrderId
+                workOrder: {
+                    id: this.state.id
+                },
+                shiftEntity: {
+                    Code: this.state.id
                 }
             }
 

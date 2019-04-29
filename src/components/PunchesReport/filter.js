@@ -81,7 +81,8 @@ class PunchesReportFilter extends Component {
     }
 
     handleCloseModal = (event) => {
-        event.preventDefault();
+        if (event)
+            event.preventDefault();
         this.setState({
             openModal: false
 
@@ -223,6 +224,7 @@ class PunchesReportFilter extends Component {
                         onEditHandler={this.onEditHandler}
                         toggleRefresh={this.toggleRefresh}
                         handleCloseModal={this.handleCloseModal}
+                        getReport={this.props.getReport}
                     />
                 </div>
             </div>
