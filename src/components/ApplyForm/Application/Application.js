@@ -22,6 +22,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import ShiftRestrictionModal from './ShiftRestrictionModal';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -135,7 +136,9 @@ class Application extends Component {
             dataWorkOrder: [],
 
 
-            openSSNDialog: false
+            openSSNDialog: false,
+            //Open/Close schedule restrictions modal
+            openRestrictionsModal: false
         };
     }
 
@@ -146,6 +149,10 @@ class Application extends Component {
 
     handleChange = (positionsTags) => {
         this.setState({ positionsTags });
+    };
+
+    handleRestrictionModalClose = () => {
+        this.setState({ openRestrictionsModal: false });
     };
 
     /**<
@@ -1067,7 +1074,8 @@ class Application extends Component {
                                                         onChange={(event) => {
                                                             this.setState(
                                                                 {
-                                                                    scheduleRestrictions: event.target.checked
+                                                                    scheduleRestrictions: event.target.checked,
+                                                                    openRestrictionsModal: event.target.checked
                                                                 },
                                                                 () => {
                                                                     if (!this.state.scheduleRestrictions) {
@@ -1193,6 +1201,10 @@ class Application extends Component {
                         </div>
                     </div>
                 </form>
+                <ShiftRestrictionModal 
+                    openModal={this.state.openRestrictionsModal}
+                    handleCloseModal={this.handleRestrictionModalClose}
+                />
             </div >
         );
     }

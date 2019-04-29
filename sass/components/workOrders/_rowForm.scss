@@ -8,6 +8,12 @@
         padding-bottom: 1rem; 
     }
 
+    &-days.in-modal{
+        .RowForm-day{
+            max-width: 79px;
+        }
+    }
+
     &-day{
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
@@ -19,11 +25,22 @@
     }
 }
 
+@include media-breakpoint-up(sm){
+    .RowForm{
+        &-days.in-modal{           
+            flex-direction: row;           
+            flex-wrap: wrap;
+            padding-bottom: 0;            
+        }
+    }
+}
+
 @include media-breakpoint-up(md){
     .RowForm{
         &-days{           
             flex-direction: row;           
             flex-wrap: wrap;
+            padding-bottom: 0; 
         }
 
         &-day{
@@ -36,6 +53,10 @@
     .RowForm{
         &-days{           
             flex-wrap: nowrap;
+        }
+
+        &-days.in-modal{           
+            flex-wrap: wrap;
         }
     }
 }
