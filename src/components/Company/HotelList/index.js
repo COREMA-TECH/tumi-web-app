@@ -185,7 +185,7 @@ class HotelList extends Component {
         return (
             <div className="container-fluid">
                 <ul className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-4 col-xl-2">
                         <div class="input-group">
                             <input onChange={this.handleChange} type="text" name="searchbox" className="form-control" placeholder="Search" />
                             <div class="input-group-append">
@@ -195,7 +195,7 @@ class HotelList extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-8 col-xl-10">
                         <div className="float-right">
                             <button className="btn btn-success mt-2 mb-1" onClick={this.handleClickOpen}>
                                 Add New Property

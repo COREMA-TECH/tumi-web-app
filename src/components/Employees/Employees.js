@@ -1013,7 +1013,7 @@ class Employees extends Component {
 
         let renderHeaderContent = () => (
             <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-4 col-xl-2">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">
@@ -1033,7 +1033,7 @@ class Employees extends Component {
                         />
                     </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-8 col-xl-10">
                     <button
                         className="btn btn-success float-right"
                         onClick={this.handleClickOpenModal}
@@ -1217,6 +1217,7 @@ class Employees extends Component {
                                         departments={this.state.departments}
                                         titles={this.state.titles}
                                         hotels={this.state.hotels}
+                                        phoneRequired={this.state.rowsInput.length - 1 == index ? false : true}
                                     />
                                 );
                             })}
@@ -1389,7 +1390,7 @@ class Employees extends Component {
                                         </select>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""                                            >Department</label>
+                                        <label htmlFor="">Department</label>
                                         <select
                                             name="departmentEmployee"
                                             className="form-control"
@@ -1413,7 +1414,7 @@ class Employees extends Component {
                                         </select>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""                                            >Position</label>
+                                        <label htmlFor="">Position</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {

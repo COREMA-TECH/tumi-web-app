@@ -219,6 +219,7 @@ class WorkOrdersForm extends Component {
         this.setState({
             openModal: nextProps.openModal
         });
+        return true;
     }
 
     getWorkOrders = () => {
@@ -291,7 +292,11 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
-                this.setState({ openModal: false, saving: false });
+                this.setState({ openModal: false, saving: false }, 
+                    () => {
+                        this.props.toggleRefresh();
+                        this.props.handleCloseModal();
+                    });
                 //this.getWorkOrders();
                 //                this.props.handleCloseModal
                 //this.props.toggleRefresh();
@@ -665,7 +670,7 @@ class WorkOrdersForm extends Component {
                         </div>
                         <div className="container">
                             <div className="row">
-                                <div className="col-md-3">
+                                <div className="col-md-4 col-xl-2">
                                     <select
                                         required
                                         name="IdEntity"
@@ -682,7 +687,7 @@ class WorkOrdersForm extends Component {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-4 col-xl-2">
                                     <div class="input-group flex-nowrap">
                                         <DatePicker
                                             selected={this.state.endDate}
@@ -716,7 +721,7 @@ class WorkOrdersForm extends Component {
                             <div className="card">
                                 <div className="card-header bg-light">
                                     <div className="row">
-                                        <div className="col-md-3">
+                                        <div className="col-md-4 col-xl-2 mb-2">
                                             <select
                                                 required
                                                 name="departmentId"
@@ -733,7 +738,7 @@ class WorkOrdersForm extends Component {
                                                 ))}
                                             </select>
                                         </div>
-                                        <div className="col-md-2">
+                                        <div className="col-md-3">
                                             {!this.state.isEditing &&
                                                 <button type="button" className="btn btn-link" onClick={this.newWorkOrder}>New +</button>
                                             }

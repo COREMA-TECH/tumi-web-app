@@ -532,7 +532,7 @@ class DepartmentsCompanyForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className="row">
-					<div className="col-md-4 mb-2">
+					<div className="col-md-4 offset-md-4 col-xl-2 offset-xl-8 mb-2">
 						<InputForm
 							id="code"
 							name="code"
@@ -544,7 +544,7 @@ class DepartmentsCompanyForm extends React.Component {
 							placeholder="* Department Code"
 						/>
 					</div>
-					<div className="col-md-4 mb-2">
+					<div className="col-md-4 col-xl-2 mb-2">
 						<InputForm
 							id="description"
 							name="description"
@@ -554,12 +554,12 @@ class DepartmentsCompanyForm extends React.Component {
 							change={(value) => this.onDescriptionChangeHandler(value)}
 							placeholder="* Department Name"
 						/>
-					</div>
-					<div className="col-md-4 mb-2">
-						<div className="tumi-row-centered">
+					</div>	
+					<div className="col-md-12">
+						<div className="Filter-buttons">
 							<button
 								disabled={this.state.loading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-								className="btn btn-success mr-1"
+								className="btn btn-success Filter-button"
 								onClick={this.addDepartmenttHandler}
 							>
 								{isEdititing ? 'Save' : 'Add'}
@@ -571,13 +571,13 @@ class DepartmentsCompanyForm extends React.Component {
 							<button
 								disabled={this.state.loading}
 								onClick={this.cancelDepartmentHandler}
-								className="btn btn-danger"
+								className="btn btn-danger Filter-button"
 							>
 								Clear<i class="fas fa-ban ml-1" />
 							</button>						
-						</div>
-					</div>
-				</div>
+						</div>		
+					</div>				
+				</div>							
 				<div className="row">
 					<div className="col-md-12">
 						<DepartmentsTable
