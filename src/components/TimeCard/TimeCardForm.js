@@ -285,8 +285,8 @@ class TimeCardForm extends Component {
                 if (!this.state.statusTimeOut) { this.addOut(); } else {
                     this.props.handleOpenSnackbar('success', 'Record Inserted!');
                     this.props.toggleRefresh();
-                    this.setState({ saving: false }, this.props.handleCloseModal);
-                }
+                    this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
+                } 0
 
             })
             .catch((error) => {
@@ -315,7 +315,10 @@ class TimeCardForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.props.toggleRefresh();
-                this.setState({ saving: false }, this.props.handleCloseModal);
+                this.setState({ saving: false }, () => {
+                    this.props.handleCloseModal();
+                    this.props.getReport();
+                });
                 // window.location.reload();
             })
             .catch((error) => {

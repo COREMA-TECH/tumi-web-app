@@ -224,6 +224,7 @@ class PunchesReportFilter extends Component {
                         onEditHandler={this.onEditHandler}
                         toggleRefresh={this.toggleRefresh}
                         handleCloseModal={this.handleCloseModal}
+                        getReport={this.props.getReport}
                     />
                 </div>
             </div>
