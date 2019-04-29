@@ -6,6 +6,8 @@ import makeAnimated from 'react-select/lib/animated';
 import { GET_REPORT_CSV_QUERY } from "./queries";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 
 class PunchesReportConsolidatedFilter extends Component {
@@ -13,7 +15,12 @@ class PunchesReportConsolidatedFilter extends Component {
     DEFAULT_STATE = {
         endDateDisabled: true,
         openModal: false,
-        directDeposit: false
+        directDeposit: false,
+        startDate: "",
+        endDate: "",
+        employee: "",
+        property: this.props.property,
+        department: this.props.department
     }
 
     constructor(props) {
@@ -59,6 +66,15 @@ class PunchesReportConsolidatedFilter extends Component {
             });
     };
 
+    clearFilters = () => {
+        this.setState( () => (
+            { ...this.DEFAULT_STATE }
+        ),
+        
+        () => {
+            this.props.updateFilter(this.state)
+        })
+    }
 
     toggleRefresh = () => {
         this.setState((prevState) => {
@@ -139,27 +155,7 @@ class PunchesReportConsolidatedFilter extends Component {
     render() {
         return <div className="card-header bg-light">
             <div className="row">
-                <div className="col-md-2 mt-1 pl-0">
-                    <Select
-                        name="property"
-                        options={this.props.properties}
-                        value={this.state.property}
-                        onChange={this.handlePropertyChange}
-                        components={makeAnimated()}
-                        closeMenuOnSelect
-                    />
-                </div>
-                <div className="col-md-2 mt-1 pl-0">
-                    <Select
-                        name="department"
-                        options={this.props.departments}
-                        value={this.state.department}
-                        onChange={this.handleDepartmentChange}
-                        components={makeAnimated()}
-                        closeMenuOnSelect
-                    />
-                </div>
-                <div className="col-md-2 mt-1 pl-0">
+                <div className="col-md-4 col-xl-2 mb-2">
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <span className="input-group-text">
@@ -169,23 +165,58 @@ class PunchesReportConsolidatedFilter extends Component {
                         <input name="employee" className="form-control" type="text" placeholder='Employee Search'
                             onChange={this.updateFilter} value={this.state.employee} />
                     </div>
+                </div>                
+                <div className="col-md-4 col-xl-2 mb-2">
+                    <Select
+                        name="property"
+                        options={this.props.properties}
+                        value={this.state.property}
+                        onChange={this.handlePropertyChange}
+                        components={makeAnimated()}
+                        closeMenuOnSelect
+                    />
                 </div>
-                <div className="col-md-4 mt-1 pl-0">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">From</span>
+                <div className="col-md-4 col-xl-2 mb-2">
+                    <Select
+                        name="department"
+                        options={this.props.departments}
+                        value={this.state.department}
+                        onChange={this.handleDepartmentChange}
+                        components={makeAnimated()}
+                        closeMenuOnSelect
+                    />
+                </div>                
+                <div className="col-md-2 offset-md-4 col-xl-2 offset-xl-0 mb-2">
+                    <div class="input-group flex-nowrap">
+                        <DatePicker
+                            selected={this.state.startDate}
+                            onChange={this.handleChangeDate}
+                            placeholderText="Start date"
+                            id="datepicker"
+                        />
+                        <div class="input-group-append">
+                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                <i class="far fa-calendar"></i>
+                            </label>
                         </div>
-                        <input type="date" className="form-control" placeholder="2018-10-30"
-                            value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">To</span>
-                        </div>
-                        <input type="date" className="form-control" name="endDate" value={this.state.endDate}
-                            disabled={this.state.endDateDisabled} placeholder="2018-10-30"
-                            onChange={this.updateFilter} />
                     </div>
                 </div>
-                <div className="col-md-2 mt-1 pl-0">
+                <div className="col-md-2 col-xl-2 mb-2">
+                    <div class="input-group flex-nowrap">
+                        <DatePicker
+                            selected={this.state.endDate}
+                            onChange={this.handleChangeDate}
+                            placeholderText="End date"
+                            id="datepicker"
+                        />
+                        <div class="input-group-append">
+                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                <i class="far fa-calendar"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4 col-xl-2 mb-2">
                     {/* TODO: add download icon - call query to generate cvs with consolidated punches*/}
                     <div className="label-switch-container">
                         <label htmlFor="">Direct Deposit?</label>
@@ -207,13 +238,17 @@ class PunchesReportConsolidatedFilter extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-12 mt-1">
-                    <button className="btn btn-success ml-1 float-right"
-                        onClick={this.getReportCSV}>CSV {this.state.loadingReport && <i className="fas fa-spinner fa-spin  ml2" />}
-                        {!this.state.loadingReport && <i className="fas fa-download  ml2" />}
+                <div className="col-md-12 mb-2 Filter-buttons">   
+                    <button class="btn btn-outline-secondary btn-not-rounded Filter-button" type="button" onClick={this.clearFilters}>
+                        <i class="fas fa-filter"></i> Clear
+                    </button>                 
+                    <button className="btn btn-success Filter-button"
+                        onClick={this.getReportCSV}>CSV {this.state.loadingReport && <i className="fas fa-spinner fa-spin ml2" />}
+                        {!this.state.loadingReport && <i className="fas fa-download ml2" />}
                     </button>
-                    <button class="btn btn-success float-right" onClick={this.handleClickOpenModal}>Add Time<i
-                        class="fas fa-plus ml-1"></i></button>
+                    <button class="btn btn-success Filter-button" onClick={this.handleClickOpenModal}>Add Time<i
+                        class="fas fa-plus ml-1"></i>
+                    </button>
                 </div>
             </div>
             <div className="row">

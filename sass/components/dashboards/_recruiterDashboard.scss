@@ -1,0 +1,20 @@
+.RecruiterDash{
+    //Fulfillment stats list item
+    &-ffmItem{  
+        align-items: center;        
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+
+        text-align: center;
+    }
+}
+
+@include media-breakpoint-up(sm){
+    .RecruiterDash{
+        &-ffmItem{  
+            flex-direction: row;
+        }
+    }
+}

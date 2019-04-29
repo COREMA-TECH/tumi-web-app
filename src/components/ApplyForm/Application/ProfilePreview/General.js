@@ -27,7 +27,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -440,7 +440,7 @@ class General extends Component {
                         }, () => {
                             //this.getApplicationEmployees(id);
                             //   this.fetchDepartments();
-
+console.log("informacion ", data)
                             this.setState({
                                 email: this.state.data.emailAddress,
                                 number: this.state.data.cellPhone,
@@ -450,6 +450,7 @@ class General extends Component {
                                 isLead: this.state.data.isLead,
                                 loading: false,
                                 directDeposit: this.state.data.directDeposit,
+                                isActive:this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
                                 EmployeeId: this.state.data.employee.id
                             })
@@ -1057,9 +1058,6 @@ class General extends Component {
     `;
 
     updateDirectDeposit = () => {
-
-        //console.log(this.state.directDeposit)
-
         this.setState(
             {
                 loading: true
@@ -1072,6 +1070,42 @@ class General extends Component {
 
                             id: this.props.applicationId,
                             directDeposit: this.state.directDeposit
+
+                        }
+                    })
+                    .then(({ data }) => {
+
+                        this.setState({
+                            loading: false,
+                        });
+
+                        this.props.handleOpenSnackbar('success', 'Candidate was updated!', 'bottom', 'right');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            }
+        );
+    };
+
+    updateActive = () => {
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_ISACTIVE,
+                        variables: {
+
+                            id: this.props.applicationId,
+                            isActive: this.state.isActive
 
                         }
                     })
@@ -1475,6 +1509,17 @@ class General extends Component {
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
+
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            isActive: event.target.checked
+                                                        }, () => {
+                                                            //  console.log(this.state.directDeposit)
+                                                            this.updateActive()
+                                                        })
+
+
+                                                    }}
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
                                                     <span className="onoffswitch-inner" />

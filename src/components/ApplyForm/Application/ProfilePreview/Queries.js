@@ -13,6 +13,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             isLead
             Urlphoto
             directDeposit
+            isActive
             position{
                 id
                 position {

@@ -203,9 +203,9 @@ class MobileMenu extends Component {
                                             </li> : ""
                                     })}
                                     {items.map(item => {
-                                        return item.Forms.Value == "/home/punches/report" ?
+                                        return item.Forms.Value == "/home/punches/report/consolidated" ?
                                             <li className="SubMenu-item">
-                                                <a className="SubMenu-link" href="/home/punches/report">
+                                                <a className="SubMenu-link" href="/home/punches/report/consolidated">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Punches
                                                     Report
                                                 </a>

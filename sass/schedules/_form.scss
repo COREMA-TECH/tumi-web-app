@@ -47,9 +47,10 @@
         border: dotted 1px map-get($map: $gray-shades, $key: gray-3);
         border-radius: $border-radius-standar;
         bottom: 0;
-        height: 75%;
-        left: 15px;
-        position: absolute;
+        // height: 75%;
+        // left: 15px;
+        // position: absolute;
+        width: 100%;
         text-align: center;
     }
     &-groupButtons {

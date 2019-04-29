@@ -1,7 +1,0 @@
- .EmployeeModal {
-    &-container {
-        @include media-breakpoint-up(lg){
-            min-width: map-get($grid-breakpoints,lg);
-        }
-    }
- }

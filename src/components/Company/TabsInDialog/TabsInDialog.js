@@ -14,6 +14,11 @@ import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from 'Generic/Global';
 import TablesContracts from '../../Contract/Main/MainContract/TablesContracts';//'./TablesContracts';
 
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+
 const theme = createMuiTheme({
 	overrides: {
 		MuiTabs: { // Name of the component ⚛️ / style sheet
@@ -88,6 +93,12 @@ class CustomizedTabs extends Component {
 		idManagement: null,
 		dataContract: [],
 		Id_Entity: null,
+
+		showConfirm:true,
+			showConfirmCompany:false,
+			showConfirmCompanyOrProperty:false,
+			opendialog: false,
+			open:false
 	};
 
 
@@ -143,6 +154,83 @@ class CustomizedTabs extends Component {
 
 		this.getContractData();
 	}
+
+	handleClose = () => {
+		this.setState({showConfirm: true, open: false });
+	};
+
+	handleOpenConfirmDialog = () => {
+		this.setState({ showConfirmCompany: false, showConfirm: true, showConfirmCompanyOrProperty:false});
+	}
+	
+	handleOpenConfirmDialogCompany = () => {
+		this.setState({ showConfirmCompany: true, showConfirm: false, showConfirmCompanyOrProperty:false });
+	}
+
+	handleOpenConfirmDialogCompanyOrProperty = () => {
+		this.setState({ showConfirmCompany: false, showConfirm: false, showConfirmCompanyOrProperty:true });
+	}
+
+	handleCloseConfirmDialog = () => {
+	this.setState({ showConfirm: false });
+	}
+
+	printDialogConfirm = () => {
+		return <Dialog maxWidth="xl" open={false} >
+			<DialogContent>
+				<h2 className="text-center">What would you like to do?</h2>
+			</DialogContent>
+			<DialogActions>
+				<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompany() }>
+					Create New Contract 
+				</button>
+				<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCloseConfirmDialog()}>
+					View and Renew Contracts 
+				</button>
+				
+			</DialogActions>
+		</Dialog>
+}
+
+printDialogConfirmCompany = () => {
+	//	console.log("estoy en el dialog ", this.state.showConfirm)
+	   
+			return <Dialog maxWidth="xl" open={this.state.showConfirmCompany} >
+				<DialogContent>
+					<h2 className="text-center">Is this contract for a new or existing company?</h2>
+				</DialogContent>
+				<DialogActions>
+					<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompanyOrProperty() }>
+						New Company
+					</button>
+					<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.redirectToCreateContract()}>
+						Existing Company
+					</button>
+					
+				</DialogActions>
+			</Dialog>
+	}
+
+	printDialogConfirmCompanyOrProperty = () => {
+		//	console.log("estoy en el dialog ", this.state.showConfirm)
+		   
+				return <Dialog maxWidth="xl" open={this.state.showConfirmCompanyOrProperty} >
+					<DialogContent>
+						<h2 className="text-center">Is this contract for Property or a Management Company?</h2>
+					</DialogContent>
+					<DialogActions>
+					<button className="btn btn-success  btn-not-rounded mb-2" type="button" onClick={(e) => this.handleClickOpen(e)}>
+							Property
+						</button>
+						<button className="btn btn-info  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateCompany() }>
+							Management Company
+						</button>
+						
+						
+					</DialogActions>
+				</Dialog>
+		}
+
 
 	render() {
 		const { classes } = this.props;
@@ -251,6 +339,10 @@ class CustomizedTabs extends Component {
 					{value === 4 && (
 						<TablesContracts
 							data={this.state.dataContract}
+							printDialogConfirm={this.printDialogConfirm}
+							printDialogConfirmCompany={this.printDialogConfirmCompany}
+							printDialogConfirmCompanyOrProperty={this.printDialogConfirmCompanyOrProperty}
+														
 							acciones={1}
 							delete={(id) => {
 								this.deleteContractById(id);

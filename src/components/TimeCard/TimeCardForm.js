@@ -568,10 +568,10 @@ class TimeCardForm extends Component {
                             <h5 className="modal-title">Add Time +</h5>
                         </div>
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent className="tumi-noPadding pb-6">
                         <form action="" onSubmit={this.handleSubmit}>
                             <div className="container-fluid">
-                                <div className="card">
+                                <div className="">
                                     <div className="">
                                         <div className="">
                                             <div className="">
@@ -700,17 +700,16 @@ class TimeCardForm extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="card-footer bg-light">
-
+                                    <div className="tumi-buttonWrapper">
                                         <button
                                             type="button"
-                                            className="btn btn-danger ml-1 float-right"
+                                            className="btn btn-danger float-right tumi-button"
                                             onClick={this.handleCloseModal}
                                         >
                                             Cancel<i className="fas fa-ban ml-2" />
                                         </button>
 
-                                        <button className="btn btn-success ml-1 float-right" type="submit">
+                                        <button className="btn btn-success float-right tumi-button" type="submit">
                                             Save {!this.state.saving && <i className="fas fa-save ml2" />}
                                             {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
                                         </button>

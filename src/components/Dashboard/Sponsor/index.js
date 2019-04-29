@@ -15,6 +15,18 @@ class DashBoardSponsor extends Component {
         ]
     };
 
+    regionData = {
+        labels: ['North', 'South', 'East', 'West'],
+        datasets: [
+            {
+                label: 'Demand for region',
+                data: [300, 50, 100, 254],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F35A50'],
+                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#F35A50']
+            }
+        ]        
+    }
+
     floatingData = {
         labels: ['Banquet', 'Housemen', 'Cook'],
         datasets: [
@@ -31,7 +43,7 @@ class DashBoardSponsor extends Component {
         return (
             <div className="container Stats">
                 <div className="row">
-                    <div className="col-md-5">
+                    <div className="col-lg-12 col-md-12 col-xl-5">
                         <div className="row">
                             <div className="col-md-6 mb-1">
                                 <div className="StatBox">
@@ -97,7 +109,7 @@ class DashBoardSponsor extends Component {
                             }}
                         />
                     </div>
-                    <div className="col-md-5 offset-md-2">
+                    <div className="col-lg-12 col-md-12 offset-xl-2 col-xl-5">
                         <div className="row">
                             <div className="col-md-6 mb-1">
                                 <div className="StatBox">
@@ -169,11 +181,11 @@ class DashBoardSponsor extends Component {
                         </div>
                         <div className="StatBox">
                             <div className="StatBox-header">
-                                Work Order Requested Per Category
+                                Work Order Requested Per Region
                             </div>
                             <div className="StatBox-body">
                                 <Doughnut
-                                    data={this.data}
+                                    data={this.regionData}
                                     width={200}
                                     height={200}
                                     options={{

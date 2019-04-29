@@ -133,7 +133,7 @@ class BoardManager extends Component {
     };
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
-
+console.log("sourceLaneId ", sourceLaneId)
         let data;
 
         this.setState({
@@ -142,8 +142,7 @@ class BoardManager extends Component {
         });
 
         if (sourceLaneId == "lane1" || sourceLaneId == "Notify" ) {
-            if (sourceLaneId == "lane1")
-            {
+           
                 this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
                 this.KeepArray();
                 this.onCardClick(this.state.ShiftId, null, 'lane1');
@@ -152,23 +151,7 @@ class BoardManager extends Component {
                     LaneOrigen: '',
                     LaneDestino: ''
                 });
-            }
-            else{
-                
-                data = this.state.notify.find((item) => { return item.id == cardId })
-                if (data.response == 0)
-                { 
-                    this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
-                    this.KeepArray();
-                    this.onCardClick(this.state.ShiftId, null, 'lane1');
-    
-                    this.setState({
-                        LaneOrigen: '',
-                        LaneDestino: ''
-                    });
-                }
-               
-            }
+          
         }
         else {
 
@@ -670,7 +653,7 @@ class BoardManager extends Component {
                                             escalationTextLeftLead: item.generalComment,
                                             escalationTextRightLead: item.car == true ? " Yes" : " No",
                                             cardStyle: { borderRadius: 6, marginBottom: 15 },
-                                            response:0
+                                            response:1
                                         });
     
                                        /* this.props.client.query({
@@ -1041,9 +1024,9 @@ class BoardManager extends Component {
                                 <div class="card">
                                     <div class="card-header info">
                                         <div className="row">
-                                            <div className="col-md-8">
+                                            <div className="col-md-12">
                                                 <div className="row">
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
                                                         <select
                                                             required
                                                             name="IdEntity"
@@ -1064,7 +1047,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-3 col-xl-2 mb-2">
                                                         <select
                                                             name="state"
                                                             className={'form-control'}
@@ -1086,7 +1069,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-3 col-xl-2 mb-2">
                                                         <select
                                                             name="city"
                                                             className={'form-control'}
@@ -1107,7 +1090,7 @@ class BoardManager extends Component {
                                                             ))}
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-3 col-xl-2 mb-2">
                                                         <select
                                                             name="city"
                                                             className={'form-control'}
@@ -1129,9 +1112,9 @@ class BoardManager extends Component {
                                                             <option value={0}>Cancelled</option>
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-4">
+                                                    <div className="col-md-12 Filter-buttons">
                                                         <a
-                                                            className="link-board" onClick={(e) => {
+                                                            className="link-board Filter-button" onClick={(e) => {
                                                                 e.preventDefault();
                                                                 e.stopPropagation();
 
@@ -1140,7 +1123,7 @@ class BoardManager extends Component {
                                                             Advanced <i className="fas fa-filter link-icon-filter"></i>
                                                         </a>
                                                         <a
-                                                            className="link-board" onClick={(e) => {
+                                                            className="link-board Filter-button" onClick={(e) => {
                                                                 this.setState({
                                                                     hotel: 0,
                                                                     state: 0,
@@ -1156,7 +1139,7 @@ class BoardManager extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-md-2"></div>
+                                            {/* <div className="col-12 col-md-2"></div> */}
                                         </div>
                                     </div>
                                 </div>

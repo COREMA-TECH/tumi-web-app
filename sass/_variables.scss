@@ -39,6 +39,8 @@ $light-gray: #f5f7f9;
 $second-light-gray: #999;
 $red: #f50057;
 $success: #3ca2c8;
+$color_gallery_approx: #eeeeee;
+$color_mountain_mist_approx: #999999;
 
 //Brackgrounds 
 $bg-body: $light-gray;
@@ -50,12 +52,16 @@ $border-standard: $gray;
 $tab-border-selected: $border-standard;
 
 // Typography
+$font_0: Trebuchet;
+$font_1: Arial;
+$font_2: sans-serif;
+
 $font-family-sans-serif: 'Nunito Sans', sans-serif;
 $font-family-stand-out: "Michroma", sans-serif;
 $font-family-application: 'Roboto', sans-serif;
-$text-color: #7e7e7e;
 $font-main-title: 36px;
 $font-size-base: 0.9rem;
+$text-color: #7e7e7e;
 
 // Navbar
 $navbar-default-bg: #fff;
@@ -91,6 +97,7 @@ $border-radius-wrapper: 30px;
 $border-radius-standar: 5px;
 $border-radius-input: $border-radius-standar;
 $half-vertical-spacing: 5.5rem;
+$profile-width: 500px;
 $vertical-spacing: 11rem;
 $vertical-spacing-underImage: 29rem;
 

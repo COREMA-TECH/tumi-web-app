@@ -18,6 +18,8 @@ import ShiftsData from '../../data/shitfsWorkOrder.json';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -99,40 +101,21 @@ class WorkOrdersTable extends Component {
         var shiftEntity = [];
 
         if (this.state.startDate != "" && this.state.endDate != "") {
-            workOrder = {
-                startDate: this.state.startDate,
-                endDate: this.state.endDate,
+            variables = {
+                ...variables,
+                workOrder: {
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                }
             }
         }
-        if (this.state.status == 0) {
-            shift = {
-                status: [0],
-                ...shift
-
-            }
-        }
-        else if (this.state.status == 1) {
-            shift = {
-                status: [1, 2]
-                , ...shift
-            }
-        }
-        else if (this.state.status == 2) {
-            shift = {
-                status: [3]
-                , ...shift
-            }
-        }
-        else if (this.state.status == 4) {
-            shift = {
-                status: [2]
-                , ...shift
-            }
-        }
-        else {
-            shift = {
-                status: [1, 2, 0]
-                , ...shift
+        if (this.state.status != null && this.state.status != "Status (All)") {
+            variables = {
+                ...variables,
+                shift: {
+                    status: this.state.status,
+                    ...shift
+                }
             }
         }
 
@@ -432,14 +415,11 @@ class WorkOrdersTable extends Component {
     }
 
     handleFilterValue = (id) => {
-        this.setState(() =>
-            ({
-                status: id
-            }),
-            () => {
-                this.getWorkOrders();
-            }
-        );
+        this.setState({
+            status: id
+        }, () => {
+            this.getWorkOrders();
+        });
 
     }
 
@@ -454,6 +434,12 @@ class WorkOrdersTable extends Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.refresh != this.props.refresh) 
+            this.getWorkOrders();
+        return true;
+    }
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
@@ -464,7 +450,17 @@ class WorkOrdersTable extends Component {
                 {isLoading && <LinearProgress />}
                 <div className="card-header bg-light">
                     <div className="row">
-                        <div className="col-md-2">
+                        <div className="col-md-4 col-xl-2 mb-2">
+                            <div class="input-group">
+                                <input type="text" name="id" value={this.state.id} className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-4 col-xl-2 offset-xl-2 mb-2">
                             <select name="state" id="" value={this.state.state} className="form-control" onChange={(e) => {
                                 this.setState({
                                     state: parseInt(e.target.value)
@@ -476,24 +472,37 @@ class WorkOrdersTable extends Component {
                                 })}
                             </select>
                         </div>
-                        <div className="col-md-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">From</span>
+                        <div className="col-md-2 col-xl-2 mb-2">
+                            <div class="input-group flex-nowrap">
+                                <DatePicker
+                                    selected={this.state.startDate}
+                                    onChange={this.handleChangeDate}
+                                    placeholderText="Start date"
+                                    id="datepicker"
+                                />
+                                <div class="input-group-append">
+                                    <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                        <i class="far fa-calendar"></i>
+                                    </label>
                                 </div>
-                                <input type="date" className="form-control" placeholder="2018-10-30" value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">To</span>
-                                </div>
-                                <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled ? true : false} placeholder="2018-10-30" onChange={this.handleEndDate} />
                             </div>
                         </div>
-                        <div className="col-md-2">
-                            <button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>
-                                <i class="fas fa-filter"></i> Clear
-                            </button>
-                        </div>
-                        <div className="col-md-2">
+                        <div className="col-md-2 col-xl-2 mb-2">
+                            <div class="input-group flex-nowrap">
+                                <DatePicker
+                                    selected={this.state.endDate}
+                                    onChange={this.handleChangeDate}
+                                    placeholderText="End date"
+                                    id="datepicker"
+                                />
+                                <div class="input-group-append">
+                                    <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                        <i class="far fa-calendar"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>                        
+                        <div className="col-md-4 offset-md-8 col-xl-2 offset-xl-0 mb-2">
                             <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control" onChange={(event) => {
                                 if (event.target.value == "null") {
                                     this.handleFilterValue(null);
@@ -511,20 +520,15 @@ class WorkOrdersTable extends Component {
 
                             </select>
                         </div>
-                        <div className="col-md-2">
-                            <div class="input-group">
-                                <input type="text" name="id" value={this.state.id} className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">
-                                        <i class="fas fa-search"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                        <div className="col-md-12 mb-2 Filter-buttons">
+                            <button class="btn btn-outline-secondary btn-not-rounded Filter-button" type="button" onClick={this.clearInputDates}>
+                                <i class="fas fa-filter"></i> Clear
+                            </button>
+                        </div>                        
                     </div>
 
                 </div>
-                <div className="card-body">
+                <div className="card-body Table-wrapper">
 
                     <Paper style={{ overflowX: 'auto' }}>
                         <Table>
@@ -604,10 +608,10 @@ class WorkOrdersTable extends Component {
                                 })}
                             </TableBody>
                             <TableFooter>
-                                <TableRow>
+                                
                                     {items.length > 0 && (
                                         <TablePagination
-                                            colSpan={3}
+                                            colSpan={1}
                                             count={items.length}
                                             rowsPerPage={rowsPerPage}
                                             page={page}
@@ -616,7 +620,7 @@ class WorkOrdersTable extends Component {
                                             ActionsComponent={TablePaginationActionsWrapped}
                                         />
                                     )}
-                                </TableRow>
+                                
                             </TableFooter>
                         </Table>
                         <ConfirmDialog

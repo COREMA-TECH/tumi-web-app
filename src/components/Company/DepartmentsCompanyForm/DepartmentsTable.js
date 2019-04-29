@@ -191,7 +191,7 @@ class DepartmentsTable extends React.Component {
 					<div className="RecordsCards-container row">
 						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
-								<div className="col-md-2">
+								<div className="col-md-3">
 									<div className="RecordsCards-item" onClick={() => { return this.props.onEditHandler({ ...row }); }}>
 										{row.Description}
 										<div className="RecordsCards-controls">

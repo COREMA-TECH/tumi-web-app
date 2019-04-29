@@ -24,7 +24,13 @@ export const UPDATE_DIRECT_DEPOSIT = gql`
 	}
 `;
 
-
+export const UPDATE_ISACTIVE = gql`
+	mutation disableApplication($id: Int,$isActive: Boolean) {
+		disableApplication(id: $id,isActive: $isActive) {
+			id
+		}
+	}
+`;
 
 export const ADD_EMPLOYEES = gql`
     mutation addEmployees($Employees: [inputInsertEmployees]) {

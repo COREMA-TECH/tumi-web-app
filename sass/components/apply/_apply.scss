@@ -1,0 +1,100 @@
+.Apply {
+    &-container {
+        margin: 0 auto;
+        max-width: 1200px;
+        width: 80%;
+    }
+    &-emoji {
+        text-align: center;
+        
+    }
+    &-okCheck {
+        position: absolute;
+        top: 30px;
+        right: 10px;
+    }
+}
+
+.ApplyBlock {
+    background-color: $white;
+    border-radius: 5px;
+    box-shadow: 0px 8px 7px $gray;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    max-width: 1400px;
+    padding: 45px;
+    padding-top: 5rem;
+    position: relative;
+    width: 90%;
+    &-subtitle {
+        font-size: 1.05rem;
+        margin: 1rem 0;
+    }
+    &-title {
+        background-color: $brand-primary;
+        color: $white;
+        height: 50px;
+        line-height: 50px;
+        left: -50px;
+        padding-left: 1rem;
+        position: absolute;
+        text-align: right;
+        top: 25px;
+        width: 100%;
+        &:after {
+            content: " "; 
+            height: 0;
+            border-bottom: 50px solid $brand-primary;
+            border-right: 50px solid transparent;
+            position: absolute;
+            right: -50px;
+            width: 0;
+        }
+        &:before {
+            content: " "; 
+            height: 0;
+            border-top: 50px solid lighten($brand-primary,15%);
+            border-left: 50px solid transparent;
+            left: 0;
+            position: absolute;
+            top: 50px;
+            width: 0;
+        }
+    }
+    .separator {
+        display: block;
+        height: 1px;
+        border: 0;
+        border-top: 1px solid $gray;
+        margin: 2em auto;
+        padding: 0; 
+        width: 95%;
+    }
+}
+.ApplyEmoji-wrapper {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    background: #fff;
+    height: 500px;
+    border-radius: 500px;
+    padding: 100px;
+}
+.ApplyForm {
+    background-color: $light-gray;
+}
+
+.text-primary-application {
+    color:$brand-primary;
+    font-size: .80rem;
+    font-family: $font-family-application;
+    font-weight: 100;
+}
+
+@include media-breakpoint-up(sm){
+    .ApplyBlock{
+        &-title{
+            text-align: left;
+        }
+    }
+}

@@ -47,3 +47,31 @@
         }
     }
 }
+
+.Filter{
+    &-buttons{
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    &-button{
+        font-size: 10px;
+
+        margin-bottom: 10px;
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 10px;
+    }
+
+    @include media-breakpoint-up(sm){
+        &-buttons{
+            justify-content: flex-end; 
+        }
+
+        &-button{
+            font-size: 0.9rem;
+        }
+    }
+}
