@@ -8404,6 +8404,23 @@ label:not(.custom-file-label):not(.form-check-label) {
   display: block;
   margin: 0 auto; }
 
+.tumi-buttonRow {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end; }
+
 @media (max-width: 767.98px) {
   .tumi-buttonWrapper {
     width: 100% !important; }
@@ -8412,7 +8429,23 @@ label:not(.custom-file-label):not(.form-check-label) {
     margin-left: 0 !important;
     margin-right: 0;
     margin-bottom: 0.5rem;
-    width: 100%; } }
+    width: 100%; }
+  .tumi-buttonRow {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center; } }
 
 .inputGroup {
   background-color: #fff;
@@ -9210,6 +9243,9 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   .minWidth-empty-modal {
     min-width: 960px; } }
 
+.ShiftRestrictionModal .card-body {
+  min-height: 200px; }
+
 .input-group .react-datepicker__input-container input {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0; }
@@ -9778,6 +9814,16 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   max-width: 91px;
   width: 100%; }
 
+@media (min-width: 576px) {
+  .RowForm-days.in-modal {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-bottom: 0; } }
+
 @media (min-width: 768px) {
   .RowForm-days {
     -webkit-box-orient: horizontal;
@@ -9785,14 +9831,18 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     -ms-flex-direction: row;
     flex-direction: row;
     -ms-flex-wrap: wrap;
-    flex-wrap: wrap; }
+    flex-wrap: wrap;
+    padding-bottom: 0; }
   .RowForm-day {
     max-width: 89px; } }
 
 @media (min-width: 992px) {
   .RowForm-days {
     -ms-flex-wrap: nowrap;
-    flex-wrap: nowrap; } }
+    flex-wrap: nowrap; }
+  .RowForm-days.in-modal {
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap; } }
 
 .RecruiterDash-ffmItem {
   -webkit-box-align: center;
