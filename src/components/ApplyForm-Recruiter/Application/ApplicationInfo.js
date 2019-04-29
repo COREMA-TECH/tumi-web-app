@@ -65,7 +65,8 @@ class VerticalLinearStepper extends Component {
             firstName:'',
             lastName:'',
             cellPhone:'',
-            showConfirm:false
+            showConfirm:false,
+            Validate:true
         }
     }
 
@@ -103,9 +104,9 @@ class VerticalLinearStepper extends Component {
     
     NewLead = () =>{
         if (
-            this.state.firstName != '' ||
-            this.state.lastName != '' ||
-            this.state.cellPhone != ''
+           (this.state.firstName != '' ||
+           this.state.lastName != '' ||
+           this.state.cellPhone != '') && this.state.Validate
         ) {
             this.setState({ showConfirm: true });
         } else{ this.redirectToCreateApplication() }
@@ -153,12 +154,14 @@ class VerticalLinearStepper extends Component {
 				</Dialog>
 		}
     
-
+    SetValidate=(value)=>
+    {
+     this.setState({Validate:value})
+    }
     SetFirstName=({firstName})=>
     {
       this.setState({firstName})
     }
-
     SetLastName=({lastName})=>
     {
       this.setState({lastName})
@@ -167,6 +170,7 @@ class VerticalLinearStepper extends Component {
     {
       this.setState({cellPhone})
     }
+
     render() {
         const { classes } = this.props;
         const steps = getSteps();
@@ -179,7 +183,7 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <Application applicationId={this.state.applicationId} handleNext={this.handleNext} SetFirstName={this.SetFirstName} SetLastName={this.SetLastName} SetCellPhone={this.SetCellPhone} />;
+                    return <Application applicationId={this.state.applicationId} handleNext={this.handleNext} SetFirstName={this.SetFirstName} SetLastName={this.SetLastName} SetCellPhone={this.SetCellPhone} SetValidate={this.SetValidate} />;
                 case 1:
                     return <Language applicationId={this.state.applicationId} handleNext={this.handleNext}
                         handleBack={this.handleBack} />;

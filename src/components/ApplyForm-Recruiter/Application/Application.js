@@ -241,6 +241,7 @@ class Application extends Component {
                                 });
 
                                 this.addApplicantJobs(object, parseInt(data.addApplication.id));
+                                this.props.SetValidate(false)
                             });
 
                             this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
@@ -326,6 +327,7 @@ class Application extends Component {
                                 });
 
                                 this.addApplicantJobs(object, this.props.applicationId);
+                                this.props.SetValidate(false)
                             });
 
                             this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
