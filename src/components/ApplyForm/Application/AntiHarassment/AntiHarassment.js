@@ -73,7 +73,7 @@ class AntiHarassment extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                console.log("esta es la data ", data);
+                
                 if (data.applications[0].harassmentPolicy !== null) {
                     this.setState({
                         id: data.applications[0].harassmentPolicy.id,
@@ -153,7 +153,6 @@ class AntiHarassment extends Component {
             })
             .then((data) => {
                 if (data.data.createdocumentspdf != null) {
-                    console.log("Ya estoy creando y estoy aqui con data ", data);
 
                 } else {
                     this.props.handleOpenSnackbar(
@@ -183,7 +182,7 @@ class AntiHarassment extends Component {
     }
 
     sleep() {
-        return new Promise((resolve) => setTimeout(resolve, 5000));
+        return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
 
