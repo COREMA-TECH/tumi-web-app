@@ -338,7 +338,7 @@ class MainContract extends Component {
 										<div className="row">
 											<div className="col-md-12">
 												<div className="card">
-													<div className="card-body Table-wrapper">
+													<div className="card-body tumi-forcedResponsiveTable">
 														<TablesContracts
 															data={dataContract}
 															printDialogConfirm={this.printDialogConfirm}

@@ -1516,35 +1516,37 @@ class Employees extends Component {
                                 <div className="">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <div className="">
-                                                <EmployeesTable
-                                                    data={dataEmployees}
-                                                    delete={id => {
-                                                        this.deleteEmployeeById(id);
-                                                    }}
-                                                    update={(id, row) => {
-                                                        this.updateEmployeeById(id);
-                                                        this.setState({
-                                                            firstNameEdit: row.firstName,
-                                                            lastNameEdit: row.lastName,
-                                                            emailEdit: row.electronicAddress,
-                                                            numberEdit: row.mobileNumber,
-                                                            departmentEdit: row.Id_Deparment,
-                                                            contactTitleEdit: row.Contact_Title,
-                                                            hotelEdit: row.idEntity
-                                                        }, () => {
-                                                            if (this.state.hotelEdit == null) {
-                                                                this.fetchDepartments()
-                                                            } else {
-                                                                this.fetchDepartments(parseInt(this.state.hotelEdit))
-                                                            }
-                                                        });
+                                            <div className="card">
+                                                <div className="card-body tumi-forcedResponsiveTable">
+                                                    <EmployeesTable
+                                                        data={dataEmployees}
+                                                        delete={id => {
+                                                            this.deleteEmployeeById(id);
+                                                        }}
+                                                        update={(id, row) => {
+                                                            this.updateEmployeeById(id);
+                                                            this.setState({
+                                                                firstNameEdit: row.firstName,
+                                                                lastNameEdit: row.lastName,
+                                                                emailEdit: row.electronicAddress,
+                                                                numberEdit: row.mobileNumber,
+                                                                departmentEdit: row.Id_Deparment,
+                                                                contactTitleEdit: row.Contact_Title,
+                                                                hotelEdit: row.idEntity
+                                                            }, () => {
+                                                                if (this.state.hotelEdit == null) {
+                                                                    this.fetchDepartments()
+                                                                } else {
+                                                                    this.fetchDepartments(parseInt(this.state.hotelEdit))
+                                                                }
+                                                            });
 
-                                                    }}
-                                                    handleClickOpenUserModal={this.handleClickOpenUserModal}
-                                                    departments={this.state.allDepartments}
-                                                    titles={this.state.allTitles}
-                                                />
+                                                        }}
+                                                        handleClickOpenUserModal={this.handleClickOpenUserModal}
+                                                        departments={this.state.allDepartments}
+                                                        titles={this.state.allTitles}
+                                                    />                                                
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

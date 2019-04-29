@@ -1150,7 +1150,7 @@ query getposition ($Id_Entity:Int){
 				<div className="row">
 					<div className="col-md-12">
 						<div className="card">
-							<div className="card-body Table-wrapper">
+							<div className="card-body p-3 tumi-forcedResponsiveTable">
 								<PositionsTable
 									data={this.state.data}
 									departments={this.state.departments}

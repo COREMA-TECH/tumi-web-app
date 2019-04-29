@@ -22,6 +22,7 @@ import Select from '@material-ui/core/Select';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
 	root: {
@@ -120,10 +121,7 @@ const styles = (theme) => ({
 	tableWrapper: {
 		overflowX: 'auto'
 	},
-	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		},
+	row: {		
 		'&:hover': {
 			cursor: 'pointer'
 		}
@@ -196,11 +194,11 @@ class ContactsTable extends React.Component {
 			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
 		}
 		return (
-			<Paper className={classes.root}>
+			<React.Fragment>
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={"Table-head"}>Actions</CustomTableCell>
+							<CustomTableCell padding="none" width="60px" className={"Table-head"}>Actions</CustomTableCell>
 							<CustomTableCell className={"Table-head"} width="60px">Contact
                                 Type</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
@@ -328,7 +326,7 @@ class ContactsTable extends React.Component {
 						</TableRow>
 					</TableFooter>
 				</Table>
-			</Paper>
+			</React.Fragment>
 		);
 	}
 }

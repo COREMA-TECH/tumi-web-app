@@ -8786,8 +8786,13 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .tumi-forcedResponsiveTable > table[class^="MuiTable-root-"] {
   display: block !important;
+  min-width: 0 !important;
   overflow-x: auto;
   width: 100%; }
+
+@media (min-width: 1200px) {
+  .tumi-forcedResponsiveTable > table[class^="MuiTable-root-"] {
+    display: table !important; } }
 
 .modal-overflow {
   overflow-x: scroll; }

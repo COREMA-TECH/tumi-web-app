@@ -122,10 +122,7 @@ const styles = (theme) => ({
 	tableWrapper: {
 		overflowX: 'auto'
 	},
-	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		},
+	row: {		
 		'&:hover': {
 			cursor: 'pointer'
 		}
@@ -212,7 +209,7 @@ class DepartmentsTable extends React.Component {
 		return (
 			<Route
 				render={({ history }) => (
-					<Paper className={classes.root}>
+					<React.Fragment>
 
 					{this.props.printDialogConfirm()}
 					{this.props.printDialogConfirmCompany()}
@@ -301,7 +298,7 @@ class DepartmentsTable extends React.Component {
 								</TableRow>
 							</TableFooter>
 						</Table>
-					</Paper>
+					</React.Fragment>
 				)}
 			/>
 		);
