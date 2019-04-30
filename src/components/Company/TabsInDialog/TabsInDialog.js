@@ -242,7 +242,7 @@ printDialogConfirmCompany = () => {
 					<Tabs
 						value={value}
 						onChange={this.handleChange}
-						classes={{ root: "Tabs-wrapper", indicator: "Tab-selectedBorder", flexContainer: "Tabs-wrapperFluid" }}
+						classes={{ root: "Tabs-wrapper", indicator: "Tab-selectedBorder", flexContainer: "Tabs-wrapperFluid tumi-xScroll" }}
 					>
 						<Tab
 							disableRipple

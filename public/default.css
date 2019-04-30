@@ -8551,7 +8551,7 @@ label:not(.custom-file-label):not(.form-check-label) {
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .tumi-checkbox-wrapper {
     font-size: 8px;
-    margin-top: 0.9rem; } }
+    margin-top: 0.7rem; } }
 
 .custom-file-label {
   overflow: hidden; }
@@ -8642,7 +8642,21 @@ label:not(.custom-file-label):not(.form-check-label) {
   background: #c1c1c1;
   color: #090909;
   border-radius: 5px;
-  padding: 8px 10px; }
+  padding: 4px 10px;
+  font-size: 12px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between; }
   .label-switch-container label {
     margin-top: 0 !important; }
   .label-switch-container .onoffswitch-container {
@@ -8784,15 +8798,8 @@ label:not(.custom-file-label):not(.form-check-label) {
 .tumi-xScroll {
   overflow-x: auto; }
 
-.tumi-forcedResponsiveTable > table[class^="MuiTable-root-"] {
-  display: block !important;
-  min-width: 0 !important;
-  overflow-x: auto;
-  width: 100%; }
-
-@media (min-width: 1200px) {
-  .tumi-forcedResponsiveTable > table[class^="MuiTable-root-"] {
-    display: table !important; } }
+.tumi-forcedResponsiveTable {
+  overflow-x: auto; }
 
 .modal-overflow {
   overflow-x: scroll; }
@@ -9086,7 +9093,7 @@ td.rdtMonth:hover, td.rdtYear:hover {
 
 .onoffswitch {
   position: relative;
-  width: 78px; }
+  width: 75px; }
 
 .onoffswitch-checkbox {
   display: none; }
