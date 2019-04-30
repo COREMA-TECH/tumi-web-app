@@ -301,7 +301,7 @@ class Application extends Component {
                                 homePhone: applicantData.homePhone,
                                 homePhoneNumberValid: this.state.homePhone.length > 0,
                                 cellPhone: applicantData.cellPhone,
-                                cellPhoneNumberValid: this.state.cellPhone.length > 0,
+                                cellPhoneNumberValid: applicantData.cellPhone.length > 0,
                                 birthDay:
                                     applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
                                 socialSecurityNumber: applicantData.socialSecurityNumber,
@@ -788,31 +788,11 @@ class Application extends Component {
                                                     mask="+(999) 999-9999"
                                                     maskChar=" "
                                                     value={this.state.homePhone}
-                                                    className={
-                                                        this.state.homePhoneNumberValid ? 'form-control' : 'form-control _invalid'
-                                                    }
+                                                    className={'form-control'}
                                                     disabled={!this.state.editing}
                                                     onChange={(event) => {
                                                         this.setState({
                                                             homePhone: event.target.value
-                                                        }, () => {
-                                                            let phoneNumberValid =
-                                                                this.state.homePhone
-                                                                    .replace(/-/g, '')
-                                                                    .replace(/ /g, '')
-                                                                    .replace('+', '')
-                                                                    .replace('(', '')
-                                                                    .replace(')', '').length === 10 ||
-                                                                this.state.homePhone
-                                                                    .replace(/-/g, '')
-                                                                    .replace(/ /g, '')
-                                                                    .replace('+', '')
-                                                                    .replace('(', '')
-                                                                    .replace(')', '').length === 0;
-
-                                                            this.setState({
-                                                                homePhoneNumberValid: phoneNumberValid
-                                                            })
                                                         });
                                                     }}
                                                     placeholder="+(___) ___-____"
@@ -836,24 +816,6 @@ class Application extends Component {
                                                     onChange={(event) => {
                                                         this.setState({
                                                             cellPhone: event.target.value
-                                                        }, () => {
-                                                            let phoneNumberValid =
-                                                                this.state.cellPhone
-                                                                    .replace(/-/g, '')
-                                                                    .replace(/ /g, '')
-                                                                    .replace('+', '')
-                                                                    .replace('(', '')
-                                                                    .replace(')', '').length === 10 ||
-                                                                this.state.cellPhone
-                                                                    .replace(/-/g, '')
-                                                                    .replace(/ /g, '')
-                                                                    .replace('+', '')
-                                                                    .replace('(', '')
-                                                                    .replace(')', '').length === 0;
-
-                                                            this.setState({
-                                                                cellPhoneNumberValid: phoneNumberValid
-                                                            })
                                                         });
                                                     }}
                                                     placeholder="+(___) ___-____"

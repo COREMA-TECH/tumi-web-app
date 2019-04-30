@@ -133,7 +133,6 @@ class BoardManager extends Component {
     };
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
-console.log("sourceLaneId ", sourceLaneId)
         let data;
 
         this.setState({
@@ -180,62 +179,13 @@ console.log("sourceLaneId ", sourceLaneId)
                         if (targetLaneId != "Matches") {
                             this.updateApplicationInformation(cardId, false, 'candidate was updated!');
                         }
-                        
-
                         if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
                             this.setState({
                                 ApplicationId: cardId,
                                 openReason: true
                             }, () => {
                             });
-
-                            this.setState(
-                                {
-                                    lane: [
-                                        {
-                                            id: 'lane1',
-                                            title: 'Work Orders',
-                                            label: ' ',
-                                            cards: this.state.workOrders,
-                                            laneStyle: { borderRadius: 50, marginBottom: 15 },
-                                            droppable: false,
-                                            draggable: false
-                                        },
-                                        {
-                                            id: 'Matches',
-                                            title: 'Matches',
-                                            label: ' ',
-                                            cards: this.state.matches,
-                                            droppable: true,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Interview',
-                                            title: 'Sent for Interview',
-                                            label: ' ',
-                                            cards: this.state.interview,
-                                            droppable: false,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Notify',
-                                            title: 'Notify',
-                                            label: ' ',
-                                            cards: this.state.notify,
-                                            droppable: true,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Accepted',
-                                            title: 'Accepted',
-                                            label: ' ',
-                                            cards: this.state.accepted,
-                                            droppable: true,
-                                            draggable: true
-                                        }
-                                    ],
-                                    loading: false
-                                });
+                            this.KeepArray();
                         }
                     }
                 }
@@ -422,7 +372,6 @@ console.log("sourceLaneId ", sourceLaneId)
 
         state = this.state.workOrders.find((item) => { return item.id == cardId })
    
-        console.log("onCardClick ",state )
         if ((laneId.trim() == "lane1"  ) && cardId > 0 && state.Status != 0) {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
@@ -438,29 +387,19 @@ console.log("sourceLaneId ", sourceLaneId)
                     ShiftId: cardId
                 })
 
-
-                console.log("dando a las variables ", this.state.Intopening , this.state.ShiftId)
-
-                console.log("dando a las variables viejas ", state.WorkOrderId , cardId)
-
             if (this.state.LaneOrigen != "lane1" && this.state.LaneOrigen != "Notify") {
                 this.clearArray();
-               
-
-
                 needEnglish = state.needEnglish;
-                needExperience =state.needExperience;
+                needExperience = state.needExperience;
                 Position = state.Position;
 
 
                 this.getLatLongHotel(1,state.Zipcode.substring(0, 5));//, () => {
 
-                    console.log("Vamos al matche ", state.Zipcode.substring(0, 5))
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
                   this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, state.Position,state.WorkOrderId , cardId);
                 } else {
-
-                   this.getMatches(needEnglish, needExperience, 30, laneId, Position,state.WorkOrderId , cardId);
+                  this.getMatches(needEnglish, needExperience, 30, laneId, Position,state.WorkOrderId , cardId);
                 }
             //});
             }
@@ -519,7 +458,6 @@ console.log("sourceLaneId ", sourceLaneId)
     clearArray() {
         this.setState(
             {
-                // workOrder: this.state.workOrders,
                 lane: [
                     {
                         id: 'lane1',
@@ -600,13 +538,11 @@ console.log("sourceLaneId ", sourceLaneId)
                                 return items.WorkOrderId == _WOID && items.ApplicationId == item.id && items.ShiftId == _SHID
                             });
 
-                            console.log("Informacion del lead ", item)
                             if (item.Coordenadas) {
                                 const { getDistance } = this.context;
                                 const distance = getDistance(this.state.latitud1, this.state.longitud1, item.Coordenadas.Lat, item.Coordenadas.Long, 'M')
                                 
-                                console.log("Distancia entre el lead y el hotel ", item.id, item.firstName + ' ' + item.lastName,varphase, distance)
-
+                 
                                 if (distance  <= location) {
 
                                     if (typeof Phases == undefined || Phases == null) {
@@ -615,8 +551,6 @@ console.log("sourceLaneId ", sourceLaneId)
                                         varphase = Phases.StageId
                                     }
     
-                                    console.log("Informacion del match ", item.id, item.firstName + ' ' + item.lastName,varphase)
-
                                     switch (varphase) {
                                         case 30469:
                                             if (item.isLead === false) {
@@ -644,8 +578,7 @@ console.log("sourceLaneId ", sourceLaneId)
                                             });
                                             break;
                                         case 30464:
-    
-    
+
                                         getnotify.push({
                                             id: item.id,
                                             name: item.firstName + ' ' + item.lastName,
@@ -695,62 +628,13 @@ console.log("sourceLaneId ", sourceLaneId)
                             matches: getmatches,
                             notify: getnotify,
                             interview: getinterview,
-                            accepted: getaccepted
-});
-
-                       this.setState(
-                                {
-                                    lane: [
-                                        {
-                                            id: 'lane1',
-                                            title: 'Work Orders',
-                                            label: ' ',
-                                            cards: this.state.workOrders,
-                                            laneStyle: { borderRadius: 50, marginBottom: 15 },
-                                            droppable: false,
-                                            draggable: false
-                                        },
-                                        {
-                                            id: 'Matches',
-                                            title: 'Matches',
-                                            label: ' ',
-                                            cards: getmatches,
-                                            droppable: true,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Interview',
-                                            title: 'Interview',
-                                            label: ' ',
-                                            cards:  getinterview,
-                                            droppable: false,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Notify',
-                                            title: 'Notify',
-                                            label: ' ',
-                                            cards: getnotify,
-                                            droppable: true,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Accepted',
-                                            title: 'Accepted',
-                                            label: ' ',
-                                            cards: getaccepted,
-                                            droppable: true,
-                                            draggable: true
-                                        }
-                                    ],
-                                    loading: false
-
-                                });
-
-
+                            accepted: getaccepted,
+                            loading: false
+                        });
+                        
+                        this.KeepArray();
 
                     }).catch(error => {
-                        console.log("entre al catch ", error)
                         this.setState({
                             loading: false,
                         })
@@ -796,23 +680,10 @@ console.log("sourceLaneId ", sourceLaneId)
 
     getLatLongHotel = async (op, zipcode) => {
         await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
-            console.log("Informa del hotel ", data)
             this.setState({
                 latitud1: data.zipcode[0].Lat,
                 longitud1: data.zipcode[0].Long
             });
-        }).catch(error => {
-        })
-    };
-
-    getLatLong = async (op, zipcode, fnc = () => {
-    }) => {
-        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
-            this.setState({
-                latitud2: data.zipcode[0].Lat,
-                longitud2: data.zipcode[0].Long
-            }, fnc);
-
         }).catch(error => {
         })
     };
@@ -895,7 +766,6 @@ console.log("sourceLaneId ", sourceLaneId)
                     count = 1;
                 }
 
-                //if (begin) count = 1;
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
@@ -920,58 +790,13 @@ console.log("sourceLaneId ", sourceLaneId)
             this.setState({
                 workOrders: getworkOrders,
             });
+
         }).catch(error => {
             console.log(error)
         })
 
-        this.setState({
-
-            // workOrders: getworkOrders,
-            lane: [
-                {
-                    id: 'lane1',
-                    title: 'Work Orders',
-                    label: ' ',
-                    cards: getworkOrders,
-                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 },
-                    droppable: false,
-                    cardDraggable: false
-                },
-                {
-                    id: 'Matches',
-                    title: 'Matches',
-                    label: ' ',
-                    cards: [],
-                    droppable: true,
-                    cardDraggable: true,
-                },
-                {
-                    id: 'Interview',
-                    title: 'Interview',
-                    label: ' ',
-                    cards: [],
-                    droppable: false,
-                    draggable: true
-                },
-                {
-                    id: 'Notify',
-                    title: 'Notify',
-                    label: ' ',
-                    cards: [],
-                    droppable: true,
-                    draggable: true
-                },
-                {
-                    id: 'Accepted',
-                    title: 'Accepted',
-                    label: ' ',
-                    cards: [],
-                    droppable: true,
-                    draggable: true
-                }
-            ],
-            loading: false
-        });
+        this.KeepArray();
+        
     };
 
     handleCloseModal = (event) => {
@@ -990,25 +815,8 @@ console.log("sourceLaneId ", sourceLaneId)
         });
     };
 
-    addClickListenerToInterviewsElements = () => {
-        let interview = document.querySelector('[title="Interview"]');
-        let interviews = interview.querySelectorAll('header > div:first-child');
-        let elements = Array.from(interviews);
-
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].classList.add('interview-title');
-            elements[i].addEventListener("click", () => {
-                this.goToEmployeePackage(this.state.interview[i].id);
-            });
-        }
-    };
-
     render() {
-        // Call listener always in render
-        if (this.state.interview.length > 0) {
-            //this.addClickListenerToInterviewsElements();
-        }
-
+        
         const { classes } = this.props;
 
         let isLoading = this.state.loading;
@@ -1158,7 +966,7 @@ console.log("sourceLaneId ", sourceLaneId)
                             eventBusHandle={this.setEventBus}
                             handleDragStart={this.handleDragStart}
                             handleDragEnd={this.handleDragEnd}
-                            onCardClick={this.state.loading ? console.log("Esta bloquedo") : this.onCardClick}
+                            onCardClick={this.state.loading ? null: this.onCardClick}
                             style={{
                                 backgroundColor: '#f5f7f9'
                             }}

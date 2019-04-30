@@ -353,10 +353,11 @@ class PreviousEmployment extends Component {
 								<div className="col-md-6">
 									<span className="primary"> {previousEmploymentLabels[5].label}</span>
 									<input
-										id="companyPayRate"
+									    id="companyPayRate"
 										form="form-previous-employment"
 										name="companyPayRate"
 										type="number"
+										step="0.01"
 										className="form-control"
 										min="0"
 										maxLength="50"

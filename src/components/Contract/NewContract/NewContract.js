@@ -1373,7 +1373,7 @@ class NewContract extends Component {
                                 }}
                                 disabled={parseInt(this.state.Contract_Status) == 2 ? false : true}
                             >
-                                Renewal Contract <i class="far fa-edit"></i>
+                                Renew Contract <i class="far fa-edit"></i>
                             </button>
                         ) : (
                                 ''
