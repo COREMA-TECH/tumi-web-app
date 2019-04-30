@@ -1349,7 +1349,7 @@ class ContactcontactForm extends React.Component {
 				<div className="row">
 					<div className="col-md-12">
 						<div className="card">
-							<div className="card-body p-3 Table-wrapper">
+							<div className="card-body p-3 tumi-forcedResponsiveTable">
 								<ContactsTable
 									data={this.state.data}
 									titles={this.state.titles}

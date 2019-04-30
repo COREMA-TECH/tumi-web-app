@@ -124,10 +124,7 @@ const styles = (theme) => ({
 	tableWrapper: {
 		overflowX: 'auto'
 	},
-	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		},
+	row: {		
 		'&:hover': {
 			cursor: 'pointer'
 		}
@@ -247,11 +244,11 @@ class PositionsTable extends React.Component {
 			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
 		}
 		return (
-			<Paper className={classes.root}>
+			<React.Fragment>
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell className={"Table-head"} style={{width: '30px' }}>
+							<CustomTableCell width='30px' className={"Table-head"} style={{width: '30px' }}>
 								Actions
 							</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '50px' }}>Department</CustomTableCell>
@@ -374,7 +371,7 @@ class PositionsTable extends React.Component {
 						</TableRow>
 					</TableFooter>
 				</Table>
-			</Paper>
+			</React.Fragment>
 		);
 	}
 }

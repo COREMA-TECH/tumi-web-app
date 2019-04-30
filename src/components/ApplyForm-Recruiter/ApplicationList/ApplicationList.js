@@ -227,11 +227,13 @@ class ApplicationList extends Component {
 								return (
 									<div className="row">
 										<div className="col-md-12">
-											<div className="">
-												<ApplicationTable
-													data={dataApplication}
-													onDeleteHandler={this.onDeleteHandler}
-												/>
+											<div className="card">
+												<div className="card-body tumi-forcedResponsiveTable">
+													<ApplicationTable
+														data={dataApplication}
+														onDeleteHandler={this.onDeleteHandler}
+													/>												
+												</div>
 											</div>
 										</div>
 									</div>
