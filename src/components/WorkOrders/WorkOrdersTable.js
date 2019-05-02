@@ -521,12 +521,12 @@ class WorkOrdersTable extends Component {
                             </select>
                         </div>
                         <div className="col-md-12 mb-2 Filter-buttons">
-                            <button class="btn btn-outline-secondary btn-not-rounded Filter-button" type="button" onClick={this.clearInputDates}>
+                            <button class="btn btn-outline-secondary btn-not-rounded Filter-button clear-btn" type="button" onClick={this.clearInputDates}>
                                 <i class="fas fa-filter"></i> Clear
                             </button>
                         </div>                        
                     </div>
-
+                    <h5 className="Table-title">{ this.props.tableTitle || "Work Orders" }</h5>                   
                 </div>
                 <div className="card-body tumi-forcedResponsiveTable">
 
