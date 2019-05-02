@@ -452,7 +452,7 @@ console.log("informacion ", data)
                                 directDeposit: this.state.data.directDeposit,
                                 isActive:this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
-                                EmployeeId: this.state.data.employee.id
+                                EmployeeId: this.state.data.employee? this.state.data.employee.id : 0
                             })
                         });
                     })
