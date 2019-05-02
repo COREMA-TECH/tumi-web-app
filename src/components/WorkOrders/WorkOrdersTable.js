@@ -382,24 +382,19 @@ class WorkOrdersTable extends Component {
             .catch();
     };
 
-    handleChangeDate = (event) => {
-        const target = event.target;
-        const value = event.target.value;
-        const name = event.target.name;
-
+    handleStartDate = (date) => {
+        console.log(`Start date ${date}`);
         this.setState(() => ({
-            [name]: value,
+            startDate: date,
             endDateDisabled: false
         }));
     }
 
-    handleEndDate = (event) => {
-        const target = event.target;
-        const value = event.target.value;
-        const name = event.target.name;
+    handleEndDate = (date) => {
+        console.log(`End date ${date}`);
 
         this.setState(() => ({
-            [name]: value
+            endDate: date
         }), () => {
             this.getWorkOrders()
         });
@@ -476,12 +471,12 @@ class WorkOrdersTable extends Component {
                                 <div class="input-group flex-nowrap WorkOrders-filter">
                                     <DatePicker
                                         selected={this.state.startDate}
-                                        onChange={this.handleChangeDate}
+                                        onChange={this.handleStartDate}
                                         placeholderText="Start date"
-                                        id="datepicker"
+                                        id="datepicker-start"
                                     />
                                     <div class="input-group-append">
-                                        <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                        <label class="input-group-text" id="addon-wrapping" for="datepicker-start">
                                             <i class="far fa-calendar"></i>
                                         </label>
                                     </div>
@@ -490,12 +485,12 @@ class WorkOrdersTable extends Component {
                                 <div class="input-group flex-nowrap WorkOrders-filter">
                                     <DatePicker
                                         selected={this.state.endDate}
-                                        onChange={this.handleChangeDate}
+                                        onChange={this.handleEndDate}
                                         placeholderText="End date"
-                                        id="datepicker"
+                                        id="datepicker-end"
                                     />
                                     <div class="input-group-append">
-                                        <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                        <label class="input-group-text" id="addon-wrapping" for="datepicker-end">
                                             <i class="far fa-calendar"></i>
                                         </label>
                                     </div>
