@@ -203,13 +203,13 @@ class ApplicationTable extends React.Component {
                             <TableHead>
                                 <TableRow>
                                     <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Completed</CustomTableCell>
                                 </TableRow>
                             </TableHead>
@@ -255,6 +255,8 @@ class ApplicationTable extends React.Component {
                                                     </button>
                                                 </Tooltip>
                                             </CustomTableCell>
+                                            <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
+                                            <CustomTableCell>{row.emailAddress}</CustomTableCell>
                                             <CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
                                             <CustomTableCell>
                                                 {row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
@@ -262,8 +264,6 @@ class ApplicationTable extends React.Component {
                                             <CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
-                                            <CustomTableCell>{row.emailAddress}</CustomTableCell>
                                             <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
                                         </TableRow>
                                     );

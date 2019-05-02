@@ -119,9 +119,6 @@ const styles = (theme) => ({
         overflowX: 'auto'
     },
     row: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.background.default
-        },
         '&:hover': {
             cursor: 'pointer'
         }
@@ -188,7 +185,7 @@ class EmployeesTable extends React.Component {
 
         return (
 
-            <Paper className={classes.root}>
+            <React.Fragment>
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
@@ -301,7 +298,7 @@ class EmployeesTable extends React.Component {
                         </TableRow>
                     </TableFooter>
                 </Table>
-            </Paper>
+            </React.Fragment>
 
         );
     }

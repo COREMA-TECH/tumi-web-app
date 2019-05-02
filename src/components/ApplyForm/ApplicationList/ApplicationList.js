@@ -340,7 +340,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={variables} >
+					<Query query={this.GET_APPLICATION_QUERY} variables={variables} pollInterval={300} >
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;

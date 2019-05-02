@@ -183,7 +183,7 @@ class PunchesReportTable extends React.Component {
         return (
             <Route
                 render={({ history }) => (
-                    <div className="card-body Table-wrapper">
+                    <div className="card-body tumi-forcedResponsiveTable">
                         <Paper className={classes.root}>
                             <Table className={classes.table}>
                                 <TableHead>

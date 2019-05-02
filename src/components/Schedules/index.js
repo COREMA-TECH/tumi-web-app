@@ -215,6 +215,7 @@ class Schedules extends Component {
                     openModal={this.state.openWorkOrderForm}
                     handleCloseModal={this.handleCloseModal}
                     handleCloseModal={this.handleOpenWorkOrderForm}
+                    toggleRefresh={this.toggleRefresh}
                 />
                 <div className="row">
                     <div className="col-md-12">

@@ -528,13 +528,13 @@ class WorkOrdersTable extends Component {
                     </div>
 
                 </div>
-                <div className="card-body Table-wrapper">
+                <div className="card-body tumi-forcedResponsiveTable">
 
-                    <Paper style={{ overflowX: 'auto' }}>
+                    <React.Fragment>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell className={"Table-head text-center"} style={{ width: '150px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"} style={{ width: '60px' }}>Actions</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '80px' }}>No.</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '220px' }}>Property</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
@@ -634,7 +634,7 @@ class WorkOrdersTable extends Component {
                             title={'are you sure you want to cancel this record?'}
                             loading={this.state.removing}
                         />
-                    </Paper>
+                    </React.Fragment>
                 </div>
             </div >
         );

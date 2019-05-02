@@ -440,7 +440,6 @@ class General extends Component {
                         }, () => {
                             //this.getApplicationEmployees(id);
                             //   this.fetchDepartments();
-console.log("informacion ", data)
                             this.setState({
                                 email: this.state.data.emailAddress,
                                 number: this.state.data.cellPhone,
@@ -453,6 +452,7 @@ console.log("informacion ", data)
                                 isActive:this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
                                 EmployeeId: this.state.data.employee? this.state.data.employee.id : 0
+                                idealJobs: this.state.data.idealJobs
                             })
                         });
                     })
@@ -1619,16 +1619,13 @@ console.log("informacion ", data)
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
-                                        <div className="col-sm-12 col-md-6 col-lg-3">
-                                            <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
-                                                Server
+                                        {this.state.idealJobs.map(idealJob => {
+                                            return <div className="col-sm-12 col-md-6 col-lg-3">
+                                                <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                    {idealJob.description}
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="col-sm-12 col-md-6 col-lg-3">
-                                            <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
-                                                Server
-                                            </div>
-                                        </div>
+                                        })}
                                     </div>
                                 </div>
                             </div>
