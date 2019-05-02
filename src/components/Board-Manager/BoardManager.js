@@ -178,7 +178,7 @@ console.log("sourceLaneId ", sourceLaneId)
                         this.addApplicationPhase(cardId, IdLane);
 
                         if (targetLaneId != "Matches") {
-                            this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                            this.updateApplicationInformation(cardId, false, 'Candidate has been notified');
                         }
                         
 
