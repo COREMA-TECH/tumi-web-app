@@ -55,10 +55,11 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany,$w
 		date
 		comment
 		EspecialComment
-		dayWeek
+		dayWeeks: dayWeek
 		IdEntity
 		contactId
 		PositionRateId
+		departmentId
 	}
 	getusers(Id: null,IsActive: 1) {
 		Id

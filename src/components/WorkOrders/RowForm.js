@@ -34,7 +34,8 @@ class RowForm extends Component {
         this.setState({
             [name]: moment(text, "HH:mm:ss").format("HH:mm")
         }, () => {
-            this.calculateHours()
+            this.calculateHours();
+            this.sendPostData();
         })
     }
 
@@ -81,7 +82,7 @@ class RowForm extends Component {
 
     sendPostData = () => {
         let form = [];
-        var { quantity, PositionRateId, shift, endShift, comment, dayWeeks, userId, date, contactId, dayWeeks, needExperience, needEnglish } = this.state;
+        var { quantity, PositionRateId, shift, endShift, comment, dayWeeks, userId, date, contactId, needExperience, needEnglish } = this.state;
         form = {
             id: this.props.form.id,
             IdEntity: this.props.IdEntity,
@@ -91,7 +92,7 @@ class RowForm extends Component {
             shift,
             endShift,
             comment,
-            dayWeek: dayWeeks,
+            dayWeeks,
             userId,
             date,
             contactId,

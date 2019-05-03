@@ -121,11 +121,21 @@ class WorkOrdersTable extends Component {
 
         if (this.state.id)
             variables = {
+                ...variables,
                 workOrder: {
                     id: this.state.id
                 },
                 shiftEntity: {
                     Code: this.state.id
+                }
+            }
+
+        if (this.state.state)
+            variables = {
+                ...variables,
+
+                shiftEntity: {
+                    State: this.state.state
                 }
             }
 
@@ -382,24 +392,19 @@ class WorkOrdersTable extends Component {
             .catch();
     };
 
-    handleChangeDate = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
+    handleStartDate = (startDate) => {
         this.setState(() => ({
-            [name]: value,
+            startDate,
             endDateDisabled: false
-        }));
+        }), () => {
+            if (this.state.endDate)
+                this.getWorkOrders()
+        });
     }
 
-    handleEndDate = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
+    handleEndDate = (endDate) => {
         this.setState(() => ({
-            [name]: value
+            endDate
         }), () => {
             this.getWorkOrders()
         });
@@ -434,8 +439,13 @@ class WorkOrdersTable extends Component {
         });
     }
 
+    handleStateChange = (e) => {
+        this.setState({
+            state: parseInt(e.target.value)
+        }, () => { this.getWorkOrders() })
+    }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.refresh != this.props.refresh) 
+        if (nextProps.refresh != this.props.refresh)
             this.getWorkOrders();
         return true;
     }
@@ -461,11 +471,7 @@ class WorkOrdersTable extends Component {
                             </div>
                         </div>
                         <div className="col-md-4 col-xl-2 offset-xl-2 mb-2">
-                            <select name="state" id="" value={this.state.state} className="form-control" onChange={(e) => {
-                                this.setState({
-                                    state: parseInt(e.target.value)
-                                }, () => { this.getWorkOrders() })
-                            }}>
+                            <select name="state" id="" value={this.state.state} className="form-control" onChange={this.handleStateChange}>
                                 <option value="0">State</option>
                                 {this.state.states.map(state => {
                                     return <option value={state.Id} key={state.Id}>{state.Name}</option>
@@ -476,12 +482,12 @@ class WorkOrdersTable extends Component {
                             <div class="input-group flex-nowrap">
                                 <DatePicker
                                     selected={this.state.startDate}
-                                    onChange={this.handleChangeDate}
+                                    onChange={this.handleStartDate}
                                     placeholderText="Start date"
-                                    id="datepicker"
+                                    id="startDate"
                                 />
                                 <div class="input-group-append">
-                                    <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                    <label class="input-group-text" id="addon-wrapping" for="startDate">
                                         <i class="far fa-calendar"></i>
                                     </label>
                                 </div>
@@ -491,17 +497,18 @@ class WorkOrdersTable extends Component {
                             <div class="input-group flex-nowrap">
                                 <DatePicker
                                     selected={this.state.endDate}
-                                    onChange={this.handleChangeDate}
+                                    onChange={this.handleEndDate}
                                     placeholderText="End date"
-                                    id="datepicker"
+                                    disabled={this.state.endDateDisabled}
+                                    id="endDate"
                                 />
                                 <div class="input-group-append">
-                                    <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                    <label class="input-group-text" id="addon-wrapping" for="endDate">
                                         <i class="far fa-calendar"></i>
                                     </label>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                         <div className="col-md-4 offset-md-8 col-xl-2 offset-xl-0 mb-2">
                             <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control" onChange={(event) => {
                                 if (event.target.value == "null") {
@@ -524,7 +531,7 @@ class WorkOrdersTable extends Component {
                             <button class="btn btn-outline-secondary btn-not-rounded Filter-button" type="button" onClick={this.clearInputDates}>
                                 <i class="fas fa-filter"></i> Clear
                             </button>
-                        </div>                        
+                        </div>
                     </div>
 
                 </div>
@@ -608,19 +615,19 @@ class WorkOrdersTable extends Component {
                                 })}
                             </TableBody>
                             <TableFooter>
-                                
-                                    {items.length > 0 && (
-                                        <TablePagination
-                                            colSpan={1}
-                                            count={items.length}
-                                            rowsPerPage={rowsPerPage}
-                                            page={page}
-                                            onChangePage={this.handleChangePage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            ActionsComponent={TablePaginationActionsWrapped}
-                                        />
-                                    )}
-                                
+
+                                {items.length > 0 && (
+                                    <TablePagination
+                                        colSpan={1}
+                                        count={items.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        onChangePage={this.handleChangePage}
+                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActionsWrapped}
+                                    />
+                                )}
+
                             </TableFooter>
                         </Table>
                         <ConfirmDialog
