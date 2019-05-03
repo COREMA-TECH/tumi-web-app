@@ -180,6 +180,7 @@ class VerticalLinearStepper extends Component {
             this.state.applicationId = localStorage.getItem('idApplication');
         }
 
+        
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
