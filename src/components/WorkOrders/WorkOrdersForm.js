@@ -105,7 +105,7 @@ class WorkOrdersForm extends Component {
         Friday: 'FR,',
         Saturday: 'SA,',
         Sunday: 'SU,',
-        dayWeek: '',
+        dayWeeks: '',
         DateContract: '',
         departmentId: 0,
         dayWeeks: '',
@@ -145,22 +145,26 @@ class WorkOrdersForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
+        console.log({ nextProps })
         if (nextProps.item && nextProps.openModal) {
 
+            let dataToEdit = {
+                quantity: nextProps.item.quantity,
+                shift: nextProps.item.shift,
+                endShift: nextProps.item.endShift,
+                dayWeeks: nextProps.item.dayWeeks,
+                comment: nextProps.item.comment,
+                needExperience: nextProps.item.needExperience,
+                needEnglish: nextProps.item.needEnglish,
+                PositionRateId: nextProps.item.PositionRateId,
+                departmentId: nextProps.item.departmentId
+            }
             this.setState(
                 {
                     id: nextProps.item.id,
-                    dataToEdit: {
-                        quantity: nextProps.item.quantity,
-                        shift: nextProps.item.shift,
-                        endShift: nextProps.item.endShift,
-                        dayWeeks: nextProps.item.dayWeek,
-                        comment: nextProps.item.comment,
-                        needExperience: nextProps.item.needExperience,
-                        needEnglish: nextProps.item.needEnglish,
-                        PositionRateId: nextProps.item.PositionRateId,
-                        departmentId: nextProps.item.departmentId
-                    },
+                    workOrderId: nextProps.item.workOrderId,
+                    dataToEdit,
+                    ...dataToEdit,
                     sameContractDate: nextProps.item.endDate,
                     endDate: nextProps.item.endDate,
                     contactId: nextProps.item.contactId,
@@ -175,9 +179,9 @@ class WorkOrdersForm extends Component {
                     isEditing: true
                 },
                 () => {
+                    console.log({ newSstate: this.state })
                     this.getEmployees();
-                    this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
-                    this.getContacts(nextProps.item.IdEntity);
+                    this.getPositions(nextProps.item.departmentId);
                     this.getRecruiter();
                     this.getDepartment(nextProps.item.IdEntity);
                     this.newWorkOrder();
@@ -209,7 +213,7 @@ class WorkOrdersForm extends Component {
                 Friday: 'FR,',
                 Saturday: 'SA,',
                 Sunday: 'SU,',
-                dayWeek: '',
+                dayWeeks: '',
                 duration: '8',
                 openModal: false,
 
@@ -292,7 +296,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
-                this.setState({ openModal: false, saving: false }, 
+                this.setState({ openModal: false, saving: false },
                     () => {
                         this.props.toggleRefresh();
                         this.props.handleCloseModal();
@@ -319,7 +323,7 @@ class WorkOrdersForm extends Component {
                     endDate: this.state.endDate,
                     quantity: this.state.quantity,
                     workOrder: {
-                        id: this.state.id,
+                        id: this.state.workOrderId,
                         IdEntity: this.state.IdEntity,
                         date: this.state.date,
                         quantity: this.state.quantity,
@@ -335,7 +339,8 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
                         contactId: this.state.contactId,
-                        dayWeek: this.state.dayWeeks
+                        dayWeek: this.state.dayWeeks,
+                        departmentId: this.state.departmentId
                     },
                     shift: {
                         entityId: this.state.IdEntity,
@@ -363,23 +368,6 @@ class WorkOrdersForm extends Component {
 
     };
 
-    getContacts = (id) => {
-        this.props.client
-            .query({
-                query: GET_CONTACT_BY_QUERY,
-                variables: { id: id }
-            })
-            .then(({ data }) => {
-                var request = data.getcontacts.find((item) => { return item.Id == this.state.contactId })
-                this.setState({
-                    contacts: data.getcontacts,
-                    Electronic_Address: request != null ? request.Electronic_Address : '',
-                    departmentId: request != null ? request.Id_Deparment : 0
-                });
-
-            })
-            .catch();
-    };
 
     getDepartment = (id) => {
         this.props.client
@@ -425,7 +413,7 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CONVERT_TO_OPENING,
                 variables: {
-                    id: this.state.id,
+                    id: this.state.workOrderId,
                     userId: this.state.userId,
                 }
             })
@@ -469,7 +457,6 @@ class WorkOrdersForm extends Component {
 
         if (name === 'IdEntity') {
             this.getDepartment(value);
-            this.getContacts(value);
         }
 
         if (name === 'departmentId') {
@@ -477,13 +464,13 @@ class WorkOrdersForm extends Component {
         }
     };
 
-    getPositions = (id, PositionId = null) => {
+    getPositions = (Id_Department) => {
         this.props.client
             .query({
                 query: GET_POSITION_BY_QUERY,
                 fetchPolicy: 'no-cache',
                 variables: {
-                    Id_Department: id
+                    Id_Department
                 }
             })
             .then(({ data }) => {
@@ -516,7 +503,7 @@ class WorkOrdersForm extends Component {
         this.props.client
             .query({
                 query: GET_SHIFTS,
-                variables: { WorkOrderId: this.state.id }
+                variables: { WorkOrderId: this.state.workOrderId }
             })
             .then(({ data }) => {
                 let employeesList = [];
@@ -614,7 +601,11 @@ class WorkOrdersForm extends Component {
     }
 
     handleChangePostData = (postData) => {
-
+        //This is to set edited values into state, because Work Order Update Structure 
+        //is created based on state props directly
+        this.setState(() => ({
+            ...postData
+        }))
         var dataFiltered = this.state.form.filter((item) => {
             return item.id != postData.id
         });
@@ -633,7 +624,7 @@ class WorkOrdersForm extends Component {
             duration: 0,
             endShift: '',
             comment: '',
-            dayWeek: ''
+            dayWeeks: ''
         }
         this.setState((prevState) =>
             ({ form: prevState.form.concat(form) })
@@ -660,7 +651,7 @@ class WorkOrdersForm extends Component {
 
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
-
+        console.log({ state: this.state })
         return (
             <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
@@ -701,17 +692,7 @@ class WorkOrdersForm extends Component {
                                             </label>
                                         </div>
                                     </div>
-                                    {/* <input
-                                        required
-                                        type="date"
-                                        className="form-control"
-                                        name="endDate"
-                                        disabled={this.state.isEditing}
-                                        onChange={this.handleChange}
-                                        value={this.state.endDate.substring(0, 10)}
-                                        onBlur={this.handleValidate}
-                                        placeholder="Week Ending"
-                                    /> */}
+
                                 </div>
                             </div>
                         </div>
