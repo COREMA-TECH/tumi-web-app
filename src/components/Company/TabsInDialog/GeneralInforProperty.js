@@ -1156,10 +1156,10 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                 </div>
-                                <div className="col-md-12 col-lg-11">
+                                <div className="col-md-12 col-lg-12">
                                     <div className="row">
 
-                                        <div className="col-md-6 col-lg-1">
+                                        <div className="col-md-6 col-lg-2">
                                             <label>* Markup</label>
                                             <InputValid
                                                 change={(text) => {
@@ -1202,7 +1202,7 @@ class GeneralInfoProperty extends Component {
                                                 required
                                             />
                                         </div>
-                                        <div className="col-md-6 col-lg-3">
+                                        <div className="col-md-6 col-lg-4">
                                             <label>Address 2</label>
                                             <input
                                                 className={'form-control'}
@@ -1242,7 +1242,7 @@ class GeneralInfoProperty extends Component {
                                             cityClass={`form-control ${this.state.validCity === '' && ' _invalid'}`}
                                             stateClass={`form-control ${this.state.validState === '' && ' _invalid'}`}
                                             zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
-                                            cityColClass="col-md-6 col-lg-3"
+                                            cityColClass="col-md-6 col-lg-4"
                                             stateColClass="col-md-6 col-lg-2"
                                             zipCodeColClass="col-md-6 col-lg-2"
                                             requiredCity={true}
@@ -1252,7 +1252,7 @@ class GeneralInfoProperty extends Component {
                                         />
 
 
-                                        <div className="col-md-12 col-lg-3">
+                                        <div className="col-md-12 col-lg-2">
                                             <label> Region</label>
                                             <AutosuggestInput
                                                 id="Region"

@@ -177,7 +177,7 @@ class BoardManager extends Component {
                         this.addApplicationPhase(cardId, IdLane);
 
                         if (targetLaneId != "Matches") {
-                            this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                            this.updateApplicationInformation(cardId, false, 'Candidate has been notified');
                         }
                         if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
                             this.setState({

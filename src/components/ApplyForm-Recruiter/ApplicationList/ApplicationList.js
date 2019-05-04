@@ -142,7 +142,7 @@ class ApplicationList extends Component {
 		// To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="row">
-				<div className="col-md-6">
+				<div className="col-md-6 col-xl-2">
 					<div className="input-group mb-3">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="basic-addon1">
@@ -162,7 +162,7 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				<div className="col-md-6">
+				<div className="col-md-6 col-xl-2 offset-xl-8">
 					<button
 						className="btn btn-success float-right"
 						onClick={() => {

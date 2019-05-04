@@ -40,12 +40,12 @@ class PunchesConsolidatedDropDownBody extends Component {
                 <table className="table DropdownBody-table">
                     <thead>
                         <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Time in-out</th>
-                            <th scope="col">Duration</th>
-                            <th scope="col">Job</th>
-                            <th scope="col">Location</th>
-                            <th scope="col">Faces</th>
+                            <th className="Table-boldHead" scope="col">Name</th>
+                            <th className="Table-boldHead" scope="col">Time in-out</th>
+                            <th className="Table-boldHead" scope="col">Duration</th>
+                            <th className="Table-boldHead" scope="col">Job</th>
+                            <th className="Table-boldHead" scope="col">Location</th>
+                            <th className="Table-boldHead" scope="col">Faces</th>
                         </tr>
                     </thead>
                     <tbody>

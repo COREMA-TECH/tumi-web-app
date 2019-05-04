@@ -460,7 +460,7 @@ class WorkOrdersTable extends Component {
                 {isLoading && <LinearProgress />}
                 <div className="card-header bg-light">
                     <div className="row">
-                        <div className="col-md-4 col-xl-2 mb-2">
+                        <div className="col-md-3 col-xl-2 mb-2">
                             <div class="input-group">
                                 <input type="text" name="id" value={this.state.id} className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
                                 <div class="input-group-prepend">
@@ -470,70 +470,71 @@ class WorkOrdersTable extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4 col-xl-2 offset-xl-2 mb-2">
-                            <select name="state" id="" value={this.state.state} className="form-control" onChange={this.handleStateChange}>
-                                <option value="0">State</option>
-                                {this.state.states.map(state => {
-                                    return <option value={state.Id} key={state.Id}>{state.Name}</option>
-                                })}
-                            </select>
-                        </div>
-                        <div className="col-md-2 col-xl-2 mb-2">
-                            <div class="input-group flex-nowrap">
-                                <DatePicker
-                                    selected={this.state.startDate}
-                                    onChange={this.handleStartDate}
-                                    placeholderText="Start date"
-                                    id="startDate"
-                                />
-                                <div class="input-group-append">
-                                    <label class="input-group-text" id="addon-wrapping" for="startDate">
-                                        <i class="far fa-calendar"></i>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-2 col-xl-2 mb-2">
-                            <div class="input-group flex-nowrap">
-                                <DatePicker
-                                    selected={this.state.endDate}
-                                    onChange={this.handleEndDate}
-                                    placeholderText="End date"
-                                    disabled={this.state.endDateDisabled}
-                                    id="endDate"
-                                />
-                                <div class="input-group-append">
-                                    <label class="input-group-text" id="addon-wrapping" for="endDate">
-                                        <i class="far fa-calendar"></i>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-4 offset-md-8 col-xl-2 offset-xl-0 mb-2">
-                            <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control" onChange={(event) => {
-                                if (event.target.value == "null") {
-                                    this.handleFilterValue(null);
-                                } else {
-                                    this.handleFilterValue(event.target.value);
-                                }
-                                // this.handleFilterValue
-                            }}
-                                value={this.state.status}>
-                                <option value={1}>Open</option>
-                                <option value={null}>Status (All)</option>
-                                <option value={2}>Completed</option>
-                                <option value={0}>Cancelled</option>
-                                <option value={4}>Openings</option>
+                        <div className="col-md-9 col-xl-8 offset-xl-2 mb-2">
+                            <div className="WorkOrders-filters">
+                                <select name="state" id="" value={this.state.state} className="form-control WorkOrders-filter" onChange={(e) => {
+                                    this.setState({
+                                        state: parseInt(e.target.value)
+                                    }, () => { this.getWorkOrders() })
+                                }}>
+                                    <option value="0">State</option>
+                                    {this.state.states.map(state => {
+                                        return <option value={state.Id} key={state.Id}>{state.Name}</option>
+                                    })}
+                                </select>
 
-                            </select>
-                        </div>
-                        <div className="col-md-12 mb-2 Filter-buttons">
-                            <button class="btn btn-outline-secondary btn-not-rounded Filter-button" type="button" onClick={this.clearInputDates}>
-                                <i class="fas fa-filter"></i> Clear
-                            </button>
-                        </div>
+                                <div class="input-group flex-nowrap WorkOrders-filter">
+                                    <DatePicker
+                                        selected={this.state.startDate}
+                                        onChange={this.handleStartDate}
+                                        placeholderText="Start date"
+                                        id="datepicker-start"
+                                    />
+                                    <div class="input-group-append">
+                                        <label class="input-group-text" id="addon-wrapping" for="datepicker-start">
+                                            <i class="far fa-calendar"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                        
+                                <div class="input-group flex-nowrap WorkOrders-filter">
+                                    <DatePicker
+                                        selected={this.state.endDate}
+                                        onChange={this.handleEndDate}
+                                        placeholderText="End date"
+                                        id="datepicker-end"
+                                    />
+                                    <div class="input-group-append">
+                                        <label class="input-group-text" id="addon-wrapping" for="datepicker-end">
+                                            <i class="far fa-calendar"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                        
+                                <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control WorkOrders-filter" onChange={(event) => {
+                                    if (event.target.value == "null") {
+                                        this.handleFilterValue(null);
+                                    } else {
+                                        this.handleFilterValue(event.target.value);
+                                    }
+                                    // this.handleFilterValue
+                                }}
+                                    value={this.state.status}>
+                                    <option value={1}>Open</option>
+                                    <option value={null}>Status (All)</option>
+                                    <option value={2}>Completed</option>
+                                    <option value={0}>Cancelled</option>
+                                    <option value={4}>Openings</option>
+
+                                </select>
+                    
+                                <button class="btn btn-outline-secondary btn-not-rounded WorkOrders-filter clear-btn" type="button" onClick={this.clearInputDates}>
+                                    <i class="fas fa-filter"></i> Clear
+                                </button>
+                            </div>
+                        </div>                        
                     </div>
-
+                    <h5 className="Table-title">{ this.props.tableTitle || "Work Orders" }</h5>                   
                 </div>
                 <div className="card-body tumi-forcedResponsiveTable">
 

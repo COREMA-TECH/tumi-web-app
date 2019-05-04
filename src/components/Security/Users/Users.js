@@ -1110,27 +1110,27 @@ class Catalogs extends React.Component {
     };
 
     searchUsers = (filterText) => {
-        let allUser = this.state.allData.filter((_, i) => {
-            if (filterText === "") {
-                return true;
-            }
+        const allUser = filterText === "" 
+            ? this.state.allData 
+            : this.state.allData
+                .filter((_, i) => {
+                    if( this.checkForSubstring(_.Code_User, filterText) || this.checkForSubstring(_.firstName, filterText) || this.checkForSubstring(_.lastName, filterText) ){
+                        return true;
+                    }           
+                });
 
-            if (
-                _.Code_User.indexOf(filterText) > -1 ||
-                _.Code_User
-                    .toLocaleLowerCase()
-                    .indexOf(filterText) > -1 ||
-                _.Code_User
-                    .toLocaleUpperCase()
-                    .indexOf(filterText) > -1
-            ) {
-                return true;
-            }
-        });
         this.setState(prevState => ({
             data: allUser
         }));
     };
+
+    checkForSubstring = (mainText, substring) => {
+        if(!mainText){
+            return false;
+        }
+
+        return mainText.toLocaleLowerCase().indexOf(substring.toLocaleLowerCase()) > -1 ? true : false;
+    }
 
     filterChangeHandler = (e) => {
         let value = e.target.value;
@@ -1400,7 +1400,7 @@ class Catalogs extends React.Component {
                 </Dialog>
 
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-4 col-xl-2">
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
                                 <span className="input-group-text" id="basic-addon1">
@@ -1416,7 +1416,7 @@ class Catalogs extends React.Component {
                             />
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 offset-md-2 offset-xl-4">
                         <button className="float-right btn btn-success mr-1" onClick={this.handleClickOpenModal}
                             disabled={isLoading}>
                             Add User<i className="fas fa-plus ml-2" />
@@ -1427,15 +1427,17 @@ class Catalogs extends React.Component {
                     <div className="col-md-12">
                         <div className="">
                             <div className="row">
-                                <div className="col-md-12">
-                                    <div className="">
-                                        <UsersTable
-                                            data={this.state.data}
-                                            loading={this.state.showCircularLoading && isLoading}
-                                            onEditHandler={this.onEditHandler}
-                                            onDeleteHandler={this.onDeleteHandler}
-                                        />
-                                    </div>
+                                <div className="col-md-12"> 
+                                    <div className="card">
+                                        <div className="card-body tumi-forcedResponsiveTable">
+                                            <UsersTable
+                                                data={this.state.data}
+                                                loading={this.state.showCircularLoading && isLoading}
+                                                onEditHandler={this.onEditHandler}
+                                                onDeleteHandler={this.onDeleteHandler}
+                                            />                                        
+                                        </div>
+                                    </div>                                  
                                 </div>
                             </div>
                         </div>

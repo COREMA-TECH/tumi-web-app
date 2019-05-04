@@ -171,6 +171,7 @@ class DashboardRecruiter extends React.Component {
 						onLifeHandler={this.onLifeHandler}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						rowsPerPage={5}
+						tableTitle={"Openings"}
 					/>
 
 				</div>
