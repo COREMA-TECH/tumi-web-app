@@ -54,10 +54,9 @@ export const GET_POSITIONS_QUERY = gql`
 `;
 
 export const GET_POSITIONS_CATALOG = gql`
-    {
+    query getcatalogitem{
     getcatalogitem(Id_Catalog: 6, IsActive: 1) {
             Id
-            IsActive
             Description
         }
     }

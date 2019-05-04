@@ -113,10 +113,11 @@ class Application extends Component {
 
         positions: [],
         positionsCatalogs: [],
+        positionCatalogTag: [],
 
-        cellPhoneValid: false,
-        lastNameValid: false,
-        firstNameValid: false,
+       // cellPhoneValid: false,
+        //lastNameValid: false,
+       // firstNameValid: false,
 
 
     }
@@ -412,6 +413,7 @@ class Application extends Component {
                                 () => {
                                     // this.removeSkeletonAnimation();
                                     this.getIdealJobsByApplicationId();
+                                    this.getPositionsCatalogs();
                                 }
                             );
                         }
@@ -494,6 +496,7 @@ class Application extends Component {
             })
     };
 
+    
     getPositionsCatalogs = () => {
         this.props.client
             .query({
@@ -501,19 +504,13 @@ class Application extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                this.setState({
-                    positionsCatalogs: data.getcatalogitem
-                }, () => {
-                    let options = [];
-                    this.state.positionsCatalogs.map((item) => (
-                        options.push({ value: item.Id, label: item.Description, key: item.Id })
-                    ));
-                    this.setState({
-                        positionCatalogTag: options
-                    });
-                    this.setState({
-                        loading: false
-                    })
+                let dataAPI = data.getcatalogitem;
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        positionCatalogTag: [...prevState.positionCatalogTag, {
+                            value: item.Id, label:item.Description.trim(),  key: item.Id
+                        }]
+                    }))
                 });
             })
             .catch(error => {
@@ -638,7 +635,6 @@ class Application extends Component {
                                         <input
                                             onChange={(event) => {
                                                 this.setState({
-                                                    firstNameValid: true,
                                                     firstName: event.target.value
                                                 },
                                                 ()=>{
@@ -650,7 +646,7 @@ class Application extends Component {
                                             value={this.state.firstName}
                                             name="firstName"
                                             type="text"
-                                            className={this.state.firstNameValid ? 'form-control' : 'form-control _invalid'}
+                                            className="form-control"
                                             disabled={!this.state.editing}
                                             required
                                             min="0"
@@ -685,7 +681,6 @@ class Application extends Component {
                                         <input
                                             onChange={(event) => {
                                                 this.setState({
-                                                    lastNameValid: true,
                                                     lastName: event.target.value
                                                 },
                                                 ()=>{
@@ -695,7 +690,7 @@ class Application extends Component {
                                             value={this.state.lastName}
                                             name="lastName"
                                             type="text"
-                                            className={this.state.lastNameValid ? 'form-control' : 'form-control _invalid'}
+                                            className="form-control"
                                             disabled={!this.state.editing}
                                             required
                                             min="0"
@@ -810,11 +805,10 @@ class Application extends Component {
                                             mask="+(999) 999-9999"
                                             maskChar=" "
                                             value={this.state.cellPhone}
-                                            className={this.state.cellPhoneValid ? 'form-control' : 'form-control _invalid'}
+                                            className="form-control"
                                             disabled={!this.state.editing}
                                             onChange={(event) => {
                                                 this.setState({
-                                                    cellPhoneValid: true,
                                                     cellPhone: event.target.value
                                                 },
                                                 ()=>{
