@@ -1529,8 +1529,6 @@ class General extends Component {
                                                         }, () => {
                                                             this.updateActive()
                                                         })
-
-
                                                     }}
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
