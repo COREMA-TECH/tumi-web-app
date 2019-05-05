@@ -92,7 +92,7 @@ class PreFilterConsolidated extends Component {
             <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal} classes={{ paper: classes.paper }}>
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
-                        <h5 className="modal-title">Prefilter Punches</h5>
+                        <h5 className="modal-title">Select A Property</h5>
                     </div>
                 </DialogTitle>
                 <DialogContent style={{ overflowY: "unset" }}>

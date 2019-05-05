@@ -1509,12 +1509,11 @@ class General extends Component {
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
-
+                                                    value={ this.props.activeUser}
                                                     onChange={(event) => {
                                                         this.setState({
                                                             isActive: event.target.checked
                                                         }, () => {
-                                                            //  console.log(this.state.directDeposit)
                                                             this.updateActive()
                                                         })
 
