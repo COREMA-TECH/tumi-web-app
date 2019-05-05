@@ -13,7 +13,6 @@ class PunchesDetailDropDownBody extends Component {
 
     render() {
         let { data } = this.props;
-        console.log(data)
         return (
             <table className="table">
                 {/* <thead className="thead-dark">

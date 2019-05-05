@@ -34,6 +34,7 @@ import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
 import PunchesReportDetail from '../../../PunchesReportDetail';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
+import Titles from './Titles';
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -211,7 +212,7 @@ class General extends Component {
         IsRecruiter: false,
         IdRegionValid: true,
         RegionName: '',
-        IsActive: 1,
+        IsActive: this.props.activeUser,
         directDeposit: 1,
         IdRegion: 0,
 
@@ -243,7 +244,8 @@ class General extends Component {
         loading: false,
         loadingConfirm: false,
         openModal: false,
-        showCircularLoading: false
+        showCircularLoading: false,
+        titleModal: false
     };
 
     /**
@@ -451,7 +453,7 @@ class General extends Component {
                                 directDeposit: this.state.data.directDeposit,
                                 isActive:this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
-                                EmployeeId: this.state.data.employee.id,
+                                EmployeeId: this.state.data.employee? this.state.data.employee.id : 0,
                                 idealJobs: this.state.data.idealJobs
                             })
                         });
@@ -1220,6 +1222,15 @@ class General extends Component {
     handleChangeProperty = (property) => {
         this.setState(() => ({ property }));
     }
+
+    hanldeOpenTitleModal = () => {
+        this.setState({titleModal: !this.state.titleModal});
+    }
+
+    hanldeCloseTitleModal = () => {
+        this.setState({titleModal: !this.state.titleModal});
+    }
+
     render() {
         const { classes } = this.props;
         const { fullScreen } = this.props;
@@ -1461,6 +1472,7 @@ class General extends Component {
 
         return (
             <div className="Apply-container--application">
+                <Titles titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} />
                 <ConfirmDialog
                     open={this.state.openConfirm}
                     closeAction={() => {
@@ -1505,12 +1517,13 @@ class General extends Component {
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
-                                                    checked={this.state.isActive}
+                                                    checked={this.props.activeUser}
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
                                                     value={ this.props.activeUser}
-                                                    onChange={(event) => {
+                                                    disabled={!this.props.hasEmployee ? true : false}
+                                                    onChange={(event) => {                                                        
                                                         this.setState({
                                                             isActive: event.target.checked
                                                         }, () => {
@@ -1614,7 +1627,10 @@ class General extends Component {
                             <br />
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <h5>Titles</h5>
+                                    <h5 className="float-left">Titles</h5>
+                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
+                                        <i class="far fa-plus-square"></i>
+                                    </button>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">

@@ -181,8 +181,8 @@ export const GET_HOTELS_BY_APPLICATION_QUERY = gql`
 `;
 
 export const GET_ACTIVE_EMPLOYEES_BY_MARKS = gql`
-    query($id: Int){
-        activeEmployees(id: $id){
+    query($employeeId: Int){
+        activeEmployeesByMarks(EmployeeId: $employeeId){
             id
         }
     }

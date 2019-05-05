@@ -133,10 +133,17 @@ class VerticalLinearStepper extends Component {
                     Urlphoto: data.applications[0].Urlphoto,
                     employee: data.applications[0].employee
                 }, () => {
-                    this.checkUserActiveByMarks();
+
+                    if(this.state.employee)
+                        this.checkUserActiveByMarks();
+                    else
+                        this.setState({
+                            activeEmployee: null
+                        });
+
                     this.setState({
                         loading: false
-                    })
+                    });
                 });
             })
             .catch(error => {
@@ -178,7 +185,7 @@ class VerticalLinearStepper extends Component {
             }
         }).then(({ data }) => {
             this.setState({
-               activeEmployee: data.activeEmployees[0]
+               activeEmployee: data.activeEmployeesByMarks[0]
             }, () => {
                 this.setState({
                     loading: false
@@ -228,7 +235,7 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <General applicationId={this.props.applicationId} activeUser={this.state.activeEmployee ? true : false }/>;
+                    return <General applicationId={this.props.applicationId} activeUser={this.state.activeEmployee ? true : false } hasEmployee={this.state.employee || null} />;
                 case 1:
                     return <div className="card mt-0">
                         <Shifts
