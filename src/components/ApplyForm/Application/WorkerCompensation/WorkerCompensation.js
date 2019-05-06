@@ -122,6 +122,7 @@ class WorkerCompensation extends Component {
                 );
 
                 this.getWorkerCompensationInformation(this.props.applicationId);
+                this.props.changeTabState("ApplicantWorkerCompensation");
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message
