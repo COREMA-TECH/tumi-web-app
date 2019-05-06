@@ -9918,7 +9918,7 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     padding-left: 1.5rem;
     padding-right: 1.5rem; } }
 
-.AdvancedDropdown {
+.AdvancedDropdown { 
   background-color: white;
   border-radius: 5px;
   -webkit-box-shadow: 0px 2px 3px #999;
