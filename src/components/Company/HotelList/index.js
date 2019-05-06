@@ -215,7 +215,7 @@ class HotelList extends Component {
                         content="Do you really want to continue whit this operation?"
                     />
                     {this.state.hotels.map((hotel) => (
-                        <li className="col-md-4 col-xl-3">
+                        <li className="col-md-4 col-xl-2">
                             <div className="HotelCard-wrapper">
                                 <div className="HotelCard-controls">
                                     <button className="btn btn-link" onClick={(e) => { this.handleAlertOpen(hotel.Id) }}>
@@ -230,11 +230,7 @@ class HotelList extends Component {
                                     </div>
                                     <div className="HotelCard-info">
                                         <span className="HotelCard-title">
-                                            <TextTruncate
-                                                line={3}
-                                                truncateText="…"
-                                                text={hotel.Name}
-                                            />
+                                            {`${hotel.Name}`}                                           
                                         </span>
                                     </div>
                                 </a>

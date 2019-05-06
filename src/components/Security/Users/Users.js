@@ -1129,7 +1129,7 @@ class Catalogs extends React.Component {
             return false;
         }
 
-        return mainText.toLocaleLowerCase().indexOf(substring.toLocaleLowerCase()) > -1 ? true : false;
+        return mainText.toLocaleLowerCase().includes(substring.toLocaleLowerCase());
     }
 
     filterChangeHandler = (e) => {

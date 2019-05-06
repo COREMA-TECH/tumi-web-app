@@ -212,7 +212,7 @@ class General extends Component {
         IsRecruiter: false,
         IdRegionValid: true,
         RegionName: '',
-        IsActive: 1,
+        IsActive: this.props.activeUser,
         directDeposit: 1,
         IdRegion: 0,
 
@@ -1517,20 +1517,18 @@ class General extends Component {
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
-                                                    checked={this.state.isActive}
+                                                    checked={this.props.activeUser}
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
-
-                                                    onChange={(event) => {
+                                                    value={ this.props.activeUser}
+                                                    disabled={!this.props.hasEmployee ? true : false}
+                                                    onChange={(event) => {                                                        
                                                         this.setState({
                                                             isActive: event.target.checked
                                                         }, () => {
-                                                            //  console.log(this.state.directDeposit)
                                                             this.updateActive()
                                                         })
-
-
                                                     }}
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">

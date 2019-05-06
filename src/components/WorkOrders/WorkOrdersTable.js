@@ -536,6 +536,7 @@ class WorkOrdersTable extends Component {
                     </div>
                     <h5 className="Table-title">{ this.props.tableTitle || "Work Orders" }</h5>                   
                 </div>
+
                 <div className="card-body tumi-forcedResponsiveTable">
 
                     <React.Fragment>
