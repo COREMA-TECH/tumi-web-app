@@ -1086,53 +1086,25 @@ query getposition ($Id_Entity:Int){
 					<DialogActions style={{ margin: '20px 20px' }}>
 						<div className="row">
 							<div className="col-12">
-								<div className={classes.root}>
-									<div className={classes.wrapper} style={{ margin: '0', width: '100%' }}>
-										<Tooltip
-											title={
-												this.state.idToEdit != null &&
-													this.state.idToEdit != '' &&
-													this.state.idToEdit != 0 ? (
-														'Save Changes'
-													) : (
-														'Insert Record'
-													)
-											}
-										>
-											<div>
-												<button
-													// disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-													variant="fab"
-													onClick={this.addPositionHandler}
-													className="btn btn-success tumi-modalButton"
-												>
-													Save {!this.state.saving && <i class="fas fa-save ml-1" />}
-													{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
-												</button>
-											</div>
-										</Tooltip>
-									</div>
-								</div>
-							</div>
+								<button
+									// disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
+									variant="fab"
+									onClick={this.addPositionHandler}
+									className="btn btn-success tumi-button float-right"
+								>
+									Save {!this.state.saving && <i class="fas fa-save ml-1" />}
+									{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
+								</button>
 
-							<div className="col-12">
-								<div className={classes.root}>
-									<div className={classes.wrapper} style={{ margin: '0', width: '100%' }}>
-										<Tooltip title={'Cancel Operation'}>
-											<div>
-												<button
-													//	disabled={this.state.loading || !this.state.enableCancelButton}
-													variant="fab"
-													onClick={this.cancelDepartmentHandler}
-													className="btn btn-danger tumi-modalButton"
-												>
-													Cancel <i class="fas fa-ban" />
-												</button>
-											</div>
-										</Tooltip>
-									</div>
-								</div>
-							</div>
+								<button
+									//	disabled={this.state.loading || !this.state.enableCancelButton}
+									variant="fab"
+									onClick={this.cancelDepartmentHandler}
+									className="btn btn-danger tumi-button float-right"
+								>
+									Cancel <i class="fas fa-ban" />
+								</button>
+							</div>							
 						</div>
 					</DialogActions>
 				</Dialog>
