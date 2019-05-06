@@ -317,7 +317,7 @@ class TimeCardForm extends Component {
                 this.props.toggleRefresh();
                 this.setState({ saving: false }, () => {
                     this.props.handleCloseModal();
-                    this.props.getReport();
+                    //this.props.getReport();
                 });
                 // window.location.reload();
             })
