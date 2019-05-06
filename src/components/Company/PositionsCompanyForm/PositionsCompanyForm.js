@@ -403,8 +403,6 @@ query getposition ($Id_Entity:Int){
 		let idDepartmentValid =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
 
-		console.table([positionValid, this.state.position.trim(), billrateValid, payrateValid, departmentNameValid]);
-
 		this.setState(
 			{
 				positionValid,
@@ -900,8 +898,6 @@ query getposition ($Id_Entity:Int){
 	};
 
 	handleChangePositionTag = (positionsTags) => {
-		console.log(positionsTags);
-
         this.setState({ positionsTags, position: positionsTags.label, catalogItem_id: positionsTags.key, positionValid: true });
     };
 
