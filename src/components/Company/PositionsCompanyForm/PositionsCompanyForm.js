@@ -29,6 +29,8 @@ import Query from 'react-apollo/Query';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import './index.css';
 import { Route } from 'react-router-dom';
+import makeAnimated from 'react-select/lib/animated';
+import Select from 'react-select';
 
 const styles = (theme) => ({
 	container: {
@@ -109,7 +111,8 @@ class PositionsCompanyForm extends React.Component {
 				Pay_Rate
 				Shift
 				IsActive,
-				Comment
+				Comment,
+				catalogItem_id				
 			}
 		}
 	`;
@@ -119,8 +122,7 @@ query getposition ($Id_Entity:Int){
         getcatalogitem(Id_Catalog: 6, IsActive: 1,Id_Entity:$Id_Entity) {
             Id
             IsActive
-			Description
-		
+			Description		
         }
     }
 `;
@@ -185,8 +187,8 @@ query getposition ($Id_Entity:Int){
 		idDepartment: '',
 		departmentName: '',
 		position: '',
-		billrate: '',
-		payrate: '',
+		billrate: 0,
+		payrate: 0,
 		shift: '',
 		Comment: '',
 		idDepartmentValid: true,
@@ -393,7 +395,7 @@ query getposition ($Id_Entity:Int){
 	};
 
 	validateAllFields(func) {
-		let positionValid = this.state.position.trim().length >= 3;
+		let positionValid = this.state.position.trim().length >= 0;
 		let billrateValid = this.state.billrate != 0 && this.state.billrate != '';
 		let payrateValid = this.state.payrate != 0 && this.state.payrate != '';
 		//let shiftValid = this.state.shift != '';
@@ -433,7 +435,7 @@ query getposition ($Id_Entity:Int){
 
 		switch (fieldName) {
 			case 'position':
-				positionValid = value.trim().length >= 3;
+				positionValid = value.trim().length >= 0;
 				positionHasValue = value != '';
 				break;
 			case 'payrate':
@@ -506,11 +508,12 @@ query getposition ($Id_Entity:Int){
 	handleConfirmAlertDialog = () => {
 		this.deletePostion();
 	};
-	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift, Comment, Id_positionApplying }) => {
+	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift, Comment, Id_positionApplying, catalogItem_id }) => {
 		this.setState({ showCircularLoading: false }, () => {
 			var department = this.state.departments.find(function (obj) {
 				return obj.Id === Id_Department;
 			});
+			
 			this.setState(
 				{
 					idToEdit: Id,
@@ -539,7 +542,8 @@ query getposition ($Id_Entity:Int){
 					departmentNameHasValue: true,
 					buttonTitle: this.TITLE_EDIT,
 					openModal: true,
-					showCircularLoading: false
+					showCircularLoading: false,
+					catalogItem_id: catalogItem_id
 				},
 				() => {
 					this.focusTextInput();
@@ -607,8 +611,39 @@ query getposition ($Id_Entity:Int){
 		});
 	};
 
+	loadPositionRates = () => {
+		this.setState({ loadingData: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_POSITIONS_QUERY,					
+					fetchPolicy: 'no-cache'
+				})
+				.then(({data}) => {
+					let dataAPI = data.getcatalogitem;
+					let positionCatalogTag = [];
+
+					dataAPI.map(item => {
+						positionCatalogTag.push({
+							value: item.Id, label: item.Description ? item.Description.trim() : '',  key: item.Id
+						})
+					});
+
+					this.setState(prevState => ({
+						positionCatalog: positionCatalogTag 
+					}));
+				})
+				.catch((error) => {
+					this.setState({
+						loadingData: false,
+						indexView: 2,
+						firstLoad: false,
+						errorMessage: 'Error: Loading positions and rates: ' + error
+					});
+				});
+		});	
+	}
+
 	loadPositions = (func = () => { }) => {
-		console.log(" loadPositions ", this.props.idCompany)
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -625,9 +660,11 @@ query getposition ($Id_Entity:Int){
 							},
 							() => {
 								this.getRate(this.resetState);
+								this.loadPositionRates();							
 								func();
 							}
 						);
+						
 					} else {
 						this.setState({
 							loadingData: false,
@@ -662,7 +699,6 @@ query getposition ($Id_Entity:Int){
 
 
 	insertPosition = (idDepartment) => {
-		console.log("dentro del insertposition ", idDepartment)
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 		this.props.client
 			.mutate({
@@ -683,7 +719,8 @@ query getposition ($Id_Entity:Int){
 						User_Created: this.state.userId,
 						User_Updated: this.state.userId,
 						Date_Created: "'2018-08-14 16:10:25+00'",
-						Date_Updated: "'2018-08-14 16:10:25+00'"
+						Date_Updated: "'2018-08-14 16:10:25+00'",
+						catalogItem_id: this.state.catalogItem_id
 					}
 				}
 			})
@@ -720,8 +757,6 @@ query getposition ($Id_Entity:Int){
 			return obj.Name.trim().toLowerCase() === this.state.departmentName.trim().toLowerCase();
 		});
 
-		console.log("estoy en el insert ", department)
-
 		let insdepartmentAsync = async () => {
 			if (department) {
 				this.insertPosition(department.Id);
@@ -753,8 +788,6 @@ query getposition ($Id_Entity:Int){
 						}
 					})
 					.then((data) => {
-						console.log("estoy en el insertPosition ", data.data.inscatalogitem.Id)
-
 						this.insertPosition(data.data.inscatalogitem.Id);
 					})
 					.catch((error) => {
@@ -836,7 +869,6 @@ query getposition ($Id_Entity:Int){
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				console.log("getRate ", data)
 				if (data.data.getbusinesscompanies != null) {
 					this.setState({
 						companyRate: data.data.getbusinesscompanies[0].Rate
@@ -864,6 +896,10 @@ query getposition ($Id_Entity:Int){
 			});
 		});
 	};
+
+	handleChangePositionTag = (positionsTags) => {
+        this.setState({ positionsTags, position: positionsTags.label, catalogItem_id: positionsTags.key, positionValid: true });
+    };
 
 	handleClickOpenModal = () => {
 		this.setState({ openModal: true });
@@ -934,7 +970,6 @@ query getposition ($Id_Entity:Int){
 														}
 													});
 
-													//console.log(this.state);
 												}}
 											>
 												{this.props.valueTab < 3 ? (
@@ -990,45 +1025,14 @@ query getposition ($Id_Entity:Int){
 								/>
 							</div>
 
-							{/*<div className="col-md-12 col-lg-6">
-								<label>* Positions</label>
-								<Query query={this.GET_POSITIONS_QUERY}>
-									{({ loading, error, data, refetch, networkStatus }) => {
-										//if (networkStatus === 4) return <LinearProgress />;
-										if (error) return <p>Nothing To Display </p>;
-										if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-											return (
-												<select
-													name="positionApply"
-													id="positionApply"
-													onChange={(event) => {
-														this.setState({
-															positionApplyingFor: event.target.value
-														});
-													}}
-													value={this.state.positionApplyingFor}
-													className="form-control"
-												>
-													<option value="">Select a position</option>
-													{data.getcatalogitem.map((item) => (
-														<option value={item.Id}>{item.Description}</option>
-													))}
-												</select>
-											);
-										}
-										return <SelectNothingToDisplay />;
-									}}
-								</Query>
-							</div> */}
 							<div className="col-md-12 col-lg-6">
-								<label>* Title</label>
-								<InputForm
-									id="position"
-									name="position"
-									maxLength="50"
-									value={this.state.position}
-									error={!this.state.positionValid}
-									change={(value) => this.onChangeHandler(value, 'position')}
+								<label>* Title</label>								
+								<Select
+									options={this.state.positionCatalog}
+									value={this.state.positionsTags}
+									onChange={this.handleChangePositionTag}
+									closeMenuOnSelect={false}
+									components={makeAnimated()}									
 								/>
 							</div>
 							{this.props.showPayRate && (
@@ -1063,22 +1067,7 @@ query getposition ($Id_Entity:Int){
 									change={(text) => this.onNumberChangeHandler(text, 'billrate')}
 								/>
 							</div>
-							{/* 
-							<div className="col-md-12 col-lg-6">
-								<label>* Shift</label>
-								<SelectForm
-									id="shift"
-									name="shift"
-									data={this.state.shifts}
-									update={(id) => {
-										this.updateSelect(id, 'shift');
-									}}
-									showNone={false}
-									error={!this.state.shiftValid}
-									value={this.state.shift}
-								/>
-							</div>
-							*/}
+						
 							<div className="col-md-12 col-lg-12">
 								<label htmlFor="">Special Comments</label>
 								<textarea
@@ -1097,53 +1086,25 @@ query getposition ($Id_Entity:Int){
 					<DialogActions style={{ margin: '20px 20px' }}>
 						<div className="row">
 							<div className="col-12">
-								<div className={classes.root}>
-									<div className={classes.wrapper} style={{ margin: '0', width: '100%' }}>
-										<Tooltip
-											title={
-												this.state.idToEdit != null &&
-													this.state.idToEdit != '' &&
-													this.state.idToEdit != 0 ? (
-														'Save Changes'
-													) : (
-														'Insert Record'
-													)
-											}
-										>
-											<div>
-												<button
-													disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-													variant="fab"
-													onClick={this.addPositionHandler}
-													className="btn btn-success tumi-modalButton"
-												>
-													Save {!this.state.saving && <i class="fas fa-save ml-1" />}
-													{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
-												</button>
-											</div>
-										</Tooltip>
-									</div>
-								</div>
-							</div>
+								<button
+									// disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
+									variant="fab"
+									onClick={this.addPositionHandler}
+									className="btn btn-success tumi-button float-right"
+								>
+									Save {!this.state.saving && <i class="fas fa-save ml-1" />}
+									{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
+								</button>
 
-							<div className="col-12">
-								<div className={classes.root}>
-									<div className={classes.wrapper} style={{ margin: '0', width: '100%' }}>
-										<Tooltip title={'Cancel Operation'}>
-											<div>
-												<button
-													//	disabled={this.state.loading || !this.state.enableCancelButton}
-													variant="fab"
-													onClick={this.cancelDepartmentHandler}
-													className="btn btn-danger tumi-modalButton"
-												>
-													Cancel <i class="fas fa-ban" />
-												</button>
-											</div>
-										</Tooltip>
-									</div>
-								</div>
-							</div>
+								<button
+									//	disabled={this.state.loading || !this.state.enableCancelButton}
+									variant="fab"
+									onClick={this.cancelDepartmentHandler}
+									className="btn btn-danger tumi-button float-right"
+								>
+									Cancel <i class="fas fa-ban" />
+								</button>
+							</div>							
 						</div>
 					</DialogActions>
 				</Dialog>
