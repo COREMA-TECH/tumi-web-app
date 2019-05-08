@@ -426,12 +426,10 @@ class GeneralInfoProperty extends Component {
                                         }
                                     })
                                     .then((data) => {
-                                        alert('saved')
-                                        console.log(data);
+                                        
                                     })
                                     .catch((error) => {
-                                        alert('Error');
-                                        console.log(error);
+                                        
                                     });                        
 
                             this.setState({
