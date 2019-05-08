@@ -629,7 +629,8 @@ query getposition ($Id_Entity:Int){
 					});
 
 					this.setState(prevState => ({
-						positionCatalog: positionCatalogTag 
+						positionCatalog: positionCatalogTag,
+						loadingData: false, 
 					}));
 				})
 				.catch((error) => {
