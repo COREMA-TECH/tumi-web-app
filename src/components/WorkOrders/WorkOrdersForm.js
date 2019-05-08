@@ -27,6 +27,7 @@ import Datetime from 'react-datetime';
 import RowForm from './RowForm';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { copyFileSync } from 'fs';
 
 const uuidv4 = require('uuid/v4');
 
@@ -145,7 +146,6 @@ class WorkOrdersForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
-        console.log({ nextProps })
         if (nextProps.item && nextProps.openModal) {
 
             let dataToEdit = {
@@ -159,35 +159,32 @@ class WorkOrdersForm extends Component {
                 PositionRateId: nextProps.item.PositionRateId,
                 departmentId: nextProps.item.departmentId
             }
-            this.setState(
-                {
-                    id: nextProps.item.id,
-                    workOrderId: nextProps.item.workOrderId,
-                    dataToEdit,
-                    ...dataToEdit,
-                    sameContractDate: nextProps.item.endDate,
-                    endDate: nextProps.item.endDate,
-                    contactId: nextProps.item.contactId,
-                    IdEntity: nextProps.item.IdEntity,
-                    date: nextProps.item.date,
-                    status: nextProps.item.status,
-                    startDate: nextProps.item.startDate,
-                    userId: localStorage.getItem('LoginId'),
-                    openModal: nextProps.openModal,
-                    EspecialComment: nextProps.item.EspecialComment,
-                    PositionName: nextProps.item.positionName,
-                    isEditing: true
-                },
-                () => {
-                    console.log({ newSstate: this.state })
-                    this.getEmployees();
-                    this.getPositions(nextProps.item.departmentId);
-                    this.getRecruiter();
-                    this.getDepartment(nextProps.item.IdEntity);
-                    this.newWorkOrder();
-                    this.ReceiveStatus = true;
-                }
-            );
+            this.setState({
+                id: nextProps.item.id,
+                workOrderId: nextProps.item.workOrderId,
+                dataToEdit,
+                ...dataToEdit,
+                sameContractDate: nextProps.item.endDate,
+                endDate: nextProps.item.endDate,
+                contactId: nextProps.item.contactId,
+                IdEntity: nextProps.item.IdEntity,
+                date: nextProps.item.date,
+                status: nextProps.item.status,
+                startDate: nextProps.item.startDate,
+                userId: localStorage.getItem('LoginId'),
+                openModal: nextProps.openModal,
+                EspecialComment: nextProps.item.EspecialComment,
+                PositionName: nextProps.item.positionName,
+                isEditing: true
+            },
+            () => {
+                this.getEmployees();
+                this.getPositions(nextProps.item.departmentId);
+                this.getRecruiter();
+                this.getDepartment(nextProps.item.IdEntity);
+                this.newWorkOrder();
+                this.ReceiveStatus = true;
+            });
         } else if (!nextProps.openModal) {
             this.setState({
                 IdEntity: 0,
@@ -264,7 +261,7 @@ class WorkOrdersForm extends Component {
         event.preventDefault();
         this.setState({ saving: true });
         var evens = [];
-        if (this.state.id == null) {
+        if (typeof this.state.id === 'string') {
             evens = this.state.form.map((item) => {
                 delete item.id
                 return item;

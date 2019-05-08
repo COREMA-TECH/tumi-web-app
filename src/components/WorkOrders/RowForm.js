@@ -94,7 +94,7 @@ class RowForm extends Component {
             shift,
             endShift,
             comment,
-            dayWeeks,
+            dayWeek: dayWeeks,
             userId,
             date,
             contactId,
