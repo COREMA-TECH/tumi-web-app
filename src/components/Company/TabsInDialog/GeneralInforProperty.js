@@ -393,12 +393,14 @@ class GeneralInfoProperty extends Component {
                         .then(({ data }) => {
                             this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(data.insbusinesscompanies.Id_Parent));
       
+                            console.log(data.insbusinesscompanies.Id);
+
                             this.props.client
                                 .mutate({
                                     mutation: INSERT_USER_QUERY,
                                     variables: {
                                         input: {                                            
-                                                Id_Entity: 1,
+                                                Id_Entity: data.insbusinesscompanies.Id,
                                                 Id_Contact: null,
                                                 Id_Roles: 1,
                                                 Full_Name: "''",
@@ -409,8 +411,8 @@ class GeneralInfoProperty extends Component {
                                                 AllowInsert:  1	,
                                                 Id_Language: 194,
                                                 Code_User: `'${this.state.Code}'`,
-                                                Date_Created:  "'2018-08-14'",
-                                                Date_Updated:  "'2018-08-14'",
+                                                Date_Created:  `'${new Date().toISOString()}'`,
+                                                Date_Updated:  `'${new Date().toISOString()}'`,
                                                 IdRegion:  null,	
                                                 IsActive:  1,
                                                 IsAdmin:  1,
@@ -421,15 +423,16 @@ class GeneralInfoProperty extends Component {
                                                 IdRegion: null,
                                                 IdSchedulesManager: null,
                                                 IdSchedulesEmployees: null,
-                                                isEmployee: 0                                            
+                                                isEmployee: false,
+                                                manageApp: true                                             
                                             }
                                         }
                                     })
                                     .then((data) => {
-                                        
+                                        alert('ok');
                                     })
                                     .catch((error) => {
-                                        
+                                        alert('error');
                                     });                        
 
                             this.setState({
