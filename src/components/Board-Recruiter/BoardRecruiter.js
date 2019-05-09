@@ -373,7 +373,7 @@ class BoardRecruiter extends Component {
                 editing: false
             });
 
-            this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
+            // this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
         }).catch((error) => {
             this.props.handleOpenSnackbar(
                 'error',
@@ -1096,7 +1096,7 @@ class BoardRecruiter extends Component {
                             <div className="card">
                                 <div className="card-header info">                                   
                                     <div className="row">
-                                        <div className="col-md-4 col-xl-2 offset-xl-4 mb-2">
+                                        <div className="col-md-4 col-xl-2 offset-xl-1 mb-2">
                                             <select
                                                 required
                                                 name="IdEntity"
@@ -1184,7 +1184,7 @@ class BoardRecruiter extends Component {
                                                 <option value={0}>Cancelled</option>
                                             </select>
                                         </div>
-                                        <div className="col-md-12 Filter-buttons">
+                                        <div className="col-md-12 col-xl-3 mb-2 Filter-buttons">
                                             <a
                                                 className="link-board Filter-button" onClick={(e) => {
                                                     e.preventDefault();

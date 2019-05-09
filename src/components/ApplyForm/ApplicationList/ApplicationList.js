@@ -17,6 +17,7 @@ import makeAnimated from 'react-select/lib/animated';
 import Select from 'react-select';
 import { GET_PROPERTIES_QUERY, GET_DEPARTMENTS_QUERY } from './Queries';
 
+
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1
@@ -95,7 +96,15 @@ class ApplicationList extends Component {
 				cellPhone
 				isLead
 				idWorkOrder
-            	statusCompleted
+				statusCompleted
+				employee {
+					Employees {
+					  idEntity
+						BusinessCompany {
+						Name
+					  }
+					}
+				  }
 				recruiter{
 					Full_Name
 				}
@@ -175,7 +184,6 @@ class ApplicationList extends Component {
 		this.setState(() => ({ department }));
 	}
 	handleStatusChange = (statu) => {
-		console.log("Cambio de status ", statu)
 		this.setState(() => ({ statu }));
 	}
 
@@ -351,6 +359,7 @@ class ApplicationList extends Component {
 				<div className="main-contract__content">
 					<Query query={this.GET_APPLICATION_QUERY} variables={variables} pollInterval={300} >
 						{({ loading, error, data, refetch, networkStatus }) => {
+							
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
 							}
@@ -364,28 +373,30 @@ class ApplicationList extends Component {
 										icon="danger"
 									/>
 								);
-							if (data.applicationsByUser != null && data.applicationsByUser.length > 0) {
-								let dataApplication = data.applicationsByUser.filter((_, i) => {
-									if (this.state.filterText === '') {
-										return true;
-									}
 
-									if (
-										(_.firstName +
-											_.middleName +
-											_.lastName +
-											(_.position ? _.position.position.Position.trim() : 'Open Position') +
-											(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
-											(_.position ? _.position.BusinessCompany.Name : '') +
-											(_.recruiter ? _.recruiter.Full_Name : '') +
-											(_.user ? _.user.Full_Name : '') +
-											_.emailAddress)
-											.toLocaleLowerCase()
-											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1
-									) {
-										return true;
-									}
-								});
+							if (data.applicationsByUser != null && data.applicationsByUser.length > 0) {
+									const dataApplication = 
+										this.state.filterText === ''
+										? data.applicationsByUser
+										: data.applicationsByUser.filter((_, i) => {								
+											if (
+												(_.firstName +
+													_.middleName +
+													_.lastName +
+													(_.position ? _.position.position.Position.trim() : 'Open Position') +
+													(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
+													(_.position ? _.position.BusinessCompany.Name : '') +
+													(_.recruiter ? _.recruiter.Full_Name : '') +
+													(_.user ? _.user.Full_Name : '') +
+													_.emailAddress)
+													.toLocaleLowerCase()
+													.indexOf(this.state.filterText.toLocaleLowerCase()) > -1
+											) {
+												return true;
+											}
+										});
+
+								console.log(dataApplication);
 
 								return (
 									<div className="row pt-0">

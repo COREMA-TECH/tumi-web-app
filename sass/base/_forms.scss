@@ -107,7 +107,14 @@
     background: #c1c1c1;
     color: #090909;
     border-radius: 5px;
-    padding: 8px 10px;
+    padding: 4px 10px;
+    font-size: 12px;
+
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
     label {
         margin-top: 0 !important;
     }

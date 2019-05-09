@@ -97,11 +97,9 @@ class PunchesReportConsolidatedFilter extends Component {
             });
     }
 
-    handleCloseModal = (event) => {
-        event.preventDefault();
+    handleCloseModal = () => {
         this.setState({
             openModal: false
-
         });
     };
 
@@ -126,8 +124,6 @@ class PunchesReportConsolidatedFilter extends Component {
                 })
                 .then(({ data }) => {
                     // TODO: show a loading icon in download button
-                    console.table("Data ----> ", data);
-
                     let url = this.context.baseUrl + data.punchesConsolidated;
                     window.open(url, '_blank');
 
@@ -136,7 +132,6 @@ class PunchesReportConsolidatedFilter extends Component {
                     }));
                 })
                 .catch(error => {
-                    console.log("Error ----> ", error);
                     this.setState(() => ({ loadingReport: false }));
                     this.props.handleOpenSnackbar(
                         'error',

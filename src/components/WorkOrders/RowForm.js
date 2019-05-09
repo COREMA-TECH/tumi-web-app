@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import Datetime from 'react-datetime';
+import AdvancedDropdown from './AdvancedDropdown';
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 
@@ -26,6 +27,7 @@ class RowForm extends Component {
             contactId: null,
             needExperience: false,
             needEnglish: false,
+            showAdvancedDropdown: false
         };
 
     }
@@ -92,7 +94,7 @@ class RowForm extends Component {
             shift,
             endShift,
             comment,
-            dayWeeks,
+            dayWeek: dayWeeks,
             userId,
             date,
             contactId,
@@ -134,6 +136,11 @@ class RowForm extends Component {
             duration: value
         });
     }
+
+    handleAdvancedSectionDisplay = () => {
+        this.setState({showAdvancedDropdown: !this.state.showAdvancedDropdown});
+    }
+
 
     render() {
         const isAdmin = localStorage.getItem('IsAdmin') == "true";
@@ -182,9 +189,43 @@ class RowForm extends Component {
                             <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
                         </div>
                         <div className="col-md-4 mb-2">
-                            <button className="btn btn-link tumi-buttonCentered" type="button">
-                                Advanced
+                            <button className="btn btn-link tumi-buttonCentered" onClick={this.handleAdvancedSectionDisplay} type="button">
+                                Advanced                                
                             </button>
+                            <AdvancedDropdown isVisible={this.state.showAdvancedDropdown} closeAction={this.handleAdvancedSectionDisplay}>
+                                <div className="tumi-col-centered">
+                                    <label htmlFor="">Need Experience?</label>
+                                    <div className="onoffswitch mb-2">
+                                        <input
+                                            type="checkbox"
+                                            name="needExperience"
+                                            className="onoffswitch-checkbox"
+                                            id="needExperience"
+                                            value={ this.state.needExperience}
+                                            onChange={this.handleChange}
+                                        />
+                                        <label className="onoffswitch-label" htmlFor="needExperience">
+                                            <span className="onoffswitch-inner" />
+                                            <span className="onoffswitch-switch" />
+                                        </label>
+                                    </div>
+                                    <label htmlFor="">Need English?</label>
+                                    <div className="onoffswitch">
+                                        <input
+                                            type="checkbox"
+                                            name="needEnglish"
+                                            className="onoffswitch-checkbox"
+                                            id="needEnglish"
+                                            value={ this.state.needEnglish}
+                                            onChange={this.handleChange}
+                                        />
+                                        <label className="onoffswitch-label" htmlFor="needEnglish">
+                                            <span className="onoffswitch-inner" />
+                                            <span className="onoffswitch-switch" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </AdvancedDropdown>
                         </div>
                     </div>
                     <div className="row">

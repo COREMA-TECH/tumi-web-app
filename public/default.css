@@ -8551,7 +8551,7 @@ label:not(.custom-file-label):not(.form-check-label) {
 @media (min-width: 992px) and (max-width: 1199.98px) {
   .tumi-checkbox-wrapper {
     font-size: 8px;
-    margin-top: 0.9rem; } }
+    margin-top: 0.7rem; } }
 
 .custom-file-label {
   overflow: hidden; }
@@ -8642,7 +8642,21 @@ label:not(.custom-file-label):not(.form-check-label) {
   background: #c1c1c1;
   color: #090909;
   border-radius: 5px;
-  padding: 8px 10px; }
+  padding: 4px 10px;
+  font-size: 12px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between; }
   .label-switch-container label {
     margin-top: 0 !important; }
   .label-switch-container .onoffswitch-container {
@@ -8784,15 +8798,8 @@ label:not(.custom-file-label):not(.form-check-label) {
 .tumi-xScroll {
   overflow-x: auto; }
 
-.tumi-forcedResponsiveTable > table[class^="MuiTable-root-"] {
-  display: block !important;
-  min-width: 0 !important;
-  overflow-x: auto;
-  width: 100%; }
-
-@media (min-width: 1200px) {
-  .tumi-forcedResponsiveTable > table[class^="MuiTable-root-"] {
-    display: table !important; } }
+.tumi-forcedResponsiveTable {
+  overflow-x: auto; }
 
 .modal-overflow {
   overflow-x: scroll; }
@@ -9086,7 +9093,7 @@ td.rdtMonth:hover, td.rdtYear:hover {
 
 .onoffswitch {
   position: relative;
-  width: 78px; }
+  width: 75px; }
 
 .onoffswitch-checkbox {
   display: none; }
@@ -9148,18 +9155,26 @@ table {
     background-color: #FFF !important;
     color: #000 !important;
     font-size: 0.9rem !important;
-    font-weight: 500 !important;
+    font-weight: 700 !important;
     padding: 4px 5px 4px 5px !important; }
     .Table-head:first-child {
-      border-radius: 3px 0 0 0; }
+      border-radius: 3px 0 0 0;
+      width: 50px; }
     .Table-head:last-child {
       border-radius: 0 3px 0 0; }
+  .Table-boldHead {
+    font-weight: 700 !important; }
   .Table-wrapper > div[class^="MuiPaper-"] {
     -webkit-box-shadow: none;
     box-shadow: none;
     overflow-x: auto !important; }
   .Table-wrapper tbody[class^="MuiTableBody-"] tr {
     background-color: #FFF; }
+  @media (max-width: 767.98px) {
+    .Table-title {
+      margin-top: 1rem;
+      text-align: center;
+      width: 100%; } }
 
 .TableProperties .Table-head {
   min-width: auto; }
@@ -9851,6 +9866,87 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   .RowForm-days.in-modal {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap; } }
+
+.WorkOrders-filters {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap; }
+
+.WorkOrders-filter {
+  -ms-flex-preferred-size: 100%;
+  flex-basis: 100%;
+  margin-bottom: 0.5rem; }
+  .WorkOrders-filter.clear-btn {
+    -ms-flex-preferred-size: 40%;
+    flex-basis: 40%; }
+
+@media (min-width: 768px) {
+  .WorkOrders-filters {
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap; }
+  .WorkOrders-filter {
+    -ms-flex-preferred-size: 20%;
+    flex-basis: 20%; }
+    .WorkOrders-filter.clear-btn {
+      -ms-flex-preferred-size: 15%;
+      flex-basis: 15%;
+      padding-left: 0.7rem;
+      padding-right: 0.7rem; } }
+
+@media (min-width: 1200px) {
+  .WorkOrders-filter.clear-btn {
+    -ms-flex-preferred-size: 15%;
+    flex-basis: 15%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem; } }
+
+.AdvancedDropdown { 
+  background-color: white;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 2px 3px #999;
+  box-shadow: 0px 2px 3px #999;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 200px;
+  height: 200px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 100%;
+  width: 100%;
+  z-index: 10; }
+  .AdvancedDropdown-wrapper {
+    height: 200px;
+    position: relative; }
+    .AdvancedDropdown-wrapper .onoffswitch-switch {
+      top: 7px; }
+  .AdvancedDropdown-close {
+    color: #f50057;
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 5px;
+    position: absolute;
+    right: 5px;
+    top: -10px; }
 
 .RecruiterDash-ffmItem {
   -webkit-box-align: center;
@@ -12293,6 +12389,9 @@ label.input-group-text {
   margin-left: 5px;
   margin-right: 5px;
   margin-top: 10px; }
+  .Filter-button.clear-btn {
+    margin-bottom: 0;
+    margin-top: 0; }
 
 @media (min-width: 576px) {
   .Filter-buttons {

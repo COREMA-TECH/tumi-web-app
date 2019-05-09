@@ -177,7 +177,7 @@ class BoardManager extends Component {
                         this.addApplicationPhase(cardId, IdLane);
 
                         if (targetLaneId != "Matches") {
-                            this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                            this.updateApplicationInformation(cardId, false, 'Candidate has been notified');
                         }
                         if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
                             this.setState({
@@ -212,7 +212,7 @@ class BoardManager extends Component {
                 editing: false
             });
 
-            this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
+            // this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
         }).catch((error) => {
             this.props.handleOpenSnackbar(
                 'error',

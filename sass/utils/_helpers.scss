@@ -84,20 +84,21 @@
 
 	// forces the table wrapped by this class to display as block and scroll horizontally
 	&-forcedResponsiveTable{
-		& > table[class^="MuiTable-root-"]{
-			display: block !important;
-			min-width: 0 !important;
-			overflow-x: auto;
-			width: 100%;
-		}		
+		// & > table[class^="MuiTable-root-"]{
+		// 	display: block !important;
+		// 	min-width: 0 !important;
+		// 	overflow-x: auto;
+		// 	width: 100%;
+		// }		
+		overflow-x: auto;
 	}
 
 	@include media-breakpoint-up(xl){
 		// resets to the default display table
-		&-forcedResponsiveTable{
-			& > table[class^="MuiTable-root-"]{
-				display: table !important;		 		
-			}
-		}
+		// &-forcedResponsiveTable{
+		// 	& > table[class^="MuiTable-root-"]{
+		// 		display: table !important;		 		
+		// 	}
+		// }
 	}
 }

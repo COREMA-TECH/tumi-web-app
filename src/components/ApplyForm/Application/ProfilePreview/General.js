@@ -34,6 +34,7 @@ import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
 import PunchesReportDetail from '../../../PunchesReportDetail';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
+import Titles from './Titles';
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -211,7 +212,7 @@ class General extends Component {
         IsRecruiter: false,
         IdRegionValid: true,
         RegionName: '',
-        IsActive: 1,
+        IsActive: this.props.activeUser,
         directDeposit: 1,
         IdRegion: 0,
 
@@ -243,7 +244,8 @@ class General extends Component {
         loading: false,
         loadingConfirm: false,
         openModal: false,
-        showCircularLoading: false
+        showCircularLoading: false,
+        titleModal: false
     };
 
     /**
@@ -1106,7 +1108,6 @@ class General extends Component {
 
                             id: this.props.applicationId,
                             isActive: this.state.isActive
-
                         }
                     })
                     .then(({ data }) => {
@@ -1220,6 +1221,15 @@ class General extends Component {
     handleChangeProperty = (property) => {
         this.setState(() => ({ property }));
     }
+
+    hanldeOpenTitleModal = () => {
+        this.setState({titleModal: !this.state.titleModal});
+    }
+
+    hanldeCloseTitleModal = () => {
+        this.setState({titleModal: !this.state.titleModal});
+    }
+
     render() {
         const { classes } = this.props;
         const { fullScreen } = this.props;
@@ -1461,6 +1471,7 @@ class General extends Component {
 
         return (
             <div className="Apply-container--application">
+                <Titles titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} />
                 <ConfirmDialog
                     open={this.state.openConfirm}
                     closeAction={() => {
@@ -1509,16 +1520,14 @@ class General extends Component {
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
-
-                                                    onChange={(event) => {
+                                                    value={ this.state.isActive}
+                                                    disabled={!this.props.hasEmployee ? true : false}
+                                                    onChange={(event) => {   
                                                         this.setState({
                                                             isActive: event.target.checked
                                                         }, () => {
-                                                            //  console.log(this.state.directDeposit)
                                                             this.updateActive()
-                                                        })
-
-
+                                                        });
                                                     }}
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
@@ -1540,13 +1549,9 @@ class General extends Component {
                                                         this.setState({
                                                             directDeposit: event.target.checked
                                                         }, () => {
-                                                            //  console.log(this.state.directDeposit)
                                                             this.updateDirectDeposit()
                                                         })
-
-
                                                     }}
-
 
                                                     checked={this.state.directDeposit}
                                                     value={this.state.directDeposit}
@@ -1615,7 +1620,10 @@ class General extends Component {
                             <br />
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <h5>Titles</h5>
+                                    <h5 className="float-left">Titles</h5>
+                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
+                                        <i class="far fa-plus-square"></i>
+                                    </button>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">

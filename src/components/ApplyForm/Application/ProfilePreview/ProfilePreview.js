@@ -17,7 +17,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { GET_APPLICATION_PROFILE_INFO } from "./Queries";
+import { GET_APPLICATION_PROFILE_INFO, GET_ACTIVE_EMPLOYEES_BY_MARKS } from "./Queries";
 import { UDPATE_PROFILE_PICTURE } from './Mutations';
 
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -133,9 +133,17 @@ class VerticalLinearStepper extends Component {
                     Urlphoto: data.applications[0].Urlphoto,
                     employee: data.applications[0].employee
                 }, () => {
+
+                    if(this.state.employee)
+                        this.checkUserActiveByMarks();
+                    else
+                        this.setState({
+                            activeEmployee: null
+                        });
+
                     this.setState({
                         loading: false
-                    })
+                    });
                 });
             })
             .catch(error => {
@@ -169,6 +177,28 @@ class VerticalLinearStepper extends Component {
             })
     };
 
+    checkUserActiveByMarks = () => {
+        this.props.client.query({
+            query: GET_ACTIVE_EMPLOYEES_BY_MARKS,
+            variables: {
+                id: this.state.employee.Employees.id
+            }
+        }).then(({ data }) => {
+            this.setState({
+               activeEmployee: data.activeEmployeesByMarks[0]
+            }, () => {
+                this.setState({
+                    loading: false
+                })
+            });
+        }).catch(error => {
+            this.setState({
+                loading: false,
+                error: true
+            })
+        })
+    }
+
     componentWillMount() {
         // Get id of the application and pass to the components
 
@@ -179,7 +209,7 @@ class VerticalLinearStepper extends Component {
                 this.setState({
                     loading: true
                 }, () => {
-                    this.getProfileInformation();
+                    this.getProfileInformation();                    
                 })
             });
 
@@ -205,7 +235,7 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <General applicationId={this.props.applicationId} />;
+                    return <General applicationId={this.props.applicationId} activeUser={this.state.activeEmployee ? true : false } hasEmployee={this.state.employee || null} />;
                 case 1:
                     return <div className="card mt-0">
                         <Shifts

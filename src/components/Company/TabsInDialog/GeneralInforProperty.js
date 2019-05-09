@@ -13,6 +13,8 @@ import './valid.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import LocationForm from '../../ui-components/LocationForm';
+import { INSERT_USER_QUERY } from '../User/Mutations';
+import moment from 'moment';
 
 class GeneralInfoProperty extends Component {
     constructor(props) {
@@ -315,8 +317,7 @@ class GeneralInfoProperty extends Component {
                         }
                     })
                     .then((data) => {
-                        NewIdRegion = data.data.inscatalogitem.Id;
-
+                        NewIdRegion = data.data.inscatalogitem.Id;                         
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
@@ -391,6 +392,48 @@ class GeneralInfoProperty extends Component {
                         })
                         .then(({ data }) => {
                             this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(data.insbusinesscompanies.Id_Parent));
+      
+                            console.log(data.insbusinesscompanies.Id);
+
+                            this.props.client
+                                .mutate({
+                                    mutation: INSERT_USER_QUERY,
+                                    variables: {
+                                        input: {                                            
+                                                Id_Entity: data.insbusinesscompanies.Id,
+                                                Id_Contact: null,
+                                                Id_Roles: 1,
+                                                Full_Name: "''",
+                                                Electronic_Address: `'${this.state.email}'`,
+                                                AllowDelete:  1,
+                                                AllowEdit:  1,
+                                                AllowExport:  1,
+                                                AllowInsert:  1	,
+                                                Id_Language: 194,
+                                                Code_User: `'${this.state.Code}'`,
+                                                Date_Created:  `'${new Date().toISOString()}'`,
+                                                Date_Updated:  `'${new Date().toISOString()}'`,
+                                                IdRegion:  null,	
+                                                IsActive:  1,
+                                                IsAdmin:  1,
+                                                Phone_Number: `'${this.state.phoneNumber}'`,
+                                                User_Created:  1,
+                                                User_Updated:  1,
+                                                IsRecruiter: 0,
+                                                IdRegion: null,
+                                                IdSchedulesManager: null,
+                                                IdSchedulesEmployees: null,
+                                                isEmployee: false,
+                                                manageApp: true                                             
+                                            }
+                                        }
+                                    })
+                                    .then((data) => {
+                                    
+                                    })
+                                    .catch((error) => {
+                                        
+                                    });                        
 
                             this.setState({
                                 linearProgress: false
@@ -954,7 +997,7 @@ class GeneralInfoProperty extends Component {
                         id={`${property}_edit`}
                         type="button"
                         onClick={() => {
-                            this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] });
+                            this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] });                                            
                         }}
                     >
                         <i className="fas fa-ban" />
@@ -1156,10 +1199,10 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                 </div>
-                                <div className="col-md-12 col-lg-11">
+                                <div className="col-md-12 col-lg-12">
                                     <div className="row">
 
-                                        <div className="col-md-6 col-lg-1">
+                                        <div className="col-md-6 col-lg-2">
                                             <label>* Markup</label>
                                             <InputValid
                                                 change={(text) => {
@@ -1202,7 +1245,7 @@ class GeneralInfoProperty extends Component {
                                                 required
                                             />
                                         </div>
-                                        <div className="col-md-6 col-lg-3">
+                                        <div className="col-md-6 col-lg-4">
                                             <label>Address 2</label>
                                             <input
                                                 className={'form-control'}
@@ -1242,7 +1285,7 @@ class GeneralInfoProperty extends Component {
                                             cityClass={`form-control ${this.state.validCity === '' && ' _invalid'}`}
                                             stateClass={`form-control ${this.state.validState === '' && ' _invalid'}`}
                                             zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
-                                            cityColClass="col-md-6 col-lg-3"
+                                            cityColClass="col-md-6 col-lg-4"
                                             stateColClass="col-md-6 col-lg-2"
                                             zipCodeColClass="col-md-6 col-lg-2"
                                             requiredCity={true}
@@ -1252,7 +1295,7 @@ class GeneralInfoProperty extends Component {
                                         />
 
 
-                                        <div className="col-md-12 col-lg-3">
+                                        <div className="col-md-12 col-lg-2">
                                             <label> Region</label>
                                             <AutosuggestInput
                                                 id="Region"

@@ -10,14 +10,19 @@ table {
         background-color: $white !important;
         color: $black !important;
         font-size: $font-size-base !important;
-        font-weight: 500 !important;
+        font-weight: 700 !important;
         padding: 4px 5px 4px 5px !important;
         &:first-child {
             border-radius: 3px 0 0 0;
+            width: 50px; 
         }
         &:last-child {
             border-radius: 0 3px 0 0;
         }
+    }
+
+    &-boldHead{
+        font-weight: 700 !important;
     }
 
     &-wrapper{
@@ -29,6 +34,14 @@ table {
         tbody[class^="MuiTableBody-"] tr{
             background-color: $white;
         }
+    }
+    
+    @include media-breakpoint-down(sm){
+        &-title{
+            margin-top: 1rem;
+            text-align: center;
+            width: 100%; 
+        }        
     }
 }
 
