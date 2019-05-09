@@ -182,6 +182,7 @@ class ApplicationList extends Component {
 	}
 	handleDepartmentChange = (department) => {
 		this.setState(() => ({ department }));
+		console.log(this.state.department);
 	}
 	handleStatusChange = (statu) => {
 		this.setState(() => ({ statu }));
@@ -266,6 +267,7 @@ class ApplicationList extends Component {
 		 */
 		if (localStorage.getItem('isEmployee') == 'true')
 			variables = { idUsers: localStorage.getItem('LoginId') };
+			
 		if (this.state.property.value != '')
 			variables = { ...variables, idEntity: this.state.property.value };
 		if (this.state.department.value != '')
@@ -395,8 +397,6 @@ class ApplicationList extends Component {
 												return true;
 											}
 										});
-
-								console.log(dataApplication);
 
 								return (
 									<div className="row pt-0">
