@@ -1423,7 +1423,7 @@ class General extends Component {
                         <div className="">
                             <div className="row">
                                 <div className="col-md-12 col-lg-12">
-                                    <label>* Property Name</label>
+                                    <label>* Property Namessss</label>
                                     <Select
                                         options={this.state.properties}
                                         value={this.state.property}
