@@ -46,3 +46,13 @@ export const SEND_EMAIL = gql`
         sendemail(username:$username,password:$password,email:$email,title:$title)
     }
 `;
+
+export const GET_APPLICATION_EMPLOYEES = gql`
+query employeepackage($EmployeeId: Int){
+    applicationEmployees (EmployeeId:$EmployeeId)
+    {
+      EmployeeId
+      ApplicationId
+    }
+  }
+`;

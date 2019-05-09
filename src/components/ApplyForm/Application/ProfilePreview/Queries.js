@@ -163,7 +163,7 @@ export const GET_EMAILS_USER = gql`
 
 export const GET_CONTACTS_BY_APP_HOTEL_QUERY = gql`
     query contacts($ApplicationId: Int, $Id_Entity: [Int]){
-    contacts(ApplicationId:$ApplicationId,Id_Entity:$Id_Entity){
+    contacts(ApplicationId:$ApplicationId,Id_Entity:$Id_Entity, IsActive:1){
         Id
         Id_Entity
     }

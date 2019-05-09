@@ -45,3 +45,10 @@ export const INSERT_USER_QUERY = gql`
     }
 `;
 
+export const INSERT_CONTACT = gql`
+    mutation addContacts($contacts: [inputContact]) {
+        addContacts(contacts: $contacts) {
+            Id
+        }
+    }
+`;

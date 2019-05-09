@@ -245,7 +245,7 @@ class EmployeesTable extends React.Component {
                                                             e.stopPropagation();
                                                             e.preventDefault();
 
-                                                            this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id, row.firstName + " " + row.lastName, row.firstName, row.lastName);
+                                                            this.props.handleClickOpenUserModal(row.idEntity,row.electronicAddress, row.mobileNumber, row.id, row.firstName + " " + row.lastName, row.firstName, row.lastName);
                                                         }}
                                                     >
                                                         <i className="fas fa-plus"></i>

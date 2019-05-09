@@ -7,14 +7,14 @@ import green from "@material-ui/core/colors/green";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
-import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, INSERT_USER_QUERY } from "./Mutations";
+import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, INSERT_USER_QUERY, INSERT_CONTACT } from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 import { Query } from "react-apollo";
 import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
-import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL } from "./Queries";
+import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL,GET_APPLICATION_EMPLOYEES } from "./Queries";
 import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
@@ -96,7 +96,7 @@ class Employees extends Component {
             lastNameEdit: "",
             emailEdit: "",
             numberEdit: "",
-
+            idEntity:0,
 
             emailToCreateUser: "",
             phoneNumberToCreateUser: "",
@@ -440,14 +440,17 @@ class Employees extends Component {
     /**
      * To open the user modal
      */
-    handleClickOpenUserModal = (email, phoneNumber, idEmployee, fullName, firstName, lastName) => {
+    handleClickOpenUserModal = (idEntity,email, phoneNumber, idEmployee, fullName, firstName, lastName) => {
         this.setState({ openUserModal: true });
         this.setState({
+            idEntity:idEntity,
             email: email,
             number: phoneNumber,
             employeeId: idEmployee,
             fullName: fullName,
-            username: firstName.slice(0, 1) + lastName + Math.floor(Math.random() * 10000)
+            username: firstName.slice(0, 1) + lastName + Math.floor(Math.random() * 10000),
+            firstNameEdit: firstName,
+            lastNameEdit:lastName
         });
     };
 
@@ -703,6 +706,23 @@ class Employees extends Component {
             });
     };
 
+    getApplicationId = () => {
+        this.props.client
+            .query({
+                query: GET_APPLICATION_EMPLOYEES,
+                variables: { EmployeeId: this.state.employeeId }
+            })
+            .then((data) => {
+                this.insertContacts(  data.data.applicationEmployees[0].ApplicationId);
+            })
+            .catch((error) => {
+                console.log("error getApplicationId: ", error)
+                // TODO: show a SnackBar with error message
+                this.setState({
+                    loading: false
+                })
+            });
+    };
 
     handleCheckedChange = (name) => (event) => {
         if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
@@ -737,7 +757,8 @@ class Employees extends Component {
 
 
     addUserHandler = () => {
-        this.validateAllFields(() => {
+        this.insertUser();
+        /*this.validateAllFields(() => {
             if (this.state.formValid) this.insertUser();
             else {
                 this.props.handleOpenSnackbar(
@@ -748,7 +769,7 @@ class Employees extends Component {
                     loading: false
                 });
             }
-        });
+        });*/
     };
 
 
@@ -791,9 +812,12 @@ class Employees extends Component {
                         }
                     })
                     .then(({ data }) => {
+                        console.log("Informacion de la appa ", data)
                         var user = data.addUser;
 
                         this.sendMail(user.Code_User, user.Electronic_Address);
+
+                        this.getApplicationId();
 
                         this.props.handleOpenSnackbar('success', 'User Inserted!');
 
@@ -821,6 +845,42 @@ class Employees extends Component {
             }
         );
     };
+
+    insertContacts=(IdApplication) =>{
+       // let form = document.getElementById("employee-edit-form");
+
+        this.props.client
+        .mutate({
+            mutation: INSERT_CONTACT,
+            variables: {
+                contacts:{
+                Id_Entity:this.state.idEntity,
+                ApplicationId: IdApplication,
+                First_Name:this.state.firstNameEdit,
+                Last_Name: this.state.lastNameEdit,
+                Electronic_Address: this.state.email,
+                Phone_Number: this.state.number,
+                Contact_Type: 1,
+                IsActive: 1,
+                User_Created: 1,
+                User_Updated: 1,
+                Date_Created:  "2019-05-09T19:42:38.355Z",
+                Date_Updated:  "2019-05-09T19:42:38.355Z"
+            }
+        }
+        })
+        .then((data) => {
+            this.props.handleOpenSnackbar('success', 'Contact Inserted!');
+        })
+        .catch((error) => {
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error: Inserting Contact: ' + error
+            );
+      
+            return false;
+        });
+    }
 
     sendMail = (username, email) => {
         this.props.client
