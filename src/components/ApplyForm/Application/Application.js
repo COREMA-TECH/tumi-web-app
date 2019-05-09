@@ -248,10 +248,8 @@ class Application extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("DEBUG");
             })
             .catch(error => {
-                console.log("DEBUG ERROR");
             })
     };
 
@@ -472,7 +470,6 @@ class Application extends Component {
     }
 
    shouldComponentUpdate(nextProps, nextState) {
-       console.log("aqui estoy")
         if (this.state.editing !== nextProps.editing) {
             return true;
         }
