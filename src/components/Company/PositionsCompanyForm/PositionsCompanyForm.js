@@ -1053,6 +1053,7 @@ query getposition ($Id_Entity:Int){
 									/>
 								</div>
 							)}
+							{localStorage.getItem('ShowMarkup')==true  ?	
 							<div className="col-md-12 col-lg-6">
 								<label>* Bill Rate</label>
 								<InputForm
@@ -1068,7 +1069,7 @@ query getposition ($Id_Entity:Int){
 									change={(text) => this.onNumberChangeHandler(text, 'billrate')}
 								/>
 							</div>
-						
+							:''}
 							<div className="col-md-12 col-lg-12">
 								<label htmlFor="">Special Comments</label>
 								<textarea

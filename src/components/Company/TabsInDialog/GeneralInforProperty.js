@@ -1201,7 +1201,7 @@ class GeneralInfoProperty extends Component {
                                 </div>
                                 <div className="col-md-12 col-lg-12">
                                     <div className="row">
-
+                                    {localStorage.getItem('ShowMarkup')==true ?
                                         <div className="col-md-6 col-lg-2">
                                             <label>* Markup</label>
                                             <InputValid
@@ -1217,6 +1217,7 @@ class GeneralInfoProperty extends Component {
                                                 placeholder='0'
                                             />
                                         </div>
+                                        :''}
                                         <div className="col-md-6 col-lg-2">
                                             <label>* Hotel Name</label>
                                             <InputValid
