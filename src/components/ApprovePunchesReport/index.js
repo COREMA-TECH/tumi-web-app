@@ -53,8 +53,9 @@ class PunchesReport extends Component {
                     variables: { ...this.getFilters() }
                 })
                 .then(({ data }) => {
+                    console.log("GET_REPORT_QUERY ", data)
                     this.setState(() => ({
-                        data: data.markedEmployeesConsolidate,
+                        data: data.markedEmployeesApproved,
                         loadingReport: false
                     }));
                 })

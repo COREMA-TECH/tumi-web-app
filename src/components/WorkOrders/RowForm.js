@@ -94,7 +94,7 @@ class RowForm extends Component {
             shift,
             endShift,
             comment,
-            dayWeeks,
+            dayWeek: dayWeeks,
             userId,
             date,
             contactId,
@@ -137,6 +137,9 @@ class RowForm extends Component {
         });
     }
 
+    handleAdvancedSectionDisplay = () => {
+        this.setState({showAdvancedDropdown: !this.state.showAdvancedDropdown});
+    }
 
 
     render() {
@@ -186,10 +189,10 @@ class RowForm extends Component {
                             <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
                         </div>
                         <div className="col-md-4 mb-2">
-                            <button className="btn btn-link tumi-buttonCentered" onClick={() => this.setState({showAdvancedDropdown: !this.state.showAdvancedDropdown})} type="button">
+                            <button className="btn btn-link tumi-buttonCentered" onClick={this.handleAdvancedSectionDisplay} type="button">
                                 Advanced                                
                             </button>
-                            <AdvancedDropdown isVisible={this.state.showAdvancedDropdown}>
+                            <AdvancedDropdown isVisible={this.state.showAdvancedDropdown} closeAction={this.handleAdvancedSectionDisplay}>
                                 <div className="tumi-col-centered">
                                     <label htmlFor="">Need Experience?</label>
                                     <div className="onoffswitch mb-2">

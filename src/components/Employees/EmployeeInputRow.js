@@ -81,7 +81,7 @@ class EmployeeInputRow extends Component {
         this.props.client
             .query({
                 query: GET_ALL_POSITIONS_QUERY,
-                variables: { Id_Entity: id },
+                variables: { Id_Department: id },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -117,8 +117,6 @@ class EmployeeInputRow extends Component {
                     this.setState({
                         arrayDepartment: data.data.getcatalogitem,
                         //  departments: data.data.getcatalogitem,
-                    }, () => {
-                        this.fetchTitles(id)
                     });
                 }
             })
@@ -258,6 +256,8 @@ class EmployeeInputRow extends Component {
                         onChange={(e) => {
                             this.setState({
                                 department: e.target.value
+                            }, () => {
+                                this.fetchTitles(this.state.department)
                             });
                             this.props.onchange(department, e.target.value);
                         }}
@@ -281,8 +281,6 @@ class EmployeeInputRow extends Component {
                             this.setState({
                                 contactTitle: e.target.value
                             });
-
-                            console.info("Contact Title ID: ", e.target.value);
                             this.props.onchange(contactTitle, e.target.value);
                         }}
                     >

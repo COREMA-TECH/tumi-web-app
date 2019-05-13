@@ -1108,7 +1108,6 @@ class General extends Component {
 
                             id: this.props.applicationId,
                             isActive: this.state.isActive
-
                         }
                     })
                     .then(({ data }) => {
@@ -1424,7 +1423,7 @@ class General extends Component {
                         <div className="">
                             <div className="row">
                                 <div className="col-md-12 col-lg-12">
-                                    <label>* Property Name</label>
+                                    <label>* Property Namessss</label>
                                     <Select
                                         options={this.state.properties}
                                         value={this.state.property}
@@ -1517,18 +1516,18 @@ class General extends Component {
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
-                                                    checked={this.props.activeUser}
+                                                    checked={this.state.isActive}
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
-                                                    value={ this.props.activeUser}
+                                                    value={ this.state.isActive}
                                                     disabled={!this.props.hasEmployee ? true : false}
-                                                    onChange={(event) => {                                                        
+                                                    onChange={(event) => {   
                                                         this.setState({
                                                             isActive: event.target.checked
                                                         }, () => {
                                                             this.updateActive()
-                                                        })
+                                                        });
                                                     }}
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
@@ -1550,13 +1549,9 @@ class General extends Component {
                                                         this.setState({
                                                             directDeposit: event.target.checked
                                                         }, () => {
-                                                            //  console.log(this.state.directDeposit)
                                                             this.updateDirectDeposit()
                                                         })
-
-
                                                     }}
-
 
                                                     checked={this.state.directDeposit}
                                                     value={this.state.directDeposit}

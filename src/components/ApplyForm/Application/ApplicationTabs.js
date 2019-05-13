@@ -128,12 +128,13 @@ class CustomizedTabs extends React.Component {
     };
 
     changeTabState = (tab) => {
-        this.setState({
-            applicationStatus: {
-                ...this.state.applicationStatus,
-                [tab]: true
-            }
-        });
+        // this.setState({
+        //     applicationStatus: {
+        //         ...this.state.applicationStatus,
+        //         [tab]: true
+        //     }
+        // });
+        this.getApplicantStatus();
     }
 
     render() {
@@ -145,7 +146,7 @@ class CustomizedTabs extends React.Component {
                 case 0:
                     return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
                 case 1:
-                    return <BackgroundCheck applicationId={this.state.applicationId} />;
+                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 2:
                     return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 3:
@@ -153,11 +154,11 @@ class CustomizedTabs extends React.Component {
                 case 4:
                     return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 5:
-                    return <WorkerCompensation applicationId={this.state.applicationId} />;
+                    return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 6:
-                    return <FormsI9 applicationId={this.state.applicationId} />;
+                    return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 7:
-                    return <FormsW4 applicationId={this.state.applicationId} />;
+                    return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 8:
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
                 case 9:

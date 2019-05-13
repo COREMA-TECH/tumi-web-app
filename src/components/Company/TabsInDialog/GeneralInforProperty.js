@@ -13,6 +13,8 @@ import './valid.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import LocationForm from '../../ui-components/LocationForm';
+import { INSERT_USER_QUERY } from '../User/Mutations';
+import moment from 'moment';
 
 class GeneralInfoProperty extends Component {
     constructor(props) {
@@ -315,8 +317,7 @@ class GeneralInfoProperty extends Component {
                         }
                     })
                     .then((data) => {
-                        NewIdRegion = data.data.inscatalogitem.Id;
-
+                        NewIdRegion = data.data.inscatalogitem.Id;                         
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
@@ -391,6 +392,48 @@ class GeneralInfoProperty extends Component {
                         })
                         .then(({ data }) => {
                             this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(data.insbusinesscompanies.Id_Parent));
+      
+                            console.log(data.insbusinesscompanies.Id);
+
+                            this.props.client
+                                .mutate({
+                                    mutation: INSERT_USER_QUERY,
+                                    variables: {
+                                        input: {                                            
+                                                Id_Entity: data.insbusinesscompanies.Id,
+                                                Id_Contact: null,
+                                                Id_Roles: 1,
+                                                Full_Name: "''",
+                                                Electronic_Address: `'${this.state.email}'`,
+                                                AllowDelete:  1,
+                                                AllowEdit:  1,
+                                                AllowExport:  1,
+                                                AllowInsert:  1	,
+                                                Id_Language: 194,
+                                                Code_User: `'${this.state.Code}'`,
+                                                Date_Created:  `'${new Date().toISOString()}'`,
+                                                Date_Updated:  `'${new Date().toISOString()}'`,
+                                                IdRegion:  null,	
+                                                IsActive:  1,
+                                                IsAdmin:  1,
+                                                Phone_Number: `'${this.state.phoneNumber}'`,
+                                                User_Created:  1,
+                                                User_Updated:  1,
+                                                IsRecruiter: 0,
+                                                IdRegion: null,
+                                                IdSchedulesManager: null,
+                                                IdSchedulesEmployees: null,
+                                                isEmployee: false,
+                                                manageApp: true                                             
+                                            }
+                                        }
+                                    })
+                                    .then((data) => {
+                                    
+                                    })
+                                    .catch((error) => {
+                                        
+                                    });                        
 
                             this.setState({
                                 linearProgress: false
@@ -954,7 +997,7 @@ class GeneralInfoProperty extends Component {
                         id={`${property}_edit`}
                         type="button"
                         onClick={() => {
-                            this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] });
+                            this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] });                                            
                         }}
                     >
                         <i className="fas fa-ban" />
@@ -1158,7 +1201,7 @@ class GeneralInfoProperty extends Component {
                                 </div>
                                 <div className="col-md-12 col-lg-12">
                                     <div className="row">
-
+                                    {localStorage.getItem('ShowMarkup')==true ?
                                         <div className="col-md-6 col-lg-2">
                                             <label>* Markup</label>
                                             <InputValid
@@ -1174,6 +1217,7 @@ class GeneralInfoProperty extends Component {
                                                 placeholder='0'
                                             />
                                         </div>
+                                        :''}
                                         <div className="col-md-6 col-lg-2">
                                             <label>* Hotel Name</label>
                                             <InputValid

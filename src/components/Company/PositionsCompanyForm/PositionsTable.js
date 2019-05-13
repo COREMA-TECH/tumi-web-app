@@ -253,9 +253,10 @@ class PositionsTable extends React.Component {
 							</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '50px' }}>Department</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Title</CustomTableCell>
-
-							<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Bill Rate</CustomTableCell>
-
+							{localStorage.getItem('ShowMarkup') ==true ?	
+								<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Bill Rate</CustomTableCell>
+							:''}
+							
 							{this.props.showPayRate && (
 								<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Pay Rate</CustomTableCell>
 							)}
@@ -322,10 +323,11 @@ class PositionsTable extends React.Component {
 										</Select>
 									</CustomTableCell>
 									<CustomTableCell  style={{width: '80px' }}>{row.Position}</CustomTableCell>
+									{localStorage.getItem('ShowMarkup') ==true ?	
 									<CustomTableCell  style={{width: '80px' }}>
 										$ {row.Bill_Rate}
 									</CustomTableCell>
-
+									:''}
 									{this.props.showPayRate && (
 										<CustomTableCell  style={{width: '80px' }}>
 											$ {row.Pay_Rate}

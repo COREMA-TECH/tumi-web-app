@@ -158,6 +158,9 @@ class Login extends Component {
 							localStorage.setItem('IdSchedulesManager', user.IdSchedulesManager);
 							localStorage.setItem('isEmployee', user.isEmployee);
 
+							if(user.Id_Roles==1 ||user.Id_Roles==10||user.Id_Roles==2)
+							{localStorage.setItem('ShowMarkup', true);}
+							else{localStorage.setItem('ShowMarkup', false);}
 
 							if (user.IsAdmin == 1) {
 								localStorage.setItem('IsAdmin', true);
