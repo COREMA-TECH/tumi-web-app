@@ -48,6 +48,7 @@ import PunchesReport from '../../PunchesReport';
 import PunchesReportDetail from '../../PunchesReportDetail';
 import ApprovePunches from '../../ApprovePunchesReport';
 import DashBoardSponsor from '../../Dashboard/Sponsor';
+import PositionCatalogTable from '../../PositionsCatalog/PositionsTable';
 
 class Container extends Component {
 	constructor(props) {
@@ -180,6 +181,7 @@ class Container extends Component {
 				<Route exact path="/home/timecardtable" component={TimeCardTable} />
 				<Route exact path="/home/approve-punches" component={ApprovePunches} />
 				<Route exact path="/home/dashboard/sponsor" component={DashBoardSponsor} />
+				<Route exact path="/home/catalogs/positions" component={PositionCatalogTable} />
 			</div>
 		);
 	}
