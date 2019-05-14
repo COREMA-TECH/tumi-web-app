@@ -1554,20 +1554,14 @@ class Employees extends Component {
                             );
                         if (data.employees != null && data.employees.length > 0) {
                             // this.setState({ data: data.employees });
+                           
                             let dataEmployees = data.employees.filter((_, i) => {
+                                console.log("data.employees ", _.firstName + _.lastName)
                                 if (this.state.filterText === "") {
                                     return true;
                                 }
-
-                                if (
-                                    _.firstName.indexOf(this.state.filterText) > -1 ||
-                                    _.firstName
-                                        .toLocaleLowerCase()
-                                        .indexOf(this.state.filterText) > -1 ||
-                                    _.firstName
-                                        .toLocaleUpperCase()
-                                        .indexOf(this.state.filterText) > -1
-                                ) {
+                                if ((_.firstName + _.lastName)
+                                    .toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1) {
                                     return true;
                                 }
                             });
