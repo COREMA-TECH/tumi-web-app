@@ -169,7 +169,7 @@ class BoardRecruiter extends Component {
                 }
             })
             .then(() => {
-                this.props.handleOpenSnackbar('success', "You were assigned the work order.", 'bottom', 'right');
+                this.props.handleOpenSnackbar('success', "A Work Order has been assigned to you.", 'bottom', 'right');
             })
             .catch(err => console.log(err))
     };
