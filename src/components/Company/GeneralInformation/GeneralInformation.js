@@ -1382,7 +1382,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									{localStorage.getItem('ShowMarkup')==true ?
+									{localStorage.getItem('ShowMarkup') == 'true' ?
 									<div className="col-md-6 col-lg-3">
 										<label className="">* Markup</label>
 										<InputForm
