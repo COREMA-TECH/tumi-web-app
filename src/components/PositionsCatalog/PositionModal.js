@@ -108,6 +108,14 @@ class PositionModal extends Component{
 	}
 
 	insertPosition = () => {
+		if(this.validateFields()){
+			this.props.handleOpenSnackbar(
+				'error', 'Please fill in the required fields.', 'bottom', 'right'
+			);
+
+			return;
+		}
+		
 		this.props.client.mutate({
 				mutation: INSERT_CATALOG_ITEM_QUERY,
 				variables: {
@@ -144,6 +152,14 @@ class PositionModal extends Component{
 	}
 
 	updatePosition = () => {
+		if(this.validateFields()){
+			this.props.handleOpenSnackbar(
+				'error', 'Please fill in the required fields.', 'bottom', 'right'
+			);
+
+			return;
+		}
+
 		this.props.client
             .mutate({
                 mutation: UPDATE_CATALOG_ITEM_QUERY,

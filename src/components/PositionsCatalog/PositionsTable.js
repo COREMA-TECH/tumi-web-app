@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withApollo } from 'react-apollo';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
+import withGlobalContent from 'Generic/Global';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -83,6 +84,23 @@ class PositionCatalogTable extends Component{
 			openModal: false,
 			idToEdit: 0
 		}, _ => this.loadPositions());
+	}
+
+	deletePosition = (Id) => {
+		this.props.client
+		.mutate({
+			mutation: DELETE_CATALOG_ITEM_QUERY,
+			variables: {
+				Id
+			}
+		})
+		.then( ({ data }) => {
+			this.props.handleOpenSnackbar('success', 'Successfully eliminated record', 'bottom', 'right');
+			this.loadPositions();
+		})
+		.catch( error => {
+			this.props.handleOpenSnackbar('error', 'Failed to delete record', 'bottom', 'right');
+		});
 	}
 
 	render(){
@@ -178,4 +196,4 @@ class PositionCatalogTable extends Component{
     }
 };
 
-export default (withApollo(withMobileDialog()(PositionCatalogTable)));
+export default withGlobalContent(withApollo(PositionCatalogTable));
