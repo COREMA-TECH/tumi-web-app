@@ -414,6 +414,22 @@ class MobileMenu extends Component {
                                                 </a>
                                             </li> : ""
                                     })}
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/catalogs/departments" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/catalogs/departments">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Departments
+                                                </a>
+                                            </li> : ""
+                                    })}
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/catalogs/positions" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/catalogs/positions">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Positions
+                                                </a>
+                                            </li> : ""
+                                    })}
                                 </ul>
                             </li> : ''
                     })}
