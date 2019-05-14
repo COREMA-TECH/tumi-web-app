@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const GET_REPORT_QUERY = gql`
   query punchesConsolidate($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date ){
-    markedEmployeesConsolidated(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate){
+    markedEmployeesApproved(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate){
               employeeId
               name
               hourCategory

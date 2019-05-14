@@ -918,7 +918,7 @@ class GeneralInformation extends Component {
 			indexView: 0, //Loading
 			errorMessage: '',
 			hotelModal: false,
-			isCorrectCity: true
+			isCorrectCity: true,
 		};
 	}
 
@@ -1382,6 +1382,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
+									{localStorage.getItem('ShowMarkup')==true ?
 									<div className="col-md-6 col-lg-3">
 										<label className="">* Markup</label>
 										<InputForm
@@ -1396,6 +1397,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
+									:''}
 									<div className="col-md-6 col-lg-3">
 										<label className="">* Company Code</label>
 										<InputForm
