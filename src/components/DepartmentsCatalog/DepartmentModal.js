@@ -15,10 +15,10 @@ import { withApollo } from 'react-apollo';
 import withGlobalContent from 'Generic/Global';
 import moment from 'moment';
 
-import {GET_POSITION, INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, DELETE_CATALOG_ITEM_QUERY} from './Queries';
+import {GET_DEPARTMENT, INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, DELETE_CATALOG_ITEM_QUERY} from './Queries';
 
-class PositionModal extends Component{
-	INITIAL_STATE = {
+class DepartmentModal extends Component{
+    INITIAL_STATE = {
 		Id: 0,
 		Name: '',
 		DisplayLabel: '',
@@ -35,15 +35,15 @@ class PositionModal extends Component{
 			Description: '',
 			DateCreated: ''			
 		};
-	}	
-
-	componentWillReceiveProps(nextProps){
-		if (nextProps.positionId !== 0 && nextProps.open) {
+    }
+    
+    componentWillReceiveProps(nextProps){
+		if (nextProps.departmentId !== 0 && nextProps.open) {
 			this.setState({
 				open: nextProps.open,				
 			});
 
-			this.loadPosition(nextProps.positionId);			
+			this.loadDepartment(nextProps.departmentId);			
 		} else if (!nextProps.open) {
 			this.setState({...this.INITIAL_STATE});
 		}
@@ -66,19 +66,19 @@ class PositionModal extends Component{
 		event.preventDefault();	
 
 		if(this.state.Id === 0)		
-			this.insertPosition();
+			this.insertDepartment();
 		else	
-			this.updatePosition();
+			this.updateDepartment();
 	}
 
-	loadPosition = (positionId) => {
+	loadDepartment = (departmentId) => {
 		this.props.client
 		.query({
-			query: GET_POSITION,
+			query: GET_DEPARTMENT,
 			fetchPolicy: 'no-cache',
 
 			variables: {
-				input: positionId,
+				input: departmentId,
 			}
 		})
 		.then( ({ data }) => {
@@ -99,15 +99,15 @@ class PositionModal extends Component{
 
 	validateFields = () => {
 		let validated = false;
-		const {Name, DisplayLabel, Description} = this.state;
-
+        const {Name, DisplayLabel, Description} = this.state;
+        
 		if(Name.length > 0 && DisplayLabel.length > 0 && Description.length > 0)
 			validated = true;
 
 		return validated;
 	}
 
-	insertPosition = () => {
+	insertDepartment = () => {
 		if(!this.validateFields()){
 			this.props.handleOpenSnackbar(
 				'error', 'Please fill in the required fields.', 'bottom', 'right'
@@ -121,7 +121,7 @@ class PositionModal extends Component{
 				variables: {
 					input: {
 						Id: this.state.Id,
-						Id_Catalog: 6,
+						Id_Catalog: 8,
 						Id_Parent: 0,
 						Name: `'${this.state.Name}'`,
 						DisplayLabel: `'${this.state.DisplayLabel}'`,
@@ -151,7 +151,7 @@ class PositionModal extends Component{
 			});
 	}
 
-	updatePosition = () => {
+	updateDepartment = () => {
 		if(!this.validateFields()){
 			this.props.handleOpenSnackbar(
 				'error', 'Please fill in the required fields.', 'bottom', 'right'
@@ -166,7 +166,7 @@ class PositionModal extends Component{
                 variables: {
 					input: {
 						Id: this.state.Id,
-						Id_Catalog: 6,
+						Id_Catalog: 8,
 						Id_Parent: 0,
 						Name: `'${this.state.Name}'`,
 						DisplayLabel: `'${this.state.DisplayLabel}'`,
@@ -210,63 +210,63 @@ class PositionModal extends Component{
 					aria-labelledby="responsive-dialog-title"
 				>	
 			<form action="" onSubmit={this.onSubmit}>
-					<DialogContent style={{ width: 600 }}>
-						<div className="row">
-							<div className="col-md-12 mb-4">
-								<span className="">* Name</span>
-								<input
-									type='text'
-									id="name"
-									name="Name"
-									maxLength="150"
-									className="form-control"
-									error={!this.state.nameValid}
-									value={this.state.Name}
-									onChange={this.onChangeHandler}
-								/>
-							</div>
-							<div className="col-md-12 mb-4">
-								<span className="">* Display Label</span>
-								<input
-									type='text'
-									id="displayLabel"
-									name="DisplayLabel"
-									maxLength="150"
-									className="form-control"
-									error={!this.state.displayLabelValid}
-									value={this.state.DisplayLabel}
-									onChange={this.onChangeHandler}
-								/>
-							</div>
-							<div className="col-md-12 mb-4">
-								<span className="">* Description</span>
-								<input
-									type='text'
-									id="description"
-									name="Description"
-									maxLength="150"
-									className="form-control"
-									error={!this.state.descriptionValid}
-									value={this.state.Description}
-									onChange={this.onChangeHandler}
-								/>
-							</div>
-						</div>				
-					</DialogContent>
-					<DialogActions style={{ margin: '16px 10px' }}>
-						<button className="btn btn-success" type="submit" value="Submit">
-							<i className="fas fa-save"></i> Save
-						</button>
+                <DialogContent style={{ width: 600 }}>
+                    <div className="row">
+                        <div className="col-md-12 mb-4">
+                            <span className="">* Name</span>
+                            <input
+                                type='text'
+                                id="name"
+                                name="Name"
+                                maxLength="150"
+                                className="form-control"
+                                error={!this.state.nameValid}
+                                value={this.state.Name}
+                                onChange={this.onChangeHandler}
+                            />
+                        </div>
+                        <div className="col-md-12 mb-4">
+                            <span className="">* Display Label</span>
+                            <input
+                                type='text'
+                                id="displayLabel"
+                                name="DisplayLabel"
+                                maxLength="150"
+                                className="form-control"
+                                error={!this.state.displayLabelValid}
+                                value={this.state.DisplayLabel}
+                                onChange={this.onChangeHandler}
+                            />
+                        </div>
+                        <div className="col-md-12 mb-4">
+                            <span className="">* Description</span>
+                            <input
+                                type='text'
+                                id="description"
+                                name="Description"
+                                maxLength="150"
+                                className="form-control"
+                                error={!this.state.descriptionValid}
+                                value={this.state.Description}
+                                onChange={this.onChangeHandler}
+                            />
+                        </div>
+                    </div>				
+                </DialogContent>
+                <DialogActions style={{ margin: '16px 10px' }}>
+                    <button className="btn btn-success" type="submit" value="Submit">
+                        <i className="fas fa-save"></i> Save
+                    </button>
 
-						<button type="button" className="btn btn-danger" 
-								onClick={ this.onCancel }>
-							<i className="fas fa-ban"></i> Cancel
-						</button>
-					</DialogActions>
-					</form>
-				</Dialog>
+                    <button type="button" className="btn btn-danger" 
+                            onClick={ this.onCancel }>
+                        <i className="fas fa-ban"></i> Cancel
+                    </button>
+                </DialogActions>
+                </form>
+            </Dialog>
 		);
 	}
 };
 
-export default withGlobalContent(withApollo(PositionModal));
+export default withGlobalContent(withApollo(DepartmentModal));
