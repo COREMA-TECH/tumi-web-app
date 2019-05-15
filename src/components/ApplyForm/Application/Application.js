@@ -17,6 +17,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
 
+
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
 }
@@ -54,7 +55,7 @@ class Application extends Component {
             birthDay: '',
             car: false,
             typeOfId: '',
-            expireDateId: '',
+            expireDateId: null,
             emailAddress: '',
             positionApplyingFor: 1,
             idealJob: '',
@@ -213,6 +214,7 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
+                        console.log("App error ", error)
                         this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.setState({
