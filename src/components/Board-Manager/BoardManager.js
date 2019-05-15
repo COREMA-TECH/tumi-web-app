@@ -975,7 +975,7 @@ class BoardManager extends Component {
                                 history={this.props.history}
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
                                 getWorkOrders={this.getWorkOrders}
-                                getnotify={this.getnotify}
+                                getnotify={() => {}}
                             />
                         </Board>
                     </div>

@@ -443,7 +443,7 @@ class Employees extends Component {
     handleClickOpenUserModal = (idEntity,email, phoneNumber, idEmployee, fullName, firstName, lastName) => {
         this.setState({ openUserModal: true });
         this.setState({
-            idEntity:idEntity,
+            idEntity:idEntity || 1,
             email: email,
             number: phoneNumber,
             employeeId: idEmployee,
@@ -806,13 +806,15 @@ class Employees extends Component {
                                 User_Updated: 1,
                                 Date_Created: new Date().toISOString(),
                                 Date_Updated: new Date().toISOString(),
-                                isEmployee: true
+                                isEmployee: true,
+                                firstName: this.state.firstNameEdit,
+                                lastName: this.state.lastNameEdit,
+                                Full_Name: this.state.firstNameEdit + " " + this.state.lastNameEdit
                             },
                             idEmployee: this.state.employeeId
                         }
                     })
                     .then(({ data }) => {
-                        console.log("Informacion de la appa ", data)
                         var user = data.addUser;
 
                         this.sendMail(user.Code_User, user.Electronic_Address);
@@ -858,6 +860,7 @@ class Employees extends Component {
                 ApplicationId: IdApplication,
                 First_Name:this.state.firstNameEdit,
                 Last_Name: this.state.lastNameEdit,
+                Middle_Name: '',
                 Electronic_Address: this.state.email,
                 Phone_Number: this.state.number,
                 Contact_Type: 1,
@@ -1218,6 +1221,14 @@ class Employees extends Component {
                                             </option>
                                         ))}
                                     </select>
+                                </div>
+                                <div className="col-md-6 col-lg-6">
+                                    <label htmlFor="">First Name</label>
+                                    <input disabled type="text" className="form-control" value={this.state.firstNameEdit}/>
+                                </div>
+                                <div className="col-md-6 col-lg-6">
+                                    <label htmlFor="">Last Name</label>
+                                    <input disabled type="text" className="form-control" value={this.state.lastNameEdit}/>
                                 </div>
 
                             </div>
@@ -1585,6 +1596,7 @@ class Employees extends Component {
                                                         }}
                                                         update={(id, row) => {
                                                             this.updateEmployeeById(id);
+                                                            console.log(row.idEntity)
                                                             this.setState({
                                                                 firstNameEdit: row.firstName,
                                                                 lastNameEdit: row.lastName,
