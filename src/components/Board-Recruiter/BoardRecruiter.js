@@ -589,17 +589,15 @@ class BoardRecruiter extends Component {
                 }).needExperience;
                 Position = this.state.Openings.find((item) => {
                     return item.id == cardId
-                }).Position;
+                }).Position.trim();
 
 
                 this.getLatLongHotel(1, this.state.Openings.find((item) => {
                     return item.id == cardId
-                }).Zipcode);
+                }).Zipcode.trim());
 
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => {
-                        return item.id == cardId
-                    }).PositionApplyfor);
+                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, Position);
                 } else {
                     this.getMatches(needEnglish, needExperience, 30, laneId, Position);
                 }
@@ -752,7 +750,7 @@ class BoardRecruiter extends Component {
     };
 
     getMatches = async (language, experience, location, laneId, PositionId) => {
-        console.log("getMatches ",language, experience, location, laneId, PositionId)
+       
         let getleads = [];
         let getApplied = [];
         let getCandidate = [];
@@ -773,31 +771,21 @@ class BoardRecruiter extends Component {
                         query: GET_LEAD, variables: { language: language, experience: experience, Position: PositionId, WorkOrderId: this.state.Intopening, ShiftId: this.state.ShiftId }
                     }).then(({ data }) => {
                         let dataAPI = data.applicationsByMatches;
-
+                       
                         dataAPI.map(wo => {
-                        //data.applicationsByMatches.forEach((wo) => {
-                            console.log("dataAPI ",wo)
                             const Phases = wo.Phases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
-                            
-                            console.log("Phases ",Phases)
-
+                       
                             if (wo.Coordenadas) {
-                             //   this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-                                console.log("entro aqui ")
                                     const { getDistance } = this.context;
-                                   // const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
                                     const distance = getDistance(this.state.latitud1, this.state.longitud1, wo.Coordenadas.Lat, wo.Coordenadas.Long, 'M')
-                                    console.log("wo.Coordenadas ",distance)
-
                                     
-                                    if (distance >= location) {
+                                    if (distance <= location) {
 
                                         if (typeof Phases == undefined || Phases == null) {
                                             varphase = 30460;
                                         } else { varphase = Phases.StageId }
 
 
-                                        console.log("Informacion de phases ",wo.id,wo.firstName + ' ' + wo.lastName,varphase)
                                         switch (varphase) {
                                             case 30460:
                                                 if (wo.isLead === true) {
@@ -918,6 +906,7 @@ class BoardRecruiter extends Component {
                             loading: false
                         })
                     }).catch(error => {
+                        console.log("error del match: ",error)
                         this.setState({
                             loading: false,
                         })
@@ -1001,7 +990,7 @@ class BoardRecruiter extends Component {
             data.ShiftBoard.forEach((ShiftBoard) => {
                 datas = {
                     id: ShiftBoard.id,
-                    name: 'Title: ' + ShiftBoard.title,
+                    name: 'Title: ' + ShiftBoard.positionName,
                     dueOn: 'Q: ' + ShiftBoard.count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,

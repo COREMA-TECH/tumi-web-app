@@ -190,8 +190,7 @@ class EmployeesTable extends React.Component {
                     <TableHead>
                         <TableRow>
                             <CustomTableCell className={"Table-head"} style={{ width: '110px' }}>Actions</CustomTableCell>
-                            <CustomTableCell style={{ width: '60px' }} className={"Table-head"}>First Name</CustomTableCell>
-                            <CustomTableCell className={"Table-head"} style={{ width: '60px' }}>Last Name</CustomTableCell>
+                            <CustomTableCell style={{ width: '60px' }} className={"Table-head"}>Full Name</CustomTableCell>
                             <CustomTableCell style={{ width: '90px' }} className={"Table-head"}>Email</CustomTableCell>
                             <CustomTableCell className={"Table-head"} style={{ width: '100px' }}>Phone Number</CustomTableCell>
                             <CustomTableCell className={"Table-head"} style={{ width: '60px' }}>Department</CustomTableCell>
@@ -254,8 +253,7 @@ class EmployeesTable extends React.Component {
                                             ) : ''
                                         }
                                     </CustomTableCell>
-                                    <CustomTableCell style={{ width: '60px' }}>{row.firstName}</CustomTableCell>
-                                    <CustomTableCell style={{ width: '60px' }}>{row.lastName}</CustomTableCell>
+                                    <CustomTableCell style={{ width: '100px' }}>{row.firstName + ' ' + row.lastName}</CustomTableCell>
                                     <CustomTableCell style={{ width: '90px' }} >{row.electronicAddress}</CustomTableCell>
                                     <CustomTableCell style={{ width: '100px' }}>{row.mobileNumber}</CustomTableCell>
                                     <CustomTableCell style={{ width: '60px' }}>

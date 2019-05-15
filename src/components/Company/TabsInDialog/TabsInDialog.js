@@ -193,7 +193,6 @@ class CustomizedTabs extends Component {
 }
 
 printDialogConfirmCompany = () => {
-	//	console.log("estoy en el dialog ", this.state.showConfirm)
 	   
 			return <Dialog maxWidth="xl" open={this.state.showConfirmCompany} >
 				<DialogContent>
@@ -267,12 +266,14 @@ printDialogConfirmCompany = () => {
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
 							label="Positions and Rates"
 						/>
+						{localStorage.getItem('ShowMarkup') == 'true' ?
 						<Tab
 							disabled={this.state.idProperty === null}
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
 							label="Contracts"
 						/>
+						:''}
 						<Tab
 							disabled={this.state.idProperty === null}
 							disableRipple
@@ -336,7 +337,8 @@ printDialogConfirmCompany = () => {
 							showPayRate={true}
 						/>
 					)}
-					{value === 4 && (
+					{localStorage.getItem('ShowMarkup') == 'true'  ?
+					value === 4 && (
 						<TablesContracts
 							data={this.state.dataContract}
 							printDialogConfirm={this.printDialogConfirm}
@@ -348,7 +350,8 @@ printDialogConfirmCompany = () => {
 								this.deleteContractById(id);
 							}}
 						/>
-					)}
+					)
+					:''}
 					{value === 5 && (
 						<User
 							handleOpenSnackbar={this.props.handleOpenSnackbar}

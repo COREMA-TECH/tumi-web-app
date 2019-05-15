@@ -380,12 +380,13 @@ printDialogConfirmCompany = () => {
 							label="Positions and Rates"
 							disabled={!this.state.activateTabs}
 						/>
+						{ localStorage.getItem('ShowMarkup') == 'true' ?
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
 							label="Contracts"
 							disabled={!this.state.activateTabs}
-						/>
+						/> :'' }
 						{/*<Tab*/}
 						{/*disableRipple*/}
 						{/*classes={{ root: "Tab-item", selected: "Tab-selected" }}*/}

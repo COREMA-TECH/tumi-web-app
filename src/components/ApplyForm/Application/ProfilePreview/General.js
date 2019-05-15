@@ -35,6 +35,8 @@ import Select from 'react-select';
 import PunchesReportDetail from '../../../PunchesReportDetail';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import Titles from './Titles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import renderHTML from 'react-render-html';
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -155,6 +157,7 @@ class General extends Component {
             loadingSupervisor: false,
             loadingAllSupervisors: false,
             loadingTitles: false,
+            loading: false,
             firstLoad: true,
             indexView: 0, //Loading
             errorMessage: '',
@@ -187,7 +190,8 @@ class General extends Component {
 
             DeparmentTitle: '',
             myHotels: [],
-            locationAbletoWorkId: 0
+            locationAbletoWorkId: 0,
+            openVerification:false
         }
     }
 
@@ -277,6 +281,10 @@ class General extends Component {
      */
     handleClickOpenModal = () => {
         this.setState({ openModal: true });
+    };
+
+    handleClickOpenVerification = () => {
+        this.setState({ openVerification: true });
     };
 
     handleClickConvertToEmployee = () => {
@@ -385,6 +393,10 @@ class General extends Component {
                 titleName: ''
             })
         });
+    };
+
+    handleCloseModalVerificacion = () => {
+        this.setState({openVerification: false})
     };
 
     /**
@@ -727,6 +739,7 @@ class General extends Component {
                         this.props.handleOpenSnackbar('success', 'Contact Inserted!');
                         this.setState(() => ({
                             openModal: false,
+                            openVerification:false,
                             saving: false,
                             property: [],
                             type: null,
@@ -1231,6 +1244,7 @@ class General extends Component {
     }
 
     render() {
+        const { loading, success } = this.state;
         const { classes } = this.props;
         const { fullScreen } = this.props;
         let userExist = false;
@@ -1423,7 +1437,7 @@ class General extends Component {
                         <div className="">
                             <div className="row">
                                 <div className="col-md-12 col-lg-12">
-                                    <label>* Property Namessss</label>
+                                    <label>* Property Name</label>
                                     <Select
                                         options={this.state.properties}
                                         value={this.state.property}
@@ -1483,6 +1497,95 @@ class General extends Component {
                     title={dialogMessages[0].label}
                     loading={this.props.removingLocationAbleToWork}
                 />
+
+
+                <Dialog
+                    fullScreen={true}
+                    open={this.state.openVerification}
+                    onClose={this.handleCloseModalVerificacion}
+                    aria-labelledby="responsive-dialog-title"
+                    style={{ width: '90%', padding: '0px', margin: '0 auto' }}
+                >
+                    <DialogTitle style={{ padding: '0px' }}>
+                        <div className="modal-header">
+                            {' '}
+                            {this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
+                                'Edit  Position/Rate'
+                            ) : (
+                                    <h5 className="modal-title">Employment Verification</h5>
+                                )}
+                        </div>
+                    </DialogTitle>
+                    <DialogContent style={{ minWidth: 750, padding: '0px' }}>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <button
+                                    //	disabled={this.state.loading || !this.state.enableCancelButton}
+                                    variant="fab"
+                                    color="secondary"
+                                    className={'btn btn-danger pull-right'}
+                                    onClick={this.handleCloseModalVerificacion}
+                                >
+                                    Close <i class="fas fa-times"></i>
+                                </button>
+                                <button
+                                    //	disabled={this.state.loading || !this.state.enableCancelButton}
+                                    variant="fab"
+                                    color="primary"
+                                    className={'btn btn-info mr-1 pull-right'}
+                                    onClick={this.handleCloseModalVerificacion}
+                                >
+                                    Send <i class="fas fa-envelope"></i>
+                                </button>
+
+
+                            </div>
+                        </div>
+                        <div className="row pdf-container">
+                                <div id="DocumentPDF" className="signature-information">
+                        {renderHTML(`<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<p style="text-align: center; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;" align="center"><strong><u><span style="font-size: 12.0pt;">VERIFICATION OF EMPLOYMENT</span></u></strong></p>
+<p style="text-align: center; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;" align="center"><strong><u><span style="font-size: 12.0pt;">&nbsp;</span></u></strong></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Today&rsquo;s Date</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Tumi Staffing</strong></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Po Box 592715</strong></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>San Antonio, TX 78259</strong></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">RE: Verification of Employment for ___________________________ [Name of Employee]</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">To whom it may concern:</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Please accept this letter as confirmation that _______________________ [Name of Employee] has been employed with <strong>Tumi Staffing</strong> since ___________________ [Employee Start Date].</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Currently, ___________________________ [Name of Employee] holds the Title of _____________________and works on a ___________________ [Full time / Part time] basis.</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><a name="_GoBack"></a>&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">If you have any questions or require further information, please don&rsquo;t hesitate to contact me at 210-853-2099.</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Sincerely yours,</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Claudia Robbins</strong></p>
+<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Owner</strong></p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+</body>
+</html>`)}
+                        </div>
+                        </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <div className="exhibit-button-right">
+                            {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+                        </div>
+                    </DialogActions>
+                </Dialog>
 
                 <div className="">
                     <div className="">
@@ -1593,6 +1696,10 @@ class General extends Component {
                                                     <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenModal();
                                                     }}>Add to hotel
+                                                    </button>
+                                                      <button className="dropdown-item" onClick={() => {
+                                                        this.handleClickOpenVerification();
+                                                    }}>Employment Verification
                                                     </button>
                                                     {
                                                         userExist || this.state.createdProfile ? (
