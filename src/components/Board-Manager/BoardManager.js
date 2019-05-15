@@ -768,7 +768,7 @@ class BoardManager extends Component {
 
                 datas = {
                     id: ShiftBoard.id,
-                    name: 'Title: ' + ShiftBoard.title,
+                    name: 'Title: ' + ShiftBoard.positionName,
                     dueOn: 'Q: ' + ShiftBoard.count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
@@ -975,7 +975,7 @@ class BoardManager extends Component {
                                 history={this.props.history}
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
                                 getWorkOrders={this.getWorkOrders}
-                                getnotify={this.getnotify}
+                                getnotify={() => {}}
                             />
                         </Board>
                     </div>
