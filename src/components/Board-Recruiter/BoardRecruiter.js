@@ -226,6 +226,9 @@ class BoardRecruiter extends Component {
                     IdLane = 30460
             }
 
+            //Applied
+            //localStorage.getItem('LoginId');
+
             if (!this.state.openReason) {
                 if (targetLaneId != sourceLaneId) {
                     this.addApplicationPhase(cardId, IdLane);
@@ -234,11 +237,40 @@ class BoardRecruiter extends Component {
                         this.updateApplicationInformation(cardId, true, 'candidate was updated!');
                     }
 
+                    if(targetLaneId === "Applied"){
+                        const recruiterId = localStorage.getItem("LoginId");
+
+                        this.props.client
+                            .mutate({
+                                mutation: UPDATE_APPLICANT,
+                                variables: {
+        
+                                    id: cardId,
+                                    isLead: true,
+                                    idRecruiter: recruiterId,
+                                    idWorkOrder: this.state.Intopening,
+                                    positionApplyingFor: this.state.Intopening
+                                }
+                            })
+                            .then(({ data }) => {
+                                this.props.handleOpenSnackbar('success', 'Candidate was updated!', 'bottom', 'right');
+                            })
+                            .catch((error) => {
+                                this.props.handleOpenSnackbar(
+                                    'error',
+                                    'Error to update applicant information. Please, try again!',
+                                    'bottom',
+                                    'right'
+                                );
+                            });
+                    }
+
                     if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
                         this.setState({
                             ApplicationId: cardId,
                             openReason: true
                         }, () => {
+
                         });
 
                         this.setState(
