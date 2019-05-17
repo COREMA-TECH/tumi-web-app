@@ -457,7 +457,7 @@ class Application extends Component {
         if (this.props.applicationId > 0) {
 
             this.getApplicationById(this.props.applicationId);
-            if (this.state.socialSecurityNumber.length === 0) {
+            if ((this.state.socialSecurityNumber || '').length === 0) {
                 this.props.handleContract();
             }
         }
@@ -533,7 +533,7 @@ class Application extends Component {
 
 
 
-        if (this.state.socialSecurityNumber.length === 0) {
+        if ((this.state.socialSecurityNumber || '').length === 0) {
             // Show dialog
             this.setState({
                 openSSNDialog: true
