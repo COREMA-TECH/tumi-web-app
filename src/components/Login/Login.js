@@ -156,7 +156,8 @@ class Login extends Component {
 							localStorage.setItem('IdRoles', user.Id_Roles);
 							localStorage.setItem('IdSchedulesEmployees', user.IdSchedulesEmployees);
 							localStorage.setItem('IdSchedulesManager', user.IdSchedulesManager);
-							localStorage.setItem('isEmployee', user.isEmployee);
+
+							localStorage.setItem('isEmployee', user.Id_Roles == 13 ? true : false);
 
 							if(user.Id_Roles==1 ||user.Id_Roles==10||user.Id_Roles==2)
 							{localStorage.setItem('ShowMarkup', true);}

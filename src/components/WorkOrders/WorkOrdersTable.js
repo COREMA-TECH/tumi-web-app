@@ -558,7 +558,7 @@ class WorkOrdersTable extends Component {
                                     let backgroundColor = row.status === 0 ? '#ddd' : '#fff';
                                     if (this.state.filterValue === 0) {
                                         return (
-                                            <TableRow style={{ background: backgroundColor }}>
+                                            <TableRow>
                                                 <CustomTableCell className={'text-center'} style={{ width: '80px' }}>
                                                     <Tooltip title="Life Cycle">
                                                         <button

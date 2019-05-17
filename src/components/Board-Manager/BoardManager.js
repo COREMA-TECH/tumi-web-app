@@ -768,7 +768,7 @@ class BoardManager extends Component {
 
                 datas = {
                     id: ShiftBoard.id,
-                    name: 'Title: ' + ShiftBoard.title,
+                    name: 'Title: ' + ShiftBoard.positionName,
                     dueOn: 'Q: ' + ShiftBoard.count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,

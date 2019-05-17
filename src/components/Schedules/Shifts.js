@@ -147,7 +147,7 @@ class Shifts extends Component {
                                             shiftDetailItem.end.substring(0, 10) +
                                             " " +
                                             shiftDetailItem.endTime,
-                                        title: shiftItem.title,
+                                        title: shiftItem.position.Position,
                                         resourceId:
                                             shiftDetailItem.detailEmployee !== null
                                                 ? shiftDetailItem.detailEmployee.EmployeeId
@@ -282,7 +282,7 @@ class Shifts extends Component {
                                 shiftDetailItem.end.substring(0, 10) +
                                 " " +
                                 shiftDetailItem.endTime,
-                            title: shiftItem.title,
+                            title: shiftItem.position.Position,
                             resourceId:
                                 shiftDetailItem.detailEmployee !== null
                                     ? shiftDetailItem.detailEmployee.EmployeeId
