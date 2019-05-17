@@ -253,7 +253,8 @@ class TimeCardForm extends Component {
         } else {
             this.setState({ saving: true });
             if (this.state.id == null) {     
-                this.checkUserMarks();                
+                // this.checkUserMarks();                
+                this.addIn();
             }
             else {
                 //alert(this.state.employees.detailEmployee)
