@@ -115,9 +115,9 @@ class Application extends Component {
         positionsCatalogs: [],
         positionCatalogTag: [],
 
-       // cellPhoneValid: false,
+        // cellPhoneValid: false,
         //lastNameValid: false,
-       // firstNameValid: false,
+        // firstNameValid: false,
 
 
     }
@@ -496,7 +496,7 @@ class Application extends Component {
             })
     };
 
-    
+
     getPositionsCatalogs = () => {
         this.props.client
             .query({
@@ -508,7 +508,7 @@ class Application extends Component {
                 dataAPI.map(item => {
                     this.setState(prevState => ({
                         positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label:item.Description.trim(),  key: item.Id
+                            value: item.Id, label: item.Description.trim(), key: item.Id
                         }]
                     }))
                 });
@@ -637,9 +637,9 @@ class Application extends Component {
                                                 this.setState({
                                                     firstName: event.target.value
                                                 },
-                                                ()=>{
-                                                    this.props.SetFirstName(this.state)
-                                                }
+                                                    () => {
+                                                        this.props.SetFirstName(this.state)
+                                                    }
                                                 );
 
                                             }}
@@ -683,9 +683,9 @@ class Application extends Component {
                                                 this.setState({
                                                     lastName: event.target.value
                                                 },
-                                                ()=>{
-                                                    this.props.SetLastName(this.state)
-                                                });
+                                                    () => {
+                                                        this.props.SetLastName(this.state)
+                                                    });
                                             }}
                                             value={this.state.lastName}
                                             name="lastName"
@@ -811,9 +811,9 @@ class Application extends Component {
                                                 this.setState({
                                                     cellPhone: event.target.value
                                                 },
-                                                ()=>{
-                                                    this.props.SetCellPhone(this.state)
-                                                });
+                                                    () => {
+                                                        this.props.SetCellPhone(this.state)
+                                                    });
                                             }}
                                             required
                                             placeholder="+(___) ___-____"
@@ -836,7 +836,6 @@ class Application extends Component {
                                             className="form-control"
                                             disabled={!this.state.editing}
                                             min="0"
-                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                             maxLength="50"
                                             minLength="8"
                                         />
