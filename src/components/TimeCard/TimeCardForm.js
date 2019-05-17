@@ -320,7 +320,7 @@ class TimeCardForm extends Component {
                         isActive: currentEmployee.isActive,
                         userCreated: currentEmployee.userCreated,
                         userUpdated: currentEmployee.userUpdated,
-                        hireDate: this.state.startDate
+                        hireDate: `'${moment(this.state.startDate).format("YYYY-MM-DD")}'`
                     }
                 }
             })

@@ -31,7 +31,8 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
                     id         
                     firstName                 
                     idUsers         
-                    idEntity       
+                    idEntity    
+                    hireDate   
                 }     
             }   
             idealJobs {

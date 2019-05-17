@@ -37,6 +37,7 @@ import ConfirmDialog from 'material-ui/ConfirmDialog';
 import Titles from './Titles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import renderHTML from 'react-render-html';
+import moment from 'moment';
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -144,6 +145,7 @@ class General extends Component {
             isLead: false,
             property: [],
             contactTypes: ContactTypesData,
+            hireDate: '',
 
             // Functional states
             titles: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
@@ -454,6 +456,7 @@ class General extends Component {
                         }, () => {
                             //this.getApplicationEmployees(id);
                             //   this.fetchDepartments();
+
                             this.setState({
                                 email: this.state.data.emailAddress,
                                 number: this.state.data.cellPhone,
@@ -466,6 +469,7 @@ class General extends Component {
                                 isActive:this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
                                 EmployeeId: this.state.data.employee? this.state.data.employee.id : 0,
+                                hireDate: this.state.data.employee.Employees.hireDate ? `${moment(this.state.data.employee.Employees.hireDate).format("YYYY-MM-DD")}` : '--',
                                 idealJobs: this.state.data.idealJobs
                             })
                         });
@@ -1599,7 +1603,12 @@ class General extends Component {
                                             className="username-number col-sm-12">Emp #: TM-0000{this.state.data.id}</span>
                                     </div>
                                 </div>
-
+                                <div className="item col-12 col-md-2">
+                                    <div className="row">
+                                        <span className="col-sm-12 font-weight-bold">Hire Date</span>
+                                        <span className="col-sm-12">{this.state.hireDate}</span>
+                                    </div>
+                                </div>
                                 <div className="item col-12 col-md-2">
                                     <div className="row">
                                         <span className="col-sm-12 font-weight-bold">Department</span>
@@ -1612,7 +1621,7 @@ class General extends Component {
                                         <span className="col-sm-12">Text</span>
                                     </div>
                                 </div>
-                                <div className="item col-sm-12  col-md-1">
+                                <div className="item col-sm-12 col-md-1">
                                     <div className="row">
                                         <span className="col-12 col-md-12 font-weight-bold">Active</span>
                                         <div className="col-12 col-md-12">
@@ -1641,7 +1650,7 @@ class General extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="item col-sm-12  col-md-2">
+                                <div className="item col-sm-12 col-md-1">
                                     <div className="row">
                                         <span className="col-12 col-md-12 font-weight-bold">Direct Deposit</span>
                                         <div className="col-12 col-md-12">
@@ -1674,7 +1683,7 @@ class General extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <div className="row">
                                         <div className="item col-sm-12  col-md-12">
                                             <div className="dropdown">
