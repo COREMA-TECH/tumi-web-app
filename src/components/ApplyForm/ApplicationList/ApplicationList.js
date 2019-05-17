@@ -127,8 +127,8 @@ class ApplicationList extends Component {
 	`;
 
 	DELETE_APPLICATION_QUERY = gql`
-		mutation disableApplication($id: Int!) {
-			disableApplication(id: $id) {
+		mutation disableApplication($id: Int!, $isActive: Boolean!) {
+			disableApplication(id: $id, isActive: $isActive) {
 				id
 				isActive
 			}
@@ -145,7 +145,8 @@ class ApplicationList extends Component {
 					.mutate({
 						mutation: this.DELETE_APPLICATION_QUERY,
 						variables: {
-							id: this.state.idToDelete
+							id: this.state.idToDelete,
+							isActive: false
 						}
 					})
 					.then((data) => {
@@ -359,7 +360,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={variables} pollInterval={300} >
+					<Query query={this.GET_APPLICATION_QUERY} variables={variables} >
 						{({ loading, error, data, refetch, networkStatus }) => {
 							
 							if (this.state.filterText === '') {

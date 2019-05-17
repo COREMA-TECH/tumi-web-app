@@ -81,8 +81,8 @@ class ApplicationList extends Component {
 		}
 	`;
 	DELETE_APPLICATION_QUERY = gql`
-		mutation disableApplication($id: Int!) {
-			disableApplication(id: $id) {
+		mutation disableApplication($id: Int!, $isActive: Boolean!) {
+			disableApplication(id: $id, isActive: $isActive) {
 				id
 				isActive
 			}
@@ -98,7 +98,8 @@ class ApplicationList extends Component {
 					.mutate({
 						mutation: this.DELETE_APPLICATION_QUERY,
 						variables: {
-							id: this.state.idToDelete
+							id: this.state.idToDelete,
+							isActive: false
 						}
 					})
 					.then((data) => {
