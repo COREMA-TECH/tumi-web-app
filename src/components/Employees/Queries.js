@@ -21,6 +21,24 @@ export const LIST_EMPLOYEES = gql`
     }
 `;
 
+export const FIND_EMPLOYEE = gql`
+    query employees($id: Int) {
+        employees(id: $id) {
+            id
+            firstName
+            lastName
+            electronicAddress
+            mobileNumber
+            idRole
+            isActive
+            Id_Deparment
+            Contact_Title
+            idUsers
+            idEntity
+        }
+    }  
+`;
+
 export const GET_ALL_DEPARTMENTS_QUERY = gql`
     query catalogitem {
         catalogitem(IsActive: 1, Id_Catalog: 8) {
