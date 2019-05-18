@@ -17,6 +17,7 @@ import FormsW4 from "./W4/FormsW4";
 import { GET_APPLICATION_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
 import IndependentContract from "./IndependentContract";
+import ApplicationInternal from './ApplicationInternal';
 
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -146,22 +147,24 @@ class CustomizedTabs extends React.Component {
                 case 0:
                     return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
                 case 1:
-                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />;
                 case 2:
-                    return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 3:
-                    return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 4:
-                    return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 5:
-                    return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 6:
-                    return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 7:
-                    return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 8:
-                    return <ApplicantDocument applicationId={this.state.applicationId} />;
+                    return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 9:
+                    return <ApplicantDocument applicationId={this.state.applicationId} />;
+                case 10:
                     return <ProfilePreview applicationId={this.state.applicationId} />;
                 case 10:
                     return <IndependentContract />
@@ -184,7 +187,11 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon` }}
                             label={applyTabs[0].label}
                         />
-
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon` }}
+                            label={applyTabs[1].label}
+                        />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}

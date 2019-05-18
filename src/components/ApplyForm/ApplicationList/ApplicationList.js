@@ -97,6 +97,9 @@ class ApplicationList extends Component {
 				isLead
 				idWorkOrder
 				statusCompleted
+				dateCreation
+				immediately
+				optionHearTumi
 				employee {
 					Employees {
 					  idEntity
@@ -359,7 +362,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={variables} pollInterval={300} >
+					<Query query={this.GET_APPLICATION_QUERY} variables={variables}  >
 						{({ loading, error, data, refetch, networkStatus }) => {
 							
 							if (this.state.filterText === '') {
