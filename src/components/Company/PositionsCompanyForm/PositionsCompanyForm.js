@@ -947,6 +947,8 @@ query getposition ($Id_Entity:Int){
 					<div className="col-md-12">
 						{this.props.showStepper ? (
 							<div className="advanced-tab-options">
+								{localStorage.getItem('ShowMarkup') =='true' ?( 
+								<div>
 								{this.state.data.length > 0 ? (
 									<Route
 										render={({ history }) => (
@@ -986,6 +988,8 @@ query getposition ($Id_Entity:Int){
 								) : (
 										''
 									)}
+									</div>
+									): ('')}
 							</div>
 						) : (
 								''
@@ -1053,7 +1057,7 @@ query getposition ($Id_Entity:Int){
 									/>
 								</div>
 							)}
-							{localStorage.getItem('ShowMarkup')==true  ?	
+							{localStorage.getItem('ShowMarkup')== 'true'  ?	
 							<div className="col-md-12 col-lg-6">
 								<label>* Bill Rate</label>
 								<InputForm

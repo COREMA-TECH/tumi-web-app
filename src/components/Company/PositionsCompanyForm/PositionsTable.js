@@ -253,7 +253,7 @@ class PositionsTable extends React.Component {
 							</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '50px' }}>Department</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Title</CustomTableCell>
-							{localStorage.getItem('ShowMarkup') ==true ?	
+							{localStorage.getItem('ShowMarkup') == 'true' ?	
 								<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Bill Rate</CustomTableCell>
 							:''}
 							
@@ -323,7 +323,7 @@ class PositionsTable extends React.Component {
 										</Select>
 									</CustomTableCell>
 									<CustomTableCell  style={{width: '80px' }}>{row.Position}</CustomTableCell>
-									{localStorage.getItem('ShowMarkup') ==true ?	
+									{localStorage.getItem('ShowMarkup') =='true' ?	
 									<CustomTableCell  style={{width: '80px' }}>
 										$ {row.Bill_Rate}
 									</CustomTableCell>
