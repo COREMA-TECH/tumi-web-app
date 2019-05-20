@@ -31,7 +31,7 @@ const styles = (theme) => ({
 
 const DEFAULT_PROPERTY = { value: '', label: 'Property(All)' };
 const DEFAULT_DEPARTMENT = { value: '', label: 'Department(All)' };
-const DEFAULT_STATUS = { value: 1 , label: 'Active' };
+const DEFAULT_STATUS = { value: 1, label: 'Active' };
 
 class ApplicationList extends Component {
 	constructor(props) {
@@ -46,7 +46,7 @@ class ApplicationList extends Component {
 			department: DEFAULT_DEPARTMENT,
 			properties: [],
 			departments: [],
-			statu:DEFAULT_STATUS,
+			statu: DEFAULT_STATUS,
 			statusValue: [{
 				value: 1,
 				label: 'Status'
@@ -57,11 +57,11 @@ class ApplicationList extends Component {
 			}, {
 				value: 2,
 				label: "Inactive"
-			},{
-				value:3,
+			}, {
+				value: 3,
 				label: "All"
 			}],
-			
+
 		};
 	}
 
@@ -130,8 +130,8 @@ class ApplicationList extends Component {
 	`;
 
 	DELETE_APPLICATION_QUERY = gql`
-		mutation disableApplication($id: Int!) {
-			disableApplication(id: $id) {
+		mutation disableApplication($id: Int!, $isActive: Boolean) {
+			disableApplication(id: $id,isActive: $isActive) {
 				id
 				isActive
 			}
@@ -148,7 +148,8 @@ class ApplicationList extends Component {
 					.mutate({
 						mutation: this.DELETE_APPLICATION_QUERY,
 						variables: {
-							id: this.state.idToDelete
+							id: this.state.idToDelete,
+							isActive: false
 						}
 					})
 					.then((data) => {
@@ -270,21 +271,17 @@ class ApplicationList extends Component {
 		 */
 		if (localStorage.getItem('isEmployee') == 'true')
 			variables = { idUsers: localStorage.getItem('LoginId') };
-			
+
 		if (this.state.property.value != '')
 			variables = { ...variables, idEntity: this.state.property.value };
 		if (this.state.department.value != '')
 			variables = { ...variables, Id_Department: this.state.department.value };
-		if (this.state.statu.value != '')
-		{	
-			if(this.state.statu.value == 1)
-			{variables = { ...variables, isActive: [true]  };}
-			if(this.state.statu.value == 2)
-			{variables = { ...variables, isActive: [false]  };}
-			if(this.state.statu.value == 3)
-			{variables = { ...variables, isActive: [true,false] };}
+		if (this.state.statu.value != '') {
+			if (this.state.statu.value == 1) { variables = { ...variables, isActive: [true] }; }
+			if (this.state.statu.value == 2) { variables = { ...variables, isActive: [false] }; }
+			if (this.state.statu.value == 3) { variables = { ...variables, isActive: [true, false] }; }
 		}
-		
+
 		/**
 		 * End - Define variables for application query
 		 */
@@ -341,7 +338,7 @@ class ApplicationList extends Component {
 					<Select
 						name="status"
 						options={this.state.status}
-						value={ this.state.statu}
+						value={this.state.statu}
 						onChange={this.handleStatusChange}
 						components={makeAnimated()}
 						closeMenuOnSelect
@@ -364,7 +361,7 @@ class ApplicationList extends Component {
 				<div className="main-contract__content">
 					<Query query={this.GET_APPLICATION_QUERY} variables={variables}  >
 						{({ loading, error, data, refetch, networkStatus }) => {
-							
+
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
 							}
@@ -380,10 +377,10 @@ class ApplicationList extends Component {
 								);
 
 							if (data.applicationsByUser != null && data.applicationsByUser.length > 0) {
-									const dataApplication = 
-										this.state.filterText === ''
+								const dataApplication =
+									this.state.filterText === ''
 										? data.applicationsByUser
-										: data.applicationsByUser.filter((_, i) => {								
+										: data.applicationsByUser.filter((_, i) => {
 											if (
 												(_.firstName +
 													_.middleName +
