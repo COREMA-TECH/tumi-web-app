@@ -140,17 +140,17 @@ class BoardManager extends Component {
             LaneDestino: targetLaneId
         });
 
-        if (sourceLaneId == "lane1" || sourceLaneId == "Notify" ) {
-           
-                this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
-                this.KeepArray();
-                this.onCardClick(this.state.ShiftId, null, 'lane1');
+        if (sourceLaneId == "lane1" || sourceLaneId == "Notify") {
 
-                this.setState({
-                    LaneOrigen: '',
-                    LaneDestino: ''
-                });
-          
+            this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
+            this.KeepArray();
+            this.onCardClick(this.state.ShiftId, null, 'lane1');
+
+            this.setState({
+                LaneOrigen: '',
+                LaneDestino: ''
+            });
+
         }
         else {
 
@@ -371,8 +371,8 @@ class BoardManager extends Component {
         let needEnglish, needExperience, Position, state;
 
         state = this.state.workOrders.find((item) => { return item.id == cardId })
-   
-        if ((laneId.trim() == "lane1"  ) && cardId > 0 && state.Status != 0) {
+
+        if ((laneId.trim() == "lane1") && cardId > 0 && state.Status != 0) {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
 
@@ -394,14 +394,14 @@ class BoardManager extends Component {
                 Position = state.Position;
 
 
-                this.getLatLongHotel(1,state.Zipcode.substring(0, 5));//, () => {
+                this.getLatLongHotel(1, state.Zipcode.substring(0, 5));//, () => {
 
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                  this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, state.Position,state.WorkOrderId , cardId);
+                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, state.Position, state.WorkOrderId, cardId);
                 } else {
-                  this.getMatches(needEnglish, needExperience, 30, laneId, Position,state.WorkOrderId , cardId);
+                    this.getMatches(needEnglish, needExperience, 30, laneId, Position, state.WorkOrderId, cardId);
                 }
-            //});
+                //});
             }
         }
     }
@@ -506,7 +506,7 @@ class BoardManager extends Component {
             });
     }
 
-    getMatches = async (language, experience, location, laneId, PositionId, _WOID,_SHID) => {
+    getMatches = async (language, experience, location, laneId, PositionId, _WOID, _SHID) => {
         let getmatches = [];
         let getnotify = [];
         let getaccepted = [];
@@ -541,16 +541,16 @@ class BoardManager extends Component {
                             if (item.Coordenadas) {
                                 const { getDistance } = this.context;
                                 const distance = getDistance(this.state.latitud1, this.state.longitud1, item.Coordenadas.Lat, item.Coordenadas.Long, 'M')
-                                
-                 
-                                if (distance  <= location) {
+
+
+                                if (distance <= location) {
 
                                     if (typeof Phases == undefined || Phases == null) {
                                         varphase = 30469;
                                     } else {
                                         varphase = Phases.StageId
                                     }
-    
+
                                     switch (varphase) {
                                         case 30469:
                                             if (item.isLead === false) {
@@ -579,30 +579,30 @@ class BoardManager extends Component {
                                             break;
                                         case 30464:
 
-                                        getnotify.push({
-                                            id: item.id,
-                                            name: item.firstName + ' ' + item.lastName,
-                                            subTitle: item.cellPhone,
-                                            body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
-                                            escalationTextLeftLead: item.generalComment,
-                                            escalationTextRightLead: item.car == true ? " Yes" : " No",
-                                            cardStyle: { borderRadius: 6, marginBottom: 15 },
-                                            response:1
-                                        });
-    
-                                       /* this.props.client.query({
-                                            query: GET_RESPONSE_QUERY,
-                                            variables: {
-                                                number: wo.cellPhone, 
-                                                ShiftId: this.state.ShiftId
-                                            },
-                                            fetchPolicy: 'no-cache'
-                                        }).then(({ data }) => {
-                                            data.smsLog.forEach((responseSMS) => {
-                                                console.log("responseSMS ", responseSMS)
-                                            })
-                                        })*/
-    
+                                            getnotify.push({
+                                                id: item.id,
+                                                name: item.firstName + ' ' + item.lastName,
+                                                subTitle: item.cellPhone,
+                                                body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: item.generalComment,
+                                                escalationTextRightLead: item.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 },
+                                                response: 1
+                                            });
+
+                                            /* this.props.client.query({
+                                                 query: GET_RESPONSE_QUERY,
+                                                 variables: {
+                                                     number: wo.cellPhone, 
+                                                     ShiftId: this.state.ShiftId
+                                                 },
+                                                 fetchPolicy: 'no-cache'
+                                             }).then(({ data }) => {
+                                                 data.smsLog.forEach((responseSMS) => {
+                                                     console.log("responseSMS ", responseSMS)
+                                                 })
+                                             })*/
+
                                             break;
                                         case 30463, 30465:
                                             getaccepted.push({
@@ -616,13 +616,13 @@ class BoardManager extends Component {
                                             });
                                             break;
                                     }
-    
+
                                 }
-                             
+
                             }
-                           
+
                         });
-                       
+
 
                         this.setState({
                             matches: getmatches,
@@ -631,7 +631,7 @@ class BoardManager extends Component {
                             accepted: getaccepted,
                             loading: false
                         });
-                        
+
                         this.KeepArray();
 
                     }).catch(error => {
@@ -796,14 +796,14 @@ class BoardManager extends Component {
         })
 
         this.KeepArray();
-        
+
     };
 
     handleCloseModal = (event) => {
         this.setState({ openModal: false });
     };
 
-   
+
 
     goToEmployeePackage = (id) => {
         // window.location.href = '/employment-application';
@@ -816,7 +816,7 @@ class BoardManager extends Component {
     };
 
     render() {
-        
+
         const { classes } = this.props;
 
         let isLoading = this.state.loading;
@@ -966,7 +966,7 @@ class BoardManager extends Component {
                             eventBusHandle={this.setEventBus}
                             handleDragStart={this.handleDragStart}
                             handleDragEnd={this.handleDragEnd}
-                            onCardClick={this.state.loading ? null: this.onCardClick}
+                            onCardClick={this.state.loading ? null : this.onCardClick}
                             style={{
                                 backgroundColor: '#f5f7f9'
                             }}
@@ -975,7 +975,7 @@ class BoardManager extends Component {
                                 history={this.props.history}
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
                                 getWorkOrders={this.getWorkOrders}
-                                getnotify={() => {}}
+                                getnotify={() => { }}
                             />
                         </Board>
                     </div>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import {GET_APPLICANT_IDEAL_JOBS,GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY} from '../Queries';
+import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY } from '../Queries';
 import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION } from '../Mutations';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withGlobalContent from '../../Generic/Global';
@@ -16,6 +16,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
+
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -41,7 +42,7 @@ class Application extends Component {
             middleName: '',
             lastName: '',
             lastName2: '',
-           
+
             date: new Date().toISOString().substring(0, 10),
             streetAddress: '',
             aptNumber: '',
@@ -54,7 +55,7 @@ class Application extends Component {
             birthDay: '',
             car: false,
             typeOfId: '',
-            expireDateId: '',
+            expireDateId: null,
             emailAddress: '',
             positionApplyingFor: 1,
             idealJob: '',
@@ -146,7 +147,7 @@ class Application extends Component {
     };
 
 
-    
+
 
     /**<
      * To update a application by id
@@ -159,7 +160,7 @@ class Application extends Component {
             () => {
                 this.props.client
                     .mutate({
-                        mutation: id==0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
+                        mutation: id == 0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
                         variables: {
                             application: {
                                 id: id,
@@ -189,7 +190,7 @@ class Application extends Component {
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
                                 idealJob: this.state.idealJob,
-                                isLead: id==0 ? false:this.state.isLead
+                                isLead: id == 0 ? false : this.state.isLead
                             }
                         }
                     })
@@ -213,6 +214,7 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
+                        console.log("App error ", error)
                         this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.setState({
@@ -322,8 +324,8 @@ class Application extends Component {
                             () => {
                                 this.getIdealJobsByApplicationId();
                                 this.getPositionCatalog();
-                              
-                              
+
+
                             }
                         );
                     })
@@ -383,7 +385,7 @@ class Application extends Component {
                 dataAPI.map(item => {
                     this.setState(prevState => ({
                         positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label:item.Description.trim(),  key: item.Id
+                            value: item.Id, label: item.Description.trim(), key: item.Id
                         }]
                     }))
                 });
@@ -453,12 +455,12 @@ class Application extends Component {
     componentWillMount() {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
-           
-                this.getApplicationById(this.props.applicationId);
-                if (this.state.socialSecurityNumber.length === 0) {
-                    this.props.handleContract();
-                }
+
+            this.getApplicationById(this.props.applicationId);
+            if ((this.state.socialSecurityNumber || '').length === 0) {
+                this.props.handleContract();
             }
+        }
 
         if (this.props.applicationId == 0) {
             this.setState({
@@ -469,7 +471,7 @@ class Application extends Component {
         this.getPositionCatalog();
     }
 
-   shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps, nextState) {
         if (this.state.editing !== nextProps.editing) {
             return true;
         }
@@ -531,7 +533,7 @@ class Application extends Component {
 
 
 
-        if (this.state.socialSecurityNumber.length === 0) {
+        if ((this.state.socialSecurityNumber || '').length === 0) {
             // Show dialog
             this.setState({
                 openSSNDialog: true
@@ -593,12 +595,12 @@ class Application extends Component {
             </Dialog>
         );
 
-       
+
 
         return (
             <div className="Apply-container--application">
                 {
-                   renderSSNDialog()
+                    renderSSNDialog()
                 }
                 <form
                     className="general-info-apply-form"
@@ -745,12 +747,9 @@ class Application extends Component {
                                                     }}
                                                     value={this.state.aptNumber}
                                                     name="aptNumber"
-                                                    type="number"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
-                                                    min="0"
                                                     maxLength="50"
-                                                    minLength="5"
                                                 />
                                             </div>
 
@@ -915,7 +914,6 @@ class Application extends Component {
                                                     required
                                                     disabled={!this.state.editing}
                                                     min="0"
-                                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                                     maxLength="50"
                                                     minLength="8"
                                                 />
@@ -965,12 +963,12 @@ class Application extends Component {
                                                     minLength="10"
                                                 />
                                             </div>
-                                               <div className="col-md-12">
+                                            <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[16].label}
                                                 </span>
-                                               
-                                             <Select
+
+                                                <Select
                                                     isDisabled={!this.state.editing}
                                                     options={this.state.positionCatalogTag}
                                                     value={this.state.positionsTags}
@@ -979,9 +977,9 @@ class Application extends Component {
                                                     components={makeAnimated()}
                                                     isMulti
                                                 />
-                                            
+
                                             </div>
-                                       
+
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[17].label}
@@ -1165,7 +1163,7 @@ class Application extends Component {
                         </div>
                     </div>
                 </form>
-                <ShiftRestrictionModal 
+                <ShiftRestrictionModal
                     openModal={this.state.openRestrictionsModal}
                     handleCloseModal={this.handleRestrictionModalClose}
                 />

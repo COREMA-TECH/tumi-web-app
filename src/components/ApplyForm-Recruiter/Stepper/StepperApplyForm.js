@@ -973,7 +973,6 @@ class VerticalLinearStepper extends Component {
                                 className="form-control"
                                 required
                                 min="0"
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                 maxLength="50"
                                 minLength="8"
                             />
