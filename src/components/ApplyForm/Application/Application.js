@@ -16,6 +16,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
+import Content from './IndependentContract/Content';
 
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
@@ -129,7 +130,8 @@ class Application extends Component {
 
             openSSNDialog: false,
             //Open/Close schedule restrictions modal
-            openRestrictionsModal: false
+            openRestrictionsModal: false,
+            openIndependentContractDialog: false
         };
     }
 
@@ -555,52 +557,95 @@ class Application extends Component {
         })
     };
 
+    handleCloseIndependentContractDialog = () => {
+        this.setState({
+            openIndependentContractDialog: false
+        })
+    };
+    renderSSNDialog = () => (
+        <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
+            <DialogTitle>
+                <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
+            </DialogTitle>
+            <DialogContent>
+                You must sign an Independent Contract Recognition
+            </DialogContent>
+            <DialogActions>
+                <div className="applicant-card__footer">
+                    <button
+                        className="applicant-card__cancel-button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.handleCloseSSNDialog();
+                        }}
+                    >
+                        {spanishActions[2].label}
+                    </button>
+                    <button type="submit"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // this.submitForm();
+                            // this.props.handleContract();
+                            // this.handleCloseSSNDialog();
+                            this.setState(() => ({ openIndependentContractDialog: true, openSSNDialog: false }));
+                        }}
+                        className="applicant-card__save-button">
+                        Accept
+                    </button>
+                </div>
+            </DialogActions>
+        </Dialog>
+    );
+
+    renderIndependentContractDialog = () => (
+        <Dialog maxWidth="md" open={this.state.openIndependentContractDialog} onClose={this.handleCloseIndependentContractDialog}>
+            <DialogTitle>
+                <h5 className="modal-title">INDEPENDENT CONTRACT</h5>
+            </DialogTitle>
+            <DialogContent>
+                <Content></Content>
+        </DialogContent>
+            <DialogActions>
+                <div className="applicant-card__footer">
+                    <button
+                        className="applicant-card__cancel-button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.handleCloseIndependentContractDialog();
+                        }}
+                    >
+                        {spanishActions[2].label}
+                    </button>
+                    <button type="submit"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // this.submitForm();
+                            //   this.props.handleContract();
+                            this.handleCloseIndependentContractDialog();
+                        }}
+                        className="applicant-card__save-button">
+                        Accept
+                </button>
+                </div>
+            </DialogActions>
+        </Dialog>
+    );
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
 
-        let renderSSNDialog = () => (
-            <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
-                <DialogTitle>
-                    <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
-                </DialogTitle>
-                <DialogContent>
-                    You must sign an Independent Contract Recognition
-                </DialogContent>
-                <DialogActions>
-                    <div className="applicant-card__footer">
-                        <button
-                            className="applicant-card__cancel-button"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.handleCloseSSNDialog();
-                            }}
-                        >
-                            {spanishActions[2].label}
-                        </button>
-                        <button type="submit"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.submitForm();
-                                this.props.handleContract();
-                                this.handleCloseSSNDialog();
-                            }}
-                            className="applicant-card__save-button">
-                            Accept
-                        </button>
-                    </div>
-                </DialogActions>
-            </Dialog>
-        );
-
-
-
         return (
             <div className="Apply-container--application">
                 {
-                    renderSSNDialog()
+                    this.renderSSNDialog()
+                }
+                {
+                    this.renderIndependentContractDialog()
                 }
                 <form
                     className="general-info-apply-form"

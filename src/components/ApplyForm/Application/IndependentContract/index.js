@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Content from './Content';
 
 class IndependentContract extends Component {
     render() {
