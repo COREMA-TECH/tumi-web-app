@@ -1,0 +1,33 @@
+.BankInfo{
+    .input-group{
+        align-items: center;
+
+        &-prepend{
+            background-color: $input-prepend-bg;
+            
+            border: 1px solid $border-standard;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+
+            padding: 10.25px;
+        }
+    }   
+
+    &-accountType{
+        height: 36px;
+
+        justify-content: flex-start;
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    &-checking, &-saving{
+        padding-left: 0;
+        padding-right: 0; 
+    }
+
+    &-saving{
+        margin-left: auto;
+    }
+}
