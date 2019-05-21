@@ -25,6 +25,14 @@
     &-checking, &-saving{
         padding-left: 0;
         padding-right: 0; 
+
+        text-indent: 5px;
+    }
+
+    &-amount, &-percentage{
+        i{
+            width: 11px;
+        }
     }
 
     &-saving{

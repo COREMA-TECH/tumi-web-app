@@ -1,6 +1,21 @@
 .Dropdown{
     border: 1px solid $border-standard;
+
+    margin-bottom: 34px;
+
+    position: relative;
     width: 100%;
+    z-index: 1000;
+
+    &:not(.open){
+        z-index: 1;
+    }
+
+    &.open{
+        .Dropdown-body{
+            height: 230px; 
+        }
+    }
 
     &-header{
         align-items: center;
@@ -8,7 +23,7 @@
         flex-direction: row;
         justify-content: space-between;
         flex-wrap: nowrap; 
-
+ 
         background-color: $dropdown-header-bg;
 
         border-bottom: 1px solid $border-standard;
@@ -25,22 +40,21 @@
         line-height: 20px;
         
         height: 15px;        
-    }
+    } 
 
     &-body{
         background-color: $dropdown-body-bg;
+        border: 1px solid $border-standard;
 
         font-size: 12px;
-
-        height: 0px;
-
-        overflow: hidden;         
-
-        transition: height 0.5s ease;
         
-        &.open{
-            height: 230px;            
-        }
+        height: 0px;
+        
+        overflow: hidden;         
+        
+        position: absolute;
+        
+        transition: height 0.5s ease;
     }
 
     &-contentWrapper{

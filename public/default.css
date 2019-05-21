@@ -9996,14 +9996,25 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 .BankInfo-checking, .BankInfo-saving {
   padding-left: 0;
-  padding-right: 0; }
+  padding-right: 0;
+  text-indent: 5px; }
+
+.BankInfo-amount i, .BankInfo-percentage i {
+  width: 11px; }
 
 .BankInfo-saving {
   margin-left: auto; }
 
 .Dropdown {
   border: 1px solid #dddddd;
-  width: 100%; }
+  margin-bottom: 34px;
+  position: relative;
+  width: 100%;
+  z-index: 1000; }
+  .Dropdown:not(.open) {
+    z-index: 1; }
+  .Dropdown.open .Dropdown-body {
+    height: 230px; }
   .Dropdown-header {
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -10031,14 +10042,14 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     height: 15px; }
   .Dropdown-body {
     background-color: #f9f9f9;
+    border: 1px solid #dddddd;
     font-size: 12px;
     height: 0px;
     overflow: hidden;
+    position: absolute;
     -webkit-transition: height 0.5s ease;
     -o-transition: height 0.5s ease;
     transition: height 0.5s ease; }
-    .Dropdown-body.open {
-      height: 230px; }
   .Dropdown-contentWrapper {
     padding-bottom: 25px;
     padding-left: 20px;

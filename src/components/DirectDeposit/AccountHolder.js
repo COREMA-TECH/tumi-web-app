@@ -1,115 +1,209 @@
 import React, { Component } from "react";
 import InputMask from 'react-input-mask';
+import LocationForm from '../ui-components/LocationForm'
 
 class AccountHolder extends Component{
+    INITIAL_STATE = {
+        zipCode: '',
+        city: '',
+        state: '',
+        firstName: '',
+        lastName: '',
+        address: ''
+    }
+
     constructor(props){
         super(props);
 
         this.state = {
-            changeCity: false,
-            city: '',
-            loadingCities: false,
-            cities: [],
-            state: '',
-            loadingStates: false,
-            states: [],
-            zipcode: ''
+            ...this.INITIAL_STATE
         }
     }
 
-    onValueChange = () => {
+    updateInput = (text, name) => {
+		this.validateField(name, text);
+    };
+    
+    validateField(fieldName, value) {
+		this.setState(
+			(prevState) => {
 
+				let codeValid = prevState.codeValid;
+				let nameValid = prevState.nameValid;
+				let addressValid = prevState.addressValid;
+
+				let startWeekValid = prevState.startWeekValid;
+				let endWeekValid = prevState.endWeekValid;
+				let rateValid = prevState.rateValid;
+				let zipCodeValid = prevState.zipCodeValid;
+				let countryValid = prevState.countryValid;
+				let stateValid = prevState.stateValid;
+
+				let cityValid = prevState.cityValid;
+				let phoneNumberValid = prevState.phoneNumberValid;
+				let faxValid = prevState.faxValid;
+				let startDateValid = prevState.startDateValid;
+				let phonePrefixValid = prevState.phonePrefixValid;
+
+				switch (fieldName) {
+					case 'Code':
+						codeValid = value.trim().length >= 2;
+
+						break;
+					case 'name':
+						nameValid = value.trim().length >= 5;
+
+						break;
+					case 'address':
+						addressValid = value.trim().length >= 5;
+
+						break;
+					case 'startWeek':
+						startWeekValid = value !== null && value !== 0 && value !== '';
+
+						break;
+					case 'endWeek':
+						endWeekValid = value !== null && value !== 0 && value !== '';
+
+						break;
+					case 'rate':
+						rateValid = parseInt(value) >= 0;
+
+						break;
+					case 'zipCode':
+
+						zipCodeValid = value.trim().length >= 2;
+						break;
+					case 'country':
+						countryValid = value !== null && value !== 0 && value !== '';
+
+						break;
+					case 'state':
+						stateValid = value !== null && value !== 0 && value !== '';
+						break;
+					case 'city':
+						cityValid = value !== null && value !== 0 && value !== '';
+						break;
+					case 'phoneNumber':
+						phoneNumberValid =
+							value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+								.length == 10;
+						break;
+					case 'phonePrefix':
+						let phonePrefix = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+						phonePrefixValid = phonePrefix.length == 10 || phonePrefix.length == 0;
+						break;
+					case 'fax':
+						let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+						faxValid = fax.length == 10 || fax.length == 0;
+						break;
+					case 'startDate':
+						startDateValid = value.trim().length == 10;
+						break;
+					default:
+						break;
+				}
+
+				return {
+
+					codeValid,
+					nameValid,
+					addressValid,
+					startWeekValid,
+					endWeekValid,
+					rateValid,
+					zipCodeValid,
+					countryValid,
+					stateValid,
+					cityValid,
+					phoneNumberValid,
+					faxValid,
+					startDateValid,
+					phonePrefixValid,
+					[fieldName]: value,
+					formValid:
+						codeValid &&
+						nameValid &&
+						addressValid &&
+						startWeekValid &&
+						endWeekValid &&
+						rateValid &&
+						zipCodeValid &&
+						countryValid &&
+						stateValid &&
+						phoneNumberValid &&
+						faxValid &&
+						phonePrefixValid
+
+				}
+			});
+    }
+    
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+		this.setState(() => {
+			return { searchigZipcode }
+		})
     }
 
+    updateState = (id) => {
+		this.setState(
+			{
+				state: id,
+				city: 0
+			},
+			() => {
+				this.validateField('state', id);
+			}
+		);
+	};
+
+	updateCity = (id) => {
+		this.validateField('city', id);
+    };
+
+    handleOnChange = e => {
+        this.setState({ [e.target.name]: e.target.type == 'checkbox' ? e.target.checked : e.target.value });
+    }
+    
     render(){
         return (
-            <div className="card">
-                <div className="card-header">Account Holder Information</div>
-                <div className="card-body">
-                    <div className="row">
-                        <div className="col-12 col-md-6">
-                            <label htmlFor="firstName">* First Name</label>
-                            <input type="text" name="firstName" id="firstName" className="form-control"/>
-                        </div>
-
-                        <div className="col-12 col-md-6">
-                            <label htmlFor="lastName">* Last Name</label>
-                            <input type="text" name="lastName" id="lastName" className="form-control"/>
-                        </div>
-
-                        <div className="col-12 col-md-6">
-                            <label htmlFor="address">* Address</label>
-                            <input type="text" name="address" id="address" className="form-control"/>
-                        </div>
-
-                        <div className="col-12 col-md-6">
-                            <label className="mr-1">* City</label>
-                            <span className="float-right tumi-checkbox-wrapper Location-changeCityByZip">
-                                <input 
-                                    type="checkbox" 
-                                    name="changeCity" 
-                                    // onChange={this.onValueChange} 
-                                    // disabled={this.props.disabledCheck || loading} 
-                                    // checked={this.state.changeCity} 
-                                />
-
-                                <label htmlFor="changeCity">Change selected city by zip code?</label>
-                            </span>
-                            <div className="select-animated">
-                                <select 
-                                    name="city" 
-                                    className='form-control' 
-                                    onChange={this.onValueChange} value={this.state.city}
-                                    // disabled={!this.state.changeCity || this.state.loadingCities || this.props.disabledCity} 
-                                    required>
-
-                                    <option value="">Select a city</option>
-                                    {/* {this.state.cities.map(({ Id, Name }) => (
-                                        <option key={Id} value={Id}>{Name}</option>
-                                    ))} */}
-                                </select>
-                                <i className={`fa fa-spinner fa-spin select-animated-icon ${this.state.loadingCities || 'd-none'}`} />
-                            </div>
-                        </div>
-
-                        <div className="col-12 col-md-6">
-                            <div className="select-animated">
-                                <label>* State</label>
-                                <select 
-                                    name="state" 
-                                    className='form-control' 
-                                    onChange={this.onValueChange} 
-                                    value={this.state.state}
-                                    disabled
-                                    required>
-
-                                    <option value="">Select a state</option>
-                                    {/* {this.state.states.map(({ Id, Name }) => (
-                                        <option key={Id} value={Id}>{Name}</option>
-                                    ))} */}
-                                </select>
-                                <i className={`fa fa-spinner fa-spin select-animated-icon ${this.state.loadingStates || 'd-none'}`} />
-                            </div>
-                        </div>
-
-                        <div className="col-12 col-md-6">
-                            <label htmlFor="zipCode">* Zip Code</label>
-                            <InputMask
-                                id="zipCode"
-                                name="zipCode"
-                                className="form-control"
-                                // onChange={this.onValueChange}
-                                value={this.state.zipcode}
-                                placeholder='_____-_____'
-                                required
-                                minLength="15"
-                                // onKeyDown={this.handleOnKeyUp}
-                                // onBlur={this.handleOnBlur}
-                            />
-                        </div>                                            
+            <React.Fragment>
+                <div className="row">
+                    <div className="col-12 col-md-6">
+                        <label htmlFor="firstName">* First Name</label>
+                        <input type="text" name="firstName" id="firstName" value={this.state.firstName} className="form-control"/>
+                    
+                        <label htmlFor="lastName">* Last Name</label>
+                        <input type="text" name="lastName" id="lastName" value={this.state.lastName} className="form-control"/>
+                    
+                        <label htmlFor="address">* Address</label>
+                        <input type="text" name="address" id="address" value={this.state.address} className="form-control"/>
                     </div>
+
+                    <div className="col-12 col-md-6 tumi-noPadding">
+                        <LocationForm
+                            disabledCheck={true}
+                            disabledCity={true}
+                            disabledZipCode={false}
+                            onChangeCity={this.updateCity}
+                            onChangeState={this.updateState}
+                            onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
+                            city={this.state.city}
+                            state={this.state.state}
+                            zipCode={this.state.zipCode} changeCity={this.state.changeCity}
+                            cityClass={`form-control ${!this.state.cityValid && ' _invalid'}`}
+                            stateClass={`form-control ${!this.state.stateValid && ' _invalid'}`}
+                            zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
+                            cityColClass="col-12"
+                            stateColClass="col-12"
+                            zipCodeColClass="col-12"
+                            requiredCity={true}
+                            requiredState={true}
+                            requiredZipCode={true}
+                            updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />                            
+                    </div>                                            
                 </div>
-            </div>
+            </React.Fragment>   
         );
     }
 };

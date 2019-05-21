@@ -13,21 +13,22 @@ class AccountDropdown extends Component{
     handleCollapse = _ => {
         this.setState({
             isOpen: !this.state.isOpen
-        }, _ => console.log("Click"));
+        });
     }
 
     render(){
         return(
-            <div className="Dropdown">
+            <div className={`Dropdown ${ this.state.isOpen ? 'open' : '' }`}>
                 <div className="Dropdown-header" onClick={this.handleCollapse}>
                     <span className="Dropdown-title">
-                        {this.props.title || 'Default Title'}
+                        <strong>Account #</strong>
+                        <span>23156465456789</span>
                     </span>
                     <span className="Dropdown-caret">
                         <i class={`fas ${this.state.isOpen ? 'fa-angle-up' : 'fa-angle-down'}`}></i>
                     </span>
                 </div>
-                <div className={`Dropdown-body ${ this.state.isOpen ? 'open' : '' }`}>
+                <div className={`Dropdown-body`}>
                     <div className="Dropdown-contentWrapper">
                         <div className="row pt-0 pb-0">
                             <div className="col-12 col-md-5">
