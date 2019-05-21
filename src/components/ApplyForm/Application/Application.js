@@ -599,40 +599,56 @@ class Application extends Component {
         </Dialog>
     );
 
+    setSignStatus = (hasSign) => {
+        this.setState(() => ({ hasSign }))
+    }
+
+    handleIndependenContractSubmit = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (this.state.hasSign)
+            this.handleCloseIndependentContractDialog();
+        else
+            this.props.handleOpenSnackbar(
+                'warning',
+                'You must sign the document to continue!',
+                'bottom',
+                'right'
+            );
+        //   this.props.handleContract();
+        // this.submitForm();
+    }
+
     renderIndependentContractDialog = () => (
         <Dialog maxWidth="md" open={this.state.openIndependentContractDialog} onClose={this.handleCloseIndependentContractDialog}>
-            <DialogTitle>
-                <h5 className="modal-title">INDEPENDENT CONTRACT</h5>
-            </DialogTitle>
-            <DialogContent>
-                <Content></Content>
-        </DialogContent>
-            <DialogActions>
-                <div className="applicant-card__footer">
-                    <button
-                        className="applicant-card__cancel-button"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            this.handleCloseIndependentContractDialog();
-                        }}
-                    >
-                        {spanishActions[2].label}
-                    </button>
-                    <button type="submit"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            // this.submitForm();
-                            //   this.props.handleContract();
-                            this.handleCloseIndependentContractDialog();
-                        }}
-                        className="applicant-card__save-button">
-                        Accept
-                </button>
-                </div>
-            </DialogActions>
+
+            <form id="independentContractForm" onSubmit={this.handleIndependenContractSubmit}>
+                <DialogTitle>
+                    <h5 className="modal-title">INDEPENDENT CONTRACT</h5>
+                </DialogTitle>
+                <DialogContent>
+
+                    <Content setSignStatus={this.setSignStatus} />
+
+
+                </DialogContent>
+                <DialogActions>
+                    <div className="applicant-card__footer">
+                        <button
+                            className="applicant-card__cancel-button"
+                            onClick={this.handleCloseIndependentContractDialog}
+                        >
+                            {spanishActions[2].label}
+                        </button>
+                        <button type="submit" className="applicant-card__save-button" > Accept </button>
+
+                    </div>
+                </DialogActions>
+
+            </form>
         </Dialog>
+
+
     );
 
     render() {
