@@ -98,6 +98,9 @@ export const GET_APPLICATION_BY_ID = gql`
 			comment
 			idealJob
 			isLead
+			independentContract{
+     			id
+    		}
 		}
 	}
 `;

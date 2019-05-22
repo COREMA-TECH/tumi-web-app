@@ -300,7 +300,7 @@ class FormsI9 extends Component {
                                                                 fontSize: '10pt'
                                                             }}><strong>►&nbsp;START
                                                       HERE:</strong> Read instructions carefully before completing this form. The instructions must be
-                                                              available, either in paper or electronically, during completion of this form. Employers are liable for
+                                                                        available, either in paper or electronically, during completion of this form. Employers are liable for
                                                     errors in the completion of this form.</span></div>
                                                         <div data-font-name="Helvetica" data-angle={0}
                                                             data-canvas-width="234.99000000000004"><span style={{
@@ -310,7 +310,7 @@ class FormsI9 extends Component {
                                                             }}><strong>ANTI-DISCRIMINATION
                                                       NOTICE:&nbsp;</strong>It is illegal to discriminate against work-authorized individuals. Employers
                                                     <strong>CANNOT</strong> specify which document(s) an employee may present to establish employment
-                                                                authorization and identity. The refusal to hire or continue to employ an individual because the
+                                                                            authorization and identity. The refusal to hire or continue to employ an individual because the
                                                     documentation presented has a future expiration date may also constitute illegal discrimination.</span>
                                                         </div>
                                                         <div data-font-name="Helvetica" data-angle={0}
@@ -685,7 +685,7 @@ class FormsI9 extends Component {
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                                 fontSize: '10pt'
                                                                             }}>&nbsp;
-                                                                                    &nbsp; Some aliens may write "N/A" in the expiration date field. (See
+                                                                                        &nbsp; Some aliens may write "N/A" in the expiration date field. (See
                       instructions)</span></p>
                                                                             <p><span style={{
                                                                                 color: '#000000',
@@ -822,7 +822,7 @@ class FormsI9 extends Component {
                                                                             fontFamily: 'arial, helvetica, sans-serif',
                                                                             fontSize: '10pt'
                                                                         }}>Signature
-                                of Employee:
+                                    of Employee:
                                                                     {/*<input*/}
                                                                             {/*value={this.state.signature}*/}
                                                                             {/*onChange={(e) => {*/}
@@ -1100,9 +1100,9 @@ class FormsI9 extends Component {
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
                                                                                 fontSize: '10pt'
                                                                             }}>(Employers
-                                  or their authorized representative must complete and sign Section 2 within 3 business
-                                  days of the employee's first day of employment. You must physically examine one document
-                                  from List A OR a combination of one document from List B and one document from List C as
+                                      or their authorized representative must complete and sign Section 2 within 3 business
+                                      days of the employee's first day of employment. You must physically examine one document
+                                      from List A OR a combination of one document from List B and one document from List C as
                       listed on the "Lists of Acceptable Documents.")</span></p>
                                                                         </td>
                                                                     </tr>

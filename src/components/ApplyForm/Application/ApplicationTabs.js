@@ -164,7 +164,7 @@ class CustomizedTabs extends React.Component {
                 case 9:
                     return <ProfilePreview applicationId={this.state.applicationId} />;
                 case 10:
-                    return <IndependentContract />
+                    return <IndependentContract applicationId={this.state.applicationId} />
 
             }
         };

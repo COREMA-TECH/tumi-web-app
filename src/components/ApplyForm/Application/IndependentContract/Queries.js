@@ -9,6 +9,10 @@ export const GET_APPLICANT_INFO = gql`
           applicantIndependentContract(ApplicationId: $ApplicationId){
                 id
                 html
+                application{                  
+                  firstName
+                  lastName
+                }
           }
     }
 `;

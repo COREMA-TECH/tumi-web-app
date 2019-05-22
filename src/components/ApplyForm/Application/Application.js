@@ -16,7 +16,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
-import Content from './IndependentContract/Content';
+import IndependentContractDialog from './IndependentContract/Modal';
 
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
@@ -56,6 +56,7 @@ class Application extends Component {
             birthDay: '',
             car: false,
             typeOfId: '',
+            independentContract: null,
             expireDateId: null,
             emailAddress: '',
             positionApplyingFor: 1,
@@ -216,7 +217,6 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
-                        console.log("App error ", error)
                         this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.setState({
@@ -303,6 +303,7 @@ class Application extends Component {
                                 positionApplyingFor: applicantData.positionApplyingFor,
                                 car: applicantData.car,
                                 typeOfId: applicantData.typeOfId,
+                                independentContract: applicantData.independentContract,
                                 expireDateId:
                                     applicantData.expireDateId !== null
                                         ? applicantData.expireDateId.substring(0, 10)
@@ -535,7 +536,7 @@ class Application extends Component {
 
 
 
-        if ((this.state.socialSecurityNumber || '').length === 0) {
+        if ((this.state.socialSecurityNumber || '').length === 0 && !this.state.independentContract) {
             // Show dialog
             this.setState({
                 openSSNDialog: true
@@ -557,11 +558,8 @@ class Application extends Component {
         })
     };
 
-    handleCloseIndependentContractDialog = () => {
-        this.setState({
-            openIndependentContractDialog: false
-        })
-    };
+
+
     renderSSNDialog = () => (
         <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
             <DialogTitle>
@@ -599,57 +597,21 @@ class Application extends Component {
         </Dialog>
     );
 
-    setSignStatus = (hasSign) => {
-        this.setState(() => ({ hasSign }))
+    handleVisivilityIndependentContractDialog = (status) => (e) => {
+
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        this.setState({
+            openIndependentContractDialog: status
+        })
+    };
+
+    getApplicantInformation = () => {
+        this.getApplicationById(this.props.applicationId)
     }
-
-    handleIndependenContractSubmit = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (this.state.hasSign)
-            this.handleCloseIndependentContractDialog();
-        else
-            this.props.handleOpenSnackbar(
-                'warning',
-                'You must sign the document to continue!',
-                'bottom',
-                'right'
-            );
-        //   this.props.handleContract();
-        // this.submitForm();
-    }
-
-    renderIndependentContractDialog = () => (
-        <Dialog maxWidth="md" open={this.state.openIndependentContractDialog} onClose={this.handleCloseIndependentContractDialog}>
-
-            <form id="independentContractForm" onSubmit={this.handleIndependenContractSubmit}>
-                <DialogTitle>
-                    <h5 className="modal-title">INDEPENDENT CONTRACT</h5>
-                </DialogTitle>
-                <DialogContent>
-
-                    <Content setSignStatus={this.setSignStatus} />
-
-
-                </DialogContent>
-                <DialogActions>
-                    <div className="applicant-card__footer">
-                        <button
-                            className="applicant-card__cancel-button"
-                            onClick={this.handleCloseIndependentContractDialog}
-                        >
-                            {spanishActions[2].label}
-                        </button>
-                        <button type="submit" className="applicant-card__save-button" > Accept </button>
-
-                    </div>
-                </DialogActions>
-
-            </form>
-        </Dialog>
-
-
-    );
 
     render() {
         //this.validateInvalidInput();
@@ -660,9 +622,14 @@ class Application extends Component {
                 {
                     this.renderSSNDialog()
                 }
-                {
-                    this.renderIndependentContractDialog()
-                }
+
+                <IndependentContractDialog
+                    open={this.state.openIndependentContractDialog}
+                    handleVisibility={this.handleVisivilityIndependentContractDialog}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    applicationId={this.props.applicationId}
+                    getApplicantInformation={this.getApplicantInformation} />
+
                 <form
                     className="general-info-apply-form"
                     id="general-info-form"
