@@ -31,7 +31,7 @@ const KeyCodes = {
     enter: 13,
 };
 
-class Application extends Component {
+class ApplicationInternal extends Component {
     constructor(props) {
         super(props);
 
@@ -902,4 +902,4 @@ class Application extends Component {
     }
 }
 
-export default withApollo(withGlobalContent(withRouter(Application)));
+export default withApollo(withGlobalContent(withRouter(ApplicationInternal)));
