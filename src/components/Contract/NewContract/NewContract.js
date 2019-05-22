@@ -21,6 +21,8 @@ import Button from '@material-ui/core/Button';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import { Route } from "react-router-dom";
 import LocationForm from '../../ui-components/LocationForm';
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
 
 const styles = (theme) => ({
     wrapper: {
@@ -161,7 +163,7 @@ class NewContract extends Component {
         };
     }
 
-    updateStatus = (id) => {
+    updateStatus = ({value: id}) => {
         this.setState(
             {
                 Contract_Status: id
@@ -1310,6 +1312,10 @@ class NewContract extends Component {
             return <LinearProgress />;
         }
 
+        const statusSelect = status.map(item => {
+            return {value: item.Id, label: item.Name}
+        });
+
         return (
             <div className="TabSelected-container">
                 <div className="row">
@@ -1640,13 +1646,21 @@ class NewContract extends Component {
                                                 <div className="row">
                                                     <div className="col-md-6 col-lg-6">
                                                         <label>* Status</label>
-                                                        <SelectForm
+                                                        {/* <SelectForm
                                                             data={status}
                                                             update={this.updateStatus}
                                                             value={parseInt(this.state.Contract_Status)}
                                                             //error={!this.state.IsActiveValid}
                                                             error={!this.state.Contract_StatusValid}
                                                             showNone={false}
+                                                        /> */}
+                                                        <Select
+                                                            options={statusSelect}
+                                                            value={{value: this.state.property, label: status[this.state.property-1]}}
+                                                            onChange={this.updateStatus}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
                                                         />
                                                     </div>
                                                     <div className="col-md-6 col-lg-6">
