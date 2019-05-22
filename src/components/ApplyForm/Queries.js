@@ -102,6 +102,12 @@ export const GET_APPLICATION_BY_ID = gql`
 			immediately
 			dateCreation
 			nameReferences
+			eeoc
+			exemptions
+			area
+			hireType
+			gender
+			marital
 		}
 	}
 `;

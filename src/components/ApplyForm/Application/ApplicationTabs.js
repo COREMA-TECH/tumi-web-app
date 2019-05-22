@@ -166,7 +166,7 @@ class CustomizedTabs extends React.Component {
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
                 case 10:
                     return <ProfilePreview applicationId={this.state.applicationId} />;
-                case 10:
+                case 11:
                     return <IndependentContract />
 
             }
@@ -190,7 +190,7 @@ class CustomizedTabs extends React.Component {
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon` }}
-                            label={applyTabs[1].label}
+                            label={applyTabs[10].label}
                         />
                         <Tab
                             disableRipple
@@ -225,17 +225,17 @@ class CustomizedTabs extends React.Component {
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[9].label}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[7].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[8].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            label={applyTabs[9].label}
                         />
                         {
                             this.state.independentContract ? (

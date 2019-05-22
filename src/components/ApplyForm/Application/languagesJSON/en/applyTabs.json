@@ -5,42 +5,42 @@
   },
   {
     "id": 1,
-    "label": "Internal Use"
-  },
-  {
-    "id": 2,
     "label": "Background Check"
   },
   {
-    "id": 3,
+    "id": 2,
     "label": "Non-Disclosure"
   },
   {
-    "id": 4,
+    "id": 3,
     "label": "Code of Conduct"
   },
   {
-    "id": 5,
+    "id": 4,
     "label": "Anti-Harassment"
   },
   {
-    "id": 6,
+    "id": 5,
     "label": "Worker's Compensation"
   },
   {
-    "id": 7,
+    "id": 6,
     "label": "I9"
   },
   {
-    "id": 8,
+    "id": 7,
     "label": "Documents"
   },
   {
-    "id": 9,
+    "id": 8,
     "label": "Profile"
   },
   {
-    "id": 10,
+    "id": 9,
     "label": "W4"
+  },
+  {
+    "id": 10,
+    "label": "Internal Use"
   }
 ]
