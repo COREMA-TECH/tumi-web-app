@@ -2,9 +2,34 @@ import React, { Component } from "react";
 import BankInfo from './BankInfo';
 import AccountHolder from './AccountHolder';
 import AccountDropdown from './AccountDropdown';
-import ApplicantDocument from '../ApplyForm/Application/ApplicantDocuments/ApplicantDocument';
 
 class DirectDeposit extends Component{
+    INITIAL_STATE = {
+        zipCode: '',
+        city: '',
+        state: '',
+        firstName: '',
+        lastName: '',
+        address: '',
+        bankName: '',
+        routingName: '',
+        account: '',  
+        amount: '',
+        percentage: '',
+        accountType: ''      
+    }
+
+    constructor(props){
+        super(props);
+
+        this.state = {
+            ...this.INITIAL_STATE
+        }
+    }
+
+    handleOnChange = e => {
+        this.setState({ [e.target.name]: e.target.type == 'checkbox' ? e.target.checked : e.target.value });        
+    }
         
     render(){
         return(
@@ -21,12 +46,18 @@ class DirectDeposit extends Component{
                         </div>                        
                     </div>
                     <div className="col-md-12 col-xl-4">
-                        <BankInfo/>
+                        <BankInfo
+                            handleOnChange={this.handleOnChange}
+                            bankName={this.state.bankName}
+                            routingName={this.state.routingName}
+                            account={this.state.account}
+                            amount={this.state.amount}
+                            percentage={this.state.percentage}
+                        />
                     </div>
                     <div className="col-md-12 col-xl-3">
                         <div className="card">
                             <div className="card-body">
-                                <ApplicantDocument applicationId={1} />
                             </div>
                         </div>
                     </div>
