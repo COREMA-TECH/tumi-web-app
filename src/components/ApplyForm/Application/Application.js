@@ -52,14 +52,14 @@ class Application extends Component {
             homePhone: '',
             cellPhone: '',
             socialSecurityNumber: '',
-            birthDay: '',
+            birthDay: null,
             car: false,
             typeOfId: '',
             expireDateId: null,
             emailAddress: '',
             positionApplyingFor: 1,
             idealJob: '',
-            dateAvailable: '',
+            dateAvailable: null,
             scheduleRestrictions: '',
             scheduleExplain: '',
             convicted: '',
@@ -69,9 +69,14 @@ class Application extends Component {
             isLead: '',
             dateCreation: new Date().toISOString().substring(0, 10),
             immediately: 0,
-            optionHearTumi: '',
-            nameReferences:'',
-
+            optionHearTumi: null,
+            nameReferences:null,
+            EEOC:null,
+            Exemptions:null,
+            area:null,
+            HireType:null,
+            gender:null,
+            marital:null,
             // Languages array
             languages: [],
 
@@ -199,7 +204,13 @@ class Application extends Component {
                                 dateCreation: new Date().toISOString().substring(0, 10),
                                 immediately: this.state.immediately,
                                 optionHearTumi: this.state.optionHearTumi,
-                                nameReferences:this.state.nameReferences
+                                nameReferences:this.state.nameReferences,
+                                eeoc:this.state.EEOC,
+                                exemptions:this.state.Exemptions,
+                                area:this.state.area,
+                                hireType:this.state.HireType,
+                                gender:this.state.gender,
+                                marital:this.state.marital
 
                             }
                         }
@@ -333,7 +344,13 @@ class Application extends Component {
                                 dateCreation:  applicantData.dateCreation,
                                 immediately: applicantData.immediately,
                                 optionHearTumi: applicantData.optionHearTumi,
-                                nameReferences: applicantData.nameReferences
+                                nameReferences: applicantData.nameReferences,
+                                EEOC:applicantData.eeoc,
+                                Exemptions:applicantData.exemptions,
+                                area:applicantData.area,
+                                HireType:applicantData.hireType,
+                                gender:applicantData.gender,
+                                marital:applicantData.marital
                             },
                             () => {
                                 this.getIdealJobsByApplicationId();
