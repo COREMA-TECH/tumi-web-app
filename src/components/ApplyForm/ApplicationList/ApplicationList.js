@@ -100,6 +100,12 @@ class ApplicationList extends Component {
 				dateCreation
 				immediately
 				optionHearTumi
+				eeoc
+				exemptions
+				area
+				hireType
+				gender
+				marital
 				employee {
 					Employees {
 					  idEntity

@@ -332,6 +332,15 @@ class MobileMenu extends Component {
                                     <span>Reports</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/exceptions" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/exceptions">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> 
+                                                    Exceptions
+                                                </a>
+                                            </li> : ""
+                                    })}
                                 </ul>
                             </li> : ''
                     })}

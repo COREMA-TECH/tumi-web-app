@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import BackgroundCheck from "./BackgroundCkeck/BackgroundCheck";
 import NonDisclosure from "./NonDisclosure/NonDisclosure";
 import ApplicationInfo from "./ApplicationInfo";
+import ApplicationInternal from "./ApplicationInternal";
 import ConductCode from "./ConductCode/ConductCode";
 import AntiHarassment from "./AntiHarassment/AntiHarassment";
 import WorkerCompensation from "./WorkerCompensation/WorkerCompensation";
@@ -146,25 +147,31 @@ class CustomizedTabs extends React.Component {
                 case 0:
                     return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
                 case 1:
-                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} handleContract={this.handleContract} />;
+                    return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />;
                 case 2:
-                    return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} handleContract={this.handleContract} />;
                 case 3:
-                    return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 4:
-                    return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 5:
-                    return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 6:
-                    return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 7:
-                    return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                    return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 8:
-                    return <ApplicantDocument applicationId={this.state.applicationId} />;
+                    return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 9:
-                    return <ProfilePreview applicationId={this.state.applicationId} />;
+                    return <ApplicantDocument applicationId={this.state.applicationId} />;
                 case 10:
+<<<<<<< HEAD
                     return <IndependentContract applicationId={this.state.applicationId} />
+=======
+                    return <ProfilePreview applicationId={this.state.applicationId} />;
+                case 11:
+                    return <IndependentContract />
+>>>>>>> 5d8322ef3160a7b15cdc2a4aff7a751501255a60
 
             }
         };
@@ -184,7 +191,11 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon` }}
                             label={applyTabs[0].label}
                         />
-
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon` }}
+                            label={applyTabs[10].label}
+                        />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
@@ -218,17 +229,17 @@ class CustomizedTabs extends React.Component {
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[9].label}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[7].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[8].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            label={applyTabs[9].label}
                         />
                         {
                             this.state.independentContract ? (
