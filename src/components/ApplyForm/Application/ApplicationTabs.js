@@ -164,10 +164,10 @@ class CustomizedTabs extends React.Component {
                     return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 9:
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
-                case 10:
+                case 10:                 
                     return <ProfilePreview applicationId={this.state.applicationId} />;
                 case 11:
-                    return <IndependentContract />
+                    return <IndependentContract applicationId={this.state.applicationId} />
 
             }
         };

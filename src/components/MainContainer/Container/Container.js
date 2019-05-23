@@ -24,9 +24,8 @@ import ResetPassword from '../../ResetPassword/ResetPassword';
 import Board from '../../Board-Manager/BoardManager';
 import BoardRecruiter from '../../Board-Recruiter/BoardRecruiter';
 import withApollo from 'react-apollo/withApollo';
-import { GET_ROLES_FORMS } from '../Queries';
+import { GET_ROLES_FORMS, GET_ROLES, GET_FORMS_QUERY } from '../Queries';
 import withGlobalContent from '../../Generic/Global';
-import { GET_FORMS_QUERY } from '../../Security/DropdownForm/queries';
 import NotFound from '../../NotFound/NotFound';
 import DashboardManager from '../../Dashboard/TumiManager';
 import DashboardHotel from '../../Dashboard/HotelManager';
@@ -104,7 +103,10 @@ class Container extends Component {
 			() => {
 				this.props.client
 					.query({
-						query: GET_FORMS_QUERY
+						query: GET_FORMS_QUERY,
+						variables: {
+							Id: this.state.roles[0].default_form_id
+						}
 					})
 					.then(({ data }) => {
 						this.setState({
@@ -128,15 +130,50 @@ class Container extends Component {
 		);
 	};
 
+	getRoles = () => {
+		this.setState({ loading: true },
+			() => {
+				this.props.client.query({
+					query: GET_ROLES,
+					variables: {
+						id: parseInt(localStorage.getItem("IdRoles"))
+					},
+					fetchPolicy: 'no-cache'
+				}).then(({ data }) => {
+					this.setState({
+						roles: data.roles,
+						loading: false
+					});
+				}).catch((error) => {
+					this.setState({
+						loading: false
+					});
+
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error to get data. Please, try again!',
+						'bottom',
+						'right'
+					);
+				});
+			}
+		);
+	};
+
+
 	componentWillMount() {
 		this.getRolesFormsInfo();
-		this.getFormsInfo();
+		//this.getFormsInfo();
+		this.getRoles();
 	}
 
 	render() {
 		if (this.state.loading) {
 			return <div className="container-fluid" />;
 		}
+
+		if (window.location.pathname === '/home' && this.state.dataForm[0])
+			window.location.href = this.state.dataForm[0].Value ;
 
 		return (
 			<div className="container-fluid">

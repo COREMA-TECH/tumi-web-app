@@ -23,6 +23,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import withGlobalContent from 'Generic/Global';
 
+import { GET_FORMS_QUERY } from './Queries';
+
 const styles = (theme) => ({
     container: {
         display: 'flex',
@@ -145,6 +147,9 @@ class RolesForm extends React.Component {
         id_companyValid: false,
         descriptionValid: false,
 
+        screenValid: false,
+        default_form_id: null,
+
         id_companyHasValue: false,
         descriptionHasValue: false,
 
@@ -155,7 +160,8 @@ class RolesForm extends React.Component {
         //openSnackbar: false,
         loading: false,
         success: false,
-        loadingConfirm: false
+        loadingConfirm: false,
+        forms: []
     };
 
     constructor(props) {
@@ -308,9 +314,24 @@ class RolesForm extends React.Component {
         this.setState({idToDelete: idSearch, opendialog: true});
     };
 
+    loadForms = () => {
+        this.props.client.query({
+            query: GET_FORMS_QUERY,
+            variables: {},
+            fetchPolicy: 'no-cache'
+        }).then(({data}) => {
+            this.setState(prevState => (
+                {forms: data.getforms}
+            ));
+        }).catch((error) => {
+            this.props.handleOpenSnackbar('error', 'Error: Loading roles: ' + error);
+        });
+    }
+
     componentWillMount() {
         this.loadRoles();
         this.loadCompanies();
+        this.loadForms();
     }
 
     loadRoles = () => {
@@ -381,7 +402,6 @@ class RolesForm extends React.Component {
     };
     insertRoles = () => {
         const {isEdition, query, id} = this.getObjectToInsertAndUpdate();
-
         this.setState(
             {
                 success: false,
@@ -396,6 +416,7 @@ class RolesForm extends React.Component {
                                 Id: id,
                                 Id_Company: this.state.id_company,
                                 Description: `'${this.state.description}'`,
+                                default_form_id: this.state.screen,
                                 IsActive: 1,
                                 User_Created: 1,
                                 User_Updated: 1,
@@ -485,7 +506,7 @@ class RolesForm extends React.Component {
         });
 
         return (
-            <div className={classes.container}>
+            <div>
                 <AlertDialogSlide
                     handleClose={this.handleCloseAlertDialog}
                     handleConfirm={this.handleConfirmAlertDialog}
@@ -493,8 +514,9 @@ class RolesForm extends React.Component {
                     loadingConfirm={this.state.loadingConfirm}
                     content="Do you really want to continue whit this operation?"
                 />
-                <div className={classes.divStyle}>
-                    <FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
+                <div className="row">
+                    <div className="col-md-1">
+                        <label htmlFor="id_company">Company</label>
                         <TextField
                             id="id_company"
                             select
@@ -507,8 +529,9 @@ class RolesForm extends React.Component {
                                 }
                             }}
                             onChange={(event) => this.onSelectChangeHandler(event)}
-                            helperText="Company"
                             margin="normal"
+                            className="form-control"
+                            style={{marginTop: '0px'}}
                         >
                             {this.state.company.map(({Id, Name}) => (
                                 <MenuItem key={Id} value={Id} name={Name}>
@@ -516,9 +539,9 @@ class RolesForm extends React.Component {
                                 </MenuItem>
                             ))}
                         </TextField>
-                    </FormControl>
-                    <FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
-                        <InputLabel htmlFor="description">Description</InputLabel>
+                    </div>
+                    <div className="col-md-3">
+                        <label htmlFor="description">Description</label>
                         <Input
                             id="description"
                             name="description"
@@ -528,67 +551,34 @@ class RolesForm extends React.Component {
                                     input: classes.descriptionControl
                                 }
                             }}
-                            className={classes.resize}
+                            className="form-control"
                             error={!this.state.descriptionValid}
                             value={this.state.description}
                             onBlur={(event) => this.onBlurHandler(event)}
                             onChange={(event) => this.onChangeHandler(event)}
                         />
-                    </FormControl>
-
-                    <div className={classes.root}>
-                        <div className={classes.wrapper}>
-                            <Tooltip
-                                title={
-                                    this.state.idToEdit != null &&
-                                    this.state.idToEdit != '' &&
-                                    this.state.idToEdit != 0 ? (
-                                        'Save Changes'
-                                    ) : (
-                                        'Insert Record'
-                                    )
-                                }
-                            >
-                                <div>
-                                    <Button
-                                        disabled={this.state.loading}
-                                        //	disabled={!this.state.formValid}
-                                        variant="fab"
-                                        color="primary"
-                                        className={buttonClassname}
-                                        onClick={this.addRolesHandler}
-                                    >
-                                        {success ? (
-                                            <CheckIcon/>
-                                        ) : this.state.idToEdit != null &&
-                                        this.state.idToEdit != '' &&
-                                        this.state.idToEdit != 0 ? (
-                                            <SaveIcon/>
-                                        ) : (
-                                            <AddIcon/>
-                                        )}
-                                    </Button>
-                                </div>
-                            </Tooltip>
-                            {loading && <CircularProgress size={68} className={classes.fabProgress}/>}
-                        </div>
                     </div>
-
+                
+                    <div className="col-md-3">
+                        <label htmlFor="screen">Default Screen</label>
+                        <select onChange={(event) => this.onChangeHandler(event)} value={this.state.default_form_id} name="screen" className="form-control" id="screen">
+                            <option value={null}>Select option</option>      
+                            {this.state.forms.map(form => (
+                                <option value={form.Id} key={form.Id}>{form.Name}</option>
+                            ))}                      
+                        </select>
+                    </div>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
-                            <Tooltip title={'Cancel Operation'}>
-                                <div>
-                                    <Button
-                                        disabled={this.state.loading || !this.state.enableCancelButton}
-                                        variant="fab"
-                                        color="secondary"
-                                        className={buttonClassname}
-                                        onClick={this.cancelRolesHandler}
-                                    >
-                                        <ClearIcon/>
-                                    </Button>
-                                </div>
-                            </Tooltip>
+                            <div>
+                                <button disabled={this.state.loading} onClick={this.addRolesHandler} className="btn btn-success" type="button">
+                                    Save
+                                </button>
+                                <button disabled={this.state.loading} onClick={this.cancelRolesHandler} className="btn btn-danger ml-1" type="button">
+                                    Cancel
+                                </button>
+                            </div>
+                            {loading && <CircularProgress size={68} className={classes.fabProgress}/>}
                         </div>
                     </div>
                 </div>
