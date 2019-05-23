@@ -208,7 +208,7 @@ class NewContract extends Component {
         );
     };
 
-    updateOwnerExpirationNotification = (id) => {
+    updateOwnerExpirationNotification = ({value: id}) => {
         this.setState(
             {
                 Owner_Expiration_Notification: id
@@ -218,6 +218,60 @@ class NewContract extends Component {
             }
         );
     };
+
+    updateContractTermsMonth = ({value, label}) => {
+        this.setState({
+            Contract_Term: value
+        }, () => {
+            if (this.state.Contract_Start_Date != '') {
+                let contractTermText = label.trim();
+                let expireDate = new Date(new Date(this.state.Contract_Start_Date).setMonth(new Date(this.state.Contract_Start_Date).getMonth() + parseInt(contractTermText)));
+
+                this.setState({
+                    contractExpiration: expireDate.toISOString().substring(0, 10)
+                })
+            }
+        });
+    }
+
+    updateManagementCompany = ({value, label}) => {
+        this.setState({
+            IdManagement: value,
+            Id_Entity: 0,
+            Management_Billing_Street: '',
+            Management_Billing_Zip_Code: '',
+            Management_Billing_State: 0,
+            Management_Billing_City: 0,
+        }, () => {
+            this.updateManagement(value);
+        });
+    }
+
+    updateHotel = ({value}) => {        
+        this.setState({
+            Id_Entity: value,
+            address: '',
+            zipCode: '',
+            state: 0,
+            city: 0,
+        }, () => {
+            this.updateEntity(value);
+        });
+    }
+
+    updateContractTemplate = (value) => {
+        this.setState(
+            {
+                Id_Contract_Template: value
+            },
+            () => {
+                this.validateField(
+                    'Id_Contract_Template',
+                    value
+                );
+            }
+        );
+    }
 
     //aqui esta el id
     updateIdCompany = (id) => {
@@ -1316,6 +1370,10 @@ class NewContract extends Component {
             return {value: item.Id, label: item.Name}
         });
 
+        const intervalDaysSelect = intervalDays.map(item => {
+            return {value: item.Id, label: item.Name}
+        });
+
         return (
             <div className="TabSelected-container">
                 <div className="row">
@@ -1465,19 +1523,7 @@ class NewContract extends Component {
                                                                     name="template"
                                                                     data={data.getcontracttemplate}
                                                                     showNone={false}
-                                                                    update={(value) => {
-                                                                        this.setState(
-                                                                            {
-                                                                                Id_Contract_Template: value
-                                                                            },
-                                                                            () => {
-                                                                                this.validateField(
-                                                                                    'Id_Contract_Template',
-                                                                                    value
-                                                                                );
-                                                                            }
-                                                                        );
-                                                                    }}
+                                                                    update={this.updateContractTemplate}
                                                                     value={this.state.Id_Contract_Template}
                                                                     error={!this.state.Id_Contract_TemplateValid}
                                                                 />
@@ -1500,35 +1546,23 @@ class NewContract extends Component {
                                                             data.getbusinesscompanies != null &&
                                                             data.getbusinesscompanies.length > 0
                                                         ) {
-                                                            return (
-                                                                <select
-                                                                    name="management"
-                                                                    id="management"
-                                                                    required
-                                                                    className="form-control"
+                                                            const managementCompanySelect = data.getbusinesscompanies.map(item => {
+                                                                return { value: item.Id, label: item.Name }
+                                                            });
 
-                                                                    disabled={!this.state.editing}
-                                                                    onChange={(e) => {
-                                                                        const value = e.target.value;
-                                                                        this.setState({
-                                                                            IdManagement: value,
-                                                                            Id_Entity: 0,
-                                                                            Management_Billing_Street: '',
-                                                                            Management_Billing_Zip_Code: '',
-                                                                            Management_Billing_State: 0,
-                                                                            Management_Billing_City: 0,
-                                                                        }, () => {
-                                                                            this.updateManagement(value);
-                                                                        });
+                                                            const findManagementCompanyLabel = data.getbusinesscompanies.find( item => {
+                                                                return item.Id === this.props.Id_Parent || item.Id === this.state.IdManagement;
+                                                            });
 
-                                                                    }}
-                                                                    value={this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.IdManagement}
-                                                                >
-                                                                    <option value="0">Select a Management</option>
-                                                                    {data.getbusinesscompanies.map((item) => (
-                                                                        <option value={item.Id}>{item.Name}</option>
-                                                                    ))}
-                                                                </select>
+                                                            return (                                                              
+                                                                <Select
+                                                                    options={managementCompanySelect}
+                                                                    value={{value: this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.IdManagement, label: findManagementCompanyLabel.Name}}
+                                                                    onChange={this.updateManagementCompany}
+                                                                    closeMenuOnSelect={true}
+                                                                    components={makeAnimated()}
+                                                                    isMulti={false}
+                                                                /> 
                                                             );
                                                         }
                                                         return <SelectNothingToDisplay />;
@@ -1545,33 +1579,23 @@ class NewContract extends Component {
                                                         if (loading) return <LinearProgress />;
                                                         if (error) return <p> Select a Hotel </p>;
 
-                                                        return (
-                                                            <select
-                                                                name="hotel"
-                                                                id="hotel"
-                                                                required
-                                                                className="form-control"
-                                                                onChange={(e) => {
-                                                                    const value = e.target.value;
-                                                                    this.setState({
-                                                                        Id_Entity: value,
-                                                                        address: '',
-                                                                        zipCode: '',
-                                                                        state: 0,
-                                                                        city: 0,
-                                                                    }, () => {
-                                                                        this.updateEntity(value);
-                                                                    });
-                                                                }}
+                                                        const hotelSelect = data.getbusinesscompanies.map(item => {
+                                                            return { value: item.Id, label: item.Name }
+                                                        });
 
-                                                                value={this.state.Id_Entity}
-                                                            >
-                                                                <option value="0">Select a Hotel</option>
+                                                        const findHotelLabel = data.getbusinesscompanies.find( item => {
+                                                            return item.Id === this.state.Id_Entity;
+                                                        });
 
-                                                                {data.getbusinesscompanies && data.getbusinesscompanies.map((item) => (
-                                                                    <option value={item.Id}>{item.Name}</option>
-                                                                ))}
-                                                            </select>
+                                                        return (                                                         
+                                                            <Select
+                                                                options={hotelSelect}
+                                                                value={{value: this.state.Id_Entity, label: findHotelLabel ? findHotelLabel.Name : "Select a Hotel"}}
+                                                                onChange={this.updateHotel}
+                                                                closeMenuOnSelect={true}
+                                                                components={makeAnimated()}
+                                                                isMulti={false}
+                                                            /> 
                                                         );
 
                                                     }}
@@ -1646,17 +1670,9 @@ class NewContract extends Component {
                                                 <div className="row">
                                                     <div className="col-md-6 col-lg-6">
                                                         <label>* Status</label>
-                                                        {/* <SelectForm
-                                                            data={status}
-                                                            update={this.updateStatus}
-                                                            value={parseInt(this.state.Contract_Status)}
-                                                            //error={!this.state.IsActiveValid}
-                                                            error={!this.state.Contract_StatusValid}
-                                                            showNone={false}
-                                                        /> */}
                                                         <Select
                                                             options={statusSelect}
-                                                            value={{value: this.state.property, label: status[this.state.property-1]}}
+                                                            value={{value: parseInt(this.state.Contract_Status), label: status[this.state.Contract_Status].Name}}
                                                             onChange={this.updateStatus}
                                                             closeMenuOnSelect={true}
                                                             components={makeAnimated()}
@@ -1706,36 +1722,24 @@ class NewContract extends Component {
                                                                     data.getcatalogitem != null &&
                                                                     data.getcatalogitem.length > 0
                                                                 ) {
-                                                                    return (
-                                                                        <select
+                                                                    const contractTermsSelect = data.getcatalogitem.map(item => {
+                                                                        return { value: item.Id, label: item.Name }
+                                                                    });
+
+                                                                    const findContractTermLabel = contractTermsSelect.find( item => {
+                                                                        return item.value === this.state.Contract_Term;
+                                                                    });
+
+                                                                    return (                                                                        
+                                                                        <Select
                                                                             id="contract-terms-month"
-                                                                            className={'form-control'}
-                                                                            disabled={this.state.loadingCities}
-                                                                            onChange={(event) => {
-                                                                                this.setState({
-                                                                                    Contract_Term: event.target.value
-                                                                                }, () => {
-                                                                                    console.log("this.state.Contract_Start_Date ", this.state.Contract_Start_Date)
-                                                                                    if (this.state.Contract_Start_Date != '') {
-                                                                                        let contractTerm = document.getElementById('contract-terms-month');
-                                                                                        let contractTermText = contractTerm.options[contractTerm.selectedIndex].text;
-                                                                                        let expireDate = new Date(new Date(this.state.Contract_Start_Date).setMonth(new Date(this.state.Contract_Start_Date).getMonth() + parseInt(contractTermText)));
-
-                                                                                        this.setState({
-                                                                                            contractExpiration: expireDate.toISOString().substring(0, 10)
-                                                                                        })
-                                                                                    }
-                                                                                });
-                                                                            }}
-                                                                            value={this.state.Contract_Term}
-                                                                            error={!this.state.Contract_TermValid}
-                                                                        >
-
-                                                                            {data.getcatalogitem.map((item) => (
-                                                                                <option
-                                                                                    value={item.Id}>{item.Name}</option>
-                                                                            ))}
-                                                                        </select>
+                                                                            options={contractTermsSelect}
+                                                                            value={{value: this.state.Contract_Term, label: findContractTermLabel.label}}
+                                                                            onChange={this.updateContractTermsMonth}
+                                                                            closeMenuOnSelect={true}
+                                                                            components={makeAnimated()}
+                                                                            isMulti={false}
+                                                                        />
                                                                     );
                                                                 }
                                                                 return <p>Nothing to display </p>;
@@ -1763,12 +1767,14 @@ class NewContract extends Component {
                                                     </div>
                                                     <div className="col-md-6 col-lg-6">
                                                         <label>* Owner Expiration Notice</label>
-                                                        <SelectForm
-                                                            data={intervalDays}
-                                                            update={this.updateOwnerExpirationNotification}
-                                                            value={this.state.Owner_Expiration_Notification}
-                                                            error={!this.state.Owner_Expiration_NotificationValid}
-                                                            showNone={false}
+                                                                                                               
+                                                        <Select
+                                                            options={intervalDaysSelect}
+                                                            value={{value: parseInt(this.state.Owner_Expiration_Notification), label: intervalDays[this.state.Owner_Expiration_Notification - 1].Name}}
+                                                            onChange={this.updateOwnerExpirationNotification}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
                                                         />
                                                     </div>
                                                     <div className="col-md-6 col-lg-6">
