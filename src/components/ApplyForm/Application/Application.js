@@ -16,6 +16,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
+import IndependentContractDialog from './IndependentContract/Modal';
 
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
@@ -55,6 +56,7 @@ class Application extends Component {
             birthDay: '',
             car: false,
             typeOfId: '',
+            independentContract: null,
             expireDateId: null,
             emailAddress: '',
             positionApplyingFor: 1,
@@ -134,7 +136,8 @@ class Application extends Component {
 
             openSSNDialog: false,
             //Open/Close schedule restrictions modal
-            openRestrictionsModal: false
+            openRestrictionsModal: false,
+            openIndependentContractDialog: false
         };
     }
 
@@ -224,7 +227,6 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
-                        console.log("App error ", error)
                         this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.setState({
@@ -311,6 +313,7 @@ class Application extends Component {
                                 positionApplyingFor: applicantData.positionApplyingFor,
                                 car: applicantData.car,
                                 typeOfId: applicantData.typeOfId,
+                                independentContract: applicantData.independentContract,
                                 expireDateId:
                                     applicantData.expireDateId !== null
                                         ? applicantData.expireDateId.substring(0, 10)
@@ -547,7 +550,7 @@ class Application extends Component {
 
 
 
-        if ((this.state.socialSecurityNumber || '').length === 0) {
+        if ((this.state.socialSecurityNumber || '').length === 0 && !this.state.independentContract) {
             // Show dialog
             this.setState({
                 openSSNDialog: true
@@ -569,53 +572,78 @@ class Application extends Component {
         })
     };
 
+
+
+    renderSSNDialog = () => (
+        <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
+            <DialogTitle>
+                <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
+            </DialogTitle>
+            <DialogContent>
+                You must sign an Independent Contract Recognition
+            </DialogContent>
+            <DialogActions>
+                <div className="applicant-card__footer">
+                    <button
+                        className="applicant-card__cancel-button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.handleCloseSSNDialog();
+                        }}
+                    >
+                        {spanishActions[2].label}
+                    </button>
+                    <button type="submit"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // this.submitForm();
+                            // this.props.handleContract();
+                            // this.handleCloseSSNDialog();
+                            this.setState(() => ({ openIndependentContractDialog: true, openSSNDialog: false }));
+                        }}
+                        className="applicant-card__save-button">
+                        Accept
+                    </button>
+                </div>
+            </DialogActions>
+        </Dialog>
+    );
+
+    handleVisivilityIndependentContractDialog = (status) => (e) => {
+
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        this.setState({
+            openIndependentContractDialog: status
+        })
+    };
+
+    getApplicantInformation = () => {
+        this.getApplicationById(this.props.applicationId)
+    }
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
 
-        let renderSSNDialog = () => (
-            <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
-                <DialogTitle>
-                    <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
-                </DialogTitle>
-                <DialogContent>
-                    You must sign an Independent Contract Recognition
-                </DialogContent>
-                <DialogActions>
-                    <div className="applicant-card__footer">
-                        <button
-                            className="applicant-card__cancel-button"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.handleCloseSSNDialog();
-                            }}
-                        >
-                            {spanishActions[2].label}
-                        </button>
-                        <button type="submit"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.submitForm();
-                                this.props.handleContract();
-                                this.handleCloseSSNDialog();
-                            }}
-                            className="applicant-card__save-button">
-                            Accept
-                        </button>
-                    </div>
-                </DialogActions>
-            </Dialog>
-        );
-
-
-
         return (
             <div className="Apply-container--application">
                 {
-                    renderSSNDialog()
+                    this.renderSSNDialog()
                 }
+
+                <IndependentContractDialog
+                    open={this.state.openIndependentContractDialog}
+                    handleVisibility={this.handleVisivilityIndependentContractDialog}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    applicationId={this.props.applicationId}
+                    getApplicantInformation={this.getApplicantInformation} />
+
                 <form
                     className="general-info-apply-form"
                     id="general-info-form"
