@@ -569,6 +569,34 @@ class Application extends Component {
                 <div className="applicant-card">
                     <div className="applicant-card__header">
                         <span className="applicant-card__title">{menuSpanish[0].label}</span>
+                        
+            
+<div className="applicant-card__edit-button">
+                                        <div className="onoffswitch">
+                                            <input
+                                                id="carSwitch"
+                                                className="onoffswitch-checkbox"
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        car: event.target.checked
+                                                    });
+                                                }}
+                                                checked={this.state.car}
+                                                value={this.state.car}
+                                                name="car"
+                                                type="checkbox"
+                                                disabled={!this.state.editing}
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="10"
+                                            />
+                                            <label className="onoffswitch-label" htmlFor="carSwitch">
+                                                <span className="onoffswitch-inner" />
+                                                <span className="onoffswitch-switch" />
+                                            </label>
+                                        </div>
+                                    </div>
+
                         {!this.state.editing && <button
                             className="applicant-card__edit-button"
                             onClick={() => {
@@ -578,7 +606,7 @@ class Application extends Component {
                             }}
                             disabled={this.state.searchigZipcode}
                         >
-                            {spanishActions[1].label} <i className="far fa-edit" />
+                            {spanishActions[1].label}<i className="far fa-edit" />
                         </button>
                         }
                     </div>

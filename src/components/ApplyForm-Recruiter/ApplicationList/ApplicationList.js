@@ -60,6 +60,16 @@ class ApplicationList extends Component {
 				cellPhone
 				isLead
 				idWorkOrder
+				statusCompleted
+				dateCreation
+				immediately
+				optionHearTumi
+				eeoc
+				exemptions
+				area
+				hireType
+				gender
+				marital
 				recruiter{
 					Full_Name
 				}
@@ -187,7 +197,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} fetchPolicy="no-cache" pollInterval={300}>
+					<Query query={this.GET_APPLICATION_QUERY} fetchPolicy="no-cache">
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
@@ -207,7 +217,7 @@ class ApplicationList extends Component {
 									if (this.state.filterText === '') {
 										return true;
 									}
-									console.log("aqui estamos en aplicant ", data.applications);
+									
 									if (
 										(_.firstName +
 											_.middleName +
