@@ -24,7 +24,7 @@
 	li {
 		padding: 5px !important;
 	}
-}
+} 
 
 .cell-align-right {
 	text-align: right !important;
@@ -78,27 +78,20 @@
 		padding-top: 0;
 	}
 
+	&-forcedTop{
+		z-index: 1000;
+	}
+
 	&-xScroll{
 		overflow-x: auto;
 	}
 
-	// forces the table wrapped by this class to display as block and scroll horizontally
-	&-forcedResponsiveTable{
-		// & > table[class^="MuiTable-root-"]{
-		// 	display: block !important;
-		// 	min-width: 0 !important;
-		// 	overflow-x: auto;
-		// 	width: 100%;
-		// }		
-		overflow-x: auto;
+	&-fullWidth {
+		width: 100%;
 	}
 
-	@include media-breakpoint-up(xl){
-		// resets to the default display table
-		// &-forcedResponsiveTable{
-		// 	& > table[class^="MuiTable-root-"]{
-		// 		display: table !important;		 		
-		// 	}
-		// }
-	}
+	// forces the table wrapped by this class to display as block and scroll horizontally
+	&-forcedResponsiveTable{			
+		overflow-x: auto;
+	}	
 }

@@ -19,6 +19,7 @@ import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
 import InputForm from "../ui-components/InputForm/InputForm";
+
 import {
     GET_CONTACTS_IN_USER_DIALOG,
     GET_DEPARTMENTS_QUERY,
@@ -26,7 +27,11 @@ import {
     GET_HOTELS_QUERY,
     GET_ROLES_QUERY,
 } from "../ApplyForm/Application/ProfilePreview/Queries";
+
 import { GET_LANGUAGES_QUERY } from "../ApplyForm-Recruiter/Queries";
+
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
 
 const styles = theme => ({
     container: {
@@ -1067,6 +1072,69 @@ class Employees extends Component {
         })
     }
 
+    updateHotel = ({value}) => {
+        this.setState({
+            hotelEdit: value
+        }, _ => {
+            this.setHotelName();
+        });
+
+        this.setState({
+            departmentEdit: "",
+            contactTitleEdit: "",
+        });
+
+        if (value === "null" || value === '') {
+            this.fetchDepartments();
+        } else {
+            this.fetchDepartments(value);
+        }
+    }
+
+    updatePosition = ({value}) => {
+        this.setState({
+            contactTitleEdit: value
+        })
+    }
+
+    findDepartmentLabel = departments => {
+        let depLabel = 'Select an Option';
+
+        if(!this.state.departmentEdit)
+            return depLabel;
+
+        let found = departments.find(item => item.value === this.state.departmentEdit);
+        depLabel = found ? found.label : depLabel;
+
+        return depLabel;
+    }
+
+    findPositionLabel = positions => {
+        // console.log(positions);
+        let posLabel = 'Select an Option';
+
+        if(!this.state.contactTitleEdit)
+            return posLabel;
+
+        let found = positions.find(item => item.value === this.state.contactTitleEdit);        
+
+        posLabel = found ? found.label : posLabel;
+
+        return posLabel;
+    }
+
+    updateDepartment = ({value}) => {
+        this.setState({
+            departmentEdit: value
+        })
+    }
+
+    setHotelName = _ => {
+        this.setState({
+            hotelName: this.state.hotels.find(item => item.Id === this.state.hotelEdit).Name.trim()
+        });
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -1331,6 +1399,26 @@ class Employees extends Component {
             </Dialog>
         );
         var loading = this.state.progressEditEmployee || this.state.progressNewEmployee;
+        
+        const hotelList = this.state.hotels.map(item => {
+            return (
+                {value: item.Id, label: item.Name.trim()}
+            )
+        });
+
+        const departmentList = this.state.departments.map(item => {
+            return (
+                {value: item.Id, label: item.Name.trim()}
+            )
+        }); 
+
+        let positionList = [];
+        
+        this.state.titles.map(item => {
+        if (this.state.hotelEdit === item.Id_Entity) {
+                positionList.push({value:item.Id, label: item.Position.trim()});
+            }
+        });
 
         return (
 
@@ -1347,6 +1435,7 @@ class Employees extends Component {
                     open={this.state.openModalEdit}
                     onClose={this.handleCloseModalEdit}
                     maxWidth="xl"
+                    style={{ minHeight: "400px" }}
                 >
                     <form
                         id="employee-edit-form"
@@ -1358,7 +1447,7 @@ class Employees extends Component {
                             </div>
                         </DialogTitle>
                         <DialogContent>
-                            <div className="container EmployeeModal-container">
+                            <div className="container EmployeeModal-container" style={{ minHeight: "250px" }}>
 
                                 <div className="row Employees-row">
                                     <div className="col">
@@ -1430,82 +1519,38 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="">Hotel</label>
-                                        <select
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    hotelEdit: e.target.value
-                                                });
-                                                this.setState({
-                                                    departmentEdit: "",
-                                                    contactTitleEdit: "",
-                                                });
-
-                                                if (e.target.value == "null") {
-                                                    this.fetchDepartments();
-                                                } else {
-                                                    this.fetchDepartments(e.target.value);
-                                                }
-                                            }}
-                                            value={this.state.hotelEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-                                                this.state.hotels.map(item => {
-                                                    return (
-                                                        <option value={item.Id}>{item.Name.trim()}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
+                                        <label htmlFor="">Hotel</label>     
+                                        <Select
+                                            options={hotelList}
+                                            value={{value: this.state.hotelEdit, label: this.state.hotelEdit ? hotelList.find(i => i.value === this.state.hotelEdit).label : 'Select Option'}}
+                                            onChange={this.updateHotel}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
+                                        />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="">Department</label>
-                                        <select
+                                        <label htmlFor="">Department</label>                                                                                
+                                        <Select
+                                            options={departmentList}
+                                            value={{value: this.state.departmentEdit, label: this.findDepartmentLabel(departmentList)}}
+                                            onChange={this.updateDepartment}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
                                             name="departmentEmployee"
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    departmentEdit: e.target.value
-                                                })
-
-                                            }}
-                                            value={this.state.departmentEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-
-                                                this.state.departments.map(item => {
-                                                    return (
-                                                        <option value={item.Id}>{item.Name.trim()}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
+                                        />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="">Position</label>
-                                        <select
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    contactTitleEdit: e.target.value
-                                                })
-                                            }}
-                                            value={this.state.contactTitleEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-                                                this.state.titles.map(item => {
-                                                    if (this.state.hotelEdit == item.Id_Entity) {
-                                                        return (
-                                                            <option value={item.Id}>{item.Position.trim()}</option>
-                                                        )
-                                                    }
-                                                })
-                                            }
-                                        </select>
+                                        <label htmlFor="">Position</label>                                       
+                                        <Select
+                                            options={positionList}
+                                            value={{value: this.state.contactTitleEdit, label: this.findPositionLabel(positionList)}}
+                                            onChange={this.updatePosition}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -1567,7 +1612,6 @@ class Employees extends Component {
                             // this.setState({ data: data.employees });
                            
                             let dataEmployees = data.employees.filter((_, i) => {
-                                console.log("data.employees ", _.firstName + _.lastName)
                                 if (this.state.filterText === "") {
                                     return true;
                                 }
@@ -1590,7 +1634,6 @@ class Employees extends Component {
                                                         }}
                                                         update={(id, row) => {
                                                             this.updateEmployeeById(id);
-                                                            console.log(row.idEntity)
                                                             this.setState({
                                                                 firstNameEdit: row.firstName,
                                                                 lastNameEdit: row.lastName,

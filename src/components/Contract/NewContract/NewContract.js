@@ -259,7 +259,7 @@ class NewContract extends Component {
         });
     }
 
-    updateContractTemplate = (value) => {
+    updateContractTemplate = ({value}) => {
         this.setState(
             {
                 Id_Contract_Template: value
@@ -1518,14 +1518,25 @@ class NewContract extends Component {
                                                             data.getcontracttemplate != null &&
                                                             data.getcontracttemplate.length > 0
                                                         ) {
-                                                            return (
-                                                                <SelectFormContractTemplate
-                                                                    name="template"
-                                                                    data={data.getcontracttemplate}
-                                                                    showNone={false}
-                                                                    update={this.updateContractTemplate}
-                                                                    value={this.state.Id_Contract_Template}
-                                                                    error={!this.state.Id_Contract_TemplateValid}
+                                                            console.log(data.getcontracttemplate)
+                                                            console.log(this.state.Id_Contract_Template)
+
+                                                            const selectContractTemplates = data.getcontracttemplate.map(item => {
+                                                                return { value: item.Id, label: item.Name }
+                                                            });
+
+                                                            const findContractTemplate = data.getcontracttemplate.find(item => {
+                                                                return item.Id === this.state.Id_Contract_Template;
+                                                            })
+
+                                                            return (                                                                
+                                                                <Select
+                                                                    options={selectContractTemplates}
+                                                                    value={{value: this.state.Id_Contract_Template, label: findContractTemplate.Name}}
+                                                                    onChange={this.updateContractTemplate}
+                                                                    closeMenuOnSelect={true}
+                                                                    components={makeAnimated()}
+                                                                    isMulti={false}
                                                                 />
                                                             );
                                                         }

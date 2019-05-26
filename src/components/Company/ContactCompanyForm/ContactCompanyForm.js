@@ -1106,7 +1106,7 @@ class ContactcontactForm extends React.Component {
 			}
 		);
 	};
-	updateType = (id) => {
+	updateType = ({value: id}) => {
 		this.setState(
 			{
 				type: id
@@ -1155,6 +1155,10 @@ class ContactcontactForm extends React.Component {
 		const selectTitles = this.state.titles.map(item => {
 			return { value: item.Name, label: item.Name }
 		});
+
+		const selectContactTypes = this.state.contactTypes.map(item => {
+			return { value: item.Id, label: item.Name }
+		})
 
 		return (
 			<div className="TabSelected-container">
@@ -1208,7 +1212,7 @@ class ContactcontactForm extends React.Component {
 								<div className="row">
 									<div className="col-md-12 col-lg-4">
 										<label>* Contact Type</label>
-										<SelectForm
+										{/* <SelectForm
 											id="type"
 											name="type"
 											data={this.state.contactTypes}
@@ -1217,6 +1221,14 @@ class ContactcontactForm extends React.Component {
 											//noneName="Employee"
 											error={!this.state.typeValid}
 											value={this.state.type}
+										/> */}
+										<Select
+											options={selectContactTypes}
+											value={{value: this.state.type, label: selectContactTypes[this.state.type - 1].label}}
+											onChange={this.updateType}
+											closeMenuOnSelect={true}
+											components={makeAnimated()}
+											isMulti={false}
 										/>
 									</div>
 									<div className="col-md-12 col-lg-4">

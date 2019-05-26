@@ -19,6 +19,8 @@ import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNoth
 import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import DatePicker from "react-datepicker";
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
 import "react-datepicker/dist/react-datepicker.css";
 
 const CustomTableCell = withStyles((theme) => ({
@@ -40,6 +42,15 @@ class WorkOrdersTable extends Component {
         id: '',
         endDateDisabled: true
     }
+
+    statusFilterList = [
+        { value: 1, label: 'Open' },
+        { value: null, label: 'Status (All)' },
+        { value: 2, label: 'Completed' },
+        { value: 0, label: 'Cancelled' },
+        { value: 4, label: 'Openings' },
+    ]
+
     constructor(props) {
         super(props);
         this.state = {
@@ -450,10 +461,24 @@ class WorkOrdersTable extends Component {
         return true;
     }
 
+    getStatusFilterValue = _id => {
+        const found = this.getStatusFilterValue.find(item => {
+            return item.value === _id;
+        });
+    }
+
+    updateStatusFilter = ({value}) => {
+        if (value == "null") {
+            this.handleFilterValue(null);
+        } else {
+            this.handleFilterValue(value);
+        }
+    }
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
-        let isLoading = this.state.loading;
+        let isLoading = this.state.loading;        
 
         return (
             <div className="card">
@@ -511,22 +536,38 @@ class WorkOrdersTable extends Component {
                                     </div>
                                 </div>
                         
-                                <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control WorkOrders-filter" onChange={(event) => {
-                                    if (event.target.value == "null") {
-                                        this.handleFilterValue(null);
-                                    } else {
-                                        this.handleFilterValue(event.target.value);
-                                    }
-                                    // this.handleFilterValue
-                                }}
+                                {/* <select 
+                                    name="filterValue" 
+                                    id="" 
+                                    disabled={this.state.propsStatus} 
+                                    className="form-control WorkOrders-filter" 
+                                    onChange={(event) => {
+                                        if (event.target.value == "null") {
+                                            this.handleFilterValue(null);
+                                        } else {
+                                            this.handleFilterValue(event.target.value);
+                                        }
+                                    }}
+
                                     value={this.state.status}>
                                     <option value={1}>Open</option>
                                     <option value={null}>Status (All)</option>
                                     <option value={2}>Completed</option>
                                     <option value={0}>Cancelled</option>
                                     <option value={4}>Openings</option>
-
-                                </select>
+                                </select> */}
+                                <div className="input-group flex-nowrap WorkOrders-filter">
+                                    <Select
+                                        options={this.statusFilterList}
+                                        value={this.getStatusFilterValue}
+                                        onChange={this.updateStatusFilter}
+                                        closeMenuOnSelect={true}
+                                        components={makeAnimated()}
+                                        isMulti={false}
+                                        isDisabled={this.state.propsStatus}
+                                        className='tumi-fullWidth'
+                                    />
+                                </div>
                     
                                 <button class="btn btn-outline-secondary btn-not-rounded WorkOrders-filter clear-btn" type="button" onClick={this.clearInputDates}>
                                     <i class="fas fa-filter"></i> Clear

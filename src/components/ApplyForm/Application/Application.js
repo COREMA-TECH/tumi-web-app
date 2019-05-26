@@ -17,7 +17,6 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
 
-
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
 }
@@ -569,6 +568,36 @@ class Application extends Component {
         })
     };
 
+    updateOptionHearTumi = ({value}) => {
+        this.setState({
+            optionHearTumi: value
+        });
+    }
+
+    findLabel = (id, options) => {
+        if(!id || id === '' || id === null || options.length === 0)
+            return 'Select an option';        
+
+        return options.find(item => item.value === id).label;        
+    }
+
+    findPositionApplyingLabel = (id, options) => {
+        if(!id || id === '' || id === null || options.length === 0)
+            return 'Select an Option';        
+                    
+        let found = options.find(item => item.value === id);
+        
+        if(!found){
+            this.setState({
+                positionApplyingFor: 0
+            });
+
+            return 'Open Position';
+        }
+
+        return found.label;
+    }
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
@@ -609,8 +638,37 @@ class Application extends Component {
             </Dialog>
         );
 
+        const hearTumiOptions = [
+            {
+                value: 0,
+                label: 'Select an option'
+            },
 
+            {
+                value: 1,
+                label: 'facebook'
+            },
 
+            {
+                value: 2,
+                label: 'newspaper'
+            },
+
+            {
+                value: 3,
+                label: 'employee'
+            },
+
+            {
+                value: 4,
+                label: 'recruiter'
+            },
+        ];
+
+        const positionApplyingList = this.state.dataWorkOrder.lenght > 0 ? this.state.dataWorkOrder.map(item => { return {value:item.id, label:`${item.position.Position} ${item.BusinessCompany.Code.trim()}`}                                                                             })
+                                                                         :  [{  value: null, label: 'Select an Option' }, {  value: 0, label: 'Open Position'  }];
+
+      
         return (
             <div className="Apply-container--application">
                 {
@@ -959,23 +1017,16 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[27].label}
                                                 </span>
-                                                <select
-                                                    name="optionHearTumi"
-                                                    id="optionHearTumi"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            optionHearTumi: e.target.value
-                                                        });
-                                                    }}
-                                                >
-                                                    <option value="">Select an option</option>
-                                                    <option value="1">facebook</option>
-                                                    <option value="2">newspaper</option>
-                                                    <option value="3">employee</option>
-                                                    <option value="4">recruiter</option>
-                                                </select>
+                                                
+                                                <Select
+                                                    options={hearTumiOptions}
+                                                    value={{value: this.state.optionHearTumi, label: this.findLabel(this.state.optionHearTumi, hearTumiOptions)}}
+                                                    onChange={this.updateOptionHearTumi}
+                                                    closeMenuOnSelect={true}
+                                                    components={makeAnimated()}
+                                                    isMulti={false}
+                                                    isDisabled={!this.state.editing}
+                                                />
                                             </div>
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
@@ -1085,6 +1136,16 @@ class Application extends Component {
                                                             value={item.id} key={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
                                                     ))}
                                                 </select>
+
+                                                {/* <Select
+                                                    options={positionApplyingList}
+                                                    value={{value: this.state.positionApplyingFor, label: this.findPositionApplyingLabel(this.state.positionApplyingFor, positionApplyingList)}}
+                                                    onChange={this.updatePositionApplyingFor}
+                                                    closeMenuOnSelect={true}
+                                                    components={makeAnimated()}
+                                                    isMulti={false}
+                                                    isDisabled={!this.state.editing}
+                                                /> */}
                                             </div>
 
                                             <div className="col-md-6">
