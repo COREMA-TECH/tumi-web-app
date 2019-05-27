@@ -43,15 +43,15 @@ class BankInfo extends Component{
                         <div className="col-md-12 col-lg-6 col-xl-8">
                             <div className="BankInfo-inputWrapper">
                                 <label htmlFor="bankName">* Bank Name</label>
-                                <input type="text" name="bankName" value={this.props.bankName} id="Bank Name" className="form-control" onChange={this.props.handleOnChange}/>
+                                <input type="text" name="bankName" value={this.props.bankName} id="Bank Name" className="form-control" onChange={this.props.handleChange}/>
                             </div>
                             <div className="BankInfo-inputWrapper">
                                 <label htmlFor="routingName">* Routing Name</label>
-                                <input type="text" name="routingName" value={this.props.routingName} id="Routing Name" className="form-control" onChange={this.props.handleOnChange}/>
+                                <input type="text" name="routingName" value={this.props.routingName} id="Routing Name" className="form-control" onChange={this.props.handleChange}/>
                             </div>
                             <div className="BankInfo-inputWrapper">
                                 <label htmlFor="account">* Account Number</label>
-                                <input type="text" name="account" value={this.props.account} id="Account Number" className="form-control" onChange={this.props.handleOnChange}/>
+                                <input type="number" name="account" value={this.props.account} id="Account Number" className="form-control" onChange={this.props.handleChange}/>
                             </div>
                         </div>                        
                         <div className="col-md-12 col-lg-6 col-xl-4">
@@ -59,12 +59,12 @@ class BankInfo extends Component{
 
                             <div className="tumi-row-centered BankInfo-accountType">
                                 <div className="tumi-row-centered BankInfo-checking">
-                                    <input type="radio" id="checking" name="accountType" value="checking" onChange={this.props.handleOnChange}/>
+                                    <input type="radio" id="checking" name="accountType" value="checking" onChange={this.props.handleChange}/>
                                     <label className='mt-0' for="checking">Checking</label>
                                 </div>
 
                                 <div className="tumi-row-centered BankInfo-saving">
-                                    <input type="radio" id="Saving" name="accountType" value="saving" onChange={this.props.handleOnChange}/>
+                                    <input type="radio" id="Saving" name="accountType" value="saving" onChange={this.props.handleChange}/>
                                     <label className='mt-0' for="Saving">Saving</label>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@ class BankInfo extends Component{
                                         <div class="input-group-prepend">
                                             <input type="checkbox" name="quantity" checked={!this.state.quantityDisabled} id="quantity" onChange={this.enableQuantity}/>
                                         </div>
-                                        <input type="text" name="amount" value={this.props.amount} class="form-control" disabled={this.state.quantityDisabled} onChange={this.props.handleOnChange}/>
+                                        <input type="text" name="amount" value={this.props.amount} class="form-control" disabled={this.state.quantityDisabled} onChange={this.props.handleChange}/>
                                     </div>
                                 </div>
 
@@ -95,7 +95,7 @@ class BankInfo extends Component{
                                         <div class="input-group-prepend">
                                             <input type="checkbox" name="percentage" checked={!this.state.percentageDisabled} id="percentage" onChange={this.enablePercentage}/>
                                         </div>
-                                        <input type="text" name="percentage" value={this.props.percentage} class="form-control" disabled={this.state.percentageDisabled} onChange={this.props.handleOnChange}/>
+                                        <input type="text" name="percentage" value={this.props.percentage} class="form-control" disabled={this.state.percentageDisabled} onChange={this.props.handleChange}/>
                                     </div>
                                 </div>
                             </div>
