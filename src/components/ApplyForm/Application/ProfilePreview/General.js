@@ -454,6 +454,7 @@ class General extends Component {
                         }, () => {
                             //this.getApplicationEmployees(id);
                             //   this.fetchDepartments();
+                            console.log("aqui esta la infpsssasad ", this.state.data)
                             this.setState({
                                 email: this.state.data.emailAddress,
                                 number: this.state.data.cellPhone,
@@ -465,7 +466,7 @@ class General extends Component {
                                 directDeposit: this.state.data.directDeposit,
                                 isActive:this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
-                                EmployeeId: this.state.data.employee? this.state.data.employee.id : 0,
+                                EmployeeId: this.state.data.employee? this.state.data.employee.EmployeeId : 999999,
                                 idealJobs: this.state.data.idealJobs
                             })
                         });
