@@ -186,7 +186,6 @@ class ApplicationList extends Component {
 	}
 	handleDepartmentChange = (department) => {
 		this.setState(() => ({ department }));
-		console.log(this.state.department);
 	}
 	handleStatusChange = (statu) => {
 		this.setState(() => ({ statu }));

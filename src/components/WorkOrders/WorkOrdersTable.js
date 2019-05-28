@@ -475,10 +475,41 @@ class WorkOrdersTable extends Component {
         }
     }
 
+    handleStateFilterChange = ({value}) => {
+        this.setState({
+            state: parseInt(value)
+        }, () => { this.getWorkOrders() })
+    }
+
+    getStateFilterOptions = _ => {
+        let options = this.state.states.map(state => {
+            return {value: state.Id, label: state.Name}
+        });
+
+        options = [{value: 0, label: 'State'}, ...options];
+
+        return options;
+    }
+
+    findSelectedState = stateId => {
+        const defValue = {value: 0, label: "Select option"};
+
+        if(stateId === 'null' || stateId === 0)
+            return defValue;
+
+        const found = this.state.states.find(item => {
+            return item.Id === stateId;
+        });
+
+        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
+    }
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
-        let isLoading = this.state.loading;        
+        let isLoading = this.state.loading;  
+        
+        const stateFilterOptions = this.getStateFilterOptions();
 
         return (
             <div className="card">
@@ -497,16 +528,32 @@ class WorkOrdersTable extends Component {
                         </div>
                         <div className="col-md-9 col-xl-8 offset-xl-2 mb-2">
                             <div className="WorkOrders-filters">
-                                <select name="state" id="" value={this.state.state} className="form-control WorkOrders-filter" onChange={(e) => {
-                                    this.setState({
-                                        state: parseInt(e.target.value)
-                                    }, () => { this.getWorkOrders() })
-                                }}>
-                                    <option value="0">State</option>
-                                    {this.state.states.map(state => {
-                                        return <option value={state.Id} key={state.Id}>{state.Name}</option>
-                                    })}
-                                </select>
+                                <div className="input-group flex-nowrap WorkOrders-filter">
+                                    {/* <select 
+                                        name="state" id="" 
+                                        value={this.state.state} 
+                                        className="form-control WorkOrders-filter" 
+                                        onChange={(e) => {
+                                        this.setState({
+                                            state: parseInt(e.target.value)
+                                        }, () => { this.getWorkOrders() })
+                                    }}>
+                                        <option value="0">State</option>
+                                        {this.state.states.map(state => {
+                                            return <option value={state.Id} key={state.Id}>{state.Name}</option>
+                                        })}
+                                    </select> */}
+
+                                    <Select
+                                        options={stateFilterOptions}
+                                        value={this.findSelectedState(this.state.state)}
+                                        onChange={this.handleStateFilterChange}
+                                        closeMenuOnSelect={true}
+                                        components={makeAnimated()}
+                                        isMulti={false}
+                                        className='tumi-fullWidth'
+                                    />
+                                </div>
 
                                 <div class="input-group flex-nowrap WorkOrders-filter">
                                     <DatePicker
@@ -534,28 +581,8 @@ class WorkOrdersTable extends Component {
                                             <i class="far fa-calendar"></i>
                                         </label>
                                     </div>
-                                </div>
-                        
-                                {/* <select 
-                                    name="filterValue" 
-                                    id="" 
-                                    disabled={this.state.propsStatus} 
-                                    className="form-control WorkOrders-filter" 
-                                    onChange={(event) => {
-                                        if (event.target.value == "null") {
-                                            this.handleFilterValue(null);
-                                        } else {
-                                            this.handleFilterValue(event.target.value);
-                                        }
-                                    }}
-
-                                    value={this.state.status}>
-                                    <option value={1}>Open</option>
-                                    <option value={null}>Status (All)</option>
-                                    <option value={2}>Completed</option>
-                                    <option value={0}>Cancelled</option>
-                                    <option value={4}>Openings</option>
-                                </select> */}
+                                </div>                       
+                                
                                 <div className="input-group flex-nowrap WorkOrders-filter">
                                     <Select
                                         options={this.statusFilterList}
