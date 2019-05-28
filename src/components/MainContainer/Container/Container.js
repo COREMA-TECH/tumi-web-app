@@ -143,6 +143,8 @@ class Container extends Component {
 					this.setState({
 						roles: data.roles,
 						loading: false
+					}, () => {
+						this.getFormsInfo()
 					});
 				}).catch((error) => {
 					this.setState({
