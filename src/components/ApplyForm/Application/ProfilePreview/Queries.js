@@ -26,6 +26,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             }
             employee {       
                 id       
+                EmployeeId
                 Employees       
                 {         
                     id         

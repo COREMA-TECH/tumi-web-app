@@ -225,17 +225,17 @@ class CustomizedTabs extends React.Component {
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
+                            label={applyTabs[9].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[7].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[8].label}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
-                            label={applyTabs[9].label}
                         />
                         {
                             this.state.independentContract ? (

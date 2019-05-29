@@ -101,6 +101,7 @@ class Application extends Component {
         insertDialogLoading: false,
         graduated: false,
         previousEmploymentPhone: '',
+        sendInterview:false,
 
         // Application id property state is used to save languages, education, mulitary services, skills
         applicationId: null,
@@ -222,7 +223,8 @@ class Application extends Component {
                                     generalComment: this.state.generalComment,
                                     isLead: true,
                                     idRecruiter: null,
-                                    UserId: localStorage.getItem('LoginId')
+                                    UserId: localStorage.getItem('LoginId'),
+                                    sendInterview: this.state.sendInterview
                                 }
                             }
                         })
@@ -309,7 +311,8 @@ class Application extends Component {
                                     convictedExplain: this.state.convictedExplain,
                                     generalComment: this.state.generalComment,
                                     isLead: true,
-                                    idRecruiter: parseInt(this.state.idRecruiter)
+                                    idRecruiter: parseInt(this.state.idRecruiter),
+                                    sendInterview:this.state.sendInterview
                                 }
                             }
                         })
@@ -408,6 +411,7 @@ class Application extends Component {
                                     positionApplyingFor: applicantData.positionApplyingFor == null ? 0 : applicantData.positionApplyingFor,
                                     car: applicantData.car,
                                     generalComment: applicantData.generalComment,
+                                    sendInterview:applicantData.sendInterview,
                                     editing: false
                                 },
                                 () => {
@@ -569,6 +573,7 @@ class Application extends Component {
                 <div className="applicant-card">
                     <div className="applicant-card__header">
                         <span className="applicant-card__title">{menuSpanish[0].label}</span>
+                        
                         {!this.state.editing && <button
                             className="applicant-card__edit-button"
                             onClick={() => {
@@ -578,13 +583,50 @@ class Application extends Component {
                             }}
                             disabled={this.state.searchigZipcode}
                         >
-                            {spanishActions[1].label} <i className="far fa-edit" />
+                            {spanishActions[1].label}<i className="far fa-edit" />
                         </button>
                         }
                     </div>
                     <br />
                     <div className="card-body">
                         <div className="row">
+                        <div className="col-md-12 col-lg-6"></div>
+                        <div className="col-md-12 col-lg-6"><div className="row">
+                        <div className="col-md-6">
+                            </div>
+                                <div className="col-md-6">
+                                        <span className="primary applicant-card__label ">
+                                           Send to Interview
+                                        </span>
+                                        <div className="onoffswitch">
+                                            <input
+                                                id="sendInterview"
+                                                className="onoffswitch-checkbox"
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        sendInterview: event.target.checked
+                                                    });
+                                                }}
+                                                checked={this.state.sendInterview}
+                                                value={this.state.sendInterview}
+                                                name="sendInterview"
+                                                type="checkbox"
+                                                disabled={!this.state.editing}
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="10"
+                                            />
+                                            <label className="onoffswitch-label" htmlFor="sendInterview">
+                                                <span className="onoffswitch-inner" />
+                                                <span className="onoffswitch-switch" />
+                                            </label>
+                                        </div>
+                                    </div>
+                              </div>
+                        </div>
+
+                        
+
                             <div className="col-md-12 col-lg-6 form-section-1">
                                 <div className="row">
                                     <div className="col-md-6">
@@ -741,6 +783,7 @@ class Application extends Component {
                                         placeholder="99999-99999"
                                         mask="99999-99999"
                                         updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
+                                   
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[23].label}
@@ -862,6 +905,8 @@ class Application extends Component {
                                             className="form-control textarea-apply-form"
                                         />
                                     </div>
+
+                                  
                                 </div>
                             </div>
                         </div>

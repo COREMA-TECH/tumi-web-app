@@ -15,17 +15,20 @@ class PunchesReportDetail extends Component {
     getFilters = () => {
         var filters = {}, { startDate, endDate } = this.state, { EmployeeId } = this.props;
 
+        console.log("getFilters getFilters ", EmployeeId)
+        console.log("getFilters getFilters 2 ", this.props.EmployeeId)
         if (startDate)
             filters = { ...filters, startDate };
         if (endDate)
             filters = { ...filters, endDate };
-        if (EmployeeId)
+        if (EmployeeId>=0)
             filters = { ...filters, EmployeeId };
 
         return filters;
     }
 
     getPunchesReport = () => {
+        console.log('estoy aqui en el punches report ',this.props )
         this.setState(() => ({ loadingReport: true }), () => {
             this.props.client
                 .query({

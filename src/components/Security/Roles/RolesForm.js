@@ -25,6 +25,9 @@ import withGlobalContent from 'Generic/Global';
 
 import { GET_FORMS_QUERY } from './Queries';
 
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
+
 const styles = (theme) => ({
     container: {
         display: 'flex',
@@ -107,6 +110,11 @@ class RolesForm extends React.Component {
                 Id_Company
                 Description
                 IsActive
+                default_form_id
+            }
+            getforms {
+                Id
+                Name
             }
         }
     `;
@@ -288,7 +296,7 @@ class RolesForm extends React.Component {
     handleConfirmAlertDialog = () => {
         this.deleteRoles();
     };
-    onEditHandler = ({Id, Id_Company, Description}) => {
+    onEditHandler = ({Id, Id_Company, Description, default_form_id, formName}) => {
         this.setState(
             {
                 idToEdit: Id,
@@ -302,7 +310,11 @@ class RolesForm extends React.Component {
                 id_companyHasValue: true,
                 descriptionHasValue: true,
 
-                buttonTitle: this.TITLE_EDIT
+                buttonTitle: this.TITLE_EDIT,
+                formSelected: {
+                    value: default_form_id,
+                    label: formName
+                }
             },
             () => {
                 this.focusTextInput();
@@ -320,9 +332,14 @@ class RolesForm extends React.Component {
             variables: {},
             fetchPolicy: 'no-cache'
         }).then(({data}) => {
-            this.setState(prevState => (
-                {forms: data.getforms}
-            ));
+            data = data.getforms;
+            data.map(item => {
+                this.setState(prevState => ({
+                    forms: [...prevState.forms, {
+                        value: item.Id, label: item.Name.trim(), key: item.Id
+                    }]
+                }))
+            });
         }).catch((error) => {
             this.props.handleOpenSnackbar('error', 'Error: Loading roles: ' + error);
         });
@@ -331,7 +348,6 @@ class RolesForm extends React.Component {
     componentWillMount() {
         this.loadRoles();
         this.loadCompanies();
-        this.loadForms();
     }
 
     loadRoles = () => {
@@ -345,7 +361,8 @@ class RolesForm extends React.Component {
                 if (data.data.getroles != null) {
                     this.setState(
                         {
-                            data: data.data.getroles
+                            data: data.data.getroles,
+                            dataForms: data.data.getforms
                         },
                         () => {
                             this.resetState();
@@ -375,6 +392,7 @@ class RolesForm extends React.Component {
                         },
                         () => {
                             this.resetState();
+                            this.loadForms();
                         }
                     );
                 } else {
@@ -416,7 +434,7 @@ class RolesForm extends React.Component {
                                 Id: id,
                                 Id_Company: this.state.id_company,
                                 Description: `'${this.state.description}'`,
-                                default_form_id: this.state.screen,
+                                default_form_id: this.state.formSelected.value,
                                 IsActive: 1,
                                 User_Created: 1,
                                 User_Updated: 1,
@@ -497,6 +515,10 @@ class RolesForm extends React.Component {
         this.resetState();
     };
 
+    handleChangeForms = (formSelected) => {
+        this.setState({ formSelected });
+    };
+
     render() {
         const {loading, success} = this.state;
         const {classes} = this.props;
@@ -561,12 +583,13 @@ class RolesForm extends React.Component {
                 
                     <div className="col-md-3">
                         <label htmlFor="screen">Default Screen</label>
-                        <select onChange={(event) => this.onChangeHandler(event)} value={this.state.default_form_id} name="screen" className="form-control" id="screen">
-                            <option value={null}>Select option</option>      
-                            {this.state.forms.map(form => (
-                                <option value={form.Id} key={form.Id}>{form.Name}</option>
-                            ))}                      
-                        </select>
+                        <Select
+                            options={this.state.forms}
+                            value={this.state.formSelected}
+                            onChange={this.handleChangeForms}
+                            closeMenuOnSelect={false}
+                            components={makeAnimated()}
+                        />
                     </div>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
@@ -585,6 +608,7 @@ class RolesForm extends React.Component {
                 <div className={classes.divStyle}>
                     <RolesTable
                         data={this.state.data}
+                        dataForms={this.state.dataForms}
                         company={this.state.company}
                         loading={this.state.loading}
                         onEditHandler={this.onEditHandler}
