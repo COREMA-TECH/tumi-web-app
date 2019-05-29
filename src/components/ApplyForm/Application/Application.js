@@ -141,7 +141,33 @@ class Application extends Component {
             openSSNDialog: false,
             //Open/Close schedule restrictions modal
             openRestrictionsModal: false,
-            openIndependentContractDialog: false
+            openIndependentContractDialog: false,
+            hearTumiOptions: [
+                {
+                    value: 0,
+                    label: 'Select an option'
+                },
+    
+                {
+                    value: 1,
+                    label: 'facebook'
+                },
+    
+                {
+                    value: 2,
+                    label: 'newspaper'
+                },
+    
+                {
+                    value: 3,
+                    label: 'employee'
+                },
+    
+                {
+                    value: 4,
+                    label: 'recruiter'
+                },
+            ],
         };
     }
 
@@ -641,36 +667,19 @@ class Application extends Component {
         this.getApplicationById(this.props.applicationId)
     }
 
+    findHearTumiOption = id => {
+        let optionId = id ? id : 0;
+
+        const found = this.state.hearTumiOptions.find(item => {
+            return item.value === optionId
+        });
+
+        return found;
+    }
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
-
-        const hearTumiOptions = [
-            {
-                value: 0,
-                label: 'Select an option'
-            },
-
-            {
-                value: 1,
-                label: 'facebook'
-            },
-
-            {
-                value: 2,
-                label: 'newspaper'
-            },
-
-            {
-                value: 3,
-                label: 'employee'
-            },
-
-            {
-                value: 4,
-                label: 'recruiter'
-            },
-        ];
 
         const positionApplyingList = this.state.dataWorkOrder.lenght > 0 ? this.state.dataWorkOrder.map(item => { return {value:item.id, label:`${item.position.Position} ${item.BusinessCompany.Code.trim()}`}                                                                             })
                                                                          :  [{  value: null, label: 'Select an Option' }, {  value: 0, label: 'Open Position'  }];
@@ -1034,8 +1043,8 @@ class Application extends Component {
                                                 </span>
                                                 
                                                 <Select
-                                                    options={hearTumiOptions}
-                                                    value={{value: this.state.optionHearTumi, label: this.findLabel(this.state.optionHearTumi, hearTumiOptions)}}
+                                                    options={this.state.hearTumiOptions}
+                                                    value={this.findHearTumiOption(this.state.optionHearTumi)}
                                                     onChange={this.updateOptionHearTumi}
                                                     closeMenuOnSelect={true}
                                                     components={makeAnimated()}
