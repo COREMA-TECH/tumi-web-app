@@ -677,6 +677,12 @@ class Application extends Component {
         return found;
     }
 
+    updateOptionHearTumi = ({value}) => {
+        this.setState({
+            optionHearTumi: value
+        });
+    }
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
