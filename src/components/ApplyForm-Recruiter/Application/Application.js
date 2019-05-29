@@ -115,6 +115,7 @@ class Application extends Component {
         positions: [],
         positionsCatalogs: [],
         positionCatalogTag: [],
+        positionFilterList: [],
 
         // cellPhoneValid: false,
         //lastNameValid: false,
@@ -486,7 +487,8 @@ class Application extends Component {
                     positions: data.workOrder
                 }, () => {
                     this.setState({
-                        loading: false
+                        loading: false,
+                        positionFilterList: this.getPositionFilterList()
                     })
                 });
             })
@@ -499,7 +501,39 @@ class Application extends Component {
                 );
             })
     };
+    
+    getPositionFilterList = _ => {
+        const positions = this.state.positions.map(item => {
+            return { value: item.id, label: `${item.position.Position.trim()} ${item.BusinessCompany.Code.trim()}` }
+        });
 
+        const options = [
+            { value: '', label: "Select a Position" },
+            { value: 0, label: "Open Position" },
+            ...positions
+        ];
+
+        return options;
+    }
+
+    handlePositionFilterChange = ({value}) => {        
+        this.setState({
+            positionApplyingFor: value
+        });
+    }
+
+    findSelectedPosition = position => {
+        const defValue = {value: '', label: 'Select a Position'};        
+        
+        if(!position)
+            return defValue;
+
+        const found = this.state.positions.find(item => {
+            return item.id === position;
+        });
+
+        return found ? { value: found.id, label: `${found.position.Position} ${found.BusinessCompany.Code.trim()}` } : defValue;
+    }
 
     getPositionsCatalogs = () => {
         this.props.client
@@ -567,7 +601,6 @@ class Application extends Component {
     }
 
     render() {
-
         return (
             <div className="Apply-container-application">
                 <div className="applicant-card">
@@ -632,26 +665,16 @@ class Application extends Component {
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">
                                             {formSpanish[16].label}
-                                        </span>
-                                        <select
-                                            name="positionApply"
-                                            id="positionApply"
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    positionApplyingFor: event.target.value
-                                                });
-                                            }}
-                                            value={this.state.positionApplyingFor}
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                        >
-                                            <option value="">Select a position</option>
-                                            <option value="0">Open Position</option>
-                                            {this.state.positions.map((item) => (
-                                                <option
-                                                    value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
-                                            ))}
-                                        </select>
+                                        </span>                                        
+                                        <Select
+                                            options={this.state.positionFilterList}
+                                            value={this.findSelectedPosition(this.state.positionApplyingFor)}
+                                            onChange={this.handlePositionFilterChange}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
+                                            isDisabled={!this.state.editing}
+                                        />
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">
@@ -760,7 +783,7 @@ class Application extends Component {
                                             min="0"
                                             maxLength="50"
                                             minLength="3"
-                                        />
+                                        /> 
                                     </div>
                                     <LocationForm
                                         disabledCheck={!this.state.editing}

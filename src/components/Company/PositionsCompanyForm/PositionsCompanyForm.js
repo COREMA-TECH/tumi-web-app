@@ -373,7 +373,7 @@ query getposition ($Id_Entity:Int){
 		);
 	};
 
-	updateDepartmentName = (value) => {
+	updateDepartmentName = ({value}) => {
 		this.setState(
 			{
 				departmentName: value
@@ -933,6 +933,11 @@ query getposition ($Id_Entity:Int){
 				</React.Fragment>
 			);
 		}
+
+		const selectDepartments = this.state.departments.map(item => {
+			return { value: item.Name, label: item.Name }
+		});
+
 		return (
 			<div className="position_tab">
 				{isLoading && <LinearProgress />}
@@ -1019,7 +1024,7 @@ query getposition ($Id_Entity:Int){
 						<div className="row">
 							<div className="col-md-12 col-lg-6">
 								<label>* Department</label>
-								<AutosuggestInput
+								{/* <AutosuggestInput
 									id="idDepartment"
 									name="idDepartment"
 									data={this.state.departments}
@@ -1027,6 +1032,14 @@ query getposition ($Id_Entity:Int){
 									value={this.state.departmentName}
 									onChange={this.updateDepartmentName}
 									onSelect={this.updateDepartmentName}
+								/> */}
+								<Select
+									options={selectDepartments}
+									value={{value: this.state.departmentName, label: this.state.departmentName}}
+									onChange={this.updateDepartmentName}
+									closeMenuOnSelect={true}
+									components={makeAnimated()}
+									isMulti={false}
 								/>
 							</div>
 

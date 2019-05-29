@@ -8242,45 +8242,6 @@ label:not(.custom-file-label):not(.form-check-label) {
     transition: transform .5s,-webkit-transform .5s;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden; }
-    .isDisabled {
-      color: currentColor;
-      cursor: not-allowed;
-      opacity: 0.5;
-      text-decoration: none;
-      pointer-events: none;
-      padding: 1rem 0;
-      border-radius: 2px;
-      position: relative;
-      overflow: hidden;
-      -webkit-transition: background-color .3s;
-      -o-transition: background-color .3s;
-      transition: background-color .3s;
-      text-align: center;
-    }
-    .isDisabled > i {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      color: #FFF;
-      line-height: 39px;
-      font-size: 1.5rem;
-      -webkit-transition: background-color .5s;
-      -o-transition: background-color .5s;
-      transition: background-color .5s; }
-    .isDisabled > small {
-      display: block;
-      margin-top: .5rem;
-      color: #9c9c9c;
-      -webkit-transition: color .5s;
-      -o-transition: color .5s;
-      transition: color .5s; }
-    .isDisabled:hover .isDisabled__helper {
-      -webkit-transform: scale(3.5);
-      -ms-transform: scale(3.5);
-      transform: scale(3.5); }
-    .isDisabled:hover > small {
-      color: #FFF; }
-
   .app-shortcuts__item {
     padding: 1rem 0;
     border-radius: 2px;
@@ -8834,8 +8795,14 @@ label:not(.custom-file-label):not(.form-check-label) {
   padding-right: 0 !important;
   padding-top: 0; }
 
+.tumi-forcedTop {
+  z-index: 1000; }
+
 .tumi-xScroll {
   overflow-x: auto; }
+
+.tumi-fullWidth {
+  width: 100%; }
 
 .tumi-forcedResponsiveTable {
   overflow-x: auto; }
