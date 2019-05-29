@@ -12,6 +12,9 @@ import { LIST_PAYROLLS } from "./queries";
 import { ADD_PAYROLL, UPDATE_PAYROLL } from "./mutations";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
+
 const styles = (theme) => ({
     container: {
         display: 'flex',
@@ -107,6 +110,7 @@ class PayRoll extends React.Component {
         super(props);
         this.state = {
             data: [],
+            selectDays: [],
             filterText: '',
 
             edit: false,
@@ -123,7 +127,8 @@ class PayRoll extends React.Component {
     PAYROLL_STATE = {
         weekStart: null,
         payPeriod: null,
-        lastPayPeriod: null
+        lastPayPeriod: null,
+        startWeekName: 'Select a Day'
     };
 
     handleEdit = () => {
@@ -225,13 +230,14 @@ class PayRoll extends React.Component {
                     weekStart: data.listPayrolls[0].weekStart,
                     payPeriod: data.listPayrolls[0].payPeriod,
                     lastPayPeriod: data.listPayrolls[0].lastPayPeriod.substring(0, 10),
-                    edit: true,
+                    edit: true,                   
                 }, () => {
                     this.setState({
                         loading: false,
                         saving: false,
                         updating: false,
-                        edit: true
+                        edit: true,
+                        startWeekName: days[this.state.weekStart].name
                     })
                 })
             })
@@ -244,13 +250,75 @@ class PayRoll extends React.Component {
         this.fetchPayrolls();
     }
 
+    getDayList = _ => {
+        const dayList = days.map(item => {
+            return { value: item.id, label: item.name }
+        });
+
+        return dayList;
+    }
+
+    findDayLabel = dayId => {
+        const defValue = 'Select a Day';
+
+        if(!dayId || dayId === '')
+            return defValue;
+
+        const dayLabel = days.find(item => {
+            return item.id === dayId
+        });
+
+        return dayLabel;
+    }
+
+    handleDayChange = ({value}) => {
+        this.setState({
+            weekStart: value,
+            startWeekName: days[value].name
+        })
+    }
+
+    handlePeriodChange = ({value, label}) => {
+        this.setState({
+            payPeriod: value
+        })
+    }
+
+    getPayPeriodList = _ => {
+        const periodList = periods.map(item => {
+            return { value: item.id, label: item.name }
+        });
+
+        return [{ value: '', label: "Select Pay Period" }, ...periodList];
+    }
+
+    findSelectedPeriod = periodId => {
+        const defValue = { value: '', label: "Select Pay Period" };
+
+        if((!periodId || periodId === '') && periodId != 0)
+            return defValue;
+
+        const found = periods.find(item => {
+            return item.id === periodId;
+        });
+
+        return found ? { value: found.id, label: found.name } : defValue;
+    }
+
     render() {
-        const { loading } = this.state;
+        const { loading } = this.state;       
 
         // If the query is loading return a LinearProgress
         if (loading) return <LinearProgress />;
 
-        // When the data finishes loading, show it in the form
+        // When the data finishes loading, show it in the form 
+        
+        const selectDays = days.map(item => {
+			return { value: item.id, label: item.name }
+        });
+
+        const selectPeriods = this.getPayPeriodList();
+        
         return (
             <div className="users_tab">
                 <div className="row">
@@ -276,52 +344,28 @@ class PayRoll extends React.Component {
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <label className="">What is your week start day (for calculating
-                                                        overtime)?</label>
-                                                    <select
-                                                        name="week-start"
-                                                        id="week-start"
-                                                        className="form-control"
-                                                        required={true}
-                                                        disabled={this.state.edit}
-                                                        value={this.state.weekStart}
-                                                        onChange={(e) => {
-                                                            console.log(e.target.value);
-
-                                                            this.setState({
-                                                                weekStart: e.target.value
-                                                            })
-                                                        }}
-                                                    >
-                                                        <option value="">Select day</option>
-                                                        {
-                                                            days.map(item => (
-                                                                <option value={item.id}>{item.name}</option>))
-                                                        }
-                                                    </select>
+                                                        overtime)?</label>                                                   
+                                                    <Select
+                                                        options={selectDays}
+                                                        value={{value: this.state.weekStart, label: this.state.startWeekName}}
+                                                        onChange={this.handleDayChange}
+                                                        closeMenuOnSelect={true}
+                                                        components={makeAnimated()}
+                                                        isMulti={false}	
+                                                        isDisabled={this.state.edit}										
+                                                    />
                                                 </div>
                                                 <div className="col-md-6">
                                                     <label className="">How often do you payroll?</label>
-                                                    <select
-                                                        name="week-start"
-                                                        id="week-start"
-                                                        className="form-control"
-                                                        required={true}
-                                                        disabled={this.state.edit}
-                                                        value={this.state.payPeriod}
-                                                        onChange={(e) => {
-                                                            console.log(e.target.value);
-
-                                                            this.setState({
-                                                                payPeriod: e.target.value
-                                                            })
-                                                        }}
-                                                    >
-                                                        <option value="">Select pay period</option>
-                                                        {
-                                                            periods.map(item => (
-                                                                <option value={item.id}>{item.name}</option>))
-                                                        }
-                                                    </select>
+                                                    <Select
+                                                        options={selectPeriods}
+                                                        value={this.findSelectedPeriod(this.state.payPeriod)}
+                                                        onChange={this.handlePeriodChange}
+                                                        closeMenuOnSelect={true}
+                                                        components={makeAnimated()}
+                                                        isMulti={false}	
+                                                        isDisabled={this.state.edit}										
+                                                    />
                                                 </div>
                                                 <div className="col-md-6">
                                                     <label className="">What was your last pay period closing
@@ -333,9 +377,6 @@ class PayRoll extends React.Component {
                                                         disabled={this.state.edit}
                                                         value={this.state.lastPayPeriod}
                                                         onChange={(e) => {
-                                                            console.log(e.target.value);
-                                                            console.table(this.state.PAYROLL_STATE);
-
                                                             this.setState({
                                                                 lastPayPeriod: e.target.value
                                                             })
