@@ -6,10 +6,7 @@ class AccountHolder extends Component{
     INITIAL_STATE = {
         zipCode: '',
         city: '',
-        state: '',
-        firstName: '',
-        lastName: '',
-        address: ''
+        state: ''      
     }
 
     constructor(props){
@@ -105,7 +102,6 @@ class AccountHolder extends Component{
 				}
 
 				return {
-
 					codeValid,
 					nameValid,
 					addressValid,
@@ -134,8 +130,9 @@ class AccountHolder extends Component{
 						phoneNumberValid &&
 						faxValid &&
 						phonePrefixValid
-
 				}
+			}, _ => { 				
+				this.props.handleLocationFormChange(this.state.zipCode, this.state.city, this.state.state)
 			});
     }
     
@@ -153,17 +150,19 @@ class AccountHolder extends Component{
 			},
 			() => {
 				this.validateField('state', id);
+				// this.props.handleLocationFormChange('state', id);
 			}
 		);
 	};
 
 	updateCity = (id) => {
 		this.validateField('city', id);
-    };
-
-    handleOnChange = e => {
-        this.setState({ [e.target.name]: e.target.type == 'checkbox' ? e.target.checked : e.target.value });
-    }
+		// this.props.handleLocationFormChange('city', id)
+	};    
+	
+	onChangeZipcode = (text) => { 
+		this.updateInput(text, 'zipCode');		
+	}
     
     render(){
         return (
@@ -171,13 +170,13 @@ class AccountHolder extends Component{
                 <div className="row">
                     <div className="col-12 col-md-6">
                         <label htmlFor="firstName">* First Name</label>
-                        <input type="text" name="firstName" id="firstName" value={this.state.firstName} className="form-control"/>
+                        <input type="text" name="firstName" id="firstName" onChange={this.props.handleChange} value={this.props.firstName} className="form-control"/>
                     
                         <label htmlFor="lastName">* Last Name</label>
-                        <input type="text" name="lastName" id="lastName" value={this.state.lastName} className="form-control"/>
+                        <input type="text" name="lastName" id="lastName" onChange={this.props.handleChange} value={this.props.lastName} className="form-control"/>
                     
                         <label htmlFor="address">* Address</label>
-                        <input type="text" name="address" id="address" value={this.state.address} className="form-control"/>
+                        <input type="text" name="address" id="address" onChange={this.props.handleChange} value={this.props.address} className="form-control"/>
                     </div>
 
                     <div className="col-12 col-md-6 tumi-noPadding">
@@ -187,7 +186,7 @@ class AccountHolder extends Component{
                             disabledZipCode={false}
                             onChangeCity={this.updateCity}
                             onChangeState={this.updateState}
-                            onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
+                            onChageZipCode={this.onChangeZipcode}
                             city={this.state.city}
                             state={this.state.state}
                             zipCode={this.state.zipCode} changeCity={this.state.changeCity}

@@ -8756,6 +8756,14 @@ label:not(.custom-file-label):not(.form-check-label) {
 .social-link {
   text-decoration: none; }
 
+.tumi-saveBtn {
+  margin: 0px 15px;
+  padding: 12px 90px; }
+  .tumi-saveBtn.right {
+    margin-left: auto; }
+  .tumi-saveBtn.left {
+    margin-right: auto; }
+
 .tumi-row-centered {
   -webkit-box-align: center;
   -ms-flex-align: center;
