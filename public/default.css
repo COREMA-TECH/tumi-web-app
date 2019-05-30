@@ -8789,6 +8789,14 @@ label:not(.custom-file-label):not(.form-check-label) {
   justify-content: center;
   padding: 5px; }
 
+.tumi-row-vert-center {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
+.tumi-text-blue {
+  color: #3ca2c8; }
+
 .tumi-noPadding {
   padding-bottom: 0;
   padding-left: 0 !important;
@@ -12481,3 +12489,32 @@ label.input-group-text {
 
 .BreaksModal-timeOpt {
   margin-top: 27px; }
+
+.BreaksModal-checkWrapper {
+  background-color: #ededed;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  padding: 16px 14px !important; }
+
+.BreaksModal-buttons {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end; }
+
+.BreaksModal-cancel {
+  background-color: #dddddd; }
+
+.AutoBreak-title {
+  padding-bottom: 6px;
+  padding-top: 12px;
+  border-bottom: 1px solid #dddddd; }

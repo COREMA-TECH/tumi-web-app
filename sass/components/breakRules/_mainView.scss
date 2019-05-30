@@ -55,4 +55,32 @@
     &-timeOpt{
         margin-top: 27px;
     }
+
+    &-checkWrapper{
+        background-color: map-get($map: $gray-shades, $key: gray-4);
+
+        border: 1px solid $border-standard;
+        border-radius: 5px;
+
+        padding: 16px 14px !important;
+    }
+
+    &-buttons{
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;        
+    }
+
+    &-cancel{
+        background-color: $gray;
+    }
+}
+
+.AutoBreak{
+    &-title{
+        padding-bottom: 6px;
+        padding-top: 12px;
+        border-bottom: 1px solid $border-standard
+    }
 }
