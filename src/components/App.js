@@ -12,6 +12,10 @@ import { setContext } from 'apollo-link-context';
 import ReactDOM from 'react-dom';
 import { connection } from './connection.js';
 import ReactGA from 'react-ga';
+import createHistory from 'history/createBrowserHistory'
+
+const history = createHistory()
+
 
 ReactGA.initialize('UA-141051584-1'); // Aqui pones tu identificador de cuenta de Google Analytics
 
