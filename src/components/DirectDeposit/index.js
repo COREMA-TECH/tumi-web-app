@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import BankInfo from './BankInfo';
 import AccountHolder from './AccountHolder';
 import AccountDropdown from './AccountDropdown';
+import Attachments from './Attachments';
 
 class DirectDeposit extends Component{
     INITIAL_STATE = {
@@ -58,6 +59,7 @@ class DirectDeposit extends Component{
                     <div className="col-md-12 col-xl-3">
                         <div className="card">
                             <div className="card-body">
+                                <Attachments />
                             </div>
                         </div>
                     </div>

@@ -40,7 +40,7 @@ class BankInfo extends Component{
                 </div>
                 <div className="card-body">
                     <div className="row">
-                        <div className="col-md-12 col-lg-6 col-xl-8">
+                        <div className="col-md-12 col-lg-6 col-xl-6">
                             <div className="BankInfo-inputWrapper">
                                 <label htmlFor="bankName">* Bank Name</label>
                                 <input type="text" name="bankName" value={this.props.bankName} id="Bank Name" className="form-control" onChange={this.props.handleOnChange}/>
@@ -54,7 +54,7 @@ class BankInfo extends Component{
                                 <input type="text" name="account" value={this.props.account} id="Account Number" className="form-control" onChange={this.props.handleOnChange}/>
                             </div>
                         </div>                        
-                        <div className="col-md-12 col-lg-6 col-xl-4">
+                        <div className="col-md-12 col-lg-6 col-xl-6">
                             <label htmlFor="">Type of Account</label>
 
                             <div className="tumi-row-centered BankInfo-accountType">

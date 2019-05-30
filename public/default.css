@@ -10064,6 +10064,10 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     margin-right: 5px;
     margin-top: 0 !important; }
 
+.Attachments-list {
+  max-height: 266px;
+  overflow-y: scroll; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -12489,3 +12493,5 @@ label.input-group-text {
     justify-content: flex-end; }
   .Filter-button {
     font-size: 0.9rem; } }
+
+/*# sourceMappingURL=default.css.map */
