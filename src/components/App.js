@@ -45,6 +45,7 @@ if (localStorage.getItem('isEmployee') == 'true' && window.location.pathname == 
 
 history.listen(location => ReactGA.pageview(location.pathname));
 
+
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
