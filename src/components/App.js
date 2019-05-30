@@ -12,13 +12,16 @@ import { setContext } from 'apollo-link-context';
 import ReactDOM from 'react-dom';
 import { connection } from './connection.js';
 import ReactGA from 'react-ga';
-import createHistory from 'history/createBrowserHistory'
 
-const history = createHistory()
+export const initGA = () => {
+	console.log('GA init')
+	ReactGA.initialize('UA-141051584-1');
+}
 
-
-ReactGA.initialize('UA-141051584-1'); // Aqui pones tu identificador de cuenta de Google Analytics
-
+export const logPageView = () => {
+	ReactGA.set({page: window.location.pathname})
+	ReactGA.pageview(window.location.pathname);
+}
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'en');
@@ -42,10 +45,6 @@ if (localStorage.getItem('isEmployee') == 'false') {
 if (localStorage.getItem('isEmployee') == 'true' && window.location.pathname == "/home") {
 	window.location.href = '/home/application';
 }
-
-history.listen(location => ReactGA.pageview(location.pathname));
-
-
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
@@ -125,6 +124,8 @@ class App extends Component {
 
 	componentDidMount = () => {
 		window.addEventListener('scroll', this.handleScroll);
+		initGA();
+		logPageView();
 	};
 
 	componentWillMount() {

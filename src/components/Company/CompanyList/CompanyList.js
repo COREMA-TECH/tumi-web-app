@@ -11,7 +11,6 @@ import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
 import { withStyles } from '@material-ui/core/styles';
-import ReactGA from 'react-ga';
 
 import withApollo from 'react-apollo/withApollo';
 
@@ -43,12 +42,6 @@ class CompanyList extends Component {
 			filterText: '',
 			opendialog: false
 		};*/
-		this.initializeReactGA();
-	}
-
-	initializeReactGA = () => {
-		ReactGA.initialize('UA-123791717-1');
-		ReactGA.pageview('/homepage');
 	}
 
 	getCompaniesQuery = gql`
