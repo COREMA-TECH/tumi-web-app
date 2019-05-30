@@ -11,6 +11,9 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import ReactDOM from 'react-dom';
 import { connection } from './connection.js';
+import ReactGA from 'react-ga';
+
+ReactGA.initialize('UA-141051584-1'); // Aqui pones tu identificador de cuenta de Google Analytics
 
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
@@ -35,6 +38,9 @@ if (localStorage.getItem('isEmployee') == 'false') {
 if (localStorage.getItem('isEmployee') == 'true' && window.location.pathname == "/home") {
 	window.location.href = '/home/application';
 }
+
+history.listen(location => ReactGA.pageview(location.pathname));
+
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
