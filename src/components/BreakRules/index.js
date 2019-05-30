@@ -1,7 +1,33 @@
 import React, {Component} from 'react';
 import withApollo from 'react-apollo/withApollo';
+import BreaksTable from './breaksTable';
+import BreakRulesModal from './breakRulesModal';
 
 class BreakRules extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            openModal: true
+        }
+    }
+
+    openModal = _ => {
+        this.setState(_ => {
+            return { openModal: true }
+        })
+    }
+
+    handleModalClose = _ => {
+        this.setState(_ => {
+            return { openModal: false }
+        })
+    }
+
+    handleModalSubmit = event => {
+        event.preventDefault();
+    }
+
     render(){
         return(
             <React.Fragment>
@@ -12,10 +38,10 @@ class BreakRules extends Component {
                     <div className="card-body">
                         <div className="Breaks-desc">
                             <div className="Breaks-mug">
-                                <i class="fas fa-plus"></i>
+                                <i class="fas fa-coffee"></i>
                             </div>
-                            <div className="Breaks-descInfo d-block">
-                                <span className="Breaks-descTitle">
+                            <div className="Breaks-descInfo d-inline-block">
+                                <span className="Breaks-descTitle d-block">
                                     Breaks
                                 </span>
                                 <span className="Breaks-descText d-block">
@@ -23,12 +49,20 @@ class BreakRules extends Component {
                                 </span>
                             </div>
                         </div>
-                        <button className="Break-add">
+                        <button className="btn btn-success Break-add" onClick={this.openModal}>
                             <i class="fas fa-plus"></i>
-                            Add Break Rule
-                        </button>                        
+                            &nbsp; Add Break Rule
+                        </button>    
+                        <div className="tumi-forcedResponsiveTable Breaks-tableWrapper">
+                            <BreaksTable />
+                        </div>
                     </div>
                 </div>
+                <BreakRulesModal 
+                    openModal={this.state.openModal}
+                    handleClose={this.handleModalClose}
+                    handleSubmit={this.handleModalSubmit}
+                />
             </React.Fragment>
         );
     }
