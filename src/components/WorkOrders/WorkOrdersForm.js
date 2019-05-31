@@ -693,6 +693,9 @@ class WorkOrdersForm extends Component {
     findSelectedDepartment = depId => {
         const defValue = {value: 0, label: "Select a Department"};
 
+        console.log(depId);
+        console.log(this.state.departments);
+
         if(depId === 'null' || depId === 0)
             return defValue;
 
@@ -700,7 +703,10 @@ class WorkOrdersForm extends Component {
             return item.Id === depId;
         });
 
-        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
+        if(!found)
+            return defValue;
+
+        return {value: found.Id, label: found.Description.trim()};
     }
 
     render() {
