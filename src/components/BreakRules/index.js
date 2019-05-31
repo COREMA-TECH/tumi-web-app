@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import withApollo from 'react-apollo/withApollo';
 import BreaksTable from './breaksTable';
 import BreakRulesModal from './breakRulesModal';
+import { GET_EMPLOYEES } from './queries';
 
 class BreakRules extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            openModal: true
+            openModal: true,
+            employeeList: []
         }
     }
 
@@ -26,6 +28,23 @@ class BreakRules extends Component {
 
     handleModalSubmit = event => {
         event.preventDefault();
+    }
+
+    componentWillMount() {
+        //Fetch employees
+        this.props.client.query({
+            query: GET_EMPLOYEES,
+            variables: { idEntity: this.props.companyId },
+            fetchPolicy: 'no-cache'
+        })
+        
+        .then(({ data }) => {
+            this.setState({
+                employeeList: data.employees
+            });
+        })
+        
+        .catch(error => console.log(error));
     }
 
     render(){
@@ -62,6 +81,7 @@ class BreakRules extends Component {
                     openModal={this.state.openModal}
                     handleClose={this.handleModalClose}
                     handleSubmit={this.handleModalSubmit}
+                    employeeList={this.state.employeeList}
                 />
             </React.Fragment>
         );

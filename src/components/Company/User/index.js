@@ -158,7 +158,9 @@ class User extends Component {
                     </div>
                 </div>
                 <div className="col-md-8">
-                    <BreakRules />
+                    <BreakRules 
+                        companyId={this.props.idCompany}
+                    />
                 </div>
             </div>
         );
