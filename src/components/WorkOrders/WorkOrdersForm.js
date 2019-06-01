@@ -700,7 +700,10 @@ class WorkOrdersForm extends Component {
             return item.Id === depId;
         });
 
-        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
+        if(!found)
+            return defValue;
+
+        return {value: found.Id, label: found.Description.trim()};
     }
 
     render() {

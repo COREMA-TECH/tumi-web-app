@@ -14,6 +14,8 @@ export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
             duration
             job
             hotelCode
+            imageMarkedIn
+            imageMarkedOut
           }
       }
     }

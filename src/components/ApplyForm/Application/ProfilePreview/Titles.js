@@ -22,7 +22,7 @@ class Titles extends Component {
 
     render() {
         return(
-            <Dialog open={this.props.titleModal} maxWidth="sm">
+            <Dialog open={this.props.titleModal} maxWidth="md">
                 <DialogTitle>
                     <h5>Add Titles</h5>
                 </DialogTitle>

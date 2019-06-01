@@ -11,7 +11,17 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import ReactDOM from 'react-dom';
 import { connection } from './connection.js';
+import ReactGA from 'react-ga';
 
+export const initGA = () => {
+	console.log('GA init')
+	ReactGA.initialize('UA-141051584-1');
+}
+
+export const logPageView = () => {
+	ReactGA.set({page: window.location.pathname})
+	ReactGA.pageview(window.location.pathname);
+}
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'en');
@@ -114,6 +124,8 @@ class App extends Component {
 
 	componentDidMount = () => {
 		window.addEventListener('scroll', this.handleScroll);
+		initGA();
+		logPageView();
 	};
 
 	componentWillMount() {

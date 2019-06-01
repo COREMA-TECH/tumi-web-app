@@ -466,6 +466,7 @@ class General extends Component {
                                 isActive:this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
                                 EmployeeId: this.state.data.employee? this.state.data.employee.EmployeeId : 999999,
+                                hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("YYYY-MM-DD")}` : '--',
                                 idealJobs: this.state.data.idealJobs
                             })
                         });
@@ -1739,13 +1740,17 @@ class General extends Component {
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
-                                        {this.state.idealJobs.map(idealJob => {
-                                            return <div className="col-sm-12 col-md-6 col-lg-3">
-                                                <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
-                                                    {idealJob.description}
-                                                </div>
-                                            </div>
-                                        })}
+                                        {
+                                            this.state.idealJobs ? 
+                                                this.state.idealJobs.map(idealJob => {
+                                                    return <div className="col-sm-12 col-md-6 col-lg-3">
+                                                        <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                            {idealJob.description}
+                                                        </div>
+                                                    </div>
+                                                })
+                                            : {}
+                                        }
                                     </div>
                                 </div>
                             </div>
