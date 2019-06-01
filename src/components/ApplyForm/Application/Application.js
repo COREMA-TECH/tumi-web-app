@@ -244,6 +244,7 @@ class Application extends Component {
                         }
                     })
                     .then(({ data }) => {
+                        localStorage.setItem('idApplication', id == 0 ? data.addApplication.id:id);
                         this.setState({
                             editing: false,
                             insertDialogLoading: false
