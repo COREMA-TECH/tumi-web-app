@@ -26,12 +26,14 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             }
             employee {       
                 id       
+                EmployeeId
                 Employees       
                 {         
                     id         
                     firstName                 
                     idUsers         
-                    idEntity       
+                    idEntity    
+                    hireDate   
                 }     
             }   
             idealJobs {
@@ -184,6 +186,17 @@ export const GET_ACTIVE_EMPLOYEES_BY_MARKS = gql`
     query($employeeId: Int){
         activeEmployeesByMarks(EmployeeId: $employeeId){
             id
+        }
+    }
+`;
+
+export const GET_POSITION = gql`
+  query getPositions($Id_Entity: Int){
+        catalogitem(IsActive: 1, Id_Catalog: 6,  Id_Entity:  $Id_Entity) {
+            Id
+            Code: Name
+            Description
+            IsActive
         }
     }
 `;

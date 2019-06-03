@@ -5,14 +5,27 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import Select from 'react-select';
 import makeAnimated from "react-select/lib/animated";
+import {GET_POSITION} from "./Queries";
+import { ADD_IDEAL_JOB } from "./Mutations";
+import withGlobalContent from 'Generic/Global';
+import { withApollo } from 'react-apollo';
+import { withStyles } from '@material-ui/core/styles';
+
+
+const styles = {
+    paper: { overflowY: 'unset' },
+    container: { overflowY: 'unset' }
+};
 
 class Titles extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            titles: [],
-            title: null
+            positionCatalogTag: [],
+            title: null,
+            positionsTags: null,
+            applicantIdealJob: []
         }
     }
 
@@ -20,16 +33,71 @@ class Titles extends Component {
         this.setState({ positionsTags });
     };
 
+    addIdealJob = () => {
+        const positionData = this.state.positionsTags.map(position => {
+            return {
+                idPosition: position.value,
+                description: position.label,
+                ApplicationId: this.props.ApplicationId
+            }
+        });
+        this.props.client
+            .mutate({
+                mutation: ADD_IDEAL_JOB,
+                variables: {
+                    application: positionData
+                }
+            })
+            .then((data) => {
+                this.props.getProfileInformation(this.props.ApplicationId);
+                this.props.hanldeCloseTitleModal();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    getPositions = () => {
+        this.props.client
+            .query({
+                query: GET_POSITION
+            })
+            .then(({ data }) => {
+                let dataAPI = data.catalogitem;
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        positionCatalogTag: [...prevState.positionCatalogTag, {
+                            value: item.Id, label: item.Code.trim(), key: item.Id
+                        }]
+                    }))
+                });
+
+            }).catch(error => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error loading Department list',
+                        'bottom',
+                        'right'
+                    );
+            });
+    }
+
+    componentWillMount() {
+        this.getPositions();
+    }
+
     render() {
+        const { classes } = this.props;
+
         return(
-            <Dialog open={this.props.titleModal} maxWidth="sm">
+            <Dialog open={this.props.titleModal} maxWidth="md" classes={{ paper: classes.paper }}>
                 <DialogTitle>
                     <h5>Add Titles</h5>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent style={{ minWidth: 300, overflowY: "unset" }}>
                     <Select
-                        options={this.state.titles}
-                        value={this.state.title}
+                        options={this.state.positionCatalogTag}
+                        value={this.state.positionsTags}
                         onChange={this.handleChangeTitle}
                         closeMenuOnSelect={true}
                         components={makeAnimated()}
@@ -37,7 +105,7 @@ class Titles extends Component {
                     />
                 </DialogContent>     
                 <DialogActions>
-                    <button className="btn btn-success" type="submit">Save</button>
+                    <button className="btn btn-success" type="button" onClick={this.addIdealJob}>Save</button>
                     <button className="btn btn-danger" onClick={this.props.hanldeCloseTitleModal}>Cancel</button>
                 </DialogActions>
             </Dialog>
@@ -46,4 +114,4 @@ class Titles extends Component {
 
 }
 
-export default Titles;
+export default withStyles(styles)(withApollo(withGlobalContent(Titles)));

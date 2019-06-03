@@ -260,6 +260,7 @@ class ApplicationList extends Component {
 		this.getProperties();
 		this.getDepartments();
 	}
+
 	render() {
 		var loading = this.state.loadingConfirm || this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
 		var variables = {};
@@ -356,7 +357,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query fetchPolicy="no-cache" query={this.GET_APPLICATION_QUERY} variables={variables} >
+					<Query fetchPolicy="network-only" query={this.GET_APPLICATION_QUERY} variables={variables} >
 						{({ loading, error, data, refetch, networkStatus }) => {
 
 							if (this.state.filterText === '') {
@@ -418,15 +419,16 @@ class ApplicationList extends Component {
 										</div>
 									</div>
 								);
+							} else {
+								return (
+									<NothingToDisplay
+										title="Oops!"
+										message={'There are no applications'}
+										type="Error-success"
+										icon="wow"
+									/>
+								);
 							}
-							return (
-								<NothingToDisplay
-									title="Oops!"
-									message={'There are no applications'}
-									type="Error-success"
-									icon="wow"
-								/>
-							);
 						}}
 					</Query>
 				</div>
