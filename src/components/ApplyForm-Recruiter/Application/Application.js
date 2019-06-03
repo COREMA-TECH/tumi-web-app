@@ -14,7 +14,6 @@ import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
 import LocationForm from '../../ui-components/LocationForm'
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -101,7 +100,7 @@ class Application extends Component {
         insertDialogLoading: false,
         graduated: false,
         previousEmploymentPhone: '',
-        sendInterview:false,
+        sendInterview: false,
 
         // Application id property state is used to save languages, education, mulitary services, skills
         applicationId: null,
@@ -313,7 +312,7 @@ class Application extends Component {
                                     generalComment: this.state.generalComment,
                                     isLead: true,
                                     idRecruiter: parseInt(this.state.idRecruiter),
-                                    sendInterview:this.state.sendInterview
+                                    sendInterview: this.state.sendInterview
                                 }
                             }
                         })
@@ -412,7 +411,7 @@ class Application extends Component {
                                     positionApplyingFor: applicantData.positionApplyingFor == null ? 0 : applicantData.positionApplyingFor,
                                     car: applicantData.car,
                                     generalComment: applicantData.generalComment,
-                                    sendInterview:applicantData.sendInterview,
+                                    sendInterview: applicantData.sendInterview,
                                     editing: false
                                 },
                                 () => {
@@ -501,7 +500,7 @@ class Application extends Component {
                 );
             })
     };
-    
+
     getPositionFilterList = _ => {
         const positions = this.state.positions.map(item => {
             return { value: item.id, label: `${item.position.Position.trim()} ${item.BusinessCompany.Code.trim()}` }
@@ -516,16 +515,16 @@ class Application extends Component {
         return options;
     }
 
-    handlePositionFilterChange = ({value}) => {        
+    handlePositionFilterChange = ({ value }) => {
         this.setState({
             positionApplyingFor: value
         });
     }
 
     findSelectedPosition = position => {
-        const defValue = {value: '', label: 'Select a Position'};        
-        
-        if(!position)
+        const defValue = { value: '', label: 'Select a Position' };
+
+        if (!position)
             return defValue;
 
         const found = this.state.positions.find(item => {
@@ -606,7 +605,7 @@ class Application extends Component {
                 <div className="applicant-card">
                     <div className="applicant-card__header">
                         <span className="applicant-card__title">{menuSpanish[0].label}</span>
-                        
+
                         {!this.state.editing && <button
                             className="applicant-card__edit-button"
                             onClick={() => {
@@ -623,49 +622,49 @@ class Application extends Component {
                     <br />
                     <div className="card-body">
                         <div className="row">
-                        <div className="col-md-12 col-lg-6"></div>
-                        <div className="col-md-12 col-lg-6"><div className="row">
-                        <div className="col-md-6">
-                            </div>
+                            <div className="col-md-12 col-lg-6"></div>
+                            <div className="col-md-12 col-lg-6"><div className="row">
                                 <div className="col-md-6">
-                                        <span className="primary applicant-card__label ">
-                                           Send to Interview
+                                </div>
+                                <div className="col-md-6">
+                                    <span className="primary applicant-card__label ">
+                                        Send to Interview
                                         </span>
-                                        <div className="onoffswitch">
-                                            <input
-                                                id="sendInterview"
-                                                className="onoffswitch-checkbox"
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        sendInterview: event.target.checked
-                                                    });
-                                                }}
-                                                checked={this.state.sendInterview}
-                                                value={this.state.sendInterview}
-                                                name="sendInterview"
-                                                type="checkbox"
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="10"
-                                            />
-                                            <label className="onoffswitch-label" htmlFor="sendInterview">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
-                                            </label>
-                                        </div>
+                                    <div className="onoffswitch">
+                                        <input
+                                            id="sendInterview"
+                                            className="onoffswitch-checkbox"
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    sendInterview: event.target.checked
+                                                });
+                                            }}
+                                            checked={this.state.sendInterview}
+                                            value={this.state.sendInterview}
+                                            name="sendInterview"
+                                            type="checkbox"
+                                            disabled={!this.state.editing}
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="10"
+                                        />
+                                        <label className="onoffswitch-label" htmlFor="sendInterview">
+                                            <span className="onoffswitch-inner" />
+                                            <span className="onoffswitch-switch" />
+                                        </label>
                                     </div>
-                              </div>
-                        </div>
+                                </div>
+                            </div>
+                            </div>
 
-                        
+
 
                             <div className="col-md-12 col-lg-6 form-section-1">
                                 <div className="row">
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">
                                             {formSpanish[16].label}
-                                        </span>                                        
+                                        </span>
                                         <Select
                                             options={this.state.positionFilterList}
                                             value={this.findSelectedPosition(this.state.positionApplyingFor)}
@@ -783,7 +782,7 @@ class Application extends Component {
                                             min="0"
                                             maxLength="50"
                                             minLength="3"
-                                        /> 
+                                        />
                                     </div>
                                     <LocationForm
                                         disabledCheck={!this.state.editing}
@@ -806,7 +805,7 @@ class Application extends Component {
                                         placeholder="99999-99999"
                                         mask="99999-99999"
                                         updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
-                                   
+
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[23].label}
@@ -929,7 +928,7 @@ class Application extends Component {
                                         />
                                     </div>
 
-                                  
+
                                 </div>
                             </div>
                         </div>

@@ -49,6 +49,7 @@ import ApprovePunches from '../../ApprovePunchesReport';
 import DashBoardSponsor from '../../Dashboard/Sponsor';
 import PositionCatalogTable from '../../PositionsCatalog/PositionsTable';
 import DepartmentsCatalogTable from '../../DepartmentsCatalog/DepartmentsTable';
+import NoShowReport from '../../NoShowReport';
 
 class Container extends Component {
 	constructor(props) {
@@ -175,7 +176,7 @@ class Container extends Component {
 		}
 
 		if (window.location.pathname === '/home' && this.state.dataForm[0])
-			window.location.href = this.state.dataForm[0].Value ;
+			window.location.href = this.state.dataForm[0].Value;
 
 		return (
 			<div className="container-fluid">
@@ -223,6 +224,7 @@ class Container extends Component {
 				<Route exact path="/home/dashboard/sponsor" component={DashBoardSponsor} />
 				<Route exact path="/home/catalogs/positions" component={PositionCatalogTable} />
 				<Route exact path="/home/catalogs/departments" component={DepartmentsCatalogTable} />
+				<Route exact path="/home/report/noshow" component={NoShowReport} />
 			</div>
 		);
 	}
