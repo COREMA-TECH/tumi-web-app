@@ -17,12 +17,13 @@ class AccountDropdown extends Component{
     }
 
     render(){
+        const { firstName, lastName, accountNumber, address, routingNumber, accountType, amount, amountType } = this.props;
         return(
             <div className={`Dropdown ${ this.state.isOpen ? 'open' : '' }`}>
                 <div className="Dropdown-header" onClick={this.handleCollapse}>
                     <span className="Dropdown-title">
                         <strong>Account #</strong>
-                        <span>23156465456789</span>
+                        <span></span>
                     </span>
                     <span className="Dropdown-caret">
                         <i class={`fas ${this.state.isOpen ? 'fa-angle-up' : 'fa-angle-down'}`}></i>
@@ -35,8 +36,7 @@ class AccountDropdown extends Component{
                                 <div className="Dropdown-item">
                                     <label className="Dropdown-itemLabel">Name:</label>
                                     <span className="Dropdown-itemDesc">
-                                        {/* {this.props.name} */}
-                                        Jorge Corea
+                                        { `${firstName} ${lastName}` }
                                     </span>
                                 </div>
                             </div>
@@ -44,8 +44,7 @@ class AccountDropdown extends Component{
                                 <div className="Dropdown-item">
                                     <label className="Dropdown-itemLabel">Address:</label>
                                     <span className="Dropdown-itemDesc">
-                                        {/* {this.props.address} */}
-                                        Some address
+                                        { `${address}` }
                                     </span>
                                 </div>
                             </div>
@@ -53,8 +52,7 @@ class AccountDropdown extends Component{
                                 <div className="Dropdown-item">
                                     <label className="Dropdown-itemLabel">Account #:</label>
                                     <span className="Dropdown-itemDesc">
-                                        {/* {this.props.account} */}
-                                        23156465456789
+                                        { `${accountNumber}` }
                                     </span>
                                 </div>
                             </div>
@@ -62,17 +60,15 @@ class AccountDropdown extends Component{
                                 <div className="Dropdown-item">
                                     <label className="Dropdown-itemLabel">Type:</label>
                                     <span className="Dropdown-itemDesc">
-                                        {/* {this.props.type} */}
-                                        Checking
+                                        { `${accountType}` }
                                     </span>
                                 </div>
                             </div>
                             <div className="col-12 col-md-5">
                                 <div className="Dropdown-item">
-                                    <label className="Dropdown-itemLabel">Routin:</label>
+                                    <label className="Dropdown-itemLabel">Routing:</label>
                                     <span className="Dropdown-itemDesc">
-                                        {/* {this.props.routin} */}
-                                        00120245
+                                        { `${routingNumber}` }
                                     </span>
                                 </div>
                             </div>
@@ -80,8 +76,7 @@ class AccountDropdown extends Component{
                                 <div className="Dropdown-item">
                                     <label className="Dropdown-itemLabel">Amount:</label>
                                     <span className="Dropdown-itemDesc">
-                                        {/* {`$ ${this.props.amount}`} */}
-                                        $115465456456
+                                        {`${amountType === 'quantity' ? '$' : ''}${amount}${amountType === 'percentage' ? '%' : ''}`}
                                     </span>
                                 </div>
                             </div>

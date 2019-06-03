@@ -3,14 +3,10 @@ import BankInfo from './BankInfo';
 import AccountHolder from './AccountHolder';
 import AccountDropdown from './AccountDropdown';
 import {INSERT_ACCOUNT_INFO} from './Mutations';
+import {GET_APPLICATION_ACCOUNTS} from './Queries';
 import withApollo from 'react-apollo/withApollo';
 import Attachments from "./Attachments";
-
-const dummyDocData = [
-    { applicationAccountId: 0, path: 'www.host.com/', name: 'checkCopy', extension: '.jpg' },
-    { applicationAccountId: 0, path: 'www.host.com/', name: 'certification', extension: '.docx' },
-    { applicationAccountId: 0, path: 'www.host.com/', name: 'checkCopy', extension: '.png' }
-]
+import withGlobalContent from "../Generic/Global";
 
 class DirectDeposit extends Component{
     INITIAL_STATE = {
@@ -21,13 +17,18 @@ class DirectDeposit extends Component{
         lastName: '',
         address: '',
         bankName: '',
-        routingName: '',
+        routingNumber: 0,
         account: '',  
         amount: '',
         percentage: '',
         accountType: '',
         amountType: '',
-        accountDocumentsInfo: [],
+        accountDocumentsInfo: [
+            { applicationAccountId:0, path: 'www.host.com/', name: 'checkCopy', extension: '.jpg' },
+            { applicationAccountId:0, path: 'www.host.com/', name: 'certification', extension: '.docx' },
+            { applicationAccountId:0, path: 'www.host.com/', name: 'checkCopy', extension: '.png' }
+        ],
+        applicationAccounts: []
     }
 
     constructor(props){
@@ -38,6 +39,10 @@ class DirectDeposit extends Component{
             // applicationId: this.props.applicationId
             applicationId: 204
         }
+    }
+
+    componentWillMount() {
+        this.getApplicationAccounts();
     }
 
     handleChange = e => {
@@ -56,37 +61,62 @@ class DirectDeposit extends Component{
         });
     }
 
+    getApplicationAccounts = _ => {
+        this.props.client.query({
+            query: GET_APPLICATION_ACCOUNTS,
+            variables: { applicationId: 204 },
+            fetchPolicy: 'no-cache'
+        })
+        .then(({data}) => {
+            this.setState({ applicationAccounts: data.applicationAccounts }, _ => console.log(data.applicationAccounts));
+        })
+        .catch(error => console.log(error));
+    }
+
     handleSubmit = e => {
         e.preventDefault();
         
-        const { firstName, lastName, city, state, zipcode, bankNumber, accountNumber, routingNumber, accountType, amount, amountType, percentage } = this.state;
-        console.log(this.state);
+        const { firstName, lastName, city, state, zipcode, bankName, account, routingNumber, accountType, amount, amountType, percentage, accountDocumentsInfo, address } = this.state;
+        const amountToSave = amountType === 'quantity' ? amount : percentage;
 
-        const amountToSave = accountType === 'quantity' ? amount : percentage;
+        this.props.client.mutate({
+            mutation: INSERT_ACCOUNT_INFO,
+            variables: {
+                input: {
+                   applicationId: 204,
+                   firstName,
+                   lastName,
+                   city,
+                   state,
+                   zipcode: parseInt(zipcode),
+                   bankName,
+                   accountNumber: parseInt(account),
+                   routingNumber: parseInt(routingNumber),
+                   accountType, 
+                   amount: amountToSave,
+                   amountType,
+                   address
+                },
 
-        // this.props.client.mutate({
-        //     mutation: INSERT_ACCOUNT_INFO,
-        //     variables: {
-        //         input: {
-        //            applicationId: 0,
-        //            firstName,
-        //            lastName,
-        //            city,
-        //            state,
-        //            zipcode: parseInt(zipcode),
-        //            bankNumber,
-        //            accountNumber,
-        //            routingNumber,
-        //            accountType, 
-        //            amount: amountToSave,
-        //            amountType
-        //         },
-
-        //         documents: this.dummyDocData
-        //     }
-        // })
-        // .then(data => alert('success'))
-        // .catch(error => alert(error)); 
+                documents: accountDocumentsInfo
+            }
+        })
+        .then(_ => {
+            this.props.handleOpenSnackbar(
+                'success',
+                'Saved Successfully',
+                'bottom',
+                'center'
+            );
+        })
+        .catch(error => {
+            this.props.handleOpenSnackbar(
+                'error',
+                `Error: ${error}`,
+                'bottom',
+                'center'
+            );
+        }); 
     }
         
     render(){
@@ -114,7 +144,7 @@ class DirectDeposit extends Component{
                             <BankInfo
                                 handleChange={this.handleChange}
                                 bankName={this.state.bankName}
-                                routingName={this.state.routingName}
+                                routingNumber={this.state.routingNumber}
                                 account={this.state.account}
                                 amount={this.state.amount}
                                 accountType={this.state.accountType}
@@ -136,33 +166,24 @@ class DirectDeposit extends Component{
                         <div className="card">
                             <div className="card-body">
                                 <div className="row">
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
-                                    <div className="col-12 col-md-4">
-                                        <AccountDropdown/>                                    
-                                    </div>
+                                    {
+                                        this.state.applicationAccounts.map(item => {
+                                            return (
+                                                <div className="col-12 col-md-4">
+                                                    <AccountDropdown
+                                                        firstName={item.firstName}
+                                                        lastName={item.lastName}
+                                                        accountNumber={item.accountNumber}
+                                                        address={item.address}
+                                                        routingNumber={item.routingNumber}
+                                                        accountType={item.accountType}
+                                                        amount={item.amount}
+                                                        amountType={item.amountType}
+                                                    />                                    
+                                                </div>  
+                                            );
+                                        })
+                                    }                                                                                                        
                                 </div>
                             </div>
                         </div>
@@ -173,4 +194,4 @@ class DirectDeposit extends Component{
     }
 }
 
-export default withApollo(DirectDeposit);
+export default withApollo(withGlobalContent(DirectDeposit));

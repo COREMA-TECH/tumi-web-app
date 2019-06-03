@@ -46,8 +46,8 @@ class BankInfo extends Component{
                                 <input type="text" name="bankName" value={this.props.bankName} id="Bank Name" className="form-control" onChange={this.props.handleChange}/>
                             </div>
                             <div className="BankInfo-inputWrapper">
-                                <label htmlFor="routingName">* Routing Name</label>
-                                <input type="text" name="routingName" value={this.props.routingName} id="Routing Name" className="form-control" onChange={this.props.handleChange}/>
+                                <label htmlFor="routingNumber">* Routing Number</label>
+                                <input type="number" name="routingNumber" value={this.props.routingNumber} id="Routing Name" className="form-control" onChange={this.props.handleChange}/>
                             </div>
                             <div className="BankInfo-inputWrapper">
                                 <label htmlFor="account">* Account Number</label>
