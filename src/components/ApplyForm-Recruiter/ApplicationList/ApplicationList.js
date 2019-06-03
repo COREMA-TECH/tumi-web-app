@@ -67,17 +67,6 @@ class ApplicationList extends Component {
 				cellPhone
 				isLead
 				idWorkOrder
-				statusCompleted
-				dateCreation
-				immediately
-				optionHearTumi
-				eeoc
-				exemptions
-				area
-				hireType
-				gender
-				marital
-				sendInterview
 				recruiter{
 					Full_Name
 				}
@@ -164,9 +153,9 @@ class ApplicationList extends Component {
 		}*/
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className="row pb-0">
-				<div className="col-md-3 col-xl-2">
-					<div className="input-group mb-2">
+			<div className="row">
+				<div className="col-md-6 col-xl-2">
+					<div className="input-group mb-3">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="basic-addon1">
 								<i className="fa fa-search icon" />
@@ -188,38 +177,35 @@ class ApplicationList extends Component {
 				
 
 				<div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
-										<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.user != null && data.user.length > 0) {
-                                                            let options = [];
-                                                            data.user.map((item) => (
-                                                                options.push({ value: item.Id, label: item.Full_Name })
-                                                            ));
+					<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
+						{({ loading, error, data, refetch, networkStatus }) => {
+							//if (networkStatus === 4) return <LinearProgress />;
+							if (error) return <p>Error </p>;
+							if (data.user != null && data.user.length > 0) {
+								let options = [];
+								data.user.map((item) => (
+									options.push({ value: item.Id, label: item.Full_Name })
+								));
 
-                                                            return (
-                                                                <div style={{
-                                                                    paddingTop: '0px',
-                                                                    paddingBottom: '2px',
-                                                                }}>
-                                                                    <Select
-                                                                        options={options}
-                                                                        value={this.state.recruitersTags}
-                                                                        onChange={this.handleChangerecruiterTag}
-                                                                        closeMenuOnSelect={false}
-                                                                        components={makeAnimated()}
-                                                                       // isMulti
-                                                                    />
-                                                                </div>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
-				</div>
-				<div className="col-md-3 col-xl-2 mb-2">
-				
+								return (
+									<div style={{
+										paddingTop: '0px',
+										paddingBottom: '2px',
+									}}>
+										<Select
+											options={options}
+											value={this.state.recruitersTags}
+											onChange={this.handleChangerecruiterTag}
+											closeMenuOnSelect={false}
+											components={makeAnimated()}
+											// isMulti
+										/>
+									</div>
+								);
+							}
+							return <SelectNothingToDisplay />;
+						}}
+					</Query>
 				</div>
 
 				<div className="col-md-3 col-xl-2 mb-2">
@@ -266,7 +252,7 @@ class ApplicationList extends Component {
 									if (this.state.filterText === '') {
 										return true;
 									}
-									
+									console.log("aqui estamos en aplicant ", data.applications);
 									if (
 										(_.firstName +
 											_.middleName +
@@ -283,8 +269,6 @@ class ApplicationList extends Component {
 										return true;
 									}
 								});
-
-								
 
 								return (
 									<div className="row">

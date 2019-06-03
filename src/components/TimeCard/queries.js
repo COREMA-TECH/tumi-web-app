@@ -212,15 +212,6 @@ export const GET_STATE_QUERY = gql`
 		} 
 `;
 
-export const GET_EMPLOYEE_MARKS = gql`
-	query markedEmployees($EmployeeId: Int){
-		markedEmployees(EmployeeId: $EmployeeId){
-			EmployeeId
-			markedDate
-		}
-	}
-`;
-
 
 
 

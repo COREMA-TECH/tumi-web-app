@@ -528,7 +528,7 @@ class BackgroundCheck extends Component {
                     <div className="col-md-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{applyTabs[1].label}</span>
+                                <span className="applicant-card__title">{applyTabs[2].label}</span>
                                 <div>
                                     {
                                         this.state.isCreated && !this.state.loadingApplicantData ? (

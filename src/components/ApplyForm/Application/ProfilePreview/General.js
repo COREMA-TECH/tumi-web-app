@@ -1486,7 +1486,7 @@ class General extends Component {
 
         return (
             <div className="Apply-container--application">
-                <Titles titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} />
+                <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} />
                 <ConfirmDialog
                     open={this.state.openConfirm}
                     closeAction={() => {

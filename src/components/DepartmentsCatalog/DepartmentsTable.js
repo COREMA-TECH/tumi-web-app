@@ -10,10 +10,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TablePaginationActionsWrapped from '../ui-components/TablePagination';
-
 import moment from 'moment';
 
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
@@ -46,9 +42,7 @@ class DepartmentsCatalogTable extends Component{
 		}
 		
 		this.state = {
-			departments: [],	
-			rowsPerPage: 25,
-			page: 0,		
+			departments: [],			
 			...this.INITIAL_STATE
 		}
 	}
@@ -66,9 +60,7 @@ class DepartmentsCatalogTable extends Component{
 		.then( ({ data }) => {
 			this.setState(() => ({
 				departments: data.getcatalogitem				
-			}), _ => {
-				console.log(this.state.departments)
-			});
+			}));
 		})
     }
     
@@ -101,19 +93,8 @@ class DepartmentsCatalogTable extends Component{
 			this.props.handleOpenSnackbar('error', 'Failed to delete record', 'bottom', 'right');
 		});
 	}
-
-	handleChangePage = (event, page) => {
-		this.setState({ page });
-};
-
-handleChangeRowsPerPage = (event) => {
-	this.setState({ rowsPerPage: event.target.value });
-};
     
     render(){
-			let items = this.state.departments;
-        const { rowsPerPage, page } = this.state;
-        let isLoading = this.state.loading;  
         return(
 			<React.Fragment>
 			<div className="row">
@@ -189,21 +170,6 @@ handleChangeRowsPerPage = (event) => {
 											);								
 										})}
 									</TableBody>					
-									<TableFooter>
-						<TableRow>
-							{items.length > 0 && (
-								<TablePagination
-									colSpan={1}
-									count={items.length}
-									rowsPerPage={rowsPerPage}
-									page={page}
-									onChangePage={this.handleChangePage}
-									onChangeRowsPerPage={this.handleChangeRowsPerPage}
-									ActionsComponent={TablePaginationActionsWrapped}
-								/>
-							)}
-						</TableRow>
-					</TableFooter>
 								</Table>				
 							</React.Fragment>
 						</div>

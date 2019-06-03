@@ -8804,6 +8804,9 @@ label:not(.custom-file-label):not(.form-check-label) {
 .tumi-fullWidth {
   width: 100%; }
 
+.tumi-datePicker .react-datepicker-wrapper, .tumi-datePicker .react-datepicker__input-container {
+  width: 100%; }
+
 .tumi-forcedResponsiveTable {
   overflow-x: auto; }
 

@@ -90,6 +90,12 @@
 		width: 100%;
 	}
 
+	&-datePicker {
+		.react-datepicker-wrapper, .react-datepicker__input-container {
+			width: 100%;
+		}
+	}
+
 	// forces the table wrapped by this class to display as block and scroll horizontally
 	&-forcedResponsiveTable{			
 		overflow-x: auto;

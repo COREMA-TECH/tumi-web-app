@@ -7,7 +7,6 @@ import Tab from '@material-ui/core/Tab';
 import BackgroundCheck from "./BackgroundCkeck/BackgroundCheck";
 import NonDisclosure from "./NonDisclosure/NonDisclosure";
 import ApplicationInfo from "./ApplicationInfo";
-import ApplicationInternal from "./ApplicationInternal";
 import ConductCode from "./ConductCode/ConductCode";
 import AntiHarassment from "./AntiHarassment/AntiHarassment";
 import WorkerCompensation from "./WorkerCompensation/WorkerCompensation";
@@ -151,9 +150,9 @@ class CustomizedTabs extends React.Component {
                 case 0:
                     return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
                 case 1:
-                    return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />;
+                    return <ProfilePreview applicationId={this.state.applicationId} />;
                 case 2:
-                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} handleContract={this.handleContract} />;
+                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 3:
                     return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 4:
@@ -168,14 +167,11 @@ class CustomizedTabs extends React.Component {
                     return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 9:
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
-                case 10:                 
-                    return <ProfilePreview applicationId={this.state.applicationId} />;
-                case 11:
-                    return <IndependentContract applicationId={this.state.applicationId} />
+                case 10:
+                    return <IndependentContract />
 
             }
         };
-
         return (
             <div>
                 <MuiThemeProvider theme={theme}>
@@ -193,48 +189,43 @@ class CustomizedTabs extends React.Component {
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon` }}
-                            label={applyTabs[10].label}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[1].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantDisclosure ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[2].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantConductCode ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantDisclosure ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[3].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantHarassmentPolicy ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantConductCode ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[4].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantWorkerCompensation ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantHarassmentPolicy ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[5].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantI9 ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantWorkerCompensation ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[6].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantI9 ? 'incomplete' : 'completed'}` }}
+                            label={applyTabs[7].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[9].label}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
-                            label={applyTabs[7].label}
                         />
                         <Tab
                             disableRipple
