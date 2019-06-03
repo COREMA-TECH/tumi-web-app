@@ -23,6 +23,8 @@ import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import './index.css';
 import ContactModal from "../../Contact/ContactModal";
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
 
 const styles = (theme) => ({
 	container: {
@@ -1072,7 +1074,7 @@ class ContactcontactForm extends React.Component {
 			}
 		);
 	};
-	updateDepartmentName = (value) => {
+	updateDepartmentName = ({value}) => {
 		this.setState(
 			{
 				departmentName: value
@@ -1083,7 +1085,7 @@ class ContactcontactForm extends React.Component {
 		);
 	};
 
-	updateTitleName = (value) => {
+	updateTitleName = ({value}) => {
 		this.setState(
 			{
 				titleName: value
@@ -1104,7 +1106,7 @@ class ContactcontactForm extends React.Component {
 			}
 		);
 	};
-	updateType = (id) => {
+	updateType = ({value: id}) => {
 		this.setState(
 			{
 				type: id
@@ -1145,6 +1147,18 @@ class ContactcontactForm extends React.Component {
 				</React.Fragment>
 			);
 		}
+
+		const selectDepartments = this.state.departments.map(item => {
+			return { value: item.Name, label: item.Name }
+		});
+
+		const selectTitles = this.state.titles.map(item => {
+			return { value: item.Name, label: item.Name }
+		});
+
+		const selectContactTypes = this.state.contactTypes.map(item => {
+			return { value: item.Id, label: item.Name }
+		})
 
 		return (
 			<div className="TabSelected-container">
@@ -1198,7 +1212,7 @@ class ContactcontactForm extends React.Component {
 								<div className="row">
 									<div className="col-md-12 col-lg-4">
 										<label>* Contact Type</label>
-										<SelectForm
+										{/* <SelectForm
 											id="type"
 											name="type"
 											data={this.state.contactTypes}
@@ -1207,11 +1221,19 @@ class ContactcontactForm extends React.Component {
 											//noneName="Employee"
 											error={!this.state.typeValid}
 											value={this.state.type}
+										/> */}
+										<Select
+											options={selectContactTypes}
+											value={{value: this.state.type, label: selectContactTypes[this.state.type - 1].label}}
+											onChange={this.updateType}
+											closeMenuOnSelect={true}
+											components={makeAnimated()}
+											isMulti={false}
 										/>
 									</div>
 									<div className="col-md-12 col-lg-4">
 										<label>* Department</label>
-										<AutosuggestInput
+										{/* <AutosuggestInput
 											id="department"
 											name="department"
 											data={this.state.departments}
@@ -1219,11 +1241,22 @@ class ContactcontactForm extends React.Component {
 											value={this.state.departmentName}
 											onChange={this.updateDepartmentName}
 											onSelect={this.updateDepartmentName}
+										/> */
+											// console.log(this.state.departments)
+										}
+
+										<Select
+											options={selectDepartments}
+											value={{value: this.state.departmentName, label: this.state.departmentName}}
+											onChange={this.updateDepartmentName}
+											closeMenuOnSelect={true}
+											components={makeAnimated()}
+											isMulti={false}
 										/>
 									</div>
 									<div className="col-md-12 col-lg-4">
 										<label>* Contact Title</label>
-										<AutosuggestInput
+										{/* <AutosuggestInput
 											id="title"
 											name="title"
 											data={this.state.titles}
@@ -1231,6 +1264,14 @@ class ContactcontactForm extends React.Component {
 											value={this.state.titleName}
 											onChange={this.updateTitleName}
 											onSelect={this.updateTitleName}
+										/> */}
+										<Select
+											options={selectTitles}
+											value={{value: this.state.titleName, label: this.state.titleName}}
+											onChange={this.updateTitleName}
+											closeMenuOnSelect={true}
+											components={makeAnimated()}
+											isMulti={false}
 										/>
 									</div>
 									<div className="col-md-12 col-lg-4">

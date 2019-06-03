@@ -41,6 +41,7 @@
 		"react-datepicker": "^2.3.0",
 		"react-datetime": "^2.16.3",
 		"react-dom": "^16.4.2",
+		"react-ga": "^2.5.7",
 		"react-input-color": "^1.7.5",
 		"react-input-colorpicker": "^1.0.13",
 		"react-input-mask": "^2.0.4",

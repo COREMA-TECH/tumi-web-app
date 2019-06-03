@@ -12,6 +12,11 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
+import { GET_HOTEL_QUERY, GET_USERS, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
+import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+
 
 const styles = (theme) => ({
 	root: {
@@ -32,7 +37,8 @@ class ApplicationList extends Component {
 			loadingContracts: false,
 			data: [],
 			filterText: '',
-			opendialog: false
+			opendialog: false,
+			recruitersTags: []
 		};
 	}
 
@@ -49,8 +55,9 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-		{
-			applications(isActive: true,isLead:true) {
+	query applications( $idRecruiter:Int) 	
+	{
+			applications(isActive: true,isLead:true, idRecruiter : $idRecruiter) {
 				id
 				firstName
 				middleName
@@ -60,6 +67,17 @@ class ApplicationList extends Component {
 				cellPhone
 				isLead
 				idWorkOrder
+				statusCompleted
+				dateCreation
+				immediately
+				optionHearTumi
+				eeoc
+				exemptions
+				area
+				hireType
+				gender
+				marital
+				sendInterview
 				recruiter{
 					Full_Name
 				}
@@ -116,6 +134,10 @@ class ApplicationList extends Component {
 		);
 	};
 
+	handleChangerecruiterTag = (recruitersTags) => {
+	  this.setState({ recruitersTags });
+    };
+
 	onDeleteHandler = (id) => {
 		this.setState({ idToDelete: id, opendialog: true });
 	};
@@ -142,9 +164,9 @@ class ApplicationList extends Component {
 		}*/
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className="row">
-				<div className="col-md-6 col-xl-2">
-					<div className="input-group mb-3">
+			<div className="row pb-0">
+				<div className="col-md-3 col-xl-2">
+					<div className="input-group mb-2">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="basic-addon1">
 								<i className="fa fa-search icon" />
@@ -163,14 +185,51 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				<div className="col-md-6 col-xl-2 offset-xl-8">
-					<button
-						className="btn btn-success float-right"
-						onClick={() => {
-							this.redirectToCreateApplication();
-						}}
-					>
-						Add Lead
+				
+
+				<div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
+										<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.user != null && data.user.length > 0) {
+                                                            let options = [];
+                                                            data.user.map((item) => (
+                                                                options.push({ value: item.Id, label: item.Full_Name })
+                                                            ));
+
+                                                            return (
+                                                                <div style={{
+                                                                    paddingTop: '0px',
+                                                                    paddingBottom: '2px',
+                                                                }}>
+                                                                    <Select
+                                                                        options={options}
+                                                                        value={this.state.recruitersTags}
+                                                                        onChange={this.handleChangerecruiterTag}
+                                                                        closeMenuOnSelect={false}
+                                                                        components={makeAnimated()}
+                                                                       // isMulti
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
+				</div>
+				<div className="col-md-3 col-xl-2 mb-2">
+				
+				</div>
+
+				<div className="col-md-3 col-xl-2 mb-2">
+						<button
+							className="btn btn-success float-right"
+							onClick={() => {
+								this.redirectToCreateApplication();
+							}}
+						>
+							Add Lead
 						</button>
 				</div>
 			</div>
@@ -187,7 +246,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} fetchPolicy="no-cache" pollInterval={300}>
+					<Query query={this.GET_APPLICATION_QUERY} variables={{idRecruiter:this.state.recruitersTags.value}} fetchPolicy="no-cache">
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
@@ -207,7 +266,7 @@ class ApplicationList extends Component {
 									if (this.state.filterText === '') {
 										return true;
 									}
-									console.log("aqui estamos en aplicant ", data.applications);
+									
 									if (
 										(_.firstName +
 											_.middleName +
@@ -224,6 +283,8 @@ class ApplicationList extends Component {
 										return true;
 									}
 								});
+
+								
 
 								return (
 									<div className="row">

@@ -100,6 +100,12 @@ class ApplicationList extends Component {
 				dateCreation
 				immediately
 				optionHearTumi
+				eeoc
+				exemptions
+				area
+				hireType
+				gender
+				marital
 				employee {
 					Employees {
 					  idEntity
@@ -186,7 +192,6 @@ class ApplicationList extends Component {
 	}
 	handleDepartmentChange = (department) => {
 		this.setState(() => ({ department }));
-		console.log(this.state.department);
 	}
 	handleStatusChange = (statu) => {
 		this.setState(() => ({ statu }));

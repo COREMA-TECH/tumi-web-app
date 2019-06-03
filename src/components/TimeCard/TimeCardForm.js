@@ -253,7 +253,8 @@ class TimeCardForm extends Component {
         } else {
             this.setState({ saving: true });
             if (this.state.id == null) {     
-                this.checkUserMarks();                
+                // this.checkUserMarks();                
+                this.addIn();
             }
             else {
                 //alert(this.state.employees.detailEmployee)
@@ -320,7 +321,7 @@ class TimeCardForm extends Component {
                         isActive: currentEmployee.isActive,
                         userCreated: currentEmployee.userCreated,
                         userUpdated: currentEmployee.userUpdated,
-                        hireDate: this.state.startDate
+                        hireDate: `'${moment(this.state.startDate).format("YYYY-MM-DD")}'`
                     }
                 }
             })
@@ -351,9 +352,11 @@ class TimeCardForm extends Component {
                 }
             })
             .then((data) => {
+                this.props.updateFiters();
                 if (!this.state.statusTimeOut) { this.addOut(); } else {
+
                     this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                    this.props.toggleRefresh();
+                    
                     this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
                 } 0
 

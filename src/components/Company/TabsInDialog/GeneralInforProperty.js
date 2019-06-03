@@ -14,6 +14,8 @@ import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import LocationForm from '../../ui-components/LocationForm';
 import { INSERT_USER_QUERY } from '../User/Mutations';
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
 import moment from 'moment';
 
 class GeneralInfoProperty extends Component {
@@ -837,7 +839,9 @@ class GeneralInfoProperty extends Component {
                                     room: item.Rooms,
                                     avatar: item.ImageURL,
                                     changeCity: false,
-                                    linearProgress: false
+                                    linearProgress: false,
+                                    startWeekName: days[item.Start_Week - 1].Name,
+									endWeekName: days[item.End_Week - 1].Name
                                 }
                             });
                         }
@@ -1123,6 +1127,71 @@ class GeneralInfoProperty extends Component {
         })
     }
 
+    findDay = id => {
+        const dayFound = days.find(item => {
+            return item.Id === id
+        });
+
+        return dayFound;
+    }
+
+    updateStartWeek = ({value}) => {
+        //Calculate End Week
+        const idStartWeek = value;
+        let idEndWeek = value - 1;
+
+        if (idEndWeek <= 0) 
+            idEndWeek = 7;
+
+        if (value === 0) {
+            this.setState({
+                startWeek: idStartWeek,
+                validStartWeek: 'valid',
+                validEndWeek: 'valid',
+                endWeek: idEndWeek
+            });
+        } else {
+            this.setState({
+                startWeek: idStartWeek,
+                validStartWeek: '',
+                validEndWeek: '',
+                endWeek: idEndWeek
+            });
+        }
+
+        this.setState({
+            startWeekName: this.findDay(idStartWeek).Name,
+            endWeekName: this.findDay(idEndWeek).Name,
+        });
+    }
+
+    updateEndWeek = ({value}) => {
+        //Calculate Start Week
+        var idStartWeek = value + 1;
+        if (idStartWeek >= 8) idStartWeek = 1;
+
+        if (value === 0) {
+            this.setState({
+                endWeek: value,
+                validEndWeek: 'valid',
+                validStartWeek: 'valid',
+                startWeek: idStartWeek
+            });
+        } else {
+            this.setState({
+                endWeek: value,
+                validEndWeek: '',
+                validStartWeek: '',
+                startWeek: idStartWeek
+            });
+        }
+
+        this.setState({
+            startWeekName: this.findDay(idStartWeek).Name,
+            endWeekName: this.findDay(value).Name,
+        })
+    }
+
     render() {
         this.changeStylesInCompletedInputs();
 
@@ -1130,6 +1199,10 @@ class GeneralInfoProperty extends Component {
             return <LinearProgress />;
         }
         var loading = this.state.linearProgress || this.state.searchigZipcode;
+
+        const selectDays = days.map(item => {
+			return { value: item.Id, label: item.Name }
+		});
 
         return <form >
             <div className="row">
@@ -1422,63 +1495,26 @@ class GeneralInfoProperty extends Component {
                                         required
                                     />
                                 </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>* Week Start</label>
-                                    <SelectForm
-                                        data={days}
-                                        update={(value) => {
-                                            //Calculate End Week
-                                            var idEndWeek = value - 1;
-                                            if (idEndWeek <= 0) idEndWeek = 7;
-
-                                            if (value === 0) {
-                                                this.setState({
-                                                    startWeek: value,
-                                                    validStartWeek: 'valid',
-                                                    validEndWeek: 'valid',
-                                                    endWeek: idEndWeek
-                                                });
-                                            } else {
-                                                this.setState({
-                                                    startWeek: value,
-                                                    validStartWeek: '',
-                                                    validEndWeek: '',
-                                                    endWeek: idEndWeek
-                                                });
-                                            }
-                                        }}
-                                        value={this.state.startWeek}
-                                        error={this.state.validStartWeek === '' ? false : true}
-                                        showNone={false}
+                                <div className="col-md-6 col-lg-4 tumi-forcedTop">
+                                    <label>* Week Start</label>                                   
+                                    <Select
+                                        options={selectDays}
+                                        value={{value: this.state.startWeek, label: this.state.startWeekName || ''}}
+                                        onChange={this.updateStartWeek}
+                                        closeMenuOnSelect={true}
+                                        components={makeAnimated()}
+                                        isMulti={false}	
                                     />
                                 </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>To</label>
-                                    <SelectForm
-                                        data={days}
-                                        update={(value) => {
-                                            //Calculate Start Week
-                                            var idStartWeek = value + 1;
-                                            if (idStartWeek >= 8) idStartWeek = 1;
-                                            if (value === 0) {
-                                                this.setState({
-                                                    endWeek: value,
-                                                    validEndWeek: 'valid',
-                                                    validStartWeek: 'valid',
-                                                    startWeek: idStartWeek
-                                                });
-                                            } else {
-                                                this.setState({
-                                                    endWeek: value,
-                                                    validEndWeek: '',
-                                                    validStartWeek: '',
-                                                    startWeek: idStartWeek
-                                                });
-                                            }
-                                        }}
-                                        value={this.state.endWeek}
-                                        error={this.state.validEndWeek === '' ? false : true}
-                                        showNone={false}
+                                <div className="col-md-6 col-lg-4 tumi-forcedTop">
+                                    <label>To</label>                                    
+                                    <Select
+                                        options={selectDays}
+                                        value={{value: this.state.endWeek, label: this.state.endWeekName || ''}}
+                                        onChange={this.updateEndWeek}
+                                        closeMenuOnSelect={true}
+                                        components={makeAnimated()}
+                                        isMulti={false}	
                                     />
                                 </div>
                                 <div className="col-md-6 col-lg-6">

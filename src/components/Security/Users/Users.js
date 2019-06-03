@@ -22,8 +22,9 @@ import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import withGlobalContent from 'Generic/Global';
-import ErrorMessageComponent from "../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
-import TablesContracts from "../../Contract/Main/MainContract/TablesContracts";
+
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
 
 const styles = (theme) => ({
     container: {
@@ -328,6 +329,7 @@ class Catalogs extends React.Component {
             IdSchedulesEmployees: "",
             IdSchedulesManager: "",
             filterText: '',
+            roleFilterList: [],
 
             ...this.DEFAULT_STATE
         };
@@ -814,8 +816,12 @@ class Catalogs extends React.Component {
                             {
                                 roles: data.data.getroles,
                                 loadingRoles: false
-                            },
-                            func
+                            }, _ => {
+                                this.setState(_ => {
+                                    return { roleFilterList: this.getRoleList() }
+                                }, func);                                
+                            }
+                            
                         );
                     } else {
                         this.setState({
@@ -1141,6 +1147,36 @@ class Catalogs extends React.Component {
         });
     }
 
+    getRoleList = _ => {
+        const positions = this.state.roles.map(item => {
+            return {value: item.Id, label: item.Name}
+        });
+
+        const options = [
+            { value: '', label: 'Select a Role'},
+            ...positions
+        ];
+
+        return options;
+    }
+
+    findSelectedRole = role => {
+        const defValue = {value: '', label: 'Select a Rol'};        
+        
+        if(!role || role === '')
+            return defValue;
+
+        const found = this.state.roleFilterList.find(item => {
+            return item.value === role;
+        });
+
+        return found ? found : defValue;
+    }
+
+    handleRoleFilterChange = ({value}) => {
+        this.updateSelect(value, 'idRol');
+    }
+
     render() {
         const { classes } = this.props;
         const { fullScreen } = this.props;
@@ -1270,7 +1306,7 @@ class Catalogs extends React.Component {
                                         </div>
                                         <div className="col-md-12 col-lg-6">
                                             <label>* Role</label>
-                                            <select
+                                            {/* <select
                                                 name="idRol"
                                                 className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
                                                     ' '
@@ -1287,7 +1323,16 @@ class Catalogs extends React.Component {
                                                         {item.Name}
                                                     </option>
                                                 ))}
-                                            </select>
+                                            </select> */}
+                                            <Select
+                                                options={this.state.roleFilterList}
+                                                value={this.findSelectedRole(this.state.idRol)}
+                                                onChange={this.handleRoleFilterChange}
+                                                closeMenuOnSelect={true}
+                                                components={makeAnimated()}
+                                                isMulti={false}
+                                                isDisabled={this.state.loadingRoles}                                                
+                                            />
                                         </div>
                                         <div className="col-md-12 col-lg-6">
                                             <label>* Language</label>

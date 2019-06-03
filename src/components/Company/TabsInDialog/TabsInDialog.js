@@ -278,7 +278,7 @@ printDialogConfirmCompany = () => {
 							disabled={this.state.idProperty === null}
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Username and Password"
+							label="Configuration"
 						/>
 					</Tabs>
 					{value === 0 && (

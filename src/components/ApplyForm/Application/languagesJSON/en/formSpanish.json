@@ -114,6 +114,29 @@
 {
   "id":28,
   "label":"Name References"
+},
+{
+  "id":29,
+  "label":"EEOC Ethnic Code"
+},
+{
+  "id":30,
+  "label":"Exemptions"
+},
+{
+  "id":31,
+  "label":"Area"
+},
+{
+  "id":32,
+  "label":"Hire Type"
+},
+{
+  "id":33,
+  "label":"Gender"
+},
+{
+  "id":34,
+  "label":"Material Status"
 }
-
 ]

@@ -254,6 +254,9 @@ class PunchesReportConsolidatedFilter extends Component {
                         onEditHandler={this.onEditHandler}
                         toggleRefresh={this.toggleRefresh}
                         handleCloseModal={this.handleCloseModal}
+                        updateFiters={()=>{
+                            this.props.updateFilter(this.state)
+                        }}
                     />
                 </div>
             </div>

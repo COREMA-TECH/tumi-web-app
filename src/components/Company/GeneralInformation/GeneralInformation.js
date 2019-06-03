@@ -30,6 +30,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hotels from './hotels';
 import LocationForm from '../../ui-components/LocationForm'
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -338,7 +340,9 @@ class GeneralInformation extends Component {
 									suite: item.Suite ? item.Suite.trim() : '',
 									indexView: 1,
 									...this.DEFAULT_STATUS,
-									loading: false
+									loading: false,
+									startWeekName: days[item.Start_Week - 1].Name,
+									endWeekName: days[item.End_Week - 1].Name
 								},
 								func
 							);
@@ -942,7 +946,15 @@ class GeneralInformation extends Component {
 		this.validateField('city', id);
 	};
 
-	updateStartWeek = (id) => {
+	findDay = id => {
+        const dayFound = days.find(item => {
+            return item.Id === id
+        });
+
+        return dayFound;
+	}
+	
+	updateStartWeek = ({value: id}) => {
 		//Calculate End Week
 		var idEndWeek = id - 1;
 		if (idEndWeek <= 0) idEndWeek = 7;
@@ -951,7 +963,9 @@ class GeneralInformation extends Component {
 			{
 				startWeek: id,
 				endWeek: idEndWeek,
-				endWeekValid: true
+				endWeekValid: true,
+				startWeekName: this.findDay(id).Name,
+				endWeekName: this.findDay(idEndWeek).Name,
 			},
 			() => {
 				this.validateField('startWeek', id);
@@ -959,7 +973,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	updateEndWeek = (id) => {
+	updateEndWeek = ({value: id}) => {
 		//Calculate Start Week
 		var idStartWeek = id + 1;
 		if (idStartWeek >= 8) idStartWeek = 1;
@@ -968,7 +982,9 @@ class GeneralInformation extends Component {
 			{
 				endWeek: id,
 				startWeek: idStartWeek,
-				startWeekValid: true
+				startWeekValid: true,
+				endWeekName: this.findDay(id).Name,
+				startWeekName: this.findDay(idStartWeek).Name
 			},
 			() => {
 				this.validateField('endWeek', id);
@@ -1282,6 +1298,11 @@ class GeneralInformation extends Component {
 				</React.Fragment>
 			);
 		}
+
+		const selectDays = days.map(item => {
+			return { value: item.Id, label: item.Name }
+		});
+
 		return (
 			<div className="TabSelected-container">
 				{isLoading && <LinearProgress />}
@@ -1546,9 +1567,9 @@ class GeneralInformation extends Component {
 							<div class="card-header warning">Legal Docs</div>
 							<div class="card-body">
 								<div className="row">
-									<div className="col-md-6">
+									<div className="col-md-6 tumi-forcedTop">
 										<label>* Week Start</label>
-										<SelectForm
+										{/* <SelectForm
 											name="startWeek"
 											data={days}
 											error={!this.state.startWeekValid}
@@ -1556,11 +1577,20 @@ class GeneralInformation extends Component {
 											value={this.state.startWeek}
 											disabled={!this.props.showStepper}
 											showNone={false}
+										/> */}										
+										<Select
+											options={selectDays}
+											value={{value: this.state.startWeek, label: this.state.startWeekName || ''}}
+											onChange={this.updateStartWeek}
+											closeMenuOnSelect={true}
+											components={makeAnimated()}
+											isMulti={false}	
+											disabled={!this.props.showStepper}										
 										/>
 									</div>
-									<div className="col-md-6">
+									<div className="col-md-6 tumi-forcedTop">
 										<label>* Week End</label>
-										<SelectForm
+										{/* <SelectForm
 											name="endWeek"
 											data={days}
 											error={!this.state.endWeekValid}
@@ -1568,6 +1598,15 @@ class GeneralInformation extends Component {
 											value={this.state.endWeek}
 											disabled={!this.props.showStepper}
 											showNone={false}
+										/> */}
+										<Select
+											options={selectDays}
+											value={{value: this.state.endWeek, label: this.state.endWeekName || ''}}
+											onChange={this.updateEndWeek}
+											closeMenuOnSelect={true}
+											components={makeAnimated()}
+											isMulti={false}	
+											disabled={!this.props.showStepper}										
 										/>
 									</div>
 									<div className="col-md-12">
