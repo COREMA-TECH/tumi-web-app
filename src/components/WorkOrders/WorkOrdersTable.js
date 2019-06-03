@@ -483,7 +483,7 @@ class WorkOrdersTable extends Component {
                                     })}
                                 </select>
 
-                                <div class="input-group flex-nowrap WorkOrders-filter">
+                                <div class="input-group flex-nowrap WorkOrders-filter tumi-datePicker">
                                     <DatePicker
                                         selected={this.state.startDate}
                                         onChange={this.handleStartDate}
@@ -497,7 +497,7 @@ class WorkOrdersTable extends Component {
                                     </div>
                                 </div>
                         
-                                <div class="input-group flex-nowrap WorkOrders-filter">
+                                <div class="input-group flex-nowrap WorkOrders-filter tumi-datePicker">
                                     <DatePicker
                                         selected={this.state.endDate}
                                         onChange={this.handleEndDate}
