@@ -20,7 +20,7 @@ class BankInfo extends Component{
                 percentageDisabled: false,
                 quantityDisabled: true
             }
-        });
+        }, _ => this.props.setAmountType('percentage'));
     }
 
     enableQuantity = _ => {
@@ -29,7 +29,7 @@ class BankInfo extends Component{
                 percentageDisabled: true,
                 quantityDisabled: false
             }
-        });
+        }, _ => this.props.setAmountType('quantity'));
     }
 
     render(){

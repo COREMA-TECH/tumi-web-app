@@ -226,7 +226,7 @@ class VerticalLinearStepper extends Component {
         const { activeStep } = this.state;
 
         let idEntity = null, Id_Department = null, EmployeeId = -1;
-
+        console.log(`Application id: ${this.props.applicationId}`);
 
 
         if (this.state.employee)

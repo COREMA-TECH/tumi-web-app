@@ -26,7 +26,8 @@ class DirectDeposit extends Component{
         amount: '',
         percentage: '',
         accountType: '',
-        accountDocumentsInfo: []         
+        amountType: '',
+        accountDocumentsInfo: [],
     }
 
     constructor(props){
@@ -34,7 +35,8 @@ class DirectDeposit extends Component{
 
         this.state = {
             ...this.INITIAL_STATE,
-            applicationId: this.props.applicationId
+            // applicationId: this.props.applicationId
+            applicationId: 204
         }
     }
 
@@ -48,35 +50,43 @@ class DirectDeposit extends Component{
         })
     }
 
+    setAmountType = amountType => {
+        this.setState(_ => {
+            return { amountType }
+        });
+    }
+
     handleSubmit = e => {
         e.preventDefault();
         
-        const { firstName, lastName, city, state, zipcode, bankNumber, accountNumber, routingNumber, accountType, amount, amountType } = this.state;
-        alert(zipcode);
+        const { firstName, lastName, city, state, zipcode, bankNumber, accountNumber, routingNumber, accountType, amount, amountType, percentage } = this.state;
+        console.log(this.state);
 
-        this.props.client.mutate({
-            mutation: INSERT_ACCOUNT_INFO,
-            variables: {
-                input: {
-                   applicationId: 0,
-                   firstName,
-                   lastName,
-                   city,
-                   state,
-                   zipcode: parseInt(zipcode),
-                   bankNumber,
-                   accountNumber,
-                   routingNumber,
-                   accountType, 
-                   amount,
-                   amountType
-                },
+        const amountToSave = accountType === 'quantity' ? amount : percentage;
 
-                documents: this.dummyDocData
-            }
-        })
-        .then(data => alert('success'))
-        .catch(error => alert(error));        
+        // this.props.client.mutate({
+        //     mutation: INSERT_ACCOUNT_INFO,
+        //     variables: {
+        //         input: {
+        //            applicationId: 0,
+        //            firstName,
+        //            lastName,
+        //            city,
+        //            state,
+        //            zipcode: parseInt(zipcode),
+        //            bankNumber,
+        //            accountNumber,
+        //            routingNumber,
+        //            accountType, 
+        //            amount: amountToSave,
+        //            amountType
+        //         },
+
+        //         documents: this.dummyDocData
+        //     }
+        // })
+        // .then(data => alert('success'))
+        // .catch(error => alert(error)); 
     }
         
     render(){
@@ -107,8 +117,8 @@ class DirectDeposit extends Component{
                                 routingName={this.state.routingName}
                                 account={this.state.account}
                                 amount={this.state.amount}
-                                percentage={this.state.percentage}
                                 accountType={this.state.accountType}
+                                setAmountType={this.setAmountType}
                             />
                         </div>
                         <div className="col-md-12 col-xl-3">
@@ -118,7 +128,7 @@ class DirectDeposit extends Component{
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" className='btn btn-success tumi-saveBtn right' value='submit'>SAVE</button>
+                        <button type="submit" className='btn btn-success tumi-saveBtn right' value='submit'>Save</button>
                     </div>      
                 </form>                          
                 <div className="row">
