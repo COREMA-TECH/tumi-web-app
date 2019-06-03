@@ -35,7 +35,7 @@ class BreakRules extends Component {
 
     handleModalClose = _ => {
         this.setState(_ => {
-            return { openModal: false }
+            return { openModal: false, breakRuleToEdit: null, isRuleEdit: false, }
         }, this.refreshComponent());
     }
 

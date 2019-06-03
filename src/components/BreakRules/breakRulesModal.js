@@ -11,7 +11,9 @@ import Datetime from 'react-datetime';
 import moment from 'moment';
 
 import { SET_BREAK_RULE, UPDATE_BREAK_RULE, SET_BREAK_RULE_DETAIL, UPDATE_BREAK_RULE_DETAIL } from './mutations';
+
 import withApollo from 'react-apollo/withApollo';
+import withGlobalContent from "../Generic/Global";
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 
@@ -123,7 +125,9 @@ class BreakRulesModal extends Component {
 
     //#region Handle Events
     handleClose = _ => {
-        this.setState({ ...this.INITIAL_STATE }, _ => this.props.handleClose());
+        this.setState({ ...this.INITIAL_STATE }, _ => {
+            this.props.handleClose()
+        });
     }
 
     handleChange = (event) => {
@@ -221,6 +225,15 @@ class BreakRulesModal extends Component {
                         }
                     });                
                 }
+
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Saved Successfully',
+                    'bottom',
+                    'center'
+                );
+
+                this.handleClose();
             }).catch(error => console.log(error));
         }      
         
@@ -280,9 +293,16 @@ class BreakRulesModal extends Component {
                     }
                 }               
                 
-            }).catch(error => console.log(error));
-        }
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Saved Successfully',
+                    'bottom',
+                    'center'
+                );
 
+                this.handleClose();
+            }).catch(error => console.log(error));
+        }        
     }
     //#endregion
     
@@ -308,8 +328,7 @@ class BreakRulesModal extends Component {
         });
     }
 
-    setBreakLenghtHours = unit => {
-            
+    setBreakLenghtHours = unit => {            
         //Break lenght will be saved in hours, for ease of conversion            
         let lenghtInHours = 0;
         
@@ -362,7 +381,7 @@ class BreakRulesModal extends Component {
                         
                         <div class="form-group form-row tumi-row-vert-center">
                             <div className="col-md-2">
-                                <input value={this.state.shiftReached} min="1" step="1" pattern="[0-9]" name="shiftReached" onChange={this.handleChange} type="number" className="form-control" />
+                                <input required value={this.state.shiftReached} min="1" step="1" pattern="[0-9]" name="shiftReached" onChange={this.handleChange} type="number" className="form-control" />
                             </div>
                             <div className="col-md-4">
                                 <Select
@@ -437,13 +456,13 @@ class BreakRulesModal extends Component {
                             <div className="col-12 col-md-6">
                                 <div className="form-group">
                                     <label for="ruleName">Name</label>
-                                    <input value={this.state.ruleName} onChange={this.handleChange} name="ruleName" type="text" className="form-control" id="ruleName"/>
+                                    <input required value={this.state.ruleName} onChange={this.handleChange} name="ruleName" type="text" className="form-control" id="ruleName"/>
                                 </div>                            
                             </div>    
                             <div className="col-12 col-md-6">
                                 <div className="form-group">
                                     <label for="code">Code</label>
-                                    <input value={this.state.code} onChange={this.handleChange} name="code" type="text" className="form-control" id="code"/>
+                                    <input required value={this.state.code} onChange={this.handleChange} name="code" type="text" className="form-control" id="code"/>
                                 </div>                            
                             </div>    
                         </div>
@@ -472,14 +491,14 @@ class BreakRulesModal extends Component {
                                     <label className="d-block" for="">Type</label>
                                     <div className="BreaksModal-radioWrap">
                                         <div className="form-check">
-                                            <input className="form-check-input" selected={this.state.isPaid} type="radio" onChange={this.handleChange} name="isPaid" id="isPaid" value="true" />
+                                            <input className="form-check-input" checked={this.state.isPaid} type="radio" onChange={this.handleChange} name="isPaid" id="isPaid" value="true" />
                                             <label className="form-check-label" for="isPaid">
                                                 Paid
                                             </label>
                                         </div>
 
                                         <div className="form-check">
-                                            <input className="form-check-input" selected={!this.state.isPaid} type="radio" onChange={this.handleChange} name="isPaid" id="isUnpaid" value="false" />
+                                            <input className="form-check-input" checked={!this.state.isPaid} type="radio" onChange={this.handleChange} name="isPaid" id="isUnpaid" value="false" />
                                             <label className="form-check-label" for="isUnpaid">
                                                 Unpaid
                                             </label>
@@ -532,4 +551,4 @@ class BreakRulesModal extends Component {
     }
 }
 
-export default withApollo(BreakRulesModal);
+export default withApollo(withGlobalContent(BreakRulesModal));
