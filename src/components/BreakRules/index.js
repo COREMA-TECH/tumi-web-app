@@ -2,16 +2,23 @@ import React, {Component} from 'react';
 import withApollo from 'react-apollo/withApollo';
 import BreaksTable from './breaksTable';
 import BreakRulesModal from './breakRulesModal';
-import { GET_EMPLOYEES } from './queries';
+import { GET_EMPLOYEES, GET_BREAK_RULES } from './queries';
 
 class BreakRules extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            openModal: true,
-            employeeList: []
+            openModal: false,
+            employeeList: [],
+            breakRules: [],
+            breakRuleToEdit: {},
+            isRuleEdit: false
         }
+    }
+
+    refreshComponent = _ => {
+        this.getBreakRules();
     }
 
     openModal = _ => {
@@ -20,10 +27,16 @@ class BreakRules extends Component {
         })
     }
 
+    setRuleToEdit = rule => {
+        this.setState(_ => {
+            return { breakRuleToEdit: rule, isRuleEdit: true, openModal: true }
+        });
+    }
+
     handleModalClose = _ => {
         this.setState(_ => {
             return { openModal: false }
-        })
+        }, this.refreshComponent());
     }
 
     handleModalSubmit = event => {
@@ -31,6 +44,11 @@ class BreakRules extends Component {
     }
 
     componentWillMount() {
+        this.getEmployees();
+        this.getBreakRules();
+    }
+
+    getEmployees = _ => {
         //Fetch employees
         this.props.client.query({
             query: GET_EMPLOYEES,
@@ -45,6 +63,21 @@ class BreakRules extends Component {
         })
         
         .catch(error => console.log(error));
+    }
+
+    getBreakRules = _ => {
+        //Fetch break rules for this company
+        this.props.client.query({
+            query: GET_BREAK_RULES,
+            variables: { businessCompanyId: this.props.companyId },
+            fetchPolicy: 'no-cache'
+        })
+
+        .then(({data}) => {
+            this.setState(_ => {
+                return { breakRules: data.breakRules }
+            }, _ => console.log(''))
+        })
     }
 
     render(){
@@ -73,7 +106,12 @@ class BreakRules extends Component {
                             &nbsp; Add Break Rule
                         </button>    
                         <div className="tumi-forcedResponsiveTable Breaks-tableWrapper">
-                            <BreaksTable />
+                            <BreaksTable 
+                                breakRules={this.state.breakRules}
+                                refresh={this.refreshComponent}
+                                setRuleToEdit={this.setRuleToEdit}
+                                employeeCount={this.state.employeeList.length}
+                            />
                         </div>
                     </div>
                 </div>
@@ -82,6 +120,10 @@ class BreakRules extends Component {
                     handleClose={this.handleModalClose}
                     handleSubmit={this.handleModalSubmit}
                     employeeList={this.state.employeeList}
+                    businessCompanyId={this.props.companyId}
+                    breakRuleToEdit={this.state.breakRuleToEdit}
+                    isRuleEdit={this.state.isRuleEdit}
+                    refresh={this.refreshComponent}
                 />
             </React.Fragment>
         );

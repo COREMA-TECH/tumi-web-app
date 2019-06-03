@@ -10,10 +10,15 @@ import Select from 'react-select';
 import Datetime from 'react-datetime';
 import moment from 'moment';
 
+import { SET_BREAK_RULE, UPDATE_BREAK_RULE, SET_BREAK_RULE_DETAIL, UPDATE_BREAK_RULE_DETAIL } from './mutations';
+import withApollo from 'react-apollo/withApollo';
+
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 
 class BreakRulesModal extends Component {
     INITIAL_STATE = {
+        ruleId: 0,
+        ruleDetailId: 0,
         ruleName: '',
         code: '',
         
@@ -45,7 +50,9 @@ class BreakRulesModal extends Component {
         selectedDays: 'MO,TU,WE,TH,FR,SA,SU',
         
         breakPlacement: 'middle',
-        breakStartTime: '12:00',
+        breakStartTime: null,
+        isActive: true,
+        isPaid: true
     }
 
     constructor(props) {
@@ -60,6 +67,37 @@ class BreakRulesModal extends Component {
         let employeeSelectOptions = nextProps.employeeList.map(employee => {
             return { value: employee.id, key: employee.id, label: `${employee.firstName} ${employee.lastName}` }
         });
+
+        if(nextProps.isRuleEdit && nextProps.breakRuleToEdit) {
+            const { id, name, code, lenght, employee_BreakRule, isAutomatic, breakRuleDetail, isActive, isPaid } = nextProps.breakRuleToEdit;
+
+            this.setState(_ => {
+                return {
+                    ruleId: id,
+                    ruleName: name,
+                    code,
+                    lenght,
+                    lenghtInHours: lenght,
+                    isPaid,
+
+                    selectedEmployees: employee_BreakRule.map(item => {
+                        return { value: item.employees.id, key: item.employees.id, label: `${item.employees.firstName} ${item.employees.lastName}` }
+                    }),
+
+                    isAutomaticBreak: isAutomatic,
+                    isManualBreak: !isAutomatic,
+
+                    ruleDetailId: breakRuleDetail ? breakRuleDetail.id : 0,
+                    shiftReached: breakRuleDetail ? breakRuleDetail.shiftReached : 0, 
+                    shiftReachedInHours: breakRuleDetail ? breakRuleDetail.shiftReached : 0,
+                    repeatBreak: breakRuleDetail ? breakRuleDetail.isRepeating : false,
+                    selectedDays: breakRuleDetail ? breakRuleDetail.days : 'MO,TU,WE,TH,FR,SA,SU',
+                    breakPlacement: breakRuleDetail ? breakRuleDetail.breakPlacement : 'middle',
+                    breakStartTime: breakRuleDetail ? breakRuleDetail.breakStartTime : null,
+                    isActive
+                }
+            });
+        }
 
         this.setState({
             employeeSelectOptions
@@ -85,9 +123,7 @@ class BreakRulesModal extends Component {
 
     //#region Handle Events
     handleClose = _ => {
-        this.setState(_ => {
-            return { ...this.INITIAL_STATE }
-        }, _ => this.props.handleClose());
+        this.setState({ ...this.INITIAL_STATE }, _ => this.props.handleClose());
     }
 
     handleChange = (event) => {
@@ -147,7 +183,106 @@ class BreakRulesModal extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        console.log(this.state);
+
+        if(this.state.ruleId === 0){
+            this.props.client.mutate({
+                mutation: SET_BREAK_RULE,
+                variables: {
+                    input: {
+                        businessCompanyId: this.props.businessCompanyId,
+                        name: this.state.ruleName.trim(),
+                        code: this.state.code.trim(),
+                        isPaid: this.state.isPaid,
+                        isAutomatic: this.state.isAutomaticBreak,
+                        lenght: this.state.lenghtInHours,
+                        isActive: true 
+                    },
+    
+                    employees: this.state.selectedEmployees.map(employee => {
+                        return employee.value
+                    })
+                }
+            }).then(({data}) => {
+                //If its an automatic break, save the config as a break rule detail
+                if(this.state.isAutomaticBreak) {
+                    const addedRuleId = data.addBreakRule.id;
+
+                    this.props.client.mutate({
+                        mutation: SET_BREAK_RULE_DETAIL,
+                        variables: {
+                            input: {
+                                breakRuleId: addedRuleId,
+                                shiftReached: this.state.shiftReachedInHours,
+                                isRepeating: this.state.repeatBreak,
+                                days: this.state.selectedDays,
+                                breakStartTime: this.state.breakPlacement === 'specific' ? null : this.state.breakStartTime,
+                                breakPlacement: this.state.breakPlacement
+                            }
+                        }
+                    });                
+                }
+            }).catch(error => console.log(error));
+        }      
+        
+        else {
+            this.props.client.mutate({
+                mutation: UPDATE_BREAK_RULE,
+                variables: {
+                    input: {
+                        id: this.state.ruleId,
+                        businessCompanyId: this.props.businessCompanyId,
+                        name: this.state.ruleName.trim(),
+                        code: this.state.code.trim(),
+                        isPaid: this.state.isPaid,
+                        isAutomatic: this.state.isAutomaticBreak,
+                        lenght: this.state.lenghtInHours,
+                        isActive: this.state.isActive 
+                    },
+    
+                    employees: this.state.selectedEmployees.map(employee => {
+                        return employee.value
+                    })
+                }
+            }).then(({data}) => {
+                if(this.state.isAutomaticBreak) {
+                    //If its an automatic break, save the config as a break rule detail
+                    if(this.state.ruleDetailId !== 0) {
+                        this.props.client.mutate({
+                            mutation: UPDATE_BREAK_RULE_DETAIL,
+                            variables: {
+                                input: {
+                                    id: this.state.ruleDetailId,
+                                    breakRuleId: this.state.ruleId,
+                                    shiftReached: this.state.shiftReachedInHours,
+                                    isRepeating: this.state.repeatBreak,
+                                    days: this.state.selectedDays,
+                                    breakStartTime: this.state.breakPlacement === 'specific' ? null : this.state.breakStartTime,
+                                    breakPlacement: this.state.breakPlacement
+                                }
+                            }
+                        });
+                    }   
+
+                    else {
+                        this.props.client.mutate({
+                            mutation: SET_BREAK_RULE_DETAIL,
+                            variables: {
+                                input: {
+                                    breakRuleId: this.state.ruleId,
+                                    shiftReached: this.state.shiftReachedInHours,
+                                    isRepeating: this.state.repeatBreak,
+                                    days: this.state.selectedDays,
+                                    breakStartTime: this.state.breakPlacement === 'specific' ? null : this.state.breakStartTime,
+                                    breakPlacement: this.state.breakPlacement
+                                }
+                            }
+                        }); 
+                    }
+                }               
+                
+            }).catch(error => console.log(error));
+        }
+
     }
     //#endregion
     
@@ -337,14 +472,14 @@ class BreakRulesModal extends Component {
                                     <label className="d-block" for="">Type</label>
                                     <div className="BreaksModal-radioWrap">
                                         <div className="form-check">
-                                            <input className="form-check-input" type="radio" onChange={this.handleChange} name="isPaid" id="isPaid" value="true" />
+                                            <input className="form-check-input" selected={this.state.isPaid} type="radio" onChange={this.handleChange} name="isPaid" id="isPaid" value="true" />
                                             <label className="form-check-label" for="isPaid">
                                                 Paid
                                             </label>
                                         </div>
 
                                         <div className="form-check">
-                                            <input className="form-check-input" type="radio" onChange={this.handleChange} name="isPaid" id="isUnpaid" value="false" />
+                                            <input className="form-check-input" selected={!this.state.isPaid} type="radio" onChange={this.handleChange} name="isPaid" id="isUnpaid" value="false" />
                                             <label className="form-check-label" for="isUnpaid">
                                                 Unpaid
                                             </label>
@@ -397,4 +532,4 @@ class BreakRulesModal extends Component {
     }
 }
 
-export default BreakRulesModal;
+export default withApollo(BreakRulesModal);
