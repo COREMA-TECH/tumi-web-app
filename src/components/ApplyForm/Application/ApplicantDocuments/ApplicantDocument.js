@@ -252,7 +252,7 @@ class ApplicantDocument extends Component {
 						<div className="applicant-card">
 							<div className="applicant-card__header">
 								<span className="applicant-card__title">
-									{applyTabs[7].label}
+									{applyTabs[8].label}
 									<p>
 										<small className="font-weight-light text-success">
 											supported files ({[

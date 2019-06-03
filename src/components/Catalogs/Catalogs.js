@@ -21,9 +21,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-
-import makeAnimated from "react-select/lib/animated";
-import Select from 'react-select';
+import Select from '@material-ui/core/Select';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -222,13 +220,9 @@ class Catalogs extends React.Component {
 		this.state = {
 			data: [],
 			catalogs: [{ Id: 0, Code: 'Nothing', Description: 'Nothing' }],
-			catalogFilterList: [{value: 0, label: 'Select an Option'}],
-			catalogFilterId: 0,
-			catalogFilterLabel: 'Select an Option',
 			idCatalogFilter: 0,
 			idCatalogHasValue: true,
 			idCatalogValid: true,
-			catalogLabel: '',
 			parents: [],
 			allparents: [],
 
@@ -279,7 +273,7 @@ class Catalogs extends React.Component {
 		//const value = e.target.value;
 		//this.setState({ [name]: value.trim() }, this.validateField(name, value));
 	}
-	updateSelect = (id, name, label='') => {
+	updateSelect = (id, name) => {
 		var parent = id;
 		switch (id) {
 			case 5: //City
@@ -294,18 +288,10 @@ class Catalogs extends React.Component {
 		}
 		this.setState({ [name]: id }, this.validateField(name, id));
 		if (name == 'idCatalogFilter') {
-			this.setState(_ => {
-				return {catalogFilterLabel: label}
-			}, _ => {
-				this.loadCatalogsItems(id);
-			})
+			this.loadCatalogsItems(id);
 		}
 		if (name == 'idCatalog') {
-			this.setState(_ => {
-				return { idCatalog: id, catalogLabel: label }
-			}, _ => {
-				this.loadParents(parent, 0, 0);
-			});
+			this.loadParents(parent, 0, 0);
 		}
 	};
 
@@ -434,15 +420,6 @@ class Catalogs extends React.Component {
 	handleConfirmAlertDialog = () => {
 		this.deleteCatalogItem();
 	};
-
-	findCatalogLabel = catalogId => {
-		const catalog = this.state.catalogs.find(item => {
-			return item.Id === catalogId
-		});
-
-		return catalog.Name.trim();
-	}
-
 	onEditHandler = ({ Id, Id_Catalog, Id_Parent, Name, DisplayLabel, Description, Value }) => {
 		this.setState({ showCircularLoading: false }, () => {
 			var parent = Id_Catalog;
@@ -467,7 +444,7 @@ class Catalogs extends React.Component {
 						displayLabel: DisplayLabel.trim(),
 						description: Description.trim(),
 						value: Value == null ? '' : Value.trim(),
-						catalogLabel: this.findCatalogLabel(Id_Catalog),
+
 						formValid: true,
 						idCatalogValid: true,
 						idParentValid: true,
@@ -503,19 +480,6 @@ class Catalogs extends React.Component {
 		});
 	}
 
-	getCatalogFilterList = _ => {
-		const catalogs = this.state.catalogs.map(item => {
-			return {value: item.Id, label: item.Name.trim()}
-		})
-
-		const options = [
-			{ value: 0, label: 'Select an Option' },
-			...catalogs
-		];
-
-		return options;
-	}
-
 	loadCatalogs = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
@@ -537,9 +501,6 @@ class Catalogs extends React.Component {
 								//	idCatalogValid: data.data.getcatalog.length > 0 ? true : false
 							},
 							() => {
-								this.setState(_ => {
-									return { catalogFilterList: this.getCatalogFilterList() }
-								})
 								this.loadParents(idCatalog, 0, 0, () => {
 									this.loadCatalogsItems(
 										data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0,
@@ -849,16 +810,6 @@ class Catalogs extends React.Component {
 	handleCloseModal = () => {
 		this.setState({ openModal: false });
 	};
-
-	handleCatalogFilterChange = ({value, label}) => {
-		this.updateSelect(value, 'idCatalogFilter', label);
-	}
-
-	handleCatalogModalChange = ({value, label}) => {
-		console.log(value);
-		this.updateSelect(value, 'idCatalog', label);
-	}
-
 	render() {
 		const { loading } = this.state;
 		const { classes } = this.props;
@@ -919,7 +870,7 @@ class Catalogs extends React.Component {
 						<div className="card-form-body">
 							<div className="card-form-row">
 								<span className="input-label primary">* Catalog</span>
-								{/* <SelectForm
+								<SelectForm
 									id="idCatalog"
 									name="idCatalog"
 									data={this.state.catalogs}
@@ -930,16 +881,6 @@ class Catalogs extends React.Component {
 									showNone={false}
 									error={!this.state.idCatalogValid}
 									value={this.state.idCatalog}
-								/> */}
-								<Select
-									options={this.state.catalogFilterList}
-									value={{value: this.state.idCatalog, label: this.state.catalogLabel}}
-									onChange={this.handleCatalogModalChange}
-									closeMenuOnSelect={true}
-									components={makeAnimated()}
-									isMulti={false}
-									isDisabled={this.state.loadingCatalogs}
-									className="tumi-fullWidth"
 								/>
 							</div>
 							<div className="card-form-row">
@@ -1055,15 +996,17 @@ class Catalogs extends React.Component {
 					<div className="input-container-catalog">
 						<span className="input-label-catalog">Filtro</span>
 
-						<Select
-							options={this.state.catalogFilterList}
-							value={{value: this.state.idCatalogFilter, label: this.state.catalogFilterLabel}}
-							onChange={this.handleCatalogFilterChange}
-							closeMenuOnSelect={true}
-							components={makeAnimated()}
-							isMulti={false}
-							isDisabled={this.state.loadingCatalogs}
-							className="tumi-fullWidth"
+						<SelectForm
+							id="idCatalogFilter"
+							name="idCatalogFilter"
+							data={this.state.catalogs}
+							disabled={this.state.loadingCatalogs}
+							update={(id) => {
+								this.updateSelect(id, 'idCatalogFilter');
+							}}
+							showNone={false}
+							//error={!this.state.idCatalogValid}
+							value={this.state.idCatalogFilter}
 						/>
 					</div>
 					<button className="add-catalog" onClick={this.handleClickOpenModal} disabled={isLoading}>

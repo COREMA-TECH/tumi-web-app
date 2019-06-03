@@ -25,9 +25,6 @@ import ApplicationPhasesForm from './ApplicationPhasesForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { conformToMask } from 'react-text-mask';
 
-import makeAnimated from "react-select/lib/animated";
-import Select from 'react-select';
-
 class CustomCard extends Component {
 
     printButtons = ({ id, laneId, cardId }) => {
@@ -129,11 +126,8 @@ class BoardRecruiter extends Component {
             Hotel: '',
             checked: true,
             states: [],
-            stateFilterList: [],
             cities: [],
-            cityFilterList: [],
             hotels: [],
-            hotelFilterList: [],
             country: 6,
             hotel: 0,
             state: 0,
@@ -159,13 +153,7 @@ class BoardRecruiter extends Component {
             distance: 0,
             ShiftId: 0,
             LaneOrigen: '',
-            LaneDestino: '',
-            statusFilterList: [
-                { value: 1, label: 'Open' },
-                { value: null, label: 'Status (All)' },
-                { value: 2, label: 'Completed' },
-                { value: 0, label: 'Cancelled' },
-            ],
+            LaneDestino: ''
         }
     }
 
@@ -448,10 +436,6 @@ class BoardRecruiter extends Component {
             .then(({ data }) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
-                }, _ => {
-                    this.setState(_ => {
-                        return {hotelFilterList: this.getHotelList()}
-                    })
                 });
             })
             .catch();
@@ -470,10 +454,6 @@ class BoardRecruiter extends Component {
             .then(({ data }) => {
                 this.setState({
                     states: data.getcatalogitem
-                }, _ => {
-                    this.setState(_ => {
-                        return { stateFilterList: this.getStateList() }
-                    })
                 });
             })
             .catch();
@@ -492,16 +472,12 @@ class BoardRecruiter extends Component {
             .then(({ data }) => {
                 this.setState({
                     cities: data.getcatalogitem
-                }, _ => {
-                    this.setState(_ => {
-                        return { cityFilterList: this.getCitiesList() }
-                    })
                 });
             })
             .catch();
     };
 
-    updateHotel = ({value: id}) => {
+    updateHotel = (id) => {
 
         if (id != 0) {
             this.setState(
@@ -1128,114 +1104,6 @@ class BoardRecruiter extends Component {
         }, 1000);
     }
 
-    getHotelList = _ => {
-        const hotelList = this.state.hotels.map((hotel) => {
-            return { value: hotel.Id, label: hotel.Name.trim() } 
-        });
-
-        const options = [{ value: 0, label: 'Select a Hotel' }, ...hotelList];
-        return options;
-    }
-
-    findSelectedHotel = hotelId => {
-        const defValue = {value: 0, label: "Select a Hotel"};
-
-        if(hotelId === 'null' || hotelId === 0)
-            return defValue;
-
-        const found = this.state.hotels.find(item => {
-            return item.Id === hotelId;
-        });
-
-        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
-    }
-
-    getStateList = _ => {
-        const stateList = this.state.states.map((item) => {
-            return { value: item.Id, label: item.Name.trim() } 
-        });
-
-        const options = [{ value: "", label: 'Select a State' }, ...stateList];
-        return options;
-    }
-
-    findSelectedState = stateId => {
-        const defValue = {value: "", label: "Select a State"};
-        
-        if(stateId === 'null' || stateId === '' )
-        return defValue;
-        
-        const found = this.state.states.find(item => {
-            return item.Id === stateId;
-        });
-
-        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
-    }
-
-    handleUpdateStateFilter = ({value}) => {
-        this.setState({
-            state: value,
-            city: 0,
-            cities: []
-        }, () => {
-            this.loadCities();
-            this.getOpenings();
-            this.getMatches();
-        })
-    }
-
-    getCitiesList = _ => {
-        const citiesList = this.state.cities.map((item) => {
-            return { value: item.Id, label: item.Name.trim() } 
-        });
-
-        const options = [{ value: "", label: 'Select a City' }, ...citiesList];
-        return options;
-    }
-
-    findSelectedCity = cityId => {
-        const defValue = {value: "", label: "Select a City"};
-
-        if(cityId === 'null' || cityId === 0)
-            return defValue;
-
-        const found = this.state.cities.find(item => {
-            return item.Id === cityId;
-        });
-
-        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
-    }
-
-    handleUpdateCityFilter = ({value}) => {
-        this.setState({
-            city: value
-        }, () => {
-            this.getOpenings();
-            this.getMatches();
-        })
-    }
-
-    findSelectedStatus = statusId => {
-        const defValue = {value: null, label: "Status (All)"};
-
-        if(statusId == null || statusId === '')
-            return defValue;
-
-        const found = this.state.statusFilterList.find(item => {
-            return item.value === statusId;
-        });
-
-        return found ? found : defValue;
-    }
-
-    handleStatusFilterChange = ({value}) => {
-        if (value == "null") {
-            this.updateStatus(null);
-        } else {
-            this.updateStatus(value);
-        }
-    }
-
     render() {
         const { classes } = this.props;
 
@@ -1249,38 +1117,76 @@ class BoardRecruiter extends Component {
                             <div className="card">
                                 <div className="card-header info">                                   
                                     <div className="row">
-                                        <div className="col-md-4 col-xl-2 offset-xl-1 mb-2">                                            
-                                            <Select
-                                                options={this.state.hotelFilterList}
-                                                value={this.findSelectedHotel(this.state.hotel)}
-                                                onChange={this.updateHotel}
-                                                closeMenuOnSelect={true}
-                                                components={makeAnimated()}
-                                                isMulti={false}
-                                            />
+                                        <div className="col-md-4 col-xl-2 offset-xl-1 mb-2">
+                                            <select
+                                                required
+                                                name="IdEntity"
+                                                className="form-control"
+                                                id=""
+                                                onChange={(event) => {
+                                                    this.updateHotel(event.target.value);
+                                                }}
+                                                value={this.state.hotel}
+                                                //disabled={!isAdmin}
+                                                onBlur={this.handleValidate}
+                                            >
+                                                <option value={0}>Select a Hotel</option>
+                                                {this.state.hotels.map((hotel) => (
+
+                                                    <option value={hotel.Id}>{hotel.Name}</option>
+
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="col-md-4 col-xl-2 mb-2">
-                                            <Select
-                                                options={this.state.stateFilterList}
-                                                value={this.findSelectedState(this.state.state)}
-                                                onChange={this.handleUpdateStateFilter}
-                                                closeMenuOnSelect={true}
-                                                components={makeAnimated()}
-                                                isMulti={false}
-                                            />
+                                            <select
+                                                name="state"
+                                                className={'form-control'}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        state: event.target.value,
+                                                        city: 0,
+                                                        cities: []
+                                                    }, () => {
+                                                        this.loadCities();
+                                                        this.getOpenings();
+                                                        this.getMatches();
+                                                    })
+                                                }}
+                                                value={this.state.state}
+                                                showNone={false}
+                                            >
+                                                <option value="">Select a state</option>
+                                                {this.state.states.map((item) => (
+                                                    <option value={item.Id}>{item.Name}</option>
+                                                ))}
+                                            </select>
                                         </div>
-                                        <div className="col-md-4 col-xl-2 mb-2">                                            
-                                            <Select
-                                                options={this.state.cityFilterList}
-                                                value={this.findSelectedCity(this.state.city)}
-                                                onChange={this.handleUpdateCityFilter}
-                                                closeMenuOnSelect={true}
-                                                components={makeAnimated()}
-                                                isMulti={false}                                                
-                                            />
+                                        <div className="col-md-4 col-xl-2 mb-2">
+                                            <select
+                                                name="city"
+                                                className={'form-control'}
+                                                // disabled={this.state.loadingCities}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        city: event.target.value
+                                                    }, () => {
+                                                        this.getOpenings();
+                                                        this.getMatches();
+                                                    })
+                                                }}
+                                                //error={!this.state.cityValid}
+                                                value={this.state.city}
+                                                showNone={false}
+                                            >
+                                                <option value="">Select a city</option>
+                                                {this.state.cities.map((item) => (
+                                                    <option value={item.Id}>{item.Name}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="col-md-4 offset-md-8 col-xl-2 offset-xl-0 mb-2">
-                                            {/* <select
+                                            <select
                                                 name="status"
                                                 className={'form-control'}
                                                 onChange={(event) => {
@@ -1297,15 +1203,7 @@ class BoardRecruiter extends Component {
                                                 <option value={null}>Status (All)</option>
                                                 <option value={2}>Completed</option>
                                                 <option value={0}>Cancelled</option>
-                                            </select> */}
-                                            <Select
-                                                options={this.state.statusFilterList}
-                                                value={this.findSelectedStatus(this.state.status)}
-                                                onChange={this.handleStatusFilterChange}
-                                                closeMenuOnSelect={true}
-                                                components={makeAnimated()}
-                                                isMulti={false}                                                            
-                                            />
+                                            </select>
                                         </div>
                                         <div className="col-md-12 col-xl-3 mb-2 Filter-buttons">
                                             <a
