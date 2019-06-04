@@ -168,7 +168,7 @@ class CustomizedTabs extends React.Component {
                 case 9:
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
                 case 10:
-                    return <IndependentContract />
+                    return <IndependentContract applicationId={this.state.applicationId} />
 
             }
         };
@@ -176,7 +176,7 @@ class CustomizedTabs extends React.Component {
             <div>
                 <MuiThemeProvider theme={theme}>
                     <Tabs
-                        value={this.state.applicationId==0?0:value}
+                        value={this.state.applicationId == 0 ? 0 : value}
                         onChange={this.handleChange}
                         scrollable
                         scrollButtons="on"
@@ -245,7 +245,7 @@ class CustomizedTabs extends React.Component {
                         }
 
                     </Tabs>
-                    { getTabContent(this.state.applicationId==0?0:value)}
+                    {getTabContent(this.state.applicationId == 0 ? 0 : value)}
                 </MuiThemeProvider>
             </div>
         );
