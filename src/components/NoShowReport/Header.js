@@ -14,58 +14,39 @@ class HeaderNoShowReport extends Component {
     render() {
         let { recruiter, leadEntered, sentToInterview, noShow, showed, hired } = this.props.header;
 
-        return <div className="card-header bg-light">
-            <div className="applicant-card__header">
+        return (
+            <React.Fragment>
                 <span className="applicant-card__title">NO SHOW REPORT</span>
-            </div>
-            <div className="row">
-
-                <div className="col-6">
-                    <div className="NoShow-row">
-                        TOTAL LEADS GENERATED {leadEntered}
-                    </div>
-                    <div className="NoShow-row">
-                        <i className="fa fa-user" />
-                        <span className="NoShow-label ml-1">
-                            Recruiter: {recruiter}
-                        </span>
-                    </div>
-                    <div className="NoShow-row">
-                        <i className="fas fa-envelope-open-text" />
-                        <span className="NoShow-label ml-1">
-                            Lead Entered: {leadEntered}
-                        </span>
-                    </div>
-                    <div className="NoShow-row">
-                        <i className="fas fa-phone-square" />
-                        <span className="NoShow-label ml-1">
-                            Sent To Interview: {sentToInterview}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="col-6">
-                    <div className="NoShow-row">
-                        REPORT PERIOD
-                </div>
-                    <div className="NoShow-row">
-                        <span className="NoShow-label">
-                            Showed: {showed}
-                        </span>
-                    </div>
-                    <div className="NoShow-row">
-                        <span className="NoShow-label">
-                            No Show: {noShow}
-                        </span>
-                    </div>
-                    <div className="NoShow-row">
-                        <span className="NoShow-label">
-                            Hired: {hired}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+                <table style={{borderCollapse: "collapse", width: "100%"}} border="1">
+                    <tbody>
+                        <tr>
+                            <td style={{width: "50%", backgroundColor: "#cbebea", color: "#2d4d40"}}>TOTAL LEADS GENERATED</td>
+                            <td style={{width: "50%", backgroundColor: "#cbebea", color: "#2d4d40"}}>REPORT PERIOD</td>
+                        </tr>
+                        <tr>
+                            <td style={{width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40"}}><img style={{marginRight: "5px", marginLeft: "5px"}} src="/images/tumi-user.png" width="16" height="16" /> 
+                                Recruiter: {recruiter}
+                            </td>
+                            <td style={{width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40"}}>
+                                <p>Showed: {showed}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={{width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40"}}><img style={{marginRight: "5px", marginLeft: "5px"}} src="/images/tumi-mail.png" width="16" height="16" />
+                                Lead Entered: {leadEntered}
+                            </td>
+                            <td style={{width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40"}}>No Show: {noShow}</td>
+                        </tr>
+                        <tr>
+                            <td style={{width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40"}}><img style={{marginRight: "5px", marginLeft: "5px"}} src="/images/tumi-phone.png" width="16" height="16" />
+                                Sent To Interview: {sentToInterview}
+                            </td>
+                            <td style={{width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40"}}>Hired: {hired}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </React.Fragment>
+        )
     }
 }
 

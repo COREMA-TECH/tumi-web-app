@@ -411,7 +411,7 @@ class ApplicationList extends Component {
 				</div>
 				
 
-				<div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
+				<div className="col-md-3 col-xl-2 offset-xl-6 mb-2">
 					<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
 						{({ loading, error, data, refetch, networkStatus }) => {
 							//if (networkStatus === 4) return <LinearProgress />;
@@ -442,7 +442,7 @@ class ApplicationList extends Component {
 						}}
 					</Query>
 					</div>
-				<div className="col-md-3 col-xl-2 offset-xl-2 mb-2">
+				<div className="col-md-3 col-xl-2 mb-2">
 					<Select
 						name="property"
 						options={this.state.properties}
@@ -451,11 +451,8 @@ class ApplicationList extends Component {
 						components={makeAnimated()}
 						closeMenuOnSelect
 					/>
-				</div>
-				<div className="col-md-2 col-xl-2 mb-2">
-
-				</div>
-				<div className="col-md-4 col-xl-4 mb-2">
+				</div>				
+				<div className="col-md-4 col-xl-12 mb-2">
 					<button
 						className="btn btn-success float-right ml-2"
 						onClick={this.showNoShowReportFilter}
