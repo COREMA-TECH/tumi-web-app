@@ -5,7 +5,9 @@ import Table from './Table';
 import withApollo from 'react-apollo/withApollo';
 import { GET_REPORT_INFORMATION, CREATE_DOCUMENTS_PDF_QUERY } from './queries';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
+const pdf = require('html-pdf');
 const uuidv4 = require('uuid/v4');
 
 
@@ -52,7 +54,6 @@ class NoShowReport extends Component {
         })
     }
 
-
     createDocumentsPDF = () => {
         var random = uuidv4();
 
@@ -89,14 +90,29 @@ class NoShowReport extends Component {
             })
     };
 
-    downloadDocumentsHandler = (random) => {
-        var url = this.context.baseUrl + '/public/Documents/' + "noShowReport-" + random + '.pdf';
-        window.open(url, '_blank');
-        this.setState({ downloading: false });
-    };
-
     sleep() {
         return new Promise((resolve) => setTimeout(resolve, 8000));
+    }
+
+    convertHtmlToPdf = (e) => {
+        this.setState(() => ({ downloading: true }));
+        var random = uuidv4();
+
+        fetch('https://v2018.api2pdf.com/chrome/html', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'd6c9d76c-2b40-474c-b786-4c4081bc4c95' //Get your API key from https://portal.api2pdf.com
+            },
+            body: JSON.stringify({ html: document.getElementById('noShowReportPDF').innerHTML, inlinePdf: true, fileName: `noShowReport - ${random}` })
+        }).then(res => res.json())
+            .then(res => {
+                this.setState(() => ({ downloading: false }));
+                window.open(res.pdf, '_blank');
+            }).catch(error => {
+                this.setState(() => ({ downloading: false }));
+            })
     }
 
     componentWillMount() {
@@ -110,7 +126,7 @@ class NoShowReport extends Component {
             {loadingReport && <LinearProgress />}
 
             <div className="row">
-                <button className="btn btn-success ml-auto" disabled={downloading || loadingReport} onClick={this.createDocumentsPDF}>
+                <button className="btn btn-success ml-auto" disabled={downloading || loadingReport} onClick={this.convertHtmlToPdf}>
                     {!downloading && <React.Fragment>Download < i className="fas fa-download" /></React.Fragment>}
                     {downloading && <React.Fragment>Downloading < i className="fas fa-spinner fa-spin" /></React.Fragment>}
                 </button>
