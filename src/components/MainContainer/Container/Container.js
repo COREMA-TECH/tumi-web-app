@@ -51,6 +51,7 @@ import DashBoardSponsor from '../../Dashboard/Sponsor';
 import PositionCatalogTable from '../../PositionsCatalog/PositionsTable';
 import DepartmentsCatalogTable from '../../DepartmentsCatalog/DepartmentsTable';
 import NoShowReport from '../../NoShowReport';
+import DirectDeposit from '../../DirectDeposit';
 
 class Container extends Component {
 	constructor(props) {
@@ -189,6 +190,7 @@ class Container extends Component {
 				<Route exact path="/home/catalogs/positions" component={PositionCatalogTable} />
 				<Route exact path="/home/catalogs/departments" component={DepartmentsCatalogTable} />
 				<Route exact path="/home/report/noshow" component={NoShowReport} />
+				<Route exact path="/home/direct-deposit" component={DirectDeposit} />
 			</div>
 		);
 	}
