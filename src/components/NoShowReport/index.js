@@ -105,7 +105,7 @@ class NoShowReport extends Component {
                 'Content-Type': 'application/json',
                 'Authorization': 'd6c9d76c-2b40-474c-b786-4c4081bc4c95' //Get your API key from https://portal.api2pdf.com
             },
-            body: JSON.stringify({ html: document.getElementById('noShowReportPDF').innerHTML, inlinePdf: true, fileName: `noShowReport - ${random}` })
+            body: JSON.stringify({ html: document.getElementById('noShowReportPDF').innerHTML, options: { landscape: true }, inlinePdf: true, fileName: `noShowReport - ${random}` })
         }).then(res => res.json())
             .then(res => {
                 this.setState(() => ({ downloading: false }));
