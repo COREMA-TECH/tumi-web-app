@@ -8756,6 +8756,14 @@ label:not(.custom-file-label):not(.form-check-label) {
 .social-link {
   text-decoration: none; }
 
+.tumi-saveBtn {
+  margin: 0px 15px;
+  padding: 12px 90px; }
+  .tumi-saveBtn.right {
+    margin-left: auto; }
+  .tumi-saveBtn.left {
+    margin-right: auto; }
+
 .tumi-row-centered {
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -9991,6 +9999,99 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 .react-trello-board .djewwL {
   max-height: 60vh; }
+
+.BankInfo .input-group {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+  .BankInfo .input-group-prepend {
+    background-color: #e8edf0;
+    border: 1px solid #dddddd;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 10.25px; }
+
+.BankInfo-accountType {
+  height: 36px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding-left: 0;
+  padding-right: 0; }
+
+.BankInfo-checking, .BankInfo-saving {
+  padding-left: 0;
+  padding-right: 0;
+  text-indent: 5px; }
+
+.BankInfo-amount i, .BankInfo-percentage i {
+  width: 11px; }
+
+.BankInfo-saving {
+  margin-left: auto; }
+
+.Dropdown {
+  border: 1px solid #dddddd;
+  margin-bottom: 34px;
+  position: relative;
+  width: 100%;
+  z-index: 1000; }
+  .Dropdown:not(.open) {
+    z-index: 1; }
+  .Dropdown.open .Dropdown-body {
+    height: 230px; }
+  .Dropdown-header {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #dddddd;
+    font-size: 14px;
+    padding: 20px; }
+  .Dropdown-caret {
+    color: #9f9f9f;
+    font-size: 20px;
+    line-height: 20px;
+    height: 15px; }
+  .Dropdown-body {
+    background-color: #f9f9f9;
+    border: 1px solid #dddddd;
+    font-size: 12px;
+    height: 0px;
+    overflow: hidden;
+    position: absolute;
+    -webkit-transition: height 0.5s ease;
+    -o-transition: height 0.5s ease;
+    transition: height 0.5s ease; }
+  .Dropdown-contentWrapper {
+    padding-bottom: 25px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 35px; }
+  .Dropdown-attachments {
+    color: #094658; }
+  .Dropdown-item {
+    margin-bottom: 30px; }
+  .Dropdown-itemLabel {
+    font-weight: 700;
+    margin-right: 5px;
+    margin-top: 0 !important; }
+
+.Attachments-list {
+  max-height: 266px;
+  overflow-y: scroll; }
 
 .Header-mobileMenu {
   color: #FFF;
@@ -12521,3 +12622,4 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
+/*# sourceMappingURL=default.css.map */
