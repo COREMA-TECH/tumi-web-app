@@ -9,9 +9,17 @@ class AddAttachment extends Component{
 
         this.state = {
             uploading: false,
-            progress: 0
+			progress: 0,
+			attachedFile: {}
         }
-    }
+	}
+	
+	handleFileAttached = event => {
+		const data = new FormData();
+		data.append('file', event.target.files[0]);
+		
+		//AJAX request to upload.
+	}
 
     render(){
         return (

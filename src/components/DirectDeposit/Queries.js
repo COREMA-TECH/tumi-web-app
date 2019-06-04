@@ -16,6 +16,7 @@ query applicationAccounts ($applicationId: Int) {
       accountType
       amount
       amountType
+      address
       
       applicationDocuments {
         id

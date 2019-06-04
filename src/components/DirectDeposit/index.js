@@ -35,10 +35,12 @@ class DirectDeposit extends Component{
         super(props);
 
         this.state = {
-            ...this.INITIAL_STATE,
-            // applicationId: this.props.applicationId
-            applicationId: 204
+            ...this.INITIAL_STATE,                        
         }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({ applicationId: nextProps.applicationId });
     }
 
     componentWillMount() {
@@ -64,7 +66,7 @@ class DirectDeposit extends Component{
     getApplicationAccounts = _ => {
         this.props.client.query({
             query: GET_APPLICATION_ACCOUNTS,
-            variables: { applicationId: 204 },
+            variables: { applicationId: this.props.applicationId },
             fetchPolicy: 'no-cache'
         })
         .then(({data}) => {
@@ -83,7 +85,7 @@ class DirectDeposit extends Component{
             mutation: INSERT_ACCOUNT_INFO,
             variables: {
                 input: {
-                   applicationId: 204,
+                   applicationId: this.props.applicationId,
                    firstName,
                    lastName,
                    city,
@@ -149,6 +151,7 @@ class DirectDeposit extends Component{
                                 amount={this.state.amount}
                                 accountType={this.state.accountType}
                                 setAmountType={this.setAmountType}
+                                address={this.address}
                             />
                         </div>
                         <div className="col-md-12 col-xl-3">

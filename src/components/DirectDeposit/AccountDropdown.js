@@ -23,7 +23,7 @@ class AccountDropdown extends Component{
                 <div className="Dropdown-header" onClick={this.handleCollapse}>
                     <span className="Dropdown-title">
                         <strong>Account #</strong>
-                        <span></span>
+                        <span>{ `${accountNumber}` }</span>
                     </span>
                     <span className="Dropdown-caret">
                         <i class={`fas ${this.state.isOpen ? 'fa-angle-up' : 'fa-angle-down'}`}></i>
