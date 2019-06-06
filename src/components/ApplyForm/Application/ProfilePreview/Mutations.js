@@ -25,8 +25,8 @@ export const UPDATE_DIRECT_DEPOSIT = gql`
 `;
 
 export const UPDATE_ISACTIVE = gql`
-	mutation disableApplication($id: Int,$isActive: Boolean) {
-		disableApplication(id: $id,isActive: $isActive) {
+	mutation disableApplication($id: Int,$isActive: Boolean,  $codeuser: Int, $nameUser: String) {
+		disableApplication(id: $id,isActive: $isActive, codeuser: $codeuser, nameUser: $nameUser) {
 			id
 		}
 	}

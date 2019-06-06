@@ -279,7 +279,9 @@ class Employees extends Component {
                             isActive: true,
                             userCreated: 1,
                             userUpdated: 1
-                        }
+                        },
+                        codeuser: localStorage.getItem('LoginId'),
+                        nameUser: localStorage.getItem('FullName')
                     }
                 })
                 .then(() => {
@@ -322,7 +324,9 @@ class Employees extends Component {
                     .mutate({
                         mutation: ADD_EMPLOYEES,
                         variables: {
-                            Employees: employeesArrays
+                            Employees: employeesArrays,
+                            codeuser: localStorage.getItem('LoginId'),
+                            nameUser: localStorage.getItem('FullName')
                         }
                     })
                     .then(({ data }) => {
@@ -373,7 +377,9 @@ class Employees extends Component {
                     .mutate({
                         mutation: DELETE_EMPLOYEE,
                         variables: {
-                            id: this.state.idToDelete
+                            id: this.state.idToDelete,
+                            codeuser: localStorage.getItem('LoginId'),
+                            nameUser: localStorage.getItem('FullName')
                         }
                     })
                     .then(data => {

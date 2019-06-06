@@ -136,8 +136,8 @@ class ApplicationList extends Component {
 	`;
 
 	DELETE_APPLICATION_QUERY = gql`
-		mutation disableApplication($id: Int!, $isActive: Boolean) {
-			disableApplication(id: $id,isActive: $isActive) {
+		mutation disableApplication($id: Int!, $isActive: Boolean,  $codeuser: Int, $nameUser: String) {
+			disableApplication(id: $id,isActive: $isActive, codeuser: $codeuser, nameUser: $nameUser) {
 				id
 				isActive
 			}

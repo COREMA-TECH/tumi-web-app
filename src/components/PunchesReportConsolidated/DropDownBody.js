@@ -64,7 +64,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                                       <td>
                                             <div>
                                                     <button   className="btn btn-success float-left ml-1" onClick={(e) => {
-                                                            alert("aqui va a venir todo")
+                                                           // alert("aqui va a venir todo")
                                                             }}><i class="fas fa-pen"/></button>
                                             </div>
                                     </td>

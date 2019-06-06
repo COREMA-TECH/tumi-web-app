@@ -239,8 +239,9 @@ class Application extends Component {
                                 hireType:this.state.HireType,
                                 gender:this.state.gender,
                                 marital:this.state.marital
-
-                            }
+                            },
+                            codeuser: localStorage.getItem('LoginId'),
+                            nameUser: localStorage.getItem('FullName')
                         }
                     })
                     .then(({ data }) => {
