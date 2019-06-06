@@ -104,20 +104,33 @@ class DirectDeposit extends Component{
             }
         })
         .then(_ => {
-            this.props.handleOpenSnackbar(
-                'success',
-                'Saved Successfully',
-                'bottom',
-                'center'
-            );
+            this.setState(_ => {
+                return { ...this.INITIAL_STATE }
+            }, _ => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Saved Successfully',
+                    'bottom',
+                    'center'
+                );
+
+                this.getApplicationAccounts();
+            })            
         })
         .catch(error => {
-            this.props.handleOpenSnackbar(
-                'error',
-                `Error: ${error}`,
-                'bottom',
-                'center'
-            );
+            this.setState(_ => {
+                return { ...this.INITIAL_STATE }
+            }, _ => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    `Error: ${error}`,
+                    'bottom',
+                    'center'
+                );
+
+                this.getApplicationAccounts();
+            });  
+            
         }); 
     }
         
