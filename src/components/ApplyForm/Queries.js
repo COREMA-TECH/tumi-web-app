@@ -98,19 +98,6 @@ export const GET_APPLICATION_BY_ID = gql`
 			comment
 			idealJob
 			isLead
-			optionHearTumi
-			immediately
-			dateCreation
-			nameReferences
-			independentContract{
-     			id
-    		}
-			eeoc
-			exemptions
-			area
-			hireType
-			gender
-			marital
 		}
 	}
 `;

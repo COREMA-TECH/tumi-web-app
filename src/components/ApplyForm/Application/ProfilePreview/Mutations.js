@@ -65,3 +65,11 @@ export const DISABLE_CONTACT_BY_HOTEL_APPLICATION = gql`
           }
     }
 `;
+
+export const ADD_IDEAL_JOB = gql`
+    mutation addApplicantIdealJob($application:  [inputInsertApplicantIdealJob]) {
+        addApplicantIdealJob(applicantIdealJob: $application) {
+            id
+        }
+    }
+`;

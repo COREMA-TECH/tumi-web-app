@@ -19,8 +19,6 @@ import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNoth
 import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import DatePicker from "react-datepicker";
-import makeAnimated from "react-select/lib/animated";
-import Select from 'react-select';
 import "react-datepicker/dist/react-datepicker.css";
 
 const CustomTableCell = withStyles((theme) => ({
@@ -42,15 +40,6 @@ class WorkOrdersTable extends Component {
         id: '',
         endDateDisabled: true
     }
-
-    statusFilterList = [
-        { value: 1, label: 'Open' },
-        { value: null, label: 'Status (All)' },
-        { value: 2, label: 'Completed' },
-        { value: 0, label: 'Cancelled' },
-        { value: 4, label: 'Openings' },
-    ]
-
     constructor(props) {
         super(props);
         this.state = {
@@ -469,55 +458,10 @@ class WorkOrdersTable extends Component {
         return true;
     }
 
-    getStatusFilterValue = _id => {
-        const found = this.getStatusFilterValue.find(item => {
-            return item.value === _id;
-        });
-    }
-
-    updateStatusFilter = ({value}) => {
-        if (value == "null") {
-            this.handleFilterValue(null);
-        } else {
-            this.handleFilterValue(value);
-        }
-    }
-
-    handleStateFilterChange = ({value}) => {
-        this.setState({
-            state: parseInt(value)
-        }, () => { this.getWorkOrders() })
-    }
-
-    getStateFilterOptions = _ => {
-        let options = this.state.states.map(state => {
-            return {value: state.Id, label: state.Name}
-        });
-
-        options = [{value: 0, label: 'State'}, ...options];
-
-        return options;
-    }
-
-    findSelectedState = stateId => {
-        const defValue = {value: 0, label: "Select option"};
-
-        if(stateId === 'null' || stateId === 0)
-            return defValue;
-
-        const found = this.state.states.find(item => {
-            return item.Id === stateId;
-        });
-
-        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
-    }
-
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
-        let isLoading = this.state.loading;  
-        
-        const stateFilterOptions = this.getStateFilterOptions();
+        let isLoading = this.state.loading;
 
         return (
             <div className="card">
@@ -536,34 +480,18 @@ class WorkOrdersTable extends Component {
                         </div>
                         <div className="col-md-9 col-xl-8 offset-xl-2 mb-2">
                             <div className="WorkOrders-filters">
-                                <div className="input-group flex-nowrap WorkOrders-filter">
-                                    {/* <select 
-                                        name="state" id="" 
-                                        value={this.state.state} 
-                                        className="form-control WorkOrders-filter" 
-                                        onChange={(e) => {
-                                        this.setState({
-                                            state: parseInt(e.target.value)
-                                        }, () => { this.getWorkOrders() })
-                                    }}>
-                                        <option value="0">State</option>
-                                        {this.state.states.map(state => {
-                                            return <option value={state.Id} key={state.Id}>{state.Name}</option>
-                                        })}
-                                    </select> */}
+                                <select name="state" id="" value={this.state.state} className="form-control WorkOrders-filter" onChange={(e) => {
+                                    this.setState({
+                                        state: parseInt(e.target.value)
+                                    }, () => { this.getWorkOrders() })
+                                }}>
+                                    <option value="0">State</option>
+                                    {this.state.states.map(state => {
+                                        return <option value={state.Id} key={state.Id}>{state.Name}</option>
+                                    })}
+                                </select>
 
-                                    <Select
-                                        options={stateFilterOptions}
-                                        value={this.findSelectedState(this.state.state)}
-                                        onChange={this.handleStateFilterChange}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                        className='tumi-fullWidth'
-                                    />
-                                </div>
-
-                                <div class="input-group flex-nowrap WorkOrders-filter">
+                                <div class="input-group flex-nowrap WorkOrders-filter tumi-datePicker">
                                     <DatePicker
                                         selected={this.state.startDate}
                                         onChange={this.handleStartDate}
@@ -577,7 +505,7 @@ class WorkOrdersTable extends Component {
                                     </div>
                                 </div>
                         
-                                <div class="input-group flex-nowrap WorkOrders-filter">
+                                <div class="input-group flex-nowrap WorkOrders-filter tumi-datePicker">
                                     <DatePicker
                                         selected={this.state.endDate}
                                         onChange={this.handleEndDate}
@@ -589,20 +517,24 @@ class WorkOrdersTable extends Component {
                                             <i class="far fa-calendar"></i>
                                         </label>
                                     </div>
-                                </div>                       
-                                
-                                <div className="input-group flex-nowrap WorkOrders-filter">
-                                    <Select
-                                        options={this.statusFilterList}
-                                        value={this.getStatusFilterValue}
-                                        onChange={this.updateStatusFilter}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                        isDisabled={this.state.propsStatus}
-                                        className='tumi-fullWidth'
-                                    />
                                 </div>
+                        
+                                <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control WorkOrders-filter" onChange={(event) => {
+                                    if (event.target.value == "null") {
+                                        this.handleFilterValue(null);
+                                    } else {
+                                        this.handleFilterValue(event.target.value);
+                                    }
+                                    // this.handleFilterValue
+                                }}
+                                    value={this.state.status}>
+                                    <option value={1}>Open</option>
+                                    <option value={null}>Status (All)</option>
+                                    <option value={2}>Completed</option>
+                                    <option value={0}>Cancelled</option>
+                                    <option value={4}>Openings</option>
+
+                                </select>
                     
                                 <button class="btn btn-outline-secondary btn-not-rounded WorkOrders-filter clear-btn" type="button" onClick={this.clearInputDates}>
                                     <i class="fas fa-filter"></i> Clear

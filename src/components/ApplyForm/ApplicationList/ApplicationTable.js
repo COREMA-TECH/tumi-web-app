@@ -235,7 +235,7 @@ class ApplicationTable extends React.Component {
                                                         onClick={(e) => {
                                                             e.stopPropagation();
 
-                                                            this.props.onDeleteHandler(row.id);
+                                                            return this.props.onDeleteHandler(row.id);
                                                         }}
                                                     >
                                                         <i className="fas fa-trash"></i>

@@ -49,10 +49,6 @@ class MainContainer extends Component {
 			title = 'Approve/Reject Punches'
 		}
 
-		if (str === "/home/application/Form") {
-			title = 'Application Form'
-		}
-
 		return title;
 	};
 

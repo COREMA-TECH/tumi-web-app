@@ -6,10 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY, GET_EMPLOYEE_MARKS } from './queries';
+import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
 import { ADD_MARCKED } from './mutations';
-import { UPDATE_EMPLOYEE } from '../Employees/Mutations';
-import { FIND_EMPLOYEE } from '../Employees/Queries';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
 import { parse } from 'path';
@@ -252,10 +250,7 @@ class TimeCardForm extends Component {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
             this.setState({ saving: true });
-            if (this.state.id == null) {     
-                // this.checkUserMarks();                
-                this.addIn();
-            }
+            if (this.state.id == null) this.addIn();
             else {
                 //alert(this.state.employees.detailEmployee)
                 if (this.state.employees.length > 0) {
@@ -268,71 +263,6 @@ class TimeCardForm extends Component {
             }
         }
     };
-
-    checkUserMarks = callbackFunc => {
-         //Check if there aren't any previous marks 
-         this.props.client.query({
-            query: GET_EMPLOYEE_MARKS,
-            variables: {
-                EmployeeId: this.state.employeeId
-            }
-        })
-        .then( ({data}) => {
-            // If there are no previous marks, update employee to set Hire date.
-            if(data.markedEmployees.length === 0)
-                this.setHireDate();  
-            else
-                this.addIn();
-        })
-        .catch( error => {            
-            console.log(error);
-        });
-    }
-
-    setHireDate = _ => {
-        let currentEmployee;
-
-        this.props.client.query({
-            query: FIND_EMPLOYEE,
-            variables: {
-                id: this.state.employeeId
-            }
-        })
-        .then( ({data}) => {
-            currentEmployee = data.employees[0];
-
-            if(!currentEmployee.id)
-                return;
-
-            this.props.client.mutate(
-            {
-                mutation: UPDATE_EMPLOYEE,
-                variables: {
-                    employees: {
-                        id: currentEmployee.id,
-                        firstName: currentEmployee.firstName,
-                        lastName: currentEmployee.lastName,
-                        electronicAddress: currentEmployee.electronicAddress,
-                        mobileNumber: currentEmployee.mobileNumber,
-                        Id_Deparment: currentEmployee.Id_Deparment,
-                        Contact_Title: currentEmployee.Contact_Title,
-                        idEntity: currentEmployee.idEntity,
-                        idRole: currentEmployee.idRole,
-                        isActive: currentEmployee.isActive,
-                        userCreated: currentEmployee.userCreated,
-                        userUpdated: currentEmployee.userUpdated,
-                        hireDate: `'${moment(this.state.startDate).format("YYYY-MM-DD")}'`
-                    }
-                }
-            })
-            .then( _ => {
-                this.addIn();
-            });            
-        })
-        .catch( error => {
-            //Failed to find the employee in the first place
-        });  
-    }
 
     addIn = () => {
         this.props.client

@@ -97,15 +97,6 @@ class ApplicationList extends Component {
 				isLead
 				idWorkOrder
 				statusCompleted
-				dateCreation
-				immediately
-				optionHearTumi
-				eeoc
-				exemptions
-				area
-				hireType
-				gender
-				marital
 				employee {
 					Employees {
 					  idEntity
@@ -160,7 +151,8 @@ class ApplicationList extends Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Application Deleted!');
-						this.setState({ opendialog: false, loadingConfirm: false }, () => { });
+						this.setState({ opendialog: false, loadingConfirm: false });
+						this.setState({ state: this.state });
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Position and Rates: ' + error);
@@ -192,6 +184,7 @@ class ApplicationList extends Component {
 	}
 	handleDepartmentChange = (department) => {
 		this.setState(() => ({ department }));
+		console.log(this.state.department);
 	}
 	handleStatusChange = (statu) => {
 		this.setState(() => ({ statu }));
@@ -267,8 +260,9 @@ class ApplicationList extends Component {
 		this.getProperties();
 		this.getDepartments();
 	}
+
 	render() {
-		var loading = this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
+		var loading = this.state.loadingConfirm || this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
 		var variables = {};
 
 		/**
@@ -353,7 +347,6 @@ class ApplicationList extends Component {
 		);
 
 		return (
-
 			<div className="main-application">
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
@@ -364,7 +357,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={variables}  >
+					<Query fetchPolicy="network-only" query={this.GET_APPLICATION_QUERY} variables={variables} >
 						{({ loading, error, data, refetch, networkStatus }) => {
 
 							if (this.state.filterText === '') {
@@ -426,15 +419,16 @@ class ApplicationList extends Component {
 										</div>
 									</div>
 								);
+							} else {
+								return (
+									<NothingToDisplay
+										title="Oops!"
+										message={'There are no applications'}
+										type="Error-success"
+										icon="wow"
+									/>
+								);
 							}
-							return (
-								<NothingToDisplay
-									title="Oops!"
-									message={'There are no applications'}
-									type="Error-success"
-									icon="wow"
-								/>
-							);
 						}}
 					</Query>
 				</div>

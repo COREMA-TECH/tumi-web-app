@@ -9,9 +9,6 @@ import { withApollo } from 'react-apollo';
 import { GET_INITIAL_DATA, GET_CONTACT_BY_QUERY, GET_DEPARTMENTS, GET_POSITION } from './Queries';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 
-import makeAnimated from "react-select/lib/animated";
-import Select from 'react-select';
-
 class PreFilter extends Component {
 
     constructor() {
@@ -19,11 +16,8 @@ class PreFilter extends Component {
         this.state = {
             saving: false,
             locations: [],
-            locationFilterOptions: [],
             departments: [],
-            departmentFilterOptions: [],
             positions: [],
-            positionFilterOptions: [],
             contacts: [],
             disabled: true,
             location: 0,
@@ -46,10 +40,6 @@ class PreFilter extends Component {
                 .then(({ data }) => {
                     this.setState((prevState) => {
                         return { departments: data.catalogitem, loadingDepartments: false }
-                    }, _ => {
-                        this.setState(_ => {
-                            return {departmentFilterOptions: this.renderDeparmentList()}
-                        })
                     })
 
                 }).catch(error => {
@@ -75,12 +65,9 @@ class PreFilter extends Component {
                     }
                 })
                 .then(({ data }) => {
+                    console.log("getPositions ", data)
                     this.setState((prevState) => {
                         return { positions: data.getposition, loadingPositions: false }
-                    }, _ => {
-                        this.setState(_ => {
-                            return { positionFilterOptions: this.renderPositionList() }
-                        })
                     })
 
                 }).catch(error => {
@@ -105,10 +92,6 @@ class PreFilter extends Component {
                 .then(({ data }) => {
                     this.setState((prevState) => {
                         return { locations: data.getbusinesscompanies, loadingLoaction: false, loadingDepartments: false }
-                    }, _ => {
-                        this.setState({
-                            locationFilterOptions: this.renderLocationList()
-                        })
                     })
                 }).catch(error => {
                     this.setState({ loadingLoaction: false }, () => {
@@ -152,21 +135,8 @@ class PreFilter extends Component {
 
     renderLocationList = () => {
         return this.state.locations.map((item) => {
-            return {value: item.Id, label: `${item.Code} | ${item.Name}`}
+            return <option key={item.Id} value={item.Id}>{item.Code} | {item.Name}</option>
         })
-    }
-
-    findSelectedLocation = location => {
-        const defValue = {value: "", label: "Select an Option"};
-
-        if(location == 'null' || location === '')
-            return defValue;
-
-        const found = this.state.locationFilterOptions.find(item => {
-            return item.value === location;
-        });
-
-        return found ? found : defValue;
     }
 
     renderContactsList = () => {
@@ -177,40 +147,13 @@ class PreFilter extends Component {
 
     renderDeparmentList = () => {
         return this.state.departments.map((item) => {
-            return {value: item.Id, label: `${item.Code} ${item.Description}`}
+            return <option key={item.Id} value={item.Id}>{item.Code + ' ' + item.Description}</option>;
         });
     }
-
     renderPositionList = () => {
         return this.state.positions.map((item) => {
-            return { value: item.Id, label: item.Position.trim() }
+            return <option key={item.Id} value={item.Id}>{item.Position}</option>;
         });
-    }
-
-    findSelectedDepartment = department => {
-        const defValue = {value: "", label: "Select an Option"};
-
-        if(department == 'null' || department === '')
-            return defValue;
-
-        const found = this.state.departmentFilterOptions.find(item => {
-            return item.value === department;
-        });
-
-        return found ? found : defValue;
-    }
-
-    findSelectedPosition = position => {
-        const defValue = {value: "", label: "Select an Option"};
-
-        if(position == 'null' || position === '')
-            return defValue;
-
-        const found = this.state.positionFilterOptions.find(item => {
-            return item.value === position;
-        });
-
-        return found ? found : defValue;
     }
 
     handleSelectValueChange = (event) => {
@@ -224,6 +167,7 @@ class PreFilter extends Component {
             [element.name + "Name"]: text,
             disabled: false
         }, () => {
+            console.log("element.name  ", element.name)
             if (element.name == 'location') {
                 this.getContacts();
                 this.getDepartments();
@@ -231,37 +175,6 @@ class PreFilter extends Component {
             if (element.name == 'department') {
                 this.getPositions();
             }
-        })
-    }
-
-    handlePositionChange = ({value, label}) => {
-        this.setState(_ => {
-            return { position: value, positionName: label, disabled: false }
-        })
-    }
-
-    handlePropertyChange = ({value, label}) => {
-        this.setState( _ => {
-            return {
-                location: value,
-                locationName: label,
-                disabled: false
-            }
-        }, _ => {
-            this.getContacts();
-            this.getDepartments();
-        })
-    }
-
-    handleDepartmentChange = ({value, label}) => {
-        this.setState( _ => {
-            return {
-                department: value,
-                departmentName: label,
-                disabled: false
-            }
-        }, _ => {
-            this.getPositions();
         })
     }
 
@@ -291,6 +204,7 @@ class PreFilter extends Component {
     };
 
     render() {
+        const disabled = this.state.disabled;
         return (
             <Dialog maxWidth="sm" open={this.props.openPreFilter} >
                 <form action="" onSubmit={this.handleApplyFilters}>
@@ -299,42 +213,37 @@ class PreFilter extends Component {
                             <div className="row">
                                 <div className="col-md-12">
                                     <label htmlFor="">Property</label>
-                                    <Select
-                                        options={this.state.locationFilterOptions}
-                                        value={this.findSelectedLocation(this.state.location)}
-                                        onChange={this.handlePropertyChange}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                        isDisabled={this.state.loadingLoaction}
-                                        required
-                                    />
+                                    {/*  <AutosuggestInput
+                                        id="location"
+                                        name="location"
+                                        data={this.state.locations}
+                                        // required
+                                        //error={!this.state.titleNameValid}
+                                        value={this.props.location}
+                                        onChange={this.updateLocationName}
+                                        onSelect={this.updateLocationName}
+                                    />*/}
+
+
+                                    <select name="location" id="" value={this.props.location} disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
+                                        <option value="">Select a Option</option>
+                                        {this.renderLocationList()}
+                                    </select>
+
                                 </div>
                                 <div className="col-md-12">
-                                    <label htmlFor="">Department</label>                                    
-                                    <Select
-                                        options={this.state.departmentFilterOptions}
-                                        value={this.findSelectedDepartment(this.state.department)}
-                                        onChange={this.handleDepartmentChange}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                        isDisabled={this.state.loadingDepartments}
-                                        required
-                                    />
+                                    <label htmlFor="">Department</label>
+                                    <select name="department" id="" value={this.props.department} disabled={this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
+                                        <option value="">Select a Option</option>
+                                        {this.renderDeparmentList()}
+                                    </select>
                                 </div>
                                 <div className="col-md-12">
-                                    <label htmlFor="">Position</label>                                    
-                                    <Select
-                                        options={this.state.positionFilterOptions}
-                                        value={this.findSelectedPosition(this.state.position)}
-                                        onChange={this.handlePositionChange}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                        isDisabled={this.state.loadingPositions}
-                                        required
-                                    />
+                                    <label htmlFor="">Position</label>
+                                    <select name="position" id="" value={this.props.position} disabled={this.state.loadingPositions} required className="form-control" onChange={this.handleSelectValueChange}>
+                                        <option value="">Select a Option</option>
+                                        {this.renderPositionList()}
+                                    </select>
                                 </div>
                             </div>
                         </div>

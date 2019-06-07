@@ -51,6 +51,7 @@
 @import "components/workOrders/workOrders.scss";
 @import "components/dashboards/dashboards";
 @import "components/location/location";
+@import "components/directDeposit/index.scss";
 
 // Layout
 @import "layout/header";
@@ -86,3 +87,6 @@
 
 //Schedules
 @import "schedules/schedules";
+
+//Break Rules
+@import "./components/breakRules/index.scss";

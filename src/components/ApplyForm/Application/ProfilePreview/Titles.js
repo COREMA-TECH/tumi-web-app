@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Select from 'react-select';
 import makeAnimated from "react-select/lib/animated";
 import {GET_POSITION} from "./Queries";
+import { ADD_IDEAL_JOB } from "./Mutations";
 import withGlobalContent from 'Generic/Global';
 import { withApollo } from 'react-apollo';
 import { withStyles } from '@material-ui/core/styles';
@@ -22,7 +23,9 @@ class Titles extends Component {
         super(props);
         this.state = {
             positionCatalogTag: [],
-            title: null
+            title: null,
+            positionsTags: null,
+            applicantIdealJob: []
         }
     }
 
@@ -30,17 +33,41 @@ class Titles extends Component {
         this.setState({ positionsTags });
     };
 
+    addIdealJob = () => {
+        const positionData = this.state.positionsTags.map(position => {
+            return {
+                idPosition: position.value,
+                description: position.label,
+                ApplicationId: this.props.ApplicationId
+            }
+        });
+        this.props.client
+            .mutate({
+                mutation: ADD_IDEAL_JOB,
+                variables: {
+                    application: positionData
+                }
+            })
+            .then((data) => {
+                this.props.getProfileInformation(this.props.ApplicationId);
+                this.props.hanldeCloseTitleModal();
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
     getPositions = () => {
         this.props.client
             .query({
                 query: GET_POSITION
             })
             .then(({ data }) => {
-                let dataAPI = data.getposition;
+                let dataAPI = data.catalogitem;
                 dataAPI.map(item => {
                     this.setState(prevState => ({
                         positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label: item.Position.trim(), key: item.Id
+                            value: item.Id, label: item.Code.trim(), key: item.Id
                         }]
                     }))
                 });
@@ -70,7 +97,7 @@ class Titles extends Component {
                 <DialogContent style={{ minWidth: 300, overflowY: "unset" }}>
                     <Select
                         options={this.state.positionCatalogTag}
-                        value={this.state.title}
+                        value={this.state.positionsTags}
                         onChange={this.handleChangeTitle}
                         closeMenuOnSelect={true}
                         components={makeAnimated()}
@@ -78,7 +105,7 @@ class Titles extends Component {
                     />
                 </DialogContent>     
                 <DialogActions>
-                    <button className="btn btn-success" type="submit">Save</button>
+                    <button className="btn btn-success" type="button" onClick={this.addIdealJob}>Save</button>
                     <button className="btn btn-danger" onClick={this.props.hanldeCloseTitleModal}>Cancel</button>
                 </DialogActions>
             </Dialog>

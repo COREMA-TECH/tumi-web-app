@@ -191,13 +191,14 @@ export const GET_ACTIVE_EMPLOYEES_BY_MARKS = gql`
 `;
 
 export const GET_POSITION = gql`
-  query positions($Id_Entity: Int,$Id_Department: Int, $Id: Int){
-    getposition(Id_Entity: $Id_Entity, Id: $Id,Id_Department: $Id_Department){
-      Id
-      Position      
-      Comment
+  query getPositions($Id_Entity: Int){
+        catalogitem(IsActive: 1, Id_Catalog: 6,  Id_Entity:  $Id_Entity) {
+            Id
+            Code: Name
+            Description
+            IsActive
+        }
     }
-  }
 `;
 
 export const CREATE_DOCUMENTS_PDF_QUERY = gql`

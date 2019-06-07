@@ -18,6 +18,7 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
 import IndependentContractDialog from './IndependentContract/Modal';
 
+
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
 }
@@ -52,7 +53,7 @@ class Application extends Component {
             homePhone: '',
             cellPhone: '',
             socialSecurityNumber: '',
-            birthDay: null,
+            birthDay: '',
             car: false,
             typeOfId: '',
             independentContract: null,
@@ -60,7 +61,7 @@ class Application extends Component {
             emailAddress: '',
             positionApplyingFor: 1,
             idealJob: '',
-            dateAvailable: null,
+            dateAvailable: '',
             scheduleRestrictions: '',
             scheduleExplain: '',
             convicted: '',
@@ -68,16 +69,6 @@ class Application extends Component {
             socialNetwork: '',
             comment: '',
             isLead: '',
-            dateCreation: new Date().toISOString().substring(0, 10),
-            immediately: 0,
-            optionHearTumi: null,
-            nameReferences:null,
-            EEOC:null,
-            Exemptions:null,
-            area:null,
-            HireType:null,
-            gender:null,
-            marital:null,
             // Languages array
             languages: [],
 
@@ -141,33 +132,7 @@ class Application extends Component {
             openSSNDialog: false,
             //Open/Close schedule restrictions modal
             openRestrictionsModal: false,
-            openIndependentContractDialog: false,
-            hearTumiOptions: [
-                {
-                    value: 0,
-                    label: 'Select an option'
-                },
-    
-                {
-                    value: 1,
-                    label: 'facebook'
-                },
-    
-                {
-                    value: 2,
-                    label: 'newspaper'
-                },
-    
-                {
-                    value: 3,
-                    label: 'employee'
-                },
-    
-                {
-                    value: 4,
-                    label: 'recruiter'
-                },
-            ],
+            openIndependentContractDialog: false
         };
     }
 
@@ -245,7 +210,6 @@ class Application extends Component {
                         }
                     })
                     .then(({ data }) => {
-                        localStorage.setItem('idApplication', id == 0 ? data.addApplication.id:id);
                         this.setState({
                             editing: false,
                             insertDialogLoading: false
@@ -370,17 +334,7 @@ class Application extends Component {
                                     ? applicantData.idealJob.split(',').map((d) => d.trim())
                                     : [],
                                 idealJob: applicantData.idealJob,
-                                isLead: applicantData.isLead,
-                                dateCreation:  applicantData.dateCreation,
-                                immediately: applicantData.immediately,
-                                optionHearTumi: applicantData.optionHearTumi,
-                                nameReferences: applicantData.nameReferences,
-                                EEOC:applicantData.eeoc,
-                                Exemptions:applicantData.exemptions,
-                                area:applicantData.area,
-                                HireType:applicantData.hireType,
-                                gender:applicantData.gender,
-                                marital:applicantData.marital
+                                isLead: applicantData.isLead
                             },
                             () => {
                                 this.getIdealJobsByApplicationId();
@@ -616,6 +570,8 @@ class Application extends Component {
         })
     };
 
+
+
     renderSSNDialog = () => (
         <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
             <DialogTitle>
@@ -669,30 +625,10 @@ class Application extends Component {
         this.getApplicationById(this.props.applicationId)
     }
 
-    findHearTumiOption = id => {
-        let optionId = id ? id : 0;
-
-        const found = this.state.hearTumiOptions.find(item => {
-            return item.value === optionId
-        });
-
-        return found;
-    }
-
-    updateOptionHearTumi = ({value}) => {
-        this.setState({
-            optionHearTumi: value
-        });
-    }
-
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
 
-        const positionApplyingList = this.state.dataWorkOrder.lenght > 0 ? this.state.dataWorkOrder.map(item => { return {value:item.id, label:`${item.position.Position} ${item.BusinessCompany.Code.trim()}`}                                                                             })
-                                                                         :  [{  value: null, label: 'Select an Option' }, {  value: 0, label: 'Open Position'  }];
-
-      
         return (
             <div className="Apply-container--application">
                 {
@@ -952,7 +888,7 @@ class Application extends Component {
                                     </div>
                                     <div className="col-md-12 col-lg-6 form-section-2">
                                         <div className="row">
-                                            {/*<div className="col-md-6">
+                                            <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     * {formSpanish[12].label}
                                                 </span>
@@ -972,28 +908,7 @@ class Application extends Component {
                                                     maxLength="50"
                                                     minLength="10"
                                                 />
-                                                </div>*/}
-                                                <div className="col-md-6">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[25].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            dateCreation: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.dateCreation}
-                                                    name="dateCreation"
-                                                    type="date"
-                                                    className="form-control"
-                                                    disabled={true}
-                                                    required
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="10"
-                                                />
-                                                </div>
+                                            </div>
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[23].label}
@@ -1043,45 +958,7 @@ class Application extends Component {
                                                     minLength="8"
                                                 />
                                             </div>
-
-                                            
                                             <div className="col-md-6">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    {formSpanish[27].label}
-                                                </span>
-                                                
-                                                <Select
-                                                    options={this.state.hearTumiOptions}
-                                                    value={this.findHearTumiOption(this.state.optionHearTumi)}
-                                                    onChange={this.updateOptionHearTumi}
-                                                    closeMenuOnSelect={true}
-                                                    components={makeAnimated()}
-                                                    isMulti={false}
-                                                    isDisabled={!this.state.editing}
-                                                />
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    {formSpanish[28].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            nameReferences: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.nameReferences}
-                                                    name="nameReferences"
-                                                    type="text"
-                                                    className="form-control"
-                                                   
-                                                    disabled={!this.state.editing || (this.state.optionHearTumi==3?false:(this.state.optionHearTumi==4?false:true))}
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="3"
-                                                />
-                                            </div>
-                                           {/* <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[14].label}
                                                 </span>
@@ -1125,9 +1002,8 @@ class Application extends Component {
                                                     maxLength="50"
                                                     minLength="10"
                                                 />
-                                            </div> 
-                                            
-                                               <div className="col-md-12">
+                                            </div>
+                                            <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[16].label}
                                                 </span>
@@ -1143,7 +1019,7 @@ class Application extends Component {
                                                 />
 
                                             </div>
-                                       */}
+
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[17].label}
@@ -1168,48 +1044,8 @@ class Application extends Component {
                                                             value={item.id} key={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
                                                     ))}
                                                 </select>
-
-                                                {/* <Select
-                                                    options={positionApplyingList}
-                                                    value={{value: this.state.positionApplyingFor, label: this.findPositionApplyingLabel(this.state.positionApplyingFor, positionApplyingList)}}
-                                                    onChange={this.updatePositionApplyingFor}
-                                                    closeMenuOnSelect={true}
-                                                    components={makeAnimated()}
-                                                    isMulti={false}
-                                                    isDisabled={!this.state.editing}
-                                                /> */}
                                             </div>
-
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    {formSpanish[26].label}
-                                                </span>
-                                                <div className="onoffswitch">
-                                                    <input
-                                                        id="immediately"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                immediately : event.target.checked
-                                                            });
-                                                        }}
-                                                        checked={this.state.immediately }
-                                                        value={this.state.immediately }
-                                                        name="immediately"
-                                                        type="checkbox"
-                                                        disabled={!this.state.editing}
-                                                        min="0"
-                                                        maxLength="50"
-                                                        minLength="10"
-                                                        className="onoffswitch-checkbox"
-                                                    />
-                                                    <label className="onoffswitch-label" htmlFor="immediately">
-                                                        <span className="onoffswitch-inner" />
-                                                        <span className="onoffswitch-switch" />
-                                                    </label>
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6">
+                                            <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     * {formSpanish[18].label}
                                                 </span>
@@ -1223,7 +1059,7 @@ class Application extends Component {
                                                     name="dateAvailable"
                                                     type="date"
                                                     className="form-control"
-                                                    disabled={!this.state.editing || this.state.immediately}
+                                                    disabled={!this.state.editing}
                                                     required
                                                     min="0"
                                                     maxLength="50"
