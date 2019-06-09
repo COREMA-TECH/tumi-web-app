@@ -5,7 +5,7 @@ import Global from 'Generic/Global';
 const MenuItem = (props) => {
 
 	const handleItemMenuAction = () => {
-		alert('hola');
+	
 	};
 
 	return (

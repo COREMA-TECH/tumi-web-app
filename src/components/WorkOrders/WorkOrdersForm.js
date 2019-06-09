@@ -287,7 +287,9 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CREATE_WORKORDER,
                 variables: {
-                    workOrder: this.state.form
+                    workOrder: this.state.form,
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
                 }
             })
             .then((data) => {
@@ -319,6 +321,8 @@ class WorkOrdersForm extends Component {
                     startDate: this.state.startDate,
                     endDate: this.state.endDate,
                     quantity: this.state.quantity,
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName'),
                     workOrder: {
                         id: this.state.workOrderId,
                         IdEntity: this.state.IdEntity,
@@ -412,6 +416,8 @@ class WorkOrdersForm extends Component {
                 variables: {
                     id: this.state.workOrderId,
                     userId: this.state.userId,
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
                 }
             })
             .then((data) => {
@@ -542,7 +548,8 @@ class WorkOrdersForm extends Component {
                 mutation: DELETE_EMPLOYEE,
                 variables: {
                     id: id,
-
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
                 }
             })
             .then((data) => {

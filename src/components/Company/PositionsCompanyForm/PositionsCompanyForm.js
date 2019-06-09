@@ -721,7 +721,7 @@ query getposition ($Id_Entity:Int){
 						User_Updated: this.state.userId,
 						Date_Created: "'2018-08-14 16:10:25+00'",
 						Date_Updated: "'2018-08-14 16:10:25+00'",
-						catalogItem_id: this.state.catalogItem_id
+						catalogItem_id:  this.state.catalogItem_id //this.state.catalogItem_id
 					}
 				}
 			})
@@ -848,6 +848,7 @@ query getposition ($Id_Entity:Int){
 			},
 			() => {
 				this.validateAllFields(() => {
+					console.log("catalogItem_id ", this.state.catalogItem_id)
 					if (this.state.formValid) this.insertDepartment();
 					else {
 						this.props.handleOpenSnackbar(
@@ -899,6 +900,7 @@ query getposition ($Id_Entity:Int){
 	};
 
 	handleChangePositionTag = (positionsTags) => {
+		console.log("handleChangePositionTag ", positionsTags)
         this.setState({ positionsTags, position: positionsTags.label, catalogItem_id: positionsTags.key, positionValid: true });
     };
 
