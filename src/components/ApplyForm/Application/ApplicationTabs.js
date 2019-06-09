@@ -141,7 +141,11 @@ class CustomizedTabs extends React.Component {
         const { classes } = this.props;
         const { value } = this.state;
 
-        let getTabContent = (step, ) => {
+        if (this.state.applicationId == 0) {
+            this.state.applicationId = localStorage.getItem('idApplication');
+        }
+
+        let getTabContent = (step) => {
             switch (step) {
                 case 0:
                     return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
@@ -164,7 +168,7 @@ class CustomizedTabs extends React.Component {
                 case 9:
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
                 case 10:
-                    return <IndependentContract />
+                    return <IndependentContract applicationId={this.state.applicationId} />
 
             }
         };
@@ -172,7 +176,7 @@ class CustomizedTabs extends React.Component {
             <div>
                 <MuiThemeProvider theme={theme}>
                     <Tabs
-                        value={value}
+                        value={this.state.applicationId == 0 ? 0 : value}
                         onChange={this.handleChange}
                         scrollable
                         scrollButtons="on"
@@ -241,7 +245,7 @@ class CustomizedTabs extends React.Component {
                         }
 
                     </Tabs>
-                    {getTabContent(value)}
+                    {getTabContent(this.state.applicationId == 0 ? 0 : value)}
                 </MuiThemeProvider>
             </div>
         );

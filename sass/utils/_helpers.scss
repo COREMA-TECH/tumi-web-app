@@ -51,7 +51,20 @@
 	text-decoration: none;
 }
 
-.tumi{
+.tumi{	
+	&-saveBtn{
+		margin: 0px 15px;
+		padding: 12px 90px;
+
+		&.right{
+			margin-left: auto; 
+		}
+
+		&.left{
+			margin-right: auto;
+		}
+	}
+	
 	&-row-centered{
 		align-items: center;
 		display: flex;
@@ -69,6 +82,14 @@
 		justify-content: center;
 		
 		padding: 5px; 
+	}
+
+	&-row-vert-center{
+		align-items: center;
+	}
+
+	&-text-blue{
+		color: $success;
 	}
 
 	&-noPadding{

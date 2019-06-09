@@ -99,9 +99,9 @@ class DepartmentModal extends Component{
 
 	validateFields = () => {
 		let validated = false;
-        const {Name, DisplayLabel, Description} = this.state;
+        const {Name, Description} = this.state;
         
-		if(Name.length > 0 && DisplayLabel.length > 0 && Description.length > 0)
+		if(Name.length > 0 && Description.length > 0)
 			validated = true;
 
 		return validated;
@@ -124,7 +124,7 @@ class DepartmentModal extends Component{
 						Id_Catalog: 8,
 						Id_Parent: 0,
 						Name: `'${this.state.Name}'`,
-						DisplayLabel: `'${this.state.DisplayLabel}'`,
+						DisplayLabel: `'${this.state.Description}'`,
 						Description: `'${this.state.Description}'`,
 						Value: `' '`,
 						Value01: null,
@@ -169,7 +169,7 @@ class DepartmentModal extends Component{
 						Id_Catalog: 8,
 						Id_Parent: 0,
 						Name: `'${this.state.Name}'`,
-						DisplayLabel: `'${this.state.DisplayLabel}'`,
+						DisplayLabel: `'${this.state.Description}'`,
 						Description: `'${this.state.Description}'`,
 						Value: `' '`,
 						Value01: null,
@@ -225,7 +225,7 @@ class DepartmentModal extends Component{
                                 onChange={this.onChangeHandler}
                             />
                         </div>
-                        <div className="col-md-12 mb-4">
+                        {/* <div className="col-md-12 mb-4">
                             <span className="">* Display Label</span>
                             <input
                                 type='text'
@@ -237,7 +237,7 @@ class DepartmentModal extends Component{
                                 value={this.state.DisplayLabel}
                                 onChange={this.onChangeHandler}
                             />
-                        </div>
+                        </div> */}
                         <div className="col-md-12 mb-4">
                             <span className="">* Description</span>
                             <input

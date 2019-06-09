@@ -1233,7 +1233,7 @@ class FormsW4 extends Component {
                                                                     </tbody>
                                                                 </table>
                                                                 <p><img src="https://i.imgur.com/wJ2ancW.png"
-                                                                        style={{ width: '100% !important' }} />
+                                                                        width="100%" />
                                                                 </p>
                                                                 <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                     <tbody>

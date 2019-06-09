@@ -17,6 +17,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import DirectDeposit from "../../../DirectDeposit";
+
 import { GET_APPLICATION_PROFILE_INFO, GET_ACTIVE_EMPLOYEES_BY_MARKS } from "./Queries";
 import { UDPATE_PROFILE_PICTURE } from './Mutations';
 
@@ -226,7 +228,7 @@ class VerticalLinearStepper extends Component {
         const { activeStep } = this.state;
 
         let idEntity = null, Id_Department = null, EmployeeId = -1;
-
+        console.log(`Application id: ${this.props.applicationId}`);
 
 
         if (this.state.employee)
@@ -245,6 +247,12 @@ class VerticalLinearStepper extends Component {
                             location={idEntity}
                             deparment={Id_Department}
                             selectedEmployee={EmployeeId}
+                        />
+                    </div>
+                case 6:
+                    return <div className="card mt-0 pl-1 pr-1">
+                        <DirectDeposit 
+                            applicationId={this.props.applicationId}
                         />
                     </div>
             }
