@@ -200,17 +200,3 @@ export const GET_POSITION = gql`
         }
     }
 `;
-
-export const CREATE_DOCUMENTS_PDF_QUERY = gql`
-query createdocumentspdf($contentHTML:String,$Name:String) {
-    createdocumentspdf(contentHTML: $contentHTML, Name: $Name) 
-}
-`;
-
-
-    export const  SEND_VERIFICATION = gql`
-        query sendemailverification($email: String)
-        {
-        sendemailverification(email:$email)
-        }
-    `;

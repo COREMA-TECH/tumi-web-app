@@ -69,9 +69,9 @@ export const UPDATE_WORKORDER = gql`
 `;
 
 export const DELETE_EMPLOYEE = gql`
-mutation deleteEmployees($id: Int, $codeuser: Int, $nameUser: String)
+mutation deleteEmployees($id: Int)
 {
-  deleteShiftDetailEmployees(id: $id, codeuser: $codeuser, nameUser: $nameUser)
+  deleteShiftDetailEmployees(id: $id)
   {
     id
   }
@@ -80,8 +80,8 @@ mutation deleteEmployees($id: Int, $codeuser: Int, $nameUser: String)
 `;
 
 export const CONVERT_TO_OPENING = gql`
-mutation convertToOpening($id: Int, $userId: Int, $codeuser: Int, $nameUser: String) {
-	convertToOpening(id: $id, userId: $userId, codeuser: $codeuser, nameUser: $nameUser)
+mutation convertToOpening($id: Int, $userId: Int) {
+	convertToOpening(id: $id, userId: $userId)
 	{
 		id
 	}
@@ -89,14 +89,14 @@ mutation convertToOpening($id: Int, $userId: Int, $codeuser: Int, $nameUser: Str
 `;
 
 export const DELETE_WORKORDER = gql`
-	mutation deleteWorkOrder($id: Int, $codeuser: Int, $nameUser: String) {
-		deleteWorkOrder(id: $id,  codeuser: $codeuser, nameUser: $nameUser)
+	mutation deleteWorkOrder($id: Int) {
+		deleteWorkOrder(id: $id)
 	}
 `;
 
 export const DELETE_SHIFT = gql`
-	mutation deleteShift($id: Int, $codeuser: Int, $nameUser: String) {
-		deleteShift(id: $id,  codeuser: $codeuser, nameUser: $nameUser)
+	mutation deleteShift($id: Int) {
+		deleteShift(id: $id)
 		{id}
 	}
 `;
