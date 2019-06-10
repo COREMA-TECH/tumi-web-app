@@ -4,8 +4,8 @@ import gql from 'graphql-tag';
  * Mutation to create employees
  */
 export const ADD_EMPLOYEES = gql`
-    mutation addEmployees($Employees: [inputInsertEmployees]) {
-        addEmployees(Employees: $Employees) {
+    mutation addEmployees($Employees: [inputInsertEmployees],$codeuser: Int, $nameUser: String) {
+        addEmployees(Employees: $Employees, codeuser: $codeuser, nameUser: $nameUser) {
             id
         }
     }
@@ -16,8 +16,8 @@ export const ADD_EMPLOYEES = gql`
  * Mutation to delete employees
  */
 export const DELETE_EMPLOYEE = gql`
-    mutation deleteEmployees($id: Int) {
-        deleteEmployees(id: $id) {
+    mutation deleteEmployees($id: Int,$codeuser: Int, $nameUser: String) {
+        deleteEmployees(id: $id, codeuser: $codeuser, nameUser: $nameUser) {
             id
         }
     }
@@ -28,8 +28,8 @@ export const DELETE_EMPLOYEE = gql`
  * Mutation to update employees
  */
 export const UPDATE_EMPLOYEE = gql`
-    mutation updemployees($employees: inputUpdateEmployees) {
-        updateEmployees(employees: $employees) {
+    mutation updemployees($employees: inputUpdateEmployees, $codeuser: Int, $nameUser: String) {
+        updateEmployees(employees: $employees, codeuser: $codeuser, nameUser: $nameUser) {
             id
         }
     }
