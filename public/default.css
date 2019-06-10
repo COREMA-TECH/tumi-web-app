@@ -10090,8 +10090,57 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     margin-top: 0 !important; }
 
 .Attachments-list {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   max-height: 266px;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem; }
+
+.Attachments-item {
+  -ms-flex-preferred-size: 45%;
+  flex-basis: 45%;
+  max-width: 45%; }
+  .Attachments-item .group-container {
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 10px;
+    width: 100%; }
+  .Attachments-item .image-upload-wrap-static {
+    height: 100px;
+    width: 100%; }
+  .Attachments-item .image-show-wrap {
+    height: 100px; }
+
+.AccountHolder .Location-changeCityByZip {
+  width: 90px; }
+  .AccountHolder .Location-changeCityByZip label {
+    display: none; }
+  .AccountHolder .Location-changeCityByZip input {
+    position: relative; }
+    .AccountHolder .Location-changeCityByZip input::after {
+      content: 'Change city';
+      font-size: 12px;
+      position: absolute;
+      left: 20px;
+      top: -3px;
+      width: 75px; }
 
 .Header-mobileMenu {
   color: #FFF;
@@ -12622,4 +12671,5 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
+
 /*# sourceMappingURL=default.css.map */

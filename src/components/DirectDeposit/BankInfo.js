@@ -3,7 +3,8 @@ import React, { Component } from "react";
 class BankInfo extends Component{
     INITIAL_STATE = {
         quantityDisabled: true,
-        percentageDisabled: true
+        percentageDisabled: true,
+        isFullCheck: false
     }
 
     constructor(props){
@@ -18,7 +19,8 @@ class BankInfo extends Component{
         this.setState( (prevState, props) => {
             return {
                 percentageDisabled: false,
-                quantityDisabled: true
+                quantityDisabled: true,
+                isFullCheck: false
             }
         }, _ => this.props.setAmountType('percentage'));
     }
@@ -27,9 +29,22 @@ class BankInfo extends Component{
         this.setState( (prevState, props) => {
             return {
                 percentageDisabled: true,
-                quantityDisabled: false
+                quantityDisabled: false,
+                isFullCheck: false
             }
         }, _ => this.props.setAmountType('quantity'));
+    }
+
+    enableFullPaycheck = _ => {
+        this.setState(_ => {
+            return {
+                percentageDisabled: true,
+                quantityDisabled: true,
+                isFullCheck: true
+            }
+        }, _ => {
+            this.props.handleFullPaycheckSelected();
+        })
     }
 
     render(){
@@ -85,7 +100,9 @@ class BankInfo extends Component{
                                     <span className="float-right tumi-checkbox-wrapper Location-changeCityByZip">
                                         <input 
                                             type="checkbox" 
-                                            name="changeCity" 
+                                            name="isFullCheck" 
+                                            checked={this.state.isFullCheck}
+                                            onChange={this.enableFullPaycheck}
                                         />
                                         
                                         <label htmlFor="changeCity">Entire Paycheck</label>
@@ -95,7 +112,7 @@ class BankInfo extends Component{
                                         <div class="input-group-prepend">
                                             <input type="checkbox" name="percentage" checked={!this.state.percentageDisabled} id="percentage" onChange={this.enablePercentage}/>
                                         </div>
-                                        <input type="text" name="percentage" value={this.props.percentage} class="form-control" disabled={this.state.percentageDisabled} onChange={this.props.handleChange}/>
+                                        <input type="number" min="0" max="100" name="percentage" value={this.props.percentage} class="form-control" disabled={this.state.percentageDisabled} onChange={this.props.handleChange}/>
                                     </div>
                                 </div>
                             </div>

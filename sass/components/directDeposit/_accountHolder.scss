@@ -1,0 +1,24 @@
+.AccountHolder{
+    .Location-changeCityByZip{
+        width: 90px;
+
+        label{
+            display: none;
+        }
+
+        input{
+            position: relative;
+
+            &::after{
+                content: 'Change city';
+                font-size: 12px;
+
+                position: absolute;
+                left: 20px;
+                top: -3px;
+
+                width: 75px;
+            }
+        }
+    }
+}

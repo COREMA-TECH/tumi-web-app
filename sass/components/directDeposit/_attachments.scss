@@ -1,6 +1,40 @@
 .Attachments{
     &-list{
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
         max-height: 266px;
+
         overflow-y: scroll;
+
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    &-item{
+        flex-basis: 45%;
+        max-width: 45%;
+
+        .group-container{
+            margin-bottom: 10px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 10px;
+
+            width: 100%;
+        }
+
+        .image-upload-wrap-static{
+            height: 100px;
+            width: 100%;
+        }
+
+        .image-show-wrap{
+            height: 100px;
+        }
     }
 }
