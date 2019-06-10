@@ -10128,6 +10128,20 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   .Attachments-item .image-show-wrap {
     height: 100px; }
 
+.AccountHolder .Location-changeCityByZip {
+  width: 90px; }
+  .AccountHolder .Location-changeCityByZip label {
+    display: none; }
+  .AccountHolder .Location-changeCityByZip input {
+    position: relative; }
+    .AccountHolder .Location-changeCityByZip input::after {
+      content: 'Change city';
+      font-size: 12px;
+      position: absolute;
+      left: 20px;
+      top: -3px;
+      width: 75px; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;

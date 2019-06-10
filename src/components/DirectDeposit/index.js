@@ -136,7 +136,7 @@ class DirectDeposit extends Component{
                 <form onSubmit={this.handleSubmit}>
                     <div className="row">
                         <div className="col-md-12 col-xl-5">
-                            <div className="card">
+                            <div className="card AccountHolder">
                                 <div className="card-header">
                                     Account Holder Information
                                 </div>
