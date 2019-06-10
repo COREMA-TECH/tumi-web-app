@@ -10114,7 +10114,8 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 .Attachments-item {
   -ms-flex-preferred-size: 45%;
-  flex-basis: 45%; }
+  flex-basis: 45%;
+  max-width: 45%; }
   .Attachments-item .group-container {
     margin-bottom: 10px;
     margin-left: 0;
