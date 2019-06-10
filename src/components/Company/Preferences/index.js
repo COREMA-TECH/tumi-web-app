@@ -305,11 +305,11 @@ class Preferences extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col-md-5">
-                            {/*        <div class="card">
-                              <div class="card-header">Lunch Preferences</div>
+                            <div class="card">
+                                <div class="card-header">Lunch Preferences</div>
                                 <div class="card-body">
                                     <div className="row">
-                                               <div className="col-md-2">
+                                        <div className="col-md-2">
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
@@ -332,89 +332,90 @@ class Preferences extends React.Component {
                                         <div className="col-md-10">
                                             <label className="font-weight-bold">
                                                 Do You Have Any Lunch Period Deductions?
-                      </label>
+                                            </label>
                                         </div>
                                         <br />
                                         <br />
                                         <div className="col-md-12 mb-2" />
-                                       
-                                <div className="col-md-3">
-                                    <label className="font-weight-bold d-lg-block text-lg-right">
-                                        Time (min)
-                      </label>
-                                </div>
-                                <div className="col-md-3">
-                                    <input
-                                        type="number"
-                                        name="amount"
-                                        disabled={this.state.disabled ? "disabled" : ""}
-                                        value={this.state.time}
-                                        className="form-control"
-                                        onChange={e => {
-                                            this.setState({
-                                                time: e.target.value
-                                            });
-                                        }}
-                                    />
-                                </div>
-                                
-                                <div className="col-md-2">
-                                    <label className="font-weight-bold d-lg-block text-lg-right">
-                                        Amount
-                      </label>
-                                </div>
-                                <div className="col-md-3">
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        name="amount"
-                                        step=".01"
-                                        disabled={this.state.disabled ? "disabled" : ""}
-                                        value={this.state.amount}
-                                        className="form-control"
-                                        onChange={this.handleChange}
-                                        placeholder="$"
-                                    />
-                                </div>
-                                <div className="col-12 col-md-12 mb-4" />
-                                
-                                <div className="col-md-2">
-                                    <label className="font-weight-bold">Frequency</label>
-                                </div>
-                                {this.state.options.map(item => {
-                                    //return <option value={item.Id} key={item.Id} > {item.Name}</option>
-                                    return (
-                                        <div className="col-3 col-md-3">
-                                            <div>
-                                                <div className="col-md-12">
-                                                    <label>{item.Name}</label>
-                                                </div>
-                                                <div className="col-md-12">
-                                                    <input
-                                                        value={item.Id}
-                                                        checked={
-                                                            this.state.period == item.Id ? true : false
-                                                        }
-                                                        onChange={event => {
-                                                            this.setState(
-                                                                { period: parseInt(event.target.value) },
-                                                                () => {
-                                                                    console.log(this.state.period);
-                                                                }
-                                                            );
-                                                        }}
-                                                        type="radio"
-                                                        name="frequency"
-                                                    />
-                                                </div>
-                                            </div>
+
+                                        <div className="col-md-3">
+                                            <label className="font-weight-bold d-lg-block text-lg-right">
+                                                Time (min)
+                                            </label>
                                         </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </div >
-                    */}
+                                        <div className="col-md-3">
+                                            <input
+                                                type="number"
+                                                name="amount"
+                                                disabled={this.state.disabled ? "disabled" : ""}
+                                                value={this.state.time}
+                                                className="form-control"
+                                                onChange={e => {
+                                                    this.setState({
+                                                        time: e.target.value
+                                                    });
+                                                }}
+                                                placeholder="$"
+                                            />
+                                        </div>
+
+                                        <div className="col-md-2">
+                                            <label className="font-weight-bold d-lg-block text-lg-right">
+                                                Amount
+                                            </label>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                name="amount"
+                                                step=".01"
+                                                disabled={this.state.disabled ? "disabled" : ""}
+                                                value={this.state.amount}
+                                                className="form-control"
+                                                onChange={this.handleChange}
+                                                placeholder="$"
+                                            />
+                                        </div>
+                                        <div className="col-12 col-md-12 mb-4" />
+
+                                        <div className="col-md-2">
+                                            <label className="font-weight-bold">Frequency</label>
+                                        </div>
+                                        {this.state.options.map(item => {
+                                            //return <option value={item.Id} key={item.Id} > {item.Name}</option>
+                                            return (
+                                                <div className="col-3 col-md-3">
+                                                    <div>
+                                                        <div className="col-md-12">
+                                                            <label>{item.Name}</label>
+                                                        </div>
+                                                        <div className="col-md-12">
+                                                            <input
+                                                                value={item.Id}
+                                                                checked={
+                                                                    this.state.period == item.Id ? true : false
+                                                                }
+                                                                onChange={event => {
+                                                                    this.setState(
+                                                                        { period: parseInt(event.target.value) },
+                                                                        () => {
+                                                                            console.log(this.state.period);
+                                                                        }
+                                                                    );
+                                                                }}
+                                                                type="radio"
+                                                                name="frequency"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div >
+
                             < div className="row" >
                                 <div className="col-md-6">
                                     <div className="card">
