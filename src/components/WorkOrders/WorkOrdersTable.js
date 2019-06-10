@@ -172,9 +172,7 @@ class WorkOrdersTable extends Component {
         this.props.client.mutate({
             mutation: DELETE_SHIFT,
             variables: {
-                id: ShiftId,
-                codeuser: localStorage.getItem('LoginId'),
-                nameUser: localStorage.getItem('FullName')
+                id: ShiftId
             }
         }).then((data) => {
             this.CancelWO(WorkOrderId);
@@ -196,9 +194,7 @@ class WorkOrdersTable extends Component {
         this.props.client.mutate({
             mutation: DELETE_WORKORDER,
             variables: {
-                id: WorkOrderId,
-                codeuser: localStorage.getItem('LoginId'),
-                nameUser: localStorage.getItem('FullName')
+                id: WorkOrderId
             }
         }).then((data) => {
 
@@ -310,9 +306,7 @@ class WorkOrdersTable extends Component {
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
                         contactId: this.state.contactId
-                    },
-                    codeuser: localStorage.getItem('LoginId'),
-                    nameUser: localStorage.getItem('FullName')
+                    }
                 }
             })
             .then((data) => {
@@ -333,8 +327,6 @@ class WorkOrdersTable extends Component {
                 variables: {
                     id: this.state.id,
                     userId: this.state.userId,
-                    codeuser: localStorage.getItem('LoginId'),
-                    nameUser: localStorage.getItem('FullName')
                 }
             })
             .then((data) => {

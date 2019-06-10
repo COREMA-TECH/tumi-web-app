@@ -5,5 +5,5 @@ export const INSERT_ACCOUNT_INFO = gql`
     addApplicationAccount(applicationAccount: $input, applicationAccountDocs: $documents) {
       id
     }
-  }     
+  }   
 `;

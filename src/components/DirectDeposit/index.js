@@ -79,7 +79,7 @@ class DirectDeposit extends Component{
             fetchPolicy: 'no-cache'
         })
         .then(({data}) => {
-            this.setState({ applicationAccounts: data.applicationAccounts });
+            this.setState({ applicationAccounts: data.applicationAccounts }, _ => console.log(data.applicationAccounts));
         })
         .catch(error => console.log(error));
     }
@@ -113,33 +113,20 @@ class DirectDeposit extends Component{
             }
         })
         .then(_ => {
-            this.setState(_ => {
-                return { ...this.INITIAL_STATE }
-            }, _ => {
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Saved Successfully',
-                    'bottom',
-                    'center'
-                );
-
-                this.getApplicationAccounts();
-            })            
+            this.props.handleOpenSnackbar(
+                'success',
+                'Saved Successfully',
+                'bottom',
+                'center'
+            );
         })
         .catch(error => {
-            this.setState(_ => {
-                return { ...this.INITIAL_STATE }
-            }, _ => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    `Error: ${error}`,
-                    'bottom',
-                    'center'
-                );
-
-                this.getApplicationAccounts();
-            });  
-            
+            this.props.handleOpenSnackbar(
+                'error',
+                `Error: ${error}`,
+                'bottom',
+                'center'
+            );
         }); 
     }
         
