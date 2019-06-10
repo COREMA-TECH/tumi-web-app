@@ -51,7 +51,7 @@ class DisplayAttachment extends Component{
     
     render(){
         return (
-			<li className="UploadDocument-item">
+			<li className="UploadDocument-item Attachments-item">
 				<div className="group-container">
 					<div className="file-name-container">
 						<input

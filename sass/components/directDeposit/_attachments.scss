@@ -1,6 +1,27 @@
 .Attachments{
     &-list{
         max-height: 266px;
+
         overflow-y: scroll;
+
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    &-item{
+        width: 100%;
+
+        .group-container{
+            margin-bottom: 10px;
+            margin-left: 0;
+            margin-right: 0;
+            margin-top: 10px;
+
+            width: 100%;
+        }
+
+        .image-upload-wrap-static{
+            width: 100%;
+        }
     }
 }

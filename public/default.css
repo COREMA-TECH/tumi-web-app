@@ -10091,7 +10091,20 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 .Attachments-list {
   max-height: 266px;
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem; }
+
+.Attachments-item {
+  width: 100%; }
+  .Attachments-item .group-container {
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 10px;
+    width: 100%; }
+  .Attachments-item .image-upload-wrap-static {
+    width: 100%; }
 
 .Header-mobileMenu {
   color: #FFF;
@@ -12622,4 +12635,5 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
+
 /*# sourceMappingURL=default.css.map */
