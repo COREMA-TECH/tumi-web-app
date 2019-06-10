@@ -10090,13 +10090,31 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     margin-top: 0 !important; }
 
 .Attachments-list {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   max-height: 266px;
   overflow-y: scroll;
   padding-left: 0.5rem;
   padding-right: 0.5rem; }
 
 .Attachments-item {
-  width: 100%; }
+  -ms-flex-preferred-size: 45%;
+  flex-basis: 45%; }
   .Attachments-item .group-container {
     margin-bottom: 10px;
     margin-left: 0;
@@ -10104,7 +10122,10 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     margin-top: 10px;
     width: 100%; }
   .Attachments-item .image-upload-wrap-static {
+    height: 100px;
     width: 100%; }
+  .Attachments-item .image-show-wrap {
+    height: 100px; }
 
 .Header-mobileMenu {
   color: #FFF;
