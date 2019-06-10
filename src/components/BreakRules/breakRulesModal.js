@@ -52,7 +52,7 @@ class BreakRulesModal extends Component {
         selectedDays: 'MO,TU,WE,TH,FR,SA,SU',
         
         breakPlacement: 'middle',
-        breakStartTime: null,
+        breakStartTime: "00:00",
         isActive: true,
         isPaid: true
     }
@@ -72,13 +72,15 @@ class BreakRulesModal extends Component {
 
         if(nextProps.isRuleEdit && nextProps.breakRuleToEdit) {
             const { id, name, code, lenght, employee_BreakRule, isAutomatic, breakRuleDetail, isActive, isPaid } = nextProps.breakRuleToEdit;
+            const convertedLength = Number.isInteger(lenght) ? lenght : (lenght * 60) /* Converted to minutes */
 
             this.setState(_ => {
+                console.log(breakRuleDetail.breakStartTime);
                 return {
                     ruleId: id,
                     ruleName: name,
                     code,
-                    lenght,
+                    lenght: convertedLength,
                     lenghtInHours: lenght,
                     isPaid,
 
@@ -95,8 +97,9 @@ class BreakRulesModal extends Component {
                     repeatBreak: breakRuleDetail ? breakRuleDetail.isRepeating : false,
                     selectedDays: breakRuleDetail ? breakRuleDetail.days : 'MO,TU,WE,TH,FR,SA,SU',
                     breakPlacement: breakRuleDetail ? breakRuleDetail.breakPlacement : 'middle',
-                    breakStartTime: breakRuleDetail ? breakRuleDetail.breakStartTime : null,
-                    isActive
+                    breakStartTime: breakRuleDetail.breakStartTime ? moment(breakRuleDetail.breakStartTime, "HH:mm:ss").format("HH:mm") : "00:00",
+                    lenghtUnit: Number.isInteger(lenght) ? "Hours" : "Minutes",
+                    isActive,
                 }
             });
         }
@@ -159,7 +162,7 @@ class BreakRulesModal extends Component {
 
     handleTimeChange = text => {
         this.setState({
-            breakStartTime: moment(text, "HH:mm:ss").format("HH:mm")
+            breakStartTime: moment(text, "HH:mm:ss").format("HH:mm"),
         });
     }
 
@@ -219,7 +222,7 @@ class BreakRulesModal extends Component {
                                 shiftReached: this.state.shiftReachedInHours,
                                 isRepeating: this.state.repeatBreak,
                                 days: this.state.selectedDays,
-                                breakStartTime: this.state.breakPlacement === 'specific' ? null : this.state.breakStartTime,
+                                breakStartTime: this.state.breakPlacement === 'middle' ? null : this.state.breakStartTime,
                                 breakPlacement: this.state.breakPlacement
                             }
                         }
@@ -269,7 +272,7 @@ class BreakRulesModal extends Component {
                                     shiftReached: this.state.shiftReachedInHours,
                                     isRepeating: this.state.repeatBreak,
                                     days: this.state.selectedDays,
-                                    breakStartTime: this.state.breakPlacement === 'specific' ? null : this.state.breakStartTime,
+                                    breakStartTime: this.state.breakPlacement === 'middle' ? null : this.state.breakStartTime,
                                     breakPlacement: this.state.breakPlacement
                                 }
                             }
@@ -285,7 +288,7 @@ class BreakRulesModal extends Component {
                                     shiftReached: this.state.shiftReachedInHours,
                                     isRepeating: this.state.repeatBreak,
                                     days: this.state.selectedDays,
-                                    breakStartTime: this.state.breakPlacement === 'specific' ? null : this.state.breakStartTime,
+                                    breakStartTime: this.state.breakPlacement === 'middle' ? null : this.state.breakStartTime,
                                     breakPlacement: this.state.breakPlacement
                                 }
                             }
@@ -444,7 +447,7 @@ class BreakRulesModal extends Component {
 
     render() {
         return(
-            <Dialog className="BreaksModal" fullWidth maxWidth="sm" open={this.props.openModal} onClose={this.handleClose}>
+            <Dialog className="BreaksModal" fullWidth maxWidth="sm" open={this.props.openModal}>
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">Break Rule</h5>
@@ -491,14 +494,14 @@ class BreakRulesModal extends Component {
                                     <label className="d-block" for="">Type</label>
                                     <div className="BreaksModal-radioWrap">
                                         <div className="form-check">
-                                            <input className="form-check-input" checked={this.state.isPaid} type="radio" onChange={this.handleChange} name="isPaid" id="isPaid" value="true" />
+                                            <input className="form-check-input" autocomplete="off" checked={this.state.isPaid == "true" || this.state.isPaid === true} type="radio" onChange={this.handleChange} name="isPaid" id="isPaid" value="true" />
                                             <label className="form-check-label" for="isPaid">
                                                 Paid
                                             </label>
                                         </div>
 
                                         <div className="form-check">
-                                            <input className="form-check-input" checked={!this.state.isPaid} type="radio" onChange={this.handleChange} name="isPaid" id="isUnpaid" value="false" />
+                                            <input className="form-check-input" autocomplete="off" checked={this.state.isPaid == "false" || this.state.isPaid === false} type="radio" onChange={this.handleChange} name="isPaid" id="isUnpaid" value="false" />
                                             <label className="form-check-label" for="isUnpaid">
                                                 Unpaid
                                             </label>
@@ -511,9 +514,9 @@ class BreakRulesModal extends Component {
                         <div class="form-group row">
                             <label for="employeeSelect" class="col-md-2 col-form-label mt-0">Employees:</label>
                             <div class="col-md-10">
-                                <div className="ScheduleWrapper">
+                                <div className="">
                                     <Select
-                                        className="EmployeeFilter"
+                                        className=""
                                         options={this.state.employeeSelectOptions}
                                         value={this.state.selectedEmployees}
                                         onChange={this.handleChangeEmployeesSelect}
