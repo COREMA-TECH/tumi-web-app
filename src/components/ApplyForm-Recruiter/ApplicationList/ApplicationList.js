@@ -10,21 +10,8 @@ import withGlobalContent from 'Generic/Global';
 import ErrorMessageComponent from 'ui-components/ErrorMessageComponent/ErrorMessageComponent';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
-import Select from 'react-select';
-import makeAnimated from 'react-select/lib/animated';
-import { GET_HOTEL_QUERY, GET_USERS, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
-import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import filterTypes from './filterTypeData';
-import NoShowReport from '../../NoShowReport';
-import DatePicker from "react-datepicker";
-import moment from 'moment';
-import { GET_RECRUITERS } from '../../NoShowReport/queries';
 
 const styles = (theme) => ({
 	root: {
@@ -37,9 +24,6 @@ const styles = (theme) => ({
 	}
 });
 
-const DEFAULT_FILTER_TYPE = { value: "W", label: "By week" };
-const DEFAULT_FILTER_RECRUITER = {};
-
 class ApplicationList extends Component {
 	constructor(props) {
 		super(props);
@@ -48,12 +32,7 @@ class ApplicationList extends Component {
 			loadingContracts: false,
 			data: [],
 			filterText: '',
-			opendialog: false,
-			recruitersTags: [],
-			showNoShowPrefilterModal: false,
-			filterType: DEFAULT_FILTER_TYPE,
-			filterRecruiter: DEFAULT_FILTER_RECRUITER,
-			filterRecruiters: []
+			opendialog: false
 		};
 	}
 
@@ -70,9 +49,8 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-	query applications( $idRecruiter:Int) 	
-	{
-			applications(isActive: true,isLead:true, idRecruiter : $idRecruiter) {
+		{
+			applications(isActive: true,isLead:true) {
 				id
 				firstName
 				middleName
@@ -138,10 +116,6 @@ class ApplicationList extends Component {
 		);
 	};
 
-	handleChangerecruiterTag = (recruitersTags) => {
-	  this.setState({ recruitersTags });
-    };
-
 	onDeleteHandler = (id) => {
 		this.setState({ idToDelete: id, opendialog: true });
 	};
@@ -152,240 +126,20 @@ class ApplicationList extends Component {
 		this.deleteApplication();
 	};
 
-	showNoShowReportFilter = () => {
-		this.setState(() => ({ showNoShowPrefilterModal: true }))
-	}
-
-	hideNoShowReportFilter = () => {
-		this.setState(() => ({ showNoShowPrefilterModal: false }))
-	}
-	hideNoShowReport = () => {
-		this.setState(() => ({ showNoShowReportModal: false }))
-	}
-
-	handleFilterTypeChange = (filterType) => {
-		this.setState(() => ({ filterType, dateRange: {} }))
-	}
-
-	handleFilterRecruiterChange = (filterRecruiter) => {
-		this.setState(() => ({ filterRecruiter, recruiter: filterRecruiter.label }))
-	}
-
-	handleAcceptFilterClick = () => {
-		let { startDate, endDate, filterRecruiter } = this.state;
-		if (!startDate || !endDate)
-			this.props.handleOpenSnackbar('warning', 'You need to select a valid range!');
-		else if (Object.keys(filterRecruiter).length == 0)
-			this.props.handleOpenSnackbar('warning', 'You need to select a recruiter!');
-		else
-			this.setState(() => ({ showNoShowPrefilterModal: false, showNoShowReportModal: true }))
-	}
-
-	handleDateRangeChange = (dateRange) => {
-		let dates = dateRange.value.split('||');
-		this.setState(() => ({ dateRange, startDate: new Date(dates[0]), endDate: new Date(dates[1]) }))
-	}
-
-	handleChangeStartDate = (value) => {
-		this.setState(() => ({
-			startDate: value,
-			endDateDisabled: false
-		}));
-	}
-
-	handleChangeEndDate = (value) => {
-		this.setState(() => ({
-			endDate: value
-		}));
-	}
-
-	loadRecruiters = () => {
-		this.props.client
-			.query({
-				query: GET_RECRUITERS,
-				fetchPolicy: 'no-cache'
-			})
-			.then(({ data: { user } }) => {
-				user.map(_ => {
-					this.setState((prevState => ({
-						filterRecruiters: prevState.filterRecruiters.concat({ value: _.Id, label: _.Full_Name })
-					})))
-				})
-			})
-			.catch((error) => {
-				this.props.handleOpenSnackbar('error', 'Error: Loading Recruiters ');
-			});
-	}
-	componentWillMount() {
-		this.loadRecruiters();
-	}
-
-	getDateRange = (type) => {
-		let today = new Date(), weeks = 4, months = 6, value, label, startDate, endDate, data = [], endDateValue, startDateValue;
-		let { filterType } = this.state;
-
-		today = moment.utc(today).subtract(6 - moment.utc(today).day(), "days")._d;
-
-		if (filterType.value == "W") {
-			while (weeks > 0) {
-				endDate = moment.utc(today).format("MM/DD/YYYY"); //get Start Date
-				today = moment.utc(today).subtract(1, "weeks")._d;//Substract a week
-				startDate = moment.utc(today).format("MM/DD/YYYY");//get End Date
-				today = moment.utc(today).subtract(1, "days")._d;//Substract a day to start new week
-				data.push({ value: `${startDate}||${endDate}`, label: `${startDate} - ${endDate}` })
-				weeks--;
-			}
-		}
-
-		if (filterType.value == "M") {
-			while (months > 0) {
-				endDate = moment.utc(today).format("MM/YYYY"); //get Start Date
-				endDateValue = moment.utc(today).endOf("month").format("MM/DD/YYYY");
-				startDateValue = moment.utc(today).startOf("month").format("MM/DD/YYYY");
-				today = moment.utc(today).subtract(1, "months")._d;//Substract a month
-
-				data.push({ value: `${startDateValue}||${endDateValue}`, label: `${endDate}` })
-				months--;
-			}
-		}
-		return data;
-	}
-	printNoShowReportPrefilter = () => {
-		let { showNoShowPrefilterModal, filterType, dateRange, filterRecruiter, filterRecruiters } = this.state;
-		return <Dialog
-			open={showNoShowPrefilterModal}
-			onClose={this.hideNoShowReportFilter}
-			aria-labelledby="responsive-dialog-title"
-			fullWidth
-			maxWidth="sm"
-		>
-			<DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
-				<div className="modal-header">
-					<h5 className="modal-title">
-						Filter No Show Report
-				</h5>
-				</div>
-			</DialogTitle>
-			<DialogContent style={{ overflowY: "unset" }}>
-				<div className="card-body">
-
-					<div className="row">
-						<div className="col-md-12 mb-2">
-							<Select
-								name="filterRecruiter"
-								options={filterRecruiters}
-								value={filterRecruiter}
-								onChange={this.handleFilterRecruiterChange}
-								components={makeAnimated()}
-								closeMenuOnSelect
-							/>
-						</div>
-						<div className="col-md-4 mb-2">
-							<Select
-								name="filterType"
-								options={filterTypes}
-								value={filterType}
-								onChange={this.handleFilterTypeChange}
-								components={makeAnimated()}
-								closeMenuOnSelect
-							/>
-						</div>
-						{filterType.value != "C" ?
-							<div className="col-md-8 mb-2">
-								<Select
-									name="dateRange"
-									options={this.getDateRange()}
-									value={dateRange}
-									onChange={this.handleDateRangeChange}
-									components={makeAnimated()}
-									closeMenuOnSelect
-								/>
-							</div> :
-							<React.Fragment>
-								<div className="col-md-4 mb-2">
-									<div class="input-group flex-nowrap">
-										<DatePicker
-											selected={this.state.startDate}
-											onChange={this.handleChangeStartDate}
-											placeholderText="Start date"
-											id="startDate"
-										/>
-										<div class="input-group-append">
-											<label class="input-group-text" id="addon-wrapping" for="startDate">
-												<i class="far fa-calendar"></i>
-											</label>
-										</div>
-									</div>
-								</div>
-								<div className="col-md-4 mb-2">
-									<div class="input-group flex-nowrap">
-										<DatePicker
-											selected={this.state.endDate}
-											onChange={this.handleChangeEndDate}
-											placeholderText="End date"
-											id="endDate"
-										/>
-										<div class="input-group-append">
-											<label class="input-group-text" id="addon-wrapping" for="endDate">
-												<i class="far fa-calendar"></i>
-											</label>
-										</div>
-									</div>
-								</div>
-							</React.Fragment>
-						}
-					</div>
-				</div>
-			</DialogContent>
-			<DialogActions>
-				<div className="applicant-card__footer">
-					<button className="applicant-card__cancel-button" type="reset" onClick={this.hideNoShowReportFilter}>
-						Cancel
-				</button>
-					<button className="applicant-card__save-button" onClick={this.handleAcceptFilterClick}>
-						Accept
-				</button>
-				</div>
-			</DialogActions>
-		</Dialog>
-	}
-	printNoShowReport = () => {
-		let { showNoShowReportModal, startDate, endDate, filterRecruiter, recruiter } = this.state;
-
-		return <Dialog
-			open={showNoShowReportModal}
-			onClose={this.hideNoShowReport}
-			aria-labelledby="responsive-dialog-title"
-			fullWidth
-			maxWidth="lg"
-		>
-
-			<DialogContent maxWidth="sm" style={{ overflowY: "unset" }}>
-				<div className="card-body">
-					<div className="row">
-						<div className="col-md-12">
-							<NoShowReport recruiter={recruiter} handleOpenSnackbar={this.props.handleOpenSnackbar} startDate={startDate} endDate={endDate} idRecruiter={filterRecruiter.value} />
-						</div>
-					</div>
-				</div>
-			</DialogContent>
-			<DialogActions>
-				<div className="applicant-card__footer">
-					<button className="applicant-card__cancel-button" type="reset" onClick={this.hideNoShowReport}>
-						Close
-					</button>
-				</div>
-			</DialogActions>
-		</Dialog>
-	}
-
 	render() {
-
+		const { classes } = this.props;
 		// If contracts query is loading, show a progress component
 		if (this.state.loadingContracts) {
 			return <LinearProgress />;
 		}
 
+		/*	if (this.state.loadingRemoving) {
+			return (
+				<div className="nothing-container">
+					<CircularProgress size={150} />
+				</div>
+			);
+		}*/
 		// To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="row">
@@ -409,72 +163,21 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				
-
-				<div className="col-md-3 col-xl-2 offset-xl-6 mb-2">
-					<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
-						{({ loading, error, data, refetch, networkStatus }) => {
-							//if (networkStatus === 4) return <LinearProgress />;
-							if (error) return <p>Error </p>;
-							if (data.user != null && data.user.length > 0) {
-								let options = [];
-								data.user.map((item) => (
-									options.push({ value: item.Id, label: item.Full_Name })
-								));
-
-								return (
-									<div style={{
-										paddingTop: '0px',
-										paddingBottom: '2px',
-									}}>
-										<Select
-											options={options}
-											value={this.state.recruitersTags}
-											onChange={this.handleChangerecruiterTag}
-											closeMenuOnSelect={false}
-											components={makeAnimated()}
-											// isMulti
-										/>
-									</div>
-								);
-							}
-							return <SelectNothingToDisplay />;
-						}}
-					</Query>
-					</div>
-				<div className="col-md-3 col-xl-2 mb-2">
-					<Select
-						name="property"
-						options={this.state.properties}
-						value={this.state.property}
-						onChange={this.handlePropertyChange}
-						components={makeAnimated()}
-						closeMenuOnSelect
-					/>
-				</div>				
-				<div className="col-md-4 col-xl-12 mb-2">
-					<button
-						className="btn btn-success float-right ml-2"
-						onClick={this.showNoShowReportFilter}
-					>
-						No Show Report
-						</button>
+				<div className="col-md-6 col-xl-2 offset-xl-8">
 					<button
 						className="btn btn-success float-right"
-						onClick={this.redirectToCreateApplication}
+						onClick={() => {
+							this.redirectToCreateApplication();
+						}}
 					>
 						Add Lead
 						</button>
 				</div>
-
-
 			</div>
 		);
 
 		return (
 			<div className="main-application">
-				{this.printNoShowReportPrefilter()}
-				{this.printNoShowReport()}
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -484,7 +187,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={{idRecruiter:this.state.recruitersTags.value}} fetchPolicy="no-cache">
+					<Query query={this.GET_APPLICATION_QUERY} fetchPolicy="no-cache" pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
@@ -504,7 +207,7 @@ class ApplicationList extends Component {
 									if (this.state.filterText === '') {
 										return true;
 									}
-
+									console.log("aqui estamos en aplicant ", data.applications);
 									if (
 										(_.firstName +
 											_.middleName +
@@ -521,8 +224,6 @@ class ApplicationList extends Component {
 										return true;
 									}
 								});
-
-
 
 								return (
 									<div className="row">

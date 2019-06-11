@@ -97,12 +97,6 @@ class ApplicationList extends Component {
 				isLead
 				idWorkOrder
 				statusCompleted
-				eeoc
-				exemptions
-				area
-				hireType
-				gender
-				marital
 				employee {
 					Employees {
 					  idEntity

@@ -98,13 +98,6 @@ export const GET_APPLICATION_BY_ID = gql`
 			comment
 			idealJob
 			isLead
-			eeoc
-			exemptions
-			area
-			hireType
-			gender
-			marital
-
 		}
 	}
 `;

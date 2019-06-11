@@ -282,11 +282,9 @@ class TimeCardForm extends Component {
                 }
             })
             .then((data) => {
-                this.props.updateFiters();
                 if (!this.state.statusTimeOut) { this.addOut(); } else {
-
                     this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                    
+                    this.props.toggleRefresh();
                     this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
                 } 0
 

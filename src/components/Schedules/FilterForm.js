@@ -227,12 +227,13 @@ class FilterForm extends Component {
                         color: COLOR_ASSIGNED,
                         status: 1
                     },
+                    shiftDetailEmployee: {
+                        ShiftDetailId: this.state.selectedDetailId,
+                        EmployeeId: this.state.selectedEmployees.value
+                    },
+                    openShift: this.state.openShift,
                     workorderId: this.state.workOrderId,
-                    comment: this.state.comment,
-                    ShiftId: this.props.isSerie ? this.state.shiftId : 0,
-                    ShiftDetailId: this.state.selectedDetailId,
-                    EmployeeId: this.state.selectedEmployees.value
-
+                    comment: this.state.comment
                 }
             })
             .then((data) => {
@@ -744,8 +745,8 @@ class FilterForm extends Component {
                                     !this.state.summaryEnable ? (
                                         <button className="btn btn-success float-left btn-not-rounded" type="button" onClick={this.savePublish}>Notify {this.showLoadingNotify()}</button>
                                     ) : (
-                                            ''
-                                        )
+                                        ''
+                                    )
                                 }
 
                             </div>}

@@ -50,8 +50,6 @@ import ApprovePunches from '../../ApprovePunchesReport';
 import DashBoardSponsor from '../../Dashboard/Sponsor';
 import PositionCatalogTable from '../../PositionsCatalog/PositionsTable';
 import DepartmentsCatalogTable from '../../DepartmentsCatalog/DepartmentsTable';
-import DirectDeposit from '../../DirectDeposit';
-import TransactionLogs from '../../TransactionLogs';
 
 class Container extends Component {
 	constructor(props) {
@@ -140,9 +138,6 @@ class Container extends Component {
 			return <div className="container-fluid" />;
 		}
 
-		if (window.location.pathname === '/home' && this.state.dataForm[0])
-			window.location.href = this.state.dataForm[0].Value;
-
 		return (
 			<div className="container-fluid">
 				<Route exact path="/home/company" component={CompanyList} />
@@ -189,8 +184,6 @@ class Container extends Component {
 				<Route exact path="/home/dashboard/sponsor" component={DashBoardSponsor} />
 				<Route exact path="/home/catalogs/positions" component={PositionCatalogTable} />
 				<Route exact path="/home/catalogs/departments" component={DepartmentsCatalogTable} />
-				<Route exact path="/home/direct-deposit" component={DirectDeposit} />
-				<Route exact path="/home/logs" component={TransactionLogs} />
 			</div>
 		);
 	}

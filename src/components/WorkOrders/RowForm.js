@@ -180,7 +180,6 @@ class RowForm extends Component {
                             </select>
                         </div>
                         <div className="col-md-4 mb-2">
-                            {console.log(this.state.shift)}
                             <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
                         </div>
                         <div className="col-md-4 mb-2">

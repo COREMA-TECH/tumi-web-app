@@ -23,7 +23,7 @@ class AddAttachment extends Component{
 
     render(){
         return (
-			<li className="UploadDocument-item">
+			<li className="UploadDocument-item Attachments-item">
 				<div className="group-container ">
 					<div className="group-title">Add Attachment</div>
 					<div className="image-upload-wrap-static">

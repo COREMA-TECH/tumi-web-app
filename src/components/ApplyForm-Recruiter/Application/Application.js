@@ -14,6 +14,7 @@ import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
 import LocationForm from '../../ui-components/LocationForm'
 import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -100,7 +101,6 @@ class Application extends Component {
         insertDialogLoading: false,
         graduated: false,
         previousEmploymentPhone: '',
-        sendInterview: false,
 
         // Application id property state is used to save languages, education, mulitary services, skills
         applicationId: null,
@@ -309,8 +309,7 @@ class Application extends Component {
                                     convictedExplain: this.state.convictedExplain,
                                     generalComment: this.state.generalComment,
                                     isLead: true,
-                                    idRecruiter: parseInt(this.state.idRecruiter),
-                                    sendInterview: this.state.sendInterview
+                                    idRecruiter: parseInt(this.state.idRecruiter)
                                 }
                             }
                         })
@@ -409,7 +408,6 @@ class Application extends Component {
                                     positionApplyingFor: applicantData.positionApplyingFor == null ? 0 : applicantData.positionApplyingFor,
                                     car: applicantData.car,
                                     generalComment: applicantData.generalComment,
-                                    sendInterview: applicantData.sendInterview,
                                     editing: false
                                 },
                                 () => {
@@ -498,38 +496,6 @@ class Application extends Component {
             })
     };
 
-    getPositionFilterList = _ => {
-        const positions = this.state.positions.map(item => {
-            return { value: item.id, label: `${item.position.Position.trim()} ${item.BusinessCompany.Code.trim()}` }
-        });
-
-        const options = [
-            { value: '', label: "Select a Position" },
-            { value: 0, label: "Open Position" },
-            ...positions
-        ];
-
-        return options;
-    }
-
-    handlePositionFilterChange = ({ value }) => {
-        this.setState({
-            positionApplyingFor: value
-        });
-    }
-
-    findSelectedPosition = position => {
-        const defValue = { value: '', label: 'Select a Position' };
-
-        if (!position)
-            return defValue;
-
-        const found = this.state.positions.find(item => {
-            return item.id === position;
-        });
-
-        return found ? { value: found.id, label: `${found.position.Position} ${found.BusinessCompany.Code.trim()}` } : defValue;
-    }
 
     getPositionsCatalogs = () => {
         this.props.client
@@ -619,58 +585,31 @@ class Application extends Component {
                     <br />
                     <div className="card-body">
                         <div className="row">
-                            <div className="col-md-12 col-lg-6"></div>
-                            <div className="col-md-12 col-lg-6"><div className="row">
-                                <div className="col-md-6">
-                                </div>
-                                <div className="col-md-6">
-                                    <span className="primary applicant-card__label ">
-                                        Send to Interview
-                                        </span>
-                                    <div className="onoffswitch">
-                                        <input
-                                            id="sendInterview"
-                                            className="onoffswitch-checkbox"
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    sendInterview: event.target.checked
-                                                });
-                                            }}
-                                            checked={this.state.sendInterview}
-                                            value={this.state.sendInterview}
-                                            name="sendInterview"
-                                            type="checkbox"
-                                            disabled={!this.state.editing}
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="10"
-                                        />
-                                        <label className="onoffswitch-label" htmlFor="sendInterview">
-                                            <span className="onoffswitch-inner" />
-                                            <span className="onoffswitch-switch" />
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-
-
-
                             <div className="col-md-12 col-lg-6 form-section-1">
                                 <div className="row">
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">
                                             {formSpanish[16].label}
                                         </span>
-                                        <Select
-                                            options={this.state.positionFilterList}
-                                            value={this.findSelectedPosition(this.state.positionApplyingFor)}
-                                            onChange={this.handlePositionFilterChange}
-                                            closeMenuOnSelect={true}
-                                            components={makeAnimated()}
-                                            isMulti={false}
-                                            isDisabled={!this.state.editing}
-                                        />
+                                        <select
+                                            name="positionApply"
+                                            id="positionApply"
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    positionApplyingFor: event.target.value
+                                                });
+                                            }}
+                                            value={this.state.positionApplyingFor}
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+                                        >
+                                            <option value="">Select a position</option>
+                                            <option value="0">Open Position</option>
+                                            {this.state.positions.map((item) => (
+                                                <option
+                                                    value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">
@@ -923,8 +862,6 @@ class Application extends Component {
                                             className="form-control textarea-apply-form"
                                         />
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
