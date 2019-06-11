@@ -149,7 +149,7 @@ class TransactionTable extends React.Component {
         super(props);
         this.state = {
             page: 0,
-            rowsPerPage: 7,
+            rowsPerPage: 15,
             loadingRemoving: false,
             transactions: [],
             openConfirm: false,
