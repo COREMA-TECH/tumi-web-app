@@ -17,7 +17,7 @@ class DirectDeposit extends Component{
         lastName: '',
         address: '',
         bankName: '',
-        routingNumber: 0,
+        routingNumber: '',
         account: '',  
         amount: '',
         percentage: '',
@@ -49,6 +49,15 @@ class DirectDeposit extends Component{
 
     handleChange = e => {
         this.setState({ [e.target.name]: e.target.type == 'checkbox' ? e.target.checked : e.target.value });        
+    }
+
+    handleFullPaycheckSelected = _ => {
+        this.setState(_ => {
+            return {
+                percentage: 100,
+                amountType: 'percentage'
+            }
+        })
     }
 
     handleLocationFormChange = (zipcode, city, state) => {
@@ -127,7 +136,7 @@ class DirectDeposit extends Component{
                 <form onSubmit={this.handleSubmit}>
                     <div className="row">
                         <div className="col-md-12 col-xl-5">
-                            <div className="card">
+                            <div className="card AccountHolder">
                                 <div className="card-header">
                                     Account Holder Information
                                 </div>
@@ -152,6 +161,8 @@ class DirectDeposit extends Component{
                                 accountType={this.state.accountType}
                                 setAmountType={this.setAmountType}
                                 address={this.address}
+                                handleFullPaycheckSelected={this.handleFullPaycheckSelected}
+                                percentage={this.state.percentage}
                             />
                         </div>
                         <div className="col-md-12 col-xl-3">

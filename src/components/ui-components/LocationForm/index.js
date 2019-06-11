@@ -245,7 +245,7 @@ class LocationForm extends Component {
         return <React.Fragment>
             <div className={this.props.cityColClass || "col-md-6 col-lg-4"}>
                 <label className={`mr-1 ${this.props.cssTitle || ''}`}>{this.props.cityTitle || "* City"}</label>
-                <span className="float-right tumi-checkbox-wrapper Location-changeCityByZip">
+                <span className="float-right tumi-checkbox-wrapper Location-changeCityByZip" title="Change selected city by zip code?">
                     <input type="checkbox" name="changeCity" onChange={this.onValueChange} disabled={this.props.disabledCheck || loading} checked={this.state.changeCity} />
                     <label className={`${this.props.cssTitle || ''}`} htmlFor="">Change selected city by zip code?</label>
                 </span>

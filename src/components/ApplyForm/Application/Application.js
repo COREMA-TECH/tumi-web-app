@@ -216,25 +216,12 @@ class Application extends Component {
                     .catch((error) => {
                         console.log("App error ", error)
                         this.setState(() => ({ insertDialogLoading: false }));
-                        if (error = 'Error: "GraphQL error: Validation error') {
-                            this.setState({
-                                socialSecurityNumber: ''
-                            });
-                            this.props.handleOpenSnackbar(
-                                'error',
-                                'Social Security Number Duplicated!',
-                                'bottom',
-                                'right'
-                            );
-                        } else {
                             this.props.handleOpenSnackbar(
                                 'error',
                                 'Error to update applicant information. Please, try again!',
                                 'bottom',
                                 'right'
                             );
-                        }
-
                     });
             }
         );
