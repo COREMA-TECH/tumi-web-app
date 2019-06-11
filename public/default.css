@@ -10292,6 +10292,43 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   display: inline-block;
   margin-left: 0.5rem;
   margin-right: 0.5rem; }
+  .RightMenu-item .isDisabled {
+    color: currentColor;
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+    pointer-events: none;
+    padding: 1rem 0;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    -webkit-transition: background-color .3s;
+    -o-transition: background-color .3s;
+    transition: background-color .3s;
+    text-align: center; }
+  .RightMenu-item .isDisabled > i {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    color: #FFF;
+    line-height: 39px;
+    font-size: 1.5rem;
+    -webkit-transition: background-color .5s;
+    -o-transition: background-color .5s;
+    transition: background-color .5s; }
+  .RightMenu-item .isDisabled > small {
+    display: block;
+    margin-top: .5rem;
+    color: #9c9c9c;
+    -webkit-transition: color .5s;
+    -o-transition: color .5s;
+    transition: color .5s; }
+  .RightMenu-item .isDisabled:hover .isDisabled__helper {
+    -webkit-transform: scale(3.5);
+    -ms-transform: scale(3.5);
+    transform: scale(3.5); }
+  .RightMenu-item .isDisabled:hover > small {
+    color: #FFF; }
 
 .RightMenu-list {
   -webkit-box-align: center;
@@ -12622,4 +12659,5 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
+
 /*# sourceMappingURL=default.css.map */

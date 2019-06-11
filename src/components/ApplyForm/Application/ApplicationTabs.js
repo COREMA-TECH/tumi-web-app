@@ -17,7 +17,6 @@ import FormsW4 from "./W4/FormsW4";
 import { GET_APPLICATION_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
 import IndependentContract from "./IndependentContract";
-import ApplicationInternal from './ApplicationInternal';
 
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -142,11 +141,7 @@ class CustomizedTabs extends React.Component {
         const { classes } = this.props;
         const { value } = this.state;
 
-        if (this.state.applicationId == 0) {
-            this.state.applicationId = localStorage.getItem('idApplication');
-        }
-
-        let getTabContent = (step) => {
+        let getTabContent = (step, ) => {
             switch (step) {
                 case 0:
                     return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
@@ -168,10 +163,8 @@ class CustomizedTabs extends React.Component {
                     return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 9:
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
-                case 10: 
-                    return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />
-                case 11:
-                    return <IndependentContract applicationId={this.state.applicationId} />;
+                case 10:
+                    return <IndependentContract />
 
             }
         };
@@ -179,7 +172,7 @@ class CustomizedTabs extends React.Component {
             <div>
                 <MuiThemeProvider theme={theme}>
                     <Tabs
-                        value={this.state.applicationId==0?0:value}
+                        value={value}
                         onChange={this.handleChange}
                         scrollable
                         scrollButtons="on"
@@ -235,11 +228,6 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[8].label}
                         />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
-                            label={applyTabs[10].label}
-                        />
                         {
                             this.state.independentContract ? (
                                 <Tab
@@ -253,7 +241,7 @@ class CustomizedTabs extends React.Component {
                         }
 
                     </Tabs>
-                    { getTabContent(this.state.applicationId==0?0:value)}
+                    {getTabContent(value)}
                 </MuiThemeProvider>
             </div>
         );

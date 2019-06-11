@@ -216,6 +216,54 @@
         display: inline-block;
         margin-left: 0.5rem;
         margin-right: 0.5rem;
+        .isDisabled {
+            color: currentColor;
+            cursor: not-allowed;
+            opacity: 0.5;
+            text-decoration: none;
+            pointer-events: none;
+            padding: 1rem 0;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+            -webkit-transition: background-color .3s;
+            -o-transition: background-color .3s;
+            transition: background-color .3s;
+            text-align: center;
+          }
+          .isDisabled {
+            > {
+              i {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                color: #FFF;
+                line-height: 39px;
+                font-size: 1.5rem;
+                -webkit-transition: background-color .5s;
+                -o-transition: background-color .5s;
+                transition: background-color .5s;
+              }
+              small {
+                display: block;
+                margin-top: .5rem;
+                color: #9c9c9c;
+                -webkit-transition: color .5s;
+                -o-transition: color .5s;
+                transition: color .5s;
+              }
+            }
+            &:hover {
+              .isDisabled__helper {
+                -webkit-transform: scale(3.5);
+                -ms-transform: scale(3.5);
+                transform: scale(3.5);
+              }
+              > small {
+                color: #FFF;
+              }
+            }
+          }
     }
     &-list {
         align-items: center;
@@ -227,6 +275,8 @@
             left: auto !important;
         }
     }
+    
+  
 }
 
 .SubMenu {

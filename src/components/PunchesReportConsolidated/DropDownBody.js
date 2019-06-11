@@ -40,7 +40,6 @@ class PunchesConsolidatedDropDownBody extends Component {
                 <table className="table DropdownBody-table">
                     <thead>
                         <tr>
-                            <th className="Table-boldHead" scope="col">Edit</th>
                             <th className="Table-boldHead" scope="col">Name</th>
                             <th className="Table-boldHead" scope="col">Time in-out</th>
                             <th className="Table-boldHead" scope="col">Duration</th>
@@ -61,13 +60,6 @@ class PunchesConsolidatedDropDownBody extends Component {
                             }
                             return (
                                 <tr>
-                                      <td>
-                                            <div>
-                                                    <button   className="btn btn-success float-left ml-1" onClick={(e) => {
-                                                            alert("aqui va a venir todo")
-                                                            }}><i class="fas fa-pen"/></button>
-                                            </div>
-                                    </td>
                                     <td>{item.name}</td>
                                     <td>{item.clockIn} - {item.clockOut}</td>
                                     <td>{item.duration}</td>
@@ -107,7 +99,6 @@ class PunchesConsolidatedDropDownBody extends Component {
                                             </div>
                                         </div>
                                     </td>
-                                  
                                 </tr>
                             );
                         })}

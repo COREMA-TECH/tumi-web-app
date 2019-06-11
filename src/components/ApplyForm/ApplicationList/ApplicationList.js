@@ -97,12 +97,6 @@ class ApplicationList extends Component {
 				isLead
 				idWorkOrder
 				statusCompleted
-				eeoc
-				exemptions
-				area
-				hireType
-				gender
-				marital
 				employee {
 					Employees {
 					  idEntity
@@ -133,14 +127,13 @@ class ApplicationList extends Component {
 	`;
 
 	DELETE_APPLICATION_QUERY = gql`
-		mutation disableApplication($id: Int!, $isActive: Boolean,  $codeuser: Int, $nameUser: String) {
-			disableApplication(id: $id,isActive: $isActive, codeuser: $codeuser, nameUser: $nameUser) {
+		mutation disableApplication($id: Int!, $isActive: Boolean) {
+			disableApplication(id: $id,isActive: $isActive) {
 				id
 				isActive
 			}
 		}
 	`;
-
 
 	deleteApplication = () => {
 		this.setState(
