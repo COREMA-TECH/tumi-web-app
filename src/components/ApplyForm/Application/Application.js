@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY } from '../Queries';
+import {GET_APPLICANT_IDEAL_JOBS,GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY} from '../Queries';
 import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION } from '../Mutations';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withGlobalContent from '../../Generic/Global';
@@ -16,6 +16,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
+import IndependentContractDialog from './IndependentContract/Modal';
 
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
@@ -42,7 +43,7 @@ class Application extends Component {
             middleName: '',
             lastName: '',
             lastName2: '',
-
+           
             date: new Date().toISOString().substring(0, 10),
             streetAddress: '',
             aptNumber: '',
@@ -67,6 +68,11 @@ class Application extends Component {
             socialNetwork: '',
             comment: '',
             isLead: '',
+            dateCreation: new Date().toISOString().substring(0, 10),
+            immediately: 0,
+            optionHearTumi: '',
+            nameReferences:'',
+
             // Languages array
             languages: [],
 
@@ -147,7 +153,7 @@ class Application extends Component {
     };
 
 
-
+    
 
     /**<
      * To update a application by id
@@ -160,7 +166,7 @@ class Application extends Component {
             () => {
                 this.props.client
                     .mutate({
-                        mutation: id == 0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
+                        mutation: id==0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
                         variables: {
                             application: {
                                 id: id,
@@ -190,7 +196,12 @@ class Application extends Component {
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
                                 idealJob: this.state.idealJob,
-                                isLead: id == 0 ? false : this.state.isLead
+                                isLead: id==0 ? false:this.state.isLead,
+                                dateCreation: new Date().toISOString().substring(0, 10),
+                                immediately: this.state.immediately,
+                                optionHearTumi: this.state.optionHearTumi,
+                                nameReferences:this.state.nameReferences
+
                             }
                         }
                     })
@@ -216,12 +227,25 @@ class Application extends Component {
                     .catch((error) => {
                         console.log("App error ", error)
                         this.setState(() => ({ insertDialogLoading: false }));
+                        if (error = 'Error: "GraphQL error: Validation error') {
+                            this.setState({
+                                socialSecurityNumber: ''
+                            });
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Social Security Number Duplicated!',
+                                'bottom',
+                                'right'
+                            );
+                        } else {
                             this.props.handleOpenSnackbar(
                                 'error',
                                 'Error to update applicant information. Please, try again!',
                                 'bottom',
                                 'right'
                             );
+                        }
+
                     });
             }
         );
@@ -306,13 +330,17 @@ class Application extends Component {
                                     ? applicantData.idealJob.split(',').map((d) => d.trim())
                                     : [],
                                 idealJob: applicantData.idealJob,
-                                isLead: applicantData.isLead
+                                isLead: applicantData.isLead,
+                                dateCreation:  applicantData.dateCreation,
+                                immediately: applicantData.immediately,
+                                optionHearTumi: applicantData.optionHearTumi,
+                                nameReferences: applicantData.nameReferences
                             },
                             () => {
                                 this.getIdealJobsByApplicationId();
                                 this.getPositionCatalog();
-
-
+                              
+                              
                             }
                         );
                     })
@@ -372,7 +400,7 @@ class Application extends Component {
                 dataAPI.map(item => {
                     this.setState(prevState => ({
                         positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label: item.Description.trim(), key: item.Id
+                            value: item.Id, label:item.Description.trim(),  key: item.Id
                         }]
                     }))
                 });
@@ -442,12 +470,12 @@ class Application extends Component {
     componentWillMount() {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
-
-            this.getApplicationById(this.props.applicationId);
-            if (this.state.socialSecurityNumber.length === 0) {
-                this.props.handleContract();
+           
+                this.getApplicationById(this.props.applicationId);
+                if (this.state.socialSecurityNumber.length === 0) {
+                    this.props.handleContract();
+                }
             }
-        }
 
         if (this.props.applicationId == 0) {
             this.setState({
@@ -458,7 +486,7 @@ class Application extends Component {
         this.getPositionCatalog();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+   shouldComponentUpdate(nextProps, nextState) {
         if (this.state.editing !== nextProps.editing) {
             return true;
         }
@@ -541,6 +569,22 @@ class Application extends Component {
             openSSNDialog: false
         })
     };
+    
+    handleVisivilityIndependentContractDialog = (status) => (e) => {
+
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        this.setState({
+            openIndependentContractDialog: status
+        })
+    };
+
+    getApplicantInformation = () => {
+        this.getApplicationById(this.props.applicationId)
+    }
 
     render() {
         //this.validateInvalidInput();
@@ -570,9 +614,10 @@ class Application extends Component {
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                this.submitForm();
-                                this.props.handleContract();
-                                this.handleCloseSSNDialog();
+                                // this.submitForm();
+                                // this.props.handleContract();
+                                // this.handleCloseSSNDialog();
+                                this.setState(() => ({ openIndependentContractDialog: true, openSSNDialog: false }));
                             }}
                             className="applicant-card__save-button">
                             Accept
@@ -582,13 +627,18 @@ class Application extends Component {
             </Dialog>
         );
 
-
-
         return (
             <div className="Apply-container--application">
                 {
-                    renderSSNDialog()
+                   renderSSNDialog()
                 }
+                 <IndependentContractDialog
+                    open={this.state.openIndependentContractDialog}
+                    handleVisibility={this.handleVisivilityIndependentContractDialog}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    applicationId={this.props.applicationId}
+                    getApplicantInformation={this.getApplicantInformation} />
+
                 <form
                     className="general-info-apply-form"
                     id="general-info-form"
@@ -734,9 +784,12 @@ class Application extends Component {
                                                     }}
                                                     value={this.state.aptNumber}
                                                     name="aptNumber"
+                                                    type="number"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
+                                                    min="0"
                                                     maxLength="50"
+                                                    minLength="5"
                                                 />
                                             </div>
 
@@ -835,7 +888,7 @@ class Application extends Component {
                                     </div>
                                     <div className="col-md-12 col-lg-6 form-section-2">
                                         <div className="row">
-                                            <div className="col-md-6">
+                                            {/*<div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     * {formSpanish[12].label}
                                                 </span>
@@ -855,7 +908,28 @@ class Application extends Component {
                                                     maxLength="50"
                                                     minLength="10"
                                                 />
-                                            </div>
+                                                </div>*/}
+                                                <div className="col-md-6">
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[25].label}
+                                                </span>
+                                                <input
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            dateCreation: event.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.dateCreation}
+                                                    name="dateCreation"
+                                                    type="date"
+                                                    className="form-control"
+                                                    disabled={true}
+                                                    required
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="10"
+                                                />
+                                                </div>
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[23].label}
@@ -901,11 +975,57 @@ class Application extends Component {
                                                     required
                                                     disabled={!this.state.editing}
                                                     min="0"
+                                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                                     maxLength="50"
                                                     minLength="8"
                                                 />
                                             </div>
+
+                                            
                                             <div className="col-md-6">
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[27].label}
+                                                </span>
+                                                <select
+                                                    name="optionHearTumi"
+                                                    id="optionHearTumi"
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            optionHearTumi: e.target.value
+                                                        });
+                                                    }}
+                                                >
+                                                    <option value="">Select an option</option>
+                                                    <option value="1">facebook</option>
+                                                    <option value="2">newspaper</option>
+                                                    <option value="3">employee</option>
+                                                    <option value="4">recruiter</option>
+                                                </select>
+                                            </div>
+                                            <div className="col-md-6 ">
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[28].label}
+                                                </span>
+                                                <input
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            nameReferences: event.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.nameReferences}
+                                                    name="nameReferences"
+                                                    type="text"
+                                                    className="form-control"
+                                                   
+                                                    disabled={!this.state.editing || (this.state.optionHearTumi==3?false:(this.state.optionHearTumi==4?false:true))}
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="3"
+                                                />
+                                            </div>
+                                           {/* <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[14].label}
                                                 </span>
@@ -949,13 +1069,14 @@ class Application extends Component {
                                                     maxLength="50"
                                                     minLength="10"
                                                 />
-                                            </div>
-                                            <div className="col-md-12">
+                                            </div> 
+                                            
+                                               <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[16].label}
                                                 </span>
-
-                                                <Select
+                                               
+                                             <Select
                                                     isDisabled={!this.state.editing}
                                                     options={this.state.positionCatalogTag}
                                                     value={this.state.positionsTags}
@@ -964,9 +1085,9 @@ class Application extends Component {
                                                     components={makeAnimated()}
                                                     isMulti
                                                 />
-
+                                            
                                             </div>
-
+                                       */}
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[17].label}
@@ -992,7 +1113,37 @@ class Application extends Component {
                                                     ))}
                                                 </select>
                                             </div>
-                                            <div className="col-md-12">
+
+                                            <div className="col-md-6">
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[26].label}
+                                                </span>
+                                                <div className="onoffswitch">
+                                                    <input
+                                                        id="immediately"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                immediately : event.target.checked
+                                                            });
+                                                        }}
+                                                        checked={this.state.immediately }
+                                                        value={this.state.immediately }
+                                                        name="immediately"
+                                                        type="checkbox"
+                                                        disabled={!this.state.editing}
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="10"
+                                                        className="onoffswitch-checkbox"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="immediately">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     * {formSpanish[18].label}
                                                 </span>
@@ -1006,7 +1157,7 @@ class Application extends Component {
                                                     name="dateAvailable"
                                                     type="date"
                                                     className="form-control"
-                                                    disabled={!this.state.editing}
+                                                    disabled={!this.state.editing || this.state.immediately}
                                                     required
                                                     min="0"
                                                     maxLength="50"
@@ -1150,7 +1301,7 @@ class Application extends Component {
                         </div>
                     </div>
                 </form>
-                <ShiftRestrictionModal
+                <ShiftRestrictionModal 
                     openModal={this.state.openRestrictionsModal}
                     handleCloseModal={this.handleRestrictionModalClose}
                 />
