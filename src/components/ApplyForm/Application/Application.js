@@ -53,7 +53,7 @@ class Application extends Component {
             homePhone: '',
             cellPhone: '',
             socialSecurityNumber: '',
-            birthDay: '',
+            birthDay: Date.now(),
             car: false,
             typeOfId: '',
             expireDateId: null,
@@ -70,7 +70,7 @@ class Application extends Component {
             isLead: '',
             dateCreation: new Date().toISOString().substring(0, 10),
             immediately: 0,
-            optionHearTumi: '',
+            optionHearTumi: 0,
             nameReferences:'',
 
             // Languages array
@@ -201,8 +201,9 @@ class Application extends Component {
                                 immediately: this.state.immediately,
                                 optionHearTumi: this.state.optionHearTumi,
                                 nameReferences:this.state.nameReferences
-
-                            }
+                            },
+                            codeuser: localStorage.getItem('LoginId'),
+                            nameUser: localStorage.getItem('FullName')
                         }
                     })
                     .then(({ data }) => {
