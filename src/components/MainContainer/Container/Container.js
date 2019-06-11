@@ -50,6 +50,7 @@ import ApprovePunches from '../../ApprovePunchesReport';
 import DashBoardSponsor from '../../Dashboard/Sponsor';
 import PositionCatalogTable from '../../PositionsCatalog/PositionsTable';
 import DepartmentsCatalogTable from '../../DepartmentsCatalog/DepartmentsTable';
+import TransactionLogs from '../../TransactionLogs';
 
 class Container extends Component {
 	constructor(props) {
@@ -184,6 +185,7 @@ class Container extends Component {
 				<Route exact path="/home/dashboard/sponsor" component={DashBoardSponsor} />
 				<Route exact path="/home/catalogs/positions" component={PositionCatalogTable} />
 				<Route exact path="/home/catalogs/departments" component={DepartmentsCatalogTable} />
+				<Route exact path="/home/logs" component={TransactionLogs} />
 			</div>
 		);
 	}
