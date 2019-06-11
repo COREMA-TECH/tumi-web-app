@@ -196,6 +196,8 @@ class Application extends Component {
                     insertDialogLoading: true
                 },
                 () => {
+                    console.log(this.state.sendInterview);
+                    return false;
                     this.props.client
                         .mutate({
                             mutation: CREATE_APPLICATION,
