@@ -729,7 +729,7 @@ class WorkOrdersForm extends Component {
                         </div>
                         <div className="container">
                             <div className="row">
-                                <div className="col-md-6 col-xl-2">
+                                <div className="col-md-6 col-xl-3">
                                     {/* <select
                                         required
                                         name="IdEntity"
@@ -744,7 +744,7 @@ class WorkOrdersForm extends Component {
                                         {this.state.hotels.map((hotel) => (
                                             <option value={hotel.Id}>{hotel.Name}</option>
                                         ))}
-                                    </select> */}
+                                    </select> */}                                    
                                     <Select
                                         options={propertyList}
                                         value={this.findSelectedProperty(this.state.IdEntity)}
@@ -754,6 +754,7 @@ class WorkOrdersForm extends Component {
                                         isMulti={false}
                                         isDisabled={!isAdmin}
                                         onBlur={this.handleValidate}
+                                        className="WorkOrders-dropdown"
                                     />
                                 </div>
                                 <div className="col-md-4 col-xl-2">
@@ -770,7 +771,6 @@ class WorkOrdersForm extends Component {
                                             </label>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -780,7 +780,7 @@ class WorkOrdersForm extends Component {
                             <div className="card">
                                 <div className="card-header bg-light">
                                     <div className="row">
-                                        <div className="col-md-4 col-xl-2 mb-2">
+                                        <div className="col-md-4 col-xl-3 mb-2">
                                             {/* <select
                                                 required
                                                 name="departmentId"

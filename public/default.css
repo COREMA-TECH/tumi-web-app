@@ -9943,6 +9943,9 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     padding-left: 1.5rem;
     padding-right: 1.5rem; } }
 
+.WorkOrders-dropdown {
+  font-size: 0.9rem !important; }
+
 .AdvancedDropdown {
   background-color: white;
   border-radius: 5px;
