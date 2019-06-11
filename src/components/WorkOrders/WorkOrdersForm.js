@@ -29,6 +29,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { copyFileSync } from 'fs';
 
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
+
+
 const uuidv4 = require('uuid/v4');
 
 
@@ -644,7 +648,69 @@ class WorkOrdersForm extends Component {
         });
     }
 
+    handlePropertySelectChange = ({value}) => {
+        this.setState( (prevState, props) => {
+            return { IdEntity: value }
+        }, _ => this.getDepartment(value));        
+    }
+
+    handleDepartmentSelectChange = ({value}) => {
+        this.setState( (prevState, props) => {
+            return { departmentId: value }
+        }, _ => this.getPositions(value));        
+    }
+
+    getDepartmentFilterList = _ => {
+        const departmentList = this.state.departments.map((department) => {
+            return { value: department.Id, label: department.Description.trim() } 
+        });
+
+        const options = [{ value: 0, label: 'Select a Department' }, ...departmentList];
+        return options;
+    }
+
+    getPropertyFilterList = _ => {
+        const propertyList = this.state.hotels.map(item => {
+            return { value: item.Id, label: item.Name }
+        });
+
+        const options = [{ value: 0, label: "Select a Property" }, ...propertyList];
+        return options;
+    }
+
+    findSelectedProperty = propertyId => {
+        const defValue = {value: 0, label: "Select a Property"};
+
+        if(propertyId === 'null' || propertyId === 0)
+            return defValue;
+
+        const found = this.state.hotels.find(item => {
+            return item.Id === propertyId;
+        });
+
+        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
+    }
+
+    findSelectedDepartment = depId => {
+        const defValue = {value: 0, label: "Select a Department"};
+
+        if(depId === 'null' || depId === 0)
+            return defValue;
+
+        const found = this.state.departments.find(item => {
+            return item.Id === depId;
+        });
+
+        if(!found)
+            return defValue;
+
+        return {value: found.Id, label: found.Description.trim()};
+    }
+
     render() {
+
+        const propertyList = this.getPropertyFilterList();
+        const departmentList = this.getDepartmentFilterList();
 
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
@@ -658,22 +724,18 @@ class WorkOrdersForm extends Component {
                         </div>
                         <div className="container">
                             <div className="row">
-                                <div className="col-md-4 col-xl-2">
-                                    <select
-                                        required
-                                        name="IdEntity"
-                                        className="form-control"
-                                        id=""
-                                        onChange={this.handleChange}
-                                        value={this.state.IdEntity}
-                                        disabled={!isAdmin}
+                                <div className="col-md-6 col-xl-3">
+                                    <Select
+                                        options={propertyList}
+                                        value={this.findSelectedProperty(this.state.IdEntity)}
+                                        onChange={this.handlePropertySelectChange}
+                                        closeMenuOnSelect={true}
+                                        components={makeAnimated()}
+                                        isMulti={false}
+                                        isDisabled={!isAdmin}
                                         onBlur={this.handleValidate}
-                                    >
-                                        <option value={0}>Select a Property</option>
-                                        {this.state.hotels.map((hotel) => (
-                                            <option value={hotel.Id}>{hotel.Name}</option>
-                                        ))}
-                                    </select>
+                                        className="WorkOrders-dropdown"
+                                    />
                                 </div>
                                 <div className="col-md-4 col-xl-2">
                                     <div class="input-group flex-nowrap">
@@ -689,7 +751,6 @@ class WorkOrdersForm extends Component {
                                             </label>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -700,21 +761,17 @@ class WorkOrdersForm extends Component {
                                 <div className="card-header bg-light">
                                     <div className="row">
                                         <div className="col-md-4 col-xl-2 mb-2">
-                                            <select
-                                                required
-                                                name="departmentId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.departmentId}
-                                                disabled={!isAdmin}
+                                            <Select
+                                                options={departmentList}
+                                                value={this.findSelectedDepartment(this.state.departmentId)}
+                                                onChange={this.handleDepartmentSelectChange}
+                                                closeMenuOnSelect={true}
+                                                components={makeAnimated()}
+                                                isMulti={false}
+                                                isDisabled={!isAdmin}
                                                 onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Department</option>
-                                                {this.state.departments.map((department) => (
-                                                    <option key={department.Id} value={department.Id}>{department.Description}</option>
-                                                ))}
-                                            </select>
+                                            />
+
                                         </div>
                                         <div className="col-md-3">
                                             {!this.state.isEditing &&
