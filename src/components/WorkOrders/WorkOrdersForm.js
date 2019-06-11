@@ -291,7 +291,9 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CREATE_WORKORDER,
                 variables: {
-                    workOrder: this.state.form
+                    workOrder: this.state.form,
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
                 }
             })
             .then((data) => {
@@ -353,7 +355,9 @@ class WorkOrdersForm extends Component {
                         endDate: this.state.endDate,
                         dayWeek: this.state.dayWeeks,
                         departmentId: this.state.departmentId
-                    }
+                    },
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
                 }
             })
             .then((data) => {
