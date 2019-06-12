@@ -84,10 +84,18 @@ class PreFilter extends Component {
     }
 
     getLocations = () => {
+        let filter = {};
+        let idRol = localStorage.getItem('IdRoles');
+        let idEntity = localStorage.getItem("Id_Entity");
+        if (idRol == 5) filter = { ...filter, Id: idEntity };
+
         this.setState({ loadingLoaction: true }, () => {
             this.props.client
                 .query({
                     query: GET_INITIAL_DATA,
+                    variables: {
+                        ...filter
+                    }
                 })
                 .then(({ data }) => {
                     this.setState((prevState) => {
@@ -259,7 +267,7 @@ class PreFilter extends Component {
 
                                     <button className="btn btn-danger btn-not-rounded tumi-button" type="button" onClick={this.props.handleClosePreFilter}>
                                         Cancel
-                                    </button>                                
+                                    </button>
                                 </div>
                             </DialogActions>
                         </div>

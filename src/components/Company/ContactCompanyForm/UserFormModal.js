@@ -26,7 +26,6 @@ class UserFormModal extends Component {
     DEFAULT_STATE = {
         idUser: null,
         fullName: '',
-        username: '',
         usernameValid: true,
         email: '',
         emailValid: true,
@@ -36,9 +35,7 @@ class UserFormModal extends Component {
         idRol: 5,//Hotel Manager
         loadingRoles: false,
         idLanguage: "",
-        firstName: '',
         firstNameValid: true,
-        lastName: '',
         lastNameValid: true,
         idLanguageValid: true,
         loadingLanguages: false,
@@ -51,11 +48,18 @@ class UserFormModal extends Component {
             openModal: false,
             roles: [],
             languages: [],
+            firstName: '',
+            lastName: '',
+            username: '',
             ...this.DEFAULT_STATE
         };
     }
     onChangeHandler(value, name) {
-        this.setState({ [name]: value }, this.validateField(name, value));
+        this.setState(() => {
+            if ("firstName|lastName".includes(name))
+                return { [name]: value, username: this.state.firstName.slice(0, 1) + this.state.lastName + Math.floor(Math.random() * 10000) }
+            else return { [name]: value }
+        }, this.validateField(name, value));
     }
 
     updateSelect = (id, name) => {
@@ -127,7 +131,7 @@ class UserFormModal extends Component {
 
     handleOnClose = () => {
         this.props.handleCloseModal();
-        this.setState(() => ({ ...this.DEFAULT_STATE }))
+        this.setState(() => ({ ...this.DEFAULT_STATE, firstName: '', lastName: '', username: '' }))
     }
     /**
      * To fetch a list of languages
@@ -302,7 +306,7 @@ class UserFormModal extends Component {
                             input: {
                                 Id_Entity: this.state.idUser ? this.state.idEntity : this.props.idEntity,
                                 Id_Roles: this.state.idRol,
-                                Code_User: this.state.firstName.slice(0, 1) + this.state.lastName + Math.floor(Math.random() * 10000),
+                                Code_User: this.state.username,
                                 Full_Name: `${this.state.firstName} ${this.state.lastName}`,
                                 Electronic_Address: this.state.email,
                                 Phone_Number: this.state.number,
@@ -425,9 +429,14 @@ class UserFormModal extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.idContact != this.props.idContact) {
+        if (nextProps.idContact != this.props.idContact)
             this.fetUserInformation(nextProps.idContact);
-        }
+        if (nextProps.contactFirstName != this.props.contactFirstName)
+            this.setState(() => ({ firstName: nextProps.contactFirstName }))
+        if (nextProps.contactLastName != this.props.contactLastName)
+            this.setState(() => ({ lastName: nextProps.contactLastName }))
+        if (nextProps.username != this.props.username)
+            this.setState(() => ({ username: nextProps.username }))
     }
 
     render() {
@@ -460,7 +469,6 @@ class UserFormModal extends Component {
                                         maxLength="15"
                                         value={this.state.username}
                                         error={!this.state.usernameValid}
-                                        change={(value) => this.onChangeHandler(value, 'username')}
                                         disabled={true}
                                     />
                                 </div>

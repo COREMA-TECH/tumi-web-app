@@ -45,9 +45,15 @@ class PreFilterConsolidated extends Component {
         if (IdRegion == 0) return false;
         let options = [];
 
+        let filter = {};
+        let idRol = localStorage.getItem('IdRoles');
+        let idEntity = localStorage.getItem("Id_Entity");
+        if (idRol == 5) filter = { ...filter, Id: idEntity };
+
         this.props.client.query({
             query: GET_PROPERTY_BY_REGION,
-            fetchPolicy: 'no-cache'
+            fetchPolicy: 'no-cache',
+            variables:{...filter}
         }).then(({ data }) => {
             this.setState({
                 properties: data.getbusinesscompanies
