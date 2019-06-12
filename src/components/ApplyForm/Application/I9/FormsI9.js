@@ -167,6 +167,14 @@ class FormsI9 extends Component {
         this.getApplicantInformation(this.props.applicationId);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
     sleep() {
         return new Promise((resolve) => setTimeout(resolve, 8000));
     }

@@ -502,6 +502,14 @@ class ApplicationInternal extends Component {
         this.getPositionCatalog();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         if (this.state.editing !== nextProps.editing) {
             return true;

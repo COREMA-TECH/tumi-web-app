@@ -189,7 +189,7 @@ class Application extends Component {
                                 expireDateId: this.state.expireDateId,
                                 emailAddress: this.state.emailAddress,
                                 positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                dateAvailable: this.state.dateAvailable,
+                                dateAvailable: this.state.immediately ? Date.now() : this.state.dateAvailable,
                                 scheduleRestrictions: this.state.scheduleRestrictions,
                                 scheduleExplain: this.state.scheduleExplain,
                                 convicted: this.state.convicted,
@@ -207,6 +207,8 @@ class Application extends Component {
                         }
                     })
                     .then(({ data }) => {
+                        if (id == 0) 
+                            this.props.setApplicantId(data.addApplication.id);
                         this.setState({
                             editing: false,
                             insertDialogLoading: false
@@ -226,7 +228,6 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
-                        console.log("App error ", error)
                         this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.setState({

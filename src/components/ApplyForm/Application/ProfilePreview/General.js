@@ -455,7 +455,7 @@ class General extends Component {
                             data: data.applications[0]
                         }, () => {
                             this.setState({
-                                email: this.state.data.emailAddress,
+                                email: this.state.data ? this.state.data.emailAddress : '',
                                 number: this.state.data.cellPhone,
                                 firstname: this.state.data.firstName,
                                 middlename: this.state.data.middleName,
@@ -1749,7 +1749,7 @@ class General extends Component {
                                                         </div>
                                                     </div>
                                                 })
-                                            : {}
+                                            : ''
                                         }
                                     </div>
                                 </div>

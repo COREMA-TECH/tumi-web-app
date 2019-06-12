@@ -219,6 +219,14 @@ class VerticalLinearStepper extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;

@@ -111,7 +111,6 @@ class CustomizedTabs extends React.Component {
                 window.location.href = "/home/application";
 
             //localStorage.setItem('languageForm', 'en');
-
             this.setState({
                 applicationId: this.props.location.state.ApplicationId
             }, () => {
@@ -138,6 +137,12 @@ class CustomizedTabs extends React.Component {
         this.getApplicantStatus();
     }
 
+    setApplicantId = (id) => {
+        this.setState((prevState, prevProps) => {
+            return { applicationId: id }
+        });
+    }
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
@@ -145,7 +150,7 @@ class CustomizedTabs extends React.Component {
         let getTabContent = (step, ) => {
             switch (step) {
                 case 0:
-                    return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
+                    return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId}/>;
                 case 1:
                     return <ProfilePreview applicationId={this.state.applicationId} />;
                 case 2:

@@ -91,7 +91,6 @@ class Language extends Component {
 			this.setState(
 				(prevState) => ({
 					newLanguages: this.state.languages.filter((_, i) => {
-						console.log(_.id);
 						return _.id === undefined;
 					})
 				}),
@@ -162,6 +161,14 @@ class Language extends Component {
 			}
 		);
 	}
+
+	componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
 
 	render() {
 		// To render the Languages Section
