@@ -255,7 +255,7 @@ class ContactsTable extends React.Component {
 												disabled={this.props.loading}
 												onClick={(e) => {
 													e.stopPropagation();
-													this.handleClickOpenModal(row.id, row.firstname, row.lastname);
+													this.handleClickOpenModal(row.id, row.firstname.trim(), row.lastname.trim());
 												}}
 											>
 												<i class="fas fa-user"></i>
