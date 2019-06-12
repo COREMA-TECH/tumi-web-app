@@ -53,7 +53,6 @@ class PunchesReport extends Component {
                     variables: { ...this.getFilters() }
                 })
                 .then(({ data }) => {
-                    console.log("GET_REPORT_QUERY ", data)
                     this.setState(() => ({
                         data: data.markedEmployeesApproved,
                         loadingReport: false
@@ -110,10 +109,17 @@ class PunchesReport extends Component {
 
     getProperties = () => {
         this.setState(() => ({ loadingProperties: true }), () => {
+         let filter={};
+            let idRol = localStorage.getItem('IdRoles');
+            let idEntity = localStorage.getItem("Id_Entity");
+            
+            if (idRol == 5) filter = { Id: idEntity };
+
             this.props.client
                 .query({
                     query: GET_PROPERTIES_QUERY,
-                    fetchPolicy: 'no-cache'
+                    fetchPolicy: 'no-cache',
+                    variables:{...filter}
                 })
                 .then(({ data }) => {
                     let options = [];
@@ -141,6 +147,8 @@ class PunchesReport extends Component {
 
     getFilters = () => {
         var filters = {}, { property, department, employee, startDate, endDate } = this.state;
+        let idRol = localStorage.getItem('IdRoles');
+        let idEntity = localStorage.getItem("Id_Entity");
 
         if (property.value)
             filters = { ...filters, idEntity: property.value };
@@ -152,6 +160,7 @@ class PunchesReport extends Component {
             filters = { ...filters, startDate };
         if (endDate)
             filters = { ...filters, endDate };
+        if (idRol == 5) filters = { ...filters, idEntity };
 
         return filters;
     }

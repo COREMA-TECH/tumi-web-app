@@ -181,14 +181,14 @@ class WorkOrdersForm extends Component {
                 PositionName: nextProps.item.positionName,
                 isEditing: true
             },
-            () => {
-                this.getEmployees();
-                this.getPositions(nextProps.item.departmentId);
-                this.getRecruiter();
-                this.getDepartment(nextProps.item.IdEntity);
-                this.newWorkOrder();
-                this.ReceiveStatus = true;
-            });
+                () => {
+                    this.getEmployees();
+                    this.getPositions(nextProps.item.departmentId);
+                    this.getRecruiter();
+                    this.getDepartment(nextProps.item.IdEntity);
+                    this.newWorkOrder();
+                    this.ReceiveStatus = true;
+                });
         } else if (!nextProps.openModal) {
             this.setState({
                 IdEntity: 0,
@@ -243,10 +243,17 @@ class WorkOrdersForm extends Component {
 
 
     componentWillMount() {
+        let filter = {};
+        let idRol = localStorage.getItem('IdRoles');
+        let idEntity = localStorage.getItem("Id_Entity");
+        if (idRol == 5) filter = { ...filter, id: idEntity };
 
         this.props.client
             .query({
-                query: GET_HOTEL_QUERY
+                query: GET_HOTEL_QUERY,
+                variables: {
+                    ...filter
+                }
             })
             .then(({ data }) => {
                 this.setState({
@@ -652,21 +659,21 @@ class WorkOrdersForm extends Component {
         });
     }
 
-    handlePropertySelectChange = ({value}) => {
-        this.setState( (prevState, props) => {
+    handlePropertySelectChange = ({ value }) => {
+        this.setState((prevState, props) => {
             return { IdEntity: value }
-        }, _ => this.getDepartment(value));        
+        }, _ => this.getDepartment(value));
     }
 
-    handleDepartmentSelectChange = ({value}) => {
-        this.setState( (prevState, props) => {
+    handleDepartmentSelectChange = ({ value }) => {
+        this.setState((prevState, props) => {
             return { departmentId: value }
-        }, _ => this.getPositions(value));        
+        }, _ => this.getPositions(value));
     }
 
     getDepartmentFilterList = _ => {
         const departmentList = this.state.departments.map((department) => {
-            return { value: department.Id, label: department.Description.trim() } 
+            return { value: department.Id, label: department.Description.trim() }
         });
 
         const options = [{ value: 0, label: 'Select a Department' }, ...departmentList];
@@ -683,32 +690,32 @@ class WorkOrdersForm extends Component {
     }
 
     findSelectedProperty = propertyId => {
-        const defValue = {value: 0, label: "Select a Property"};
+        const defValue = { value: 0, label: "Select a Property" };
 
-        if(propertyId === 'null' || propertyId === 0)
+        if (propertyId === 'null' || propertyId === 0)
             return defValue;
 
         const found = this.state.hotels.find(item => {
             return item.Id === propertyId;
         });
 
-        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
+        return found ? { value: found.Id, label: found.Name.trim() } : defValue;
     }
 
     findSelectedDepartment = depId => {
-        const defValue = {value: 0, label: "Select a Department"};
+        const defValue = { value: 0, label: "Select a Department" };
 
-        if(depId === 'null' || depId === 0)
+        if (depId === 'null' || depId === 0)
             return defValue;
 
         const found = this.state.departments.find(item => {
             return item.Id === depId;
         });
 
-        if(!found)
+        if (!found)
             return defValue;
 
-        return {value: found.Id, label: found.Description.trim()};
+        return { value: found.Id, label: found.Description.trim() };
     }
 
     render() {

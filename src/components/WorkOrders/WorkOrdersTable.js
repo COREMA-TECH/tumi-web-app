@@ -150,6 +150,17 @@ class WorkOrdersTable extends Component {
                 }
             }
 
+
+        let idRol = localStorage.getItem('IdRoles');
+        let idEntity = localStorage.getItem("Id_Entity");
+        if (idRol == 5)
+            variables = {
+                ...variables,
+                workOrder: {
+                    IdEntity: idEntity
+                }
+            }
+
         return variables;
     }
 
@@ -467,7 +478,7 @@ class WorkOrdersTable extends Component {
         });
     }
 
-    updateStatusFilter = ({value}) => {
+    updateStatusFilter = ({ value }) => {
         if (value == "null") {
             this.handleFilterValue(null);
         } else {
@@ -475,7 +486,7 @@ class WorkOrdersTable extends Component {
         }
     }
 
-    handleStateFilterChange = ({value}) => {
+    handleStateFilterChange = ({ value }) => {
         this.setState({
             state: parseInt(value)
         }, () => { this.getWorkOrders() })
@@ -483,32 +494,32 @@ class WorkOrdersTable extends Component {
 
     getStateFilterOptions = _ => {
         let options = this.state.states.map(state => {
-            return {value: state.Id, label: state.Name}
+            return { value: state.Id, label: state.Name }
         });
 
-        options = [{value: 0, label: 'State'}, ...options];
+        options = [{ value: 0, label: 'State' }, ...options];
 
         return options;
     }
 
     findSelectedState = stateId => {
-        const defValue = {value: 0, label: "Select option"};
+        const defValue = { value: 0, label: "Select option" };
 
-        if(stateId === 'null' || stateId === 0)
+        if (stateId === 'null' || stateId === 0)
             return defValue;
 
         const found = this.state.states.find(item => {
             return item.Id === stateId;
         });
 
-        return found ? {value: found.Id, label: found.Name.trim()} : defValue;
+        return found ? { value: found.Id, label: found.Name.trim() } : defValue;
     }
 
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
-        let isLoading = this.state.loading;  
-        
+        let isLoading = this.state.loading;
+
         const stateFilterOptions = this.getStateFilterOptions();
 
         return (
@@ -568,7 +579,7 @@ class WorkOrdersTable extends Component {
                                         </label>
                                     </div>
                                 </div>
-                        
+
                                 <div class="input-group flex-nowrap WorkOrders-filter">
                                     <DatePicker
                                         selected={this.state.endDate}
@@ -581,8 +592,8 @@ class WorkOrdersTable extends Component {
                                             <i class="far fa-calendar"></i>
                                         </label>
                                     </div>
-                                </div>                       
-                                
+                                </div>
+
                                 <div className="input-group flex-nowrap WorkOrders-filter">
                                     <Select
                                         options={this.statusFilterList}
@@ -595,14 +606,14 @@ class WorkOrdersTable extends Component {
                                         className='tumi-fullWidth'
                                     />
                                 </div>
-                    
+
                                 <button class="btn btn-outline-secondary btn-not-rounded WorkOrders-filter clear-btn" type="button" onClick={this.clearInputDates}>
                                     <i class="fas fa-filter"></i> Clear
                                 </button>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
-                    <h5 className="Table-title">{ this.props.tableTitle || "Work Orders" }</h5>                   
+                    <h5 className="Table-title">{this.props.tableTitle || "Work Orders"}</h5>
                 </div>
 
                 <div className="card-body tumi-forcedResponsiveTable">

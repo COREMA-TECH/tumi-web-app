@@ -148,7 +148,10 @@ class ContactsTable extends React.Component {
 		this.state = {
 			page: 0,
 			rowsPerPage: 5,
-			openModal: false
+			openModal: false,
+			contactFirstName: '',
+			contactLastName: '',
+			username: ''
 		};
 	}
 
@@ -185,16 +188,16 @@ class ContactsTable extends React.Component {
 	/**
      * To open modal updating the state
      */
-	handleClickOpenModal = (idContact) => {
-		this.setState(() => ({ openModal: true, idContact }));
+	handleClickOpenModal = (idContact, contactFirstName, contactLastName) => {
+		let username = contactFirstName.trim().slice(0, 1) + contactLastName.trim() + Math.floor(Math.random() * 10000)
+		this.setState(() => ({ openModal: true, idContact, contactFirstName, contactLastName, username }));
 	};
 
     /**
      * To hide modal and then restart modal state values
      */
 	handleCloseModal = () => {
-		console.log({ message: this })
-		this.setState(() => ({ openModal: false,idContact:null }));
+		this.setState(() => ({ openModal: false, idContact: null, contactFirstName: '', contactLastName: '', username: '' }));
 	};
 
 	render() {
@@ -217,7 +220,8 @@ class ContactsTable extends React.Component {
 		}
 		return (
 			<React.Fragment>
-				<UserFormModal handleCloseModal={this.handleCloseModal} openModal={this.state.openModal} idContact={this.state.idContact} idEntity={this.props.idEntity} />
+				<UserFormModal handleCloseModal={this.handleCloseModal} openModal={this.state.openModal}
+					idContact={this.state.idContact} idEntity={this.props.idEntity} contactFirstName={this.state.contactFirstName} contactLastName={this.state.contactLastName} username={this.state.username} />
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
@@ -251,7 +255,7 @@ class ContactsTable extends React.Component {
 												disabled={this.props.loading}
 												onClick={(e) => {
 													e.stopPropagation();
-													this.handleClickOpenModal(row.id);
+													this.handleClickOpenModal(row.id, row.firstname, row.lastname);
 												}}
 											>
 												<i class="fas fa-user"></i>
