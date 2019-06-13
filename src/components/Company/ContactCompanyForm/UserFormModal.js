@@ -9,7 +9,7 @@ import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import withGlobalContent from '../../Generic/Global';
-import { GET_ROLES_QUERY, GET_LANGUAGES_QUERY, GET_EMAILS_USER, SEND_EMAIL, GET_USER_INFORMATION } from './queries';
+import { GET_ROLES_QUERY, GET_LANGUAGES_QUERY, SEND_EMAIL, GET_USER_INFORMATION } from './queries';
 import { INSERT_USER_QUERY, UPDATE_USER_QUERY } from './mutation';
 
 const styles = (theme) => ({
@@ -27,9 +27,7 @@ class UserFormModal extends Component {
         idUser: null,
         fullName: '',
         usernameValid: true,
-        email: '',
         emailValid: true,
-        number: '',
         numberValid: true,
         idRolValid: true,
         idRol: 5,//Hotel Manager
@@ -42,15 +40,20 @@ class UserFormModal extends Component {
         password: 'TEMP',
         idEntity: null
     };
+    RESET_VALUES = {
+        firstName: '',
+        lastName: '',
+        email: '',
+        number: '',
+        username: ''
+    }
     constructor(props) {
         super(props);
         this.state = {
             openModal: false,
             roles: [],
             languages: [],
-            firstName: '',
-            lastName: '',
-            username: '',
+            ...this.RESET_VALUES,
             ...this.DEFAULT_STATE
         };
     }
@@ -72,10 +75,18 @@ class UserFormModal extends Component {
             }
         );
     };
+
+    getDefaultLaguage = () => {
+        let english = this.state.languages.find(_ => { return _.Name.trim().toUpperCase() == "ENGLISH" })
+        if (english)
+            return english.Id;
+        return '';
+    }
+
     /**
 * To fetch user information
 */
-    fetUserInformation = (Id_Contact) => {
+    fetchUserInformation = (Id_Contact) => {
         this.props.client
             .query({
                 query: GET_USER_INFORMATION,
@@ -99,13 +110,14 @@ class UserFormModal extends Component {
                         lastName: lastName || '',
                         idEntity: Id_Entity
                     }))
-                } else this.setState(() => ({ ...this.DEFAULT_STATE }))
+                } else this.setState(() => ({ ...this.DEFAULT_STATE, idLanguage: this.getDefaultLaguage() }))
 
             })
             .catch((error) => {
 
             });
     };
+
     /**
 * To fetch a list of roles
 */
@@ -144,11 +156,13 @@ class UserFormModal extends Component {
             })
             .then((data) => {
                 if (data.data.getcatalogitem != null) {
-                    this.setState({
+                    this.setState(() => ({
                         languages: data.data.getcatalogitem,
                         loadingLanguages: false
-                    }, () => {
-                        this.fetchEmails();
+                    }), () => {
+                        this.setState(() => ({
+                            idLanguage: this.getDefaultLaguage()
+                        }))
                     });
                 }
             })
@@ -162,28 +176,6 @@ class UserFormModal extends Component {
             });
     };
 
-	/**
- * To fetch a list of applicants emails
- */
-    fetchEmails = () => {
-        this.props.client
-            .query({
-                query: GET_EMAILS_USER
-            })
-            .then(({ data }) => {
-                this.setState({
-                    dataEmail: data.getusers
-                }, () => {
-                    this.setState({
-                        loading: false
-                    });
-                })
-            })
-            .catch(error => {
-                // TODO: add snackbar message error
-                this.props.handleOpenSnackbar('error', 'Error to list users!');
-            })
-    };
 
     validateField(fieldName, value) {
         let emailValid = this.state.emailValid;
@@ -325,7 +317,7 @@ class UserFormModal extends Component {
                                 isEmployee: true,
                                 firstName: this.state.firstName,
                                 lastName: this.state.lastName,
-                                Id_Contact: this.props.idContact
+                                Id_Contact: this.state.idContact
                             },
                             idEmployee: 0
                         }
@@ -356,8 +348,8 @@ class UserFormModal extends Component {
     };
 
     /**
-   * Insert a user with general information and permissions
-   */
+    * Insert a user with general information and permissions
+    */
     updateUser = () => {
         this.setState(
             {
@@ -429,14 +421,24 @@ class UserFormModal extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.idContact != this.props.idContact)
-            this.fetUserInformation(nextProps.idContact);
-        if (nextProps.contactFirstName != this.props.contactFirstName)
-            this.setState(() => ({ firstName: nextProps.contactFirstName }))
-        if (nextProps.contactLastName != this.props.contactLastName)
-            this.setState(() => ({ lastName: nextProps.contactLastName }))
-        if (nextProps.username != this.props.username)
-            this.setState(() => ({ username: nextProps.username }))
+        if (nextProps.contact) {
+            if (JSON.stringify(nextProps.contact) != JSON.stringify(this.props.contact)) {
+                let { firstname, lastname, email, number, id } = nextProps.contact;
+                let username = firstname.trim().slice(0, 1) + lastname.trim() + Math.floor(Math.random() * 10000)
+                this.setState(() => ({
+                    firstName: firstname.trim(),
+                    lastName: lastname.trim(),
+                    email,
+                    number,
+                    username,
+                    idContact: id
+                }), () => {
+                    this.fetchUserInformation(id);
+                })
+            }
+        } else {
+            this.setState(() => ({ ...this.RESET_VALUES }))
+        }
     }
 
     render() {
@@ -586,9 +588,6 @@ class UserFormModal extends Component {
 
 UserFormModal.protoTypes = {
     openModal: PropTypes.object.isRequired,
-    idContact: PropTypes.object.isRequired,
-    firstName: PropTypes.object.isRequired,
-    lastName: PropTypes.object.isRequired,
     idEntity: PropTypes.object.isRequired
 }
 

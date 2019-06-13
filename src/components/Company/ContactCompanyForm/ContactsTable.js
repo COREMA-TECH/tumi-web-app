@@ -149,9 +149,8 @@ class ContactsTable extends React.Component {
 			page: 0,
 			rowsPerPage: 5,
 			openModal: false,
-			contactFirstName: '',
-			contactLastName: '',
-			username: ''
+			username: '',
+			contact: null
 		};
 	}
 
@@ -188,16 +187,18 @@ class ContactsTable extends React.Component {
 	/**
      * To open modal updating the state
      */
-	handleClickOpenModal = (idContact, contactFirstName, contactLastName) => {
-		let username = contactFirstName.trim().slice(0, 1) + contactLastName.trim() + Math.floor(Math.random() * 10000)
-		this.setState(() => ({ openModal: true, idContact, contactFirstName, contactLastName, username }));
+	handleClickOpenModal = (row) => {
+		this.setState(() => ({ openModal: true, contact: row }));
 	};
 
     /**
      * To hide modal and then restart modal state values
      */
 	handleCloseModal = () => {
-		this.setState(() => ({ openModal: false, idContact: null, contactFirstName: '', contactLastName: '', username: '' }));
+		this.setState(() => ({ openModal: false, contact: null }), () => {
+			if (this.props.updateData)
+				this.props.updateData();
+		});
 	};
 
 	render() {
@@ -221,7 +222,7 @@ class ContactsTable extends React.Component {
 		return (
 			<React.Fragment>
 				<UserFormModal handleCloseModal={this.handleCloseModal} openModal={this.state.openModal}
-					idContact={this.state.idContact} idEntity={this.props.idEntity} contactFirstName={this.state.contactFirstName} contactLastName={this.state.contactLastName} username={this.state.username} />
+					idEntity={this.props.idEntity} contact={this.state.contact} />
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
@@ -249,18 +250,6 @@ class ContactsTable extends React.Component {
 									}}
 								>
 									<CustomTableCell>
-										<Tooltip title="User">
-											<button
-												className="btn btn-info ml-1 float-left"
-												disabled={this.props.loading}
-												onClick={(e) => {
-													e.stopPropagation();
-													this.handleClickOpenModal(row.id, row.firstname.trim(), row.lastname.trim());
-												}}
-											>
-												<i class="fas fa-user"></i>
-											</button>
-										</Tooltip>
 										<Tooltip title="Edit">
 											<button
 												className="btn btn-success ml-1 float-left"
@@ -285,6 +274,19 @@ class ContactsTable extends React.Component {
 												<i class="fas fa-trash"></i>
 											</button>
 										</Tooltip>
+										{row.users.length == 0 ?
+											<Tooltip title="User">
+												<button
+													className="btn btn-outline-info float-left ml-1"
+													disabled={this.props.loading}
+													onClick={(e) => {
+														e.stopPropagation();
+														this.handleClickOpenModal({ ...row });
+													}}
+												>
+													<i className="fas fa-plus"></i>
+												</button>
+											</Tooltip> : ''}
 									</CustomTableCell>
 									<CustomTableCell>
 										<Select
