@@ -114,6 +114,7 @@ class Application extends Component {
         positions: [],
         positionsCatalogs: [],
         positionCatalogTag: [],
+        positionFilterList: [],
 
         // cellPhoneValid: false,
         //lastNameValid: false,
@@ -222,8 +223,11 @@ class Application extends Component {
                                     generalComment: this.state.generalComment,
                                     isLead: true,
                                     idRecruiter: null,
-                                    UserId: localStorage.getItem('LoginId')
-                                }
+                                    UserId: localStorage.getItem('LoginId'),
+                                    sendInterview: this.state.sendInterview
+                                },
+                                codeuser: localStorage.getItem('LoginId'),
+                                nameUser: localStorage.getItem('FullName')
                             }
                         })
                         .then(({ data }) => {
@@ -484,7 +488,8 @@ class Application extends Component {
                     positions: data.workOrder
                 }, () => {
                     this.setState({
-                        loading: false
+                        loading: false,
+                        positionFilterList: this.getPositionFilterList()
                     })
                 });
             })
@@ -597,12 +602,12 @@ class Application extends Component {
     }
 
     render() {
-
         return (
             <div className="Apply-container-application">
                 <div className="applicant-card">
                     <div className="applicant-card__header">
                         <span className="applicant-card__title">{menuSpanish[0].label}</span>
+
                         {!this.state.editing && <button
                             className="applicant-card__edit-button"
                             onClick={() => {
@@ -612,7 +617,7 @@ class Application extends Component {
                             }}
                             disabled={this.state.searchigZipcode}
                         >
-                            {spanishActions[1].label} <i className="far fa-edit" />
+                            {spanishActions[1].label}<i className="far fa-edit" />
                         </button>
                         }
                     </div>
@@ -802,6 +807,7 @@ class Application extends Component {
                                         placeholder="99999-99999"
                                         mask="99999-99999"
                                         updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
+
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[23].label}

@@ -98,6 +98,18 @@ class VerticalLinearStepper extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
+    setApplicantId = (id) => {
+        this.props.setApplicantId(id)
+    }
+
     render() {
         const { classes } = this.props;
         const steps = getSteps();
@@ -110,7 +122,7 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <Application applicationId={this.state.applicationId} handleContract={this.props.handleContract}/>;
+                    return <Application applicationId={this.state.applicationId} handleContract={this.props.handleContract} setApplicantId={this.setApplicantId}/>;
                 case 1:
                     return <Language applicationId={this.state.applicationId} />;
                 case 2:

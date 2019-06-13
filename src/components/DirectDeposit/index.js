@@ -17,7 +17,7 @@ class DirectDeposit extends Component{
         lastName: '',
         address: '',
         bankName: '',
-        routingNumber: 0,
+        routingNumber: '',
         account: '',  
         amount: '',
         percentage: '',
@@ -51,6 +51,15 @@ class DirectDeposit extends Component{
         this.setState({ [e.target.name]: e.target.type == 'checkbox' ? e.target.checked : e.target.value });        
     }
 
+    handleFullPaycheckSelected = _ => {
+        this.setState(_ => {
+            return {
+                percentage: 100,
+                amountType: 'percentage'
+            }
+        })
+    }
+
     handleLocationFormChange = (zipcode, city, state) => {
         this.setState( (prevState, props) => {
             return { zipcode, city, state }
@@ -70,7 +79,7 @@ class DirectDeposit extends Component{
             fetchPolicy: 'no-cache'
         })
         .then(({data}) => {
-            this.setState({ applicationAccounts: data.applicationAccounts });
+            this.setState({ applicationAccounts: data.applicationAccounts }, _ => console.log(data.applicationAccounts));
         })
         .catch(error => console.log(error));
     }
@@ -104,33 +113,20 @@ class DirectDeposit extends Component{
             }
         })
         .then(_ => {
-            this.setState(_ => {
-                return { ...this.INITIAL_STATE }
-            }, _ => {
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Saved Successfully',
-                    'bottom',
-                    'center'
-                );
-
-                this.getApplicationAccounts();
-            })            
+            this.props.handleOpenSnackbar(
+                'success',
+                'Saved Successfully',
+                'bottom',
+                'center'
+            );
         })
         .catch(error => {
-            this.setState(_ => {
-                return { ...this.INITIAL_STATE }
-            }, _ => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    `Error: ${error}`,
-                    'bottom',
-                    'center'
-                );
-
-                this.getApplicationAccounts();
-            });  
-            
+            this.props.handleOpenSnackbar(
+                'error',
+                `Error: ${error}`,
+                'bottom',
+                'center'
+            );
         }); 
     }
         
@@ -140,7 +136,7 @@ class DirectDeposit extends Component{
                 <form onSubmit={this.handleSubmit}>
                     <div className="row">
                         <div className="col-md-12 col-xl-5">
-                            <div className="card">
+                            <div className="card AccountHolder">
                                 <div className="card-header">
                                     Account Holder Information
                                 </div>
@@ -165,6 +161,8 @@ class DirectDeposit extends Component{
                                 accountType={this.state.accountType}
                                 setAmountType={this.setAmountType}
                                 address={this.address}
+                                handleFullPaycheckSelected={this.handleFullPaycheckSelected}
+                                percentage={this.state.percentage}
                             />
                         </div>
                         <div className="col-md-12 col-xl-3">

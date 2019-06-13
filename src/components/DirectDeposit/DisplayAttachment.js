@@ -5,9 +5,9 @@ class DisplayAttachment extends Component{
         super(props);
 
         this.state = {
-            title: 'm4a1-cinnamon-cannon.jpg',
-            startTitle: 'm4a1-cinnamon-cannon.jpg',
-            editName: 'm4a1-cinnamon-cannon.jpg',
+            title: 'example-attachment.jpg',
+            startTitle: 'example-attachment.jpg',
+            editName: 'example-attachment.jpg',
             idToDelete: 0,
             updating: false
         }
@@ -51,7 +51,7 @@ class DisplayAttachment extends Component{
     
     render(){
         return (
-			<li className="UploadDocument-item">
+			<li className="UploadDocument-item Attachments-item">
 				<div className="group-container">
 					<div className="file-name-container">
 						<input

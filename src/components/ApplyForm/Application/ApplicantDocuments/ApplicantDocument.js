@@ -153,6 +153,14 @@ class ApplicantDocument extends Component {
 		this.getTemplateDocuments();
 	}
 
+	componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
 	renderStaticElement = () => {
 		return (
 			<DocumentInputFileCard

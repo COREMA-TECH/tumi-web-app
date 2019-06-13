@@ -4,8 +4,8 @@ import gql from 'graphql-tag';
  * Mutation to create application with general information
  */
 export const CREATE_APPLICATION = gql`
-    mutation addApplication($application: inputInsertApplication) {
-        addApplication(application: $application) {
+    mutation addApplication($application: inputInsertApplication, $codeuser: Int, $nameUser: String) {
+        addApplication(application: $application, codeuser: $codeuser, nameUser: $nameUser) {
             id
         }
     }
@@ -15,11 +15,11 @@ export const CREATE_APPLICATION = gql`
  * Mutation to update a application
  */
 export const UPDATE_APPLICATION = gql`
-    mutation updateApplication($application: inputUpdateApplication) {
-        updateApplication(application: $application) {
-            id
-        }
-    }
+	mutation updateApplication($application: inputUpdateApplication, $codeuser: Int, $nameUser: String) {
+		updateApplication(application: $application, codeuser: $codeuser, nameUser: $nameUser) {
+			id
+		}
+	}
 `;
 
 export const ADD_LANGUAGES = gql`

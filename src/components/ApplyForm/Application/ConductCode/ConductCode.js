@@ -186,7 +186,13 @@ class ConductCode extends Component {
 		return new Promise((resolve) => setTimeout(resolve, 8000));
 	}
 
-
+	componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
 
 	render() {
 		let renderSignatureDialog = () => (

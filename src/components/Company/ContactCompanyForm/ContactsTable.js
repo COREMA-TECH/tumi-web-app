@@ -21,7 +21,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import Select from '@material-ui/core/Select';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import UserFormModal from './UserFormModal';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -121,7 +121,7 @@ const styles = (theme) => ({
 	tableWrapper: {
 		overflowX: 'auto'
 	},
-	row: {		
+	row: {
 		'&:hover': {
 			cursor: 'pointer'
 		}
@@ -142,10 +142,19 @@ const styles = (theme) => ({
 let id = 0;
 
 class ContactsTable extends React.Component {
-	state = {
-		page: 0,
-		rowsPerPage: 5
-	};
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			page: 0,
+			rowsPerPage: 5,
+			openModal: false,
+			contactFirstName: '',
+			contactLastName: '',
+			username: ''
+		};
+	}
+
 	handleChangePage = (event, page) => {
 		this.setState({ page });
 	};
@@ -166,7 +175,8 @@ class ContactsTable extends React.Component {
 		}
 		if (
 			this.state.page !== nextState.page ||
-			this.state.rowsPerPage !== nextState.rowsPerPage //||
+			this.state.rowsPerPage !== nextState.rowsPerPage || //||
+			this.state.openModal != nextState.openModal
 			//this.state.order !== nextState.order ||
 			//this.state.orderBy !== nextState.orderBy
 		) {
@@ -174,6 +184,21 @@ class ContactsTable extends React.Component {
 		}
 		return false;
 	}
+
+	/**
+     * To open modal updating the state
+     */
+	handleClickOpenModal = (idContact, contactFirstName, contactLastName) => {
+		let username = contactFirstName.trim().slice(0, 1) + contactLastName.trim() + Math.floor(Math.random() * 10000)
+		this.setState(() => ({ openModal: true, idContact, contactFirstName, contactLastName, username }));
+	};
+
+    /**
+     * To hide modal and then restart modal state values
+     */
+	handleCloseModal = () => {
+		this.setState(() => ({ openModal: false, idContact: null, contactFirstName: '', contactLastName: '', username: '' }));
+	};
 
 	render() {
 		const { classes } = this.props;
@@ -195,6 +220,8 @@ class ContactsTable extends React.Component {
 		}
 		return (
 			<React.Fragment>
+				<UserFormModal handleCloseModal={this.handleCloseModal} openModal={this.state.openModal}
+					idContact={this.state.idContact} idEntity={this.props.idEntity} contactFirstName={this.state.contactFirstName} contactLastName={this.state.contactLastName} username={this.state.username} />
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
@@ -222,6 +249,18 @@ class ContactsTable extends React.Component {
 									}}
 								>
 									<CustomTableCell>
+										<Tooltip title="User">
+											<button
+												className="btn btn-info ml-1 float-left"
+												disabled={this.props.loading}
+												onClick={(e) => {
+													e.stopPropagation();
+													this.handleClickOpenModal(row.id, row.firstname.trim(), row.lastname.trim());
+												}}
+											>
+												<i class="fas fa-user"></i>
+											</button>
+										</Tooltip>
 										<Tooltip title="Edit">
 											<button
 												className="btn btn-success ml-1 float-left"
@@ -326,7 +365,7 @@ class ContactsTable extends React.Component {
 						</TableRow>
 					</TableFooter>
 				</Table>
-			</React.Fragment>
+			</React.Fragment >
 		);
 	}
 }

@@ -19,7 +19,7 @@ class PunchesReportConsolidatedFilter extends Component {
         startDate: "",
         endDate: "",
         employee: "",
-        property: this.props.property,
+        property: {value: "", label: "Property (All)"},
         department: this.props.department
     }
 
@@ -108,8 +108,10 @@ class PunchesReportConsolidatedFilter extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.property.value != nextProps.property.value)
-            this.setState(() => ({ property: nextProps.property }));
+        if (this.props.property.value != nextProps.property.value) {
+            const propertyValue = nextProps.property ? nextProps.property : {value: "", label: "Property (All)"};
+            this.setState(() => ({ property: propertyValue }));
+        }
         if (this.props.department.value != nextProps.department.value)
             this.setState(() => ({ department: nextProps.department }));
     }
@@ -254,9 +256,6 @@ class PunchesReportConsolidatedFilter extends Component {
                         onEditHandler={this.onEditHandler}
                         toggleRefresh={this.toggleRefresh}
                         handleCloseModal={this.handleCloseModal}
-                        updateFiters={()=>{
-                            this.props.updateFilter(this.state)
-                        }}
                     />
                 </div>
             </div>

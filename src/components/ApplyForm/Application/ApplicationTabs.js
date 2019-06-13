@@ -17,6 +17,7 @@ import FormsW4 from "./W4/FormsW4";
 import { GET_APPLICATION_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
 import IndependentContract from "./IndependentContract";
+import ApplicationInternal from './ApplicationInternal';
 
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -110,7 +111,6 @@ class CustomizedTabs extends React.Component {
                 window.location.href = "/home/application";
 
             //localStorage.setItem('languageForm', 'en');
-
             this.setState({
                 applicationId: this.props.location.state.ApplicationId
             }, () => {
@@ -137,18 +137,20 @@ class CustomizedTabs extends React.Component {
         this.getApplicantStatus();
     }
 
+    setApplicantId = (id) => {
+        this.setState((prevState, prevProps) => {
+            return { applicationId: id }
+        });
+    }
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
 
-        if (this.state.applicationId == 0) {
-            this.state.applicationId = localStorage.getItem('idApplication');
-        }
-
-        let getTabContent = (step) => {
+        let getTabContent = (step, ) => {
             switch (step) {
                 case 0:
-                    return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} />;
+                    return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId}/>;
                 case 1:
                     return <ProfilePreview applicationId={this.state.applicationId} />;
                 case 2:
@@ -167,8 +169,10 @@ class CustomizedTabs extends React.Component {
                     return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
                 case 9:
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
-                case 10:
-                    return <IndependentContract applicationId={this.state.applicationId} />
+                case 10: 
+                    return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />
+                case 11:
+                    return <IndependentContract applicationId={this.state.applicationId} />;
 
             }
         };
@@ -176,7 +180,7 @@ class CustomizedTabs extends React.Component {
             <div>
                 <MuiThemeProvider theme={theme}>
                     <Tabs
-                        value={this.state.applicationId == 0 ? 0 : value}
+                        value={value}
                         onChange={this.handleChange}
                         scrollable
                         scrollButtons="on"
@@ -232,6 +236,11 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[8].label}
                         />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            label={applyTabs[10].label}
+                        />
                         {
                             this.state.independentContract ? (
                                 <Tab
@@ -243,9 +252,8 @@ class CustomizedTabs extends React.Component {
                                     ''
                                 )
                         }
-
                     </Tabs>
-                    {getTabContent(this.state.applicationId == 0 ? 0 : value)}
+                    {getTabContent(value)}
                 </MuiThemeProvider>
             </div>
         );

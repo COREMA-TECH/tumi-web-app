@@ -23,6 +23,9 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withRouter } from "react-router-dom";
 import { red } from '@material-ui/core/es/colors';
 
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
+
 const CustomCard = props => {
     return (
         <div>
@@ -123,8 +126,13 @@ class BoardManager extends Component {
             userId: localStorage.getItem('LoginId'),
             ReasonId: 30471,
             LaneOrigen: '',
-            LaneDestino: ''
-
+            LaneDestino: '',
+            statusOptions: [
+                { value: null, label: "Status (All)" },
+                { value: 1, label: "Open" },
+                { value: 2, label: "Completed" },
+                { value: 0, label: "Cancelled" },
+            ]
         }
     }
 
@@ -285,7 +293,7 @@ class BoardManager extends Component {
             .catch();
     };
 
-    updateHotel = (id) => {
+    updateHotel = ({value: id}) => {
         if (id != 0) {
             this.setState(
                 {
@@ -294,7 +302,7 @@ class BoardManager extends Component {
                 },
                 () => {
                     this.loadStates();
-                    this.loadCities();
+                    // this.loadCities();
                     this.getWorkOrders();
                 }
             );
@@ -310,7 +318,7 @@ class BoardManager extends Component {
                 () => {
                     this.getWorkOrders();
                     this.loadStates();
-                    this.loadCities();
+                    // this.loadCities(); 
                 }
             );
 
@@ -803,8 +811,6 @@ class BoardManager extends Component {
         this.setState({ openModal: false });
     };
 
-
-
     goToEmployeePackage = (id) => {
         // window.location.href = '/employment-application';
 
@@ -814,6 +820,108 @@ class BoardManager extends Component {
             state: { ApplicationId: id }
         });
     };
+
+    //#region Dropdowns
+    getHotelOptions = _ => {
+        const defValue = {value: 0, label: "Select a Hotel"};
+
+        const options = this.state.hotels.map(hotel => {
+            return {value: hotel.Id, label: hotel.Name};
+        });
+
+        return [defValue, ...options];
+    }
+
+    findSelectedHotel = hotelId => {
+        const defValue = {value: 0, label: "Select a Hotel"};
+
+        const found = this.state.hotels.find(hotel => {
+            return hotel.Id === hotelId;
+        });
+
+        return found ? { value: found.Id, label: found.Name } : defValue;
+    }
+
+    getStateOptions = _ => {
+        const defValue = {value: 0, label: "Select a State"};
+
+        const options = this.state.states.map(state => {
+            return {value: state.Id, label: state.Name};
+        });
+
+        return [defValue, ...options];
+    }
+
+    findSelectedState = stateId => {
+        const defValue = {value: 0, label: "Select a State"};
+
+        const found = this.state.states.find(state => {
+            return state.Id === stateId;
+        });
+
+        return found ? { value: found.Id, label: found.Name } : defValue;
+    }
+
+    handleStateFilterChange = ({value}) => {
+        this.setState({
+            state: value,
+            city: 0,
+            cities: []
+        }, () => {
+            this.loadCities();
+            this.getWorkOrders();
+        })
+    }
+
+    getCityOptions = _ => {
+        const defValue = {value: 0, label: "Select a City"};
+
+        const options = this.state.cities.map(city => {
+            return {value: city.Id, label: city.Name};
+        });
+
+        return [defValue, ...options];
+    }
+
+    findSelectedCity = cityId => {
+        const defValue = {value: 0, label: "Select a City"};
+
+        const found = this.state.cities.find(city => {
+            return city.Id === cityId;
+        });
+
+        return found ? { value: found.Id, label: found.Name } : defValue;
+    }
+
+    handleCityFilterChange = ({value}) => {
+        this.setState({
+            city: value
+        }, () => {
+            this.getWorkOrders();
+        })
+    }
+
+   findSelectedStatus = statusId => {
+        const defValue = {value: null, label: "Status (All)"};
+
+        if(!statusId)
+            return defValue;
+
+        const found = this.state.statusOptions.find(status => {
+            return status.value === statusId;
+        });
+
+        return found ? found : defValue;
+    }
+
+    handleStatusFilterChange = ({value}) => {
+        if (value == "null") {
+            this.updateStatus(null);
+        } else {
+            this.updateStatus(value);
+        }
+    }
+    //#endregion
 
     render() {
 
@@ -836,90 +944,44 @@ class BoardManager extends Component {
                                             <div className="col-md-12">
                                                 <div className="row">
                                                     <div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
-                                                        <select
-                                                            required
-                                                            name="IdEntity"
-                                                            className="form-control"
-                                                            id=""
-                                                            onChange={(event) => {
-                                                                this.updateHotel(event.target.value);
-                                                            }}
-                                                            value={this.state.hotel}
-                                                            //disabled={!isAdmin}
-                                                            onBlur={this.handleValidate}
-                                                        >
-                                                            <option value={0}>Select a Hotel</option>
-                                                            {this.state.hotels.map((hotel) => (
-
-                                                                <option value={hotel.Id}>{hotel.Name}</option>
-
-                                                            ))}
-                                                        </select>
+                                                        <Select
+                                                            options={this.getHotelOptions()}
+                                                            value={this.findSelectedHotel(this.state.hotel)}
+                                                            onChange={this.updateHotel}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
+                                                        />
+                                                    </div>
+                                                    <div className="col-md-3 col-xl-2 mb-2">                                                       
+                                                        <Select
+                                                            options={this.getStateOptions()}
+                                                            value={this.findSelectedState(this.state.state)}
+                                                            onChange={this.handleStateFilterChange}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
+                                                        />
                                                     </div>
                                                     <div className="col-md-3 col-xl-2 mb-2">
-                                                        <select
-                                                            name="state"
-                                                            className={'form-control'}
-                                                            onChange={(event) => {
-                                                                this.setState({
-                                                                    state: event.target.value,
-                                                                    city: 0,
-                                                                    cities: []
-                                                                }, () => {
-                                                                    this.loadCities();
-                                                                    this.getWorkOrders();
-                                                                })
-                                                            }}
-                                                            value={this.state.state}
-                                                        >
-                                                            <option value="">Select a state</option>
-                                                            {this.state.states.map((item) => (
-                                                                <option value={item.Id}>{item.Name}</option>
-                                                            ))}
-                                                        </select>
+                                                        <Select
+                                                            options={this.getCityOptions()}
+                                                            value={this.findSelectedCity(this.state.city)}
+                                                            onChange={this.handleCityFilterChange}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
+                                                        />
                                                     </div>
                                                     <div className="col-md-3 col-xl-2 mb-2">
-                                                        <select
-                                                            name="city"
-                                                            className={'form-control'}
-                                                            disabled={this.state.loadingCities}
-                                                            onChange={(event) => {
-                                                                this.setState({
-                                                                    city: event.target.value
-                                                                }, () => {
-                                                                    this.getWorkOrders();
-                                                                })
-                                                            }}
-                                                            //error={!this.state.cityValid}
-                                                            value={this.state.city}
-                                                        >
-                                                            <option value="">Select a city</option>
-                                                            {this.state.cities.map((item) => (
-                                                                <option value={item.Id}>{item.Name}</option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                    <div className="col-md-3 col-xl-2 mb-2">
-                                                        <select
-                                                            name="city"
-                                                            className={'form-control'}
-                                                            // disabled={this.state.loadingCities}
-                                                            onChange={(event) => {
-                                                                if (event.target.value == "null") {
-                                                                    this.updateStatus(null);
-                                                                } else {
-                                                                    this.updateStatus(event.target.value);
-                                                                }
-                                                            }}
-                                                            //error={!this.state.cityValid}
-                                                            value={this.state.status}
-                                                            showNone={false}
-                                                        >
-                                                            <option value={1}>Open</option>
-                                                            <option value={null}>Status (All)</option>
-                                                            <option value={2}>Completed</option>
-                                                            <option value={0}>Cancelled</option>
-                                                        </select>
+                                                        <Select
+                                                            options={this.state.statusOptions}
+                                                            value={this.findSelectedStatus(this.state.status)}
+                                                            onChange={this.handleStatusFilterChange}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
+                                                        />
                                                     </div>
                                                     <div className="col-md-12 Filter-buttons">
                                                         <a

@@ -1280,7 +1280,7 @@ class ContactcontactForm extends React.Component {
 											onChange={(e) => {
 												this.onNumberChangeHandler(e.target.value);
 											}}
-                                            placeholder="+(___) ___-____"
+											placeholder="+(___) ___-____"
 										/>
 									</div>
 									<div className="col-md-12 col-lg-4">
@@ -1359,7 +1359,8 @@ class ContactcontactForm extends React.Component {
 									departments={this.state.departments}
 									onEditHandler={this.onEditHandler}
 									onDeleteHandler={this.onDeleteHandler}
-								/>							
+									idEntity={this.state.idCompany}
+								/>
 							</div>
 						</div>
 					</div>

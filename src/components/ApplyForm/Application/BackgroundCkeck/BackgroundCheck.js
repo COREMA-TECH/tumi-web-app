@@ -423,6 +423,14 @@ class BackgroundCheck extends Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
     createDocumentsPDF = (random) => {
 
         this.setState(

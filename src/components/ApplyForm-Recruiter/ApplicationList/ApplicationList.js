@@ -32,13 +32,15 @@ const styles = (theme) => ({
 	},
 	paper: {
 		padding: theme.spacing.unit * 2,
-		textAlign: 'center',
-		color: theme.palette.text.secondary
+		// textAlign: 'center',
+		color: theme.palette.text.secondary,
+		overflowY: 'visible'
 	}
 });
 
+const DEFAULT_RECRUITER_VALUE = "ND";
 const DEFAULT_FILTER_TYPE = { value: "W", label: "By week" };
-const DEFAULT_FILTER_RECRUITER = {};
+const DEFAULT_FILTER_RECRUITER = { value: DEFAULT_RECRUITER_VALUE, label: "Select Recruiter" };
 
 class ApplicationList extends Component {
 	constructor(props) {
@@ -103,8 +105,8 @@ class ApplicationList extends Component {
 		}
 	`;
 	DELETE_APPLICATION_QUERY = gql`
-		mutation disableApplication($id: Int!, $isActive: Boolean, $codeuser: Int, $nameUser: String) {
-			disableApplication(id: $id,isActive: $isActive, codeuser: $codeuser, nameUser: $nameUser) {
+		mutation disableApplication($id: Int!, $isActive: Boolean) {
+			disableApplication(id: $id,isActive: $isActive) {
 				id
 				isActive
 			}
@@ -139,8 +141,8 @@ class ApplicationList extends Component {
 	};
 
 	handleChangerecruiterTag = (recruitersTags) => {
-	  this.setState({ recruitersTags });
-    };
+		this.setState({ recruitersTags });
+	};
 
 	onDeleteHandler = (id) => {
 		this.setState({ idToDelete: id, opendialog: true });
@@ -176,6 +178,8 @@ class ApplicationList extends Component {
 		if (!startDate || !endDate)
 			this.props.handleOpenSnackbar('warning', 'You need to select a valid range!');
 		else if (Object.keys(filterRecruiter).length == 0)
+			this.props.handleOpenSnackbar('warning', 'You need to select a recruiter!');
+		else if (filterRecruiter.value == DEFAULT_RECRUITER_VALUE)
 			this.props.handleOpenSnackbar('warning', 'You need to select a recruiter!');
 		else
 			this.setState(() => ({ showNoShowPrefilterModal: false, showNoShowReportModal: true }))
@@ -251,6 +255,7 @@ class ApplicationList extends Component {
 		return data;
 	}
 	printNoShowReportPrefilter = () => {
+		const { classes } = this.props;
 		let { showNoShowPrefilterModal, filterType, dateRange, filterRecruiter, filterRecruiters } = this.state;
 		return <Dialog
 			open={showNoShowPrefilterModal}
@@ -258,11 +263,12 @@ class ApplicationList extends Component {
 			aria-labelledby="responsive-dialog-title"
 			fullWidth
 			maxWidth="sm"
+			classes={{ paper: classes.paper }}
 		>
 			<DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
 				<div className="modal-header">
 					<h5 className="modal-title">
-						Filter No Show Report
+						No Show Report
 				</h5>
 				</div>
 			</DialogTitle>
@@ -347,7 +353,7 @@ class ApplicationList extends Component {
 				</button>
 				</div>
 			</DialogActions>
-		</Dialog>
+		</ Dialog>
 	}
 	printNoShowReport = () => {
 		let { showNoShowReportModal, startDate, endDate, filterRecruiter, recruiter } = this.state;
@@ -409,7 +415,7 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				
+
 
 				<div className="col-md-3 col-xl-2 offset-xl-6 mb-2">
 					<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
@@ -433,7 +439,7 @@ class ApplicationList extends Component {
 											onChange={this.handleChangerecruiterTag}
 											closeMenuOnSelect={false}
 											components={makeAnimated()}
-											// isMulti
+										// isMulti
 										/>
 									</div>
 								);
@@ -441,7 +447,7 @@ class ApplicationList extends Component {
 							return <SelectNothingToDisplay />;
 						}}
 					</Query>
-					</div>
+				</div>
 				<div className="col-md-3 col-xl-2 mb-2">
 					<Select
 						name="property"
@@ -451,7 +457,7 @@ class ApplicationList extends Component {
 						components={makeAnimated()}
 						closeMenuOnSelect
 					/>
-				</div>				
+				</div>
 				<div className="col-md-4 col-xl-12 mb-2">
 					<button
 						className="btn btn-success float-right ml-2"
@@ -484,7 +490,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={{idRecruiter:this.state.recruitersTags.value}} fetchPolicy="no-cache">
+					<Query query={this.GET_APPLICATION_QUERY} variables={{ idRecruiter: this.state.recruitersTags.value }} fetchPolicy="no-cache">
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
