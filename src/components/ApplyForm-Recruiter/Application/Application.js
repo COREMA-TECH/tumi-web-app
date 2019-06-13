@@ -114,8 +114,7 @@ class Application extends Component {
         positions: [],
         positionsCatalogs: [],
         positionCatalogTag: [],
-        positionFilterList: [],
-
+        positionFilterList: []
         // cellPhoneValid: false,
         //lastNameValid: false,
         // firstNameValid: false,

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import {GET_APPLICANT_IDEAL_JOBS,GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY} from '../Queries';
-import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION } from '../Mutations';
+import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY } from '../Queries';
+import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION, ADD_INDEPENDENT_CONTRACT } from '../Mutations';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
@@ -43,7 +43,7 @@ class Application extends Component {
             middleName: '',
             lastName: '',
             lastName2: '',
-           
+
             date: new Date().toISOString().substring(0, 10),
             streetAddress: '',
             aptNumber: '',
@@ -71,7 +71,7 @@ class Application extends Component {
             dateCreation: new Date().toISOString().substring(0, 10),
             immediately: 0,
             optionHearTumi: 0,
-            nameReferences:'',
+            nameReferences: '',
 
             // Languages array
             languages: [],
@@ -135,7 +135,9 @@ class Application extends Component {
 
             openSSNDialog: false,
             //Open/Close schedule restrictions modal
-            openRestrictionsModal: false
+            openRestrictionsModal: false,
+            applicationIdForIndependent: 0,
+            hasIndependentContract: false
         };
     }
 
@@ -153,12 +155,12 @@ class Application extends Component {
     };
 
 
-    
+
 
     /**<
      * To update a application by id
      */
-    InsertUpdateApplicationInformation = (id) => {
+    InsertUpdateApplicationInformation = (id, saveIndependentContract = () => { }) => {
         this.setState(
             {
                 insertDialogLoading: true
@@ -166,7 +168,7 @@ class Application extends Component {
             () => {
                 this.props.client
                     .mutate({
-                        mutation: id==0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
+                        mutation: id == 0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
                         variables: {
                             application: {
                                 id: id,
@@ -196,18 +198,18 @@ class Application extends Component {
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
                                 idealJob: this.state.idealJob,
-                                isLead: id==0 ? false:this.state.isLead,
+                                isLead: id == 0 ? false : this.state.isLead,
                                 dateCreation: new Date().toISOString().substring(0, 10),
                                 immediately: this.state.immediately,
                                 optionHearTumi: this.state.optionHearTumi,
-                                nameReferences:this.state.nameReferences
+                                nameReferences: this.state.nameReferences
                             },
                             codeuser: localStorage.getItem('LoginId'),
                             nameUser: localStorage.getItem('FullName')
                         }
                     })
                     .then(({ data }) => {
-                        if (id == 0) 
+                        if (id == 0)
                             this.props.setApplicantId(data.addApplication.id);
                         this.setState({
                             editing: false,
@@ -221,8 +223,8 @@ class Application extends Component {
                                     description: item.label
                                 })
                             });
-
                             this.addApplicantJobs(object);
+                            saveIndependentContract(data.addApplication.id)
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
@@ -333,16 +335,17 @@ class Application extends Component {
                                     : [],
                                 idealJob: applicantData.idealJob,
                                 isLead: applicantData.isLead,
-                                dateCreation:  applicantData.dateCreation,
+                                dateCreation: applicantData.dateCreation,
                                 immediately: applicantData.immediately,
                                 optionHearTumi: applicantData.optionHearTumi,
-                                nameReferences: applicantData.nameReferences
+                                nameReferences: applicantData.nameReferences,
+                                hasIndependentContract: applicantData.independentContract != null
                             },
                             () => {
                                 this.getIdealJobsByApplicationId();
                                 this.getPositionCatalog();
-                              
-                              
+
+
                             }
                         );
                     })
@@ -402,7 +405,7 @@ class Application extends Component {
                 dataAPI.map(item => {
                     this.setState(prevState => ({
                         positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label:item.Description.trim(),  key: item.Id
+                            value: item.Id, label: item.Description.trim(), key: item.Id
                         }]
                     }))
                 });
@@ -472,12 +475,12 @@ class Application extends Component {
     componentWillMount() {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
-           
-                this.getApplicationById(this.props.applicationId);
-                if (this.state.socialSecurityNumber.length === 0) {
-                    this.props.handleContract();
-                }
+
+            this.getApplicationById(this.props.applicationId);
+            if (this.state.socialSecurityNumber.length === 0) {
+                this.props.handleContract();
             }
+        }
 
         if (this.props.applicationId == 0) {
             this.setState({
@@ -488,7 +491,7 @@ class Application extends Component {
         this.getPositionCatalog();
     }
 
-   shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps, nextState) {
         if (this.state.editing !== nextProps.editing) {
             return true;
         }
@@ -532,7 +535,11 @@ class Application extends Component {
                 this.state.homePhoneNumberValid ||
                 this.state.cellPhoneNumberValid
             ) {
-                this.InsertUpdateApplicationInformation(this.props.applicationId);
+                if (!this.state.hasIndependentContract && this.state.socialSecurityNumber.length === 0)
+                    this.setState(() => ({
+                        openSSNDialog: true
+                    }))
+                else this.InsertUpdateApplicationInformation(this.props.applicationId);
             } else {
                 this.props.handleOpenSnackbar(
                     'warning',
@@ -548,16 +555,8 @@ class Application extends Component {
         e.preventDefault();
         e.stopPropagation();
 
+        this.submitForm()
 
-
-        if (this.state.socialSecurityNumber.length === 0) {
-            // Show dialog
-            this.setState({
-                openSSNDialog: true
-            })
-        } else {
-            this.submitForm()
-        }
     }
 
     updateSearchingZipCodeProgress = (searchigZipcode) => {
@@ -571,7 +570,7 @@ class Application extends Component {
             openSSNDialog: false
         })
     };
-    
+
     handleVisivilityIndependentContractDialog = (status) => (e) => {
 
         if (e) {
@@ -584,10 +583,60 @@ class Application extends Component {
         })
     };
 
-    getApplicantInformation = () => {
-        this.getApplicationById(this.props.applicationId)
+    saveIndependentContract = (id) => {
+        let html = document.getElementById('independenContractContainer');
+
+        if (!html)
+            this.props.handleOpenSnackbar(
+                'error',
+                'This document can not be processed , please try again!',
+                'bottom',
+                'right'
+            );
+        else {
+            let inputs = html.getElementsByTagName('input');
+
+            //Disable elements before save html into database
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].disabled = true;
+            }
+
+            //Insert record into database
+            this.props.client
+                .mutate({
+                    mutation: ADD_INDEPENDENT_CONTRACT,
+                    variables: {
+                        html: html.outerHTML,
+                        ApplicantId: id
+                    }
+                })
+                .then(({ data }) => {
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Created successfully',
+                        'bottom',
+                        'right'
+                    );
+                    this.handleVisivilityIndependentContractDialog(false)();
+                    this.getApplicationById(id);
+                })
+                .catch(error => {
+                    // If there's an error show a snackbar with a error message
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to save Independet Contract. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                });
+        }
     }
 
+    onHanldeSave = (hasSign) => {
+        if (hasSign)
+            this.InsertUpdateApplicationInformation(this.props.applicationId, this.saveIndependentContract);
+        else this.props.handleOpenSnackbar('warning', 'You must sign the document to continue!', 'bottom', 'right');
+    }
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
@@ -616,9 +665,6 @@ class Application extends Component {
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                // this.submitForm();
-                                // this.props.handleContract();
-                                // this.handleCloseSSNDialog();
                                 this.setState(() => ({ openIndependentContractDialog: true, openSSNDialog: false }));
                             }}
                             className="applicant-card__save-button">
@@ -632,14 +678,14 @@ class Application extends Component {
         return (
             <div className="Apply-container--application">
                 {
-                   renderSSNDialog()
+                    renderSSNDialog()
                 }
-                 <IndependentContractDialog
+                <IndependentContractDialog
                     open={this.state.openIndependentContractDialog}
                     handleVisibility={this.handleVisivilityIndependentContractDialog}
                     handleOpenSnackbar={this.props.handleOpenSnackbar}
-                    applicationId={this.props.applicationId}
-                    getApplicantInformation={this.getApplicantInformation} />
+                    onHandleSave={this.onHanldeSave}
+                />
 
                 <form
                     className="general-info-apply-form"
@@ -911,7 +957,7 @@ class Application extends Component {
                                                     minLength="10"
                                                 />
                                                 </div>*/}
-                                                <div className="col-md-6">
+                                            <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     * {formSpanish[25].label}
                                                 </span>
@@ -931,7 +977,7 @@ class Application extends Component {
                                                     maxLength="50"
                                                     minLength="10"
                                                 />
-                                                </div>
+                                            </div>
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[23].label}
@@ -983,7 +1029,7 @@ class Application extends Component {
                                                 />
                                             </div>
 
-                                            
+
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[27].label}
@@ -1020,14 +1066,14 @@ class Application extends Component {
                                                     name="nameReferences"
                                                     type="text"
                                                     className="form-control"
-                                                   
-                                                    disabled={!this.state.editing || (this.state.optionHearTumi==3?false:(this.state.optionHearTumi==4?false:true))}
+
+                                                    disabled={!this.state.editing || (this.state.optionHearTumi == 3 ? false : (this.state.optionHearTumi == 4 ? false : true))}
                                                     min="0"
                                                     maxLength="50"
                                                     minLength="3"
                                                 />
                                             </div>
-                                           {/* <div className="col-md-6">
+                                            {/* <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[14].label}
                                                 </span>
@@ -1125,11 +1171,11 @@ class Application extends Component {
                                                         id="immediately"
                                                         onChange={(event) => {
                                                             this.setState({
-                                                                immediately : event.target.checked
+                                                                immediately: event.target.checked
                                                             });
                                                         }}
-                                                        checked={this.state.immediately }
-                                                        value={this.state.immediately }
+                                                        checked={this.state.immediately}
+                                                        value={this.state.immediately}
                                                         name="immediately"
                                                         type="checkbox"
                                                         disabled={!this.state.editing}
@@ -1303,7 +1349,7 @@ class Application extends Component {
                         </div>
                     </div>
                 </form>
-                <ShiftRestrictionModal 
+                <ShiftRestrictionModal
                     openModal={this.state.openRestrictionsModal}
                     handleCloseModal={this.handleRestrictionModalClose}
                 />
