@@ -38,7 +38,7 @@ class MainContainer extends Component {
 		}
 
 		if (str === "/home/Recruiter") {
-			title = 'New Lead'
+			title = 'Lead'
 		}
 
 		if (str === "/home/punches/report") {

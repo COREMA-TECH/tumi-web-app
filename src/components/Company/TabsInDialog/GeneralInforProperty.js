@@ -1470,30 +1470,36 @@ class GeneralInfoProperty extends Component {
                                     />
                                 </div>
                                 <div className="col-md-6 col-lg-4">
-                                    <label>* Contract Start Date</label>
-                                    <InputValid
-                                        change={(text) => {
+                                    <label>Contract Start Date</label>
+                                    <input
+                                        type="date"
+                                        value={this.state.startDate}
+                                        onChange={(e) => {
                                             this.setState({
-                                                startDate: text
+                                                startDate: e.target.value
                                             });
                                         }}
-                                        value={this.state.startDate}
-                                        type="date"
-                                        required
+                                       
+                                        className={'form-control'}
                                     />
+                                    
                                 </div>
                                 <div className="col-md-6 col-lg-4">
-                                    <label>* Number of Rooms</label>
-                                    <InputValid
-                                        change={(text) => {
+                                    <label>Number of Rooms</label>
+                                    <input
+                                         type="number"
+                                        
+                                         placeholder='0'
+                                        value={this.state.room}
+                                        onChange={(e) => {
                                             this.setState({
-                                                room: text
+                                                room: e.target.value
                                             });
                                         }}
-                                        value={this.state.room}
-                                        type="number"
-                                        required
+                                       
+                                        className={'form-control'}
                                     />
+                                    
                                 </div>
                                 <div className="col-md-6 col-lg-4 tumi-forcedTop">
                                     <label>* Week Start</label>                                   
