@@ -167,13 +167,87 @@ class VerticalLinearStepper extends Component {
             positionsTags: [],
             validCity: true,
             validState: true,
-            validZipCode: true
+            validZipCode: true,
+
+            // <option value="">Select a position</option>
+            //                                 <option value="0">Open Position</option>
+            positionApplyOptions: [
+                { value: "", label: "Select a Position" },
+                { value: 0, label: "Open Position" }
+            ],
+
+            positionCatalogOptions: [
+            ],
         };
     }
 
+    //#region PositionApplyFor dropdown
+    fetchPositions = _ => {
+        this.props.client.query({
+            query: GET_POSITIONS_QUERY,
+            fetchPolicy: 'no-cache'
+        })
+        .then(({data}) => {
+            const {workOrder} = data;
+
+            const options = workOrder.map(item => {
+                return { value: item.id, label: `${item.position.Position.trim()} ${item.BusinessCompany.Code.trim()}`}
+            });
+            
+            this.setState(_ => {
+                return {
+                    positionApplyOptions: [{ value: "", label: "Select a Position" }, { value: 0, label: "Open Position" }, ...options]
+                }
+            });
+        })
+    }
+
+    findSelectedPositionApply = positionId => {
+        const defValue = {value: "", label: "Select a Position"};
+
+        if(!positionId)
+            return defValue;
+
+        const found = this.state.positionApplyOptions.find(item => {
+            return item.value === positionId;
+        });
+
+        return found ? found : defValue;
+    }
+
+    handlePositionApplyChange = ({value}) => {
+        this.setState(_ => {
+            return {
+                idealJob: value
+            }
+        })
+    }
+    //#endregion
+
+    //#region PositionCatalog dropdown
+    fetchPositionCatalogs = _ => {
+        this.props.client.query({
+            query: GET_POSITIONS_CATALOG,
+            fetchPolicy: 'no-cache'
+        })
+        .then(({data}) => {
+            const {getcatalogitem} = data;
+
+            const options = getcatalogitem.map(item => {
+                return { value: item.Id, label: item.Description }
+            });
+            
+            this.setState(_ => {
+                return {
+                    positionCatalogOptions: options
+                }
+            });
+        })
+    }
+    //#endregion
+
     handleChangePositionTag = (positionsTags) => {
         this.setState({ positionsTags });
-        console.log(`Option selected:`, positionsTags);
     };
 
     handleChange = (positionsTags) => {
@@ -206,6 +280,8 @@ class VerticalLinearStepper extends Component {
     handleClose = () => {
         this.setState({ open: false });
     };
+
+    
 
     // To insert general applicant information
     insertApplicationInformation = (history) => {
@@ -302,10 +378,8 @@ class VerticalLinearStepper extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("DEBUG");
             })
             .catch(error => {
-                console.log("DEBUG ERROR");
             })
     };
 
@@ -644,9 +718,14 @@ class VerticalLinearStepper extends Component {
 
     // Execute methods before rendering
     componentWillMount() {
-
         // Get languages list from catalogs
         this.getLanguagesList();
+
+        //Fetch positions
+        this.fetchPositions();
+
+        //Fetch position catalogs
+        this.fetchPositionCatalogs();
     }
 
     updateCity = (city) => {
@@ -983,70 +1062,30 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-6">
                         <span className="primary"> * Position Applying For</span>
-
-                        <Query query={GET_POSITIONS_QUERY}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (error) return <p>Error </p>;
-                                if (data.workOrder != null && data.workOrder.length > 0) {
-                                    return (
-                                        <select
-                                            name="positionApply"
-                                            id="positionApply"
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    idealJob: event.target.value
-                                                });
-                                            }}
-                                            value={this.state.idealJob}
-                                            className="form-control"
-                                        >
-                                            <option value="">Select a position</option>
-                                            <option value="0">Open Position</option>
-                                            {data.workOrder.map((item) => (
-                                                <option
-                                                    value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
-                                            ))}
-                                        </select>
-                                    );
-                                }
-                                return <SelectNothingToDisplay />;
-                            }}
-                        </Query>
+                        
+                        <Select
+                            options={this.state.positionApplyOptions}
+                            value={this.findSelectedPositionApply(this.state.idealJob)}
+                            onChange={this.handlePositionApplyChange}
+                            closeMenuOnSelect={true}
+                            components={makeAnimated()}
+                            isMulti={false}
+                        />
                     </div>
                     <div className="col-md-6">
                         <span className="primary">Willing to work as</span>
 
-                        <Query query={GET_POSITIONS_CATALOG}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    let options = [];
-                                    data.getcatalogitem.map((item) => (
-                                        options.push({ value: item.Id, label: item.Description })
-                                    ));
-
-                                    return (
-                                        <div style={{
-                                            paddingTop: '0px',
-                                            paddingBottom: '2px',
-                                        }}>
-                                            <Select
-                                                options={options}
-                                                value={this.state.positionsTags}
-                                                onChange={this.handleChangePositionTag}
-                                                closeMenuOnSelect={false}
-                                                components={makeAnimated()}
-                                                isMulti
-                                            />
-                                        </div>
-                                    );
-                                }
-                                return <SelectNothingToDisplay />;
-                            }}
-                        </Query>
-                    </div>
+                        <Select
+                            options={this.state.positionCatalogOptions}
+                            value={this.state.positionsTags}
+                            onChange={this.handleChangePositionTag}
+                            closeMenuOnSelect={false}
+                            components={makeAnimated()}
+                            isMulti
+                        />
+                    </div>                    
+                </div>
+                <div className="row">
                     <div className="col-md-6">
                         <span className="primary">* Date Available</span>
                         <div className="input-container--validated">
@@ -1379,7 +1418,6 @@ class VerticalLinearStepper extends Component {
                         degree: parseInt(document.getElementById('degree').value),
                         ApplicationId: 1 // Static application id
                     };
-                    console.log(item);
                     this.setState(
                         (prevState) => ({
                             open: false,
@@ -2148,7 +2186,6 @@ class VerticalLinearStepper extends Component {
                                     onClick={() => {
                                         this.setState((prevState) => ({
                                             languages: this.state.languages.filter((_, i) => {
-                                                console.log(this.state.languages);
                                                 return _.uuid !== languageItem.uuid;
                                             })
                                         }));
@@ -2203,21 +2240,7 @@ class VerticalLinearStepper extends Component {
                             <option value="">Select an option</option>
                             {this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
                         </select>
-
-                        {/*<Query query={GET_LANGUAGES_QUERY}>*/}
-                        {/*{({loading, error, data, refetch, networkStatus}) => {*/}
-                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                        {/*if (loading) return <LinearProgress/>;*/}
-                        {/*if (error) return <p>Error </p>;*/}
-                        {/*if (this.state.languagesLoaded != null && this.state.languagesLoaded.length > 0) {*/}
-                        {/*return (*/}
-                        {/**/}
-                        {/*);*/}
-                        {/*}*/}
-                        {/*return <SelectNothingToDisplay/>;*/}
-                        {/*}}*/}
-                        {/*</Query>*/}
-                        {/*<input*/}
+                      
                         <span className="check-icon" />
                     </div>
                     <div className="col-md-3">
@@ -2311,7 +2334,6 @@ class VerticalLinearStepper extends Component {
                                             onClick={() => {
                                                 this.setState((prevState) => ({
                                                     skills: this.state.skills.filter((_, i) => {
-                                                        console.log(this.state.skills);
                                                         return _.uuid !== skillItem.uuid;
                                                     })
                                                 }));
@@ -2519,4 +2541,3 @@ VerticalLinearStepper.propTypes = {
 };
 
 export default withStyles(styles)(withApollo(withGlobalContent(VerticalLinearStepper)));
-
