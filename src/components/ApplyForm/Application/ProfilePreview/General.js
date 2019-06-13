@@ -197,7 +197,7 @@ class General extends Component {
             locationAbletoWorkId: 0,
             openVerification:false,
             date: new Date().toISOString().substring(0, 10),
-           
+            codeUser:'',
 
         }
     }
@@ -509,9 +509,11 @@ class General extends Component {
                         }
                     })
                     .then(({ data }) => {
+                        console.log("informaicon de la application ", data)
                         this.setState({
                             data: data.applications[0]
                         }, () => {
+                            console.log("data: data.applications[0] ",  this.state.data)
                             this.setState({
                                 email: this.state.data.emailAddress,
                                 number: this.state.data.cellPhone,
@@ -526,7 +528,8 @@ class General extends Component {
                                 EmployeeId: this.state.data.employee? this.state.data.employee.EmployeeId : 999999,
                                 hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("YYYY-MM-DD")}` : '--',
                                 idealJobs: this.state.data.idealJobs,
-                                applicantName: this.state.data.firstName+' '+this.state.data.lastName
+                                applicantName: this.state.data.firstName+' '+this.state.data.lastName,
+                                codeUser:this.state.data.user?this.state.data.user.Code_User:'--'
                             })
                         });
                     })
@@ -1704,6 +1707,8 @@ class General extends Component {
                                             className="username col-sm-12">{this.state.data.firstName + ' ' + this.state.data.lastName}</span>
                                         <span
                                             className="username-number col-sm-12">Emp #: TM-0000{this.state.data.id}</span>
+                                             <span
+                                            className="username-number col-sm-12">UserName: {this.state.codeUser}</span>
                                     </div>
                                 </div>
                                 <div className="item col-12 col-md-2">

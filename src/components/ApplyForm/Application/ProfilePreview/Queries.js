@@ -40,6 +40,9 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
                 id
                 description
             }
+            user{
+                Code_User
+              }
         }
     }
 `;
