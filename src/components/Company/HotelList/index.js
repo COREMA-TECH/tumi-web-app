@@ -148,17 +148,15 @@ class HotelList extends Component {
                 if (
                     _.Name.indexOf(value) > -1 ||
                     _.Name.toLocaleLowerCase().indexOf(value.toLowerCase()) > -1 ||
-                    _.Name.toLocaleUpperCase().indexOf(value.toUpperCase()) > -1
+                    _.Name.toLocaleUpperCase().indexOf(value.toUpperCase()) > -1 ||
+                    _.Code.indexOf(value) > -1 ||
+                    _.Code.toLocaleLowerCase().indexOf(value.toLowerCase()) > -1 ||
+                    _.Code.toLocaleUpperCase().indexOf(value.toUpperCase()) > -1 
+                    
                 ) {
                     return true;
                 }
             });
-
-            // this.state.hotels.forEach(hotel => {
-            //     if (hotel.Name.includes(value.toLowerCase()) || hotel.Name.includes(value.toUpperCase())) {
-            //         hotelFind.push(hotel);
-            //     }
-            // });
 
             this.setState({
                 hotels: dataEmployees
