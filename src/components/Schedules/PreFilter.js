@@ -65,7 +65,6 @@ class PreFilter extends Component {
                     }
                 })
                 .then(({ data }) => {
-                    console.log("getPositions ", data)
                     this.setState((prevState) => {
                         return { positions: data.getposition, loadingPositions: false }
                     })
@@ -175,7 +174,6 @@ class PreFilter extends Component {
             [element.name + "Name"]: text,
             disabled: false
         }, () => {
-            console.log("element.name  ", element.name)
             if (element.name == 'location') {
                 this.getContacts();
                 this.getDepartments();

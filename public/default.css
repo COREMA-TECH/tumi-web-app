@@ -9169,6 +9169,74 @@ td.rdtMonth:hover, td.rdtYear:hover {
   -o-transition: all 0.3s ease-in 0s;
   transition: all 0.3s ease-in 0s; }
 
+.SmallSwitch .onoffswitch {
+  position: relative;
+  width: 60px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none; }
+
+.SmallSwitch .onoffswitch-checkbox {
+  display: none; }
+
+.SmallSwitch .onoffswitch-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 5px; }
+
+.SmallSwitch .onoffswitch-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  -webkit-transition: margin 0.3s ease-in 0s;
+  -o-transition: margin 0.3s ease-in 0s;
+  transition: margin 0.3s ease-in 0s; }
+  .SmallSwitch .onoffswitch-inner:before, .SmallSwitch .onoffswitch-inner:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 20px;
+    padding: 0;
+    line-height: 20px;
+    font-size: 14px;
+    color: white;
+    font-family: Trebuchet, Arial, sans-serif;
+    font-weight: bold;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box; }
+  .SmallSwitch .onoffswitch-inner:before {
+    content: "";
+    padding-left: 10px;
+    background-color: #34A7C1;
+    color: #FFFFFF; }
+  .SmallSwitch .onoffswitch-inner:after {
+    content: "";
+    padding-right: 10px;
+    background-color: #EEEEEE;
+    color: #999999;
+    text-align: right; }
+
+.SmallSwitch .onoffswitch-switch {
+  display: block;
+  width: 14px;
+  margin: 3px;
+  background: #FFFFFF;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 36px;
+  border-radius: 5px;
+  -webkit-transition: all 0.3s ease-in 0s;
+  -o-transition: all 0.3s ease-in 0s;
+  transition: all 0.3s ease-in 0s; }
+
+.SmallSwitch .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+  margin-left: 0; }
+
+.SmallSwitch .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+  right: 0px; }
+
 table {
   table-layout: auto;
   width: 100%; }
@@ -12379,6 +12447,32 @@ label.input-group-text {
   width: 58px;
   line-height: 56px;
   font-size: 13px; }
+
+.MasterShift-schedules .leftLabel-Switch {
+  float: left;
+  font-weight: 700;
+  font-size: .7rem;
+  line-height: 22px;
+  margin-right: 5px; }
+
+.MasterShift-schedules .rightLable-Switch {
+  float: left;
+  font-weight: 700;
+  font-size: .7rem;
+  line-height: 22px;
+  margin-left: 5px; }
+
+.MasterShift-schedules .SmallSwitch {
+  float: right; }
+  .MasterShift-schedules .SmallSwitch .onoffswitch {
+    float: left; }
+    .MasterShift-schedules .SmallSwitch .onoffswitch label:not(.custom-file-label):not(.form-check-label) {
+      margin-top: 0; }
+  .MasterShift-schedules .SmallSwitch::after {
+    content: " ";
+    clear: both;
+    display: block;
+    margin-bottom: 1rem; }
 
 #printPreview {
   width: 100%;

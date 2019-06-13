@@ -351,4 +351,38 @@
       .can-toggle.demo-rebrand-2 label .can-toggle__switch:hover:after {
         //box-shadow: 0 4px 4px rgba(0, 0, 0, 0.4);
       }
+
+      &-schedules {
+        .leftLabel-Switch {
+          float: left;
+          font-weight: 700;
+          font-size: .7rem;
+          line-height: 22px;
+          margin-right: 5px;
+        }
+
+        .rightLable-Switch {
+          float: left;
+          font-weight: 700;
+          font-size: .7rem;
+          line-height: 22px;
+          margin-left: 5px;
+        }
+
+        .SmallSwitch {
+          float: right;
+          .onoffswitch {
+            float: left;
+            label:not(.custom-file-label):not(.form-check-label) {
+              margin-top: 0;
+            }
+          }
+          &::after {
+            content: " ";
+            clear: both;
+            display: block;
+            margin-bottom: 1rem;
+          }
+        }
+      } 
 }
