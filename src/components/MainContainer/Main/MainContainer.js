@@ -49,6 +49,9 @@ class MainContainer extends Component {
 			title = 'Approve/Reject Punches'
 		}
 
+		if (str.toLowerCase() === "/home/application/Form".toLowerCase())
+			title = "Application form"
+
 		return title;
 	};
 
