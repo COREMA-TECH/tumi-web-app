@@ -620,7 +620,7 @@ class Application extends Component {
                         </button>
                         }
                     </div>
-                    <br />
+                   
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-12 col-lg-6"></div>
