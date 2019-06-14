@@ -204,14 +204,14 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-12 pl-3 mb-2">
                         <button
-                            className="btn btn-success btn-sm"
+                            className="btn btn-info btn-sm"
                             onClick={() => {
                                 this.props.history.push({
                                     pathname: '/home/Recruiter',
                                     state: { ApplicationId: 0 }
                                 });
                             }}>
-                           <i class="fas fa-times"></i>
+                           <i className="fas fa-chevron-left" /> 
                         </button>
                         <button
                             className="btn btn-success btn-sm ml-2"
@@ -221,7 +221,7 @@ class VerticalLinearStepper extends Component {
                                     state: { ApplicationId: 0 }
                                 });
                             }}>
-                            <i className="fas fa-chevron-left" /> Go To Board
+                             Go To Board
                         </button>
                         <button
                             type="button"
