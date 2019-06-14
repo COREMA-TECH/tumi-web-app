@@ -53,7 +53,6 @@ class PreviousEmploymentCard extends Component {
                 </DialogActions>
             </Dialog>
         );
-
         return (
             <div className="previous-employment-card">
                 <span
@@ -93,7 +92,7 @@ class PreviousEmploymentCard extends Component {
                         )
                 }
                 <div className="previous-employment-card__phone">
-                    <i className="far fa-calendar-alt"></i><span>{dialogMessages[1].label} <b>{this.props.startDate.substring(0, 10)}</b> {dialogMessages[2].label} <b>{this.props.endDate.substring(0, 10)}</b></span>
+                    <i className="far fa-calendar-alt"></i><span>{dialogMessages[1].label} <b>{this.props.startDate ? this.props.startDate.substring(0, 10) : ''}</b> {dialogMessages[2].label} <b>{this.props.endDate ? this.props.endDate.substring(0, 10) : ''}</b></span>
                 </div>
 
                 {
