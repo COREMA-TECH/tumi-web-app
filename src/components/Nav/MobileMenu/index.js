@@ -257,13 +257,13 @@ class MobileMenu extends Component {
                         return item.Forms.Value == "HotelManager" ?
                             <li className="MainMenu-option">
                                 <Link
-                                    to={`/home/application`}
+                                    to={`/home/owner`}
                                     className="MenuMobile-link"
                                     onClick={this.handleItemMenuAction}
                                     data-submenu="1"
                                 >
                                     <i className="fas fa-chalkboard-teacher MenuMobile-icon" title={'Hotel Manager'} />
-                                    <span>Sponsor</span>
+                                    <span>Owner</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
                                     {items.map(item => {
@@ -278,7 +278,7 @@ class MobileMenu extends Component {
                                         return item.Forms.Value == "/home/logs" ?
                                             <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/logs">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Log
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> User Activity Logs
                                                 </a>
                                             </li> : ""
                                     })}
