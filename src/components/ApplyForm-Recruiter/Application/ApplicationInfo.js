@@ -207,6 +207,16 @@ class VerticalLinearStepper extends Component {
                             className="btn btn-success btn-sm"
                             onClick={() => {
                                 this.props.history.push({
+                                    pathname: '/home/Recruiter',
+                                    state: { ApplicationId: 0 }
+                                });
+                            }}>
+                           <i class="fas fa-times"></i>
+                        </button>
+                        <button
+                            className="btn btn-success btn-sm ml-2"
+                            onClick={() => {
+                                this.props.history.push({
                                     pathname: '/home/board/recruiter',
                                     state: { ApplicationId: 0 }
                                 });
