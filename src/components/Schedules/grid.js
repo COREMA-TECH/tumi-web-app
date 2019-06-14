@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { GET_INITIAL_DATA } from './Queries';
 import withApollo from "react-apollo/withApollo"; 
 import moment from 'moment';
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
 
 class Grid extends Component {
 
@@ -67,9 +69,13 @@ class Grid extends Component {
             }
         }).then(({ data }) => {
             //Save data into state
-            //--Employees
-            this.setState((prevState) => {
-                return { employees:data.employees }
+            let dataAPI = data.employees;
+            dataAPI.map(item => {
+                this.setState(prevState => ({
+                    employees: [...prevState.employees, {
+                        value: item.id, label: item.firstName + item.lastName, key: item.id
+                    }]
+                }))
             });
 
         }).catch(error => {
@@ -79,6 +85,10 @@ class Grid extends Component {
             );
         });
     }
+
+    handleChangeEmployees = (employeesTags) => {
+        this.setState({ employeesTags });
+    };
 
     render() {
         return(
@@ -106,31 +116,41 @@ class Grid extends Component {
                             })}
                         </tr>
                         <tr>
-                            <th colspan="7" className="font-weight-bold">Employees</th>
+                            <th colspan="8" className="font-weight-bold">Employees</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.employees.map(employee => {
-                            return (
-                                <tr>
-                                    <td>{employee.firstName + " " + employee.lastName}</td>
-                                    {this.state.daysOfWeek.map(day => {
-                                        return (
-                                            <td>
-                                                <select name="" className="form-control" id="">
-                                                    <option value="0">OFF</option>
-                                                    {this.state.hours.map(hour => {
-                                                        return (
-                                                            <option value={hour}>{hour}</option>
-                                                        )
-                                                    })}
-                                                </select>
-                                            </td>
-                                        )
-                                    })}
-                                </tr>
-                            );
-                        })}
+                        <tr>
+                            <td>
+                                <Select
+                                    options={this.state.employees}
+                                    value={this.state.employeesTags}
+                                    onChange={this.handleChangeEmployees}
+                                    closeMenuOnSelect={true}
+                                    components={makeAnimated()}
+                                    isMulti={false}
+                                />
+                            </td>
+                            {this.state.daysOfWeek.map(day => {
+                                return (
+                                    <td>
+                                        <select name="" className="form-control" id="">
+                                            <option value="0">OFF</option>
+                                            {this.state.hours.map(hour => {
+                                                return (
+                                                    <option value={hour}>{hour}</option>
+                                                )
+                                            })}
+                                        </select>
+                                    </td>
+                                )
+                            })}
+                        </tr>
+                        <tr>
+                            <td colspan="8" align="right">
+                                <button className="btn btn-success">Save</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </React.Fragment>
