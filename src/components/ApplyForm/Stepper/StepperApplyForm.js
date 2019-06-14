@@ -21,7 +21,6 @@ import languageLevelsJSON from '../data/languagesLevels';
 import InputRangeDisabled from '../ui/InputRange/InputRangeDisabled';
 import { GET_LANGUAGES_QUERY } from '../Queries.js';
 import withApollo from 'react-apollo/withApollo';
-import Query from 'react-apollo/Query';
 import { GET_CITIES_QUERY, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
@@ -745,421 +744,431 @@ class VerticalLinearStepper extends Component {
         })
     }
 
-    render() {
-        const { classes } = this.props;
-        const steps = getSteps();
-        const { activeStep } = this.state;
-        this.validateInvalidInput();
+//#region Functions called in render
 
-        // To render the applicant information section
-        let renderApplicantInformationSection = () => (
-            <div className="ApplyBlock">
-                <h4 className="ApplyBlock-title">Applicant Information</h4>
-                <div className="row">
-                    <div className="col-md-3">
-                        <span className="primary">* First Name</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        firstName: event.target.value
-                                    });
-                                }}
-                                value={this.state.firstName}
-                                name="firstName"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">Middle Name</span>
+    // To render the applicant information section
+    renderApplicantInformationSection = (steps) => (
+        <div className="ApplyBlock">
+            <h4 className="ApplyBlock-title">Applicant Information</h4>
+            <div className="row">
+                <div className="col-md-3">
+                    <span className="primary">* First Name</span>
+                    <div className="input-container--validated">
                         <input
                             onChange={(event) => {
                                 this.setState({
-                                    middleName: event.target.value
+                                    firstName: event.target.value
                                 });
                             }}
-                            value={this.state.middleName}
-                            name="midleName"
+                            value={this.state.firstName}
+                            name="firstName"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <span className="primary">Middle Name</span>
+                    <input
+                        onChange={(event) => {
+                            this.setState({
+                                middleName: event.target.value
+                            });
+                        }}
+                        value={this.state.middleName}
+                        name="midleName"
+                        type="text"
+                        className="form-control"
+                        min="0"
+                        maxLength="50"
+                        minLength="1"
+                    />
+                </div>
+                <div className="col-md-3">
+                    <span className="primary">* Last Name</span>
+                    <div className="input-container--validated">
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    lastName: event.target.value
+                                });
+                            }}
+                            value={this.state.lastName}
+                            name="lastName"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <span className="primary">Second Last Name</span>
+                    <div className="input-container--validated">
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    lastName2: event.target.value
+                                });
+                            }}
+                            value={this.state.lastName2}
+                            name="lastName2"
                             type="text"
                             className="form-control"
                             min="0"
                             maxLength="50"
-                            minLength="1"
+                            minLength="3"
                         />
                     </div>
-                    <div className="col-md-3">
-                        <span className="primary">* Last Name</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        lastName: event.target.value
-                                    });
-                                }}
-                                value={this.state.lastName}
-                                name="lastName"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">Second Last Name</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        lastName2: event.target.value
-                                    });
-                                }}
-                                value={this.state.lastName2}
-                                name="lastName2"
-                                type="text"
-                                className="form-control"
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                        </div>
-                    </div>
                 </div>
-                <div className="row form-section">
-                    <div className="col-md-9">
-                        <span className="primary">* Street Address</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        streetAddress: event.target.value
-                                    });
-                                }}
-                                value={this.state.streetAddress}
-                                name="streetAddress"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="5"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">Apt Number</span>
+            </div>
+            <div className="row form-section">
+                <div className="col-md-9">
+                    <span className="primary">* Street Address</span>
+                    <div className="input-container--validated">
                         <input
                             onChange={(event) => {
                                 this.setState({
-                                    aptNumber: event.target.value
+                                    streetAddress: event.target.value
                                 });
                             }}
-                            value={this.state.aptNumber}
-                            name="aptNumber"
-                            type="number"
+                            value={this.state.streetAddress}
+                            name="streetAddress"
+                            type="text"
                             className="form-control"
+                            required
                             min="0"
                             maxLength="50"
                             minLength="5"
                         />
                     </div>
                 </div>
+                <div className="col-md-3">
+                    <span className="primary">Apt Number</span>
+                    <input
+                        onChange={(event) => {
+                            this.setState({
+                                aptNumber: event.target.value
+                            });
+                        }}
+                        value={this.state.aptNumber}
+                        name="aptNumber"
+                        type="number"
+                        className="form-control"
+                        min="0"
+                        maxLength="50"
+                        minLength="5"
+                    />
+                </div>
+            </div>
 
 
-                <div className="row">
-                    <LocationForm
-                        onChangeCity={this.updateCity}
-                        onChangeState={this.updateState}
-                        onChageZipCode={this.updateZipCode}
-                        city={this.state.city}
-                        state={this.state.state}
-                        zipCode={this.state.zipCode}
-                        changeCity={this.state.changeCity}
-                        cityClass={`form-control ${!this.state.validCity && ' _invalid'}`}
-                        stateClass={`form-control ${!this.state.validState && ' _invalid'}`}
-                        zipCodeClass={`form-control ${!this.state.validZipCode && ' _invalid'}`}
+            <div className="row">
+                <LocationForm
+                    onChangeCity={this.updateCity}
+                    onChangeState={this.updateState}
+                    onChageZipCode={this.updateZipCode}
+                    city={this.state.city}
+                    state={this.state.state}
+                    zipCode={this.state.zipCode}
+                    changeCity={this.state.changeCity}
+                    cityClass={`form-control ${!this.state.validCity && ' _invalid'}`}
+                    stateClass={`form-control ${!this.state.validState && ' _invalid'}`}
+                    zipCodeClass={`form-control ${!this.state.validZipCode && ' _invalid'}`}
 
-                        cityColClass="col-md-3"
-                        stateColClass="col-md-3"
-                        zipCodeColClass="col-md-3"
-                        cssTitle={"primary"}
-                        placeholder="99999-99999"
-                        mask="99999-99999"
-                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
-                    <div className="col-md-3">
-                        <span className="primary"> Home Phone</span>
+                    cityColClass="col-md-3"
+                    stateColClass="col-md-3"
+                    zipCodeColClass="col-md-3"
+                    cssTitle={"primary"}
+                    placeholder="99999-99999"
+                    mask="99999-99999"
+                    updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
+                <div className="col-md-3">
+                    <span className="primary"> Home Phone</span>
+                    <InputMask
+                        id="home-number"
+                        name="homePhone"
+                        mask="+(999) 999-9999"
+                        maskChar=" "
+                        value={this.state.homePhone}
+                        className="form-control"
+                        onChange={(event) => {
+                            this.setState({
+                                homePhone: event.target.value
+                            });
+                        }}
+                        placeholder="+(___) ___-____"
+                        pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                        minLength="15"
+                    />
+                </div>
+            </div>
+            <div className="row">
+
+                <div className="col-md-3">
+                    <span className="primary">* Cell Phone</span>
+                    <div className="input-container--validated">
                         <InputMask
-                            id="home-number"
-                            name="homePhone"
+                            id="cell-number"
+                            name="cellPhone"
                             mask="+(999) 999-9999"
                             maskChar=" "
-                            value={this.state.homePhone}
+                            value={this.state.cellPhone}
                             className="form-control"
                             onChange={(event) => {
                                 this.setState({
-                                    homePhone: event.target.value
+                                    cellPhone: event.target.value
                                 });
                             }}
-                            placeholder="+(___) ___-____"
                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                            placeholder="+(___) ___-____"
+                            required
                             minLength="15"
                         />
                     </div>
                 </div>
-                <div className="row">
 
-                    <div className="col-md-3">
-                        <span className="primary">* Cell Phone</span>
-                        <div className="input-container--validated">
-                            <InputMask
-                                id="cell-number"
-                                name="cellPhone"
-                                mask="+(999) 999-9999"
-                                maskChar=" "
-                                value={this.state.cellPhone}
-                                className="form-control"
-                                onChange={(event) => {
-                                    this.setState({
-                                        cellPhone: event.target.value
-                                    });
-                                }}
-                                pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                                placeholder="+(___) ___-____"
-                                required
-                                minLength="15"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="col-md-3">
-                        <span className="primary">* Social Security Number</span>
-                        <div className="input-container--validated">
-                            <InputMask
-                                id="socialSecurityNumber"
-                                name="socialSecurityNumber"
-                                mask="999-99-9999"
-                                maskChar=" "
-                                className="form-control"
-                                onChange={(event) => {
-                                    this.setState({
-                                        socialSecurityNumber: event.target.value
-                                    });
-                                }}
-                                value={this.state.socialSecurityNumber}
-                                placeholder="___-__-____"
-                                pattern="^\d{3}-\d{2}-\d{4}$"
-                                required
-                                minLength="15"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <div className="col-md-12">
-                            <span className="primary"> Do you own transportation?</span>
-                        </div>
-                        <div className="col-md-12">
-                            <div className="onoffswitch">
-                                <input
-                                    id="carSwitch"
-                                    className="onoffswitch-checkbox"
-                                    onChange={(event) => {
-                                        this.setState({
-                                            car: event.target.checked
-                                        });
-                                    }}
-                                    checked={this.state.car}
-                                    value={this.state.car}
-                                    name="car"
-                                    type="checkbox"
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="10"
-                                />
-                                <label className="onoffswitch-label" htmlFor="carSwitch">
-                                    <span className="onoffswitch-inner" />
-                                    <span className="onoffswitch-switch" />
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">* Type Of ID</span>
-                        <select
-                            name="typeOfID"
-                            id="typeOfID"
-                            required
+                <div className="col-md-3">
+                    <span className="primary">* Social Security Number</span>
+                    <div className="input-container--validated">
+                        <InputMask
+                            id="socialSecurityNumber"
+                            name="socialSecurityNumber"
+                            mask="999-99-9999"
+                            maskChar=" "
                             className="form-control"
-                            onChange={(e) => {
+                            onChange={(event) => {
                                 this.setState({
-                                    typeOfId: e.target.value
+                                    socialSecurityNumber: event.target.value
                                 });
                             }}
-                            value={this.state.typeOfId}
-                        >
-                            <option value="">Select an option</option>
-                            <option value="1">Birth certificate</option>
-                            <option value="2">Social Security card</option>
-                            <option value="3">State-issued driver's license</option>
-                            <option value="4">State-issued ID</option>
-                            <option value="5">Passport</option>
-                            <option value="6">Department of Defense Identification Card</option>
-                            <option value="7">Green Card</option>
-                        </select>
+                            value={this.state.socialSecurityNumber}
+                            placeholder="___-__-____"
+                            pattern="^\d{3}-\d{2}-\d{4}$"
+                            required
+                            minLength="15"
+                        />
                     </div>
                 </div>
-                <div className="row">
-                </div>
-                <div className="row">
-                    <div className="col-md-6">
-                        <span className="primary">* Expire Date ID</span>
-                        <div className="input-container--validated">
+                <div className="col-md-3">
+                    <div className="col-md-12">
+                        <span className="primary"> Do you own transportation?</span>
+                    </div>
+                    <div className="col-md-12">
+                        <div className="onoffswitch">
                             <input
+                                id="carSwitch"
+                                className="onoffswitch-checkbox"
                                 onChange={(event) => {
                                     this.setState({
-                                        expireDateId: event.target.value
+                                        car: event.target.checked
                                     });
                                 }}
-                                value={this.state.expireDateId}
-                                name="expireDateId"
-                                type="date"
-                                className="form-control"
-                                required
+                                checked={this.state.car}
+                                value={this.state.car}
+                                name="car"
+                                type="checkbox"
                                 min="0"
                                 maxLength="50"
                                 minLength="10"
                             />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <span className="primary">* Email Address</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        emailAddress: event.target.value
-                                    });
-                                }}
-                                value={this.state.emailAddress}
-                                name="emailAddress"
-                                type="email"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="8"
-                            />
+                            <label className="onoffswitch-label" htmlFor="carSwitch">
+                                <span className="onoffswitch-inner" />
+                                <span className="onoffswitch-switch" />
+                            </label>
                         </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-6">
-                        <span className="primary"> * Position Applying For</span>
-                        
-                        <Select
-                            options={this.state.positionApplyOptions}
-                            value={this.findSelectedPositionApply(this.state.idealJob)}
-                            onChange={this.handlePositionApplyChange}
-                            closeMenuOnSelect={true}
-                            components={makeAnimated()}
-                            isMulti={false}
+                <div className="col-md-3">
+                    <span className="primary">* Type Of ID</span>
+                    <select
+                        name="typeOfID"
+                        id="typeOfID"
+                        required
+                        className="form-control"
+                        onChange={(e) => {
+                            this.setState({
+                                typeOfId: e.target.value
+                            });
+                        }}
+                        value={this.state.typeOfId}
+                    >
+                        <option value="">Select an option</option>
+                        <option value="1">Birth certificate</option>
+                        <option value="2">Social Security card</option>
+                        <option value="3">State-issued driver's license</option>
+                        <option value="4">State-issued ID</option>
+                        <option value="5">Passport</option>
+                        <option value="6">Department of Defense Identification Card</option>
+                        <option value="7">Green Card</option>
+                    </select>
+                </div>
+            </div>
+            <div className="row">
+            </div>
+            <div className="row">
+                <div className="col-md-6">
+                    <span className="primary">* Expire Date ID</span>
+                    <div className="input-container--validated">
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    expireDateId: event.target.value
+                                });
+                            }}
+                            value={this.state.expireDateId}
+                            name="expireDateId"
+                            type="date"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="10"
                         />
                     </div>
-                    <div className="col-md-6">
-                        <span className="primary">Willing to work as</span>
+                </div>
+                <div className="col-md-6">
+                    <span className="primary">* Email Address</span>
+                    <div className="input-container--validated">
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    emailAddress: event.target.value
+                                });
+                            }}
+                            value={this.state.emailAddress}
+                            name="emailAddress"
+                            type="email"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="8"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-6">
+                    <span className="primary"> * Position Applying For</span>
+                    
+                    <Select
+                        options={this.state.positionApplyOptions}
+                        value={this.findSelectedPositionApply(this.state.idealJob)}
+                        onChange={this.handlePositionApplyChange}
+                        closeMenuOnSelect={true}
+                        components={makeAnimated()}
+                        isMulti={false}
+                    />
+                </div>
+                <div className="col-md-6">
+                    <span className="primary">Willing to work as</span>
 
-                        <Select
-                            options={this.state.positionCatalogOptions}
-                            value={this.state.positionsTags}
-                            onChange={this.handleChangePositionTag}
-                            closeMenuOnSelect={false}
-                            components={makeAnimated()}
-                            isMulti
+                    <Select
+                        options={this.state.positionCatalogOptions}
+                        value={this.state.positionsTags}
+                        onChange={this.handleChangePositionTag}
+                        closeMenuOnSelect={false}
+                        components={makeAnimated()}
+                        isMulti
+                    />
+                </div>                    
+            </div>
+            <div className="row">
+                <div className="col-md-6">
+                    <span className="primary">* Date Available</span>
+                    <div className="input-container--validated">
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    dateAvailable: event.target.value
+                                });
+                            }}
+                            value={this.state.dateAvailable}
+                            name="dateAvailable"
+                            type="date"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
                         />
-                    </div>                    
-                </div>
-                <div className="row">
-                    <div className="col-md-6">
-                        <span className="primary">* Date Available</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        dateAvailable: event.target.value
-                                    });
-                                }}
-                                value={this.state.dateAvailable}
-                                name="dateAvailable"
-                                type="date"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                            />
-                        </div>
                     </div>
+                </div>
+                <div className="col-md-12">
+                    {this.state.idealJobs.map((idealJobItem) => (
+                        <span className="idealJobItem">
+                            <span>{idealJobItem.description}</span>{' '}
+                            <i
+                                className="far fa-times-circle"
+                                onClick={() => {
+                                    this.setState((prevState) => ({
+                                        idealJobs: this.state.idealJobs.filter((_, i) => {
+                                            return _.uuid !== idealJobItem.uuid;
+                                        })
+                                    }));
+                                }}
+                            />
+                        </span>
+                    ))}
+                </div>
+            </div>
+            <hr className="separator" />
+            <div className="row">
+                <div className="col-md-4">
+                    <span className="primary"> Do you have any schedule restrictions? </span>
                     <div className="col-md-12">
-                        {this.state.idealJobs.map((idealJobItem) => (
-                            <span className="idealJobItem">
-                                <span>{idealJobItem.description}</span>{' '}
-                                <i
-                                    className="far fa-times-circle"
-                                    onClick={() => {
-                                        this.setState((prevState) => ({
-                                            idealJobs: this.state.idealJobs.filter((_, i) => {
-                                                return _.uuid !== idealJobItem.uuid;
-                                            })
-                                        }));
-                                    }}
-                                />
-                            </span>
-                        ))}
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    scheduleRestrictions: event.target.value
+                                });
+                            }}
+                            value="1"
+                            type="radio"
+                            name="scheduleRestrictions"
+                            className=""
+                        />
+                        <label className="radio-label"> Yes</label>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    scheduleRestrictions: event.target.value,
+                                    scheduleExplain: ''
+                                });
+                            }}
+                            value="0"
+                            type="radio"
+                            name="scheduleRestrictions"
+                            className=""
+                            checked={this.state.scheduleRestrictions === '0'}
+                        />
+                        <label className="radio-label"> No</label>
                     </div>
+                    <span className="check-icon" />
                 </div>
-                <hr className="separator" />
-                <div className="row">
-                    <div className="col-md-4">
-                        <span className="primary"> Do you have any schedule restrictions? </span>
-                        <div className="col-md-12">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        scheduleRestrictions: event.target.value
-                                    });
-                                }}
-                                value="1"
-                                type="radio"
-                                name="scheduleRestrictions"
-                                className=""
-                            />
-                            <label className="radio-label"> Yes</label>
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        scheduleRestrictions: event.target.value,
-                                        scheduleExplain: ''
-                                    });
-                                }}
-                                value="0"
-                                type="radio"
-                                name="scheduleRestrictions"
-                                className=""
-                                checked={this.state.scheduleRestrictions === '0'}
-                            />
-                            <label className="radio-label"> No</label>
-                        </div>
-                        <span className="check-icon" />
-                    </div>
-                    <div className="col-md-8">
-                        <span className="primary"> If yes, please explain </span>
-                        {this.state.scheduleRestrictions === '0' ? (
+                <div className="col-md-8">
+                    <span className="primary"> If yes, please explain </span>
+                    {this.state.scheduleRestrictions === '0' ? (
+                        <textarea
+                            onChange={(event) => {
+                                this.setState({
+                                    scheduleExplain: event.target.value
+                                });
+                            }}
+                            value={this.state.scheduleExplain}
+                            name="form-control"
+                            cols="30"
+                            rows="3"
+                            disabled
+                            className="form-control textarea-apply-form"
+                        />
+                    ) : (
                             <textarea
                                 onChange={(event) => {
                                     this.setState({
@@ -1170,61 +1179,61 @@ class VerticalLinearStepper extends Component {
                                 name="form-control"
                                 cols="30"
                                 rows="3"
-                                disabled
+                                required
                                 className="form-control textarea-apply-form"
                             />
-                        ) : (
-                                <textarea
-                                    onChange={(event) => {
-                                        this.setState({
-                                            scheduleExplain: event.target.value
-                                        });
-                                    }}
-                                    value={this.state.scheduleExplain}
-                                    name="form-control"
-                                    cols="30"
-                                    rows="3"
-                                    required
-                                    className="form-control textarea-apply-form"
-                                />
-                            )}
+                        )}
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-4">
+                    <span className="primary"> Have you ever been convicted of a felony? </span>
+                    <div className="col-md-12">
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    convicted: event.target.value
+                                });
+                            }}
+                            value="1"
+                            type="radio"
+                            name="convicted"
+                            className=""
+                        />
+                        <label className="radio-label"> Yes</label>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    convicted: event.target.value,
+                                    convictedExplain: ''
+                                });
+                            }}
+                            value="0"
+                            type="radio"
+                            name="convicted"
+                            className=""
+                            checked={this.state.convicted === '0'}
+                        />
+                        <label className="radio-label"> No</label>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-4">
-                        <span className="primary"> Have you ever been convicted of a felony? </span>
-                        <div className="col-md-12">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        convicted: event.target.value
-                                    });
-                                }}
-                                value="1"
-                                type="radio"
-                                name="convicted"
-                                className=""
-                            />
-                            <label className="radio-label"> Yes</label>
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        convicted: event.target.value,
-                                        convictedExplain: ''
-                                    });
-                                }}
-                                value="0"
-                                type="radio"
-                                name="convicted"
-                                className=""
-                                checked={this.state.convicted === '0'}
-                            />
-                            <label className="radio-label"> No</label>
-                        </div>
-                    </div>
-                    <div className="col-md-8">
-                        <span className="primary"> If yes, please explain </span>
-                        {this.state.convicted === '0' ? (
+                <div className="col-md-8">
+                    <span className="primary"> If yes, please explain </span>
+                    {this.state.convicted === '0' ? (
+                        <textarea
+                            onChange={(event) => {
+                                this.setState({
+                                    convictedExplain: event.target.value
+                                });
+                            }}
+                            value={this.state.convictedExplain}
+                            name="form-control"
+                            cols="30"
+                            disabled
+                            rows="3"
+                            className="form-control textarea-apply-form"
+                        />
+                    ) : (
                             <textarea
                                 onChange={(event) => {
                                     this.setState({
@@ -1234,280 +1243,686 @@ class VerticalLinearStepper extends Component {
                                 value={this.state.convictedExplain}
                                 name="form-control"
                                 cols="30"
-                                disabled
+                                required
                                 rows="3"
                                 className="form-control textarea-apply-form"
                             />
-                        ) : (
+                        )}
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-12">
+                    <span className="primary"> How did you hear about Tumi Staffing </span>
+                </div>
+                <div className="col-md-12">
+                    <select
+                        name="networks"
+                        id="networks"
+                        onChange={(event) => {
+                            this.setState({
+                                socialNetwork: event.target.value
+                            });
+                        }}
+                        value={this.state.socialNetwork}
+                        required
+                        className="form-control"
+                    >
+                        <option value="">Select a option</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="linkedin">Linkedin</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="newspaper">News Paper</option>
+                        <option value="journals">Journals</option>
+                        <option value="others">Other</option>
+                    </select>
+
+                    <div className="row">
+                        <div className="col-md-12">
+                            {this.state.socialNetwork === 'others' ? (
                                 <textarea
                                     onChange={(event) => {
                                         this.setState({
-                                            convictedExplain: event.target.value
+                                            comment: event.target.value
                                         });
                                     }}
-                                    value={this.state.convictedExplain}
-                                    name="form-control"
-                                    cols="30"
+                                    placeholder="Explain how did you hear about Tumi Staffing"
+                                    value={this.state.comment}
                                     required
-                                    rows="3"
+                                    name="comment"
+                                    cols="20"
+                                    rows="4"
                                     className="form-control textarea-apply-form"
                                 />
-                            )}
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        <span className="primary"> How did you hear about Tumi Staffing </span>
-                    </div>
-                    <div className="col-md-12">
-                        <select
-                            name="networks"
-                            id="networks"
-                            onChange={(event) => {
-                                this.setState({
-                                    socialNetwork: event.target.value
-                                });
-                            }}
-                            value={this.state.socialNetwork}
-                            required
-                            className="form-control"
-                        >
-                            <option value="">Select a option</option>
-                            <option value="facebook">Facebook</option>
-                            <option value="linkedin">Linkedin</option>
-                            <option value="instagram">Instagram</option>
-                            <option value="newspaper">News Paper</option>
-                            <option value="journals">Journals</option>
-                            <option value="others">Other</option>
-                        </select>
-
-                        <div className="row">
-                            <div className="col-md-12">
-                                {this.state.socialNetwork === 'others' ? (
-                                    <textarea
-                                        onChange={(event) => {
-                                            this.setState({
-                                                comment: event.target.value
-                                            });
-                                        }}
-                                        placeholder="Explain how did you hear about Tumi Staffing"
-                                        value={this.state.comment}
-                                        required
-                                        name="comment"
-                                        cols="20"
-                                        rows="4"
-                                        className="form-control textarea-apply-form"
-                                    />
-                                ) : (
-                                        ''
-                                    )}
-                            </div>
+                            ) : (
+                                    ''
+                                )}
                         </div>
                     </div>
                 </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button type="submit" variant="contained" color="primary" className={classes.button} disabled={this.state.searchigZipcode}>
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            </div>
+            <div className="bottom-container-stepper">
+                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
+                    Back
+                </Button>
+                <Button type="submit" variant="contained" color="primary" className={this.props.classes.button} disabled={this.state.searchigZipcode}>
+                    {this.state.activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                </Button>
+            </div>
+        </div>
+    );
+
+    // To render a dialog loading when the mutation is loading
+    renderInsertDialogLoading = (steps) => (
+        <Dialog
+            open={this.state.insertDialogLoading}
+            onClose={this.handleClose}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle id="responsive-dialog-title">Sending Application</DialogTitle>
+            <DialogContent>
+                <div className="center-progress-dialog">
+                    <CircularProgressLoading />
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+
+    // To render the Skills Dialog
+    renderSkillsDialog = (steps) => (
+        <form
+            autoComplete="off"
+            id="skill-form"
+            onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                let item = {
+                    uuid: uuidv4(),
+                    description: document.getElementById('description').value,
+                    level: this.state.percent
+                };
+
+                this.setState(
+                    (prevState) => ({
+                        open: false,
+                        skills: [...prevState.skills, item]
+                    }),
+                    () => {
+
+
+                        document.getElementById('skill-form').reset();
+                    }
+                );
+            }}
+            className="apply-form row form-section-1"
+        >
+            <div className="col-md-5">
+                <span className="primary">* Skill Name</span>
+                <input
+                    id="description"
+                    name="description"
+                    type="text"
+                    className="form-control"
+                    required
+                    min="0"
+                    maxLength="20"
+                    minLength="3"
+                    form="skill-form"
+                />
+            </div>
+            <div className="col-md-5">
+                <span className="primary">Skill Level</span>
+                <InputRange
+                    getPercentSkill={(percent) => {
+                        // update the percent skill
+                        this.setState({
+                            percent: percent
+                        });
+                    }}
+                />
+            </div>
+            <div className="col-md-2">
+                <div className="form-section--center form-section--center--margin">
+                    <button className="btn btn-save-skill btn-success col-md-6" type="submit" form="skill-form">
+                        <i className="fas fa-plus"></i>
+                    </button>
+                    <button className="btn btn-danger col-md-6" type="reset" onClick={this.handleClose}>
+                        <i className="fas fa-ban"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    );
+
+    // To render the Education Service Section
+    renderEducationSection = (steps) => (
+        <form
+            id="education-form"
+            className="ApplyBlock"
+            onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                let item = {
+                    uuid: uuidv4(),
+                    schoolType: document.getElementById('studyType').value,
+                    educationName: document.getElementById('institutionName').value,
+                    educationAddress: document.getElementById('addressInstitution').value,
+                    startDate: document.getElementById('startPeriod').value,
+                    endDate: document.getElementById('endPeriod').value,
+                    graduated: document.getElementById('graduated').checked,
+                    degree: parseInt(document.getElementById('degree').value),
+                    ApplicationId: 1 // Static application id
+                };
+                this.setState(
+                    (prevState) => ({
+                        open: false,
+                        schools: [...prevState.schools, item]
+                    }),
+                    () => {
+                        document.getElementById('education-form').reset();
+                        document.getElementById('studyType').classList.remove('invalid-apply-form');
+                        document.getElementById('institutionName').classList.remove('invalid-apply-form');
+                        document.getElementById('addressInstitution').classList.remove('invalid-apply-form');
+                        document.getElementById('startPeriod').classList.remove('invalid-apply-form');
+                        document.getElementById('endPeriod').classList.remove('invalid-apply-form');
+                        document.getElementById('graduated').classList.remove('invalid-apply-form');
+                        document.getElementById('graduated').checked = false;
+                        document.getElementById('degree').classList.remove('invalid-apply-form');
+
+                        this.setState({
+                            graduated: false
+                        });
+                    }
+                );
+            }}
+        >
+            <h4 className="ApplyBlock-title">Education</h4>
+            {this.state.schools.length > 0 ? (
+                <div key={uuidv4()} className="skills-container skills-container--header">
+                    <div className="row">
+                        <div className="col-md-2">
+                            <span>Field of Study</span>
+                        </div>
+                        <div className="col-md-2">
+                            <span>Institution</span>
+                        </div>
+                        <div className="col-md-2">
+                            <span>Address</span>
+                        </div>
+                        <div className="col-md-2">
+                            <span>Start Date</span>
+                        </div>
+                        <div className="col-md-1">
+                            <span>End Date</span>
+                        </div>
+                        <div className="col-md-1">
+                            <span>Graduated</span>
+                        </div>
+                        <div className="col-md-1">
+                            <span>Degree</span>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                    ''
+                )}
+            {this.state.schools.map((schoolItem) => (
+                <div key={uuidv4()} className="skills-container">
+                    <div className="row">
+                        <div className="col-md-2">
+                            <span>{schoolItem.schoolType}</span>
+                        </div>
+                        <div className="col-md-2">
+                            <span>{schoolItem.educationName}</span>
+                        </div>
+                        <div className="col-md-2">
+                            <span>{schoolItem.educationAddress}</span>
+                        </div>
+                        <div className="col-md-2">
+                            <span>{schoolItem.startDate}</span>
+                        </div>
+                        <div className="col-md-1">
+                            <span>{schoolItem.endDate}</span>
+                        </div>
+                        <div className="col-md-1">
+                            <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
+                        </div>
+                        <div className="col-md-1">
+                            <span>
+                                {studyTypes.map((item) => {
+                                    if (item.Id == schoolItem.degree) {
+                                        return item.Name + '';
+                                    }
+                                })}
+                            </span>
+                        </div>
+                        <div className="col-md-1">
+                            <Button
+                                className="deleteSkillSection"
+                                onClick={() => {
+                                    this.setState((prevState) => ({
+                                        schools: this.state.schools.filter((_, i) => {
+                                            return _.uuid !== schoolItem.uuid;
+                                        })
+                                    }));
+                                }}
+                            >
+                                x
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            ))}
+            <hr className="separator" />
+            <div className="row">
+                <div className="col-md-3">
+                    <label className="primary">* Field of Study</label>
+                    <div className="input-container--validated">
+                        <input
+                            id="studyType"
+                            form="education-form"
+                            name="studyType"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="2"
+                        />
+                        <span className="check-icon" />
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <label className="primary">* Name (Institution)</label>
+                    <div className="input-container--validated">
+                        <input
+                            form="education-form"
+                            name="institutionName"
+                            id="institutionName"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                        <span className="check-icon" />
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <label className="primary">* Address</label>
+                    <div className="input-container--validated">
+                        <input
+                            form="education-form"
+                            name="addressInstitution"
+                            id="addressInstitution"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                        <span className="check-icon" />
+                    </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-3">
+                    <span className="primary">* Time Period</span>
+                    <div className="input-container--validated">
+                        <input
+                            form="education-form"
+                            name="startPeriod"
+                            id="startPeriod"
+                            type="date"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                        <span className="check-icon" />
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <span className="primary">* To</span>
+                    <div className="input-container--validated">
+                        <input
+                            form="education-form"
+                            name="endPeriod"
+                            id="endPeriod"
+                            type="date"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                        <span className="check-icon" />
+                    </div>
+                </div>
+                <div className="col-md-2">
+                    <label className="primary">Graduated</label> <br />
+
+                    <div className="onoffswitch">
+                        <input
+                            className="onoffswitch-checkbox"
+                            onChange={(e) => {
+                                this.setState({
+                                    graduated: document.getElementById('graduated').checked
+                                });
+                            }}
+                            form="education-form"
+                            type="checkbox"
+                            value="graduated"
+                            name="graduated"
+                            id="graduated"
+                        />
+                        <label className="onoffswitch-label" htmlFor="graduated">
+                            <span className="onoffswitch-inner" />
+                            <span className="onoffswitch-switch" />
+                        </label>
+                    </div>
+
+                    {/*<label className="switch">*/}
+                    {/*<input*/}
+                    {/*onChange={(e) => {*/}
+                    {/*this.setState({*/}
+                    {/*graduated: document.getElementById('graduated').checked*/}
+                    {/*});*/}
+                    {/*}}*/}
+                    {/*form="education-form"*/}
+                    {/*type="checkbox"*/}
+                    {/*value="graduated"*/}
+                    {/*name="graduated"*/}
+                    {/*id="graduated"*/}
+                    {/*/>*/}
+                    {/*<p className="slider round" />*/}
+                    {/*</label>*/}
+                </div>
+                <div className="col-md-4">
+                    <label className="primary">Degree</label>
+                    {this.state.graduated ? (
+                        <div className="input-container--validated">
+                            <select form="education-form" name="degree" id="degree" className="form-control">
+                                <option value="">Select an option</option>
+                                {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                            </select>
+                        </div>
+                    ) : (
+                            <div className="input-container--validated">
+                                <select
+                                    form="education-form"
+                                    name="degree"
+                                    id="degree"
+                                    disabled
+                                    className="form-control"
+                                >
+                                    <option value="">Select an option</option>
+                                    {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                </select>
+                            </div>
+                        )}
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-12">
+                    <Button type="submit" form="education-form" className="save-skill-button">
+                        Add
                     </Button>
                 </div>
             </div>
-        );
+            <div className="bottom-container-stepper">
+                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
+                    Back
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        this.insertEducationApplication();
+                    }}
+                    className={this.props.classes.button}
+                >
+                    {this.state.activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                </Button>
+            </div>
+        </form>
+    );
 
-        // To render a dialog loading when the mutation is loading
-        let renderInsertDialogLoading = () => (
-            <Dialog
-                open={this.state.insertDialogLoading}
-                onClose={this.handleClose}
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">Sending Application</DialogTitle>
-                <DialogContent>
-                    <div className="center-progress-dialog">
-                        <CircularProgressLoading />
-                    </div>
-                </DialogContent>
-            </Dialog>
-        );
-
-        // To render the Skills Dialog
-        let renderSkillsDialog = () => (
-            <form
-                autoComplete="off"
-                id="skill-form"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    let item = {
-                        uuid: uuidv4(),
-                        description: document.getElementById('description').value,
-                        level: this.state.percent
-                    };
-
-                    this.setState(
-                        (prevState) => ({
-                            open: false,
-                            skills: [...prevState.skills, item]
-                        }),
-                        () => {
-
-
-                            document.getElementById('skill-form').reset();
-                        }
-                    );
-                }}
-                className="apply-form row form-section-1"
-            >
-                <div className="col-md-5">
-                    <span className="primary">* Skill Name</span>
+    // To render the Military Service Section
+    renderMilitaryServiceSection = (steps) => (
+        <div className="ApplyBlock">
+            <h4 className="ApplyBlock-title">Military Service</h4>
+            <div className="row">
+                <div className="col-md-6">
+                    <span className="primary"> Branch</span>
                     <input
-                        id="description"
-                        name="description"
-                        type="text"
-                        className="form-control"
-                        required
-                        min="0"
-                        maxLength="20"
-                        minLength="3"
-                        form="skill-form"
-                    />
-                </div>
-                <div className="col-md-5">
-                    <span className="primary">Skill Level</span>
-                    <InputRange
-                        getPercentSkill={(percent) => {
-                            // update the percent skill
+                        onChange={(e) => {
                             this.setState({
-                                percent: percent
+                                branch: e.target.value
                             });
                         }}
+                        value={this.state.branch}
+                        name="militaryBranch"
+                        type="text"
+                        className="form-control"
+                        min="0"
+                        maxLength="50"
+                        minLength="3"
+                    />
+                    <span className="check-icon" />
+                </div>
+                <div className="col-md-6">
+                    <span className="primary"> Rank at Discharge</span>
+                    <input
+                        onChange={(e) => {
+                            this.setState({
+                                rankAtDischarge: e.target.value
+                            });
+                        }}
+                        value={this.state.rankAtDischarge}
+                        name="militaryRankDischarge"
+                        type="text"
+                        className="form-control"
+                        min="0"
+                        maxLength="50"
+                        minLength="3"
+                    />
+                    <span className="check-icon" />
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-3">
+                    <span className="primary"> Dates</span>
+                    <input
+                        onChange={(e) => {
+                            this.setState({
+                                startDateMilitaryService: e.target.value
+                            });
+                        }}
+                        value={this.state.startDateMilitaryService}
+                        name="militaryStartDate"
+                        type="date"
+                        className="form-control"
+                        min="0"
+                        maxLength="50"
+                        minLength="3"
                     />
                 </div>
-                <div className="col-md-2">
-                    <div className="form-section--center form-section--center--margin">
-                        <button className="btn btn-save-skill btn-success col-md-6" type="submit" form="skill-form">
-                            <i className="fas fa-plus"></i>
-                        </button>
-                        <button className="btn btn-danger col-md-6" type="reset" onClick={this.handleClose}>
-                            <i className="fas fa-ban"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-        );
-
-        // To render the Education Service Section
-        let renderEducationSection = () => (
-            <form
-                id="education-form"
-                className="ApplyBlock"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    let item = {
-                        uuid: uuidv4(),
-                        schoolType: document.getElementById('studyType').value,
-                        educationName: document.getElementById('institutionName').value,
-                        educationAddress: document.getElementById('addressInstitution').value,
-                        startDate: document.getElementById('startPeriod').value,
-                        endDate: document.getElementById('endPeriod').value,
-                        graduated: document.getElementById('graduated').checked,
-                        degree: parseInt(document.getElementById('degree').value),
-                        ApplicationId: 1 // Static application id
-                    };
-                    this.setState(
-                        (prevState) => ({
-                            open: false,
-                            schools: [...prevState.schools, item]
-                        }),
-                        () => {
-                            document.getElementById('education-form').reset();
-                            document.getElementById('studyType').classList.remove('invalid-apply-form');
-                            document.getElementById('institutionName').classList.remove('invalid-apply-form');
-                            document.getElementById('addressInstitution').classList.remove('invalid-apply-form');
-                            document.getElementById('startPeriod').classList.remove('invalid-apply-form');
-                            document.getElementById('endPeriod').classList.remove('invalid-apply-form');
-                            document.getElementById('graduated').classList.remove('invalid-apply-form');
-                            document.getElementById('graduated').checked = false;
-                            document.getElementById('degree').classList.remove('invalid-apply-form');
-
+                <div className="col-md-3">
+                    <span className="primary">To: </span>
+                    <input
+                        onChange={(e) => {
                             this.setState({
-                                graduated: false
+                                endDateMilitaryService: e.target.value
                             });
-                        }
-                    );
-                }}
-            >
-                <h4 className="ApplyBlock-title">Education</h4>
-                {this.state.schools.length > 0 ? (
+                        }}
+                        value={this.state.endDateMilitaryService}
+                        name="militaryEndDate"
+                        type="date"
+                        className="form-control"
+                        min="0"
+                        maxLength="50"
+                        minLength="3"
+                    />
+                </div>
+                <div className="col-md-6">
+                    <span className="primary"> Type of Discharge</span>
+                    <select
+                        onChange={(e) => {
+                            this.setState({
+                                typeOfDischarge: e.target.value
+                            });
+                        }}
+                        value={this.state.typeOfDischarge}
+                        name="dischargeType"
+                        id="dischargeType"
+                        className="form-control"
+                    >
+                        <option value="">Select an option</option>
+                        <option value="1">Honorable discharge</option>
+                        <option value="2">General discharge</option>
+                        <option value="3">Other than honorable (OTH) discharge</option>
+                        <option value="4">Bad conduct discharge</option>
+                        <option value="5">Dishonorable discharge</option>
+                        <option value="6">Entry-level separation.</option>
+                    </select>
+                    <span className="check-icon" />
+                </div>
+            </div>
+            <div className="bottom-container-stepper">
+                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
+                    Back
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        this.insertMilitaryServicesApplication();
+                    }}
+                    className={this.props.classes.button}
+                >
+                    {this.state.activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                </Button>
+            </div>
+        </div>
+    );
+
+    // To render the Previous Employment Section
+    renderPreviousEmploymentSection = (steps) => (
+        <form
+            id="form-previous-employment"
+            className="ApplyBlock"
+            onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                let item = {
+                    uuid: uuidv4(),
+                    companyName: document.getElementById('companyNameEmployment').value,
+                    phone: document.getElementById('companyPhoneEmployment').value,
+                    address: document.getElementById('companyAddressEmployment').value,
+                    supervisor: document.getElementById('companySupervisor').value,
+                    jobTitle: document.getElementById('companyJobTitle').value,
+                    payRate: parseFloat(document.getElementById('companyPayRate').value),
+                    startDate: document.getElementById('companyStartDate').value,
+                    endDate: document.getElementById('companyEndDate').value,
+                    reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
+                    ApplicationId: 1 // Static application id
+                };
+                this.setState(
+                    (prevState) => ({
+                        open: false,
+                        previousEmployment: [...prevState.previousEmployment, item]
+                    }),
+                    () => {
+                        document.getElementById('form-previous-employment').reset();
+                        document.getElementById('companyNameEmployment').classList.remove('invalid-apply-form');
+                        document.getElementById('companyPhoneEmployment').classList.remove('invalid-apply-form');
+                        document.getElementById('companyAddressEmployment').classList.remove('invalid-apply-form');
+                        document.getElementById('companySupervisor').classList.remove('invalid-apply-form');
+                        document.getElementById('companyJobTitle').classList.remove('invalid-apply-form');
+                        document.getElementById('companyPayRate').classList.remove('invalid-apply-form');
+                        document.getElementById('companyStartDate').classList.remove('invalid-apply-form');
+                        document.getElementById('companyEndDate').classList.remove('invalid-apply-form');
+                        document.getElementById('companyReasonForLeaving').classList.remove('invalid-apply-form');
+
+                        this.setState({
+                            previousEmploymentPhone: ''
+                        });
+                    }
+                );
+            }}
+        >
+            <h4 className="ApplyBlock-title">Previous Employment</h4>
+            <div className="row">
+                {this.state.previousEmployment.length > 0 ? (
                     <div key={uuidv4()} className="skills-container skills-container--header">
                         <div className="row">
                             <div className="col-md-2">
-                                <span>Field of Study</span>
-                            </div>
-                            <div className="col-md-2">
-                                <span>Institution</span>
+                                <span>Company</span>
                             </div>
                             <div className="col-md-2">
                                 <span>Address</span>
                             </div>
                             <div className="col-md-2">
+                                <span>Job Title</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span>Phone</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span>Supervisor</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span>Pay Rate</span>
+                            </div>
+                            <div className="col-md-1">
                                 <span>Start Date</span>
                             </div>
                             <div className="col-md-1">
                                 <span>End Date</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span>Graduated</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span>Degree</span>
                             </div>
                         </div>
                     </div>
                 ) : (
                         ''
                     )}
-                {this.state.schools.map((schoolItem) => (
+                {this.state.previousEmployment.map((employmentItem) => (
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-md-2">
-                                <span>{schoolItem.schoolType}</span>
+                                <span>{employmentItem.companyName}</span>
                             </div>
                             <div className="col-md-2">
-                                <span>{schoolItem.educationName}</span>
+                                <span>{employmentItem.address}</span>
                             </div>
                             <div className="col-md-2">
-                                <span>{schoolItem.educationAddress}</span>
-                            </div>
-                            <div className="col-md-2">
-                                <span>{schoolItem.startDate}</span>
+                                <span>{employmentItem.jobTitle}</span>
                             </div>
                             <div className="col-md-1">
-                                <span>{schoolItem.endDate}</span>
+                                <span>{employmentItem.phone}</span>
                             </div>
                             <div className="col-md-1">
-                                <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
+                                <span>{employmentItem.supervisor}</span>
                             </div>
                             <div className="col-md-1">
-                                <span>
-                                    {studyTypes.map((item) => {
-                                        if (item.Id == schoolItem.degree) {
-                                            return item.Name + '';
-                                        }
-                                    })}
-                                </span>
+                                <span>{employmentItem.payRate}</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span>{employmentItem.startDate}</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span>{employmentItem.endDate}</span>
                             </div>
                             <div className="col-md-1">
                                 <Button
                                     className="deleteSkillSection"
                                     onClick={() => {
                                         this.setState((prevState) => ({
-                                            schools: this.state.schools.filter((_, i) => {
-                                                return _.uuid !== schoolItem.uuid;
+                                            previousEmployment: this.state.previousEmployment.filter((_, i) => {
+                                                return _.uuid !== employmentItem.uuid;
                                             })
                                         }));
                                     }}
@@ -1519,218 +1934,86 @@ class VerticalLinearStepper extends Component {
                     </div>
                 ))}
                 <hr className="separator" />
-                <div className="row">
-                    <div className="col-md-3">
-                        <label className="primary">* Field of Study</label>
-                        <div className="input-container--validated">
-                            <input
-                                id="studyType"
-                                form="education-form"
-                                name="studyType"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="2"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <label className="primary">* Name (Institution)</label>
-                        <div className="input-container--validated">
-                            <input
-                                form="education-form"
-                                name="institutionName"
-                                id="institutionName"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <label className="primary">* Address</label>
-                        <div className="input-container--validated">
-                            <input
-                                form="education-form"
-                                name="addressInstitution"
-                                id="addressInstitution"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
+            </div>
+            <div className="row">
+                <div className="col-md-8">
+                    <span className="primary">* Company</span>
+                    <div className="input-container--validated">
+                        <input
+                            id="companyNameEmployment"
+                            form="form-previous-employment"
+                            name="companyNameEmployment"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                        <span className="check-icon" />
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-3">
-                        <span className="primary">* Time Period</span>
-                        <div className="input-container--validated">
-                            <input
-                                form="education-form"
-                                name="startPeriod"
-                                id="startPeriod"
-                                type="date"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">* To</span>
-                        <div className="input-container--validated">
-                            <input
-                                form="education-form"
-                                name="endPeriod"
-                                id="endPeriod"
-                                type="date"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-2">
-                        <label className="primary">Graduated</label> <br />
-
-                        <div className="onoffswitch">
-                            <input
-                                className="onoffswitch-checkbox"
-                                onChange={(e) => {
-                                    this.setState({
-                                        graduated: document.getElementById('graduated').checked
-                                    });
-                                }}
-                                form="education-form"
-                                type="checkbox"
-                                value="graduated"
-                                name="graduated"
-                                id="graduated"
-                            />
-                            <label className="onoffswitch-label" htmlFor="graduated">
-                                <span className="onoffswitch-inner" />
-                                <span className="onoffswitch-switch" />
-                            </label>
-                        </div>
-
-                        {/*<label className="switch">*/}
+                <div className="col-md-4">
+                    <span className="primary">* Phone</span>
+                    <div className="input-container--validated">
+                        <InputMask
+                            id="companyPhoneEmployment"
+                            form="form-previous-employment"
+                            name="phoneEmployment"
+                            mask="+(999) 999-9999"
+                            maskChar=" "
+                            value={this.state.previousEmploymentPhone}
+                            className="form-control"
+                            onChange={(event) => {
+                                this.setState({
+                                    previousEmploymentPhone: event.target.value
+                                });
+                            }}
+                            required
+                            placeholder="+(___) ___-____"
+                            minLength="15"
+                        />
                         {/*<input*/}
-                        {/*onChange={(e) => {*/}
-                        {/*this.setState({*/}
-                        {/*graduated: document.getElementById('graduated').checked*/}
-                        {/*});*/}
-                        {/*}}*/}
-                        {/*form="education-form"*/}
-                        {/*type="checkbox"*/}
-                        {/*value="graduated"*/}
-                        {/*name="graduated"*/}
-                        {/*id="graduated"*/}
+                        {/*id="companyPhoneEmployment"*/}
+                        {/*form="form-previous-employment"*/}
+                        {/*name="phoneEmployment"*/}
+                        {/*type="number"*/}
+                        {/*className="form-control"*/}
+                        {/*required*/}
+                        {/*min="0"*/}
+                        {/*maxLength="10"*/}
+                        {/*minLength="10"*/}
                         {/*/>*/}
-                        {/*<p className="slider round" />*/}
-                        {/*</label>*/}
-                    </div>
-                    <div className="col-md-4">
-                        <label className="primary">Degree</label>
-                        {this.state.graduated ? (
-                            <div className="input-container--validated">
-                                <select form="education-form" name="degree" id="degree" className="form-control">
-                                    <option value="">Select an option</option>
-                                    {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                                </select>
-                            </div>
-                        ) : (
-                                <div className="input-container--validated">
-                                    <select
-                                        form="education-form"
-                                        name="degree"
-                                        id="degree"
-                                        disabled
-                                        className="form-control"
-                                    >
-                                        <option value="">Select an option</option>
-                                        {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                                    </select>
-                                </div>
-                            )}
+                        <span className="check-icon" />
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        <Button type="submit" form="education-form" className="save-skill-button">
-                            Add
-                        </Button>
-                    </div>
-                </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertEducationApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                </div>
-            </form>
-        );
-
-        // To render the Military Service Section
-        let renderMilitaryServiceSection = () => (
-            <div className="ApplyBlock">
-                <h4 className="ApplyBlock-title">Military Service</h4>
-                <div className="row">
-                    <div className="col-md-6">
-                        <span className="primary"> Branch</span>
+                <div className="col-md-8">
+                    <span className="primary">* Address</span>
+                    <div className="input-container--validated">
                         <input
-                            onChange={(e) => {
-                                this.setState({
-                                    branch: e.target.value
-                                });
-                            }}
-                            value={this.state.branch}
-                            name="militaryBranch"
+                            id="companyAddressEmployment"
+                            form="form-previous-employment"
+                            name="addressEmployment"
                             type="text"
                             className="form-control"
+                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
                         />
                         <span className="check-icon" />
                     </div>
-                    <div className="col-md-6">
-                        <span className="primary"> Rank at Discharge</span>
+                </div>
+                <div className="col-md-4">
+                    <span className="primary">* Supervisor</span>
+                    <div className="input-container--validated">
                         <input
-                            onChange={(e) => {
-                                this.setState({
-                                    rankAtDischarge: e.target.value
-                                });
-                            }}
-                            value={this.state.rankAtDischarge}
-                            name="militaryRankDischarge"
+                            id="companySupervisor"
+                            form="form-previous-employment"
+                            name="supervisorEmployment"
                             type="text"
                             className="form-control"
+                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1738,196 +2021,315 @@ class VerticalLinearStepper extends Component {
                         <span className="check-icon" />
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-3">
-                        <span className="primary"> Dates</span>
+                <div className="col-md-8">
+                    <span className="primary">* Job Title</span>
+                    <div className="input-container--validated">
                         <input
-                            onChange={(e) => {
-                                this.setState({
-                                    startDateMilitaryService: e.target.value
-                                });
-                            }}
-                            value={this.state.startDateMilitaryService}
-                            name="militaryStartDate"
-                            type="date"
+                            id="companyJobTitle"
+                            form="form-previous-employment"
+                            name="jobTitleEmployment"
+                            type="text"
                             className="form-control"
+                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
                         />
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">To: </span>
-                        <input
-                            onChange={(e) => {
-                                this.setState({
-                                    endDateMilitaryService: e.target.value
-                                });
-                            }}
-                            value={this.state.endDateMilitaryService}
-                            name="militaryEndDate"
-                            type="date"
-                            className="form-control"
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                    </div>
-                    <div className="col-md-6">
-                        <span className="primary"> Type of Discharge</span>
-                        <select
-                            onChange={(e) => {
-                                this.setState({
-                                    typeOfDischarge: e.target.value
-                                });
-                            }}
-                            value={this.state.typeOfDischarge}
-                            name="dischargeType"
-                            id="dischargeType"
-                            className="form-control"
-                        >
-                            <option value="">Select an option</option>
-                            <option value="1">Honorable discharge</option>
-                            <option value="2">General discharge</option>
-                            <option value="3">Other than honorable (OTH) discharge</option>
-                            <option value="4">Bad conduct discharge</option>
-                            <option value="5">Dishonorable discharge</option>
-                            <option value="6">Entry-level separation.</option>
-                        </select>
                         <span className="check-icon" />
                     </div>
                 </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertMilitaryServicesApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                <div className="col-md-4">
+                    <span className="primary">* Pay Rate</span>
+                    <div className="input-container--validated">
+                        <input
+                            id="companyPayRate"
+                            form="form-previous-employment"
+                            name="payRateEmployment"
+                            type="number"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                        <span className="check-icon" />
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <span className="primary">* Dates</span>
+                    <div className="input-container--validated">
+                        <input
+                            id="companyStartDate"
+                            form="form-previous-employment"
+                            name="startPreviousEmployment"
+                            type="date"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                        <span className="check-icon" />
+                    </div>
+                </div>
+                <div className="col-md-3">
+                    <span className="primary">* To: </span>
+                    <div className="input-container--validated">
+                        <input
+                            id="companyEndDate"
+                            form="form-previous-employment"
+                            name="endPreviousEmployment"
+                            type="date"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                        />
+                        <span className="check-icon" />
+                    </div>
+                </div>
+                <div className="col-md-6">
+                    <span className="primary"> Reason for leaving</span>
+                    <textarea
+                        id="companyReasonForLeaving"
+                        form="form-previous-employment"
+                        name="reasonForLeavingEmployment"
+                        className="form-control textarea-apply-form"
+                    />
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-md-12">
+                    <Button type="submit" form="form-previous-employment" className="save-skill-button">
+                        Add
                     </Button>
                 </div>
             </div>
-        );
+            <div className="bottom-container-stepper">
+                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
+                    Back
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        this.insertPreviousEmploymentApplication();
+                    }}
+                    className={this.props.classes.button}
+                >
+                    {this.state.activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                </Button>
+            </div>
+        </form>
+    );
 
-        // To render the Previous Employment Section
-        let renderPreviousEmploymentSection = () => (
+    // To render the Languages Section
+    renderlanguagesSection = (steps) => (
+        <div className="ApplyBlock">
+            <h4 className="ApplyBlock-title">Languages</h4>
+            {this.state.languages.length > 0 ? (
+                <div className="skills-container skills-container--header">
+                    <div className="row">
+                        <div className="col-md-3">
+                            <span>Language Name</span>
+                        </div>
+                        <div className="col-md-4">
+                            <span>Conversation</span>
+                        </div>
+                        <div className="col-md-4">
+                            <span>Writing</span>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                    ''
+                )}
+            {this.state.languages.map((languageItem) => (
+                <div key={uuidv4()} className="skills-container">
+                    <div className="row">
+                        <div className="col-md-3">
+                            <span>
+                                {this.state.languagesLoaded.map((item) => {
+                                    if (item.Id == languageItem.language) {
+                                        return item.Name.trim();
+                                    }
+                                })}
+                            </span>
+                        </div>
+                        <div className="col-md-4">
+                            <span>
+                                {languageLevelsJSON.map((item) => {
+                                    if (item.Id == languageItem.conversation) {
+                                        return item.Name;
+                                    }
+                                })}
+                            </span>
+                        </div>
+                        <div className="col-md-4">
+                            <span>
+                                {languageLevelsJSON.map((item) => {
+                                    if (item.Id == languageItem.writing) {
+                                        return item.Name;
+                                    }
+                                })}
+                            </span>
+                        </div>
+                        <div className="col-md-1">
+                            <Button
+                                className="deleteSkillSection"
+                                onClick={() => {
+                                    this.setState((prevState) => ({
+                                        languages: this.state.languages.filter((_, i) => {
+                                            return _.uuid !== languageItem.uuid;
+                                        })
+                                    }));
+                                }}
+                            >
+                                x
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            ))}
+            <br />
+            <br />
+            {this.state.languages.length > 0 ? <hr /> : ''}
             <form
-                id="form-previous-employment"
-                className="ApplyBlock"
+                className="row"
+                id="form-language"
+                autoComplete="off"
                 onSubmit={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     let item = {
                         uuid: uuidv4(),
-                        companyName: document.getElementById('companyNameEmployment').value,
-                        phone: document.getElementById('companyPhoneEmployment').value,
-                        address: document.getElementById('companyAddressEmployment').value,
-                        supervisor: document.getElementById('companySupervisor').value,
-                        jobTitle: document.getElementById('companyJobTitle').value,
-                        payRate: parseFloat(document.getElementById('companyPayRate').value),
-                        startDate: document.getElementById('companyStartDate').value,
-                        endDate: document.getElementById('companyEndDate').value,
-                        reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
-                        ApplicationId: 1 // Static application id
+                        ApplicationId: this.state.applicationId,
+                        language: document.getElementById('nameLanguage').value,
+                        writing: parseInt(document.getElementById('writingLanguage').value),
+                        conversation: parseInt(document.getElementById('conversationLanguage').value)
                     };
                     this.setState(
                         (prevState) => ({
                             open: false,
-                            previousEmployment: [...prevState.previousEmployment, item]
+                            languages: [...prevState.languages, item]
                         }),
                         () => {
-                            document.getElementById('form-previous-employment').reset();
-                            document.getElementById('companyNameEmployment').classList.remove('invalid-apply-form');
-                            document.getElementById('companyPhoneEmployment').classList.remove('invalid-apply-form');
-                            document.getElementById('companyAddressEmployment').classList.remove('invalid-apply-form');
-                            document.getElementById('companySupervisor').classList.remove('invalid-apply-form');
-                            document.getElementById('companyJobTitle').classList.remove('invalid-apply-form');
-                            document.getElementById('companyPayRate').classList.remove('invalid-apply-form');
-                            document.getElementById('companyStartDate').classList.remove('invalid-apply-form');
-                            document.getElementById('companyEndDate').classList.remove('invalid-apply-form');
-                            document.getElementById('companyReasonForLeaving').classList.remove('invalid-apply-form');
-
-                            this.setState({
-                                previousEmploymentPhone: ''
-                            });
+                            document.getElementById('form-language').reset();
+                            document.getElementById('writingLanguage').classList.remove('invalid-apply-form');
+                            document.getElementById('conversationLanguage').classList.remove('invalid-apply-form');
+                            document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
                         }
                     );
                 }}
             >
-                <h4 className="ApplyBlock-title">Previous Employment</h4>
-                <div className="row">
-                    {this.state.previousEmployment.length > 0 ? (
-                        <div key={uuidv4()} className="skills-container skills-container--header">
+                <div className="col-md-4">
+                    <span className="primary">* Languages</span>
+                    <select
+                        id="nameLanguage"
+                        name="languageName"
+                        required
+                        className="form-control"
+                        form="form-language"
+                    >
+                        <option value="">Select an option</option>
+                        {this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                    </select>
+                  
+                    <span className="check-icon" />
+                </div>
+                <div className="col-md-3">
+                    <span className="primary">* Conversation</span>
+                    <select
+                        required
+                        id="conversationLanguage"
+                        form="form-language"
+                        name="conversationLanguage"
+                        className="form-control"
+                    >
+                        <option value="">Select an option</option>
+                        {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                    </select>
+                    <span className="check-icon" />
+                </div>
+                <div className="col-md-3">
+                    <span className="primary">* Writing</span>
+                    <select
+                        required
+                        id="writingLanguage"
+                        form="form-language"
+                        name="writingLanguage"
+                        className="form-control"
+                    >
+                        <option value="">Select an option</option>
+                        {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                    </select>
+                    <span className="check-icon" />
+                </div>
+                <div className="col-md-2">
+                    <br />
+                    <Button type="submit" form="form-language" className="save-skill-button">
+                        Add
+                    </Button>
+                </div>
+                <div className="bottom-container-stepper">
+                    <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
+                        Back
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            this.insertLanguagesApplication();
+                        }}
+                        className={this.props.classes.button}
+                    >
+                        {this.state.activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
+                </div>
+            </form>
+        </div>
+    );
+
+    // To render the skills section
+    renderSkillsSection = (steps) => (
+        <div className="ApplyBlock">
+            <h4 className="ApplyBlock-title">Skills</h4>
+            <div className="row">
+                <div className="col-md-12">
+                    {this.renderSkillsDialog()}
+                </div>
+                <div className="col-md-12">
+                    {this.state.skills.length > 0 ? (
+                        <div className="skills-container skills-container--header">
                             <div className="row">
-                                <div className="col-md-2">
-                                    <span>Company</span>
+                                <div className="col-md-6">
+                                    <span>Skill Name</span>
                                 </div>
-                                <div className="col-md-2">
-                                    <span>Address</span>
-                                </div>
-                                <div className="col-md-2">
-                                    <span>Job Title</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>Phone</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>Supervisor</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>Pay Rate</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>Start Date</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>End Date</span>
+                                <div className="col-md-6">
+                                    <span>Skill Level</span>
                                 </div>
                             </div>
                         </div>
                     ) : (
                             ''
                         )}
-                    {this.state.previousEmployment.map((employmentItem) => (
+                    {this.state.skills.map((skillItem) => (
                         <div key={uuidv4()} className="skills-container">
                             <div className="row">
-                                <div className="col-md-2">
-                                    <span>{employmentItem.companyName}</span>
+                                <div className="col-md-6">
+                                    <span>{skillItem.description}</span>
                                 </div>
-                                <div className="col-md-2">
-                                    <span>{employmentItem.address}</span>
-                                </div>
-                                <div className="col-md-2">
-                                    <span>{employmentItem.jobTitle}</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>{employmentItem.phone}</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>{employmentItem.supervisor}</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>{employmentItem.payRate}</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>{employmentItem.startDate}</span>
-                                </div>
-                                <div className="col-md-1">
-                                    <span>{employmentItem.endDate}</span>
+                                <div className="col-md-5">
+                                    <InputRangeDisabled percent={skillItem.level} />
                                 </div>
                                 <div className="col-md-1">
                                     <Button
                                         className="deleteSkillSection"
                                         onClick={() => {
                                             this.setState((prevState) => ({
-                                                previousEmployment: this.state.previousEmployment.filter((_, i) => {
-                                                    return _.uuid !== employmentItem.uuid;
+                                                skills: this.state.skills.filter((_, i) => {
+                                                    return _.uuid !== skillItem.uuid;
                                                 })
                                             }));
                                         }}
@@ -1938,522 +2340,121 @@ class VerticalLinearStepper extends Component {
                             </div>
                         </div>
                     ))}
-                    <hr className="separator" />
                 </div>
-                <div className="row">
-                    <div className="col-md-8">
-                        <span className="primary">* Company</span>
-                        <div className="input-container--validated">
-                            <input
-                                id="companyNameEmployment"
-                                form="form-previous-employment"
-                                name="companyNameEmployment"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <span className="primary">* Phone</span>
-                        <div className="input-container--validated">
-                            <InputMask
-                                id="companyPhoneEmployment"
-                                form="form-previous-employment"
-                                name="phoneEmployment"
-                                mask="+(999) 999-9999"
-                                maskChar=" "
-                                value={this.state.previousEmploymentPhone}
-                                className="form-control"
-                                onChange={(event) => {
-                                    this.setState({
-                                        previousEmploymentPhone: event.target.value
-                                    });
-                                }}
-                                required
-                                placeholder="+(___) ___-____"
-                                minLength="15"
-                            />
-                            {/*<input*/}
-                            {/*id="companyPhoneEmployment"*/}
-                            {/*form="form-previous-employment"*/}
-                            {/*name="phoneEmployment"*/}
-                            {/*type="number"*/}
-                            {/*className="form-control"*/}
-                            {/*required*/}
-                            {/*min="0"*/}
-                            {/*maxLength="10"*/}
-                            {/*minLength="10"*/}
-                            {/*/>*/}
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-8">
-                        <span className="primary">* Address</span>
-                        <div className="input-container--validated">
-                            <input
-                                id="companyAddressEmployment"
-                                form="form-previous-employment"
-                                name="addressEmployment"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <span className="primary">* Supervisor</span>
-                        <div className="input-container--validated">
-                            <input
-                                id="companySupervisor"
-                                form="form-previous-employment"
-                                name="supervisorEmployment"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-8">
-                        <span className="primary">* Job Title</span>
-                        <div className="input-container--validated">
-                            <input
-                                id="companyJobTitle"
-                                form="form-previous-employment"
-                                name="jobTitleEmployment"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-4">
-                        <span className="primary">* Pay Rate</span>
-                        <div className="input-container--validated">
-                            <input
-                                id="companyPayRate"
-                                form="form-previous-employment"
-                                name="payRateEmployment"
-                                type="number"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">* Dates</span>
-                        <div className="input-container--validated">
-                            <input
-                                id="companyStartDate"
-                                form="form-previous-employment"
-                                name="startPreviousEmployment"
-                                type="date"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">* To: </span>
-                        <div className="input-container--validated">
-                            <input
-                                id="companyEndDate"
-                                form="form-previous-employment"
-                                name="endPreviousEmployment"
-                                type="date"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <span className="primary"> Reason for leaving</span>
-                        <textarea
-                            id="companyReasonForLeaving"
-                            form="form-previous-employment"
-                            name="reasonForLeavingEmployment"
-                            className="form-control textarea-apply-form"
-                        />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        <Button type="submit" form="form-previous-employment" className="save-skill-button">
-                            Add
-                        </Button>
-                    </div>
-                </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertPreviousEmploymentApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                </div>
-            </form>
-        );
-
-        // To render the Languages Section
-        let renderlanguagesSection = () => (
-            <div className="ApplyBlock">
-                <h4 className="ApplyBlock-title">Languages</h4>
-                {this.state.languages.length > 0 ? (
-                    <div className="skills-container skills-container--header">
-                        <div className="row">
-                            <div className="col-md-3">
-                                <span>Language Name</span>
-                            </div>
-                            <div className="col-md-4">
-                                <span>Conversation</span>
-                            </div>
-                            <div className="col-md-4">
-                                <span>Writing</span>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                        ''
-                    )}
-                {this.state.languages.map((languageItem) => (
-                    <div key={uuidv4()} className="skills-container">
-                        <div className="row">
-                            <div className="col-md-3">
-                                <span>
-                                    {this.state.languagesLoaded.map((item) => {
-                                        if (item.Id == languageItem.language) {
-                                            return item.Name.trim();
-                                        }
-                                    })}
-                                </span>
-                            </div>
-                            <div className="col-md-4">
-                                <span>
-                                    {languageLevelsJSON.map((item) => {
-                                        if (item.Id == languageItem.conversation) {
-                                            return item.Name;
-                                        }
-                                    })}
-                                </span>
-                            </div>
-                            <div className="col-md-4">
-                                <span>
-                                    {languageLevelsJSON.map((item) => {
-                                        if (item.Id == languageItem.writing) {
-                                            return item.Name;
-                                        }
-                                    })}
-                                </span>
-                            </div>
-                            <div className="col-md-1">
-                                <Button
-                                    className="deleteSkillSection"
-                                    onClick={() => {
-                                        this.setState((prevState) => ({
-                                            languages: this.state.languages.filter((_, i) => {
-                                                return _.uuid !== languageItem.uuid;
-                                            })
-                                        }));
-                                    }}
-                                >
-                                    x
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-                <br />
-                <br />
-                {this.state.languages.length > 0 ? <hr /> : ''}
-                <form
-                    className="row"
-                    id="form-language"
-                    autoComplete="off"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        let item = {
-                            uuid: uuidv4(),
-                            ApplicationId: this.state.applicationId,
-                            language: document.getElementById('nameLanguage').value,
-                            writing: parseInt(document.getElementById('writingLanguage').value),
-                            conversation: parseInt(document.getElementById('conversationLanguage').value)
-                        };
-                        this.setState(
-                            (prevState) => ({
-                                open: false,
-                                languages: [...prevState.languages, item]
-                            }),
-                            () => {
-                                document.getElementById('form-language').reset();
-                                document.getElementById('writingLanguage').classList.remove('invalid-apply-form');
-                                document.getElementById('conversationLanguage').classList.remove('invalid-apply-form');
-                                document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
-                            }
-                        );
+            </div>
+            <div className="bottom-container-stepper">
+                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
+                    Back
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                        this.insertSkillsApplication();
                     }}
+                    className={this.props.classes.button}
                 >
-                    <div className="col-md-4">
-                        <span className="primary">* Languages</span>
-                        <select
-                            id="nameLanguage"
-                            name="languageName"
-                            required
-                            className="form-control"
-                            form="form-language"
-                        >
-                            <option value="">Select an option</option>
-                            {this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                        </select>
-                      
-                        <span className="check-icon" />
+                    {this.state.activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                </Button>
+            </div>
+        </div>
+    );
+
+    // To render the disclaimer section
+    renderDisclaimerSection = (history, steps) => (
+        <div className="ApplyBlock">
+            <h4 className="ApplyBlock-title">Disclaimer</h4>
+            <div className="row">
+                <div className="col-md-12">
+                    <p className="disclaimer-text">
+                        I certify that the information on this application is correct and I understand that any
+                        misrepresentation or omission of any information will result in my disqualification from
+                        consideration for employment or, if employed, my dismissal. I hereby acknowledge and agree
+                        that, as part of my application for employment, Tumi Staffing, Inc., may request background
+                        information about me from a consumer reporting agency for employment purposes in accordance
+                        with federal and state law. I authorize law enforcement agencies, learning institutions
+                        (including public and private schools and universities), information service bureaus, credit
+                        bureaus, record/data repositories, courts (federal, state and local), motor vehicle records
+                        agencies, my past or present employers, the military, and other individuals and sources to
+                        furnish any and all information on me that is requested by the consumer reporting agency. By
+                        my acceptance below, I certify the information I provided on this form is true and correct.
+                        I agree that this Disclosure and Authorization form will be valid for any reports that may
+                        be requested by or on behalf of the Company. By my acceptance below, the company may obtain
+                        a consumer report as discussed above.
+                    </p>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <input
+                            type="checkbox"
+                            checked={this.state.aceptedDisclaimer}
+                            onChange={(e) => {
+                                this.setState({
+                                    aceptedDisclaimer: e.target.checked,
+                                    openSignature: e.target.checked
+                                });
+                            }} />
+                        <span className="primary"> Accept and Sign</span>
                     </div>
-                    <div className="col-md-3">
-                        <span className="primary">* Conversation</span>
-                        <select
-                            required
-                            id="conversationLanguage"
-                            form="form-language"
-                            name="conversationLanguage"
-                            className="form-control"
-                        >
-                            <option value="">Select an option</option>
-                            {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                        </select>
-                        <span className="check-icon" />
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">* Writing</span>
-                        <select
-                            required
-                            id="writingLanguage"
-                            form="form-language"
-                            name="writingLanguage"
-                            className="form-control"
-                        >
-                            <option value="">Select an option</option>
-                            {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                        </select>
-                        <span className="check-icon" />
-                    </div>
-                    <div className="col-md-2">
-                        <br />
-                        <Button type="submit" form="form-language" className="save-skill-button">
-                            Add
-                        </Button>
-                    </div>
-                    <div className="bottom-container-stepper">
-                        <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                            Back
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                                this.insertLanguagesApplication();
+                </div>
+                {
+                    this.state.aceptedDisclaimer ? (
+                        <Dialog
+                            open={this.state.openSignature}
+                            onClose={() => {
+                                this.setState({
+                                    openSignature: false,
+                                    aceptedDisclaimer: false
+                                })
                             }}
-                            className={classes.button}
-                        >
-                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                        </Button>
-                    </div>
-                </form>
+                            aria-labelledby="form-dialog-title">
+                            <DialogTitle>
+                                <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
+                            </DialogTitle>
+                            <DialogContent>
+                                <SignatureForm applicationId={this.state.applicationId} signatureValue={null}
+                                    showSaveIcon={null} />
+                            </DialogContent>
+                        </Dialog>
+                    ) : (
+                            ''
+                        )
+                }
             </div>
-        );
-
-        // To render the skills section
-        let renderSkillsSection = () => (
-            <div className="ApplyBlock">
-                <h4 className="ApplyBlock-title">Skills</h4>
-                <div className="row">
-                    <div className="col-md-12">
-                        {renderSkillsDialog()}
-                    </div>
-                    <div className="col-md-12">
-                        {this.state.skills.length > 0 ? (
-                            <div className="skills-container skills-container--header">
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <span>Skill Name</span>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <span>Skill Level</span>
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                                ''
-                            )}
-                        {this.state.skills.map((skillItem) => (
-                            <div key={uuidv4()} className="skills-container">
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <span>{skillItem.description}</span>
-                                    </div>
-                                    <div className="col-md-5">
-                                        <InputRangeDisabled percent={skillItem.level} />
-                                    </div>
-                                    <div className="col-md-1">
-                                        <Button
-                                            className="deleteSkillSection"
-                                            onClick={() => {
-                                                this.setState((prevState) => ({
-                                                    skills: this.state.skills.filter((_, i) => {
-                                                        return _.uuid !== skillItem.uuid;
-                                                    })
-                                                }));
-                                            }}
-                                        >
-                                            x
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertSkillsApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                </div>
+            <div className="bottom-container-stepper">
+                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
+                    Back
+                </Button>
             </div>
-        );
+        </div>
+    );
 
-        // To render the disclaimer section
-        let renderDisclaimerSection = (history) => (
-            <div className="ApplyBlock">
-                <h4 className="ApplyBlock-title">Disclaimer</h4>
-                <div className="row">
-                    <div className="col-md-12">
-                        <p className="disclaimer-text">
-                            I certify that the information on this application is correct and I understand that any
-                            misrepresentation or omission of any information will result in my disqualification from
-                            consideration for employment or, if employed, my dismissal. I hereby acknowledge and agree
-                            that, as part of my application for employment, Tumi Staffing, Inc., may request background
-                            information about me from a consumer reporting agency for employment purposes in accordance
-                            with federal and state law. I authorize law enforcement agencies, learning institutions
-                            (including public and private schools and universities), information service bureaus, credit
-                            bureaus, record/data repositories, courts (federal, state and local), motor vehicle records
-                            agencies, my past or present employers, the military, and other individuals and sources to
-                            furnish any and all information on me that is requested by the consumer reporting agency. By
-                            my acceptance below, I certify the information I provided on this form is true and correct.
-                            I agree that this Disclosure and Authorization form will be valid for any reports that may
-                            be requested by or on behalf of the Company. By my acceptance below, the company may obtain
-                            a consumer report as discussed above.
-                        </p>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-12">
-                            <input
-                                type="checkbox"
-                                checked={this.state.aceptedDisclaimer}
-                                onChange={(e) => {
-                                    this.setState({
-                                        aceptedDisclaimer: e.target.checked,
-                                        openSignature: e.target.checked
-                                    });
-                                }} />
-                            <span className="primary"> Accept and Sign</span>
-                        </div>
-                    </div>
-                    {
-                        this.state.aceptedDisclaimer ? (
-                            <Dialog
-                                open={this.state.openSignature}
-                                onClose={() => {
-                                    this.setState({
-                                        openSignature: false,
-                                        aceptedDisclaimer: false
-                                    })
-                                }}
-                                aria-labelledby="form-dialog-title">
-                                <DialogTitle>
-                                    <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-                                </DialogTitle>
-                                <DialogContent>
-                                    <SignatureForm applicationId={this.state.applicationId} signatureValue={null}
-                                        showSaveIcon={null} />
-                                </DialogContent>
-                            </Dialog>
-                        ) : (
-                                ''
-                            )
-                    }
-                </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                </div>
-            </div>
-        );
+    getStepContent = (step, history, steps) => {
+        switch (step) {
+            case 0:
+                return this.renderApplicantInformationSection(steps);
+            case 1:
+                return this.renderlanguagesSection(steps);
+            case 2:
+                return this.renderEducationSection(steps);
+            case 3:
+                return this.renderPreviousEmploymentSection(steps);
+            case 4:
+                return this.renderMilitaryServiceSection(steps);
+            case 5:
+                return this.renderSkillsSection(steps);
+            case 6:
+                return this.renderDisclaimerSection(history, steps);
+            default:
+                return 'Unknown step';
+        }
+    };
+//#endregion
 
-        let getStepContent = (step, history) => {
-            switch (step) {
-                case 0:
-                    return renderApplicantInformationSection();
-                case 1:
-                    return renderlanguagesSection();
-                case 2:
-                    return renderEducationSection();
-                case 3:
-                    return renderPreviousEmploymentSection();
-                case 4:
-                    return renderMilitaryServiceSection();
-                case 5:
-                    return renderSkillsSection();
-                case 6:
-                    return renderDisclaimerSection(history);
-                default:
-                    return 'Unknown step';
-            }
-        };
+    render() {
+        const { classes } = this.props;
+        const steps = getSteps();
+        const { activeStep } = this.state;            
 
         return (
             <div className="main-stepper-container">
@@ -2520,7 +2521,7 @@ class VerticalLinearStepper extends Component {
 
                                             }}
                                         >
-                                            {getStepContent(this.state.activeStep, history)}
+                                            {this.getStepContent(this.state.activeStep, history, steps)}
                                         </form>
                                     )}
                                 />
