@@ -181,13 +181,13 @@ class PreviousEmployment extends Component {
 			editing: true,
 			id: 0,
 			previousEmploymentPhone: '',
-			startPreviousEmployment: '',
-			endPreviousEmployment: '',
+			startPreviousEmployment: null,
+			endPreviousEmployment: null,
 			companyNameEmployment: '',
 			companyAddressEmployment: '',
 			companySupervisor: '',
 			companyJobTitle: '',
-			companyPayRate: '',
+			companyPayRate: null,
 			companyReasonForLeaving: ''
 		});
 	}
@@ -198,8 +198,8 @@ class PreviousEmployment extends Component {
 			editing: true,
 			id,
 			previousEmploymentPhone: phone,
-			startPreviousEmployment: startDate.substring(0, 10),
-			endPreviousEmployment: endDate.substring(0, 10),
+			startPreviousEmployment: startDate ? startDate.substring(0, 10) : null,
+			endPreviousEmployment: endDate ? endDate.substring(0, 10) : null,
 			companyNameEmployment: companyName,
 			companyAddressEmployment: address,
 			companySupervisor: supervisor,
@@ -241,25 +241,38 @@ class PreviousEmployment extends Component {
 						e.stopPropagation();
 
 						try {
-							let item = {
-								uuid: uuidv4(),
-								companyName: document.getElementById('companyNameEmployment').value,
-								phone: document.getElementById('companyPhoneEmployment').value,
-								address: document.getElementById('companyAddressEmployment').value,
-								supervisor: document.getElementById('companySupervisor').value,
-								jobTitle: document.getElementById('companyJobTitle').value,
-								payRate: parseFloat(document.getElementById('companyPayRate').value),
-								startDate: document.getElementById('companyStartDate').value,
-								endDate: document.getElementById('companyEndDate').value,
-								reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
-								ApplicationId: this.state.applicationId
-							};
 
-							if (this.state.id != 0)
-								this.updatePreviousEmploymentApplication({ ...item, id: this.state.id });
-							else
-								this.insertPreviousEmploymentApplication(item);
+							let { companyNameEmployment, previousEmploymentPhone, companyAddressEmployment, companySupervisor, companyJobTitle, companyPayRate, startPreviousEmployment, endPreviousEmployment, companyReasonForLeaving, applicationId } = this.state;
+							let formData = {
+								companyName: companyNameEmployment,
+								phone: previousEmploymentPhone,
+								address: companyAddressEmployment,
+								supervisor: companySupervisor,
+								jobTitle: companyJobTitle,
+								payRate: companyPayRate,
+								startDate: startPreviousEmployment,
+								endDate: endPreviousEmployment,
+								reasonForLeaving: companyReasonForLeaving,
+							}
+							let values = [];
+							Object.values(formData).map(value => {
+								if (value)
+									values.push(value);
+							})
+							if (values.length == 0)
+								this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
+							else {
+								let item = {
+									uuid: uuidv4(),
+									...formData,
+									ApplicationId: applicationId
+								};
 
+								if (this.state.id != 0)
+									this.updatePreviousEmploymentApplication({ ...item, id: this.state.id });
+								else
+									this.insertPreviousEmploymentApplication(item);
+							}
 						} catch (e) { }
 					}}
 					className="apply-form"
@@ -269,14 +282,13 @@ class PreviousEmployment extends Component {
 						{this.state.editing ? (
 							<div className="form-section-1 row">
 								<div className="col-md-6">
-									<span className="primary">* {previousEmploymentLabels[0].label}</span>
+									<span className="primary">{previousEmploymentLabels[0].label}</span>
 									<input
 										id="companyNameEmployment"
 										form="form-previous-employment"
 										name="companyNameEmployment"
 										type="text"
 										className="form-control"
-										required
 										min="0"
 										maxLength="50"
 										minLength="3"
@@ -334,14 +346,13 @@ class PreviousEmployment extends Component {
 									/>
 								</div>
 								<div className="col-md-6">
-									<span className="primary">* {previousEmploymentLabels[4].label}</span>
+									<span className="primary">{previousEmploymentLabels[4].label}</span>
 									<input
 										id="companyJobTitle"
 										form="form-previous-employment"
 										name="companyJobTitle"
 										type="text"
 										className="form-control"
-										required
 										min="0"
 										maxLength="50"
 										minLength="3"
@@ -366,7 +377,7 @@ class PreviousEmployment extends Component {
 									/>
 								</div>
 								<div className="col-md-6">
-									<span className="primary">* {previousEmploymentLabels[6].label}</span>
+									<span className="primary">{previousEmploymentLabels[6].label}</span>
 									<input
 										id="companyStartDate"
 										onChange={(event) => {
@@ -378,13 +389,12 @@ class PreviousEmployment extends Component {
 										name="startPreviousEmployment"
 										type="date"
 										className="form-control"
-										required
 										max={this.state.endPreviousEmployment}
 										value={this.state.startPreviousEmployment}
 									/>
 								</div>
 								<div className="col-md-6">
-									<span className="primary">* {previousEmploymentLabels[7].label} </span>
+									<span className="primary">{previousEmploymentLabels[7].label} </span>
 									<input
 										id="companyEndDate"
 										onChange={(event) => {
@@ -396,7 +406,6 @@ class PreviousEmployment extends Component {
 										name="endPreviousEmployment"
 										type="date"
 										className="form-control"
-										required
 										min={this.state.startPreviousEmployment}
 										value={this.state.endPreviousEmployment}
 									/>
