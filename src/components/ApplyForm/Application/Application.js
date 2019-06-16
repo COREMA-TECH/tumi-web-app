@@ -185,7 +185,7 @@ class Application extends Component {
                                 homePhone: this.state.homePhone,
                                 cellPhone: this.state.cellPhone,
                                 socialSecurityNumber: this.state.socialSecurityNumber,
-                                birthDay: this.state.birthDay,
+                                birthDay: Date.now(),
                                 car: this.state.car,
                                 typeOfId: parseInt(this.state.typeOfId),
                                 expireDateId: this.state.expireDateId,
@@ -532,11 +532,9 @@ class Application extends Component {
                 'right'
             );
         else {
-            if (
-                this.state.homePhoneNumberValid ||
-                this.state.cellPhoneNumberValid
-            ) {
-                if (!this.state.hasIndependentContract && this.state.socialSecurityNumber.length === 0)
+            if (this.state.homePhoneNumberValid || this.state.cellPhoneNumberValid) {
+                let socialSecurityNumber = this.state.socialSecurityNumber || '';
+                if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
                     this.setState(() => ({
                         openSSNDialog: true
                     }))
