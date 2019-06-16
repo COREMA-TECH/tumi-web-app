@@ -12,7 +12,8 @@ import {
     GET_ROLES_QUERY,
     GET_TYPES_QUERY,
     GET_CONTACTS_BY_APP_HOTEL_QUERY,
-    GET_HOTELS_BY_APPLICATION_QUERY
+    GET_HOTELS_BY_APPLICATION_QUERY,
+    GET_APPLICATION_CODE_USER
 } from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import InputMask from "react-input-mask";
@@ -433,6 +434,25 @@ class General extends Component {
         })
     };
 
+    getCodeUser = (id) => {
+        this.props.client.query({
+            query: GET_APPLICATION_CODE_USER,
+            fetchPolicy: 'no-cache',
+            variables: {
+                id: id
+            }
+        }).then(({ data }) => { 
+            let user = data.applicationCodeUser[0];
+            this.setState((prevState, prevProps) => {
+                return { Code_User: user.Code_User || '--' }
+            });
+        }).catch(error => {
+            this.setState({
+                loading: false,
+                error: true
+            })
+        });
+    }
 
     /**
      * To get the profile information for applicant
@@ -475,6 +495,8 @@ class General extends Component {
                                 idealJobs: this.state.data.idealJobs,
                                 applicantName: this.state.data.firstName+' '+this.state.data.lastName,
                                 codeUser:this.state.data.user?this.state.data.user.Code_User:'--'
+                            }, _ => {
+                                this.getCodeUser(id);
                             })
                         });
                     })
@@ -1606,7 +1628,7 @@ class General extends Component {
                                         <span
                                             className="username-number col-sm-12">Emp #: TM-0000{this.state.data.id}</span>
                                              <span
-                                            className="username-number col-sm-12">UserName: {this.state.codeUser}</span>
+                                            className="username-number col-sm-12">UserName: {this.state.Code_User}</span>
                                     </div>
                                 </div>
                                 <div className="item col-12 col-md-2">

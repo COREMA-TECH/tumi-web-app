@@ -203,3 +203,12 @@ export const GET_POSITION = gql`
         }
     }
 `;
+
+export const GET_APPLICATION_CODE_USER = gql`
+    query applicationCodeUser($id: Int!) {
+        applicationCodeUser(id: $id) {
+            id
+            Code_User
+        }
+    }
+`;
