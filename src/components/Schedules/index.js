@@ -6,7 +6,7 @@ import PreFilter from './PreFilter';
 import DefaultClient from 'apollo-boost';
 import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
 import withGlobalContent from 'Generic/Global';
-import Grid from './Grid';
+import GridTabs from './GridTabs';
 
 const DEFAULT_EMPLOYEE = { value: 0, label: "Select an employee" };
 
@@ -243,7 +243,7 @@ class Schedules extends Component {
                                 </div>
                                 {
                                     !this.state.gridView ? (
-                                        <Grid location={this.state.location} gridView={this.state.gridView}/>
+                                        <GridTabs location={this.state.location} position={this.state.position} department={this.state.department}/>
                                     ) : ('')
                                 }
                                 {
