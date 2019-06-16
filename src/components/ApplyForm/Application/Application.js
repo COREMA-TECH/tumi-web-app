@@ -209,8 +209,12 @@ class Application extends Component {
                         }
                     })
                     .then(({ data }) => {
-                        if (id == 0)
+                        let applicationId;
+                        if (id == 0) {
                             this.props.setApplicantId(data.addApplication.id);
+                            applicationId = data.addApplication.id;
+                        } else 
+                            applicationId = data.updateApplication.id;
                         this.setState({
                             editing: false,
                             insertDialogLoading: false
@@ -224,7 +228,7 @@ class Application extends Component {
                                 })
                             });
                             this.addApplicantJobs(object);
-                            saveIndependentContract(data.addApplication.id)
+                            saveIndependentContract(applicationId)
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
@@ -232,12 +236,9 @@ class Application extends Component {
                     .catch((error) => {
                         this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
-                            this.setState({
-                                socialSecurityNumber: ''
-                            });
                             this.props.handleOpenSnackbar(
                                 'error',
-                                'Social Security Number Duplicated!',
+                                'The record could not be saved. Could some field be missing',
                                 'bottom',
                                 'right'
                             );
