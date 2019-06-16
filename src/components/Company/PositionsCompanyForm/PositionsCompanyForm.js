@@ -513,7 +513,6 @@ query getposition ($Id_Entity:Int){
 			var department = this.state.departments.find(function (obj) {
 				return obj.Id === Id_Department;
 			});
-			
 			this.setState(
 				{
 					idToEdit: Id,
@@ -1024,15 +1023,6 @@ query getposition ($Id_Entity:Int){
 						<div className="row">
 							<div className="col-md-12 col-lg-6">
 								<label>* Department</label>
-								{/* <AutosuggestInput
-									id="idDepartment"
-									name="idDepartment"
-									data={this.state.departments}
-									error={!this.state.departmentNameValid}
-									value={this.state.departmentName}
-									onChange={this.updateDepartmentName}
-									onSelect={this.updateDepartmentName}
-								/> */}
 								<Select
 									options={selectDepartments}
 									value={{value: this.state.departmentName, label: this.state.departmentName}}
@@ -1047,7 +1037,7 @@ query getposition ($Id_Entity:Int){
 								<label>* Title</label>								
 								<Select
 									options={this.state.positionCatalog}
-									value={this.state.positionsTags}
+									value={{value: this.state.catalogItem_id, label: this.state.position}}
 									onChange={this.handleChangePositionTag}
 									closeMenuOnSelect={false}
 									components={makeAnimated()}									
