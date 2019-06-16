@@ -1143,6 +1143,14 @@ class Employees extends Component {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="row">
+                                <div className="col-md-6 col-lg-6">
+                                    <label htmlFor="">First Name</label>
+                                    <input disabled type="text" className="form-control" value={this.state.firstNameEdit}/>
+                                </div>
+                                <div className="col-md-6 col-lg-6">
+                                    <label htmlFor="">Last Name</label>
+                                    <input disabled type="text" className="form-control" value={this.state.lastNameEdit}/>
+                                </div>
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Username</label>
                                     <InputForm
@@ -1228,15 +1236,6 @@ class Employees extends Component {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-md-6 col-lg-6">
-                                    <label htmlFor="">First Name</label>
-                                    <input disabled type="text" className="form-control" value={this.state.firstNameEdit}/>
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    <label htmlFor="">Last Name</label>
-                                    <input disabled type="text" className="form-control" value={this.state.lastNameEdit}/>
-                                </div>
-
                             </div>
 
                         </div>

@@ -911,7 +911,7 @@ class Catalogs extends React.Component {
                 AllowExport: this.state.allowExport ? 1 : 0,
                 IsRecruiter: this.state.IsRecruiter,
                 isEmployee: this.state.isEmployee,
-                IdRegion: this.state.IdRegion,
+                IdRegion: null,
                 IsActive: this.state.IsActive ? 1 : 0,
                 User_Created: 1,
                 User_Updated: 1,
@@ -1318,7 +1318,7 @@ class Catalogs extends React.Component {
 
 
 
-                                        <div className="col-md-9 col-lg-6">
+                                        {/* <div className="col-md-9 col-lg-6">
                                             <label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
                                             <AutosuggestInput
                                                 id="IdRegion"
@@ -1335,7 +1335,7 @@ class Catalogs extends React.Component {
                                                 }}
                                             />
 
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
 
