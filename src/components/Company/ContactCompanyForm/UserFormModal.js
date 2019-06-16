@@ -463,6 +463,14 @@ class UserFormModal extends Component {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="row">
+                                <div className="col-md-6 col-lg-6">
+                                    <label htmlFor="">First Name</label>
+                                    <input type="text" className={this.state.firstNameValid ? 'form-control' : 'form-control _invalid'} value={this.state.firstName} onChange={(e) => this.onChangeHandler(e.target.value, 'firstName')} />
+                                </div>
+                                <div className="col-md-6 col-lg-6">
+                                    <label htmlFor="">Last Name</label>
+                                    <input type="text" className={this.state.lastNameValid ? 'form-control' : 'form-control _invalid'} value={this.state.lastName} onChange={(e) => this.onChangeHandler(e.target.value, 'lastName')} />
+                                </div>
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Username</label>
                                     <InputForm
@@ -543,15 +551,6 @@ class UserFormModal extends Component {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-md-6 col-lg-6">
-                                    <label htmlFor="">First Name</label>
-                                    <input type="text" className={this.state.firstNameValid ? 'form-control' : 'form-control _invalid'} value={this.state.firstName} onChange={(e) => this.onChangeHandler(e.target.value, 'firstName')} />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    <label htmlFor="">Last Name</label>
-                                    <input type="text" className={this.state.lastNameValid ? 'form-control' : 'form-control _invalid'} value={this.state.lastName} onChange={(e) => this.onChangeHandler(e.target.value, 'lastName')} />
-                                </div>
-
                             </div>
 
                         </div>
