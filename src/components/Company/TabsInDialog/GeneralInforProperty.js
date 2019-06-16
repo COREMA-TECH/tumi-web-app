@@ -1275,7 +1275,7 @@ class GeneralInfoProperty extends Component {
                                 <div className="col-md-12 col-lg-12">
                                     <div className="row">
                                     {localStorage.getItem('ShowMarkup') == 'true' ?
-                                        <div className="col-md-6 col-lg-2">
+                                        <div className="col-md-6 col-lg-1">
                                             <label>* Markup</label>
                                             <InputValid
                                                 change={(text) => {
@@ -1291,7 +1291,7 @@ class GeneralInfoProperty extends Component {
                                             />
                                         </div>
                                         :''}
-                                        <div className="col-md-6 col-lg-2">
+                                        <div className="col-md-6 col-lg-4">
                                             <label>* Hotel Name</label>
                                             <InputValid
                                                 change={(text) => {
@@ -1305,7 +1305,7 @@ class GeneralInfoProperty extends Component {
                                                 required
                                             />
                                         </div>
-                                        <div className="col-md-6 col-lg-4">
+                                        <div className="col-md-6 col-lg-3">
                                             <label>* Address</label>
                                             <InputValid
                                                 change={(text) => {
@@ -1319,7 +1319,7 @@ class GeneralInfoProperty extends Component {
                                                 required
                                             />
                                         </div>
-                                        <div className="col-md-6 col-lg-4">
+                                        <div className="col-md-6 col-lg-3">
                                             <label>Address 2</label>
                                             <input
                                                 className={'form-control'}
@@ -1333,7 +1333,7 @@ class GeneralInfoProperty extends Component {
                                                 maxLength="50"
                                             />
                                         </div>
-                                        <div className="col-md-6 col-lg-2">
+                                        <div className="col-md-6 col-lg-1">
                                             <label>Suite</label>
                                             <input
                                                 onChange={(e) => {
@@ -1359,9 +1359,9 @@ class GeneralInfoProperty extends Component {
                                             cityClass={`form-control ${this.state.validCity === '' && ' _invalid'}`}
                                             stateClass={`form-control ${this.state.validState === '' && ' _invalid'}`}
                                             zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
-                                            cityColClass="col-md-6 col-lg-4"
+                                            cityColClass="col-md-6 col-lg-3"
                                             stateColClass="col-md-6 col-lg-2"
-                                            zipCodeColClass="col-md-6 col-lg-2"
+                                            zipCodeColClass="col-md-6 col-lg-1"
                                             requiredCity={true}
                                             requiredState={true}
                                             requiredZipCode={true}
