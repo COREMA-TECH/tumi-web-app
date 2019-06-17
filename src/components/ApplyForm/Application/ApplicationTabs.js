@@ -242,17 +242,11 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[9].label}
                         />
-                        {
-                            this.state.independentContract ? (
-                                <Tab
-                                    disableRipple
-                                    classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
-                                    label={'Independent Contract'}
-                                />
-                            ) : (
-                                    ''
-                                )
-                        }
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            label={'Independent Contract'}
+                        />
                     </Tabs>
                     {getTabContent(value)}
                 </MuiThemeProvider>

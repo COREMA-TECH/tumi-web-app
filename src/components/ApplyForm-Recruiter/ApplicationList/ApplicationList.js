@@ -269,7 +269,7 @@ class ApplicationList extends Component {
 				<div className="modal-header">
 					<h5 className="modal-title">
 						No Show Report
-				</h5>
+					</h5>
 				</div>
 			</DialogTitle>
 			<DialogContent style={{ overflowY: "unset" }}>
@@ -459,12 +459,12 @@ class ApplicationList extends Component {
 					/>
 				</div>
 				<div className="col-md-4 col-xl-12 mb-2">
-					<button
+					{/* <button
 						className="btn btn-success float-right ml-2"
 						onClick={this.showNoShowReportFilter}
 					>
 						No Show Report
-						</button>
+						</button> */}
 					<button
 						className="btn btn-success float-right"
 						onClick={this.redirectToCreateApplication}

@@ -584,7 +584,6 @@ class Application extends Component {
 
     saveIndependentContract = (id) => {
         let html = document.getElementById('independenContractContainer');
-
         if (!html)
             this.props.handleOpenSnackbar(
                 'error',
@@ -620,6 +619,7 @@ class Application extends Component {
                     this.getApplicationById(id);
                 })
                 .catch(error => {
+                    console.log(error)
                     // If there's an error show a snackbar with a error message
                     this.props.handleOpenSnackbar(
                         'error',

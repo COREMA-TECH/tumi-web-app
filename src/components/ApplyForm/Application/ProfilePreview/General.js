@@ -1734,10 +1734,10 @@ class General extends Component {
                                                         this.handleClickOpenModal();
                                                     }}>Add to hotel
                                                     </button>
-                                                      <button className="dropdown-item" onClick={() => {
+                                                      {/* <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenVerification();
                                                     }}>Employment Verification
-                                                    </button>
+                                                    </button> */}
                                                     {
                                                         userExist || this.state.createdProfile ? (
                                                             ''
