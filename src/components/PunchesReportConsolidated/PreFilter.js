@@ -42,7 +42,7 @@ class PreFilterConsolidated extends Component {
 
     getPropertiesByRegion = (IdRegion) => {
 
-        if (IdRegion == 0) return false;
+        //if (IdRegion == 0) return false;
         let options = [];
 
         let filter = {};
