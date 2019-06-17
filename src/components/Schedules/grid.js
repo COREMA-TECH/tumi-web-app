@@ -62,13 +62,14 @@ class Grid extends Component {
                 this.createNewRow()
             ]
         }))
+        this.getEmployees(this.props.entityId);
     }
 
     getCurrentWeek = (newCurrentDate) => {
-        let currentDate = moment();
+        let currentDate = moment.utc();
 
         if (newCurrentDate) {
-            currentDate = moment(newCurrentDate);
+            currentDate = moment.utc(newCurrentDate);
         }
 
         let weekStart = currentDate.clone().startOf('week');
@@ -76,7 +77,7 @@ class Grid extends Component {
 
         let days = [];
         for (let i = 0; i <= 6; i++) {
-            let date = moment(weekStart).add(i, 'days');
+            let date = moment.utc(weekStart).add(i, 'days');
             days.push({ index: i, label: date.format("MMMM Do,dddd"), date: date.format("YYYY-MM-DD") });
         };
 
@@ -95,8 +96,8 @@ class Grid extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.location != nextProps.location || this.props.gridView != nextProps.gridView) {
-            this.getEmployees(nextProps.location);
+        if (this.props.entityId != nextProps.entityId) {
+            this.getEmployees(nextProps.entityId);
         }
     }
 
@@ -167,70 +168,83 @@ class Grid extends Component {
         })
     }
 
-    createWorkOrder = () => {
-        this.props.client
-            .mutate({
-                mutation: CREATE_WORKORDER,
-                variables: {
-                    workOrder: this.state.form,
-                    codeuser: localStorage.getItem('LoginId'),
-                    nameUser: localStorage.getItem('FullName')
-                }
-            })
-            .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                this.setState(() => ({
-                    rows: []
-                }))
-            })
-            .catch((error) => {
-                this.setState({ saving: true });
-                this.props.handleOpenSnackbar('error', 'Error: ' + error);
-            });
+    insertWorkOrders = (data) => {
+        this.setState({ saving: true }, () => {
+            this.props.client
+                .mutate({
+                    mutation: CREATE_WORKORDER,
+                    variables: {
+                        workOrder: data,
+                        codeuser: localStorage.getItem('LoginId'),
+                        nameUser: localStorage.getItem('FullName')
+                    }
+                })
+                .then((data) => {
+                    this.props.handleOpenSnackbar('success', ' Shifts created successfully!');
+                    this.setState(() => ({ firstRow: null }));
+                    this.setState(() => ({
+                        rows: [{
+                            ...this.createNewRow(),
+                        }],
+                        saving: false
+                    }))
+                })
+                .catch((error) => {
+                    this.setState({ saving: false });
+                    this.props.handleOpenSnackbar('error', 'Error: ' + error);
+                });
+        });
     };
 
     saveWorkOrder = () => {
-        let data = [];
-        this.state.rows.map(_ => {
-            if (Object.keys(_.employeeId).length > 0) {
-                console.log(_);
-                DAYS.map(day => {
-                    if (_[day.description] != "0")
-                        this.createWorkOrderObject({ dayNumber: day.id, hour: _[day.description] });
-                })
+        this.setState(() => ({ saving: true }), () => {
+            let data = [];
+            this.state.rows.map(_ => {
+                if (Object.keys(_.employeeId).length > 0) {
+                    DAYS.map(day => {
+                        if (_[day.description] != "0")
+                            data.push(this.createWorkOrderObject({ dayNumber: day.id, hour: _[day.description], employeeId: _.employeeId.value }));
+                    })
+                }
+            })
+            if (data.length == 0) {
+                this.setState(() => ({ saving: false }));
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    'There is nothing to save!!'
+                )
             }
+            else this.insertWorkOrders(data);
         })
+
     }
 
     // createWorkOrderObject = ({ dayNumber, hour, employeeId }) => {
-    createWorkOrderObject = ({ dayNumber ,hour}) => {
-        console.log({ dayNumber, dates: this.state.daysOfWeek })
+    createWorkOrderObject = ({ dayNumber, hour, employeeId }) => {
         let date = this.state.daysOfWeek.find(_ => { return _.index == dayNumber }).date;
-        console.log(date);
-        let algo = {
-            IdEntity: 206,
-            PositionRateId: "172",
+        let workOrder = {
+            IdEntity: this.props.entityId,
+            PositionRateId: this.props.positionId,
             comment: "",
-            // contactId: null,
             date: date,
-            dayWeek: this.getDayCode(moment(date).day()),
-            departmentId: 30708,
+            dayWeek: this.getDayCode(moment.utc(date).day()),
+            departmentId: this.props.departmentId,
             endDate: date,
-            endShift: hour,
+            endShift: moment.utc(new Date("01/01/1990 " + hour), "HH:mm:ss").add(8, 'hours').format('HH:mm'),
             needEnglish: false,
             needExperience: false,
-            quantity: "1",
-            shift: "08:00",
-            startDate: "2019-05-21T00:00:00-06:00",
+            quantity: 1,
+            shift: hour,
+            startDate: date,
             status: 1,
-            userId: "10"
+            userId: localStorage.getItem("LoginId"),
+            employeeId
         }
-        console.log(algo);
+        return workOrder;
     }
 
     getDayCode = (day) => {
-        console.log("this is my day", day)
-        return day.toString().replace(1, "MO").replace(2, "TU").replace(3, "WE").replace(4, "TH").replace(5, "FR").replace(6, "SA").replace(7, "SU")
+        return day.toString().replace(1, "MO").replace(2, "TU").replace(3, "WE").replace(4, "TH").replace(5, "FR").replace(6, "SA").replace(0, "SU")
     }
 
     getDayControlName = (day) => {
@@ -288,7 +302,7 @@ class Grid extends Component {
                                     <tr>
                                         <td >
                                             <div className="d-inline-block w-25">
-                                                {_.id != this.state.firstRow ? <button className="btn btn-info" onClick={this.onClickDeleteHandler(_.id)}>
+                                                {_.id != this.state.firstRow ? <button className="btn" onClick={this.onClickDeleteHandler(_.id)}>
                                                     <i class="fas fa-times"></i>
                                                 </button> : ''}
                                             </div>
@@ -327,7 +341,7 @@ class Grid extends Component {
                         }
                         <tr>
                             <td colspan="8" align="right">
-                                <button className="btn btn-success" onClick={this.saveWorkOrder}>Save</button>
+                                <button className="btn btn-success" onClick={this.saveWorkOrder}>Save {this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}</button>
                             </td>
                         </tr>
                     </tbody>

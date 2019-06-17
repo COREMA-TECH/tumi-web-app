@@ -103,8 +103,8 @@ export const PUBLISH_ALL = gql`
 `;
 
 export const CREATE_WORKORDER = gql`
-	mutation addWorkOrder($workOrder: [inputInsertWorkOrder],  $codeuser: Int, $nameUser: String) {
-		addWorkOrder(workOrder: $workOrder, codeuser: $codeuser, nameUser: $nameUser) {
+	mutation addWorkOrderGrid($workOrder: [inputInsertWorkOrderGridType],  $codeuser: Int, $nameUser: String) {
+		addWorkOrderGrid(workOrder: $workOrder, codeuser: $codeuser, nameUser: $nameUser) {
 			id
 		}
 	}

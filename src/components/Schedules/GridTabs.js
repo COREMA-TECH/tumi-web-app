@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Grid from './grid';
-import withApollo from "react-apollo/withApollo"; 
+import withApollo from "react-apollo/withApollo";
 import withGlobalContent from 'Generic/Global';
 import GridTabModal from './GridTabModal';
 import { GET_POSITION } from './Queries';
@@ -50,8 +50,8 @@ class GridTabs extends Component {
                 name: data.getposition[0].Position
             });
             this.setState(prevState => {
-                return { 
-                    positions : position,
+                return {
+                    positions: position,
                     tabSelected: data.getposition[0].Id
                 }
             });
@@ -86,19 +86,19 @@ class GridTabs extends Component {
 
     selectTab = (id) => {
         this.setState(prevState => {
-            return { tabSelected : id }
+            return { tabSelected: id }
         });
     }
 
     render() {
-        return(
+        return (
             <React.Fragment>
                 <div className="GridTab-content">
                     {
                         this.state.positions.map(__position => {
                             return (
                                 <div className={this.state.tabSelected === __position.id ? 'd-block' : 'd-none'}>
-                                    <Grid entityId={this.props.location} positionId={__position.Id} departmentId={this.props.departmentId} />
+                                    <Grid entityId={this.props.location} positionId={__position.id} departmentId={this.props.department} handleOpenSnackbar={this.props.handleOpenSnackbar} />
                                 </div>
                             )
                         })
