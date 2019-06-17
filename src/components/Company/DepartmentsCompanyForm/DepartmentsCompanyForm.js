@@ -486,7 +486,7 @@ class DepartmentsCompanyForm extends React.Component {
 					this.setState(() => ({ loading: false }));
 					this.props.handleOpenSnackbar(
 						'warning',
-						'This code already exist in the database'
+						'This department is duplicated'
 					);
 				}
 				else
