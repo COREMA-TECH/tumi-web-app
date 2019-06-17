@@ -259,7 +259,7 @@ class FormsI9 extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{applyTabs[7].label}</span>
+                                <span className="applicant-card__title">{applyTabs[8].label}</span>
                                 {
                                     this.state.isCreated === null ? (
                                         ''

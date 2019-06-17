@@ -230,7 +230,7 @@ class AntiHarassment extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{applyTabs[5].label}</span>
+                                <span className="applicant-card__title">{applyTabs[6].label}</span>
                                 {
                                     this.state.id !== null ? (
                                         <button className="applicant-card__edit-button" onClick={() => {

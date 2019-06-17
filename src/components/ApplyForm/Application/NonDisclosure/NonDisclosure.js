@@ -231,7 +231,7 @@ class NonDisclosure extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{applyTabs[3].label}</span>
+                                <span className="applicant-card__title">{applyTabs[4].label}</span>
                                 {
                                     this.state.id === '' ? (
                                         ''

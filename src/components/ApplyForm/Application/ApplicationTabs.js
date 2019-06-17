@@ -151,26 +151,26 @@ class CustomizedTabs extends React.Component {
             switch (step) {
                 case 0:
                     return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId}/>;
-                case 1:
-                    return <ProfilePreview applicationId={this.state.applicationId} />;
-                case 2:
-                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 3:
-                    return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 4:
-                    return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 5:
-                    return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 6:
-                    return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 7:
-                    return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 8:
-                    return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 9:
-                    return <ApplicantDocument applicationId={this.state.applicationId} />;
-                case 10: 
+                case 1: 
                     return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />
+                case 2:
+                    return <ProfilePreview applicationId={this.state.applicationId} />;
+                case 3:
+                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                case 4:
+                    return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                case 5:
+                    return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                case 6:
+                    return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                case 7:
+                    return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                case 8:
+                    return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                case 9:
+                    return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                case 10:
+                    return <ApplicantDocument applicationId={this.state.applicationId} />;
                 case 11:
                     return <IndependentContract applicationId={this.state.applicationId} />;
 
@@ -198,48 +198,49 @@ class CustomizedTabs extends React.Component {
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[2].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantDisclosure ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[3].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantConductCode ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantDisclosure ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[4].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantHarassmentPolicy ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantConductCode ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[5].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantWorkerCompensation ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantHarassmentPolicy ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[6].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantI9 ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantWorkerCompensation ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[7].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[9].label}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantI9 ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[8].label}
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[10].label}
+                        />
+                        
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            label={applyTabs[9].label}
                         />
                         {
                             this.state.independentContract ? (

@@ -22,6 +22,7 @@ if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('
     localStorage.setItem('languageForm', 'en');
 }
 
+const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const formSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/formSpanish`);
@@ -637,7 +638,7 @@ class ApplicationInternal extends Component {
                     <div className="">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{menuSpanish[0].label}</span>
+                                <span className="applicant-card__title">{applyTabs[1].label}</span>
                                 {!this.state.editing &&
                                     <button
                                         className="applicant-card__edit-button"

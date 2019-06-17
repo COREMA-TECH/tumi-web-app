@@ -5,38 +5,42 @@
   },
   {
     "id": 1,
-    "label": "Perfil"
+    "label": "Uso Interno"
   },
   {
     "id": 2,
-    "label": "Verificación de Antecedentes"
+    "label": "Perfil"
   },
   {
     "id": 3,
-    "label": "No Divulgación"
+    "label": "Verificación de Antecedentes"
   },
   {
     "id": 4,
-    "label": "Código de Conducta"
+    "label": "No Divulgación"
   },
   {
     "id": 5,
-    "label": "Anti-Acoso"
+    "label": "Código de Conducta"
   },
   {
     "id": 6,
-    "label": "Compensación del Trabajador"
+    "label": "Anti-Acoso"
   },
   {
     "id": 7,
-    "label": "I9"
+    "label": "Compensación del Trabajador"
   },
   {
     "id": 8,
-    "label": "Documentos"
+    "label": "I9"
   },
   {
     "id": 9,
+    "label": "Documentos"
+  },
+  {
+    "id": 10,
     "label": "W4"
   }
 ]
