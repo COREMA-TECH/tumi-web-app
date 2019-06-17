@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import withApollo from "react-apollo/withApollo";
 import studyTypes from "../../data/studyTypes";
-import {GET_APPLICATION_EDUCATION_BY_ID} from "../../Queries";
-import {ADD_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION} from "../../Mutations";
+import { GET_APPLICATION_EDUCATION_BY_ID } from "../../Queries";
+import { ADD_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION } from "../../Mutations";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
 import EducationCard from "../../../ui-components/EducationCard/EducationCard";
@@ -33,7 +33,7 @@ class Education extends Component {
 
     // To open the skill dialog
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     // To close the skill dialog
@@ -57,7 +57,7 @@ class Education extends Component {
                     },
                     fetchPolicy: 'no-cache'
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     this.setState({
                         schools: data.applications[0].educations,
                         loading: false
@@ -86,7 +86,7 @@ class Education extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.props.handleOpenSnackbar(
                     'success',
                     'Successfully removed',
@@ -192,7 +192,7 @@ class Education extends Component {
                     }}
                     className="apply-form"
                 >
-                    <br/>
+                    <br />
                     <DialogContent>
                         <div className="col-12 form-section-1">
                             <div className="row">
@@ -211,7 +211,7 @@ class Education extends Component {
                                             maxLength="50"
                                             minLength="2"
                                         />
-                                        <span className="check-icon"/>
+                                        <span className="check-icon" />
                                     </div>
                                 </div>
                                 <div className="col-6">
@@ -229,7 +229,7 @@ class Education extends Component {
                                             maxLength="50"
                                             minLength="3"
                                         />
-                                        <span className="check-icon"/>
+                                        <span className="check-icon" />
                                     </div>
                                 </div>
                                 <div className="col-12">
@@ -247,7 +247,7 @@ class Education extends Component {
                                             maxLength="50"
                                             minLength="3"
                                         />
-                                        <span className="check-icon"/>
+                                        <span className="check-icon" />
                                     </div>
                                 </div>
                             </div>
@@ -267,7 +267,7 @@ class Education extends Component {
                                             maxLength="50"
                                             minLength="3"
                                         />
-                                        <span className="check-icon"/>
+                                        <span className="check-icon" />
                                     </div>
                                 </div>
                                 <div className="col-6">
@@ -285,11 +285,11 @@ class Education extends Component {
                                             maxLength="50"
                                             minLength="3"
                                         />
-                                        <span className="check-icon"/>
+                                        <span className="check-icon" />
                                     </div>
                                 </div>
                                 <div className="col-6">
-                                    <label className="primary">{educationFormLanguage[5].label}</label> <br/>
+                                    <label className="primary">{educationFormLanguage[5].label}</label> <br />
                                     <label className="switch">
                                         <input
                                             onChange={(e) => {
@@ -304,7 +304,7 @@ class Education extends Component {
                                             pattern=".*[^ ].*"
                                             id="graduated"
                                         />
-                                        <p className="slider round"/>
+                                        <p className="slider round" />
                                     </label>
                                 </div>
                                 <div className="col-6">
@@ -312,25 +312,25 @@ class Education extends Component {
                                     {this.state.graduated ? (
                                         <div className="input-container--validated">
                                             <select form="education-form" name="degree" id="degree"
-                                                    className="form-control">
+                                                className="form-control">
                                                 <option value="">{spanishActions[5].label}</option>
                                                 {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
                                             </select>
                                         </div>
                                     ) : (
-                                        <div className="input-container--validated">
-                                            <select
-                                                form="education-form"
-                                                name="degree"
-                                                id="degree"
-                                                disabled
-                                                className="form-control"
-                                            >
-                                                <option value="">{spanishActions[5].label}</option>
-                                                {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                                            </select>
-                                        </div>
-                                    )}
+                                            <div className="input-container--validated">
+                                                <select
+                                                    form="education-form"
+                                                    name="degree"
+                                                    id="degree"
+                                                    disabled
+                                                    className="form-control"
+                                                >
+                                                    <option value="">{spanishActions[5].label}</option>
+                                                    {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                                </select>
+                                            </div>
+                                        )}
                                 </div>
                             </div>
                         </div>
@@ -377,7 +377,7 @@ class Education extends Component {
                                         this.removeEducationById(schoolItem.id)
                                     }
                                 });
-                            }}/>
+                            }} />
                     </div>
                 ))}
                 {/*<div key={uuidv4()} className="skills-container">*/}
@@ -430,7 +430,7 @@ class Education extends Component {
                 {/*</div>*/}
                 {/*</div>*/}
                 {/*))}*/}
-                <br/><br/>
+                <br /><br />
                 <div className="col-2"></div>
                 {/*{*/}
                 {/*this.state.editing ? (*/}
@@ -585,7 +585,7 @@ class Education extends Component {
         return (
             <div>
                 <div className="Apply-container--application">
-                        <div className="row">
+                    <div className="row">
                         <div className="col-12">
                             <div className="applicant-card">
                                 <div className="applicant-card__header">
@@ -594,25 +594,25 @@ class Education extends Component {
                                         this.state.editing ? (
                                             ''
                                         ) : (
-                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                this.setState({
-                                                    editing: true,
-                                                    open: true
-                                                })
-                                            }}>{spanishActions[0].label} <i className="fas fa-plus"></i>
-                                            </button>
-                                        )
+                                                <button className="applicant-card__edit-button" onClick={() => {
+                                                    this.setState({
+                                                        editing: true,
+                                                        open: true
+                                                    })
+                                                }}>{spanishActions[0].label} <i className="fas fa-plus"></i>
+                                                </button>
+                                            )
                                     }
                                 </div>
                                 <div className="row">
                                     {
                                         this.state.loading ? (
                                             <div className="form-section-1 form-section--center">
-                                                <CircularProgressLoading/>
+                                                <CircularProgressLoading />
                                             </div>
                                         ) : (
-                                            renderEducationSection()
-                                        )
+                                                renderEducationSection()
+                                            )
                                     }
                                 </div>
 

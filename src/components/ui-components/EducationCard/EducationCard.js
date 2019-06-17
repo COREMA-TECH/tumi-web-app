@@ -80,10 +80,10 @@ class EducationCard extends Component {
                     <i className="fas fa-map-marker-alt"></i><span> {this.props.address}</span>
                 </div>
                 <div className="education-card__phone" title="Start Date">
-                    <i className="far fa-calendar-alt"></i><span>{this.props.startDate.substring(0, 10)}</span>
+                    <i className="far fa-calendar-alt"></i><span>{this.props.startDate ? this.props.startDate.substring(0, 10) : ''}</span>
                 </div>
                 <div className="education-card__phone" title="End Date">
-                    <i className="far fa-calendar-check"></i><span>{this.props.endDate.substring(0, 10)}</span>
+                    <i className="far fa-calendar-check"></i><span>{this.props.endDate ? this.props.endDate.substring(0, 10) : ''}</span>
                 </div>
                 <div className="education-card__phone" title="Graduated">
                     <i className="fas fa-graduation-cap"></i><span>{this.props.graduated ? 'Yes' : 'No'}</span>
