@@ -6,6 +6,8 @@ import PreFilter from './PreFilter';
 import DefaultClient from 'apollo-boost';
 import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
 import withGlobalContent from 'Generic/Global';
+import GridTabs from './GridTabs';
+import Grid from './grid';
 
 const DEFAULT_EMPLOYEE = { value: 0, label: "Select an employee" };
 
@@ -19,7 +21,8 @@ class Schedules extends Component {
         isSerie: false,
         isEditFilter: false,
         employees: [],
-        selectedEmployee: { ...DEFAULT_EMPLOYEE }
+        selectedEmployee: { ...DEFAULT_EMPLOYEE },
+        gridView: false
     };
 
     constructor() {
@@ -155,6 +158,13 @@ class Schedules extends Component {
     onSelectedEmployeeChange = (selectedEmployee) => {
         this.setState({ selectedEmployee });
     }
+
+    viewChange = (event) => {
+        this.setState({
+            gridView: !this.state.gridView
+        });
+    };
+
     render() {
         return (
             <div className="MasterShift">
@@ -221,8 +231,24 @@ class Schedules extends Component {
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">
                             <div className="MasterShift-schedulesBody" id="divToPrint">
+                                <div className="SmallSwitch">
+                                    <span className="rightLable-Switch">Grid View</span>
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="gridView" class="onoffswitch-checkbox" id="gridView" checked={this.state.gridView} onChange={this.viewChange} />
+                                        <label class="onoffswitch-label" for="gridView">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                    <span className="leftLabel-Switch">Calendar View</span>
+                                </div>
                                 {
-                                    this.state.filtered == true ? (
+                                    !this.state.gridView ? (
+                                        <GridTabs location={this.state.location} position={this.state.position} department={this.state.department}/>
+                                    ) : ('')
+                                }
+                                {
+                                    this.state.filtered == true && this.state.gridView ? (
                                         <Shifts
                                             editConfirmOpened={this.state.editConfirmOpened}
                                             openEditConfirm={this.openEditConfirm}

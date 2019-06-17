@@ -65,7 +65,6 @@ class PreFilter extends Component {
                     }
                 })
                 .then(({ data }) => {
-                    console.log("getPositions ", data)
                     this.setState((prevState) => {
                         return { positions: data.getposition, loadingPositions: false }
                     })
@@ -175,7 +174,6 @@ class PreFilter extends Component {
             [element.name + "Name"]: text,
             disabled: false
         }, () => {
-            console.log("element.name  ", element.name)
             if (element.name == 'location') {
                 this.getContacts();
                 this.getDepartments();
@@ -255,23 +253,23 @@ class PreFilter extends Component {
                                 </div>
                             </div>
                         </div>
-                    </DialogContent>
-                    <div className="row">
-                        <div className="col-md-12">
-                            <DialogActions>
-                                <div className="tumi-buttonWrapper">
-                                    <button className="btn btn-success btn-not-rounded tumi-button" type="submit">
-                                        Filter
-                                            {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
-                                    </button>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <DialogActions>
+                                    <div className="tumi-buttonWrapper">
+                                        <button className="btn btn-success btn-not-rounded tumi-button" type="submit">
+                                            Filter
+                                                {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
+                                        </button>
 
-                                    <button className="btn btn-danger btn-not-rounded tumi-button" type="button" onClick={this.props.handleClosePreFilter}>
-                                        Cancel
-                                    </button>
-                                </div>
-                            </DialogActions>
+                                        <button className="btn btn-danger btn-not-rounded tumi-button" type="button" onClick={this.props.handleClosePreFilter}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </DialogActions>
+                            </div>
                         </div>
-                    </div>
+                    </DialogContent>
                 </form>
             </Dialog>
         );
