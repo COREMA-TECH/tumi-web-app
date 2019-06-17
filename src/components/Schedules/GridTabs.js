@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Grid from './Grid';
+import Grid from './grid';
 import withApollo from "react-apollo/withApollo"; 
 import withGlobalContent from 'Generic/Global';
 import GridTabModal from './GridTabModal';
@@ -21,7 +21,8 @@ class GridTabs extends Component {
         positions: [],
         position: 0,
         positionTags: [],
-        open: false
+        open: false,
+        tabSelected: 0
     };
 
     componentWillMount() {
@@ -49,7 +50,10 @@ class GridTabs extends Component {
                 name: data.getposition[0].Position
             });
             this.setState(prevState => {
-                return { positions : position }
+                return { 
+                    positions : position,
+                    tabSelected: data.getposition[0].Id
+                }
             });
         }).catch(error => {
             this.props.handleOpenSnackbar(
@@ -62,7 +66,8 @@ class GridTabs extends Component {
     addTab = (position) => {
         this.setState(prevState => {
             return {
-                positions: [...prevState.positions, position]
+                positions: [...prevState.positions, position],
+                open: false
             }
         });
     }
@@ -73,6 +78,18 @@ class GridTabs extends Component {
         });
     }
 
+    closeGrdiModal = () => {
+        this.setState(prevState => {
+            return { open: false }
+        });
+    }
+
+    selectTab = (id) => {
+        this.setState(prevState => {
+            return { tabSelected : id }
+        });
+    }
+
     render() {
         return(
             <React.Fragment>
@@ -80,7 +97,9 @@ class GridTabs extends Component {
                     {
                         this.state.positions.map(__position => {
                             return (
-                                <Grid positionId={__position.Id} departmentId={this.props.departmentId} />
+                                <div className={this.state.tabSelected === __position.id ? 'd-block' : 'd-none'}>
+                                    <Grid entityId={this.props.location} positionId={__position.Id} departmentId={this.props.departmentId} />
+                                </div>
                             )
                         })
                     }
@@ -89,8 +108,9 @@ class GridTabs extends Component {
                     <div class="btn-group" role="group" aria-label="Basic example">
                         {
                             this.state.positions.map(__position => {
+                                let selected = this.state.tabSelected === __position.id ? 'GridTab-selected' : '';
                                 return (
-                                    <button type="button" class="btn btn-secondary">{__position.name}</button>
+                                    <button type="button" className={`btn btn-secondary ${selected}`} onClick={_ => { this.selectTab(__position.id) }}>{__position.name}</button>
                                 )
                             })
                         }
@@ -99,7 +119,7 @@ class GridTabs extends Component {
                         </button>
                     </div>
                 </div>
-                <GridTabModal open={this.state.open} department={this.props.department} addTab={this.addTab}/>
+                <GridTabModal open={this.state.open} department={this.props.department} addTab={this.addTab} closeGrdiModal={this.closeGrdiModal} />
             </React.Fragment>
         );
     }

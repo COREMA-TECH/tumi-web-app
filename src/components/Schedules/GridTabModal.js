@@ -9,6 +9,12 @@ import makeAnimated from 'react-select/lib/animated';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from 'Generic/Global';
 import { GET_POSITION } from './Queries';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = {
+    paper: { overflowY: 'unset' },
+    container: { overflowY: 'unset' }
+};
 
 class GridTabModal extends Component {
     
@@ -34,13 +40,17 @@ class GridTabModal extends Component {
         }).then(({ data }) => {
             //Save data into state
             let dataAPI = data.getposition;
+            let positions = [];
+
             dataAPI.map(item => {
-                this.setState(prevState => ({
-                    positions: [...prevState.positions, {
-                        value: item.Id, label: item.Position
-                    }]
-                }))
+                positions.push( {
+                    value: item.Id, label: item.Position
+                });
             });
+
+            this.setState(prevState => ({
+                positions: positions
+            }))
         }).catch(error => {
             this.props.handleOpenSnackbar(
                 'error',
@@ -49,20 +59,22 @@ class GridTabModal extends Component {
         });
     }
 
-    handleChangeEmployees = (positionTags) => {
+    handleChangePositions = (positionTags) => {
+        console.log(positionTags)
         this.setState({ positionTags });
     };
 
-    handleSubmit = () => {
-        console.log(this.state.positionTags);
-       // this.props.addTab();
+    handleSubmit = (event) => {
+        event.preventDefault();
+        this.props.addTab({ id: this.state.positionTags.value, name: this.state.positionTags.label });
     }
 
     render() {
+        const { classes } = this.props;
         return(
             <React.Fragment>
-                <Dialog fullWidth={true} maxWidth={'sm'} open={this.props.open}>
-                    <DialogContent>
+                <Dialog fullWidth={true} maxWidth={'sm'} open={this.props.open} classes={{ paper: classes.paper }}>
+                    <DialogContent style={{ overflowY: "unset" }}>
                         <form action="" onSubmit={this.handleSubmit}>
                             <div className="container">
                                 <div className="row">
@@ -76,7 +88,10 @@ class GridTabModal extends Component {
                                             isMulti={false}
                                         />
                                     </div>
-                                    <div className="col-md-12">
+                                    <div className="col-md-12 mt-2 text-right">
+                                        <button className="btn btn-danger mr-1" type="button" onClick={this.props.closeGrdiModal}>  
+                                            Cancel
+                                        </button>
                                         <button className="btn btn-success" type="submit">
                                             Add Tab
                                         </button>
@@ -92,4 +107,4 @@ class GridTabModal extends Component {
 
 }
 
-export default withApollo(withGlobalContent(GridTabModal));
+export default withStyles(styles)(withApollo(withGlobalContent(GridTabModal)));

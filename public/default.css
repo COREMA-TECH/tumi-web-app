@@ -10239,6 +10239,10 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   border-top: 0;
   color: #bdbdbd; }
 
+.GridTab-selected {
+  color: #000 !important;
+  font-weight: 700; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;

@@ -27,4 +27,8 @@
             color: map-get($gray-shades, gray-3);
         }
     }
+    &-selected {
+        color: $black !important;
+        font-weight: 700;
+    }
 }
