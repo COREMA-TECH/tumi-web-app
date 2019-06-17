@@ -10213,6 +10213,36 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
       top: -3px;
       width: 75px; }
 
+.GridTab-head .btn-group::after, .GridTab-head .btn-group::before {
+  content: " ";
+  display: block;
+  border-top: solid 1px #bdbdbd;
+  margin-left: 5px;
+  width: 5px; }
+
+.GridTab-head .btn-group::after {
+  margin-right: 5px;
+  margin-left: 0; }
+
+.GridTab-head .btn-group > .btn:not(:last-child):not(.dropdown-toggle), .GridTab-head .btn-group > .btn-group:not(:last-child) > .btn {
+  border-top-left-radius: 0;
+  -webkit-box-shadow: -1px 3px 3px #dddddd;
+  box-shadow: -1px 3px 3px #dddddd; }
+
+.GridTab-head .btn-group > .btn:not(:first-child), .GridTab-head .btn-group > .btn-group:not(:first-child) > .btn {
+  border-top-right-radius: 0;
+  -webkit-box-shadow: 1px 3px 3px #dddddd;
+  box-shadow: 1px 3px 3px #dddddd; }
+
+.GridTab-head .btn-secondary {
+  background: #FFF;
+  border-top: 0;
+  color: #bdbdbd; }
+
+.GridTab-selected {
+  color: #000 !important;
+  font-weight: 700; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
