@@ -33,6 +33,9 @@
 @import "base/switch";
 @import "base/table";
 
+//Flag language selector
+@import "vendor/flag-selector.scss";
+
 //Components
 @import "components/tabs/tabs";
 @import "components/records-cards/records-cards";

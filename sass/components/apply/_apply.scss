@@ -60,7 +60,7 @@
             top: 50px;
             width: 0;
         }
-    }
+    }    
     .separator {
         display: block;
         height: 1px;
@@ -82,6 +82,16 @@
 }
 .ApplyForm {
     background-color: $light-gray;
+
+    &-language {
+        display: block;
+        margin-left: auto;
+        width: 160px;
+
+        img {
+            top: -2px !important;
+        }
+    }
 }
 
 .text-primary-application {

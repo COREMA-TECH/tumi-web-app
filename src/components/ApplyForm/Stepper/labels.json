@@ -1,0 +1,235 @@
+{
+    "formTitle": {
+        "US": "Applicant Information",
+        "ES": "Información del Aplicante"
+    },
+    "firstName": {
+        "US": "First Name",
+        "ES": "Primer Nombre"
+    },
+    "midName": {
+        "US": "Middle Name",
+        "ES": "Segundo Nombre"
+    },
+    "lastName": {
+        "US": "Last Name",
+        "ES": "Apellido"
+    },
+    "secLastName": {
+        "US": "Second Last Name",
+        "ES": "Segundo Apellido"
+    },
+    "stAddress": {
+        "US": "Street Address",
+        "ES": "Dirección"
+    },
+    "apt": {
+        "US": "Apt Number",
+        "ES": "Número Apt"
+    },
+    "city": {
+        "US": "City",
+        "ES": "Ciudad"
+    },
+    "changeCity": {
+        "US": "Change selected city by zipcode",
+        "ES": "Cambiar ciudad seleccionada"
+    },
+    "state": {
+        "US": "State",
+        "ES": "Estado"
+    },
+    "zipcode": {
+        "US": "Zip Code",
+        "ES": "Código Postal"
+    },
+    "homePhone": {
+        "US": "Home Phone",
+        "ES": "Teléfono fijo"
+    },
+    "cellPhone": {
+        "US": "Cell Phone",
+        "ES": "Teléfono Móvil"
+    },
+    "ssn": {
+        "US": "Social Security Number",
+        "ES": "Número de Seguridad Social"
+    },
+    "transport": {
+        "US": "Do you own transportation?",
+        "ES": "Posee vehículo propio?"
+    },
+    "idType": {
+        "US": "Type of ID",
+        "ES": "Tipo de ID"
+    },
+    "idExpire": {
+        "US": "Expire Date ID",
+        "ES": "Fecha de Expiración del ID"
+    },
+    "email": {
+        "US": "Email Address",
+        "ES": "Correo Electrónico"
+    },
+    "position": {
+        "US": "Position Applying For",
+        "ES": "Pocisión a la que Aplica"
+    },
+    "willing": {
+        "US": "Position Applying For",
+        "ES": "Dispuesto a trabajar como"
+    },
+    "available": {
+        "US": "Date Available",
+        "ES": "Fecha de Disponibilidad"
+    },
+    "restrictions": {
+        "US": "Do you have any schedule restrictions?",
+        "ES": "Tiene restricciones de horario?"
+    },
+    "explain": {
+        "US": "If yes, please explain",
+        "ES": "De ser asi, por favor explique"
+    },
+    "felony": {
+        "US": "Have you ever been convicted of a felony?",
+        "ES": "Alguna vez ha sido arrestado?"
+    },
+    "heardTumi": {
+        "US": "How did you hear about Tumi Staffing?",
+        "ES": "Cómo escuchó acerca de Tumi Staffing"
+    },
+    "back": {
+        "US": "Back",
+        "ES": "Anterior"
+    },
+    "next": {
+        "US": "Next",
+        "ES": "Siguiente"
+    },
+    "languages": {
+        "US": "Languages",
+        "ES": "Lenguajes"
+    },
+    "conversation": {
+        "US": "Conversation",
+        "ES": "Conversación"
+    },
+    "writing": {
+        "US": "Writing",
+        "ES": "Escritura"
+    },
+    "add": {
+        "US": "Add",
+        "ES": "Agregar"
+    },
+    "education": {
+        "US": "Education",
+        "ES": "Educación"
+    },
+    "field-study": {
+        "US": "Field of Study",
+        "ES": "Campo de Estudio"
+    },
+    "institution": {
+        "US": "Name (Institution)",
+        "ES": "Nombre (Institución)"
+    },
+    "address": {
+        "US": "Address",
+        "ES": "Dirección"
+    },
+    "period": {
+        "US": "Time Period",
+        "ES": "Período de Tiempo"
+    },
+    "to": {
+        "US": "To",
+        "ES": "Hasta"
+    },
+    "graduated": {
+        "US": "Graduated",
+        "ES": "Grduado"
+    },
+    "degree": {
+        "US": "Degree",
+        "ES": "Título"
+    },
+    "prevEmployment": {
+        "US": "Previous Employment",
+        "ES": "Empleo Previo"
+    },
+    "company": {
+        "US": "Company",
+        "ES": "Compañía"
+    },
+    "jobTitle": {
+        "US": "Job Title",
+        "ES": "Título del Puesto"
+    },
+    "dates": {
+        "US": "Dates",
+        "ES": "Fechas"
+    },
+    "phone": {
+        "US": "Phone",
+        "ES": "Teléfono"
+    },
+    "supervisor": {
+        "US": "Supervisor",
+        "ES": "Supervisor"
+    },
+    "pay": {
+        "US": "Pay Rate",
+        "ES": "Tasa de Pago"
+    },
+    "reasonLeaving": {
+        "US": "Reason for Leaving",
+        "ES": "Razón de Salida"
+    },
+    "military": {
+        "US": "Military Service",
+        "ES": "Servicio Militar"
+    },
+    "branch": {
+        "US": "Branch",
+        "ES": "Rama"
+    },
+    "dischargeRank": {
+        "US": "Rank at Discharge",
+        "ES": "Rango al darse de baja"
+    },
+    "dischargeType": {
+        "US": "Type of Discharge",
+        "ES": "Tipo de baja"
+    },
+    "skills": {
+        "US": "Skills",
+        "ES": "Habilidades"
+    },
+    "skillName": {
+        "US": "Skill Name",
+        "ES": "Habilidad"
+    },
+    "skillLabel": {
+        "US": "Skill Label",
+        "ES": "Nombre de la Habilidad"
+    },
+    "novice": {
+        "US": "Newbie",
+        "ES": "Novato"
+    },
+    "expert": {
+        "US": "Expert",
+        "ES": "Expert"
+    },
+    "success": {
+        "US": "Successfully Created!",
+        "ES": "Creado Exitosamente!"
+    },
+    "new": {
+        "US": "New Application",
+        "ES": "Nueva Aplicación"
+    }
+
+}

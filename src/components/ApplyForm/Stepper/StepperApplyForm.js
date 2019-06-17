@@ -42,6 +42,12 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import LocationForm from '../../ui-components/LocationForm';
 
+import labels from './labels.json';
+
+import ReactFlagsSelect from 'react-flags-select';
+
+import {debounce} from 'throttle-debounce';
+
 const spanishActions = require(`../Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
 const uuidv4 = require('uuid/v4');
@@ -121,6 +127,7 @@ class VerticalLinearStepper extends Component {
 
             // Languages array
             languages: [],
+            displayLanguage: "US",
 
             // Skills array
             skills: [],
@@ -280,6 +287,16 @@ class VerticalLinearStepper extends Component {
         this.setState({ open: false });
     };
 
+    //Generic state change handler
+    handleStateChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+    }
     
 
     // To insert general applicant information
@@ -725,6 +742,12 @@ class VerticalLinearStepper extends Component {
 
         //Fetch position catalogs
         this.fetchPositionCatalogs();
+
+        this.setState(_ => {
+            return {
+                labels: labels
+            }
+        });
     }
 
     updateCity = (city) => {
@@ -744,572 +767,506 @@ class VerticalLinearStepper extends Component {
         })
     }
 
+    handleIdealJobClick = (idealJobItem) => (event) => {
+        debounce( 300, 
+            this.setState((prevState) => ({
+                idealJobs: this.state.idealJobs.filter((_, i) => {
+                    return _.uuid !== idealJobItem.uuid;
+                })
+            }))
+        );        
+    }
 //#region Functions called in render
+    handleDisplayLanguageChange = language => {
+        this.setState(_ => {
+            return {
+                displayLanguage: language
+            }
+        })
+    }
 
     // To render the applicant information section
-    renderApplicantInformationSection = (steps) => (
-        <div className="ApplyBlock">
-            <h4 className="ApplyBlock-title">Applicant Information</h4>
-            <div className="row">
-                <div className="col-md-3">
-                    <span className="primary">* First Name</span>
-                    <div className="input-container--validated">
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    firstName: event.target.value
-                                });
-                            }}
-                            value={this.state.firstName}
-                            name="firstName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
+    renderApplicantInformationSection = (steps) => {
+        const { labels, displayLanguage } = this.state;
+     
+        return (        
+            <div className="ApplyBlock">            
+                <h4 className="ApplyBlock-title">{labels.formTitle[displayLanguage]}</h4>
+                <div className="row">
+                    <div className="col-md-3">
+                        <span className="primary">* {labels.firstName[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.firstName}
+                                name="firstName"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="col-md-3">
-                    <span className="primary">Middle Name</span>
-                    <input
-                        onChange={(event) => {
-                            this.setState({
-                                middleName: event.target.value
-                            });
-                        }}
-                        value={this.state.middleName}
-                        name="midleName"
-                        type="text"
-                        className="form-control"
-                        min="0"
-                        maxLength="50"
-                        minLength="1"
-                    />
-                </div>
-                <div className="col-md-3">
-                    <span className="primary">* Last Name</span>
-                    <div className="input-container--validated">
+                    <div className="col-md-3">
+                        <span className="primary">{labels.midName[displayLanguage]}</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    lastName: event.target.value
-                                });
-                            }}
-                            value={this.state.lastName}
-                            name="lastName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                    </div>
-                </div>
-                <div className="col-md-3">
-                    <span className="primary">Second Last Name</span>
-                    <div className="input-container--validated">
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    lastName2: event.target.value
-                                });
-                            }}
-                            value={this.state.lastName2}
-                            name="lastName2"
+                            onChange={ this.handleStateChange }
+                            value={this.state.middleName}
+                            name="middleName"
                             type="text"
                             className="form-control"
                             min="0"
                             maxLength="50"
-                            minLength="3"
+                            minLength="1"
                         />
                     </div>
+                    <div className="col-md-3">
+                        <span className="primary">* {labels.lastName[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.lastName}
+                                name="lastName"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <span className="primary">{labels.secLastName[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.lastName2}
+                                name="lastName2"
+                                type="text"
+                                className="form-control"
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className="row form-section">
-                <div className="col-md-9">
-                    <span className="primary">* Street Address</span>
-                    <div className="input-container--validated">
+                <div className="row form-section">
+                    <div className="col-md-9">
+                        <span className="primary">* {labels.stAddress[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.streetAddress}
+                                name="streetAddress"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="5"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <span className="primary">{labels.apt[displayLanguage]}</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    streetAddress: event.target.value
-                                });
-                            }}
-                            value={this.state.streetAddress}
-                            name="streetAddress"
-                            type="text"
+                            onChange={ this.handleStateChange }
+                            value={this.state.aptNumber}
+                            name="aptNumber"
+                            type="number"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="5"
                         />
                     </div>
                 </div>
-                <div className="col-md-3">
-                    <span className="primary">Apt Number</span>
-                    <input
-                        onChange={(event) => {
-                            this.setState({
-                                aptNumber: event.target.value
-                            });
-                        }}
-                        value={this.state.aptNumber}
-                        name="aptNumber"
-                        type="number"
-                        className="form-control"
-                        min="0"
-                        maxLength="50"
-                        minLength="5"
-                    />
-                </div>
-            </div>
 
 
-            <div className="row">
-                <LocationForm
-                    onChangeCity={this.updateCity}
-                    onChangeState={this.updateState}
-                    onChageZipCode={this.updateZipCode}
-                    city={this.state.city}
-                    state={this.state.state}
-                    zipCode={this.state.zipCode}
-                    changeCity={this.state.changeCity}
-                    cityClass={`form-control ${!this.state.validCity && ' _invalid'}`}
-                    stateClass={`form-control ${!this.state.validState && ' _invalid'}`}
-                    zipCodeClass={`form-control ${!this.state.validZipCode && ' _invalid'}`}
+                <div className="row">
+                    <LocationForm
+                        onChangeCity={this.updateCity}
+                        onChangeState={this.updateState}
+                        onChageZipCode={this.updateZipCode}
+                        city={this.state.city}
+                        state={this.state.state}
+                        zipCode={this.state.zipCode}
+                        changeCity={this.state.changeCity}
+                        cityClass={`form-control ${!this.state.validCity && ' _invalid'}`}
+                        stateClass={`form-control ${!this.state.validState && ' _invalid'}`}
+                        zipCodeClass={`form-control ${!this.state.validZipCode && ' _invalid'}`}
 
-                    cityColClass="col-md-3"
-                    stateColClass="col-md-3"
-                    zipCodeColClass="col-md-3"
-                    cssTitle={"primary"}
-                    placeholder="99999-99999"
-                    mask="99999-99999"
-                    updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
-                <div className="col-md-3">
-                    <span className="primary"> Home Phone</span>
-                    <InputMask
-                        id="home-number"
-                        name="homePhone"
-                        mask="+(999) 999-9999"
-                        maskChar=" "
-                        value={this.state.homePhone}
-                        className="form-control"
-                        onChange={(event) => {
-                            this.setState({
-                                homePhone: event.target.value
-                            });
-                        }}
-                        placeholder="+(___) ___-____"
-                        pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                        minLength="15"
-                    />
-                </div>
-            </div>
-            <div className="row">
-
-                <div className="col-md-3">
-                    <span className="primary">* Cell Phone</span>
-                    <div className="input-container--validated">
+                        cityColClass="col-md-3"
+                        stateColClass="col-md-3"
+                        zipCodeColClass="col-md-3"
+                        cssTitle={"primary"}
+                        placeholder="99999-99999"
+                        mask="99999-99999"
+                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
+                    <div className="col-md-3">
+                        <span className="primary"> {labels.homePhone[displayLanguage]}</span>
                         <InputMask
-                            id="cell-number"
-                            name="cellPhone"
+                            id="home-number"
+                            name="homePhone"
                             mask="+(999) 999-9999"
                             maskChar=" "
-                            value={this.state.cellPhone}
+                            value={this.state.homePhone}
                             className="form-control"
                             onChange={(event) => {
                                 this.setState({
-                                    cellPhone: event.target.value
+                                    homePhone: event.target.value
                                 });
                             }}
-                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                             placeholder="+(___) ___-____"
-                            required
+                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                             minLength="15"
                         />
                     </div>
                 </div>
+                <div className="row">
 
-                <div className="col-md-3">
-                    <span className="primary">* Social Security Number</span>
-                    <div className="input-container--validated">
-                        <InputMask
-                            id="socialSecurityNumber"
-                            name="socialSecurityNumber"
-                            mask="999-99-9999"
-                            maskChar=" "
-                            className="form-control"
-                            onChange={(event) => {
-                                this.setState({
-                                    socialSecurityNumber: event.target.value
-                                });
-                            }}
-                            value={this.state.socialSecurityNumber}
-                            placeholder="___-__-____"
-                            pattern="^\d{3}-\d{2}-\d{4}$"
+                    <div className="col-md-3">
+                        <span className="primary">* {labels.cellPhone[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <InputMask
+                                id="cell-number"
+                                name="cellPhone"
+                                mask="+(999) 999-9999"
+                                maskChar=" "
+                                value={this.state.cellPhone}
+                                className="form-control"
+                                onChange={ this.handleStateChange }
+                                pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                                placeholder="+(___) ___-____"
+                                required
+                                minLength="15"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-md-3">
+                        <span className="primary">* {labels.ssn[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <InputMask
+                                id="socialSecurityNumber"
+                                name="socialSecurityNumber"
+                                mask="999-99-9999"
+                                maskChar=" "
+                                className="form-control"
+                                onChange={ this.handleStateChange }
+                                value={this.state.socialSecurityNumber}
+                                placeholder="___-__-____"
+                                pattern="^\d{3}-\d{2}-\d{4}$"
+                                required
+                                minLength="15"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <div className="col-md-12">
+                            <span className="primary"> {labels.transport[displayLanguage]}</span>
+                        </div>
+                        <div className="col-md-12">
+                            <div className="onoffswitch">
+                                <input
+                                    id="carSwitch"
+                                    className="onoffswitch-checkbox"
+                                    onChange={ this.handleStateChange }
+                                    checked={this.state.car}
+                                    value={this.state.car}
+                                    name="car"
+                                    type="checkbox"
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="10"
+                                />
+                                <label className="onoffswitch-label" htmlFor="carSwitch">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+                        <span className="primary">* {labels.idType[displayLanguage]}</span>
+                        <select
+                            name="typeOfId"
+                            id="typeOfID"
                             required
-                            minLength="15"
-                        />
+                            className="form-control"
+                            onChange={ this.handleStateChange }
+                            value={this.state.typeOfId}
+                        >
+                            <option value="">Select an option</option>
+                            <option value="1">Birth certificate</option>
+                            <option value="2">Social Security card</option>
+                            <option value="3">State-issued driver's license</option>
+                            <option value="4">State-issued ID</option>
+                            <option value="5">Passport</option>
+                            <option value="6">Department of Defense Identification Card</option>
+                            <option value="7">Green Card</option>
+                        </select>
                     </div>
                 </div>
-                <div className="col-md-3">
-                    <div className="col-md-12">
-                        <span className="primary"> Do you own transportation?</span>
-                    </div>
-                    <div className="col-md-12">
-                        <div className="onoffswitch">
+                <div className="row">
+                </div>
+                <div className="row">
+                    <div className="col-md-6">
+                        <span className="primary">* {labels.idExpire[displayLanguage]}</span>
+                        <div className="input-container--validated">
                             <input
-                                id="carSwitch"
-                                className="onoffswitch-checkbox"
-                                onChange={(event) => {
-                                    this.setState({
-                                        car: event.target.checked
-                                    });
-                                }}
-                                checked={this.state.car}
-                                value={this.state.car}
-                                name="car"
-                                type="checkbox"
+                                onChange={ this.handleStateChange }
+                                value={this.state.expireDateId}
+                                name="expireDateId"
+                                type="date"
+                                className="form-control"
+                                required
                                 min="0"
                                 maxLength="50"
                                 minLength="10"
                             />
-                            <label className="onoffswitch-label" htmlFor="carSwitch">
-                                <span className="onoffswitch-inner" />
-                                <span className="onoffswitch-switch" />
-                            </label>
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                        <span className="primary">* {labels.email[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.emailAddress}
+                                name="emailAddress"
+                                type="email"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="8"
+                            />
                         </div>
                     </div>
                 </div>
-                <div className="col-md-3">
-                    <span className="primary">* Type Of ID</span>
-                    <select
-                        name="typeOfID"
-                        id="typeOfID"
-                        required
-                        className="form-control"
-                        onChange={(e) => {
-                            this.setState({
-                                typeOfId: e.target.value
-                            });
-                        }}
-                        value={this.state.typeOfId}
-                    >
-                        <option value="">Select an option</option>
-                        <option value="1">Birth certificate</option>
-                        <option value="2">Social Security card</option>
-                        <option value="3">State-issued driver's license</option>
-                        <option value="4">State-issued ID</option>
-                        <option value="5">Passport</option>
-                        <option value="6">Department of Defense Identification Card</option>
-                        <option value="7">Green Card</option>
-                    </select>
-                </div>
-            </div>
-            <div className="row">
-            </div>
-            <div className="row">
-                <div className="col-md-6">
-                    <span className="primary">* Expire Date ID</span>
-                    <div className="input-container--validated">
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    expireDateId: event.target.value
-                                });
-                            }}
-                            value={this.state.expireDateId}
-                            name="expireDateId"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="10"
+                <div className="row">
+                    <div className="col-md-6">
+                        <span className="primary"> * {labels.position[displayLanguage]}</span>
+                        
+                        <Select
+                            options={this.state.positionApplyOptions}
+                            value={this.findSelectedPositionApply(this.state.idealJob)}
+                            onChange={this.handlePositionApplyChange}
+                            closeMenuOnSelect={true}
+                            components={makeAnimated()}
+                            isMulti={false}
                         />
                     </div>
-                </div>
-                <div className="col-md-6">
-                    <span className="primary">* Email Address</span>
-                    <div className="input-container--validated">
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    emailAddress: event.target.value
-                                });
-                            }}
-                            value={this.state.emailAddress}
-                            name="emailAddress"
-                            type="email"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="8"
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-md-6">
-                    <span className="primary"> * Position Applying For</span>
-                    
-                    <Select
-                        options={this.state.positionApplyOptions}
-                        value={this.findSelectedPositionApply(this.state.idealJob)}
-                        onChange={this.handlePositionApplyChange}
-                        closeMenuOnSelect={true}
-                        components={makeAnimated()}
-                        isMulti={false}
-                    />
-                </div>
-                <div className="col-md-6">
-                    <span className="primary">Willing to work as</span>
+                    <div className="col-md-6">
+                        <span className="primary">{labels.willing[displayLanguage]}</span>
 
-                    <Select
-                        options={this.state.positionCatalogOptions}
-                        value={this.state.positionsTags}
-                        onChange={this.handleChangePositionTag}
-                        closeMenuOnSelect={false}
-                        components={makeAnimated()}
-                        isMulti
-                    />
-                </div>                    
-            </div>
-            <div className="row">
-                <div className="col-md-6">
-                    <span className="primary">* Date Available</span>
-                    <div className="input-container--validated">
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    dateAvailable: event.target.value
-                                });
-                            }}
-                            value={this.state.dateAvailable}
-                            name="dateAvailable"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
+                        <Select
+                            options={this.state.positionCatalogOptions}
+                            value={this.state.positionsTags}
+                            onChange={this.handleChangePositionTag}
+                            closeMenuOnSelect={false}
+                            components={makeAnimated()}
+                            isMulti
                         />
-                    </div>
+                    </div>                    
                 </div>
-                <div className="col-md-12">
-                    {this.state.idealJobs.map((idealJobItem) => (
-                        <span className="idealJobItem">
-                            <span>{idealJobItem.description}</span>{' '}
-                            <i
-                                className="far fa-times-circle"
-                                onClick={() => {
-                                    this.setState((prevState) => ({
-                                        idealJobs: this.state.idealJobs.filter((_, i) => {
-                                            return _.uuid !== idealJobItem.uuid;
-                                        })
-                                    }));
-                                }}
-                            />
-                        </span>
-                    ))}
-                </div>
-            </div>
-            <hr className="separator" />
-            <div className="row">
-                <div className="col-md-4">
-                    <span className="primary"> Do you have any schedule restrictions? </span>
-                    <div className="col-md-12">
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    scheduleRestrictions: event.target.value
-                                });
-                            }}
-                            value="1"
-                            type="radio"
-                            name="scheduleRestrictions"
-                            className=""
-                        />
-                        <label className="radio-label"> Yes</label>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    scheduleRestrictions: event.target.value,
-                                    scheduleExplain: ''
-                                });
-                            }}
-                            value="0"
-                            type="radio"
-                            name="scheduleRestrictions"
-                            className=""
-                            checked={this.state.scheduleRestrictions === '0'}
-                        />
-                        <label className="radio-label"> No</label>
-                    </div>
-                    <span className="check-icon" />
-                </div>
-                <div className="col-md-8">
-                    <span className="primary"> If yes, please explain </span>
-                    {this.state.scheduleRestrictions === '0' ? (
-                        <textarea
-                            onChange={(event) => {
-                                this.setState({
-                                    scheduleExplain: event.target.value
-                                });
-                            }}
-                            value={this.state.scheduleExplain}
-                            name="form-control"
-                            cols="30"
-                            rows="3"
-                            disabled
-                            className="form-control textarea-apply-form"
-                        />
-                    ) : (
-                            <textarea
-                                onChange={(event) => {
-                                    this.setState({
-                                        scheduleExplain: event.target.value
-                                    });
-                                }}
-                                value={this.state.scheduleExplain}
-                                name="form-control"
-                                cols="30"
-                                rows="3"
+                <div className="row">
+                    <div className="col-md-6">
+                        <span className="primary">* {labels.available[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.dateAvailable}
+                                name="dateAvailable"
+                                type="date"
+                                className="form-control"
                                 required
-                                className="form-control textarea-apply-form"
+                                min="0"
+                                maxLength="50"
                             />
-                        )}
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-md-4">
-                    <span className="primary"> Have you ever been convicted of a felony? </span>
+                        </div>
+                    </div>
                     <div className="col-md-12">
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    convicted: event.target.value
-                                });
-                            }}
-                            value="1"
-                            type="radio"
-                            name="convicted"
-                            className=""
-                        />
-                        <label className="radio-label"> Yes</label>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    convicted: event.target.value,
-                                    convictedExplain: ''
-                                });
-                            }}
-                            value="0"
-                            type="radio"
-                            name="convicted"
-                            className=""
-                            checked={this.state.convicted === '0'}
-                        />
-                        <label className="radio-label"> No</label>
+                        {this.state.idealJobs.map((idealJobItem) => (
+                            <span className="idealJobItem">
+                                <span>{idealJobItem.description}</span>{' '}
+                                <i
+                                    className="far fa-times-circle"
+                                    onClick={ this.handleIdealJobClick(idealJobItem) }
+                                />
+                            </span>
+                        ))}
                     </div>
                 </div>
-                <div className="col-md-8">
-                    <span className="primary"> If yes, please explain </span>
-                    {this.state.convicted === '0' ? (
-                        <textarea
-                            onChange={(event) => {
-                                this.setState({
-                                    convictedExplain: event.target.value
-                                });
-                            }}
-                            value={this.state.convictedExplain}
-                            name="form-control"
-                            cols="30"
-                            disabled
-                            rows="3"
-                            className="form-control textarea-apply-form"
-                        />
-                    ) : (
-                            <textarea
-                                onChange={(event) => {
-                                    this.setState({
-                                        convictedExplain: event.target.value
-                                    });
-                                }}
-                                value={this.state.convictedExplain}
-                                name="form-control"
-                                cols="30"
-                                required
-                                rows="3"
-                                className="form-control textarea-apply-form"
-                            />
-                        )}
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-md-12">
-                    <span className="primary"> How did you hear about Tumi Staffing </span>
-                </div>
-                <div className="col-md-12">
-                    <select
-                        name="networks"
-                        id="networks"
-                        onChange={(event) => {
-                            this.setState({
-                                socialNetwork: event.target.value
-                            });
-                        }}
-                        value={this.state.socialNetwork}
-                        required
-                        className="form-control"
-                    >
-                        <option value="">Select a option</option>
-                        <option value="facebook">Facebook</option>
-                        <option value="linkedin">Linkedin</option>
-                        <option value="instagram">Instagram</option>
-                        <option value="newspaper">News Paper</option>
-                        <option value="journals">Journals</option>
-                        <option value="others">Other</option>
-                    </select>
-
-                    <div className="row">
+                <hr className="separator" />
+                <div className="row">
+                    <div className="col-md-4">
+                        <span className="primary"> {labels.restrictions[displayLanguage]} </span>
                         <div className="col-md-12">
-                            {this.state.socialNetwork === 'others' ? (
+                            <input
+                                onChange={ this.handleStateChange }
+                                value="1"
+                                type="radio"
+                                name="scheduleRestrictions"
+                                className=""
+                            />
+                            <label className="radio-label"> Yes</label>
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        scheduleRestrictions: event.target.value,
+                                        scheduleExplain: ''
+                                    });
+                                }}
+                                value="0"
+                                type="radio"
+                                name="scheduleRestrictions"
+                                className=""
+                                checked={this.state.scheduleRestrictions === '0'}
+                            />
+                            <label className="radio-label"> No</label>
+                        </div>
+                        <span className="check-icon" />
+                    </div>
+                    <div className="col-md-8">
+                        <span className="primary"> {labels.explain[displayLanguage]} </span>
+                        {this.state.scheduleRestrictions === '0' ? (
+                            <textarea
+                                onChange={ this.handleStateChange }
+                                value={this.state.scheduleExplain}
+                                name="scheduleExplain"
+                                cols="30"
+                                rows="3"
+                                disabled
+                                className="form-control textarea-apply-form"
+                            />
+                        ) : (
                                 <textarea
-                                    onChange={(event) => {
-                                        this.setState({
-                                            comment: event.target.value
-                                        });
-                                    }}
-                                    placeholder="Explain how did you hear about Tumi Staffing"
-                                    value={this.state.comment}
+                                    onChange={ this.handleStateChange }
+                                    value={this.state.scheduleExplain}
+                                    name="scheduleExplain"
+                                    cols="30"
+                                    rows="3"
                                     required
-                                    name="comment"
-                                    cols="20"
-                                    rows="4"
                                     className="form-control textarea-apply-form"
                                 />
-                            ) : (
-                                    ''
-                                )}
+                            )}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-4">
+                        <span className="primary"> {labels.felony[displayLanguage]} </span>
+                        <div className="col-md-12">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        convicted: event.target.value
+                                    });
+                                }}
+                                value="1"
+                                type="radio"
+                                name="convicted"
+                                className=""
+                            />
+                            <label className="radio-label"> Yes</label>
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        convicted: event.target.value,
+                                        convictedExplain: ''
+                                    });
+                                }}
+                                value="0"
+                                type="radio"
+                                name="convicted"
+                                className=""
+                                checked={this.state.convicted === '0'}
+                            />
+                            <label className="radio-label"> No</label>
+                        </div>
+                    </div>
+                    <div className="col-md-8">
+                        <span className="primary"> {labels.explain[displayLanguage]} </span>
+                        {this.state.convicted === '0' ? (
+                            <textarea
+                                onChange={ this.handleStateChange }
+                                value={this.state.convictedExplain}
+                                name="convictedExplain"
+                                cols="30"
+                                disabled
+                                rows="3"
+                                className="form-control textarea-apply-form"
+                            />
+                        ) : (
+                                <textarea
+                                    onChange={ this.handleStateChange }
+                                    value={this.state.convictedExplain}
+                                    name="convictedExplain"
+                                    cols="30"
+                                    required
+                                    rows="3"
+                                    className="form-control textarea-apply-form"
+                                />
+                            )}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <span className="primary"> {labels.heardTumi[displayLanguage]} </span>
+                    </div>
+                    <div className="col-md-12">
+                        <select
+                            name="socialNetwork"
+                            id="networks"
+                            onChange={ this.handleStateChange }
+                            value={this.state.socialNetwork}
+                            required
+                            className="form-control"
+                        >
+                            <option value="">Select a option</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="linkedin">Linkedin</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="newspaper">News Paper</option>
+                            <option value="journals">Journals</option>
+                            <option value="others">Other</option>
+                        </select>
+
+                        <div className="row">
+                            <div className="col-md-12">
+                                {this.state.socialNetwork === 'others' ? (
+                                    <textarea
+                                        onChange={ this.handleStateChange }
+                                        placeholder="Explain how did you hear about Tumi Staffing"
+                                        value={this.state.comment}
+                                        required
+                                        name="comment"
+                                        cols="20"
+                                        rows="4"
+                                        className="form-control textarea-apply-form"
+                                    />
+                                ) : (
+                                        ''
+                                    )}
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div className="bottom-container-stepper">
+                    <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
+                        {labels.back[displayLanguage]}
+                    </Button>
+                    <Button type="submit" variant="contained" color="primary" className={this.props.classes.button} disabled={this.state.searchigZipcode}>
+                        {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
+                    </Button>
+                </div>
             </div>
-            <div className="bottom-container-stepper">
-                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={this.props.classes.button}>
-                    Back
-                </Button>
-                <Button type="submit" variant="contained" color="primary" className={this.props.classes.button} disabled={this.state.searchigZipcode}>
-                    {this.state.activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                </Button>
-            </div>
-        </div>
-    );
+        )
+    };
 
     // To render a dialog loading when the mutation is loading
     renderInsertDialogLoading = (steps) => (
@@ -1328,71 +1285,74 @@ class VerticalLinearStepper extends Component {
     );
 
     // To render the Skills Dialog
-    renderSkillsDialog = (steps) => (
-        <form
-            autoComplete="off"
-            id="skill-form"
-            onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+    renderSkillsDialog = (steps) => {
+        
+        return(
+            <form
+                autoComplete="off"
+                id="skill-form"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
 
-                let item = {
-                    uuid: uuidv4(),
-                    description: document.getElementById('description').value,
-                    level: this.state.percent
-                };
+                    let item = {
+                        uuid: uuidv4(),
+                        description: document.getElementById('description').value,
+                        level: this.state.percent
+                    };
 
-                this.setState(
-                    (prevState) => ({
-                        open: false,
-                        skills: [...prevState.skills, item]
-                    }),
-                    () => {
+                    this.setState(
+                        (prevState) => ({
+                            open: false,
+                            skills: [...prevState.skills, item]
+                        }),
+                        () => {
 
 
-                        document.getElementById('skill-form').reset();
-                    }
-                );
-            }}
-            className="apply-form row form-section-1"
-        >
-            <div className="col-md-5">
-                <span className="primary">* Skill Name</span>
-                <input
-                    id="description"
-                    name="description"
-                    type="text"
-                    className="form-control"
-                    required
-                    min="0"
-                    maxLength="20"
-                    minLength="3"
-                    form="skill-form"
-                />
-            </div>
-            <div className="col-md-5">
-                <span className="primary">Skill Level</span>
-                <InputRange
-                    getPercentSkill={(percent) => {
-                        // update the percent skill
-                        this.setState({
-                            percent: percent
-                        });
-                    }}
-                />
-            </div>
-            <div className="col-md-2">
-                <div className="form-section--center form-section--center--margin">
-                    <button className="btn btn-save-skill btn-success col-md-6" type="submit" form="skill-form">
-                        <i className="fas fa-plus"></i>
-                    </button>
-                    <button className="btn btn-danger col-md-6" type="reset" onClick={this.handleClose}>
-                        <i className="fas fa-ban"></i>
-                    </button>
+                            document.getElementById('skill-form').reset();
+                        }
+                    );
+                }}
+                className="apply-form row form-section-1"
+            >
+                <div className="col-md-5">
+                    <span className="primary">* Skill Name</span>
+                    <input
+                        id="description"
+                        name="description"
+                        type="text"
+                        className="form-control"
+                        required
+                        min="0"
+                        maxLength="20"
+                        minLength="3"
+                        form="skill-form"
+                    />
                 </div>
-            </div>
-        </form>
-    );
+                <div className="col-md-5">
+                    <span className="primary">Skill Level</span>
+                    <InputRange
+                        getPercentSkill={(percent) => {
+                            // update the percent skill
+                            this.setState({
+                                percent: percent
+                            });
+                        }}
+                    />
+                </div>
+                <div className="col-md-2">
+                    <div className="form-section--center form-section--center--margin">
+                        <button className="btn btn-save-skill btn-success col-md-6" type="submit" form="skill-form">
+                            <i className="fas fa-plus"></i>
+                        </button>
+                        <button className="btn btn-danger col-md-6" type="reset" onClick={this.handleClose}>
+                            <i className="fas fa-ban"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        );
+    }
 
     // To render the Education Service Section
     renderEducationSection = (steps) => (
@@ -2457,84 +2417,92 @@ class VerticalLinearStepper extends Component {
         const { activeStep } = this.state;            
 
         return (
-            <div className="main-stepper-container">
-                <header className="Header">Application Form</header>
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-md-2">
-                            <div className="Stepper-wrapper p-3 ">
-                                <Stepper activeStep={activeStep} orientation="vertical" className="main-stepper-nav">
-                                    {steps.map((label, index) => {
-                                        return (
-                                            <Step key={label}>
-                                                <StepLabel className={classes.stepper}>{label}</StepLabel>
-                                                <StepContent>
-                                                    <Typography
-                                                        variant="caption">{index === 0 ? 'Required' : 'Optional'}</Typography>
-                                                </StepContent>
-                                            </Step>
-                                        );
-                                    })}
-                                </Stepper>
+            <React.Fragment>
+                <div className="main-stepper-container">
+                    <header className="Header">Application Form</header>
+                    <div className="container-fluid">
+                        <div className="row">
+                            <div className="col-md-2">
+                                <div className="Stepper-wrapper p-3 ">
+                                    <Stepper activeStep={activeStep} orientation="vertical" className="main-stepper-nav">
+                                        {steps.map((label, index) => {
+                                            return (
+                                                <Step key={label}>
+                                                    <StepLabel className={classes.stepper}>{label}</StepLabel>
+                                                    <StepContent>
+                                                        <Typography
+                                                            variant="caption">{index === 0 ? 'Required' : 'Optional'}
+                                                        </Typography>
+                                                    </StepContent>
+                                                </Step>
+                                            );
+                                        })}
+                                    </Stepper>
+                                </div>
+                                {activeStep === steps.length && (
+                                    <Paper square elevation={0} className={classes.resetContainer}>
+                                        <Typography>All steps completed - you&quot;re finished</Typography>
+                                        <Button onClick={this.handleReset} className={classes.button}>
+                                            Reset
+                                        </Button>
+                                    </Paper>
+                                )}
+
                             </div>
-                            {activeStep === steps.length && (
-                                <Paper square elevation={0} className={classes.resetContainer}>
-                                    <Typography>All steps completed - you&quot;re finished</Typography>
-                                    <Button onClick={this.handleReset} className={classes.button}>
-                                        Reset
-                                    </Button>
-                                </Paper>
-                            )}
-
-                        </div>
-                        <div className="col-md-10">
-                            <Typography className="">
-                                <Route
-                                    render={({ history }) => (
-                                        <form
-                                            className="ApplyForm apply-form"
-                                            onSubmit={(e) => {
-                                                // To cancel the default submit event
-                                                e.preventDefault();
-                                                this.setState(() => {
-                                                    return {
-                                                        validCity: this.state.city && true,
-                                                        validState: this.state.state && true,
-                                                        validZipCode: this.state.zipCode.trim().replace('-', '') && true
-                                                    }
-                                                }, () => {
-                                                    if (!this.state.validCity)
-                                                        this.props.handleOpenSnackbar('warning', 'City needed');
-                                                    else if (!this.state.validState)
-                                                        this.props.handleOpenSnackbar('warning', 'State needed');
-                                                    else if (!this.state.validZipCode)
-                                                        this.props.handleOpenSnackbar('warning', 'ZipCode needed');
-                                                    else {
-                                                        // Call mutation to create a application
-                                                        if (this.state.applicationId === null) {
-                                                            this.insertApplicationInformation(history);
-                                                        } else {
-                                                            this.updateApplicationInformation();
+                            <div className="col-md-10">
+                                <Typography className="">
+                                    <Route
+                                        render={({ history }) => (
+                                            <form
+                                                className="ApplyForm apply-form"
+                                                onSubmit={(e) => {
+                                                    // To cancel the default submit event
+                                                    e.preventDefault();
+                                                    this.setState(() => {
+                                                        return {
+                                                            validCity: this.state.city && true,
+                                                            validState: this.state.state && true,
+                                                            validZipCode: this.state.zipCode.trim().replace('-', '') && true
                                                         }
-                                                    }
-                                                });
+                                                    }, () => {
+                                                        if (!this.state.validCity)
+                                                            this.props.handleOpenSnackbar('warning', 'City needed');
+                                                        else if (!this.state.validState)
+                                                            this.props.handleOpenSnackbar('warning', 'State needed');
+                                                        else if (!this.state.validZipCode)
+                                                            this.props.handleOpenSnackbar('warning', 'ZipCode needed');
+                                                        else {
+                                                            // Call mutation to create a application
+                                                            if (this.state.applicationId === null) {
+                                                                this.insertApplicationInformation(history);
+                                                            } else {
+                                                                this.updateApplicationInformation();
+                                                            }
+                                                        }
+                                                    });
 
-                                            }}
-                                        >
-                                            {this.getStepContent(this.state.activeStep, history, steps)}
-                                        </form>
-                                    )}
-                                />
-                            </Typography>
+                                                }}
+                                            >
+                                                <ReactFlagsSelect 
+                                                    defaultCountry="US" 
+                                                    onSelect={this.handleDisplayLanguageChange}
+                                                    countries={["US", "ES"]}
+                                                    customLabels={{"US":"English", "ES": "Español"}}
+                                                    className="ApplyForm-language"
+                                                />
+                                                {this.getStepContent(this.state.activeStep, history, steps)}
+                                            </form>
+                                        )}
+                                    />
+                                </Typography>
 
+                            </div>
                         </div>
                     </div>
                 </div>
-
-            </div>
+            </React.Fragment>
         );
     }
-
 }
 
 VerticalLinearStepper.propTypes = {
