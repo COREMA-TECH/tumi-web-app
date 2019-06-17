@@ -4,9 +4,20 @@ import withApollo from "react-apollo/withApollo";
 import moment from 'moment';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import { CREATE_WORKORDER } from './Mutations';
 
 const uuidv4 = require('uuid/v4');
 const WILDCARD = '||';
+const DAYS = [
+    { id: 0, description: "firstDay" },
+    { id: 1, description: "secondDay" },
+    { id: 2, description: "thirdDay" },
+    { id: 3, description: "fourthDay" },
+    { id: 4, description: "fifthDay" },
+    { id: 5, description: "sixthDay" },
+    { id: 6, description: "seventhDay" }
+];
+
 class Grid extends Component {
     createNewRow = () => {
         let id = uuidv4();
@@ -65,7 +76,8 @@ class Grid extends Component {
 
         let days = [];
         for (let i = 0; i <= 6; i++) {
-            days.push({ index: i, label: moment(weekStart).add(i, 'days').format("MMMM Do,dddd") });
+            let date = moment(weekStart).add(i, 'days');
+            days.push({ index: i, label: date.format("MMMM Do,dddd"), date: date.format("YYYY-MM-DD") });
         };
 
         const hours = Array(24 * 2).fill(0).map((_, i) => {
@@ -155,6 +167,91 @@ class Grid extends Component {
         })
     }
 
+    createWorkOrder = () => {
+        this.props.client
+            .mutate({
+                mutation: CREATE_WORKORDER,
+                variables: {
+                    workOrder: this.state.form,
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Record Inserted!');
+                this.setState(() => ({
+                    rows: []
+                }))
+            })
+            .catch((error) => {
+                this.setState({ saving: true });
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+            });
+    };
+
+    saveWorkOrder = () => {
+        let data = [];
+        this.state.rows.map(_ => {
+            if (Object.keys(_.employeeId).length > 0) {
+                console.log(_);
+                DAYS.map(day => {
+                    if (_[day.description] != "0")
+                        this.createWorkOrderObject({ dayNumber: day.id, hour: _[day.description] });
+                })
+            }
+        })
+    }
+
+    // createWorkOrderObject = ({ dayNumber, hour, employeeId }) => {
+    createWorkOrderObject = ({ dayNumber ,hour}) => {
+        console.log({ dayNumber, dates: this.state.daysOfWeek })
+        let date = this.state.daysOfWeek.find(_ => { return _.index == dayNumber }).date;
+        console.log(date);
+        let algo = {
+            IdEntity: 206,
+            PositionRateId: "172",
+            comment: "",
+            // contactId: null,
+            date: date,
+            dayWeek: this.getDayCode(moment(date).day()),
+            departmentId: 30708,
+            endDate: date,
+            endShift: hour,
+            needEnglish: false,
+            needExperience: false,
+            quantity: "1",
+            shift: "08:00",
+            startDate: "2019-05-21T00:00:00-06:00",
+            status: 1,
+            userId: "10"
+        }
+        console.log(algo);
+    }
+
+    getDayCode = (day) => {
+        console.log("this is my day", day)
+        return day.toString().replace(1, "MO").replace(2, "TU").replace(3, "WE").replace(4, "TH").replace(5, "FR").replace(6, "SA").replace(7, "SU")
+    }
+
+    getDayControlName = (day) => {
+        return DAYS.find(_ => { return _.id == day }).description;
+    }
+
+    onChangeDayHandler = (rowId, dayName) => (e) => {
+        let element = e.target;
+        this.setState((prevState) => {
+            let rows = prevState.rows;
+            let data = [];
+            rows.map(_ => {
+                if (_.id == rowId)
+                    _[dayName] = element.value
+                data.push(_);
+            })
+
+            return { rows: data }
+        })
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -209,10 +306,11 @@ class Grid extends Component {
 
                                         </td>
                                         {this.state.daysOfWeek.map(day => {
+                                            let dayName = this.getDayControlName(day.index)
                                             return (
                                                 <td>
 
-                                                    <select name="" className="form-control" id={`${_.id}${WILDCARD}${day.index}`} >
+                                                    <select name="" className="form-control" id={`${_.id}${WILDCARD}${day.index}`} value={_[dayName]} onChange={this.onChangeDayHandler(_.id, dayName)} >
                                                         <option value="0">OFF</option>
                                                         {this.state.hours.map(hour => {
                                                             return (
@@ -229,7 +327,7 @@ class Grid extends Component {
                         }
                         <tr>
                             <td colspan="8" align="right">
-                                <button className="btn btn-success">Save</button>
+                                <button className="btn btn-success" onClick={this.saveWorkOrder}>Save</button>
                             </td>
                         </tr>
                     </tbody>

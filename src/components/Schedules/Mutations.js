@@ -100,4 +100,12 @@ export const PUBLISH_ALL = gql`
       id
     }
   }
-`
+`;
+
+export const CREATE_WORKORDER = gql`
+	mutation addWorkOrder($workOrder: [inputInsertWorkOrder],  $codeuser: Int, $nameUser: String) {
+		addWorkOrder(workOrder: $workOrder, codeuser: $codeuser, nameUser: $nameUser) {
+			id
+		}
+	}
+`;
