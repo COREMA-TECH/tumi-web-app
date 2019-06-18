@@ -626,7 +626,6 @@ class WorkOrdersTable extends Component {
                                     <CustomTableCell className={"Table-head"} style={{ width: '80px' }}>No.</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '220px' }}>Property</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
-                                    <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Needs Experience?</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Needs to Speak English?</CustomTableCell>
@@ -683,10 +682,9 @@ class WorkOrdersTable extends Component {
                                                             )
                                                     }
                                                 </CustomTableCell>
-                                                <CustomTableCell style={{ width: '80px' }}>{row.workOrderId}</CustomTableCell>
+                                                <CustomTableCell style={{ width: '80px' }}>{`${row.workOrderId}-${row.count}`}</CustomTableCell>
                                                 <CustomTableCell style={{ width: '220px' }}>{row.CompanyName != null ? row.CompanyName : ''}</CustomTableCell>
                                                 <CustomTableCell >{row.positionName != null ? row.positionName : ''}</CustomTableCell>
-                                                <CustomTableCell className={'text-center'}>{row.count + '/' + row.quantity}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>

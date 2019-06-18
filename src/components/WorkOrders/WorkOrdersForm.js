@@ -272,11 +272,13 @@ class WorkOrdersForm extends Component {
         event.preventDefault();
         this.setState({ saving: true });
         var evens = [];
-        if (typeof this.state.id === 'string') {
+
+        if (typeof this.state.id === 'string' && !this.state.workOrderId) {
             evens = this.state.form.map((item) => {
                 delete item.id
                 return item;
             });
+
             this.setState({
                 form: evens
             }, () => this.add());
@@ -370,7 +372,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.setState({ openModal: false, saving: false, converting: false });
-                //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
+                this.setState({ ...this.DEFAULT_STATE })
                 window.location.reload();
             })
             .catch((error) => {
@@ -724,8 +726,8 @@ class WorkOrdersForm extends Component {
         const departmentList = this.getDepartmentFilterList();
 
         const { classes } = this.props;
-        const isAdmin = localStorage.getItem('IsAdmin') == "true"
-        console.log({ state: this.state })
+        const isAdmin = localStorage.getItem('IsAdmin') == "true";
+
         return (
             <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
