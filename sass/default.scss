@@ -3,6 +3,7 @@
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,900";
 @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
+@import url('https://fonts.googleapis.com/css?family=Ropa+Sans&display=swap');
 
 // Variables
 @import "variables";
@@ -72,6 +73,9 @@
 @import "components/apply/document";
 @import "components/apply/profile-picture";
 @import "components/apply/stepper";
+
+//External apply
+@import "components/apply/external/index";
 
 //Holidays 
 @import "components/holidays/holidays";

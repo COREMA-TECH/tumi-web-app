@@ -2,6 +2,7 @@
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,900";
 @import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900");
+@import url("https://fonts.googleapis.com/css?family=Ropa+Sans&display=swap");
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic);
 html,
 body {
@@ -10872,6 +10873,150 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 div[class*="MuiStepper-root-"] {
   padding: 0 !important; }
+
+.External-label, .External .Location-label {
+  color: #FFF !important;
+  font-family: 'Ropa Sans', sans-serif;
+  font-size: 0.875rem;
+  text-transform: uppercase; }
+
+.External {
+  background-color: transparent;
+  font-family: 'Ropa Sans', sans-serif; }
+  .External-bg {
+    background-image: url("../images/external-application-bg.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 0; }
+  .External-row {
+    margin-bottom: 35px; }
+  .External-stepper .MuiStepIcon-root-60.MuiStepIcon-active-62, .External-stepper .MuiStepLabel-label-52.MuiStepLabel-active-53 {
+    color: #3ca2c8;
+    font-family: 'Ropa Sans', sans-serif; }
+  .External .External-input {
+    background-color: transparent !important;
+    color: #FFF !important;
+    border: none;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    font-family: 'Ropa Sans', sans-serif !important;
+    font-size: 18px; }
+    .External .External-input::-webkit-input-placeholder {
+      color: #868686;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .External .External-input:-ms-input-placeholder {
+      color: #868686;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .External .External-input::-ms-input-placeholder {
+      color: #868686;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .External .External-input::placeholder {
+      color: #868686;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .External .External-input:disabled {
+      background-color: transparent !important;
+      border: none !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important; }
+    .External .External-input option {
+      color: #000; }
+      .External .External-input option:hover {
+        color: #FFF;
+        background-color: #FFF; }
+  .External-formButtons {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap; }
+  .External .External-formButton {
+    background-color: transparent;
+    color: #FFF;
+    border: 1px solid #FFF;
+    text-transform: uppercase;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+    width: 155px; }
+    .External .External-formButton span[class*="MuiButton-label"] {
+      font-family: 'Ropa Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700; }
+    .External .External-formButton:hover {
+      background-color: #FFF;
+      color: #000; }
+    .External .External-formButton:first-child {
+      margin-left: auto; }
+    .External .External-formButton[disabled] {
+      color: #FFF;
+      cursor: not-allowed; }
+  .External .Stepper-wrapper {
+    border-radius: 0;
+    margin-left: auto;
+    max-width: 340px;
+    width: 100%; }
+  .External .Location-label.changeCity {
+    font-size: 10px; }
+  .External .ApplyForm {
+    background-color: transparent; }
+  .External .ApplyBlock {
+    background-color: rgba(0, 0, 0, 0.65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-family: 'Ropa Sans', sans-serif;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+    width: 100%;
+    min-height: 100vh;
+    padding-left: 60px;
+    padding-top: 30px; }
+    .External .ApplyBlock-title {
+      background-color: transparent;
+      color: #FFF;
+      font-size: 24px;
+      font-weight: 700;
+      padding-left: 0;
+      position: unset; }
+      .External .ApplyBlock-title::before, .External .ApplyBlock-title::after {
+        display: none; }
+  .External .skills-container {
+    border: none;
+    margin-left: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-top: 0; }
+    .External .skills-container--header {
+      background-color: transparent; }
+    .External .skills-container:hover .deleteSkillSection {
+      position: absolute;
+      top: -5px; }
+  .External .skills-label, .External .skills-desc {
+    color: #FFF !important;
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 14px; }
+  .External .skills-desc {
+    font-size: 18px; }
 
 .DaysWeekMonth-wrapper {
   padding-top: 1.5rem;

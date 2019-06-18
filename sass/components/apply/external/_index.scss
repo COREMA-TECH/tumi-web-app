@@ -1,0 +1,198 @@
+%external-form-label{
+    color: $white !important;
+
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 0.875rem;
+
+    text-transform: uppercase;
+}
+
+.External{
+    background-color: transparent;
+    font-family: 'Ropa Sans', sans-serif;
+
+    &-bg{
+        background-image: url('#{$img-path}/external-application-bg.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        padding-top: 0;
+    }
+
+    &-row{
+        margin-bottom: 35px;
+    }
+
+    &-stepper{
+        .MuiStepIcon-root-60.MuiStepIcon-active-62, .MuiStepLabel-label-52.MuiStepLabel-active-53{
+            color: $brand-primary;
+            font-family: 'Ropa Sans', sans-serif;
+        }
+    }
+
+    &-label{
+        @extend %external-form-label;
+    }
+
+    & &-input{
+        background-color: transparent !important;
+        color: $white !important;
+
+        border: none;
+        box-shadow: none !important;
+
+        font-family: 'Ropa Sans', sans-serif !important;
+        font-size: 18px;
+
+        // margin-bottom: 1.5rem;
+
+        &::placeholder{
+            color: $placeholder;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        &:disabled{
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        option{
+            color: $black;
+
+            &:hover{
+                color: $white;
+                background-color: $white;
+            }
+        }
+    }
+
+    &-formButtons{
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-wrap: nowrap;
+    }
+
+    & &-formButton{
+        background-color: transparent;
+        color: $white;
+        
+        border: 1px solid $white;
+        
+        text-transform: uppercase;
+        transition: all 0.25s ease;
+
+        width: 155px;
+        
+        span[class*="MuiButton-label"]{
+            font-family: 'Ropa Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        &:hover{
+            background-color: $white;
+            color: $black;
+        }
+
+        &:first-child{
+            margin-left: auto;
+        }
+
+        &[disabled]{
+            color: $white;
+            cursor: not-allowed;
+        }
+    }
+
+    .Stepper-wrapper{
+        border-radius: 0;
+
+        margin-left: auto;
+
+        max-width: 340px;
+        width: 100%;
+    }
+
+    .Location-label{
+        @extend %external-form-label;
+
+        &.changeCity{
+            font-size: 10px;
+        }
+    }
+
+    .ApplyForm{
+        background-color: transparent;
+    }
+
+    .ApplyBlock {   
+        background-color: rgba($color: $black, $alpha: 0.65);
+        box-shadow: none;
+
+        font-family: 'Ropa Sans', sans-serif;     
+
+        margin-left: 0;
+        margin-right: 0;
+        
+        max-width: 100%;
+        width: 100%;
+
+        min-height: 100vh;
+
+        padding-left: 60px;
+        padding-top: 30px;
+
+        &-title{
+            background-color: transparent;
+            color: $white;
+
+            font-size: 24px;
+            font-weight: 700;
+
+            padding-left: 0;
+            position: unset;
+            
+            &::before, &::after{
+                display: none;
+            }
+        }
+    }
+
+    .skills{
+        &-container{
+            border: none;
+
+            margin-left: 0;
+
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-top: 0;
+
+            &--header{
+                background-color: transparent;
+            }
+
+            &:hover .deleteSkillSection{
+                position: absolute;
+                top: -5px;
+            }
+        }
+
+        &-label,  &-desc{
+            color: $white !important;
+            font-family: 'Ropa Sans', sans-serif; 
+            font-size: 14px;
+        }
+
+        &-desc{
+            font-size: 18px;
+        }
+    }
+}

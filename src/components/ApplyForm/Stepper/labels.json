@@ -76,7 +76,7 @@
         "ES": "Pocisión a la que Aplica"
     },
     "willing": {
-        "US": "Position Applying For",
+        "US": "Willing to work as",
         "ES": "Dispuesto a trabajar como"
     },
     "available": {
@@ -104,8 +104,8 @@
         "ES": "Anterior"
     },
     "next": {
-        "US": "Next",
-        "ES": "Siguiente"
+        "US": "Continue",
+        "ES": "Continuar"
     },
     "languages": {
         "US": "Languages",
