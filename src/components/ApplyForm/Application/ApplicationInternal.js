@@ -157,9 +157,6 @@ class ApplicationInternal extends Component {
         this.setState({ openRestrictionsModal: false });
     };
 
-
-
-
     /**<
      * To update a application by id
      */
@@ -230,7 +227,6 @@ class ApplicationInternal extends Component {
                                 })
                             });
 
-                            this.addApplicantJobs(object);
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
@@ -261,22 +257,6 @@ class ApplicationInternal extends Component {
             }
         );
     };
-
-    addApplicantJobs = (idealJobArrayObject) => {
-        this.props.client
-            .mutate({
-                mutation: RECREATE_IDEAL_JOB_LIST,
-                variables: {
-                    ApplicationId: this.props.applicationId,
-                    applicationIdealJob: idealJobArrayObject
-                }
-            })
-            .then(({ data }) => {
-            })
-            .catch(error => {
-            })
-    };
-
 
     /**
      * To get applications by id
@@ -352,12 +332,8 @@ class ApplicationInternal extends Component {
                                 HireType:applicantData.hireType,
                                 gender:applicantData.gender,
                                 marital:applicantData.marital
-                            },
-                            () => {
-                                this.getIdealJobsByApplicationId();
-                                this.getPositionCatalog();
-
-
+                            }, _ => {
+                                this.removeSkeletonAnimation();
                             }
                         );
                     })
@@ -373,68 +349,6 @@ class ApplicationInternal extends Component {
             }
         );
     };
-
-    // get ideal jobs
-    getIdealJobsByApplicationId = () => {
-        this.props.client
-            .query({
-                query: GET_APPLICANT_IDEAL_JOBS,
-                variables: {
-                    ApplicationId: this.props.applicationId
-                },
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                let dataAPI = data.applicantIdealJob;
-                dataAPI.map(item => {
-                    this.setState(prevState => ({
-                        positionsTags: [...prevState.positionsTags, {
-                            value: item.id,
-                            label: item.description
-                        }]
-                    }))
-                });
-            })
-            .catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to show applicant information. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            })
-    };
-
-    // get ideal jobs
-    getPositionCatalog = () => {
-        this.props.client
-            .query({
-                query: GET_POSITIONS_CATALOG,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                let dataAPI = data.getcatalogitem;
-                dataAPI.map(item => {
-                    this.setState(prevState => ({
-                        positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label: item.Description.trim(), key: item.Id
-                        }]
-                    }))
-                });
-
-                this.removeSkeletonAnimation();
-            })
-            .catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to show applicant information. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            })
-    };
-
-
 
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {
@@ -459,31 +373,6 @@ class ApplicationInternal extends Component {
         }
     };
 
-    getPositions = () => {
-        this.props.client
-            .query({
-                query: GET_POSITIONS_QUERY,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                this.setState({
-                    positionApplyingFor: data.workOrder
-                }, () => {
-                    this.setState({
-                        loading: false
-                    })
-                });
-            })
-            .catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to show applicant information. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            })
-    };
-
     componentWillMount() {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
@@ -499,8 +388,8 @@ class ApplicationInternal extends Component {
                 editing: true
             });
         }
-        this.getPositions();
-        this.getPositionCatalog();
+
+        
     }
 
     componentWillReceiveProps(nextProps) {
@@ -515,17 +404,6 @@ class ApplicationInternal extends Component {
         if (this.state.editing !== nextProps.editing) {
             return true;
         }
-    }
-
-    updateCity = (city) => {
-        this.setState(() => { return { city } });
-    };
-    updateState = (state) => {
-        this.setState(() => { return { state } });
-    };
-
-    updateZipCode = (zipCode) => {
-        this.setState(() => { return { zipCode } });
     }
 
     submitForm = () => {
@@ -582,53 +460,22 @@ class ApplicationInternal extends Component {
         })
     };
 
+    handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+    }
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
 
-        let renderSSNDialog = () => (
-            <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
-                <DialogTitle>
-                    <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
-                </DialogTitle>
-                <DialogContent>
-                    You must sign an Independent Contract Recognition
-                </DialogContent>
-                <DialogActions>
-                    <div className="applicant-card__footer">
-                        <button
-                            className="applicant-card__cancel-button"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.handleCloseSSNDialog();
-                            }}
-                        >
-                            {spanishActions[2].label}
-                        </button>
-                        <button type="submit"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.submitForm();
-                                this.props.handleContract();
-                                this.handleCloseSSNDialog();
-                            }}
-                            className="applicant-card__save-button">
-                            Accept
-                        </button>
-                    </div>
-                </DialogActions>
-            </Dialog>
-        );
-
-
-
         return (
             <div className="Apply-container--application">
-                {
-                    renderSSNDialog()
-                }
                 <form
                     className="general-info-apply-form"
                     id="general-info-form"
@@ -663,11 +510,7 @@ class ApplicationInternal extends Component {
                                                     * {formSpanish[12].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            birthDay: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.birthDay}
                                                     name="birthDay"
                                                     type="date"
@@ -690,11 +533,7 @@ class ApplicationInternal extends Component {
                                                     className="form-control"
                                                     disabled={!this.state.editing}
                                                     value={this.state.gender}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            gender : e.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                 >
                                                     <option value="">Select an option</option>
                                                     <option value="1">Male</option>
@@ -712,11 +551,7 @@ class ApplicationInternal extends Component {
                                                     className="form-control"
                                                     disabled={!this.state.editing}
                                                     value={this.state.EEOC}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            EEOC : e.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                 >
                                                     <option value="">Select an option</option>
                                                     <option value="1">White</option>
@@ -738,11 +573,7 @@ class ApplicationInternal extends Component {
                                                     id="marital"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            marital : e.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.marital}
                                                 >
                                                     <option value="">Select an option</option>
@@ -806,11 +637,7 @@ class ApplicationInternal extends Component {
                                                     className="form-control"
                                                     disabled={!this.state.editing}
                                                     value={this.state.HireType}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            HireType : e.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                 >
                                                     <option value="">Select an option</option>
                                                     <option value="1">New hire</option>
@@ -833,11 +660,7 @@ class ApplicationInternal extends Component {
                                                     className="form-control"
                                                     disabled={!this.state.editing}
                                                     value={this.state.typeOfId}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            typeOfId: e.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                 >
                                                     <option value="">Select an option</option>
                                                     <option value="1">Birth certificate</option>
@@ -858,11 +681,7 @@ class ApplicationInternal extends Component {
                                                    * {formSpanish[15].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            expireDateId: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.expireDateId}
                                                     name="expireDateId"
                                                     type="date"

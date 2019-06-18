@@ -60,7 +60,6 @@ class GridTabModal extends Component {
     }
 
     handleChangePositions = (positionTags) => {
-        console.log(positionTags)
         this.setState({ positionTags });
     };
 

@@ -4,7 +4,6 @@ import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY } from '../Queries';
 import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION, ADD_INDEPENDENT_CONTRACT } from '../Mutations';
-import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
@@ -19,18 +18,12 @@ import ShiftRestrictionModal from './ShiftRestrictionModal';
 import IndependentContractDialog from './IndependentContract/Modal';
 
 
-if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
+if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) 
     localStorage.setItem('languageForm', 'en');
-}
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const formSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/formSpanish`);
-
-const KeyCodes = {
-    comma: 188,
-    enter: 13,
-};
 
 class Application extends Component {
     constructor(props) {
@@ -154,15 +147,11 @@ class Application extends Component {
         this.setState({ openRestrictionsModal: false });
     };
 
-
-
-
     /**<
      * To update a application by id
      */
     InsertUpdateApplicationInformation = (id, saveIndependentContract = () => { }) => {
-        this.setState(
-            {
+        this.setState({
                 insertDialogLoading: true
             },
             () => {
@@ -345,8 +334,6 @@ class Application extends Component {
                             () => {
                                 this.getIdealJobsByApplicationId();
                                 this.getPositionCatalog();
-
-
                             }
                         );
                     })
@@ -403,13 +390,16 @@ class Application extends Component {
             })
             .then(({ data }) => {
                 let dataAPI = data.getcatalogitem;
+                let positionCatalogTag = [];
                 dataAPI.map(item => {
-                    this.setState(prevState => ({
-                        positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label: item.Description.trim(), key: item.Id
-                        }]
-                    }))
+                    positionCatalogTag.push({
+                        value: item.Id, label: item.Description.trim(), key: item.Id
+                    });
                 });
+
+                this.setState(prevState => {
+                    return { positionCatalogTag: positionCatalogTag }
+                })
 
                 this.removeSkeletonAnimation();
             })
@@ -476,11 +466,13 @@ class Application extends Component {
     componentWillMount() {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
-
             this.getApplicationById(this.props.applicationId);
-            if (this.state.socialSecurityNumber.length === 0) {
+            if (this.state.socialSecurityNumber.length === 0) 
                 this.props.handleContract();
-            }
+            
+        } else {
+            this.getPositions();
+            this.getPositionCatalog();
         }
 
         if (this.props.applicationId == 0) {
@@ -488,8 +480,6 @@ class Application extends Component {
                 editing: true
             });
         }
-        this.getPositions();
-        this.getPositionCatalog();
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -636,48 +626,98 @@ class Application extends Component {
             this.InsertUpdateApplicationInformation(this.props.applicationId, this.saveIndependentContract);
         else this.props.handleOpenSnackbar('warning', 'You must sign the document to continue!', 'bottom', 'right');
     }
-    render() {
-        //this.validateInvalidInput();
-        const { tags, suggestions } = this.state;
 
-        let renderSSNDialog = () => (
-            <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
-                <DialogTitle>
-                    <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
-                </DialogTitle>
-                <DialogContent>
-                    You must sign an Independent Contract Recognition
-                </DialogContent>
-                <DialogActions>
-                    <div className="applicant-card__footer">
-                        <button
-                            className="applicant-card__cancel-button"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.handleCloseSSNDialog();
-                            }}
-                        >
-                            {spanishActions[2].label}
-                        </button>
-                        <button type="submit"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                this.setState(() => ({ openIndependentContractDialog: true, openSSNDialog: false }));
-                            }}
-                            className="applicant-card__save-button">
-                            Accept
-                        </button>
-                    </div>
-                </DialogActions>
-            </Dialog>
+    renderSSNDialog = () => (
+        <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
+            <DialogTitle>
+                <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
+            </DialogTitle>
+            <DialogContent>
+                You must sign an Independent Contract Recognition
+            </DialogContent>
+            <DialogActions>
+                <div className="applicant-card__footer">
+                    <button
+                        className="applicant-card__cancel-button"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.handleCloseSSNDialog();
+                        }}
+                    >
+                        {spanishActions[2].label}
+                    </button>
+                    <button type="submit"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            this.setState(() => ({ openIndependentContractDialog: true, openSSNDialog: false }));
+                        }}
+                        className="applicant-card__save-button">
+                        Accept
+                    </button>
+                </div>
+            </DialogActions>
+        </Dialog>
+    );
+
+    handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+    }
+
+    handleScheduleInput =(event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState(prevState => {
+            return { 
+                scheduleRestrictions: value,
+                openRestrictionsModal: value
+            }
+        }, _ => {
+                if (!this.state.scheduleRestrictions) {
+                    this.setState({
+                        scheduleExplain: ''
+                    });
+                }
+            }
         );
+    }
+
+    handleChangeConvictedSwitch = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        this.setState(prevState => {
+            return {  convicted: value }
+        },() => {
+            if (!this.state.convicted) {
+                this.setState({
+                    convictedExplain: ''
+                });
+            }
+        });
+    }
+
+    handleChangeEditing = () => {
+        this.setState({
+            editing: true
+        });
+    }
+    
+    render() {
 
         return (
             <div className="Apply-container--application">
                 {
-                    renderSSNDialog()
+                    this.renderSSNDialog()
                 }
                 <IndependentContractDialog
                     open={this.state.openIndependentContractDialog}
@@ -699,11 +739,7 @@ class Application extends Component {
                                 {!this.state.editing &&
                                     <button
                                         className="applicant-card__edit-button"
-                                        onClick={() => {
-                                            this.setState({
-                                                editing: true
-                                            });
-                                        }}
+                                        onClick={this.handleChangeEditing}
                                         disabled={this.state.searchigZipcode}
                                     >
                                         {spanishActions[1].label} <i className="far fa-edit" />
@@ -720,11 +756,7 @@ class Application extends Component {
                                                     * {formSpanish[0].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            firstName: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.firstName}
                                                     name="firstName"
                                                     type="text"
@@ -741,13 +773,9 @@ class Application extends Component {
                                                     {formSpanish[1].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            middleName: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.middleName}
-                                                    name="midleName"
+                                                    name="middleName"
                                                     type="text"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
@@ -761,11 +789,7 @@ class Application extends Component {
                                                     * {formSpanish[2].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            lastName: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.lastName}
                                                     name="lastName"
                                                     type="text"
@@ -782,11 +806,7 @@ class Application extends Component {
                                                     {formSpanish[24].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            lastName2: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.lastName2}
                                                     name="lastName2"
                                                     type="text"
@@ -803,11 +823,7 @@ class Application extends Component {
                                                     * {formSpanish[22].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            streetAddress: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.streetAddress}
                                                     name="streetAddress"
                                                     type="text"
@@ -824,11 +840,7 @@ class Application extends Component {
                                                     {formSpanish[4].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            aptNumber: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.aptNumber}
                                                     name="aptNumber"
                                                     type="number"
@@ -877,11 +889,7 @@ class Application extends Component {
                                                     value={this.state.homePhone}
                                                     className={'form-control'}
                                                     disabled={!this.state.editing}
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            homePhone: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     placeholder="+(___) ___-____"
                                                     minLength="15"
                                                 />
@@ -900,11 +908,7 @@ class Application extends Component {
                                                         this.state.cellPhoneNumberValid ? 'form-control' : 'form-control _invalid'
                                                     }
                                                     disabled={!this.state.editing}
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            cellPhone: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     placeholder="+(___) ___-____"
                                                     required
                                                     minLength="15"
@@ -921,11 +925,7 @@ class Application extends Component {
                                                     maskChar=" "
                                                     className="form-control"
                                                     disabled={!this.state.editing}
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            socialSecurityNumber: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.socialSecurityNumber}
                                                     placeholder="___-__-____"
                                                     minLength="11"
@@ -935,37 +935,12 @@ class Application extends Component {
                                     </div>
                                     <div className="col-md-12 col-lg-6 form-section-2">
                                         <div className="row">
-                                            {/*<div className="col-md-6">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[12].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            birthDay: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.birthDay}
-                                                    name="birthDay"
-                                                    type="date"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    required
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="10"
-                                                />
-                                                </div>*/}
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     * {formSpanish[25].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            dateCreation: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.dateCreation}
                                                     name="dateCreation"
                                                     type="date"
@@ -984,11 +959,7 @@ class Application extends Component {
                                                 <div className="onoffswitch">
                                                     <input
                                                         id="carInput"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                car: event.target.checked
-                                                            });
-                                                        }}
+                                                        onChange={this.handleInputChange}
                                                         checked={this.state.car}
                                                         value={this.state.car}
                                                         name="car"
@@ -1010,11 +981,7 @@ class Application extends Component {
                                                     * {formSpanish[13].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            emailAddress: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.emailAddress}
                                                     name="emailAddress"
                                                     type="email"
@@ -1037,11 +1004,7 @@ class Application extends Component {
                                                     id="optionHearTumi"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            optionHearTumi: e.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                 >
                                                     <option value="">Select an option</option>
                                                     <option value="1">facebook</option>
@@ -1055,11 +1018,7 @@ class Application extends Component {
                                                     {formSpanish[28].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            nameReferences: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.nameReferences}
                                                     name="nameReferences"
                                                     type="text"
@@ -1071,69 +1030,6 @@ class Application extends Component {
                                                     minLength="3"
                                                 />
                                             </div>
-                                            {/* <div className="col-md-6">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    {formSpanish[14].label}
-                                                </span>
-                                                <select
-                                                    name="typeOfID"
-                                                    id="typeOfID"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            typeOfId: e.target.value
-                                                        });
-                                                    }}
-                                                >
-                                                    <option value="">Select an option</option>
-                                                    <option value="1">Birth certificate</option>
-                                                    <option value="2">Social Security card</option>
-                                                    <option value="3">State-issued driver's license</option>
-                                                    <option value="4">State-issued ID</option>
-                                                    <option value="5">Passport</option>
-                                                    <option value="6">Department of Defense Identification Card</option>
-                                                    <option value="7">Green Card</option>
-                                                </select>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    {formSpanish[15].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            expireDateId: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.expireDateId}
-                                                    name="expireDateId"
-                                                    type="date"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="10"
-                                                />
-                                            </div> 
-                                            
-                                               <div className="col-md-12">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    {formSpanish[16].label}
-                                                </span>
-                                               
-                                             <Select
-                                                    isDisabled={!this.state.editing}
-                                                    options={this.state.positionCatalogTag}
-                                                    value={this.state.positionsTags}
-                                                    onChange={this.handleChange}
-                                                    closeMenuOnSelect={false}
-                                                    components={makeAnimated()}
-                                                    isMulti
-                                                />
-                                            
-                                            </div>
-                                       */}
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[17].label}
@@ -1141,12 +1037,7 @@ class Application extends Component {
                                                 <select
                                                     name="positionApply"
                                                     id="positionApply"
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            // Fixme: repair this
-                                                            positionApplyingFor: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.positionApplyingFor}
                                                     className="form-control"
                                                     disabled={!this.state.editing}
@@ -1167,11 +1058,7 @@ class Application extends Component {
                                                 <div className="onoffswitch">
                                                     <input
                                                         id="immediately"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                immediately: event.target.checked
-                                                            });
-                                                        }}
+                                                        onChange={this.handleInputChange}
                                                         checked={this.state.immediately}
                                                         value={this.state.immediately}
                                                         name="immediately"
@@ -1194,11 +1081,7 @@ class Application extends Component {
                                                     * {formSpanish[18].label}
                                                 </span>
                                                 <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            dateAvailable: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.dateAvailable}
                                                     name="dateAvailable"
                                                     type="date"
@@ -1217,21 +1100,7 @@ class Application extends Component {
                                                 <div className="onoffswitch">
                                                     <input
                                                         id="scheduleInput"
-                                                        onChange={(event) => {
-                                                            this.setState(
-                                                                {
-                                                                    scheduleRestrictions: event.target.checked,
-                                                                    openRestrictionsModal: event.target.checked
-                                                                },
-                                                                () => {
-                                                                    if (!this.state.scheduleRestrictions) {
-                                                                        this.setState({
-                                                                            scheduleExplain: ''
-                                                                        });
-                                                                    }
-                                                                }
-                                                            );
-                                                        }}
+                                                        onChange={this.handleScheduleInput}
                                                         checked={this.state.scheduleRestrictions}
                                                         value={this.state.scheduleRestrictions}
                                                         name="scheduleRestrictions"
@@ -1250,11 +1119,7 @@ class Application extends Component {
                                                     {formSpanish[21].label}
                                                 </span>
                                                 <textarea
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            scheduleExplain: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.scheduleExplain}
                                                     name="form-control"
                                                     cols="30"
@@ -1272,20 +1137,7 @@ class Application extends Component {
                                                 <div className="onoffswitch">
                                                     <input
                                                         id="convictedSwitch"
-                                                        onChange={(event) => {
-                                                            this.setState(
-                                                                {
-                                                                    convicted: event.target.checked
-                                                                },
-                                                                () => {
-                                                                    if (!this.state.convicted) {
-                                                                        this.setState({
-                                                                            convictedExplain: ''
-                                                                        });
-                                                                    }
-                                                                }
-                                                            );
-                                                        }}
+                                                        onChange={this.handleChangeConvictedSwitch}
                                                         checked={this.state.convicted}
                                                         value={this.state.convicted}
                                                         name="convicted"
@@ -1305,13 +1157,9 @@ class Application extends Component {
                                                     {formSpanish[21].label}
                                                 </span>
                                                 <textarea
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            convictedExplain: event.target.value
-                                                        });
-                                                    }}
+                                                    onChange={this.handleInputChange}
                                                     value={this.state.convictedExplain}
-                                                    name="form-control"
+                                                    name="convictedExplain"
                                                     disabled={!this.state.editing || !this.state.convicted}
                                                     required
                                                     cols="30"
