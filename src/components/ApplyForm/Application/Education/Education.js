@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import withApollo from 'react-apollo/withApollo';
 import studyTypes from '../../data/studyTypes';
 import { GET_APPLICATION_EDUCATION_BY_ID } from '../../Queries';
-import { ADD_APLICANT_EDUCATION,UPDATE_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION } from '../../Mutations';
+import { ADD_APLICANT_EDUCATION, UPDATE_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION } from '../../Mutations';
 import CircularProgressLoading from '../../../material-ui/CircularProgressLoading';
 import withGlobalContent from '../../../Generic/Global';
 import EducationCard from '../../../ui-components/EducationCard/EducationCard';
@@ -166,7 +166,7 @@ class Education extends Component {
 			});
 	};
 
-	clearControls =()=>{
+	clearControls = () => {
 		document.getElementById('education-form').reset();
 		document.getElementById('studyType').classList.remove('invalid-apply-form');
 		document.getElementById('institutionName').classList.remove('invalid-apply-form');
@@ -174,12 +174,17 @@ class Education extends Component {
 		document.getElementById('startPeriod').classList.remove('invalid-apply-form');
 		document.getElementById('endPeriod').classList.remove('invalid-apply-form');
 		document.getElementById('graduated').classList.remove('invalid-apply-form');
-		document.getElementById('graduated').checked = false;
 		document.getElementById('degree').classList.remove('invalid-apply-form');
 
-		this.setState({
-			graduated: false
-		});
+		this.setState(() => ({
+			studyType: '',
+			institutionName: '',
+			addressInstitution: '',
+			startPeriod: null,
+			endPeriod: null,
+			graduated: false,
+			degree: '',
+		}));
 	}
 
 	onChangeValue = (event) => {
@@ -197,30 +202,28 @@ class Education extends Component {
 			open: true,
 			editing: true,
 			id: 0,
-			studyType:'',
-			institutionName:'',
-			addressInstitution:'',
-			startPeriod:'',
-			endPeriod:'',
-			graduated:false,
-			degree:''
+			studyType: '',
+			institutionName: '',
+			addressInstitution: '',
+			startPeriod: null,
+			endPeriod: null,
+			graduated: false,
+			degree: '',
 		});
 	}
 
-	handleOpenEditModal = ({ id,		schoolType,		educationName,		educationAddress,		startDate,		endDate,		graduated,		degree }) => {
+	handleOpenEditModal = ({ id, schoolType, educationName, educationAddress, startDate, endDate, graduated, degree }) => {
 		this.setState({
 			open: true,
 			editing: true,
 			id,
-			studyType:schoolType,
-			institutionName:educationName,
-			addressInstitution:educationAddress,
-			startPeriod:startDate.substring(0, 10),
-			endPeriod:endDate.substring(0, 10),
+			studyType: schoolType,
+			institutionName: educationName,
+			addressInstitution: educationAddress,
+			startPeriod: startDate ? startDate.substring(0, 10) : null,
+			endPeriod: endDate ? endDate.substring(0, 10) : null,
 			graduated,
 			degree
-		}, () => {
-
 		});
 	}
 
@@ -247,24 +250,37 @@ class Education extends Component {
 						e.preventDefault();
 						e.stopPropagation();
 
-						let item = {
-							uuid: uuidv4(),
-							schoolType: document.getElementById('studyType').value,
-							educationName: document.getElementById('institutionName').value,
-							educationAddress: document.getElementById('addressInstitution').value,
-							startDate: document.getElementById('startPeriod').value,
-							endDate: document.getElementById('endPeriod').value,
-							graduated: document.getElementById('graduated').checked,
-							degree: parseInt(document.getElementById('degree').value),
-							ApplicationId: this.state.applicationId
+						let { studyType, institutionName, addressInstitution, startPeriod, endPeriod, graduated, degree } = this.state;
+						let formData = {
+							schoolType: studyType,
+							educationName: institutionName,
+							educationAddress: addressInstitution,
+							startDate: startPeriod,
+							endDate: endPeriod,
+							graduated: graduated,
+							degree: degree ? degree : null
 						};
+						let values = [];
+						Object.values(formData).map(value => {
+							if (value)
+								values.push(value);
+						})
+						if (values.length == 0)
+							this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
+						else {
+							let item = {
+								uuid: uuidv4(),
+								...formData,
+								ApplicationId: this.state.applicationId
+							};
+							if (this.state.id == 0)
+								this.insertEducationApplication(item);
+							else
+								this.updateEducationApplication({ ...item, id: this.state.id });
+						}
 
-						if (this.state.id==0)
-							this.insertEducationApplication(item);
-						else
-							this.updateEducationApplication({...item, id: this.state.id});
-							
-					
+
+
 					}}
 					className="apply-form"
 				>
@@ -273,14 +289,13 @@ class Education extends Component {
 						<div className="col-md-12 form-section-1">
 							<div className="row">
 								<div className="col-md-6">
-									<label className="primary">* {educationFormLanguage[0].label}</label>
+									<label className="primary"> {educationFormLanguage[0].label}</label>
 									<input
 										id="studyType"
 										form="education-form"
 										name="studyType"
 										type="text"
 										className="form-control"
-										required
 										min="0"
 										pattern=".*[^ ].*"
 										maxLength="50"
@@ -290,7 +305,7 @@ class Education extends Component {
 									/>
 								</div>
 								<div className="col-md-6">
-									<label className="primary">* {educationFormLanguage[1].label}</label>
+									<label className="primary"> {educationFormLanguage[1].label}</label>
 									<input
 										form="education-form"
 										name="institutionName"
@@ -298,7 +313,6 @@ class Education extends Component {
 										type="text"
 										pattern=".*[^ ].*"
 										className="form-control"
-										required
 										min="0"
 										maxLength="50"
 										minLength="3"
@@ -307,7 +321,7 @@ class Education extends Component {
 									/>
 								</div>
 								<div className="col-md-12">
-									<label className="primary">* {educationFormLanguage[2].label}</label>
+									<label className="primary"> {educationFormLanguage[2].label}</label>
 									<input
 										form="education-form"
 										name="addressInstitution"
@@ -315,7 +329,6 @@ class Education extends Component {
 										type="text"
 										pattern=".*[^ ].*"
 										className="form-control"
-										required
 										min="0"
 										maxLength="50"
 										minLength="3"
@@ -326,7 +339,7 @@ class Education extends Component {
 							</div>
 							<div className="row">
 								<div className="col-md-6">
-									<span className="primary">* {educationFormLanguage[3].label}</span>
+									<span className="primary"> {educationFormLanguage[3].label}</span>
 									<input
 										form="education-form"
 										name="startPeriod"
@@ -334,7 +347,6 @@ class Education extends Component {
 										type="date"
 										pattern=".*[^ ].*"
 										className="form-control"
-										required
 										max={this.state.endPeriod}
 										min="0"
 										maxLength="50"
@@ -344,7 +356,7 @@ class Education extends Component {
 									/>
 								</div>
 								<div className="col-md-6">
-									<span className="primary">* {educationFormLanguage[4].label}</span>
+									<span className="primary"> {educationFormLanguage[4].label}</span>
 									<input
 										form="education-form"
 										name="endPeriod"
@@ -352,7 +364,6 @@ class Education extends Component {
 										type="date"
 										pattern=".*[^ ].*"
 										className="form-control"
-										required
 										min={this.state.startPeriod}
 										maxLength="50"
 										minLength="3"
@@ -383,19 +394,19 @@ class Education extends Component {
 								</div>
 								<div className="col-md-6">
 									<label className="primary">{educationFormLanguage[6].label}</label>
-										<div className="input-container--validated">
-												<select
-													form="education-form"
-													name="degree"
-													id="degree"
-													disabled={!this.state.graduated}
-													className="form-control"
-													onChange={this.onChangeValue}
-													value={this.state.degree}>
-													<option value="">{spanishActions[5].label}</option>
-													{studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-												</select>
-											</div>										
+									<div className="input-container--validated">
+										<select
+											form="education-form"
+											name="degree"
+											id="degree"
+											disabled={!this.state.graduated}
+											className="form-control"
+											onChange={this.onChangeValue}
+											value={this.state.degree}>
+											<option value="">{spanishActions[5].label}</option>
+											{studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+										</select>
+									</div>
 								</div>
 							</div>
 						</div>
