@@ -18,7 +18,7 @@ import ShiftRestrictionModal from './ShiftRestrictionModal';
 import IndependentContractDialog from './IndependentContract/Modal';
 
 
-if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) 
+if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null)
     localStorage.setItem('languageForm', 'en');
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
@@ -51,9 +51,9 @@ class Application extends Component {
             typeOfId: '',
             expireDateId: null,
             emailAddress: '',
-            positionApplyingFor: 1,
+            positionApplyingFor: 0,
             idealJob: '',
-            dateAvailable: '',
+            dateAvailable: null,
             scheduleRestrictions: '',
             scheduleExplain: '',
             convicted: '',
@@ -147,13 +147,13 @@ class Application extends Component {
         this.setState({ openRestrictionsModal: false });
     };
 
-    /**<
+    /*<
      * To update a application by id
      */
     InsertUpdateApplicationInformation = (id, saveIndependentContract = () => { }) => {
         this.setState({
-                insertDialogLoading: true
-            },
+            insertDialogLoading: true
+        },
             () => {
                 this.props.client
                     .mutate({
@@ -202,7 +202,7 @@ class Application extends Component {
                         if (id == 0) {
                             this.props.setApplicantId(data.addApplication.id);
                             applicationId = data.addApplication.id;
-                        } else 
+                        } else
                             applicationId = data.updateApplication.id;
                         this.setState({
                             editing: false,
@@ -446,7 +446,7 @@ class Application extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                    positionApplyingFor: data.workOrder
+                    dataWorkOrder: data.workOrder
                 }, () => {
                     this.setState({
                         loading: false
@@ -467,9 +467,9 @@ class Application extends Component {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
             this.getApplicationById(this.props.applicationId);
-            if (this.state.socialSecurityNumber.length === 0) 
+            if (this.state.socialSecurityNumber.length === 0)
                 this.props.handleContract();
-            
+
         } else {
             this.getPositions();
             this.getPositionCatalog();
@@ -500,44 +500,48 @@ class Application extends Component {
     }
 
     submitForm = () => {
-        if (!this.state.zipCode.trim().replace("-", ""))
-            this.props.handleOpenSnackbar(
-                'warning',
-                'ZipCode needed!',
-                'bottom',
-                'right'
-            );
-        else if (!this.state.city)
-            this.props.handleOpenSnackbar(
-                'warning',
-                'City needed!',
-                'bottom',
-                'right'
-            );
-        else if (!this.state.state)
-            this.props.handleOpenSnackbar(
-                'warning',
-                'State needed!',
-                'bottom',
-                'right'
-            );
-        else {
-            if (this.state.homePhoneNumberValid || this.state.cellPhoneNumberValid) {
-                let socialSecurityNumber = this.state.socialSecurityNumber || '';
-                if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
-                    this.setState(() => ({
-                        openSSNDialog: true
-                    }))
-                else this.InsertUpdateApplicationInformation(this.props.applicationId);
-            } else {
-                this.props.handleOpenSnackbar(
-                    'warning',
-                    'Complete all the fields and try again!',
-                    'bottom',
-                    'right'
-                );
+        let { firstName, middleName, lastName, lastName2, streetAddress, aptNumber, city, state, zipCode, homePhone, cellPhone, socialSecurityNumber, emailAddress, optionHearTumi, nameReferences, positionApplyingFor, immediately, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain } = this.state;
+        let values = [];
+        let formData = {
+            firstName,
+            middleName,
+            lastName,
+            lastName2,
+            streetAddress,
+            aptNumber,
+            city,
+            state,
+            zipCode,
+            homePhone,
+            cellPhone,
+            emailAddress,
+            optionHearTumi,
+            nameReferences,
+            positionApplyingFor,
+            immediately,
+            dateAvailable,
+            scheduleExplain,
+            convictedExplain
+        };
+
+        console.log(formData)
+        Object.values(formData).map(value => {
+            if (value) {
+                values.push(value);
             }
+        })
+        console.log(values)
+        if (values.length == 0)
+            this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
+        else {
+            if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
+                this.setState(() => ({
+                    openSSNDialog: true
+                }))
+            else this.InsertUpdateApplicationInformation(this.props.applicationId);
         }
+
+
     }
 
     handleSubmit = (e) => {
@@ -671,23 +675,23 @@ class Application extends Component {
         });
     }
 
-    handleScheduleInput =(event) => {
+    handleScheduleInput = (event) => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
         this.setState(prevState => {
-            return { 
+            return {
                 scheduleRestrictions: value,
                 openRestrictionsModal: value
             }
         }, _ => {
-                if (!this.state.scheduleRestrictions) {
-                    this.setState({
-                        scheduleExplain: ''
-                    });
-                }
+            if (!this.state.scheduleRestrictions) {
+                this.setState({
+                    scheduleExplain: ''
+                });
             }
+        }
         );
     }
 
@@ -696,8 +700,8 @@ class Application extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         this.setState(prevState => {
-            return {  convicted: value }
-        },() => {
+            return { convicted: value }
+        }, () => {
             if (!this.state.convicted) {
                 this.setState({
                     convictedExplain: ''
@@ -711,7 +715,7 @@ class Application extends Component {
             editing: true
         });
     }
-    
+
     render() {
 
         return (
@@ -753,7 +757,7 @@ class Application extends Component {
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[0].label}
+                                                    {formSpanish[0].label}
                                                 </span>
                                                 <input
                                                     onChange={this.handleInputChange}
@@ -762,7 +766,6 @@ class Application extends Component {
                                                     type="text"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
-                                                    required
                                                     min="0"
                                                     maxLength="50"
                                                     minLength="3"
@@ -786,7 +789,7 @@ class Application extends Component {
                                             </div>
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[2].label}
+                                                    {formSpanish[2].label}
                                                 </span>
                                                 <input
                                                     onChange={this.handleInputChange}
@@ -795,7 +798,6 @@ class Application extends Component {
                                                     type="text"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
-                                                    required
                                                     min="0"
                                                     maxLength="50"
                                                     minLength="3"
@@ -812,7 +814,6 @@ class Application extends Component {
                                                     type="text"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
-
                                                     min="0"
                                                     maxLength="50"
                                                     minLength="3"
@@ -820,7 +821,7 @@ class Application extends Component {
                                             </div>
                                             <div className="col-md-12 ">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[22].label}
+                                                    {formSpanish[22].label}
                                                 </span>
                                                 <input
                                                     onChange={this.handleInputChange}
@@ -828,7 +829,6 @@ class Application extends Component {
                                                     name="streetAddress"
                                                     type="text"
                                                     className="form-control"
-                                                    required
                                                     disabled={!this.state.editing}
                                                     min="0"
                                                     maxLength="50"
@@ -866,15 +866,15 @@ class Application extends Component {
                                                 cityColClass="col-md-6"
                                                 stateColClass="col-md-6"
                                                 zipCodeColClass="col-md-6"
-                                                zipCodeTitle={`* ${formSpanish[5].label}`}
-                                                stateTitle={`* ${formSpanish[6].label}`}
-                                                cityTitle={`* ${formSpanish[7].label}`}
+                                                zipCodeTitle={` ${formSpanish[5].label}`}
+                                                stateTitle={` ${formSpanish[6].label}`}
+                                                cityTitle={` ${formSpanish[7].label}`}
                                                 cssTitle={"text-primary-application"}
                                                 placeholder="99999-99999"
                                                 mask="99999-99999"
-                                                requiredZipCode={true}
-                                                requiredCity={true}
-                                                requiredState={true}
+                                                requiredZipCode={false}
+                                                requiredCity={false}
+                                                requiredState={false}
                                                 updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
 
                                             <div className="col-md-6 ">
@@ -896,7 +896,7 @@ class Application extends Component {
                                             </div>
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[10].label}
+                                                    {formSpanish[10].label}
                                                 </span>
                                                 <InputMask
                                                     id="cell-number"
@@ -910,13 +910,12 @@ class Application extends Component {
                                                     disabled={!this.state.editing}
                                                     onChange={this.handleInputChange}
                                                     placeholder="+(___) ___-____"
-                                                    required
                                                     minLength="15"
                                                 />
                                             </div>
                                             <div className="col-md-12 ">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[11].label}
+                                                    {formSpanish[11].label}
                                                 </span>
                                                 <InputMask
                                                     id="socialSecurityNumber"
@@ -937,7 +936,7 @@ class Application extends Component {
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[25].label}
+                                                    {formSpanish[25].label}
                                                 </span>
                                                 <input
                                                     onChange={this.handleInputChange}
@@ -946,7 +945,6 @@ class Application extends Component {
                                                     type="date"
                                                     className="form-control"
                                                     disabled={true}
-                                                    required
                                                     min="0"
                                                     maxLength="50"
                                                     minLength="10"
@@ -978,7 +976,7 @@ class Application extends Component {
                                             </div>
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[13].label}
+                                                    {formSpanish[13].label}
                                                 </span>
                                                 <input
                                                     onChange={this.handleInputChange}
@@ -986,7 +984,6 @@ class Application extends Component {
                                                     name="emailAddress"
                                                     type="email"
                                                     className="form-control"
-                                                    required
                                                     disabled={!this.state.editing}
                                                     min="0"
                                                     maxLength="50"
@@ -1005,6 +1002,7 @@ class Application extends Component {
                                                     className="form-control"
                                                     disabled={!this.state.editing}
                                                     onChange={this.handleInputChange}
+                                                    value={this.state.optionHearTumi}
                                                 >
                                                     <option value="">Select an option</option>
                                                     <option value="1">facebook</option>
@@ -1023,7 +1021,6 @@ class Application extends Component {
                                                     name="nameReferences"
                                                     type="text"
                                                     className="form-control"
-
                                                     disabled={!this.state.editing || (this.state.optionHearTumi == 3 ? false : (this.state.optionHearTumi == 4 ? false : true))}
                                                     min="0"
                                                     maxLength="50"
@@ -1035,8 +1032,8 @@ class Application extends Component {
                                                     {formSpanish[17].label}
                                                 </span>
                                                 <select
-                                                    name="positionApply"
-                                                    id="positionApply"
+                                                    name="positionApplyingFor"
+                                                    id="positionApplyingFor"
                                                     onChange={this.handleInputChange}
                                                     value={this.state.positionApplyingFor}
                                                     className="form-control"
@@ -1078,7 +1075,7 @@ class Application extends Component {
 
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[18].label}
+                                                    {formSpanish[18].label}
                                                 </span>
                                                 <input
                                                     onChange={this.handleInputChange}
@@ -1087,7 +1084,6 @@ class Application extends Component {
                                                     type="date"
                                                     className="form-control"
                                                     disabled={!this.state.editing || this.state.immediately}
-                                                    required
                                                     min="0"
                                                     maxLength="50"
                                                 />
@@ -1121,11 +1117,10 @@ class Application extends Component {
                                                 <textarea
                                                     onChange={this.handleInputChange}
                                                     value={this.state.scheduleExplain}
-                                                    name="form-control"
+                                                    name="scheduleExplain"
                                                     cols="30"
                                                     rows="3"
                                                     disabled={!this.state.editing || !this.state.scheduleRestrictions}
-                                                    required
                                                     className="form-control textarea-apply-form"
                                                 />
                                             </div>
@@ -1161,7 +1156,6 @@ class Application extends Component {
                                                     value={this.state.convictedExplain}
                                                     name="convictedExplain"
                                                     disabled={!this.state.editing || !this.state.convicted}
-                                                    required
                                                     cols="30"
                                                     rows="3"
                                                     className="form-control textarea-apply-form"
