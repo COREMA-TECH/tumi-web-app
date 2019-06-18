@@ -128,12 +128,6 @@ class CustomizedTabs extends React.Component {
     };
 
     changeTabState = (tab) => {
-        // this.setState({
-        //     applicationStatus: {
-        //         ...this.state.applicationStatus,
-        //         [tab]: true
-        //     }
-        // });
         this.getApplicantStatus();
     }
 
@@ -143,41 +137,42 @@ class CustomizedTabs extends React.Component {
         });
     }
 
+    getTabContent = (step, ) => {
+        switch (step) {
+            case 0:
+                return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId}/>;
+            case 1: 
+                return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />
+            case 2:
+                return <ProfilePreview applicationId={this.state.applicationId} />;
+            case 3:
+                return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 4:
+                return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 5:
+                return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 6:
+                return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 7:
+                return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 8:
+                return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 9:
+                return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 10:
+                return <ApplicantDocument applicationId={this.state.applicationId} />;
+            case 11:
+                return <IndependentContract applicationId={this.state.applicationId} />;
+
+        }
+    };
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
 
-        let getTabContent = (step, ) => {
-            switch (step) {
-                case 0:
-                    return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId}/>;
-                case 1: 
-                    return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />
-                case 2:
-                    return <ProfilePreview applicationId={this.state.applicationId} />;
-                case 3:
-                    return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 4:
-                    return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 5:
-                    return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 6:
-                    return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 7:
-                    return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 8:
-                    return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 9:
-                    return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-                case 10:
-                    return <ApplicantDocument applicationId={this.state.applicationId} />;
-                case 11:
-                    return <IndependentContract applicationId={this.state.applicationId} />;
-
-            }
-        };
         return (
-            <div>
+            <React.Fragment>
                 <MuiThemeProvider theme={theme}>
                     <Tabs
                         value={value}
@@ -248,9 +243,9 @@ class CustomizedTabs extends React.Component {
                             label={'Independent Contract'}
                         />
                     </Tabs>
-                    {getTabContent(value)}
+                    {this.getTabContent(value)}
                 </MuiThemeProvider>
-            </div>
+            </React.Fragment>
         );
     }
 }
