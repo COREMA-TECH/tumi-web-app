@@ -173,7 +173,6 @@ class LifeCycleWorkOrdersTable extends Component {
                             </TableHead>
                             <TableBody>
                                 {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    console.log("Inform de la row ", row);
                                     return (
                                         <TableRow>
 
