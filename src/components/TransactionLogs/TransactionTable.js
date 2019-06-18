@@ -217,7 +217,7 @@ class TransactionTable extends React.Component {
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>User Name</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>UserName</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Date of change</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Time of change</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Affected object</CustomTableCell>
