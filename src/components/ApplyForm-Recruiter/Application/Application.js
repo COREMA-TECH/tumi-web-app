@@ -314,7 +314,9 @@ class Application extends Component {
                                     isLead: true,
                                     idRecruiter: parseInt(this.state.idRecruiter),
                                     sendInterview: this.state.sendInterview
-                                }
+                                } ,
+                                codeuser: localStorage.getItem('LoginId'),
+                                nameUser: localStorage.getItem('FullName')
                             }
                         })
                         .then(({ data }) => {
