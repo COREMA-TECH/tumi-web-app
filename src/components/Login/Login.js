@@ -273,7 +273,7 @@ class Login extends Component {
 						</div>
 						<div class="clearfix">
 							<label class="pull-left Remember-label checkbox-inline"><input type="checkbox" /> Remember me</label>
-							<a href="#" class="pull-right forgot">Forgot Password?</a>
+							<a href="/forgotpassword" class="pull-right forgot">Forgot Password?</a>
 						</div>
 						<div className="txt1">
 							<span>Or Sign Up Using</span>

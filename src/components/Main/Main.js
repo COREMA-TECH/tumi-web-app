@@ -9,6 +9,7 @@ import StepperApplyForm from '../ApplyForm/Stepper/StepperApplyForm';
 import Signature from '../Contract/Signature';
 import PropTypes from 'prop-types';
 import ResetPassword from "../ResetPassword/ResetPassword";
+import ForgotPassword from '../ForgotPassword';
 
 class Main extends Component {
     LoginId = localStorage.getItem('LoginId');
@@ -21,7 +22,8 @@ class Main extends Component {
                 window.location.pathname == '/home/signature/' ||
                 window.location.pathname == '/employment-application' ||
                 window.location.pathname == '/employment-application-message' ||
-                window.location.pathname == '/reset'
+                window.location.pathname == '/reset' ||
+                window.location.pathname == '/forgotpassword'
             )
         )
             if (!this.LoginId || !this.token) {
@@ -54,6 +56,7 @@ class Main extends Component {
                 <PrivateRoute path="/employment-application-message" component={ApplyFormMessage} />
                 <PrivateRoute path="/reset" component={ResetPassword} />
                 <PrivateRoute path="/home" component={Private} />
+                <PrivateRoute path="/forgotpassword" component={ForgotPassword} />
             </div>
         );
     }
