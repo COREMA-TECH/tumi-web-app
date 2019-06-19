@@ -1,10 +1,8 @@
 const url = {
-    cert: 'http://ec2-3-16-143-115.us-east-2.compute.amazonaws.com:4000',
-    dev: 'http://ec2-3-16-143-115.us-east-2.compute.amazonaws.com:5000',
-    prod: 'http://ec2-18-221-184-184.us-east-2.compute.amazonaws.com:4001',
+    cert: 'http://tumiapi-12-6-2019.us-east-1.elasticbeanstalk.com',
+    dev: 'http://orion-dev-api.us-east-2.elasticbeanstalk.com',
+    prod: 'http://tumiapi.us-east-1.elasticbeanstalk.com',
     local: 'http://localhost:5000'
 }
 
-
-
-export const connection = url['local'];
+export const connection = url['dev'];

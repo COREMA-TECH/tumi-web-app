@@ -1722,12 +1722,12 @@ class General extends Component {
                                                 </button>
                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     {
-                                                        this.state.isLead ? (
-                                                            <button className="dropdown-item" onClick={() => {
-                                                                this.handleClickConvertToEmployee();
-                                                            }}>Convert to Employee
-                                                            </button>
-                                                        ) : ('')
+                                                        // this.state.isLead ? (
+                                                        //     <button className="dropdown-item" onClick={() => {
+                                                        //         this.handleClickConvertToEmployee();
+                                                        //     }}>Convert to Employee
+                                                        //     </button>
+                                                        // ) : ('')
 
                                                     }
                                                     <button className="dropdown-item" onClick={() => {

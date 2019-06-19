@@ -18,6 +18,7 @@ import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
+import moment from 'moment';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -192,6 +193,7 @@ class EmployeesTable extends React.Component {
                             <CustomTableCell className={"Table-head"} style={{ width: '110px' }}>Actions</CustomTableCell>
                             <CustomTableCell style={{ width: '60px' }} className={"Table-head"}>Full Name</CustomTableCell>
                             <CustomTableCell style={{ width: '90px' }} className={"Table-head"}>Email</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>Hire Date</CustomTableCell>
                             <CustomTableCell className={"Table-head"} style={{ width: '100px' }}>Phone Number</CustomTableCell>
                             <CustomTableCell className={"Table-head"} style={{ width: '60px' }}>Department</CustomTableCell>
                             <CustomTableCell className={"Table-head"} style={{ width: '60px' }}>Position</CustomTableCell>
@@ -255,6 +257,7 @@ class EmployeesTable extends React.Component {
                                     </CustomTableCell>
                                     <CustomTableCell style={{ width: '100px' }}>{row.firstName + ' ' + row.lastName}</CustomTableCell>
                                     <CustomTableCell style={{ width: '90px' }} >{row.electronicAddress}</CustomTableCell>
+                                    <CustomTableCell style={{ width: '90px' }} >{row.hireDate ? moment.utc(row.hireDate).format('l') : ''}</CustomTableCell>
                                     <CustomTableCell style={{ width: '100px' }}>{row.mobileNumber}</CustomTableCell>
                                     <CustomTableCell style={{ width: '60px' }}>
                                         {

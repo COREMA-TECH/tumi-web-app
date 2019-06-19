@@ -8,6 +8,8 @@ import green from "@material-ui/core/colors/green";
 import InputMask from "react-input-mask";
 import { GET_DEPARTMENTS_QUERY } from "../ApplyForm/Application/ProfilePreview/Queries";
 import { GET_ALL_POSITIONS_QUERY } from "./Queries";
+import DatePicker from "react-datepicker";
+import moment from 'moment';
 
 const styles = theme => ({
     container: {
@@ -129,6 +131,16 @@ class EmployeeInputRow extends Component {
             });
     };
 
+    handleChangeDate = (hireDate) => (date) => {
+        let _date = moment(date).format();
+        
+        this.props.onchange(hireDate, _date);
+
+        this.setState(prevState => {
+            return { hireDateSelected: _date }
+        })
+    }
+
     render() {
         const firstName = `firstName${this.props.index}`;
         const lastName = `lastName${this.props.index}`;
@@ -137,10 +149,11 @@ class EmployeeInputRow extends Component {
         const department = `department${this.props.index}`;
         const contactTitle = `contactTitle${this.props.index}`;
         const idEntity = `idEntity${this.props.index}`;
+        const hireDate = `hireDate${this.props.index}`;
 
         return (
 
-            < div className="row Employees-row">
+            <div className="row Employees-row">
                 <div className="col">
                     <label htmlFor="" >* First Name</label>
                     <input
@@ -180,16 +193,22 @@ class EmployeeInputRow extends Component {
                     />
                 </div>
                 <div className="col">
-                    <label htmlFor="" >Email Address</label>
-                    <input
+                    <label htmlFor="">Hire Date</label>
+                    {/* <input
                         onChange={(e) => {
-                            this.props.onchange(email, e.target.value);
+                            this.props.onchange(hireDate, e.target.value);
                         }}
-                        value={this.props[email]}
-                        type="email"
-                        name="email"
+                        value={this.props[hireDate]}
+                        type="text"
+                        name="hireDate"
                         className="form-control"
                         maxLength={100}
+                    /> */
+                    }
+                    <DatePicker
+                        selected={this.state.hireDateSelected}
+                        onChange={this.handleChangeDate(hireDate)}
+                        id="datepicker"
                     />
                 </div>
                 <div className="col">

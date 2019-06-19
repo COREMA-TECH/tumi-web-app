@@ -17,6 +17,7 @@ export const LIST_EMPLOYEES = gql`
             Contact_Title
             idUsers
             idEntity
+            hireDate
         }
     }
 `;
