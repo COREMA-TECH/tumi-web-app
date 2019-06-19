@@ -84,12 +84,22 @@
     background-color: $light-gray;
 
     &-language {
+        color: $white;
         display: block;
         margin-left: auto;
         width: 160px;
 
         img {
             top: -2px !important;
+        }
+
+        span{
+            font-family: 'Ropa Sans', sans-serif;
+        }
+
+        //Options color
+        .flag-option.has-label{
+            color: $black;
         }
     }
 }

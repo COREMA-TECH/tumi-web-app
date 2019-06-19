@@ -20,8 +20,30 @@
         padding-top: 0;
     }
 
+    &-logo{
+        margin-bottom: 22px;
+        margin-left: auto;
+
+        max-width: 340px;
+        width: 100%;
+
+        img{
+            display: block;
+
+            margin-left: 0;
+            margin-right: auto;
+
+            max-width: 95px;
+            width: 100%;
+        }
+    }
+
     &-row{
         margin-bottom: 35px;
+    }
+
+    &-col{
+        margin-bottom: 1rem;
     }
 
     &-stepper{
@@ -33,6 +55,12 @@
 
     &-label{
         @extend %external-form-label;
+    }
+
+    &-text{
+        color: $white;
+        font-family: 'Ropa Sans', sans-serif !important;
+        font-size: 18px;
     }
 
     & &-input{
@@ -111,6 +139,15 @@
         }
     }
 
+    & .Slider{
+        &-skillLabel, &-percentageLabel{
+            color: $white;
+
+            font-family: 'Ropa Sans', sans-serif;
+            line-height: 1;
+        }
+    }
+
     .Stepper-wrapper{
         border-radius: 0;
 
@@ -146,7 +183,6 @@
 
         min-height: 100vh;
 
-        padding-left: 60px;
         padding-top: 30px;
 
         &-title{
@@ -195,4 +231,137 @@
             font-size: 18px;
         }
     }
+
+    @include media-breakpoint-up(md){
+        .Stepper-col{
+            padding-right: 0;
+        }
+
+        .Application-col{
+            padding-left: 0;
+        }
+    }
+}
+
+%flex-row{
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.Footer{
+    background-color: $black;
+
+    font-family: 'Ropa Sans', sans-serif; 
+    font-size: 10px;
+
+    padding-bottom: 56px;
+    padding-top: 52px;
+
+    &-wrapper{
+        @extend %flex-row;
+        justify-content: flex-start;
+
+        padding-left: 15px;
+        padding-right: 15px;  
+        
+        width: 100%;
+    }
+
+    &-logo{
+        background-color: red;
+
+        flex-shrink: 0;
+
+        margin-right: 150px;
+
+        height: 95px;
+        width: 95px;
+    }
+
+    &-info{
+        display: block;
+        width: 100%;
+    }
+
+    &-links{
+        @extend %flex-row;
+        margin-bottom: 30px;
+    }
+
+    &-link{
+        color: $white;
+
+        font-size: 10px;
+
+        padding-left: 10px;
+        padding-right: 10px;
+
+        text-transform: uppercase;
+
+        &:first-child{
+            padding-left: 0;
+            margin-right: auto;
+        }
+    }
+
+    &-contactInfo{
+        @extend %flex-row;
+        justify-content: flex-start;
+    }
+
+    &-contact{
+        color: $placeholder;
+        font-size: 10px;
+        margin-right: 70px;
+
+        &.address, &.phone{
+            max-width: 130px;
+            width: 100%;
+        }
+
+        &.copyright{
+            margin-right: 0;
+        }
+    }
+
+    @include media-breakpoint-down(md){
+        &-logo{
+            margin-bottom: 10px;
+            margin-right: 0;
+        }
+
+        &-wrapper, &-contactInfo, &-links{
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+      
+        &-link{
+            margin-bottom: 10px;
+            margin-top: 10px;
+
+            &:first-child{
+                margin-right: 0;
+                padding-left: 10px;
+            }
+        }
+
+        &-contact{
+            margin-bottom: 10px;
+            margin-right: 0;
+            margin-top: 10px;
+
+            text-align: center;
+    
+            &.address, &.phone{
+                max-width: 130px;
+                width: 100%;
+            }
+        }
+    }    
 }
