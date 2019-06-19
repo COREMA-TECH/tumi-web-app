@@ -27,6 +27,8 @@ import {
     GET_ROLES_QUERY,
 } from "../ApplyForm/Application/ProfilePreview/Queries";
 import { GET_LANGUAGES_QUERY } from "../ApplyForm-Recruiter/Queries";
+import DatePicker from "react-datepicker";
+import moment from 'moment';
 
 const styles = theme => ({
     container: {
@@ -74,7 +76,13 @@ const styles = theme => ({
         left: "50%",
         marginTop: -12,
         marginLeft: -12
-    }
+    },
+    paper: {
+		padding: theme.spacing.unit * 2,
+		// textAlign: 'center',
+		color: theme.palette.text.secondary,
+		overflowY: 'visible'
+	}
 });
 
 class Employees extends Component {
@@ -94,7 +102,7 @@ class Employees extends Component {
 
             firstNameEdit: "",
             lastNameEdit: "",
-            emailEdit: "",
+            hireDateEdit: "",
             numberEdit: "",
             idEntity:0,
 
@@ -203,7 +211,7 @@ class Employees extends Component {
             openModalEdit: false,
             firstNameEdit: "",
             lastNameEdit: "",
-            emailEdit: "",
+            hireDateEdit: "",
             numberEdit: "",
             departmentEdit: "",
             contactTitleEdit: "",
@@ -225,7 +233,7 @@ class Employees extends Component {
             return {
                 firstName: this.state[`firstName${index}`],
                 lastName: this.state[`lastName${index}`],
-                electronicAddress: this.state[`email${index}`],
+                hireDate: this.state[`hireDate${index}`],
                 mobileNumber: this.state[`phoneNumber${index}`],
                 Id_Deparment: parseInt(this.state[`department${index}`]),
                 Contact_Title: parseInt(this.state[`contactTitle${index}`]),
@@ -265,7 +273,7 @@ class Employees extends Component {
                             id: this.state.idToEdit,
                             firstName: form.elements[0].value,
                             lastName: form.elements[1].value,
-                            electronicAddress: form.elements[2].value,
+                            hireDate: form.elements[2].value,
                             mobileNumber: form.elements[3].value,
                             Id_Deparment: parseInt(this.state.departmentEdit),
                             Contact_Title: parseInt(this.state.contactTitleEdit),
@@ -1073,6 +1081,13 @@ class Employees extends Component {
         })
     }
 
+    handleChangeDate = (date) => {
+        let _date = moment.utc(date).format();
+        this.setState(prevState => {
+            return { hireDateEdit: _date }
+        })
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -1356,6 +1371,7 @@ class Employees extends Component {
                     open={this.state.openModalEdit}
                     onClose={this.handleCloseModalEdit}
                     maxWidth="xl"
+                    classes={{ paper: classes.paper }}
                 >
                     <form
                         id="employee-edit-form"
@@ -1366,7 +1382,7 @@ class Employees extends Component {
                                 <h5 class="modal-title">Edit Employee</h5>
                             </div>
                         </DialogTitle>
-                        <DialogContent>
+                        <DialogContent style={{overflowY:'initial'}}>
                             <div className="container EmployeeModal-container">
 
                                 <div className="row Employees-row">
@@ -1405,19 +1421,24 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="" >Email Address</label>
-                                        <input
-                                            type="email"
+                                        <label htmlFor="">Hire Date</label>
+                                        {/* <input
+                                            type="text"
                                             name="email"
                                             className="form-control"
                                             onChange={e => {
                                                 this.setState({
-                                                    emailEdit: e.target.value
+                                                    hireDateEdit: e.target.value
                                                 });
                                             }}
-                                            value={this.state.emailEdit}
+                                            value={this.state.hireDateEdit}
                                             minLength="3"
                                             maxLength={100}
+                                        /> */}
+                                        <DatePicker
+                                            selected={this.state.hireDateEdit}
+                                            onChange={this.handleChangeDate}
+                                            id="hireDateEdit"
                                         />
                                     </div>
                                     <div className="col">
@@ -1576,7 +1597,6 @@ class Employees extends Component {
                             // this.setState({ data: data.employees });
                            
                             let dataEmployees = data.employees.filter((_, i) => {
-                                console.log("data.employees ", _.firstName + _.lastName)
                                 if (this.state.filterText === "") {
                                     return true;
                                 }
@@ -1602,7 +1622,7 @@ class Employees extends Component {
                                                             this.setState({
                                                                 firstNameEdit: row.firstName,
                                                                 lastNameEdit: row.lastName,
-                                                                emailEdit: row.electronicAddress,
+                                                                hireDateEdit: row.hireDate ? moment.utc(row.hireDate).format() : '',
                                                                 numberEdit: row.mobileNumber,
                                                                 departmentEdit: row.Id_Deparment,
                                                                 contactTitleEdit: row.Contact_Title,
