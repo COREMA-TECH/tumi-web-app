@@ -90,7 +90,8 @@ class Signature extends React.Component {
             tokenValid: false,
             idContract: 0,
             view: 1,
-            open: false
+            open: false,
+            openFinishModal: false,
         };
     }
 
@@ -116,6 +117,17 @@ class Signature extends React.Component {
             //	signaturePad.clear();
         }
     };
+
+    handleCloseFinishModal = _ => {
+        this.setState(_ => {
+            return {
+                openFinishModal: false
+            }
+        }, _ => {
+            window.location.reload()
+        })
+        
+    }
 
     insertTextIntoCanvas = () => {
         if (this.state.inputText.trim() === '') {
@@ -203,10 +215,16 @@ class Signature extends React.Component {
                                 },
                                 () => {
                                     if (this.sigPad) this.sigPad.off();
+                                    this.setState(_ => {
+                                        return {
+                                            openFinishModal: true
+                                        }
+                                    })
                                 }
                             );
 
-                            window.location.href = "/employment-application-message";
+                            // window.location.href = "/employment-application-message";
+
                         })
                         .catch((error) => {
                             this.props.handleOpenSnackbar('error', 'Error: Signing Application: ' + error);
@@ -537,6 +555,21 @@ class Signature extends React.Component {
                             Cancel
                         </Button>
                     </DialogActions>
+                </Dialog>
+                <Dialog                    
+                    maxWidth={"sm"}
+                    open={this.state.openFinishModal}
+                    onClose={this.handleCloseFinishModal}
+                    className='External-finish'
+                >
+                    <DialogContent>
+                        <div className="tumi-col-centered">
+                            <p className="text-center mb-2">
+                                Thank you for your application!! Please let our office staff know that you’re ready for the next step!
+                            </p>
+                            <a href="#" onClick={this.handleCloseFinishModal} className="btn btn-success">Ok!</a>
+                        </div>
+                    </DialogContent>
                 </Dialog>
             </div>
         );

@@ -2,6 +2,7 @@
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,900";
 @import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900");
+@import url("https://fonts.googleapis.com/css?family=Ropa+Sans&display=swap");
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic);
 html,
 body {
@@ -8544,7 +8545,7 @@ label:not(.custom-file-label):not(.form-check-label) {
   margin-top: 0.65rem; }
   .tumi-checkbox-wrapper label {
     display: inline;
-    font-size: 12px;
+    font-size: 10px;
     margin-top: 0 !important;
     text-indent: 5px; }
 
@@ -9300,6 +9301,78 @@ tbody[class^="MuiTableBody-"] tr {
 
 tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   padding: 5px 5px 5px 5px !important; }
+
+.flag-select {
+  position: relative;
+  display: inline-block;
+  vertical-align: inherit;
+  padding-bottom: 5px;
+  color: #4d4d4d;
+  text-align: left; }
+  .flag-select img {
+    width: 1.3em;
+    height: 1.3em;
+    position: relative;
+    top: 0.3em; }
+  .flag-select .selected--flag--option {
+    cursor: pointer;
+    padding: 0 8px; }
+    .flag-select .selected--flag--option:before {
+      content: ' ';
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: 999; }
+    .flag-select .selected--flag--option:focus {
+      outline: none; }
+    .flag-select .selected--flag--option .country-label {
+      padding-left: 9px; }
+  .flag-select .country-flag {
+    cursor: pointer; }
+    .flag-select .country-flag .country-label {
+      font-size: 1em;
+      position: relative; }
+  .flag-select .flag-options {
+    position: absolute;
+    z-index: 999999;
+    border: 1px solid #bdbbbb;
+    border-radius: 3px;
+    background: #ffffff;
+    margin-top: 8px;
+    padding: 8px 0;
+    max-height: 160px;
+    overflow: auto; }
+    .flag-select .flag-options.to--left {
+      right: 10px; }
+  .flag-select .flag-option {
+    cursor: pointer;
+    padding: 0px 8px 3px 8px;
+    margin: 4px 0;
+    white-space: nowrap; }
+    .flag-select .flag-option.has-label {
+      padding: 0px 20px 3px 8px; }
+    .flag-select .flag-option:hover {
+      background: #eaeaea; }
+    .flag-select .flag-option:focus {
+      outline: none;
+      background: #eaeaea; }
+    .flag-select .flag-option .country-label {
+      padding: 0 9px; }
+  .flag-select .filterBox {
+    width: 100%; }
+    .flag-select .filterBox input {
+      width: 90%;
+      margin: 0 4%; }
+      .flag-select .filterBox input:focus {
+        outline: none; }
+  .flag-select .arrow-down {
+    color: #4d4d4d;
+    padding: 2px; }
+  .flag-select .hidden {
+    display: none; }
+  .flag-select .no--focus {
+    pointer-events: none; }
 
 .Tab-fa-icon:after {
   color: #7e7e7e;
@@ -10709,6 +10782,17 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 .ApplyForm {
   background-color: #f5f7f9; }
+  .ApplyForm-language {
+    color: #FFF;
+    display: block;
+    margin-left: auto;
+    width: 160px; }
+    .ApplyForm-language img {
+      top: -2px !important; }
+    .ApplyForm-language span {
+      font-family: 'Ropa Sans', sans-serif; }
+    .ApplyForm-language .flag-option.has-label {
+      color: #000; }
 
 .text-primary-application {
   color: #3ca2c8;
@@ -10892,6 +10976,342 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 div[class*="MuiStepper-root-"] {
   padding: 0 !important; }
+
+.External-label, .External .Location-label {
+  color: #FFF !important;
+  font-family: 'Ropa Sans', sans-serif;
+  font-size: 0.875rem;
+  text-transform: uppercase; }
+
+.External {
+  background-color: transparent;
+  font-family: 'Ropa Sans', sans-serif; }
+  .External-search {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    background-color: #000;
+    padding-bottom: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 10; }
+  .External-searchInputGroup .input-group-prepend, .External-searchInputGroup .input-group-text {
+    background-color: transparent !important;
+    border: none;
+    color: #FFF !important; }
+  .External-searchText {
+    color: #FFF;
+    padding-left: 1rem;
+    padding-right: 1rem; }
+  .External-searchButton {
+    background-color: transparent;
+    color: #FFF;
+    border: 1px solid #FFF;
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 18px;
+    text-transform: uppercase;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+    width: 105px; }
+    .External-searchButton:hover {
+      background-color: #FFF;
+      color: #000; }
+  .External-bg {
+    padding-bottom: 0;
+    padding-top: 52px;
+    position: relative; }
+    .External-bg::before {
+      content: '&nbsp;';
+      background-image: url("../images/external-application-bg.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: block;
+      -webkit-filter: blur(4px);
+      filter: blur(4px);
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      top: 0; }
+  .External-logo {
+    margin-bottom: 22px;
+    margin-left: auto;
+    max-width: 340px;
+    width: 100%; }
+    .External-logo img {
+      display: block;
+      margin-left: 0;
+      margin-right: auto;
+      max-width: 95px;
+      width: 100%; }
+  .External-row {
+    margin-bottom: 35px; }
+  .External-col {
+    margin-bottom: 1rem;
+    overflow: visible !important; }
+  .External-stepper .MuiStepIcon-root-60.MuiStepIcon-active-62, .External-stepper .MuiStepLabel-label-52.MuiStepLabel-active-53 {
+    color: #3ca2c8;
+    font-family: 'Ropa Sans', sans-serif; }
+  .External-text {
+    color: #FFF;
+    font-family: 'Ropa Sans', sans-serif !important;
+    font-size: 18px; }
+  .External .External-input {
+    background-color: transparent !important;
+    color: #FFF !important;
+    border: none;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    font-family: 'Ropa Sans', sans-serif !important;
+    font-size: 18px; }
+    .External .External-input::-webkit-input-placeholder {
+      color: #868686;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .External .External-input:-ms-input-placeholder {
+      color: #868686;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .External .External-input::-ms-input-placeholder {
+      color: #868686;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .External .External-input::placeholder {
+      color: #868686;
+      font-weight: 700;
+      text-transform: uppercase; }
+    .External .External-input:disabled {
+      background-color: transparent !important;
+      border: none !important;
+      -webkit-box-shadow: none !important;
+      box-shadow: none !important; }
+    .External .External-input option {
+      color: #000; }
+      .External .External-input option:hover {
+        color: #FFF;
+        background-color: #FFF; }
+  .External-formButtons {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -webkit-box-flex: 0;
+    -ms-flex-positive: 0;
+    flex-grow: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap; }
+  .External .External-formButton {
+    background-color: transparent;
+    color: #FFF;
+    border: 1px solid #FFF;
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 12px;
+    text-transform: uppercase;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+    width: 155px; }
+    .External .External-formButton span[class*="MuiButton-label"] {
+      font-family: 'Ropa Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700; }
+    .External .External-formButton:hover {
+      background-color: #FFF;
+      color: #000; }
+    .External .External-formButton:first-child {
+      margin-left: auto; }
+    .External .External-formButton[disabled] {
+      color: #FFF;
+      cursor: not-allowed; }
+  .External .Slider-skillLabel, .External .Slider-percentageLabel {
+    color: #FFF;
+    font-family: 'Ropa Sans', sans-serif;
+    line-height: 1; }
+  .External .Stepper-wrapper {
+    border-radius: 0;
+    margin-left: auto;
+    max-width: 340px;
+    width: 100%; }
+  .External .Location-label.changeCity {
+    font-size: 10px; }
+  .External .ApplyForm {
+    background-color: transparent; }
+  .External .ApplyBlock {
+    background-color: rgba(0, 0, 0, 0.65);
+    border-radius: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    font-family: 'Ropa Sans', sans-serif;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 30px; }
+    .External .ApplyBlock-title {
+      background-color: transparent;
+      color: #FFF;
+      font-size: 24px;
+      font-weight: 700;
+      padding-left: 0;
+      position: unset; }
+      .External .ApplyBlock-title::before, .External .ApplyBlock-title::after {
+        display: none; }
+  .External .skills-container {
+    border: none;
+    margin-left: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-top: 0; }
+    .External .skills-container--header {
+      background-color: transparent; }
+    .External .skills-container:hover .deleteSkillSection {
+      position: absolute;
+      top: -5px; }
+  .External .skills-label, .External .skills-desc {
+    color: #FFF !important;
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 14px; }
+  .External .skills-desc {
+    font-size: 18px; }
+  @media (min-width: 768px) {
+    .External .Stepper-col {
+      padding-right: 0; }
+    .External .Application-col {
+      padding-left: 0;
+      padding-right: 0; } }
+
+.Footer-wrapper, .Footer-links, .Footer-contactInfo {
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+
+.Footer {
+  background-color: #000;
+  font-family: 'Ropa Sans', sans-serif;
+  font-size: 10px;
+  padding-bottom: 56px;
+  padding-top: 52px; }
+  .Footer-wrapper {
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%; }
+  .Footer-logo {
+    background-color: red;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    margin-right: 150px;
+    height: 95px;
+    width: 95px; }
+  .Footer-info {
+    display: block;
+    width: 100%; }
+  .Footer-links {
+    margin-bottom: 30px; }
+  .Footer-link {
+    color: #FFF;
+    font-size: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-transform: uppercase; }
+    .Footer-link:first-child {
+      padding-left: 0;
+      margin-right: auto; }
+  .Footer-contactInfo {
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start; }
+  .Footer-contact {
+    color: #868686;
+    font-size: 10px;
+    margin-right: 70px; }
+    .Footer-contact.address, .Footer-contact.phone {
+      max-width: 130px;
+      width: 100%; }
+    .Footer-contact.copyright {
+      margin-right: 0; }
+  @media (max-width: 991.98px) {
+    .Footer-logo {
+      margin-bottom: 10px;
+      margin-right: 0; }
+    .Footer-wrapper, .Footer-contactInfo, .Footer-links {
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center; }
+    .Footer-link {
+      margin-bottom: 10px;
+      margin-top: 10px; }
+      .Footer-link:first-child {
+        margin-right: 0;
+        padding-left: 10px; }
+    .Footer-contact {
+      margin-bottom: 10px;
+      margin-right: 0;
+      margin-top: 10px;
+      text-align: center; }
+      .Footer-contact.address, .Footer-contact.phone {
+        max-width: 130px;
+        width: 100%; } }
 
 .DaysWeekMonth-wrapper {
   padding-top: 1.5rem;
