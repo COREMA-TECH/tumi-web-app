@@ -22,8 +22,11 @@ import InputRangeDisabled from '../ui/InputRange/InputRangeDisabled';
 import { GET_LANGUAGES_QUERY } from '../Queries.js';
 import withApollo from 'react-apollo/withApollo';
 import { GET_CITIES_QUERY, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
+import {GET_APPLICATION} from './Queries';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import moment from 'moment';
+
 import {
     ADD_APLICANT_EDUCATION,
     ADD_APLICANT_PREVIOUS_EMPLOYMENT,
@@ -227,13 +230,13 @@ class VerticalLinearStepper extends Component {
             ],
 
             heardTumiOptions: [
-                { value:'', label:'Select an option' },
-                { value:'facebook', label:'Facebook' },
-                { value:'linkedin', label:'Linkedin' },
-                { value:'instagram', label:'Instagram' },
-                { value:'newspaper', label:'Newspaper' },
-                { value:'journals', label:'Journals' },
-                { value:'others', label:'Other' },
+                { value:'', label:'Select an Option' },
+                { value: 1, label:'Facebook' },
+                { value: 2, label:'Linkedin' },
+                { value: 3, label:'Instagram' },
+                { value: 4, label:'Newspaper' },
+                { value: 5, label:'Journals' },
+                { value: 6, label:'Other' },
             ]
         };
     }
@@ -245,7 +248,7 @@ class VerticalLinearStepper extends Component {
             return defValue;
 
         const found = this.state.idTypeOptions.find(item => {
-            return item.value === idType;
+            return item.value === `${idType}`;
         });
 
         return found ? found : defValue;
@@ -304,7 +307,7 @@ class VerticalLinearStepper extends Component {
     findSelectedPositionApply = positionId => {
         const defValue = {value: "", label: "Select a Position"};
 
-        if(!positionId && positionId !== 0)
+        if(!positionId || positionId === "")
             return defValue;
 
         const found = this.state.positionApplyOptions.find(item => {
@@ -421,7 +424,7 @@ class VerticalLinearStepper extends Component {
                                 typeOfId: parseInt(this.state.typeOfId),
                                 expireDateId: this.state.expireDateId,
                                 emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.idealJob),
+                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
                                 dateAvailable: this.state.dateAvailable,
                                 scheduleRestrictions: this.state.scheduleRestrictions,
                                 scheduleExplain: this.state.scheduleExplain,
@@ -429,7 +432,8 @@ class VerticalLinearStepper extends Component {
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
                                 isLead: true,
-                                idealJob: this.state.idealJob
+                                idealJob: this.state.idealJob,
+                                optionHearTumi: this.state.socialNetwork                                
                             }
                         }
                     })
@@ -521,7 +525,7 @@ class VerticalLinearStepper extends Component {
                                 typeOfId: parseInt(this.state.typeOfId),
                                 expireDateId: this.state.expireDateId,
                                 emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.idealJob),
+                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
                                 dateAvailable: this.state.dateAvailable,
                                 scheduleRestrictions: this.state.scheduleRestrictions,
                                 scheduleExplain: this.state.scheduleExplain,
@@ -529,7 +533,8 @@ class VerticalLinearStepper extends Component {
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
                                 isLead: true,
-                                idealJob: this.state.idealJob
+                                idealJob: this.state.idealJob,
+                                optionHearTumi: this.state.socialNetwork
                             }
                         }
                     })
@@ -841,6 +846,81 @@ class VerticalLinearStepper extends Component {
                 labels: labels
             }
         });
+
+        // this.getLead();
+    }
+
+    handleSearch = event => {
+        event.preventDefault();
+
+        let filter = {};
+
+        if(this.state.leadIdSearch && this.state.leadIdSearch !== 0)
+            filter = {id: this.state.leadIdSearch, ...filter}
+
+        if(this.state.phoneSearch && this.state.phoneSearch !== '')
+            filter = {cellPhone: this.state.phoneSearch, ...filter}
+
+        this.getLead(filter);
+    }    
+
+    getLead = (filter) => {
+        // const applicationId = 460;
+        this.props.client.query({
+            query: GET_APPLICATION,
+            variables: {
+                ...filter
+            }
+        })
+        .then(({data}) => {
+            if(data.applications.length === 0) {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'No match found',
+                    'bottom',
+                    'Center'
+                );
+
+                return;
+            }            
+
+            const app = data.applications[0];
+
+            this.setState(prevState => {
+                return {
+                    applicationId: app.id,
+                    firstName: app.firstName,
+                    middleName: app.middleName,
+                    lastName: app.lastName,
+                    lastName2: app.lastName2,
+                    date: app.date,
+                    streetAddress: app.streetAddress,
+                    aptNumber: app.aptNumber,
+                    city: app.city,
+                    state: app.state,
+                    zipCode: app.zipCode,
+                    homePhone: app.homePhone,
+                    cellPhone: app.cellPhone,
+                    socialSecurityNumber: app.socialSecurityNumber,
+                    birthDay: app.birthDay,
+                    car: app.car,
+                    typeOfId: app.typeOfId,
+                    expireDateId: moment(new Date(app.expireDateId)).format("YYYY-MM-DD"),
+                    emailAddress: app.emailAddress,
+                    positionApplyingFor: app.positionApplyingFor,
+                    idealJob: app.idealJob,
+                    idealJobs: [],
+                    dateAvailable: moment(new Date(app.dateAvailable)).format("YYYY-MM-DD"),
+                    scheduleRestrictions: app.scheduleRestrictions,
+                    scheduleExplain: app.scheduleExplain,
+                    convicted: app.convicted,
+                    convictedExplain: app.convictedExplain,
+                    socialNetwork: app.optionHearTumi,
+                    comment: app.comment,
+                }
+            }, _ => console.log(this.state))
+        })
+        .catch(error => console.log(error));
     }
 
     updateCity = (city) => {
@@ -1152,7 +1232,7 @@ class VerticalLinearStepper extends Component {
                         
                         <Select
                             options={this.state.positionApplyOptions}
-                            value={this.findSelectedPositionApply(this.state.idealJob)}
+                            value={this.findSelectedPositionApply(this.state.positionApplyingFor)}
                             onChange={this.handlePositionApplyChange}
                             closeMenuOnSelect={true}
                             components={makeAnimated()}
@@ -1160,21 +1240,6 @@ class VerticalLinearStepper extends Component {
                             styles={selectStyles}
                         />
                     </div>
-                    <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">{labels.willing[displayLanguage]}</span>
-
-                        <Select
-                            options={this.state.positionCatalogOptions}
-                            value={this.state.positionsTags}
-                            onChange={this.handleChangePositionTag}
-                            closeMenuOnSelect={false}
-                            components={makeAnimated()}
-                            isMulti
-                            styles={selectStyles}                            
-                        />
-                    </div>                    
-                </div>
-                <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label">* {labels.available[displayLanguage]}</span>
                         <div className="input-container--validated">
@@ -1189,8 +1254,21 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                             />
                         </div>
+
+                        {/* <span className="External-label">{labels.willing[displayLanguage]}</span>
+
+                        <Select
+                            options={this.state.positionCatalogOptions}
+                            value={this.state.positionsTags}
+                            onChange={this.handleChangePositionTag}
+                            closeMenuOnSelect={false}
+                            components={makeAnimated()}
+                            isMulti
+                            styles={selectStyles}                            
+                        /> */}
                     </div>                    
                 </div>
+               
                 {/* <hr className="separator" /> */}
                 <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
@@ -1202,6 +1280,7 @@ class VerticalLinearStepper extends Component {
                                 type="radio"
                                 name="scheduleRestrictions"
                                 className=""
+                                checked={this.state.scheduleRestrictions}
                             />
                             <label className="radio-label External-label"> Yes</label>
                             <input
@@ -1215,7 +1294,7 @@ class VerticalLinearStepper extends Component {
                                 type="radio"
                                 name="scheduleRestrictions"
                                 className=""
-                                checked={this.state.scheduleRestrictions === '0'}
+                                checked={!this.state.scheduleRestrictions}
                             />
                             <label className="radio-label External-label"> No</label>
                         </div>
@@ -1261,6 +1340,7 @@ class VerticalLinearStepper extends Component {
                                 type="radio"
                                 name="convicted"
                                 className=""
+                                checked={this.state.convicted}
                             />
                             <label className="radio-label External-label"> Yes</label>
                             <input
@@ -1274,7 +1354,7 @@ class VerticalLinearStepper extends Component {
                                 type="radio"
                                 name="convicted"
                                 className=""
-                                checked={this.state.convicted === '0'}
+                                checked={!this.state.convicted}
                             />
                             <label className="radio-label External-label"> No</label>
                         </div>
@@ -2465,11 +2545,46 @@ class VerticalLinearStepper extends Component {
         return (
             <React.Fragment>
                 <div className="main-stepper-container External">
-                    <div className="container-fluid">
+                    <div className="container-fluid">                        
                         <div className="row External-bg">
+                            <div className="col-12 pr-0 pl-0">
+                                <form className="form-inline External-search" onSubmit={this.handleSearch}>                                    
+                                    <div class="input-group External-searchInputGroup">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-phone"></i></span>
+                                        </div>
+                                        <InputMask
+                                            id="phoneSearch"
+                                            name="phoneSearch"
+                                            mask="+(999) 999-9999"
+                                            maskChar=" "
+                                            value={this.state.phoneSearch}
+                                            className="form-control External-input"
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    phoneSearch: event.target.value
+                                                });
+                                            }}
+                                            placeholder="+(___) ___-____"
+                                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                                            minLength="15"
+                                        />
+                                        {/* <input value={this.state.phoneSearch} name='phoneSearch' onChange={this.handleStateChange} type="text" class="form-control External-input phone" placeholder="Phone Number" aria-label="Phone Number" aria-describedby="basic-addon1" /> */}
+                                    </div>                                           
+                                
+                                    <div class="input-group External-searchInputGroup">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                        </div>
+
+                                        <input value={this.state.leadIdSearch} name='leadIdSearch' onChange={this.handleStateChange} type="text" class="form-control External-input lead" placeholder="Lead Id" aria-label="Lead Id" aria-describedby="basic-addon2" />
+                                    </div>
+                                    <button className="External-searchButton" ype="submit">Search</button>                                        
+                                </form>   
+                            </div>
                             <div className="col-12 col-md-4 Stepper-col">
                                 <div className="External-logo">
-                                    <img src='../images/tumi-staffing-red-logo.png' alt="TUMI STAFFING, Inc." className=""/>
+                                    <img src='../images/tumi-staffing-red-logo.png' alt="TUMI STAFFING, Inc."/>
                                 </div>
                                 <div className="Stepper-wrapper p-3">
                                     <Stepper activeStep={activeStep} orientation="vertical" className="main-stepper-nav External-stepper">
@@ -2531,7 +2646,6 @@ class VerticalLinearStepper extends Component {
 
                                                 }}
                                             >                                                
-                                                {/* {this.getStepContent(this.state.activeStep, history, steps)} */}
                                                 {this.getStepContent(this.state.activeStep, history, steps)}
                                             </form>
                                         )}

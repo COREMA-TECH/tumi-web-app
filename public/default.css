@@ -10888,12 +10888,63 @@ div[class*="MuiStepper-root-"] {
 .External {
   background-color: transparent;
   font-family: 'Ropa Sans', sans-serif; }
+  .External-search {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    background-color: #000;
+    padding-bottom: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 10; }
+  .External-searchInputGroup .input-group-prepend, .External-searchInputGroup .input-group-text {
+    background-color: transparent !important;
+    border: none;
+    color: #FFF !important; }
+  .External-searchText {
+    color: #FFF;
+    padding-left: 1rem;
+    padding-right: 1rem; }
+  .External-searchButton {
+    background-color: transparent;
+    color: #FFF;
+    border: 1px solid #FFF;
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 18px;
+    text-transform: uppercase;
+    -webkit-transition: all 0.25s ease;
+    -o-transition: all 0.25s ease;
+    transition: all 0.25s ease;
+    width: 105px; }
+    .External-searchButton:hover {
+      background-color: #FFF;
+      color: #000; }
   .External-bg {
     background-image: url("../images/external-application-bg.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    padding-top: 0; }
+    padding-bottom: 0;
+    padding-top: 52px; }
   .External-logo {
     margin-bottom: 22px;
     margin-left: auto;
@@ -10975,6 +11026,8 @@ div[class*="MuiStepper-root-"] {
     background-color: transparent;
     color: #FFF;
     border: 1px solid #FFF;
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 12px;
     text-transform: uppercase;
     -webkit-transition: all 0.25s ease;
     -o-transition: all 0.25s ease;
@@ -11010,6 +11063,7 @@ div[class*="MuiStepper-root-"] {
     -webkit-box-shadow: none;
     box-shadow: none;
     font-family: 'Ropa Sans', sans-serif;
+    margin-bottom: 0;
     margin-left: 0;
     margin-right: 0;
     max-width: 100%;
@@ -11046,7 +11100,8 @@ div[class*="MuiStepper-root-"] {
     .External .Stepper-col {
       padding-right: 0; }
     .External .Application-col {
-      padding-left: 0; } }
+      padding-left: 0;
+      padding-right: 0; } }
 
 .Footer-wrapper, .Footer-links, .Footer-contactInfo {
   -webkit-box-align: start;
