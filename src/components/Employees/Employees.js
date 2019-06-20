@@ -193,6 +193,7 @@ class Employees extends Component {
                 this.setState({
                     rowsInput: [1]
                 });
+                this.getEmployees();
             }
         );
     };
@@ -341,7 +342,10 @@ class Employees extends Component {
                         this.setState({
                             progressNewEmployee: false,
                             finishLoading: true
+                        }, _ => {
+                            this.getEmployees();
                         });
+                        
                     })
                     .catch(error => {
                         // Hide dialog
@@ -477,6 +481,7 @@ class Employees extends Component {
             openUserModal: false,
         }, () => {
             this.resetUserModalState();
+            this.getEmployees();
         });
     };
 
@@ -1092,7 +1097,8 @@ class Employees extends Component {
 
     getEmployees = () => {
         this.props.client.query({
-            query: LIST_EMPLOYEES
+            query: LIST_EMPLOYEES,
+            fetchPolicy: 'no-cache',
         }).then(({data}) => {
             this.setState(prevState => {
                 return {employees: data.employees}
@@ -1330,6 +1336,7 @@ class Employees extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="xl"
                 disableBackdropClick={true}
+                classes={{ paper: classes.paper }}
             >
                 <form id="employee-form" onSubmit={this.handleSubmit}>
                     <DialogTitle style={{ padding: "0px" }}>
@@ -1340,7 +1347,7 @@ class Employees extends Component {
                             </button>
                         </div>
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent style={{overflowY:'initial'}}>
                         <div className="container EmployeeModal-container">
                             {this.state.rowsInput.map((item, index) => {
                                 return (
@@ -1382,6 +1389,7 @@ class Employees extends Component {
                                             this.setState({
                                                 rowsInput: [1]
                                             });
+                                            this.getEmployees();
                                         });
                                     }}
                                 >

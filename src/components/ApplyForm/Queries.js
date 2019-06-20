@@ -98,6 +98,14 @@ export const GET_APPLICATION_BY_ID = gql`
 			comment
 			idealJob
 			isLead
+			immediately
+			gender
+			marital
+			exemptions
+			eeoc
+			hireType
+			expireDateId
+			area
 			independentContract{
 				id
 			}

@@ -231,7 +231,7 @@ class Schedules extends Component {
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <div className="SmallSwitch">
+                                {/* <div className="SmallSwitch">
                                     <span className="rightLable-Switch">Grid View</span>
                                     <div class="onoffswitch">
                                         <input type="checkbox" name="gridView" class="onoffswitch-checkbox" id="gridView" checked={this.state.gridView} onChange={this.viewChange} />
@@ -241,14 +241,14 @@ class Schedules extends Component {
                                         </label>
                                     </div>
                                     <span className="leftLabel-Switch">Calendar View</span>
-                                </div>
-                                {
+                                </div> */}
+                                {/* {
                                     !this.state.gridView ? (
                                         <GridTabs location={this.state.location} position={this.state.position} department={this.state.department}/>
                                     ) : ('')
-                                }
+                                } */}
                                 {
-                                    this.state.filtered == true && this.state.gridView ? (
+                                    this.state.filtered == true /* && this.state.gridView*/ ? (
                                         <Shifts
                                             editConfirmOpened={this.state.editConfirmOpened}
                                             openEditConfirm={this.openEditConfirm}

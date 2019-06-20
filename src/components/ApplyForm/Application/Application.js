@@ -280,6 +280,8 @@ class Application extends Component {
                     })
                     .then(({ data }) => {
                         let applicantData = data.applications[0];
+                        let homePhoneNumberValid = homePhoneNumberValid || '';
+                        let cellPhoneNumberValid = applicantData.cellPhone || '';
                         this.setState(
                             {
                                 firstName: applicantData.firstName,
@@ -297,9 +299,9 @@ class Application extends Component {
                                 state: applicantData.state,
                                 zipCode: applicantData.zipCode,
                                 homePhone: applicantData.homePhone,
-                                homePhoneNumberValid: this.state.homePhone.length > 0,
+                                homePhoneNumberValid: homePhoneNumberValid.length > 0,
                                 cellPhone: applicantData.cellPhone,
-                                cellPhoneNumberValid: applicantData.cellPhone.length > 0,
+                                cellPhoneNumberValid: cellPhoneNumberValid.length > 0,
                                 birthDay:
                                     applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
                                 socialSecurityNumber: applicantData.socialSecurityNumber,
@@ -338,6 +340,7 @@ class Application extends Component {
                         );
                     })
                     .catch((error) => {
+                        console.log(error)
                         // TODO: replace alert with snackbar error message
                         this.props.handleOpenSnackbar(
                             'error',
@@ -533,11 +536,17 @@ class Application extends Component {
         if (values.length == 0)
             this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
         else {
-            if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
+            if (socialSecurityNumber === null) {
                 this.setState(() => ({
                     openSSNDialog: true
                 }))
-            else this.InsertUpdateApplicationInformation(this.props.applicationId);
+            } else {
+                if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
+                    this.setState(() => ({
+                        openSSNDialog: true
+                    }))
+                else this.InsertUpdateApplicationInformation(this.props.applicationId);
+            }
         }
 
 
@@ -850,7 +859,6 @@ class Application extends Component {
                                                     disabled={!this.state.editing}
                                                     min="0"
                                                     maxLength="50"
-                                                    minLength="5"
                                                 />
                                             </div>
 

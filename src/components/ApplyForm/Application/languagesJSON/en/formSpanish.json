@@ -101,11 +101,11 @@
   },
   {
     "id": 25,
-    "label": "Date"
+    "label": "Today Date"
   },
   {
     "id":26,
-    "label":"Immediately"
+    "label":"Can you start Immediately?"
   },
 {
   "id":27,
@@ -138,5 +138,9 @@
 {
   "id":34,
   "label":"Marital Status"
+},
+{
+  "id": 35,
+  "label": "Hire Date"
 }
 ]
