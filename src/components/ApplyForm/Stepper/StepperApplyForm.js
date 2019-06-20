@@ -125,124 +125,128 @@ function getSteps() {
 }
 
 class VerticalLinearStepper extends Component {
+    INITIAL_STATE = {
+        activeStep: 0,
+        open: false,
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        lastName2: '',
+        date: new Date().toISOString().substring(0, 10),
+        streetAddress: '',
+        aptNumber: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        homePhone: '',
+        cellPhone: '',
+        socialSecurityNumber: '',
+        birthDay: '',
+        car: false,
+        typeOfId: '',
+        expireDateId: '',
+        emailAddress: '',
+        positionApplyingFor: 1,
+        idealJob: '',
+        idealJobs: [],
+        dateAvailable: '',
+        scheduleRestrictions: '0',
+        scheduleExplain: '',
+        convicted: '0',
+        convictedExplain: '',
+        socialNetwork: '',
+        comment: '',
+
+        // Languages array
+        languages: [],
+        displayLanguage: "US",
+
+        // Skills array
+        skills: [],
+
+        // Schools array
+        schools: [],
+
+        // Military Service state fields
+        branch: '',
+        startDateMilitaryService: '',
+        endDateMilitaryService: '',
+        rankAtDischarge: '',
+        typeOfDischarge: '',
+
+        // Previous Employment
+        previousEmployment: [],
+        companyName: '',
+        companyPhone: '',
+        companyAddress: '',
+        companySupervisor: '',
+        companyJobTitle: '',
+        companyPayRate: '',
+        companyStartDate: '',
+        companyEndDate: '',
+        companyReasonForLeaving: '',
+
+        percent: 50,
+        insertDialogLoading: false,
+        graduated: false,
+        previousEmploymentPhone: '',
+
+        // Application id property state is used to save languages, education, mulitary services, skills
+        applicationId: null,
+
+        // Languages catalog
+        languagesLoaded: [],
+
+        openSnackbar: true,
+        aceptedDisclaimer: false,
+        openSignature: false,
+
+        // React tag input with suggestions
+        positionsTags: [],
+        validCity: true,
+        validState: true,
+        validZipCode: true,
+    
+        positionApplyOptions: [
+            { value: "", label: "Select a Position" },
+            { value: 0, label: "Open Position" }
+        ],
+
+        positionCatalogOptions: [
+        ],
+
+        idTypeOptions: [
+            { value:'', label:  'Select an Option' },
+            { value:'1', label: 'Birth certificate' },
+            { value:'2', label: 'Social Security card' },
+            { value:'3', label: `State-issued driver's license` },
+            { value:'4', label: `State-issued ID` },
+            { value:'5', label: `Passport` },
+            { value:'6', label: `Department of Defense Identification Card` },
+            { value:'7', label: `Green Card` },                
+        ],
+
+        heardTumiOptions: [
+            { value:'', label:'Select an Option' },
+            { value: 1, label:'Facebook' },
+            { value: 2, label:'Linkedin' },
+            { value: 3, label:'Instagram' },
+            { value: 4, label:'Newspaper' },
+            { value: 5, label:'Journals' },
+            { value: 6, label:'Other' },
+        ]
+    }
+
     constructor(props) {
         super(props);
 
         this.state = {
-            activeStep: 0,
-            open: false,
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            lastName2: '',
-            date: new Date().toISOString().substring(0, 10),
-            streetAddress: '',
-            aptNumber: '',
-            city: '',
-            state: '',
-            zipCode: '',
-            homePhone: '',
-            cellPhone: '',
-            socialSecurityNumber: '',
-            birthDay: '',
-            car: false,
-            typeOfId: '',
-            expireDateId: '',
-            emailAddress: '',
-            positionApplyingFor: 1,
-            idealJob: '',
-            idealJobs: [],
-            dateAvailable: '',
-            scheduleRestrictions: '0',
-            scheduleExplain: '',
-            convicted: '0',
-            convictedExplain: '',
-            socialNetwork: '',
-            comment: '',
-
-            // Languages array
-            languages: [],
-            displayLanguage: "US",
-
-            // Skills array
-            skills: [],
-
-            // Schools array
-            schools: [],
-
-            // Military Service state fields
-            branch: '',
-            startDateMilitaryService: '',
-            endDateMilitaryService: '',
-            rankAtDischarge: '',
-            typeOfDischarge: '',
-
-            // Previous Employment
-            previousEmployment: [],
-            companyName: '',
-            companyPhone: '',
-            companyAddress: '',
-            companySupervisor: '',
-            companyJobTitle: '',
-            companyPayRate: '',
-            companyStartDate: '',
-            companyEndDate: '',
-            companyReasonForLeaving: '',
-
-            percent: 50,
-            insertDialogLoading: false,
-            graduated: false,
-            previousEmploymentPhone: '',
-
-            // Application id property state is used to save languages, education, mulitary services, skills
-            applicationId: null,
-
-            // Languages catalog
-            languagesLoaded: [],
-
-            openSnackbar: true,
-            aceptedDisclaimer: false,
-            openSignature: false,
-
-            // React tag input with suggestions
-            positionsTags: [],
-            validCity: true,
-            validState: true,
-            validZipCode: true,
-      
-            positionApplyOptions: [
-                { value: "", label: "Select a Position" },
-                { value: 0, label: "Open Position" }
-            ],
-
-            positionCatalogOptions: [
-            ],
-
-            idTypeOptions: [
-                { value:'', label: 'Select an option' },
-                { value:'1', label: 'Birth certificate' },
-                { value:'2', label: 'Social Security card' },
-                { value:'3', label: `State-issued driver's license` },
-                { value:'4', label: `State-issued ID` },
-                { value:'5', label: `Passport` },
-                { value:'6', label: `Department of Defense Identification Card` },
-                { value:'7', label: `Green Card` },                
-            ],
-
-            heardTumiOptions: [
-                { value:'', label:'Select an Option' },
-                { value: 1, label:'Facebook' },
-                { value: 2, label:'Linkedin' },
-                { value: 3, label:'Instagram' },
-                { value: 4, label:'Newspaper' },
-                { value: 5, label:'Journals' },
-                { value: 6, label:'Other' },
-            ]
+            ...this.INITIAL_STATE
         };
     }
 
     findSelectedIdType = idType => {
-        const defValue = {value: "", label: "Select an Option"};
+        const defValue = {value: "", label: `${this.state.labels.selectOption[this.state.displayLanguage]}`};
 
         if(!idType || idType === "")
             return defValue;
@@ -263,7 +267,7 @@ class VerticalLinearStepper extends Component {
     }
 
     findSelectedReference = refId => {
-        const defValue = {value: "", label: "Select an Option"};
+        const defValue = {value: "", label: `${this.state.labels.selectOption[this.state.displayLanguage]}`};
 
         if(!refId || refId === "")
             return defValue;
@@ -298,14 +302,14 @@ class VerticalLinearStepper extends Component {
             
             this.setState(_ => {
                 return {
-                    positionApplyOptions: [{ value: "", label: "Select a Position" }, { value: 0, label: "Open Position" }, ...options]
+                    positionApplyOptions: [{ value: "", label: `${this.state.labels.selectPosition[this.state.displayLanguage]}` }, { value: 0, label: "Open Position" }, ...options]
                 }
             });
         })
     }
 
     findSelectedPositionApply = positionId => {
-        const defValue = {value: "", label: "Select a Position"};
+        const defValue = {value: "", label: `${this.state.labels.selectPosition[this.state.displayLanguage]}`};
 
         if(!positionId || positionId === "")
             return defValue;
@@ -320,7 +324,7 @@ class VerticalLinearStepper extends Component {
     handlePositionApplyChange = ({value}) => {
         this.setState(_ => {
             return {
-                idealJob: value
+                positionApplyingFor: value
             }
         })
     }
@@ -747,13 +751,7 @@ class VerticalLinearStepper extends Component {
                     this.handleNext();
                 })
                 .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to save military services: Please, try again!',
-                        'bottom',
-                        'right'
-                    );
+                   
                 });
         } else {
             this.handleNext();
@@ -846,8 +844,6 @@ class VerticalLinearStepper extends Component {
                 labels: labels
             }
         });
-
-        // this.getLead();
     }
 
     handleSearch = event => {
@@ -880,7 +876,7 @@ class VerticalLinearStepper extends Component {
                     'bottom',
                     'Center'
                 );
-
+                
                 return;
             }            
 
@@ -963,15 +959,14 @@ class VerticalLinearStepper extends Component {
         const { labels, displayLanguage } = this.state;
      
         return (        
-            <div className="ApplyBlock">  
-                <ReactFlagsSelect 
+            <div className="ApplyBlock">
+                    <ReactFlagsSelect 
                     defaultCountry="US" 
                     onSelect={this.handleDisplayLanguageChange}
                     countries={["US", "ES"]}
                     customLabels={{"US":"English", "ES": "Español"}}
                     className="ApplyForm-language"
-                />
-
+                />  
                 <h4 className="ApplyBlock-title">{labels.formTitle[displayLanguage]}</h4>
                 <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
@@ -1274,13 +1269,14 @@ class VerticalLinearStepper extends Component {
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.restrictions[displayLanguage]} </span>
                         <div className="col-md-12">
+                            {console.log(this.state.scheduleRestrictions)}
                             <input
                                 onChange={ this.handleStateChange }
                                 value="1"
                                 type="radio"
                                 name="scheduleRestrictions"
                                 className=""
-                                checked={this.state.scheduleRestrictions}
+                                checked={this.state.scheduleRestrictions === '1' || this.state.scheduleRestrictions === 1 || this.state.scheduleRestrictions === 'true' || this.state.scheduleRestrictions === true}
                             />
                             <label className="radio-label External-label"> Yes</label>
                             <input
@@ -1294,7 +1290,7 @@ class VerticalLinearStepper extends Component {
                                 type="radio"
                                 name="scheduleRestrictions"
                                 className=""
-                                checked={!this.state.scheduleRestrictions}
+                                checked={this.state.scheduleRestrictions === '0' || this.state.scheduleRestrictions === 0 || this.state.scheduleRestrictions === 'false' || this.state.scheduleRestrictions === false}
                             />
                             <label className="radio-label External-label"> No</label>
                         </div>
@@ -1311,7 +1307,7 @@ class VerticalLinearStepper extends Component {
                                 rows="3"
                                 disabled
                                 className="form-control textarea-apply-form External-input"
-                                placeholder='Add details...'
+                                placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                             />
                         ) : (
                                 <textarea
@@ -1322,7 +1318,7 @@ class VerticalLinearStepper extends Component {
                                     rows="3"
                                     required
                                     className="form-control textarea-apply-form External-input"
-                                    placeholder='Add details...'
+                                    placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                                 />
                             )}
                     </div>
@@ -1340,7 +1336,7 @@ class VerticalLinearStepper extends Component {
                                 type="radio"
                                 name="convicted"
                                 className=""
-                                checked={this.state.convicted}
+                                checked={this.state.convicted === '1' || this.state.convicted === 1 || this.state.convicted === 'true' || this.state.convicted === true}
                             />
                             <label className="radio-label External-label"> Yes</label>
                             <input
@@ -1354,7 +1350,7 @@ class VerticalLinearStepper extends Component {
                                 type="radio"
                                 name="convicted"
                                 className=""
-                                checked={!this.state.convicted}
+                                checked={this.state.convicted === '0' || this.state.convicted === 0 || this.state.convicted === 'false' || this.state.convicted === false}
                             />
                             <label className="radio-label External-label"> No</label>
                         </div>
@@ -1370,7 +1366,7 @@ class VerticalLinearStepper extends Component {
                                 disabled
                                 rows="3"
                                 className="form-control textarea-apply-form External-input"
-                                placeholder='Add details...'
+                                placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                             />
                         ) : (
                                 <textarea
@@ -1381,7 +1377,7 @@ class VerticalLinearStepper extends Component {
                                     required
                                     rows="3"
                                     className="form-control textarea-apply-form External-input"
-                                    placeholder='Add details...'
+                                    placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                                 />
                             )}
                     </div>
@@ -1410,7 +1406,7 @@ class VerticalLinearStepper extends Component {
                                 cols="20"
                                 rows="4"
                                 className="form-control textarea-apply-form External-input"
-                                placeholder='Add Details...'
+                                placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                             />
                         ) : (
                                 ''
@@ -1478,7 +1474,7 @@ class VerticalLinearStepper extends Component {
                 className="apply-form row External-skillForm"
             >
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Skill Name</span>
+                    <span className="External-label">* {labels.skillName[displayLanguage]}</span>
                     <input
                         id="description"
                         name="description"
@@ -1493,7 +1489,7 @@ class VerticalLinearStepper extends Component {
                     />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">Skill Level</span>
+                    <span className="External-label">{labels.skillLevel[displayLanguage]}</span>
                     <InputRange
                         getPercentSkill={(percent) => {
                             // update the percent skill
@@ -1563,30 +1559,30 @@ class VerticalLinearStepper extends Component {
                 );
             }}
         >
-            <h4 className="ApplyBlock-title">Education</h4>
+            <h4 className="ApplyBlock-title">{labels.education[displayLanguage]}</h4>
             {this.state.schools.length > 0 ? (
                 <div key={uuidv4()} className="skills-container skills-container--header">
                     <div className="row">
                         <div className="col-md-2">
-                            <span>Field of Study</span>
+                            <span>{labels.fieldStudy[displayLanguage]}</span>
                         </div>
                         <div className="col-md-2">
-                            <span>Institution</span>
+                            <span>{labels.institution[displayLanguage]}</span>
                         </div>
                         <div className="col-md-2">
-                            <span>Address</span>
+                            <span>{labels.address[displayLanguage]}</span>
                         </div>
                         <div className="col-md-2">
-                            <span>Start Date</span>
+                            <span>{labels.startDate[displayLanguage]}</span>
                         </div>
                         <div className="col-md-1">
-                            <span>End Date</span>
+                            <span>{labels.endDate[displayLanguage]}</span>
                         </div>
                         <div className="col-md-1">
-                            <span>Graduated</span>
+                            <span>{labels.graduated[displayLanguage]}</span>
                         </div>
                         <div className="col-md-1">
-                            <span>Degree</span>
+                            <span>{labels.degree[displayLanguage]}</span>
                         </div>
                     </div>
                 </div>
@@ -1642,7 +1638,7 @@ class VerticalLinearStepper extends Component {
             ))}
             <div className="row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">* Field of Study</label>
+                    <label className="External-label">{labels.fieldStudy[displayLanguage]}</label>
                     <div className="input-container--validated">
                         <input
                             id="studyType"
@@ -1659,7 +1655,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">* Name (Institution)</label>
+                    <label className="External-label">* {labels.institution[displayLanguage]}</label>
                     <div className="input-container--validated">
                         <input
                             form="education-form"
@@ -1676,7 +1672,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">* Address</label>
+                    <label className="External-label">* {labels.address[displayLanguage]}</label>
                     <div className="input-container--validated">
                         <input
                             form="education-form"
@@ -1695,7 +1691,7 @@ class VerticalLinearStepper extends Component {
             </div>
             <div className="row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Time Period</span>
+                    <span className="External-label">* {labels.period[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <input
                             form="education-form"
@@ -1711,7 +1707,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* To</span>
+                    <span className="External-label">* {labels.to[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <input
                             form="education-form"
@@ -1727,7 +1723,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">Graduated</label> <br />
+                    <label className="External-label">{labels.graduated[displayLanguage]}</label> <br />
 
                     <div className="onoffswitch">
                         <input
@@ -1750,11 +1746,11 @@ class VerticalLinearStepper extends Component {
                     </div>               
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">Degree</label>
+                    <label className="External-label">{labels.degree[displayLanguage]}</label>
                     {this.state.graduated ? (
                         <div className="input-container--validated">
                             <select form="education-form" name="degree" id="degree" className="form-control External-input">
-                                <option value="">Select an option</option>
+                                <option value="">{labels.selectOption[displayLanguage]}</option>
                                 {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
                             </select>
                         </div>
@@ -1767,7 +1763,7 @@ class VerticalLinearStepper extends Component {
                                     disabled
                                     className="form-control External-input"
                                 >
-                                    <option value="">Select an option</option>
+                                    <option value="">{labels.selectOption[displayLanguage]}</option>
                                     {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
                                 </select>
                             </div>
@@ -1777,7 +1773,7 @@ class VerticalLinearStepper extends Component {
             <div className="row mb-4">
                 <div className="col-md-12">
                     <Button type="submit" form="education-form" className="External-formButton float-right">
-                        Add
+                        {labels.add[displayLanguage]}
                     </Button>
                 </div>
             </div>
@@ -1798,10 +1794,17 @@ class VerticalLinearStepper extends Component {
 
         return (
         <div className="ApplyBlock">
-            <h4 className="ApplyBlock-title">Military Service</h4>
+            <ReactFlagsSelect 
+                defaultCountry="US" 
+                onSelect={this.handleDisplayLanguageChange}
+                countries={["US", "ES"]}
+                customLabels={{"US":"English", "ES": "Español"}}
+                className="ApplyForm-language"
+            />
+            <h4 className="ApplyBlock-title">{labels.military[displayLanguage]}</h4>
             <div className="row External-row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label"> Branch</span>
+                    <span className="External-label"> {labels.branch[displayLanguage]}</span>
                     <input
                         onChange={(e) => {
                             this.setState({
@@ -1819,7 +1822,7 @@ class VerticalLinearStepper extends Component {
                     />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label"> Rank at Discharge</span>
+                    <span className="External-label"> {labels.dischargeRank[displayLanguage]}</span>
                     <input
                         onChange={(e) => {
                             this.setState({
@@ -1838,7 +1841,7 @@ class VerticalLinearStepper extends Component {
                 </div>
             
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label"> Dates</span>
+                    <span className="External-label"> {labels.dates[displayLanguage]}</span>
                     <input
                         onChange={(e) => {
                             this.setState({
@@ -1855,7 +1858,7 @@ class VerticalLinearStepper extends Component {
                     />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">To: </span>
+                    <span className="External-label">{labels.to[displayLanguage]}: </span>
                     <input
                         onChange={(e) => {
                             this.setState({
@@ -1874,7 +1877,7 @@ class VerticalLinearStepper extends Component {
             </div>
             <div className="row External-row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label"> Type of Discharge</span>
+                    <span className="External-label"> {labels.dischargeType[displayLanguage]}</span>
                     <select
                         onChange={(e) => {
                             this.setState({
@@ -1886,7 +1889,7 @@ class VerticalLinearStepper extends Component {
                         id="dischargeType"
                         className="form-control External-input"
                     >
-                        <option value="">Select an Option</option>
+                        <option value="">{labels.selectOption[displayLanguage]}</option>
                         <option value="1">Honorable discharge</option>
                         <option value="2">General discharge</option>
                         <option value="3">Other than honorable (OTH) discharge</option>
@@ -1954,34 +1957,34 @@ class VerticalLinearStepper extends Component {
                 );
             }}
         >
-            <h4 className="ApplyBlock-title">Previous Employment</h4>
+            <h4 className="ApplyBlock-title">{labels.prevEmployment[displayLanguage]}</h4>
             <div className="row">
                 {this.state.previousEmployment.length > 0 ? (
                     <div key={uuidv4()} className="skills-container skills-container--header">
                         <div className="row">
                             <div className="col-md-2">
-                                <span>Company</span>
+                                <span>{labels.company[displayLanguage]}</span>
                             </div>
                             <div className="col-md-2">
-                                <span>Address</span>
+                                <span>{labels.address[displayLanguage]}</span>
                             </div>
                             <div className="col-md-2">
-                                <span>Job Title</span>
+                                <span>{labels.jobTitle[displayLanguage]}</span>
                             </div>
                             <div className="col-md-1">
-                                <span>Phone</span>
+                                <span>{labels.phone[displayLanguage]}</span>
                             </div>
                             <div className="col-md-1">
-                                <span>Supervisor</span>
+                                <span>{labels.supervisor[displayLanguage]}</span>
                             </div>
                             <div className="col-md-1">
-                                <span>Pay Rate</span>
+                                <span>{labels.pay[displayLanguage]}</span>
                             </div>
                             <div className="col-md-1">
-                                <span>Start Date</span>
+                                <span>{labels.startDate[displayLanguage]}</span>
                             </div>
                             <div className="col-md-1">
-                                <span>End Date</span>
+                                <span>{labels.endDate[displayLanguage]}</span>
                             </div>
                         </div>
                     </div>
@@ -2035,7 +2038,7 @@ class VerticalLinearStepper extends Component {
             </div>
             <div className="row External-row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Company</span>
+                    <span className="External-label">* {labels.company[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <input
                             id="companyNameEmployment"
@@ -2052,7 +2055,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Phone</span>
+                    <span className="External-label">* {labels.phone[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <InputMask
                             id="companyPhoneEmployment"
@@ -2074,7 +2077,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Address</span>
+                    <span className="External-label">* {labels.address[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <input
                             id="companyAddressEmployment"
@@ -2091,7 +2094,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Supervisor</span>
+                    <span className="External-label">* {labels.supervisor[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <input
                             id="companySupervisor"
@@ -2110,7 +2113,7 @@ class VerticalLinearStepper extends Component {
             </div>
             <div className="row External-row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Job Title</span>
+                    <span className="External-label">* {labels.jobTitle[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <input
                             id="companyJobTitle"
@@ -2127,7 +2130,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Pay Rate</span>
+                    <span className="External-label">* {labels.pay[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <input
                             id="companyPayRate"
@@ -2144,7 +2147,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Dates</span>
+                    <span className="External-label">* {labels.dates[displayLanguage]}</span>
                     <div className="input-container--validated">
                         <input
                             id="companyStartDate"
@@ -2160,7 +2163,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* To: </span>
+                    <span className="External-label">* {labels.to[displayLanguage]}: </span>
                     <div className="input-container--validated">
                         <input
                             id="companyEndDate"
@@ -2178,20 +2181,20 @@ class VerticalLinearStepper extends Component {
             </div>
             <div className="row External-row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label"> Reason for leaving</span>
+                    <span className="External-label"> {labels.reasonLeaving[displayLanguage]}</span>
                     <textarea
                         id="companyReasonForLeaving"
                         form="form-previous-employment"
                         name="reasonForLeavingEmployment"
                         className="form-control External-input"
-                        placeholder='Add details...'
+                        placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                     />
                 </div>
             </div>
             <div className="row External-row">
                 <div className="col-md-12">
                     <Button type="submit" form="form-previous-employment" className="External-formButton float-right">
-                        Add
+                        {labels.add[displayLanguage]}
                     </Button>
                 </div>
             </div>            
@@ -2212,18 +2215,25 @@ class VerticalLinearStepper extends Component {
         
         return(
         <div className="ApplyBlock">
+            <ReactFlagsSelect 
+                defaultCountry="US" 
+                onSelect={this.handleDisplayLanguageChange}
+                countries={["US", "ES"]}
+                customLabels={{"US":"English", "ES": "Español"}}
+                className="ApplyForm-language"
+            />
             <h4 className="ApplyBlock-title">Languages</h4>
             {this.state.languages.length > 0 ? (
                 <div className="skills-container skills-container--header">
                     <div className="row pt-0 pb-0">
                         <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className='skills-label'>Language Name</span>
+                            <span className='skills-label'>{labels.languageName[displayLanguage]}</span>
                         </div>
                         <div className="col-md-4">
-                            <span className='skills-label'>Conversation</span>
+                            <span className='skills-label'>{labels.conversation[displayLanguage]}</span>
                         </div>
                         <div className="col-md-4">
-                            <span className='skills-label'>Writing</span>
+                            <span className='skills-label'>{labels.writing[displayLanguage]}</span>
                         </div>
                     </div>
                 </div>
@@ -2309,7 +2319,7 @@ class VerticalLinearStepper extends Component {
                 }}
             >
                 <div className="col-md-4">
-                    <span className="External-label">* Languages</span>
+                    <span className="External-label">* {labels.languages[displayLanguage]}</span>
                     <select
                         id="nameLanguage"
                         name="languageName"
@@ -2317,14 +2327,14 @@ class VerticalLinearStepper extends Component {
                         className="form-control External-input"
                         form="form-language"
                     >
-                        <option value="">Select an option</option>
+                        <option value="">{labels.selectOption[displayLanguage]}</option>
                         {this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
                     </select>
                   
                     <span className="check-icon" />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Conversation</span>
+                    <span className="External-label">* {labels.conversation[displayLanguage]}</span>
                     <select
                         required
                         id="conversationLanguage"
@@ -2332,13 +2342,13 @@ class VerticalLinearStepper extends Component {
                         name="conversationLanguage"
                         className="form-control External-input"
                     >
-                        <option value="">Select an option</option>
+                        <option value="">{labels.selectOption[displayLanguage]}</option>
                         {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                     </select>
                     <span className="check-icon" />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* Writing</span>
+                    <span className="External-label">* {labels.writing[displayLanguage]}</span>
                     <select
                         required
                         id="writingLanguage"
@@ -2346,7 +2356,7 @@ class VerticalLinearStepper extends Component {
                         name="writingLanguage"
                         className="form-control External-input"
                     >
-                        <option value="">Select an option</option>
+                        <option value="">{labels.selectOption[displayLanguage]}</option>
                         {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                     </select>
                     <span className="check-icon" />
@@ -2354,7 +2364,7 @@ class VerticalLinearStepper extends Component {
                 <div className="col-md-2">
                     <br />
                     <Button type="submit" form="form-language" className="External-formButton">
-                        Add
+                        {labels.add[displayLanguage]}
                     </Button>
                 </div>                
             </form>
@@ -2375,7 +2385,14 @@ class VerticalLinearStepper extends Component {
 
         return(
         <div className="ApplyBlock">
-            <h4 className="ApplyBlock-title">Skills</h4>
+            <ReactFlagsSelect 
+                defaultCountry="US" 
+                onSelect={this.handleDisplayLanguageChange}
+                countries={["US", "ES"]}
+                customLabels={{"US":"English", "ES": "Español"}}
+                className="ApplyForm-language"
+            />
+            <h4 className="ApplyBlock-title">{labels.skills[displayLanguage]}</h4>
             <div className="row External-row">
                 <div className="col-md-12">
                     {this.renderSkillsDialog()}
@@ -2388,10 +2405,10 @@ class VerticalLinearStepper extends Component {
                         <div className="skills-container skills-container--header">
                             <div className="row pb-0 pt-0">
                                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                                    <span class='External-label'>Skill Name</span>
+                                    <span class='External-label'>{labels.skillName[displayLanguage]}</span>
                                 </div>
                                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                                    <span class='External-label'>Skill Level</span>
+                                    <span class='External-label'>{labels.skillLevel[displayLanguage]}</span>
                                 </div>
                             </div>
                         </div>
@@ -2449,6 +2466,13 @@ class VerticalLinearStepper extends Component {
 
         return (
         <div className="ApplyBlock">
+            <ReactFlagsSelect 
+                defaultCountry="US" 
+                onSelect={this.handleDisplayLanguageChange}
+                countries={["US", "ES"]}
+                customLabels={{"US":"English", "ES": "Español"}}
+                className="ApplyForm-language"
+            />
             <h4 className="ApplyBlock-title">Disclaimer</h4>
             <div className="row External-row">
                 <div className="col-md-12 mb-4">
@@ -2645,7 +2669,7 @@ class VerticalLinearStepper extends Component {
                                                     });
 
                                                 }}
-                                            >                                                
+                                            >                                                                
                                                 {this.getStepContent(this.state.activeStep, history, steps)}
                                             </form>
                                         )}
