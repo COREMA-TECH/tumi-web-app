@@ -19,7 +19,7 @@ class PunchesReportConsolidatedFilter extends Component {
         startDate: "",
         endDate: "",
         employee: "",
-        property: {value: "", label: "Property (All)"},
+        property: { value: "", label: "Property (All)" },
         department: this.props.department
     }
 
@@ -67,13 +67,13 @@ class PunchesReportConsolidatedFilter extends Component {
     };
 
     clearFilters = () => {
-        this.setState( () => (
+        this.setState(() => (
             { ...this.DEFAULT_STATE }
         ),
-        
-        () => {
-            this.props.updateFilter(this.state)
-        })
+
+            () => {
+                this.props.updateFilter(this.state)
+            })
     }
 
     toggleRefresh = () => {
@@ -109,7 +109,7 @@ class PunchesReportConsolidatedFilter extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.property.value != nextProps.property.value) {
-            const propertyValue = nextProps.property ? nextProps.property : {value: "", label: "Property (All)"};
+            const propertyValue = nextProps.property ? nextProps.property : { value: "", label: "Property (All)" };
             this.setState(() => ({ property: propertyValue }));
         }
         if (this.props.department.value != nextProps.department.value)
@@ -126,7 +126,7 @@ class PunchesReportConsolidatedFilter extends Component {
                 })
                 .then(({ data }) => {
                     // TODO: show a loading icon in download button
-                    let url = this.context.baseUrl + data.punchesConsolidated;
+                    let url = this.context.baseUrl + data.markedEmployeesConsolidatedForCSV;
                     window.open(url, '_blank');
 
                     this.setState(() => ({
@@ -162,7 +162,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         <input name="employee" className="form-control" type="text" placeholder='Employee Search'
                             onChange={this.updateFilter} value={this.state.employee} />
                     </div>
-                </div>                
+                </div>
                 <div className="col-md-4 col-xl-2 mb-2">
                     <Select
                         name="property"
@@ -182,7 +182,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         components={makeAnimated()}
                         closeMenuOnSelect
                     />
-                </div>                
+                </div>
                 <div className="col-md-2 offset-md-4 col-xl-2 offset-xl-0 mb-2">
                     <div class="input-group flex-nowrap">
                         <DatePicker
@@ -235,10 +235,10 @@ class PunchesReportConsolidatedFilter extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-12 mb-2 Filter-buttons">   
+                <div className="col-md-12 mb-2 Filter-buttons">
                     <button class="btn btn-outline-secondary btn-not-rounded Filter-button" type="button" onClick={this.clearFilters}>
                         <i class="fas fa-filter"></i> Clear
-                    </button>                 
+                    </button>
                     <button className="btn btn-success Filter-button"
                         onClick={this.getReportCSV}>CSV {this.state.loadingReport && <i className="fas fa-spinner fa-spin ml2" />}
                         {!this.state.loadingReport && <i className="fas fa-download ml2" />}
