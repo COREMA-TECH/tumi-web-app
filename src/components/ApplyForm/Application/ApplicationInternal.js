@@ -407,30 +407,7 @@ class ApplicationInternal extends Component {
     }
 
     submitForm = () => {
-        if (!this.state.zipCode.trim().replace("-", ""))
-            this.props.handleOpenSnackbar(
-                'warning',
-                'ZipCode needed!',
-                'bottom',
-                'right'
-            );
-        else if (!this.state.city)
-            this.props.handleOpenSnackbar(
-                'warning',
-                'City needed!',
-                'bottom',
-                'right'
-            );
-        else if (!this.state.state)
-            this.props.handleOpenSnackbar(
-                'warning',
-                'State needed!',
-                'bottom',
-                'right'
-            );
-        else {
-            if (!this.state.birthDay || !this.state.gender || !this.state.marital || !this.state.typeOfId || !this.state.expireDateId )
-             {  
+        if (!this.state.birthDay || !this.state.gender || !this.state.marital || !this.state.typeOfId || !this.state.expireDateId ) {  
                 this.props.handleOpenSnackbar(
                     'warning',
                     'some fields are required',
@@ -438,7 +415,7 @@ class ApplicationInternal extends Component {
                     'right'
                 ); 
              }else{this.InsertUpdateApplicationInformation(this.props.applicationId);}
-        }
+        
     }
 
     handleSubmit = (e) => {
@@ -537,7 +514,7 @@ class ApplicationInternal extends Component {
                                                 >
                                                     <option value="">Select an option</option>
                                                     <option value="1">Male</option>
-                                                    <option value="2">Famale</option>
+                                                    <option value="2">Female</option>
                                                 </select>
                                             </div>
 

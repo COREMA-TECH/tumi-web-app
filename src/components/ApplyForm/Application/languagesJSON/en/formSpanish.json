@@ -13,7 +13,7 @@
   },
   {
     "id": 3,
-    "label": "Date"
+    "label": "Today Date"
   },
   {
     "id": 4,
@@ -137,6 +137,6 @@
 },
 {
   "id":34,
-  "label":"Material Status"
+  "label":"Marital Status"
 }
 ]

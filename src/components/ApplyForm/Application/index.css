@@ -182,7 +182,6 @@
 .general-info-apply-form input:disabled,
 .general-info-apply-form select:disabled,
 .general-info-apply-form textarea:disabled {
-    border: 1px solid transparent !important;
     border-bottom: 1px solid #efefef !important;
     color: #777777;
 
@@ -192,7 +191,6 @@
 .military-service-form input:disabled,
 .military-service-form select:disabled,
 .military-service-form textarea:disabled {
-    border: 1px solid transparent !important;
     border-bottom: 1px solid #efefef !important;
     color: #777777;
 

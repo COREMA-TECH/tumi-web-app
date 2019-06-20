@@ -89,6 +89,8 @@ class CustomizedTabs extends React.Component {
     };
 
     getApplicantStatus = () => {
+        if (!this.state.applicationId || this.state.applicationId === 0)
+            return;
         this.props.client
             .query({
                 query: GET_APPLICATION_STATUS,

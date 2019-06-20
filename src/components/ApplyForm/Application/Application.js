@@ -46,7 +46,7 @@ class Application extends Component {
             homePhone: '',
             cellPhone: '',
             socialSecurityNumber: '',
-            birthDay: Date.now(),
+            birthDay: '',
             car: false,
             typeOfId: '',
             expireDateId: null,
@@ -174,13 +174,13 @@ class Application extends Component {
                                 homePhone: this.state.homePhone,
                                 cellPhone: this.state.cellPhone,
                                 socialSecurityNumber: this.state.socialSecurityNumber,
-                                birthDay: Date.now(),
+                                birthDay: null,
                                 car: this.state.car,
                                 typeOfId: parseInt(this.state.typeOfId),
                                 expireDateId: this.state.expireDateId,
                                 emailAddress: this.state.emailAddress,
                                 positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                dateAvailable: this.state.immediately ? Date.now() : this.state.dateAvailable,
+                                dateAvailable: this.state.immediately || this.state.immediately === "" ? Date.now() : this.state.dateAvailable,
                                 scheduleRestrictions: this.state.scheduleRestrictions,
                                 scheduleExplain: this.state.scheduleExplain,
                                 convicted: this.state.convicted,
@@ -524,13 +524,12 @@ class Application extends Component {
             convictedExplain
         };
 
-        console.log(formData)
         Object.values(formData).map(value => {
             if (value) {
                 values.push(value);
             }
         })
-        console.log(values)
+   
         if (values.length == 0)
             this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
         else {
@@ -669,6 +668,9 @@ class Application extends Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
+        if (name === "immediately" && value == true) {
+            this.setState({ dateAvailable: new Date().toISOString().substring(0, 10) })
+        }
 
         this.setState({
             [name]: value
@@ -843,7 +845,7 @@ class Application extends Component {
                                                     onChange={this.handleInputChange}
                                                     value={this.state.aptNumber}
                                                     name="aptNumber"
-                                                    type="number"
+                                                    type="text"
                                                     className="form-control"
                                                     disabled={!this.state.editing}
                                                     min="0"
@@ -1027,7 +1029,7 @@ class Application extends Component {
                                                     minLength="3"
                                                 />
                                             </div>
-                                            <div className="col-md-12">
+                                            {/* <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[17].label}
                                                 </span>
@@ -1046,7 +1048,7 @@ class Application extends Component {
                                                             value={item.id} key={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
                                                     ))}
                                                 </select>
-                                            </div>
+                                            </div> */}
 
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
