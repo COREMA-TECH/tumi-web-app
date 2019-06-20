@@ -978,7 +978,7 @@ class VerticalLinearStepper extends Component {
                                 name="firstName"
                                 type="text"
                                 className="form-control External-input"
-                                required
+                                
                                 min="0"
                                 maxLength="50"
                                 minLength="3"
@@ -1009,7 +1009,7 @@ class VerticalLinearStepper extends Component {
                                 name="lastName"
                                 type="text"
                                 className="form-control External-input"
-                                required
+                                
                                 min="0"
                                 maxLength="50"
                                 minLength="3"
@@ -1045,7 +1045,7 @@ class VerticalLinearStepper extends Component {
                                 name="streetAddress"
                                 type="text"
                                 className="form-control External-input"
-                                required
+                                
                                 min="0"
                                 maxLength="50"
                                 minLength="5"
@@ -1124,7 +1124,7 @@ class VerticalLinearStepper extends Component {
                                 onChange={ this.handleStateChange }
                                 pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                 placeholder="+(___) ___-____"
-                                required
+                                
                                 minLength="15"
                             />
                         </div>
@@ -1143,7 +1143,7 @@ class VerticalLinearStepper extends Component {
                                 value={this.state.socialSecurityNumber}
                                 placeholder="___-__-____"
                                 pattern="^\d{3}-\d{2}-\d{4}$"
-                                required
+                                
                                 minLength="15"
                             />
                         </div>
@@ -1197,7 +1197,7 @@ class VerticalLinearStepper extends Component {
                                 name="expireDateId"
                                 type="date"
                                 className="form-control External-input"
-                                required
+                                
                                 min="0"
                                 maxLength="50"
                                 minLength="10"
@@ -1213,7 +1213,7 @@ class VerticalLinearStepper extends Component {
                                 name="emailAddress"
                                 type="email"
                                 className="form-control External-input"
-                                required
+                                
                                 min="0"
                                 maxLength="50"
                                 minLength="8"
@@ -1244,7 +1244,7 @@ class VerticalLinearStepper extends Component {
                                 name="dateAvailable"
                                 type="date"
                                 className="form-control External-input"
-                                required
+                                
                                 min="0"
                                 maxLength="50"
                             />
@@ -1316,7 +1316,7 @@ class VerticalLinearStepper extends Component {
                                     name="scheduleExplain"
                                     cols="30"
                                     rows="3"
-                                    required
+                                    
                                     className="form-control textarea-apply-form External-input"
                                     placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                                 />
@@ -1374,7 +1374,7 @@ class VerticalLinearStepper extends Component {
                                     value={this.state.convictedExplain}
                                     name="convictedExplain"
                                     cols="30"
-                                    required
+                                    
                                     rows="3"
                                     className="form-control textarea-apply-form External-input"
                                     placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
@@ -1401,7 +1401,7 @@ class VerticalLinearStepper extends Component {
                                 onChange={ this.handleStateChange }
                                 placeholder="Explain how did you hear about Tumi Staffing"
                                 value={this.state.comment}
-                                required
+                                
                                 name="comment"
                                 cols="20"
                                 rows="4"
@@ -1480,7 +1480,7 @@ class VerticalLinearStepper extends Component {
                         name="description"
                         type="text"
                         className="form-control External-input"
-                        required
+                        
                         min="0"
                         maxLength="20"
                         minLength="3"
@@ -1646,7 +1646,7 @@ class VerticalLinearStepper extends Component {
                             name="studyType"
                             type="text"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="2"
@@ -1663,7 +1663,7 @@ class VerticalLinearStepper extends Component {
                             id="institutionName"
                             type="text"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1680,7 +1680,7 @@ class VerticalLinearStepper extends Component {
                             id="addressInstitution"
                             type="text"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1699,7 +1699,7 @@ class VerticalLinearStepper extends Component {
                             id="startPeriod"
                             type="date"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1715,7 +1715,7 @@ class VerticalLinearStepper extends Component {
                             id="endPeriod"
                             type="date"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -2046,7 +2046,7 @@ class VerticalLinearStepper extends Component {
                             name="companyNameEmployment"
                             type="text"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -2070,7 +2070,7 @@ class VerticalLinearStepper extends Component {
                                     previousEmploymentPhone: event.target.value
                                 });
                             }}
-                            required
+                            
                             placeholder="+(___) ___-____"
                             minLength="15"
                         />                       
@@ -2085,7 +2085,7 @@ class VerticalLinearStepper extends Component {
                             name="addressEmployment"
                             type="text"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -2102,7 +2102,7 @@ class VerticalLinearStepper extends Component {
                             name="supervisorEmployment"
                             type="text"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -2121,7 +2121,7 @@ class VerticalLinearStepper extends Component {
                             name="jobTitleEmployment"
                             type="text"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -2138,7 +2138,7 @@ class VerticalLinearStepper extends Component {
                             name="payRateEmployment"
                             type="number"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -2155,7 +2155,7 @@ class VerticalLinearStepper extends Component {
                             name="startPreviousEmployment"
                             type="date"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -2171,7 +2171,7 @@ class VerticalLinearStepper extends Component {
                             name="endPreviousEmployment"
                             type="date"
                             className="form-control External-input"
-                            required
+                            
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -2323,7 +2323,7 @@ class VerticalLinearStepper extends Component {
                     <select
                         id="nameLanguage"
                         name="languageName"
-                        required
+                        
                         className="form-control External-input"
                         form="form-language"
                     >
@@ -2336,7 +2336,7 @@ class VerticalLinearStepper extends Component {
                 <div className="col-12 col-md-4 col-xl-3 External-col">
                     <span className="External-label">* {labels.conversation[displayLanguage]}</span>
                     <select
-                        required
+                        
                         id="conversationLanguage"
                         form="form-language"
                         name="conversationLanguage"
@@ -2350,7 +2350,7 @@ class VerticalLinearStepper extends Component {
                 <div className="col-12 col-md-4 col-xl-3 External-col">
                     <span className="External-label">* {labels.writing[displayLanguage]}</span>
                     <select
-                        required
+                        
                         id="writingLanguage"
                         form="form-language"
                         name="writingLanguage"
