@@ -438,7 +438,10 @@ class VerticalLinearStepper extends Component {
                                 isLead: true,
                                 idealJob: this.state.idealJob,
                                 optionHearTumi: this.state.socialNetwork                                
-                            }
+                            },
+                            codeUser: 0,
+                            nameUser: 'Public'
+
                         }
                     })
                     .then(({ data }) => {
@@ -540,7 +543,10 @@ class VerticalLinearStepper extends Component {
                                 idealJob: this.state.idealJob,
                                 optionHearTumi: this.state.socialNetwork
                             }
-                        }
+                        },
+                    
+                        codeUser: 0,
+                        nameUser: 'Public'
                     })
                     .then(({ data }) => {
                         this.props.handleOpenSnackbar(
@@ -1959,6 +1965,7 @@ class VerticalLinearStepper extends Component {
         >
             <h4 className="ApplyBlock-title">{labels.prevEmployment[displayLanguage]}</h4>
             <div className="row">
+                {console.log(this.state.previousEmployment.length)}
                 {this.state.previousEmployment.length > 0 ? (
                     <div key={uuidv4()} className="skills-container skills-container--header">
                         <div className="row">
