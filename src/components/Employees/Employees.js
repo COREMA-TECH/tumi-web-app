@@ -170,7 +170,8 @@ class Employees extends Component {
         loading: false,
         loadingConfirm: false,
         openModal: false,
-        showCircularLoading: false
+        showCircularLoading: false,
+        employees: []
     };
 
     /**
@@ -1077,7 +1078,8 @@ class Employees extends Component {
         this.setState({
             loading: true
         }, () => {
-            this.fetchAllDepartments()
+            this.fetchAllDepartments();
+            this.getEmployees();
         })
     }
 
@@ -1085,6 +1087,42 @@ class Employees extends Component {
         let _date = moment.utc(date).format();
         this.setState(prevState => {
             return { hireDateEdit: _date }
+        })
+    }
+
+    getEmployees = () => {
+        this.props.client.query({
+            query: LIST_EMPLOYEES
+        }).then(({data}) => {
+            this.setState(prevState => {
+                return {employees: data.employees}
+            })
+        });
+    }
+
+    handleSearch = (e) => {
+        let keyword = e.target.value;
+
+        if(keyword === "") this.getEmployees();
+
+        let result = this.state.employees.filter((item) => {
+            if (keyword === "") {
+                return true;
+            }
+
+            if (
+                item.firstName.indexOf(keyword) > -1 ||
+                item.firstName.toLocaleLowerCase().indexOf(keyword.toLowerCase()) > -1 ||
+                item.lastName.indexOf(keyword) > -1 ||
+                item.lastName.toLocaleLowerCase().indexOf(keyword.toLowerCase()) > -1
+                
+            ) {
+                return true;
+            }
+        });
+
+        this.setState(prevState => {
+            return { employees : result, filterText: keyword }
         })
     }
 
@@ -1105,11 +1143,12 @@ class Employees extends Component {
                             </span>
                         </div>
                         <input
-                            onChange={text => {
-                                this.setState({
-                                    filterText: text.target.value
-                                });
-                            }}
+                            // onChange={text => {
+                            //     this.setState({
+                            //         filterText: text.target.value
+                            //     });
+                            // }}
+                            onChange = {this.handleSearch}
                             value={this.state.filterText}
                             type="text"
                             placeholder="Search employees"
@@ -1570,93 +1609,45 @@ class Employees extends Component {
                 </Dialog>
                 {renderNewEmployeeDialog()}
                 {renderUserDialog()}
-                <Query query={LIST_EMPLOYEES}>
-                    {({ loading, error, data, refetch, networkStatus }) => {
-                        if (this.state.finishLoading) {
-                            refetch();
-                            this.setState(prevState => ({
-                                finishLoading: false
-                            }));
-                        }
 
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card">
+                            <div className="card-body tumi-forcedResponsiveTable">
+                                <EmployeesTable
+                                    data={this.state.employees}
+                                    delete={id => {
+                                        this.deleteEmployeeById(id);
+                                    }}
+                                    update={(id, row) => {
+                                        this.updateEmployeeById(id);
+                                        this.setState({
+                                            firstNameEdit: row.firstName,
+                                            lastNameEdit: row.lastName,
+                                            hireDateEdit: row.hireDate ? moment.utc(row.hireDate).format() : '',
+                                            numberEdit: row.mobileNumber,
+                                            departmentEdit: row.Id_Deparment,
+                                            contactTitleEdit: row.Contact_Title,
+                                            hotelEdit: row.idEntity
+                                        }, () => {
+                                            if (this.state.hotelEdit == null) {
+                                                this.fetchDepartments()
+                                            } else {
+                                                this.fetchDepartments(parseInt(this.state.hotelEdit))
+                                            }
+                                        });
 
-                        if (this.state.filterText === "") {
-                            if (loading) return <LinearProgress />;
-                        }
+                                    }}
+                                    handleClickOpenUserModal={this.handleClickOpenUserModal}
+                                    departments={this.state.allDepartments}
+                                    titles={this.state.allTitles}
+                                />                                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                                           
 
-                        if (error)
-                            return (
-                                <ErrorMessageComponent
-                                    title="Oops!"
-                                    message={"Error loading contracts"}
-                                    type="Error-danger"
-                                    icon="danger"
-                                />
-                            );
-                        if (data.employees != null && data.employees.length > 0) {
-                            // this.setState({ data: data.employees });
-                           
-                            let dataEmployees = data.employees.filter((_, i) => {
-                                if (this.state.filterText === "") {
-                                    return true;
-                                }
-                                if ((_.firstName + _.lastName)
-                                    .toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1) {
-                                    return true;
-                                }
-                            });
-
-                            return (
-                                <div className="">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <div className="card">
-                                                <div className="card-body tumi-forcedResponsiveTable">
-                                                    <EmployeesTable
-                                                        data={dataEmployees}
-                                                        delete={id => {
-                                                            this.deleteEmployeeById(id);
-                                                        }}
-                                                        update={(id, row) => {
-                                                            this.updateEmployeeById(id);
-                                                            this.setState({
-                                                                firstNameEdit: row.firstName,
-                                                                lastNameEdit: row.lastName,
-                                                                hireDateEdit: row.hireDate ? moment.utc(row.hireDate).format() : '',
-                                                                numberEdit: row.mobileNumber,
-                                                                departmentEdit: row.Id_Deparment,
-                                                                contactTitleEdit: row.Contact_Title,
-                                                                hotelEdit: row.idEntity
-                                                            }, () => {
-                                                                if (this.state.hotelEdit == null) {
-                                                                    this.fetchDepartments()
-                                                                } else {
-                                                                    this.fetchDepartments(parseInt(this.state.hotelEdit))
-                                                                }
-                                                            });
-
-                                                        }}
-                                                        handleClickOpenUserModal={this.handleClickOpenUserModal}
-                                                        departments={this.state.allDepartments}
-                                                        titles={this.state.allTitles}
-                                                    />                                                
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        }
-                        return (
-                            <NothingToDisplay
-                                title="Oops!"
-                                message={"There are no employees"}
-                                type="Error-success"
-                                icon="wow"
-                            />
-                        );
-                    }}
-                </Query>
             </div>
         );
     }
