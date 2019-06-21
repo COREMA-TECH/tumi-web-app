@@ -439,7 +439,7 @@ class VerticalLinearStepper extends Component {
                                 idealJob: this.state.idealJob,
                                 optionHearTumi: this.state.socialNetwork                                
                             },
-                            codeUser: 0,
+                            codeuser: 0,
                             nameUser: 'Public'
 
                         }
@@ -545,7 +545,7 @@ class VerticalLinearStepper extends Component {
                             }
                         },
                     
-                        codeUser: 0,
+                        codeuser: 0,
                         nameUser: 'Public'
                     })
                     .then(({ data }) => {
