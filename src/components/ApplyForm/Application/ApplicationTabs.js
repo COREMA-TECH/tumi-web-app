@@ -18,6 +18,7 @@ import { GET_APPLICATION_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
 import IndependentContract from "./IndependentContract";
 import ApplicationInternal from './ApplicationInternal';
+import Summary from './Summary/Summary';
 
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -172,6 +173,8 @@ class CustomizedTabs extends React.Component {
                 case 10: 
                     return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />
                 case 11:
+                    return <Summary applicationId={this.state.applicationId} />
+                case 12:
                     return <IndependentContract applicationId={this.state.applicationId} />;
 
             }
@@ -240,6 +243,11 @@ class CustomizedTabs extends React.Component {
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[10].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            label={applyTabs[11].label}
                         />
                         {
                             this.state.independentContract ? (

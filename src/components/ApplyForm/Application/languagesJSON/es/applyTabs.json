@@ -38,5 +38,13 @@
   {
     "id": 9,
     "label": "W4"
+  },
+  {
+    "id": 10,
+    "label": "Uso Interno"
+  },
+  {
+    "id": 11,
+    "label": "Resumen"
   }
 ]

@@ -42,5 +42,9 @@
   {
     "id": 10,
     "label": "Internal Use"
+  },
+  {
+    "id": 11,
+    "label": "Summary"
   }
 ]
