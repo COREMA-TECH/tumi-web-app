@@ -1294,7 +1294,6 @@ class VerticalLinearStepper extends Component {
                             />
                             <label className="radio-label External-label"> No</label>
                         </div>
-                        <span className="check-icon" />
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.explain[displayLanguage]} </span>
@@ -2330,8 +2329,6 @@ class VerticalLinearStepper extends Component {
                         <option value="">{labels.selectOption[displayLanguage]}</option>
                         {this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
                     </select>
-                  
-                    <span className="check-icon" />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
                     <span className="External-label">* {labels.conversation[displayLanguage]}</span>
@@ -2345,7 +2342,6 @@ class VerticalLinearStepper extends Component {
                         <option value="">{labels.selectOption[displayLanguage]}</option>
                         {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                     </select>
-                    <span className="check-icon" />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
                     <span className="External-label">* {labels.writing[displayLanguage]}</span>
@@ -2359,7 +2355,6 @@ class VerticalLinearStepper extends Component {
                         <option value="">{labels.selectOption[displayLanguage]}</option>
                         {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                     </select>
-                    <span className="check-icon" />
                 </div>
                 <div className="col-md-2">
                     <br />
