@@ -26,7 +26,25 @@ class Summary extends Component {
             applicantName: '',
             ApplicationId: this.props.applicationId,
             openSignature: false,
-            completed: false
+            completed: false,
+
+            applicantName: ' '
+            ,socialSecurityNumber: ' '
+            ,cellphone: ' '
+            ,birthDay :' '
+            ,streetAddress: ' '
+            ,zipCode: ' '
+            ,hireDate: ' '
+            ,gender: ' '
+            ,bankName:  ' '
+            ,routing:  ' '
+            ,account: ' '
+            ,car:' ' 
+            ,hotel: ' '
+            ,recruiter: ' '
+            ,area: ' '
+            ,typeOfId: ' '
+            ,expireDateId:' '
         }
     }
 
@@ -109,7 +127,7 @@ class Summary extends Component {
             })
             .then(({ data }) => {
                 if (data.applications[0] !== null) {
-                   console.log("data.applications[0] ", data.applications[0])
+                 
                     this.setState({
                         applicantName: data.applications[0].firstName +' '+data.applications[0].middleName+' '+ data.applications[0].lastName
                       ,socialSecurityNumber:data.applications[0].socialSecurityNumber ?data.applications[0].socialSecurityNumber:'--'
@@ -128,8 +146,6 @@ class Summary extends Component {
                         ,area:data.applications[0].area ? data.applications[0].area : '--'
                         ,typeOfId:data.applications[0].typeOfId ? (data.applications[0].typeOfId==1?'Birth certificate':(data.applications[0].typeOfId==2?'Social Security card':'State-issued drivers license')): '--'
                         ,expireDateId:data.applications[0].expireDateId ? data.applications[0].expireDateId.substring(0, 10): '--'
-                       /* 
-                        */
                     });
                 }
             })
@@ -161,11 +177,8 @@ class Summary extends Component {
             })
             .then((data) => {
                 if (data.data.createdocumentspdf != null) {
-                    console.log("Ya estoy creando y estoy aqui con data ", data);
-
+                  
                     this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
-
-                    console.log(this.state.urlPDF);
 
                 } else {
                     this.props.handleOpenSnackbar(
