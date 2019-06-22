@@ -79,7 +79,7 @@ class DirectDeposit extends Component{
             fetchPolicy: 'no-cache'
         })
         .then(({data}) => {
-            this.setState({ applicationAccounts: data.applicationAccounts }, _ => console.log(data.applicationAccounts));
+            this.setState({ applicationAccounts: data.applicationAccounts });
         })
         .catch(error => console.log(error));
     }

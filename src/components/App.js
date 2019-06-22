@@ -14,7 +14,6 @@ import { connection } from './connection.js';
 import ReactGA from 'react-ga';
 
 export const initGA = () => {
-	console.log('GA init')
 	ReactGA.initialize('UA-141051584-1');
 }
 
@@ -116,7 +115,6 @@ class App extends Component {
 	handleScroll = (event) => {
 		const node = ReactDOM.findDOMNode(this);
 		let scroll = node.querySelector('.buttonsGroup');
-		//console.log(window.scrollY);
 		if (!scroll) return false;
 		if (scroll.scrollHeight <= window.scrollY) scroll.classList.add('buttonsGroup-fixed');
 		else scroll.classList.remove('buttonsGroup-fixed');

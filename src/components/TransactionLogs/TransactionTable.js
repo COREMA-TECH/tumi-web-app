@@ -179,12 +179,9 @@ class TransactionTable extends React.Component {
             });
     };
     componentWillReceiveProps(nextProps) {
-        console.log("Entro al componentWillReceiveProps del table")
-
         this.getTransactions();
     }
     componentWillMount() {
-        console.log("Entro al componentWillMount del table")
         this.getTransactions();
     }
 

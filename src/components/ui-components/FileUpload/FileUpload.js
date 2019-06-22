@@ -90,7 +90,6 @@ class FileUpload extends Component {
 	}
 
 	render() {
-		//console.log("This props", !this.props.url)
 		return (
 			<div className="">
 				<div className="">

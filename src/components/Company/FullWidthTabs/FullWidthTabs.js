@@ -199,7 +199,6 @@ class CustomizedTabs extends React.Component {
 }
 
 printDialogConfirmCompany = () => {
-	//	console.log("estoy en el dialog ", this.state.showConfirm)
 	   
 			return <Dialog maxWidth="xl" open={this.state.showConfirmCompany} >
 				<DialogContent>
@@ -218,7 +217,6 @@ printDialogConfirmCompany = () => {
 	}
 
 	printDialogConfirmCompanyOrProperty = () => {
-		//	console.log("estoy en el dialog ", this.state.showConfirm)
 		   
 				return <Dialog maxWidth="xl" open={this.state.showConfirmCompanyOrProperty} >
 					<DialogContent>

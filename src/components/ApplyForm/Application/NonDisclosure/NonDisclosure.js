@@ -150,12 +150,7 @@ class NonDisclosure extends Component {
             })
             .then((data) => {
                 if (data.data.createdocumentspdf != null) {
-                    console.log("Ya estoy creando y estoy aqui con data ", data);
-
                     this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
-
-                    console.log(this.state.urlPDF);
-
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',

@@ -49,17 +49,11 @@ class Toolbar extends Component {
 		let initialValue = localStorage.getItem('languageForm');
 
 		if (this.state.languageIcon == 'en') {
-			console.log("IF | Languages is --> ", localStorage.getItem('languageForm'));
 			await localStorage.setItem('languageForm', 'es');
-            console.log("New value is --> ", localStorage.getItem('languageForm'));
         }
 
         if (this.state.languageIcon == 'es') {
-            console.log("ELSE | Languages is --> ", localStorage.getItem('languageForm', () => {
-
-			}));
 			await localStorage.setItem('languageForm', 'en');
-            console.log("New value is --> ", localStorage.getItem('languageForm'));
         }
 
 		window.location.reload();
@@ -69,8 +63,6 @@ class Toolbar extends Component {
 		//this.getRolesFormsInfo();
 		this.setState({
 			languageIcon: localStorage.getItem('languageForm')
-		}, () => {
-			console.log("Language --> ", localStorage.getItem('languageForm'));
 		});
 
 		this.getRolesFormsInfo();

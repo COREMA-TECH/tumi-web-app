@@ -109,7 +109,6 @@ class Summary extends Component {
             })
             .then(({ data }) => {
                 if (data.applications[0] !== null) {
-                   console.log("data.applications[0] ", data.applications[0].Account.bankName)
                     this.setState({
                         applicantName: data.applications[0].firstName +' '+data.applications[0].middleName+' '+ data.applications[0].lastName
                         ,socialSecurityNumber:data.applications[0].socialSecurityNumber==null?'--':data.applications[0].socialSecurityNumber
@@ -159,12 +158,7 @@ class Summary extends Component {
             })
             .then((data) => {
                 if (data.data.createdocumentspdf != null) {
-                    console.log("Ya estoy creando y estoy aqui con data ", data);
-
                     this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
-
-                    console.log(this.state.urlPDF);
-
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',

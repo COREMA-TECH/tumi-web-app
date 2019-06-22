@@ -633,8 +633,6 @@ class BackgroundCheck extends Component {
                                                                     })
                                                                 }
                                                             });
-
-                                                            console.log(e.target.checked);
                                                         }}
                                                         value={this.state.vehicleReportRequired}
                                                         checked={this.state.vehicleReportRequired}
@@ -777,8 +775,6 @@ class BackgroundCheck extends Component {
                                                         onChange={(e) => {
                                                             this.setState({
                                                                 commercialDriverLicense: e.target.checked
-                                                            }, () => {
-                                                                console.log("commercialDriverLicense: " + this.state.commercialDriverLicense);
                                                             })
                                                         }}
                                                         value={this.state.commercialDriverLicense}
@@ -1074,9 +1070,7 @@ class BackgroundCheck extends Component {
                                                                         <span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>WILL A MOTOR VEHICLE REPORT BE REQUIRED?: </strong>
                                                                         </span>
                                                                     </span>
-                                                                    {
-                                                                        console.log("The value is: ", this.state.vehicleReportRequired)
-                                                                    }
+                                                                    
                                                                     {
                                                                         this.state.vehicleReportRequired ? (
                                                                             <span style={{

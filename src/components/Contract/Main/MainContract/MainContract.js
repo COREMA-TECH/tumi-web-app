@@ -200,7 +200,6 @@ class MainContract extends Component {
 	}
 
 	printDialogConfirmCompany = () => {
-		//	console.log("estoy en el dialog ", this.state.showConfirm)
 		   
 				return <Dialog maxWidth="xl" open={this.state.showConfirmCompany} >
 					<DialogContent>
@@ -221,7 +220,6 @@ class MainContract extends Component {
 		}
 
 		printDialogConfirmCompanyOrProperty = () => {
-			//	console.log("estoy en el dialog ", this.state.showConfirm)
 			   
 					return <Dialog maxWidth="xl" open={this.state.showConfirmCompanyOrProperty} >
 						<DialogContent>

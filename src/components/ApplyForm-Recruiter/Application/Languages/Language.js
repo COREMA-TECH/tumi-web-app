@@ -91,7 +91,6 @@ class Language extends Component {
 			this.setState(
 				(prevState) => ({
 					newLanguages: this.state.languages.filter((_, i) => {
-						console.log(_.id);
 						return _.id === undefined;
 					})
 				}),

@@ -75,7 +75,6 @@ class BreakRulesModal extends Component {
             const convertedLength = Number.isInteger(lenght) ? lenght : (lenght * 60) /* Converted to minutes */
 
             this.setState(_ => {
-                console.log(breakRuleDetail.breakStartTime);
                 return {
                     ruleId: id,
                     ruleName: name,

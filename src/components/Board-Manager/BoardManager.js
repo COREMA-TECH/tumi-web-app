@@ -598,19 +598,6 @@ class BoardManager extends Component {
                                                 response: 1
                                             });
 
-                                            /* this.props.client.query({
-                                                 query: GET_RESPONSE_QUERY,
-                                                 variables: {
-                                                     number: wo.cellPhone, 
-                                                     ShiftId: this.state.ShiftId
-                                                 },
-                                                 fetchPolicy: 'no-cache'
-                                             }).then(({ data }) => {
-                                                 data.smsLog.forEach((responseSMS) => {
-                                                     console.log("responseSMS ", responseSMS)
-                                                 })
-                                             })*/
-
                                             break;
                                         case 30463, 30465:
                                             getaccepted.push({

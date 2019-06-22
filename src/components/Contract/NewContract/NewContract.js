@@ -1701,7 +1701,6 @@ class NewContract extends Component {
                                                                                 this.setState({
                                                                                     Contract_Term: event.target.value
                                                                                 }, () => {
-                                                                                    console.log("this.state.Contract_Start_Date ", this.state.Contract_Start_Date)
                                                                                     if (this.state.Contract_Start_Date != '') {
                                                                                         let contractTerm = document.getElementById('contract-terms-month');
                                                                                         let contractTermText = contractTerm.options[contractTerm.selectedIndex].text;
