@@ -211,7 +211,6 @@ printDialogConfirmCompany = () => {
 	}
 
 	printDialogConfirmCompanyOrProperty = () => {
-		//	console.log("estoy en el dialog ", this.state.showConfirm)
 		   
 				return <Dialog maxWidth="xl" open={this.state.showConfirmCompanyOrProperty} >
 					<DialogContent>

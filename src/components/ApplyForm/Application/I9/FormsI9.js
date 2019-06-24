@@ -137,10 +137,7 @@ class FormsI9 extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.createdocumentspdf != null) {
-                    console.log("Ya estoy creando y estoy aqui con data ", data);
-
-                } else {
+                if (data.data.createdocumentspdf === null) {
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'

@@ -150,7 +150,6 @@ class RegionForm extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                console.log("getrecruiterbyregion ", data)
                 let dataAPI = data.user;
 
                 dataAPI.map(item => {
@@ -232,7 +231,6 @@ class RegionForm extends Component {
                 },
             })
             .then(({ data }) => {
-                console.log("getRecruiter ", data)
                 this.setState({
                     recruiters: data.user
                 });
@@ -250,7 +248,6 @@ class RegionForm extends Component {
             .then(({ data }) => {
                 if (data.configregions != null &&
                     data.configregions.length > 0) {
-                    console.log("ata.configregions", data.configregions)
                     this.setState({
                         ConfigRegions: data.configregions,
                         IdRegionalManager: data.configregions[0].regionalManagerId,
@@ -532,9 +529,6 @@ class RegionForm extends Component {
                             Region: idRegion
                         }
                     })
-                    .then((data) => {
-                        console.log(data)
-                    })
                     .catch((error) => {
                         console.log(error)
                     });
@@ -555,9 +549,6 @@ class RegionForm extends Component {
                             IdRegion: idRegion
                         }
                     })
-                    .then((data) => {
-                        console.log(data)
-                    })
                     .catch((error) => {
                         console.log(error)
                     });
@@ -573,13 +564,11 @@ class RegionForm extends Component {
     };
 
     handleChangeDirectorTag = (directorTags) => {
-        console.log("handleChangeManagerTag ", directorTags.value)
         this.setState({ directorTags });
         this.setState({ IdRegionalDirector: directorTags.value });
     };
 
     handleChangeManagerTag = (managerTags) => {
-        console.log("handleChangeManagerTag ", managerTags.value)
         this.setState({ managerTags });
         this.setState({ IdRegionalManager: managerTags.value });
     };

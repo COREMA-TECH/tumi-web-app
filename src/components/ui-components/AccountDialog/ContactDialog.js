@@ -96,9 +96,6 @@ class SimpleDialog extends React.Component {
                     }
                 }
             })
-            .then((data) => {
-                console.log('Server data contact created' + data);
-            })
             .catch((err) => console.log('The error is: ' + err));
     };
 

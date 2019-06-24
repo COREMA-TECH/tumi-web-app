@@ -294,7 +294,6 @@ class CardTemplate extends Component {
     }
 
     render() {
-      //console.log("desde el render ",this.props.name ,this.props.id, this.props.response )
         return <div>
             <header
                 style={{

@@ -285,8 +285,6 @@ class PayRoll extends React.Component {
                                                         disabled={this.state.edit}
                                                         value={this.state.weekStart}
                                                         onChange={(e) => {
-                                                            console.log(e.target.value);
-
                                                             this.setState({
                                                                 weekStart: e.target.value
                                                             })
@@ -309,8 +307,6 @@ class PayRoll extends React.Component {
                                                         disabled={this.state.edit}
                                                         value={this.state.payPeriod}
                                                         onChange={(e) => {
-                                                            console.log(e.target.value);
-
                                                             this.setState({
                                                                 payPeriod: e.target.value
                                                             })
@@ -333,9 +329,6 @@ class PayRoll extends React.Component {
                                                         disabled={this.state.edit}
                                                         value={this.state.lastPayPeriod}
                                                         onChange={(e) => {
-                                                            console.log(e.target.value);
-                                                            console.table(this.state.PAYROLL_STATE);
-
                                                             this.setState({
                                                                 lastPayPeriod: e.target.value
                                                             })

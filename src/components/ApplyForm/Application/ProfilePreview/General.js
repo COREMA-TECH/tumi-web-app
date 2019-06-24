@@ -474,11 +474,9 @@ class General extends Component {
                         }
                     })
                     .then(({ data }) => {
-                        console.log("informaicon de la application ", data)
                         this.setState({
                             data: data.applications[0]
                         }, () => {
-                            console.log("data: data.applications[0] ",  this.state.data)
                             this.setState({
                                 email: this.state.data ? this.state.data.emailAddress : '',
                                 number: this.state.data.cellPhone,

@@ -91,7 +91,6 @@ class Language extends Component {
 			this.setState(
 				(prevState) => ({
 					newLanguages: this.state.languages.filter((_, i) => {
-						console.log(_.id);
 						return _.id === undefined;
 					})
 				}),
@@ -208,7 +207,7 @@ class Language extends Component {
 								form="form-language"
 							>
 								<option value="">{spanishActions[5].label}</option>
-								{this.state.languagesLoaded.map((item) => <option value={item.Id} disabled={item.Id == 199 ? "disabled" : ""}>{item.Name}</option>)}
+								{this.state.languagesLoaded.map((item) => <option key={item.Id} value={item.Id} disabled={item.Id == 199 ? "disabled" : ""}>{item.Name}</option>)}
 							</select>
 							<span className="check-icon" />
 						</div>
@@ -222,7 +221,7 @@ class Language extends Component {
 								className="form-control"
 							>
 								<option value="">{spanishActions[5].label}</option>
-								{languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
+								{languageLevelsJSON.map((item, i) => <option key={i} value={item.Id}>{item.Name}</option>)}
 							</select>
 							<span className="check-icon" />
 						</div>
@@ -236,7 +235,7 @@ class Language extends Component {
 								className="form-control"
 							>
 								<option value="">{spanishActions[5].label}</option>
-								{languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
+								{languageLevelsJSON.map((item, i) => <option key={i} value={item.Id}>{item.Name}</option>)}
 							</select>
 							<span className="check-icon" />
 						</div>

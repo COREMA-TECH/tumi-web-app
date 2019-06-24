@@ -102,13 +102,10 @@ class WorkOrdersPositionTable extends Component {
 			}
 		}
 
-		//  if (this.state.endDate != "" || this.state.status != "" || this.state.state != 0 ) {
 		variables = {
 			workOrder,
 			workOrderCompany
 		}
-		//}
-		console.log(variables, this.state.id)
 		return variables;
 	}
 

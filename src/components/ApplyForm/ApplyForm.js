@@ -1056,7 +1056,7 @@ class ApplyForm extends Component {
                         degree: parseInt(document.getElementById('degree').value),
                         ApplicationId: 1 // Static application id
                     };
-                    console.log(item);
+                    
                     this.setState(
                         (prevState) => ({
                             open: false,
@@ -1715,7 +1715,6 @@ class ApplyForm extends Component {
                                     onClick={() => {
                                         this.setState((prevState) => ({
                                             languages: this.state.languages.filter((_, i) => {
-                                                console.log(this.state.languages);
                                                 return _.uuid !== languageItem.uuid;
                                             })
                                         }));
@@ -1864,7 +1863,6 @@ class ApplyForm extends Component {
                                             onClick={() => {
                                                 this.setState((prevState) => ({
                                                     skills: this.state.skills.filter((_, i) => {
-                                                        console.log(this.state.skills);
                                                         return _.uuid !== skillItem.uuid;
                                                     })
                                                 }));

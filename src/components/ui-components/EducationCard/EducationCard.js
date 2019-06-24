@@ -54,8 +54,6 @@ class EducationCard extends Component {
             </Dialog>
         );
 
-        console.log(this.props.degree);
-
         return (
             <div className="education-card">
                 <span

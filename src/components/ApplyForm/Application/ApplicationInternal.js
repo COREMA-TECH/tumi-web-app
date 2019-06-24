@@ -277,7 +277,6 @@ class ApplicationInternal extends Component {
                     })
                     .then(({ data }) => {
                         let applicantData = data.applications[0];
-                         console.log(applicantData)
                         this.setState(
                             {
                                 firstName: applicantData.firstName,

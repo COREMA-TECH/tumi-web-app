@@ -79,7 +79,6 @@ class ConductCode extends Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then(({ data }) => {
-				console.log('esta es la data ', data);
 				if (data.applications[0].conductCode !== null) {
 					this.setState({
 						id: data.applications[0].conductCode.id,
@@ -152,11 +151,7 @@ class ConductCode extends Component {
 			})
 			.then((data) => {
 				if (data.data.createdocumentspdf != null) {
-					console.log('Ya estoy creando y estoy aqui con data ', data);
-
 					this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename;
-
-					console.log(this.state.urlPDF);
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',

@@ -166,7 +166,6 @@ class TimeCardTable extends React.Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                console.log("Informacion de las regiones ", data)
                 this.setState({
                     regions: data.getcatalogitem
 
@@ -175,12 +174,9 @@ class TimeCardTable extends React.Component {
             .catch();
     };
     componentWillReceiveProps(nextProps) {
-        console.log("Entro al componentWillReceiveProps del table")
-
         this.getRegions();
     }
     componentWillMount() {
-        console.log("Entro al componentWillMount del table")
         this.getRegions();
     }
 
