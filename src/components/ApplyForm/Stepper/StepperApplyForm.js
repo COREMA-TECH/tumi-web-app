@@ -920,7 +920,7 @@ class VerticalLinearStepper extends Component {
                     socialNetwork: app.optionHearTumi,
                     comment: app.comment,
                 }
-            }, _ => console.log(this.state))
+            })
         })
         .catch(error => console.log(error));
     }
@@ -1526,9 +1526,7 @@ class VerticalLinearStepper extends Component {
                         ApplicationId: 1 // Static application id
                     };
                     this.setState(
-                        (prevState) => {
-                            console.log('Previous schools');
-                            console.log(prevState.schools);
+                        (prevState) => {                            
                             return {
                                 open: false,
                                 schools: [...prevState.schools, item]
@@ -1582,9 +1580,7 @@ class VerticalLinearStepper extends Component {
                 ) : (
                         ''
                     )}
-
-                {console.log('Schools:')}
-                {console.log(this.state.schools)}
+                
                 {this.state.schools.map((schoolItem) => (
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
@@ -1770,15 +1766,15 @@ class VerticalLinearStepper extends Component {
                         </Button>
                     </div>
                 </div>
+                <div className="External-formButtons">
+                    <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
+                        {labels.back[displayLanguage]}
+                    </Button>
+                    <Button onClick={this.insertEducationApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
+                        {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
+                    </Button>             
+                </div> 
             </form>
-            <div className="External-formButtons">
-                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
-                    {labels.back[displayLanguage]}
-                </Button>
-                <Button onClick={this.insertEducationApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
-                    {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
-                </Button>             
-            </div> 
         </Fragment> 
     )};
 
@@ -1954,7 +1950,6 @@ class VerticalLinearStepper extends Component {
             >
                 <h4 className="ApplyBlock-title">{labels.prevEmployment[displayLanguage]}</h4>
                 <div className="row">
-                    {console.log(this.state.previousEmployment.length)}
                     {this.state.previousEmployment.length > 0 ? (
                         <div key={uuidv4()} className="skills-container skills-container--header">
                             <div className="row">
@@ -2194,15 +2189,15 @@ class VerticalLinearStepper extends Component {
                         </Button>
                     </div>
                 </div>            
+                <div className="External-formButtons">
+                    <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
+                        {labels.back[displayLanguage]}
+                    </Button>
+                    <Button onClick={this.insertPreviousEmploymentApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
+                        {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
+                    </Button>             
+                </div>
             </form>
-            <div className="External-formButtons">
-                <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
-                    {labels.back[displayLanguage]}
-                </Button>
-                <Button onClick={this.insertPreviousEmploymentApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
-                    {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
-                </Button>             
-            </div>
         </Fragment>
     )};
 
@@ -2446,7 +2441,7 @@ class VerticalLinearStepper extends Component {
                 <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
                     {labels.back[displayLanguage]}
                 </Button>
-                <Button type="submit" onClick={this.insertSkillsApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
+                <Button onClick={this.insertSkillsApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
                     {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
                 </Button>             
             </div>
