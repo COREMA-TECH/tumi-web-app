@@ -234,7 +234,7 @@ class VerticalLinearStepper extends Component {
             { value: 4, label:'Newspaper' },
             { value: 5, label:'Journals' },
             { value: 6, label:'Other' },
-        ]
+        ],
     }
 
     constructor(props) {
@@ -2613,15 +2613,14 @@ class VerticalLinearStepper extends Component {
                                         })}
                                     </Stepper>
                                 </div>
-                                {activeStep === steps.length && (
+                                {/* {activeStep === steps.length && (
                                     <Paper square elevation={0} className={classes.resetContainer}>
                                         <Typography>All steps completed - you&quot;re finished</Typography>
                                         <Button onClick={this.handleReset} className={classes.button}>
                                             Reset
                                         </Button>
                                     </Paper>
-                                )}
-
+                                )} */}
                             </div>
                             <div className="col-12 col-md-8 Application-col">
                                 <Typography className="">
@@ -2647,6 +2646,8 @@ class VerticalLinearStepper extends Component {
                                                             this.props.handleOpenSnackbar('warning', 'ZipCode needed');
                                                         else {
                                                             // Call mutation to create a application
+                                                            // const {firstName, middleName, lastName, lastName2, streetAddress, aptNumber, homePhone, cellPhone, socialSecurityNumber, car, idTypeOptions, typeOfId, emailAddress, positionApplyingFor, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain, socialNetwork} = this.state;
+
                                                             if (this.state.applicationId === null) {
                                                                 this.insertApplicationInformation(history);
                                                             } else {
