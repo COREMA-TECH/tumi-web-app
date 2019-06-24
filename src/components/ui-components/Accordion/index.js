@@ -33,7 +33,11 @@ class Accordion extends Component{
                         <Typography>{title}</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className="panel-dropdown-body">
-                        { children }
+                        <div className="row">
+                            <div className="col-12">
+                                { children }
+                            </div>
+                        </div>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Fragment>
