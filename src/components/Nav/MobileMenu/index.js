@@ -84,9 +84,9 @@ class MobileMenu extends Component {
                         </a>
                     </li>
 
-                    {items.map(item => {
+                    {items.map((item, i) => {
                         return item.Forms.Value == "/home/company" ?
-                            <li className="MainMenu-option">
+                            <li key={i} className="MainMenu-option">
                                 <Link to={`/home/Company`} className="MenuMobile-link"
                                     onClick={this.props.handleCloseMenu}>
                                     <i className={'fas fa-warehouse MenuMobile-icon'} title={'Companies'} />
@@ -95,9 +95,9 @@ class MobileMenu extends Component {
                             </li> : ''
                     })}
 
-                    {items.map(item => {
+                    {items.map((item, i) => {
                         return item.Forms.Value == "/home/Properties" ?
-                            <li className="MainMenu-option">
+                            <li key={i} className="MainMenu-option">
                                 <Link to={`/home/Properties`} className="MenuMobile-link"
                                     onClick={this.props.handleCloseMenu}>
                                     <i className={'fas fa-building MenuMobile-icon'} title={'Properties'} />
@@ -105,9 +105,9 @@ class MobileMenu extends Component {
                                 </Link>
                             </li> : ""
                     })}
-                    {items.map(item => {
+                    {items.map((item, i) => {
                         return item.Forms.Value == "/home/Contracts" ?
-                            <li className="MainMenu-option">
+                            <li key={i} className="MainMenu-option">
                                 <Link to={`/home/Contracts`} className="MenuMobile-link"
                                     onClick={this.props.handleCloseMenu}>
                                     <i className={'far fa-handshake MenuMobile-icon'} title={'Contracts'} />
@@ -115,9 +115,9 @@ class MobileMenu extends Component {
                                 </Link>
                             </li> : ""
                     })}
-                    {items.map(item => {
+                    {items.map((item, i) => {
                         return item.Forms.Value == "Employee" ?
-                            <li className="MainMenu-option">
+                            <li key={i} className="MainMenu-option">
                                 <Link
                                     to={`/home/application`}
                                     className="MenuMobile-link"
@@ -128,17 +128,17 @@ class MobileMenu extends Component {
                                     <span>Employees</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/employees" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/employees">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Quick Add
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/application" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/application">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Employee Package
                                                 </a>
@@ -147,9 +147,9 @@ class MobileMenu extends Component {
                                 </ul>
                             </li> : ""
                     })}
-                    {items.map(item => {
+                    {items.map((item, i) => {
                         return item.Forms.Value == "Operations" ?
-                            <li className="MainMenu-option">
+                            <li key={i} className="MainMenu-option">
                                 <Link
                                     to={`/home/application`}
                                     className="MenuMobile-link"
@@ -160,41 +160,41 @@ class MobileMenu extends Component {
                                     <span>Operations</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/dashboard/manager" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/manager">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/board/manager" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/board/manager">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Board
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/work-orders" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/work-orders">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/schedules" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/schedules">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Schedules
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/property/schedules" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/property/schedules">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Manage
                                                     Schedules

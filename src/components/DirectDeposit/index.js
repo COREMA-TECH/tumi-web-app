@@ -181,9 +181,9 @@ class DirectDeposit extends Component{
                             <div className="card-body">
                                 <div className="row">
                                     {
-                                        this.state.applicationAccounts.map(item => {
+                                        this.state.applicationAccounts.map((item, i) => {
                                             return (
-                                                <div className="col-12 col-md-4">
+                                                <div key={i} className="col-12 col-md-4">
                                                     <AccountDropdown
                                                         firstName={item.firstName}
                                                         lastName={item.lastName}

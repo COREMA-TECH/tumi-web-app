@@ -329,7 +329,7 @@ class Preferences extends React.Component {
                                                         {months.map(month => {
                                                             if (this.state.endMonth != month.id) {
                                                                 return (
-                                                                    <option value={month.id}>
+                                                                    <option key={month.id} value={month.id}>
                                                                         {month.description}
                                                                     </option>
                                                                 );
@@ -356,7 +356,7 @@ class Preferences extends React.Component {
                                                         {months.map(month => {
                                                             if (this.state.startMonth != month.id) {
                                                                 return (
-                                                                    <option value={month.id}>
+                                                                    <option key={month.id} value={month.id}>
                                                                         {month.description}
                                                                     </option>
                                                                 );
@@ -390,7 +390,7 @@ class Preferences extends React.Component {
                                                         <option value="">Select an option</option>
                                                         {timeZones.map(item => {
                                                             return (
-                                                                <option value={item.id}>
+                                                                <option key={item.id} value={item.id}>
                                                                     {item.offset + " " + item.name}
                                                                 </option>
                                                             );

@@ -127,10 +127,7 @@ class Summary extends Component {
             })
             .then(({ data }) => {
                 if (data.applications[0] !== null) {
-<<<<<<< HEAD
-=======
                  
->>>>>>> 4aa1098fa85921800d2c52ba11a237f703e4a1f0
                     this.setState({
                         applicantName: data.applications[0].firstName +' '+data.applications[0].middleName+' '+ data.applications[0].lastName
                       ,socialSecurityNumber:data.applications[0].socialSecurityNumber ?data.applications[0].socialSecurityNumber:'--'
@@ -180,13 +177,9 @@ class Summary extends Component {
             })
             .then((data) => {
                 if (data.data.createdocumentspdf != null) {
-<<<<<<< HEAD
-                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
-=======
                   
                     this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
 
->>>>>>> 4aa1098fa85921800d2c52ba11a237f703e4a1f0
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',
