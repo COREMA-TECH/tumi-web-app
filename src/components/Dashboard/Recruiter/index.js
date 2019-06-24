@@ -204,9 +204,9 @@ class DashboardRecruiter extends React.Component {
 						<div className="card-header info">FULFILLMENT STATS</div>
 						<div className="card-body">
 							<ul className="list-group list-group-flush">
-								{this.state.timeElapsed.slice(0, 5).map((timeElapsed) => {
+								{this.state.timeElapsed.slice(0, 5).map((timeElapsed, i) => {
 									return (
-										<li className="list-group-item RecruiterDash-ffmItem">
+										<li key={i} className="list-group-item RecruiterDash-ffmItem">
 											<span className="font-weight-bold">{timeElapsed.WorkOrderId}</span>	{timeElapsed.Full_Name}
 											<span class="badge badge-primary"> {timeElapsed.TimeElapsed}</span>
 										</li>

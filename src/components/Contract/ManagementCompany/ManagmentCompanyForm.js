@@ -336,9 +336,6 @@ class GeneralInfoProperty extends Component {
 					}
 				}
 			})
-			.then((data) => {
-				console.log('Server data response is: ' + data);
-			})
 			.catch((err) => console.log('The error is: ' + err));
 	};
 

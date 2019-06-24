@@ -50,7 +50,6 @@ class ControlledExpansionPanels extends React.Component {
                     query: GET_FORMS_QUERY,
                 })
                 .then(({ data }) => {
-                    console.log("GET_FORMS_QUERY ", data)
                     this.setState({
                         dataForm: data.getforms
                     })

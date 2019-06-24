@@ -720,12 +720,9 @@ class ApplyForm extends Component {
 										<span className="primary"> Position Applying for</span>
 										<Query query={GET_POSITIONS_QUERY}>
 											{({ loading, error, data, refetch, networkStatus }) => {
-												console.log("data del position 0 ", data);
 												if (loading) return <LinearProgress />;
 												if (error) return <p>Error </p>;
-												console.log("data del position1 ", data.getposition);
 												if (data.getposition != null && data.getposition.length > 0) {
-													console.log("data del position2 ", data.getposition);
 													return (
 														<select
 															name="city"

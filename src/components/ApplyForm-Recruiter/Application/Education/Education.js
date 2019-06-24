@@ -314,7 +314,7 @@ class Education extends Component {
                                             <select form="education-form" name="degree" id="degree"
                                                 className="form-control">
                                                 <option value="">{spanishActions[5].label}</option>
-                                                {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                                {studyTypes.map((item, i) => <option key={i} value={item.Id}>{item.Name}</option>)}
                                             </select>
                                         </div>
                                     ) : (
@@ -327,7 +327,7 @@ class Education extends Component {
                                                     className="form-control"
                                                 >
                                                     <option value="">{spanishActions[5].label}</option>
-                                                    {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                                    {studyTypes.map((item, i) => <option key={i} value={item.Id}>{item.Name}</option>)}
                                                 </select>
                                             </div>
                                         )}
@@ -352,8 +352,8 @@ class Education extends Component {
         // To render the Education Service Section
         let renderEducationSection = () => (
             <div>
-                {this.state.schools.map((schoolItem) => (
-                    <div className="col-3">
+                {this.state.schools.map((schoolItem, i) => (
+                    <div key={i} className="col-3">
                         <EducationCard
                             type={schoolItem.schoolType}
                             educationName={schoolItem.educationName}

@@ -75,7 +75,6 @@ class TimeCard extends Component {
     };
 
     toggleRefresh = () => {
-        console.log("Aqui estamos en el toggle")
         this.setState((prevState) => { return { refresh: !prevState.refresh } })
     }
 

@@ -95,7 +95,6 @@ class Skills extends Component {
 					this.setState(
 						(prevState) => ({
 							newSkills: this.state.skills.filter((_, i) => {
-								console.log(_.id);
 								return _.id === undefined;
 							})
 						}),
@@ -177,7 +176,6 @@ class Skills extends Component {
 									this.setState(
 										(prevState) => ({
 											skills: this.state.skills.filter((_, i) => {
-												console.log(this.state.skills);
 												return _.uuid !== skillItem.uuid;
 											})
 										}),

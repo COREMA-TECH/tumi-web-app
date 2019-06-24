@@ -127,7 +127,6 @@ class TimeCardForm extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.item && nextProps.openModal) {
 
-            console.log("nextProps.item ", nextProps.item)
             this.setState(
                 {
                     id: nextProps.item.id,
@@ -535,7 +534,6 @@ class TimeCardForm extends Component {
     }
 
     DisabledTimeOut = () => {
-        console.log("statusTimeOut ", document.getElementById("disabledTimeOut").checked)
         if (document.getElementById("disabledTimeOut").checked) {
             this.setState(
                 {
@@ -551,8 +549,6 @@ class TimeCardForm extends Component {
                     endShift: ""
                 })
         }
-
-        console.log("statusTimeOut ", this.state.statusTimeOut)
     }
 
     render() {

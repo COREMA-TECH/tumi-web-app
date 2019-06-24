@@ -394,8 +394,6 @@ class GeneralInfoProperty extends Component {
                         })
                         .then(({ data }) => {
                             this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(data.insbusinesscompanies.Id_Parent));
-      
-                            console.log(data.insbusinesscompanies.Id);
 
                             this.props.client
                                 .mutate({
@@ -898,8 +896,6 @@ class GeneralInfoProperty extends Component {
                         if (data.getbusinesscompanies !== null) {
                             this.setState({
                                 parentDescription: 'A ' + data.getbusinesscompanies[0].Name + ' Management Company'
-                            }, () => {
-                                console.log("Parent Description: ", this.state.parentDescription)
                             });
 
                             this.setState({

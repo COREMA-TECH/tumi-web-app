@@ -920,7 +920,7 @@ class VerticalLinearStepper extends Component {
                     socialNetwork: app.optionHearTumi,
                     comment: app.comment,
                 }
-            }, _ => console.log(this.state))
+            })
         })
         .catch(error => console.log(error));
     }
@@ -1275,7 +1275,6 @@ class VerticalLinearStepper extends Component {
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.restrictions[displayLanguage]} </span>
                         <div className="col-md-12">
-                            {console.log(this.state.scheduleRestrictions)}
                             <input
                                 onChange={ this.handleStateChange }
                                 value="1"
@@ -1964,7 +1963,6 @@ class VerticalLinearStepper extends Component {
         >
             <h4 className="ApplyBlock-title">{labels.prevEmployment[displayLanguage]}</h4>
             <div className="row">
-                {console.log(this.state.previousEmployment.length)}
                 {this.state.previousEmployment.length > 0 ? (
                     <div key={uuidv4()} className="skills-container skills-container--header">
                         <div className="row">

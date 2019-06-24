@@ -107,7 +107,6 @@ class Contract extends React.Component {
 	};
 
 	updateCompanyId = (id) => {
-		console.log("updateCompanyId ", id)
 		this.setState({
 			companyId: id
 		});

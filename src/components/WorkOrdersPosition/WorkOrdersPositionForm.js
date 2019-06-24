@@ -280,13 +280,11 @@ class WorkOrdersPositionForm extends Component {
 
 
 	handleChange = (event) => {
-		console.log("veamos el evento ", event);
 		const target = event.target;
 		const value = target.type === 'checkbox' ? target.checked : target.value;
 		const name = target.name;
 		let comments = '';
 
-		// console.log("veamos el evento target ", target, " value ", value, " name ", name);
 		this.setState({
 			[name]: value
 		});
@@ -311,7 +309,6 @@ class WorkOrdersPositionForm extends Component {
 				variables: { id: id }
 			})
 			.then(({ data }) => {
-				console.log("positions ", data.getposition)
 				this.setState({
 					positions: data.getposition,
 					PositionRateId: PositionId

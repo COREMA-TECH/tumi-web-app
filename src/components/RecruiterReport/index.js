@@ -41,7 +41,6 @@ class RecruiterReport extends Component {
             startDate = moment(date).startOf(frequency).format('MM/DD/YYYY');
             endDate = moment(date).endOf(frequency).format('MM/DD/YYYY');
 
-            // console.log({ startDate, endDate })
             filter = { ...filter, startDate, endDate }
         }
         return filter;
