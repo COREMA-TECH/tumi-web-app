@@ -4,13 +4,6 @@ import Select from 'react-select';
 
 import { GET_PROPERTIES_QUERY } from './queries';
 import withApollo from 'react-apollo/withApollo';
-import { withStyles } from '@material-ui/core/styles';
-
-const styles = (theme) => ({
-	root: {
-		flexGrow: 1
-	}
-});
 
 class EmployeesProperties extends Component{
 
@@ -140,4 +133,4 @@ class EmployeesProperties extends Component{
     }
 }
 
-export default withStyles(styles)(withApollo(EmployeesProperties));
+export default withApollo(EmployeesProperties);
