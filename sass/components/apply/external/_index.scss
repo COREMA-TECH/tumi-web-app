@@ -58,6 +58,8 @@
         font-size: 12px;
         font-weight: 700;
 
+        margin-left: 1.5rem;
+
         padding: 8px 18px;
         
         text-transform: uppercase;
@@ -148,6 +150,9 @@
         color: $white !important;
 
         border: none;
+        border-bottom: 1px solid $placeholder-color;
+        border-radius: 0;
+
         box-shadow: none !important;
 
         font-family: 'Ropa Sans', sans-serif !important;
@@ -156,7 +161,7 @@
         // margin-bottom: 1.5rem;
 
         &::placeholder{
-            color: $placeholder;
+            color: $placeholder-color;
             font-weight: 700;
             text-transform: uppercase;
         }
@@ -403,7 +408,7 @@
     }
 
     &-contact{
-        color: $placeholder;
+        color: $placeholder-color;
         font-size: 10px;
         margin-right: 70px;
 

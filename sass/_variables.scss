@@ -50,7 +50,9 @@ $dropdown-caret: #9f9f9f;
 
 $dark-blue: #094658;
 
-$placeholder: #868686;
+// External application 
+$placeholder-color: #868686;
+$input-border-color: $placeholder-color;
 
 //Brackgrounds 
 $bg-body: $light-gray;

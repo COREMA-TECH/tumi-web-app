@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -976,7 +976,7 @@ class VerticalLinearStepper extends Component {
                 <h4 className="ApplyBlock-title">{labels.formTitle[displayLanguage]}</h4>
                 <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.firstName[displayLanguage]}</span>
+                        <span className="External-label">{labels.firstName[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={ this.handleStateChange }
@@ -988,7 +988,7 @@ class VerticalLinearStepper extends Component {
                                 min="0"
                                 maxLength="50"
                                 minLength="3"
-                                placeholder='John'
+                                placeholder={labels.firstName[displayLanguage]}
                             />
                         </div>
                     </div>
@@ -1003,11 +1003,11 @@ class VerticalLinearStepper extends Component {
                             min="0"
                             maxLength="50"
                             minLength="1"
-                            placeholder='Michael'
+                            placeholder={labels.midName[displayLanguage]}
                         />
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.lastName[displayLanguage]}</span>
+                        <span className="External-label">{labels.lastName[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={ this.handleStateChange }
@@ -1019,7 +1019,7 @@ class VerticalLinearStepper extends Component {
                                 min="0"
                                 maxLength="50"
                                 minLength="3"
-                                placeholder='Doe'
+                                placeholder={labels.lastName[displayLanguage]}
                             />
                         </div>
                     </div>
@@ -1035,7 +1035,7 @@ class VerticalLinearStepper extends Component {
                                 min="0"
                                 maxLength="50"
                                 minLength="3"
-                                placeholder='Doe'
+                                placeholder={labels.secLastName[displayLanguage]}
                             />
                         </div>
                     </div>
@@ -1043,7 +1043,7 @@ class VerticalLinearStepper extends Component {
 
                 <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.stAddress[displayLanguage]}</span>
+                        <span className="External-label">{labels.stAddress[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={ this.handleStateChange }
@@ -1055,7 +1055,7 @@ class VerticalLinearStepper extends Component {
                                 min="0"
                                 maxLength="50"
                                 minLength="5"
-                                placeholder='445 Mount Eden Road, Mount Eden, Auckland.'
+                                placeholder={labels.stAddress[displayLanguage]}
                             />
                         </div>
                     </div>
@@ -1070,7 +1070,7 @@ class VerticalLinearStepper extends Component {
                             min="0"
                             maxLength="50"
                             minLength="5"
-                            placeholder='34'
+                            placeholder={labels.apt[displayLanguage]}
                         />
                     </div>
                 </div>
@@ -1118,7 +1118,7 @@ class VerticalLinearStepper extends Component {
                 <div className="row External-row">
 
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.cellPhone[displayLanguage]}</span>
+                        <span className="External-label">{labels.cellPhone[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <InputMask
                                 id="cell-number"
@@ -1137,7 +1137,7 @@ class VerticalLinearStepper extends Component {
                     </div>
 
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.ssn[displayLanguage]}</span>
+                        <span className="External-label">{labels.ssn[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <InputMask
                                 id="socialSecurityNumber"
@@ -1156,7 +1156,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <div className="col-md-12">
-                            <span className="External-label"> {labels.transport[displayLanguage]}</span>
+                            <span className="External-label">{labels.transport[displayLanguage]}</span>
                         </div>
                         <div className="col-md-12">
                             <div className="onoffswitch">
@@ -1195,7 +1195,7 @@ class VerticalLinearStepper extends Component {
                 
                 <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.idExpire[displayLanguage]}</span>
+                        <span className="External-label">{labels.idExpire[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={ this.handleStateChange }
@@ -1211,7 +1211,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.email[displayLanguage]}</span>
+                        <span className="External-label">{labels.email[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={ this.handleStateChange }
@@ -1223,13 +1223,13 @@ class VerticalLinearStepper extends Component {
                                 min="0"
                                 maxLength="50"
                                 minLength="8"
-                                placeholder='john.doe@email.com'
+                                placeholder={labels.email[displayLanguage]}
                             />
                         </div>
                     </div>
                 
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label"> * {labels.position[displayLanguage]}</span>
+                        <span className="External-label">{labels.position[displayLanguage]}</span>
                         
                         <Select
                             options={this.state.positionApplyOptions}
@@ -1242,40 +1242,25 @@ class VerticalLinearStepper extends Component {
                         />
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.available[displayLanguage]}</span>
+                        <span className="External-label">{labels.available[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={ this.handleStateChange }
                                 value={this.state.dateAvailable}
                                 name="dateAvailable"
                                 type="date"
-                                className="form-control External-input"
-                                
+                                className="form-control External-input"                                
                                 min="0"
                                 maxLength="50"
                             />
                         </div>
-
-                        {/* <span className="External-label">{labels.willing[displayLanguage]}</span>
-
-                        <Select
-                            options={this.state.positionCatalogOptions}
-                            value={this.state.positionsTags}
-                            onChange={this.handleChangePositionTag}
-                            closeMenuOnSelect={false}
-                            components={makeAnimated()}
-                            isMulti
-                            styles={selectStyles}                            
-                        /> */}
                     </div>                    
                 </div>
                
-                {/* <hr className="separator" /> */}
                 <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.restrictions[displayLanguage]} </span>
                         <div className="col-md-12">
-                            {console.log(this.state.scheduleRestrictions)}
                             <input
                                 onChange={ this.handleStateChange }
                                 value="1"
@@ -1404,9 +1389,7 @@ class VerticalLinearStepper extends Component {
                         {this.state.socialNetwork === 'others' ? (
                             <textarea
                                 onChange={ this.handleStateChange }
-                                placeholder="Explain how did you hear about Tumi Staffing"
-                                value={this.state.comment}
-                                
+                                value={this.state.comment}                                
                                 name="comment"
                                 cols="20"
                                 rows="4"
@@ -1479,7 +1462,7 @@ class VerticalLinearStepper extends Component {
                 className="apply-form row External-skillForm"
             >
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.skillName[displayLanguage]}</span>
+                    <span className="External-label">{labels.skillName[displayLanguage]}</span>
                     <input
                         id="description"
                         name="description"
@@ -1494,7 +1477,7 @@ class VerticalLinearStepper extends Component {
                     />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">{labels.skillLevel[displayLanguage]}</span>
+                    <span className="External-label">{labels.skillName[displayLanguage]}</span>
                     <InputRange
                         getPercentSkill={(percent) => {
                             // update the percent skill
@@ -1524,273 +1507,279 @@ class VerticalLinearStepper extends Component {
         const { labels, displayLanguage } = this.state;
 
         return(
-        <form
-            id="education-form"
-            className="ApplyBlock"
-            onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                let item = {
-                    uuid: uuidv4(),
-                    schoolType: document.getElementById('studyType').value,
-                    educationName: document.getElementById('institutionName').value,
-                    educationAddress: document.getElementById('addressInstitution').value,
-                    startDate: document.getElementById('startPeriod').value,
-                    endDate: document.getElementById('endPeriod').value,
-                    graduated: document.getElementById('graduated').checked,
-                    degree: parseInt(document.getElementById('degree').value),
-                    ApplicationId: 1 // Static application id
-                };
-                this.setState(
-                    (prevState) => ({
-                        open: false,
-                        schools: [...prevState.schools, item]
-                    }),
-                    () => {
-                        document.getElementById('education-form').reset();
-                        document.getElementById('studyType').classList.remove('invalid-apply-form');
-                        document.getElementById('institutionName').classList.remove('invalid-apply-form');
-                        document.getElementById('addressInstitution').classList.remove('invalid-apply-form');
-                        document.getElementById('startPeriod').classList.remove('invalid-apply-form');
-                        document.getElementById('endPeriod').classList.remove('invalid-apply-form');
-                        document.getElementById('graduated').classList.remove('invalid-apply-form');
-                        document.getElementById('graduated').checked = false;
-                        document.getElementById('degree').classList.remove('invalid-apply-form');
+        <Fragment>            
+            <form
+                id="education-form"
+                className="ApplyBlock"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    let item = {
+                        uuid: uuidv4(),
+                        schoolType: document.getElementById('studyType').value,
+                        educationName: document.getElementById('institutionName').value,
+                        educationAddress: document.getElementById('addressInstitution').value,
+                        startDate: document.getElementById('startPeriod').value,
+                        endDate: document.getElementById('endPeriod').value,
+                        graduated: document.getElementById('graduated').checked,
+                        degree: parseInt(document.getElementById('degree').value),
+                        ApplicationId: 1 // Static application id
+                    };
+                    this.setState(
+                        (prevState) => {
+                            console.log('Previous schools');
+                            console.log(prevState.schools);
+                            return {
+                                open: false,
+                                schools: [...prevState.schools, item]
+                            }
+                        },
+                        () => {
+                            document.getElementById('education-form').reset();
+                            document.getElementById('studyType').classList.remove('invalid-apply-form');
+                            document.getElementById('institutionName').classList.remove('invalid-apply-form');
+                            document.getElementById('addressInstitution').classList.remove('invalid-apply-form');
+                            document.getElementById('startPeriod').classList.remove('invalid-apply-form');
+                            document.getElementById('endPeriod').classList.remove('invalid-apply-form');
+                            document.getElementById('graduated').classList.remove('invalid-apply-form');
+                            document.getElementById('graduated').checked = false;
+                            document.getElementById('degree').classList.remove('invalid-apply-form');
 
-                        this.setState({
-                            graduated: false
-                        });
-                    }
-                );
-            }}
-        >
-            <h4 className="ApplyBlock-title">{labels.education[displayLanguage]}</h4>
-            {this.state.schools.length > 0 ? (
-                <div key={uuidv4()} className="skills-container skills-container--header">
-                    <div className="row">
-                        <div className="col-md-2">
-                            <span>{labels.fieldStudy[displayLanguage]}</span>
-                        </div>
-                        <div className="col-md-2">
-                            <span>{labels.institution[displayLanguage]}</span>
-                        </div>
-                        <div className="col-md-2">
-                            <span>{labels.address[displayLanguage]}</span>
-                        </div>
-                        <div className="col-md-2">
-                            <span>{labels.startDate[displayLanguage]}</span>
-                        </div>
-                        <div className="col-md-1">
-                            <span>{labels.endDate[displayLanguage]}</span>
-                        </div>
-                        <div className="col-md-1">
-                            <span>{labels.graduated[displayLanguage]}</span>
-                        </div>
-                        <div className="col-md-1">
-                            <span>{labels.degree[displayLanguage]}</span>
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                    ''
-                )}
-            {this.state.schools.map((schoolItem) => (
-                <div key={uuidv4()} className="skills-container">
-                    <div className="row">
-                        <div className="col-md-2">
-                            <span className='skills-label'>{schoolItem.schoolType}</span>
-                        </div>
-                        <div className="col-md-2">
-                            <span className='skills-label'>{schoolItem.educationName}</span>
-                        </div>
-                        <div className="col-md-2">
-                            <span className='skills-label'>{schoolItem.educationAddress}</span>
-                        </div>
-                        <div className="col-md-2">
-                            <span className='skills-label'>{schoolItem.startDate}</span>
-                        </div>
-                        <div className="col-md-1">
-                            <span className='skills-label'>{schoolItem.endDate}</span>
-                        </div>
-                        <div className="col-md-1">
-                            <span className='skills-label'>{schoolItem.graduated ? 'Yes' : 'No'}</span>
-                        </div>
-                        <div className="col-md-1">
-                            <span className='skills-label'>
-                                {studyTypes.map((item) => {
-                                    if (item.Id == schoolItem.degree) {
-                                        return item.Name + '';
-                                    }
-                                })}
-                            </span>
-                        </div>
-                        <div className="col-md-1">
-                            <Button
-                                className="deleteSkillSection"
-                                onClick={() => {
-                                    this.setState((prevState) => ({
-                                        schools: this.state.schools.filter((_, i) => {
-                                            return _.uuid !== schoolItem.uuid;
-                                        })
-                                    }));
-                                }}
-                            >
-                                x
-                            </Button>
+                            this.setState({
+                                graduated: false
+                            });
+                        }
+                    );
+                }}
+            >
+                <h4 className="ApplyBlock-title">{labels.education[displayLanguage]}</h4>
+                {this.state.schools.length > 0 ? (
+                    <div key={uuidv4()} className="skills-container skills-container--header">
+                        <div className="row">
+                            <div className="col-md-2">
+                                <span>{labels.fieldStudy[displayLanguage]}</span>
+                            </div>
+                            <div className="col-md-2">
+                                <span>{labels.institution[displayLanguage]}</span>
+                            </div>
+                            <div className="col-md-2">
+                                <span>{labels.address[displayLanguage]}</span>
+                            </div>
+                            <div className="col-md-2">
+                                <span>{labels.startDate[displayLanguage]}</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span>{labels.endDate[displayLanguage]}</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span>{labels.graduated[displayLanguage]}</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span>{labels.degree[displayLanguage]}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            ))}
-            <div className="row">
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">{labels.fieldStudy[displayLanguage]}</label>
-                    <div className="input-container--validated">
-                        <input
-                            id="studyType"
-                            form="education-form"
-                            name="studyType"
-                            type="text"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="2"
-                            placeholder='Engineering'
-                        />
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">* {labels.institution[displayLanguage]}</label>
-                    <div className="input-container--validated">
-                        <input
-                            form="education-form"
-                            name="institutionName"
-                            id="institutionName"
-                            type="text"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                            placeholder='Universitiy of California'
-                        />
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">* {labels.address[displayLanguage]}</label>
-                    <div className="input-container--validated">
-                        <input
-                            form="education-form"
-                            name="addressInstitution"
-                            id="addressInstitution"
-                            type="text"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                            placeholder='445 Mount Eden Road, Mount Eden, Auckland'
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.period[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <input
-                            form="education-form"
-                            name="startPeriod"
-                            id="startPeriod"
-                            type="date"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.to[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <input
-                            form="education-form"
-                            name="endPeriod"
-                            id="endPeriod"
-                            type="date"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">{labels.graduated[displayLanguage]}</label> <br />
+                ) : (
+                        ''
+                    )}
 
-                    <div className="onoffswitch">
-                        <input
-                            className="onoffswitch-checkbox"
-                            onChange={(e) => {
-                                this.setState({
-                                    graduated: document.getElementById('graduated').checked
-                                });
-                            }}
-                            form="education-form"
-                            type="checkbox"
-                            value="graduated"
-                            name="graduated"
-                            id="graduated"
-                        />
-                        <label className="onoffswitch-label" htmlFor="graduated">
-                            <span className="onoffswitch-inner" />
-                            <span className="onoffswitch-switch" />
-                        </label>
-                    </div>               
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <label className="External-label">{labels.degree[displayLanguage]}</label>
-                    {this.state.graduated ? (
-                        <div className="input-container--validated">
-                            <select form="education-form" name="degree" id="degree" className="form-control External-input">
-                                <option value="">{labels.selectOption[displayLanguage]}</option>
-                                {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                            </select>
-                        </div>
-                    ) : (
-                            <div className="input-container--validated">
-                                <select
-                                    form="education-form"
-                                    name="degree"
-                                    id="degree"
-                                    disabled
-                                    className="form-control External-input"
+                {console.log('Schools:')}
+                {console.log(this.state.schools)}
+                {this.state.schools.map((schoolItem) => (
+                    <div key={uuidv4()} className="skills-container">
+                        <div className="row">
+                            <div className="col-md-2">
+                                <span className='skills-label'>{schoolItem.schoolType}</span>
+                            </div>
+                            <div className="col-md-2">
+                                <span className='skills-label'>{schoolItem.educationName}</span>
+                            </div>
+                            <div className="col-md-2">
+                                <span className='skills-label'>{schoolItem.educationAddress}</span>
+                            </div>
+                            <div className="col-md-2">
+                                <span className='skills-label'>{schoolItem.startDate}</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span className='skills-label'>{schoolItem.endDate}</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span className='skills-label'>{schoolItem.graduated ? 'Yes' : 'No'}</span>
+                            </div>
+                            <div className="col-md-1">
+                                <span className='skills-label'>
+                                    {studyTypes.map((item) => {
+                                        if (item.Id == schoolItem.degree) {
+                                            return item.Name + '';
+                                        }
+                                    })}
+                                </span>
+                            </div>
+                            <div className="col-md-1">
+                                <Button
+                                    className="deleteSkillSection"
+                                    onClick={() => {
+                                        this.setState((prevState) => ({
+                                            schools: this.state.schools.filter((_, i) => {
+                                                return _.uuid !== schoolItem.uuid;
+                                            })
+                                        }));
+                                    }}
                                 >
+                                    x
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                <div className="row">
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <label className="External-label">{labels.fieldStudy[displayLanguage]}</label>
+                        <div className="input-container--validated">
+                            <input
+                                id="studyType"
+                                form="education-form"
+                                name="studyType"
+                                type="text"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="2"
+                                placeholder={labels.fieldStudy[displayLanguage]}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <label className="External-label">{labels.institution[displayLanguage]}</label>
+                        <div className="input-container--validated">
+                            <input
+                                form="education-form"
+                                name="institutionName"
+                                id="institutionName"
+                                type="text"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder={labels.institution[displayLanguage]}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <label className="External-label">{labels.address[displayLanguage]}</label>
+                        <div className="input-container--validated">
+                            <input
+                                form="education-form"
+                                name="addressInstitution"
+                                id="addressInstitution"
+                                type="text"
+                                className="form-control External-input"                            
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder={labels.address[displayLanguage]}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.period[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                form="education-form"
+                                name="startPeriod"
+                                id="startPeriod"
+                                type="date"
+                                className="form-control External-input"                            
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.to[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                form="education-form"
+                                name="endPeriod"
+                                id="endPeriod"
+                                type="date"
+                                className="form-control External-input"                            
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <label className="External-label">{labels.graduated[displayLanguage]}</label> <br />
+
+                        <div className="onoffswitch">
+                            <input
+                                className="onoffswitch-checkbox"
+                                onChange={(e) => {
+                                    this.setState({
+                                        graduated: document.getElementById('graduated').checked
+                                    });
+                                }}
+                                form="education-form"
+                                type="checkbox"
+                                value="graduated"
+                                name="graduated"
+                                id="graduated"
+                            />
+                            <label className="onoffswitch-label" htmlFor="graduated">
+                                <span className="onoffswitch-inner" />
+                                <span className="onoffswitch-switch" />
+                            </label>
+                        </div>               
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <label className="External-label">{labels.degree[displayLanguage]}</label>
+                        {this.state.graduated ? (
+                            <div className="input-container--validated">
+                                <select form="education-form" name="degree" id="degree" className="form-control External-input">
                                     <option value="">{labels.selectOption[displayLanguage]}</option>
                                     {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
                                 </select>
                             </div>
-                        )}
+                        ) : (
+                                <div className="input-container--validated">
+                                    <select
+                                        form="education-form"
+                                        name="degree"
+                                        id="degree"
+                                        disabled
+                                        className="form-control External-input"
+                                    >
+                                        <option value="">{labels.selectOption[displayLanguage]}</option>
+                                        {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                    </select>
+                                </div>
+                            )}
+                    </div>
                 </div>
-            </div>
-            <div className="row mb-4">
-                <div className="col-md-12">
-                    <Button type="submit" form="education-form" className="External-formButton float-right">
-                        {labels.add[displayLanguage]}
-                    </Button>
+                <div className="row mb-4">
+                    <div className="col-md-12">
+                        <Button type="submit" form="education-form" className="External-formButton float-right">
+                            {labels.add[displayLanguage]}
+                        </Button>
+                    </div>
                 </div>
-            </div>
+            </form>
             <div className="External-formButtons">
                 <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
                     {labels.back[displayLanguage]}
                 </Button>
-                <Button type="submit" onClick={this.insertEducationApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
+                <Button onClick={this.insertEducationApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
                     {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
                 </Button>             
-            </div>  
-        </form>
+            </div> 
+        </Fragment> 
     )};
 
     // To render the Military Service Section
@@ -1809,7 +1798,7 @@ class VerticalLinearStepper extends Component {
             <h4 className="ApplyBlock-title">{labels.military[displayLanguage]}</h4>
             <div className="row External-row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label"> {labels.branch[displayLanguage]}</span>
+                    <span className="External-label">{labels.branch[displayLanguage]}</span>
                     <input
                         onChange={(e) => {
                             this.setState({
@@ -1823,11 +1812,11 @@ class VerticalLinearStepper extends Component {
                         min="0"
                         maxLength="50"
                         minLength="3"
-                        placeholder='US Navy'
+                        placeholder={labels.branch[displayLanguage]}
                     />
                 </div>
                 <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label"> {labels.dischargeRank[displayLanguage]}</span>
+                    <span className="External-label">{labels.dischargeRank[displayLanguage]}</span>
                     <input
                         onChange={(e) => {
                             this.setState({
@@ -1841,7 +1830,7 @@ class VerticalLinearStepper extends Component {
                         min="0"
                         maxLength="50"
                         minLength="3"
-                        placeholder='Major'
+                        placeholder={labels.dischargeRank[displayLanguage]}
                     />
                 </div>
             
@@ -1919,300 +1908,302 @@ class VerticalLinearStepper extends Component {
     renderPreviousEmploymentSection = (steps) => {
         const { labels, displayLanguage } = this.state;
         return(
-        <form
-            id="form-previous-employment"
-            className="ApplyBlock"
-            onSubmit={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                let item = {
-                    uuid: uuidv4(),
-                    companyName: document.getElementById('companyNameEmployment').value,
-                    phone: document.getElementById('companyPhoneEmployment').value,
-                    address: document.getElementById('companyAddressEmployment').value,
-                    supervisor: document.getElementById('companySupervisor').value,
-                    jobTitle: document.getElementById('companyJobTitle').value,
-                    payRate: parseFloat(document.getElementById('companyPayRate').value),
-                    startDate: document.getElementById('companyStartDate').value,
-                    endDate: document.getElementById('companyEndDate').value,
-                    reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
-                    ApplicationId: 1 // Static application id
-                };
-                this.setState(
-                    (prevState) => ({
-                        open: false,
-                        previousEmployment: [...prevState.previousEmployment, item]
-                    }),
-                    () => {
-                        document.getElementById('form-previous-employment').reset();
-                        document.getElementById('companyNameEmployment').classList.remove('invalid-apply-form');
-                        document.getElementById('companyPhoneEmployment').classList.remove('invalid-apply-form');
-                        document.getElementById('companyAddressEmployment').classList.remove('invalid-apply-form');
-                        document.getElementById('companySupervisor').classList.remove('invalid-apply-form');
-                        document.getElementById('companyJobTitle').classList.remove('invalid-apply-form');
-                        document.getElementById('companyPayRate').classList.remove('invalid-apply-form');
-                        document.getElementById('companyStartDate').classList.remove('invalid-apply-form');
-                        document.getElementById('companyEndDate').classList.remove('invalid-apply-form');
-                        document.getElementById('companyReasonForLeaving').classList.remove('invalid-apply-form');
+        <Fragment>
+            <form
+                id="form-previous-employment"
+                className="ApplyBlock"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    let item = {
+                        uuid: uuidv4(),
+                        companyName: document.getElementById('companyNameEmployment').value,
+                        phone: document.getElementById('companyPhoneEmployment').value,
+                        address: document.getElementById('companyAddressEmployment').value,
+                        supervisor: document.getElementById('companySupervisor').value,
+                        jobTitle: document.getElementById('companyJobTitle').value,
+                        payRate: parseFloat(document.getElementById('companyPayRate').value),
+                        startDate: document.getElementById('companyStartDate').value,
+                        endDate: document.getElementById('companyEndDate').value,
+                        reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
+                        ApplicationId: 1 // Static application id
+                    };
+                    this.setState(
+                        (prevState) => ({
+                            open: false,
+                            previousEmployment: [...prevState.previousEmployment, item]
+                        }),
+                        () => {
+                            document.getElementById('form-previous-employment').reset();
+                            document.getElementById('companyNameEmployment').classList.remove('invalid-apply-form');
+                            document.getElementById('companyPhoneEmployment').classList.remove('invalid-apply-form');
+                            document.getElementById('companyAddressEmployment').classList.remove('invalid-apply-form');
+                            document.getElementById('companySupervisor').classList.remove('invalid-apply-form');
+                            document.getElementById('companyJobTitle').classList.remove('invalid-apply-form');
+                            document.getElementById('companyPayRate').classList.remove('invalid-apply-form');
+                            document.getElementById('companyStartDate').classList.remove('invalid-apply-form');
+                            document.getElementById('companyEndDate').classList.remove('invalid-apply-form');
+                            document.getElementById('companyReasonForLeaving').classList.remove('invalid-apply-form');
 
-                        this.setState({
-                            previousEmploymentPhone: ''
-                        });
-                    }
-                );
-            }}
-        >
-            <h4 className="ApplyBlock-title">{labels.prevEmployment[displayLanguage]}</h4>
-            <div className="row">
-                {console.log(this.state.previousEmployment.length)}
-                {this.state.previousEmployment.length > 0 ? (
-                    <div key={uuidv4()} className="skills-container skills-container--header">
-                        <div className="row">
-                            <div className="col-md-2">
-                                <span>{labels.company[displayLanguage]}</span>
-                            </div>
-                            <div className="col-md-2">
-                                <span>{labels.address[displayLanguage]}</span>
-                            </div>
-                            <div className="col-md-2">
-                                <span>{labels.jobTitle[displayLanguage]}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span>{labels.phone[displayLanguage]}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span>{labels.supervisor[displayLanguage]}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span>{labels.pay[displayLanguage]}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span>{labels.startDate[displayLanguage]}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span>{labels.endDate[displayLanguage]}</span>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                        ''
-                    )}
-                {this.state.previousEmployment.map((employmentItem) => (
-                    <div key={uuidv4()} className="skills-container">
-                        <div className="row">
-                            <div className="col-md-2">
-                                <span className='External-label'>{employmentItem.companyName}</span>
-                            </div>
-                            <div className="col-md-2">
-                                <span className='External-label'>{employmentItem.address}</span>
-                            </div>
-                            <div className="col-md-2">
-                                <span className='External-label'>{employmentItem.jobTitle}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span className='External-label'>{employmentItem.phone}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span className='External-label'>{employmentItem.supervisor}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span className='External-label'>{employmentItem.payRate}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span className='External-label'>{employmentItem.startDate}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <span className='External-label'>{employmentItem.endDate}</span>
-                            </div>
-                            <div className="col-md-1">
-                                <Button
-                                    className="deleteSkillSection"
-                                    onClick={() => {
-                                        this.setState((prevState) => ({
-                                            previousEmployment: this.state.previousEmployment.filter((_, i) => {
-                                                return _.uuid !== employmentItem.uuid;
-                                            })
-                                        }));
-                                    }}
-                                >
-                                    x
-                                </Button>
+                            this.setState({
+                                previousEmploymentPhone: ''
+                            });
+                        }
+                    );
+                }}
+            >
+                <h4 className="ApplyBlock-title">{labels.prevEmployment[displayLanguage]}</h4>
+                <div className="row">
+                    {console.log(this.state.previousEmployment.length)}
+                    {this.state.previousEmployment.length > 0 ? (
+                        <div key={uuidv4()} className="skills-container skills-container--header">
+                            <div className="row">
+                                <div className="col-md-2">
+                                    <span>{labels.company[displayLanguage]}</span>
+                                </div>
+                                <div className="col-md-2">
+                                    <span>{labels.address[displayLanguage]}</span>
+                                </div>
+                                <div className="col-md-2">
+                                    <span>{labels.jobTitle[displayLanguage]}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span>{labels.phone[displayLanguage]}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span>{labels.supervisor[displayLanguage]}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span>{labels.pay[displayLanguage]}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span>{labels.startDate[displayLanguage]}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span>{labels.endDate[displayLanguage]}</span>
+                                </div>
                             </div>
                         </div>
+                    ) : (
+                            ''
+                        )}
+                    {this.state.previousEmployment.map((employmentItem) => (
+                        <div key={uuidv4()} className="skills-container">
+                            <div className="row">
+                                <div className="col-md-2">
+                                    <span className='External-label'>{employmentItem.companyName}</span>
+                                </div>
+                                <div className="col-md-2">
+                                    <span className='External-label'>{employmentItem.address}</span>
+                                </div>
+                                <div className="col-md-2">
+                                    <span className='External-label'>{employmentItem.jobTitle}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span className='External-label'>{employmentItem.phone}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span className='External-label'>{employmentItem.supervisor}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span className='External-label'>{employmentItem.payRate}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span className='External-label'>{employmentItem.startDate}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <span className='External-label'>{employmentItem.endDate}</span>
+                                </div>
+                                <div className="col-md-1">
+                                    <Button
+                                        className="deleteSkillSection"
+                                        onClick={() => {
+                                            this.setState((prevState) => ({
+                                                previousEmployment: this.state.previousEmployment.filter((_, i) => {
+                                                    return _.uuid !== employmentItem.uuid;
+                                                })
+                                            }));
+                                        }}
+                                    >
+                                        x
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="row External-row">
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.company[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyNameEmployment"
+                                form="form-previous-employment"
+                                name="companyNameEmployment"
+                                type="text"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder={labels.company[displayLanguage]}
+                            />
+                        </div>
                     </div>
-                ))}
-            </div>
-            <div className="row External-row">
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.company[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <input
-                            id="companyNameEmployment"
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.phone[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <InputMask
+                                id="companyPhoneEmployment"
+                                form="form-previous-employment"
+                                name="phoneEmployment"
+                                mask="+(999) 999-9999"
+                                maskChar=" "
+                                value={this.state.previousEmploymentPhone}
+                                className="form-control External-input"
+                                onChange={(event) => {
+                                    this.setState({
+                                        previousEmploymentPhone: event.target.value
+                                    });
+                                }}
+                                
+                                placeholder="+(___) ___-____"
+                                minLength="15"
+                            />                       
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.address[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyAddressEmployment"
+                                form="form-previous-employment"
+                                name="addressEmployment"
+                                type="text"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder={labels.address[displayLanguage]}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.supervisor[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                id="companySupervisor"
+                                form="form-previous-employment"
+                                name="supervisorEmployment"
+                                type="text"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder={labels.supervisor[displayLanguage]}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="row External-row">
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.jobTitle[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyJobTitle"
+                                form="form-previous-employment"
+                                name="jobTitleEmployment"
+                                type="text"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder={labels.jobTitle[displayLanguage]}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.pay[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyPayRate"
+                                form="form-previous-employment"
+                                name="payRateEmployment"
+                                type="number"
+                                className="form-control External-input"
+                                step='0.01'
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder='0000'
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">* {labels.dates[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyStartDate"
+                                form="form-previous-employment"
+                                name="startPreviousEmployment"
+                                type="date"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">* {labels.to[displayLanguage]}: </span>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyEndDate"
+                                form="form-previous-employment"
+                                name="endPreviousEmployment"
+                                type="date"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="row External-row">
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label"> {labels.reasonLeaving[displayLanguage]}</span>
+                        <textarea
+                            id="companyReasonForLeaving"
                             form="form-previous-employment"
-                            name="companyNameEmployment"
-                            type="text"
+                            name="reasonForLeavingEmployment"
                             className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                            placeholder='Name of the Company'
+                            placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                         />
                     </div>
                 </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.phone[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <InputMask
-                            id="companyPhoneEmployment"
-                            form="form-previous-employment"
-                            name="phoneEmployment"
-                            mask="+(999) 999-9999"
-                            maskChar=" "
-                            value={this.state.previousEmploymentPhone}
-                            className="form-control External-input"
-                            onChange={(event) => {
-                                this.setState({
-                                    previousEmploymentPhone: event.target.value
-                                });
-                            }}
-                            
-                            placeholder="+(___) ___-____"
-                            minLength="15"
-                        />                       
+                <div className="row External-row">
+                    <div className="col-md-12">
+                        <Button type="submit" form="form-previous-employment" className="External-formButton float-right">
+                            {labels.add[displayLanguage]}
+                        </Button>
                     </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.address[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <input
-                            id="companyAddressEmployment"
-                            form="form-previous-employment"
-                            name="addressEmployment"
-                            type="text"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                            placeholder='445 Mount Eden Road, Mount Eden, Auckland'
-                        />
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.supervisor[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <input
-                            id="companySupervisor"
-                            form="form-previous-employment"
-                            name="supervisorEmployment"
-                            type="text"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                            placeholder='John Doe'
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="row External-row">
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.jobTitle[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <input
-                            id="companyJobTitle"
-                            form="form-previous-employment"
-                            name="jobTitleEmployment"
-                            type="text"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                            placeholder='Area Manager'
-                        />
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.pay[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <input
-                            id="companyPayRate"
-                            form="form-previous-employment"
-                            name="payRateEmployment"
-                            type="number"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                            placeholder='1111.1'
-                        />
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.dates[displayLanguage]}</span>
-                    <div className="input-container--validated">
-                        <input
-                            id="companyStartDate"
-                            form="form-previous-employment"
-                            name="startPreviousEmployment"
-                            type="date"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                    </div>
-                </div>
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label">* {labels.to[displayLanguage]}: </span>
-                    <div className="input-container--validated">
-                        <input
-                            id="companyEndDate"
-                            form="form-previous-employment"
-                            name="endPreviousEmployment"
-                            type="date"
-                            className="form-control External-input"
-                            
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                    </div>
-                </div>
-            </div>
-            <div className="row External-row">
-                <div className="col-12 col-md-4 col-xl-3 External-col">
-                    <span className="External-label"> {labels.reasonLeaving[displayLanguage]}</span>
-                    <textarea
-                        id="companyReasonForLeaving"
-                        form="form-previous-employment"
-                        name="reasonForLeavingEmployment"
-                        className="form-control External-input"
-                        placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
-                    />
-                </div>
-            </div>
-            <div className="row External-row">
-                <div className="col-md-12">
-                    <Button type="submit" form="form-previous-employment" className="External-formButton float-right">
-                        {labels.add[displayLanguage]}
-                    </Button>
-                </div>
-            </div>            
+                </div>            
+            </form>
             <div className="External-formButtons">
                 <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
                     {labels.back[displayLanguage]}
                 </Button>
-                <Button type="submit" onClick={this.insertPreviousEmploymentApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
+                <Button onClick={this.insertPreviousEmploymentApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
                     {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
                 </Button>             
             </div>
-        </form>
+        </Fragment>
     )};
 
     // To render the Languages Section
@@ -2595,7 +2586,6 @@ class VerticalLinearStepper extends Component {
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                             minLength="15"
                                         />
-                                        {/* <input value={this.state.phoneSearch} name='phoneSearch' onChange={this.handleStateChange} type="text" class="form-control External-input phone" placeholder="Phone Number" aria-label="Phone Number" aria-describedby="basic-addon1" /> */}
                                     </div>                                           
                                 
                                     <div class="input-group External-searchInputGroup">
