@@ -26,7 +26,25 @@ class Summary extends Component {
             applicantName: '',
             ApplicationId: this.props.applicationId,
             openSignature: false,
-            completed: false
+            completed: false,
+
+            applicantName: ' '
+            ,socialSecurityNumber: ' '
+            ,cellphone: ' '
+            ,birthDay :' '
+            ,streetAddress: ' '
+            ,zipCode: ' '
+            ,hireDate: ' '
+            ,gender: ' '
+            ,bankName:  ' '
+            ,routing:  ' '
+            ,account: ' '
+            ,car:' ' 
+            ,hotel: ' '
+            ,recruiter: ' '
+            ,area: ' '
+            ,typeOfId: ' '
+            ,expireDateId:' '
         }
     }
 
@@ -109,24 +127,28 @@ class Summary extends Component {
             })
             .then(({ data }) => {
                 if (data.applications[0] !== null) {
+<<<<<<< HEAD
+=======
+                 
+>>>>>>> 4aa1098fa85921800d2c52ba11a237f703e4a1f0
                     this.setState({
                         applicantName: data.applications[0].firstName +' '+data.applications[0].middleName+' '+ data.applications[0].lastName
-                        ,socialSecurityNumber:data.applications[0].socialSecurityNumber==null?'--':data.applications[0].socialSecurityNumber
-                        ,cellphone:data.applications[0].cellPhone==null?'--':data.applications[0].cellPhone
-                        ,birthDay :data.applications[0].birthDay==null?'--':data.applications[0].birthDay.substring(0, 10)
-                        ,streetAddress:data.applications[0].streetAddress==null?'--':data.applications[0].streetAddress
-                        ,zipCode:data.applications[0].zipCode==null?'--':data.applications[0].zipCode.substring(0, 5)
-                        ,hireDate:data.applications[0].hireDate==null?'--':data.applications[0].hireDate
-                        ,gender:data.applications[0].gender==null?'--':data.applications[0].gender
-                        ,bankName:data.applications[0].Account !=null ? data.applications[0].Account.bankName: '--'
-                        ,routing:data.applications[0].Account !=null ? data.applications[0].Account.routingNumber: '--'
-                        ,account:data.applications[0].Account !=null ? data.applications[0].Account.accountNumber: '--'
-                        ,car:data.applications[0].car
-                        ,recruiter:data.applications[0].recruiter==null?'--':data.applications[0].recruiter.Full_Name
-                        ,area:data.applications[0].area==null?'--':data.applications[0].area
-                        ,typeOfId:data.applications[0].typeOfId==null?'--': (data.applications[0].typeOfId==1?'Birth certificate':(data.applications[0].typeOfId==2?'Social Security card':'State-issued drivers license'))
-                        ,expireDateId:data.applications[0].expireDateId==null?'--':data.applications[0].expireDateId.substring(0, 10)
-                        ,hotel: data.applications[0].employee==null?'--': data.applications[0].employee.Employees.BusinessCompany.Name
+                      ,socialSecurityNumber:data.applications[0].socialSecurityNumber ?data.applications[0].socialSecurityNumber:'--'
+                        ,cellphone:data.applications[0].cellPhone ? data.applications[0].cellPhone:'--'
+                        ,birthDay :data.applications[0].birthDay ? data.applications[0].birthDay.substring(0, 10): '--'
+                        ,streetAddress:data.applications[0].streetAddress ? data.applications[0].streetAddress: '--'
+                        ,zipCode:data.applications[0].zipCode ? data.applications[0].zipCode.substring(0, 5): '--'
+                        ,hireDate:data.applications[0].hireDate ? data.applications[0].hireDate: '--'
+                        ,gender:data.applications[0].gender ? data.applications[0].gender : '--'
+                          ,bankName:data.applications[0].Account ? data.applications[0].Account.bankName: '--'
+                        ,routing:data.applications[0].Account  ? data.applications[0].Account.routingNumber: '--'
+                        ,account:data.applications[0].Account  ? data.applications[0].Account.accountNumber: '--'
+                        ,car:data.applications[0].car 
+                        ,hotel: data.applications[0].employee ? data.applications[0].employee.Employees.BusinessCompany.Name: '--'
+                        ,recruiter:data.applications[0].recruiter ? data.applications[0].recruiter.Full_Name : '--'
+                        ,area:data.applications[0].area ? data.applications[0].area : '--'
+                        ,typeOfId:data.applications[0].typeOfId ? (data.applications[0].typeOfId==1?'Birth certificate':(data.applications[0].typeOfId==2?'Social Security card':'State-issued drivers license')): '--'
+                        ,expireDateId:data.applications[0].expireDateId ? data.applications[0].expireDateId.substring(0, 10): '--'
                     });
                 }
             })
@@ -134,7 +156,7 @@ class Summary extends Component {
                 // If there's an error show a snackbar with a error message
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error to get disclosure information. Please, try again!',
+                    'Error to get summary information. Please, try again!',
                     'bottom',
                     'right'
                 );
@@ -158,7 +180,13 @@ class Summary extends Component {
             })
             .then((data) => {
                 if (data.data.createdocumentspdf != null) {
+<<<<<<< HEAD
                     this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+=======
+                  
+                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+
+>>>>>>> 4aa1098fa85921800d2c52ba11a237f703e4a1f0
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',
@@ -235,11 +263,9 @@ class Summary extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{applyTabs[3].label}</span>
+                                <span className="applicant-card__title">{applyTabs[11].label}</span>
                                 {
-                                    this.state.id === '' ? (
-                                        ''
-                                    ) : (
+                                    
                                             <div>
                                                 {
                                                     this.state.id !== null ? (
@@ -266,7 +292,7 @@ class Summary extends Component {
                                                         )
                                                 }
                                             </div>
-                                        )
+                                       
                                 }
                             </div>
 
