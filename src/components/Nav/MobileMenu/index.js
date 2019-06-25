@@ -201,9 +201,9 @@ class MobileMenu extends Component {
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/punches/report/consolidated" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/punches/report/consolidated">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Punches
                                                     Report
@@ -226,25 +226,25 @@ class MobileMenu extends Component {
                                     <span>Hotel Manager</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/dashboard/hotel" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/hotel">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/work-orders" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/work-orders">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/approve-punches" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/approve-punches">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Approve/Reject punches
                                                 </a>
@@ -266,9 +266,9 @@ class MobileMenu extends Component {
                                     <span>Owner</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map(item => {
+                                    {items.map((item, i) => {
                                         return item.Forms.Value == "/home/dashboard/sponsor" ?
-                                            <li className="SubMenu-item">
+                                            <li key={i} className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/sponsor">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>

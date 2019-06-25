@@ -1,10 +1,46 @@
 import React, { Component, Fragment } from 'react';
 
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+//import TableFooter from '@material-ui/core/TableFooter';
+//import TablePagination from '@material-ui/core/TablePagination';
+import Tooltip from '@material-ui/core/Tooltip';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
+
+
+//import withApollo from 'react-apollo/withApollo';
+
+
+const CustomTableCell = withStyles((theme) => ({
+	head: {
+		backgroundColor: theme.palette.common.black,
+		color: theme.palette.common.white
+	},
+	body: {
+		fontSize: 14
+	}
+}))(TableCell);
+
 class VisitTable extends Component{
+
+    state = {
+        //data: [],
+        page: 0,
+        rowsPerPage: 100, //this.props.rowsPerPage || 25,
+        openConfirm: false
+    }
+
     render() {
+        let items = this.props.data;
+		const { rowsPerPage, page } = this.state;
         return (
-            <Paper style={{ overflowX: 'auto' }}>
-                <Table>
+            <Fragment>
+                <Table classes={{}}>
                     <TableHead>
                         <TableRow>
                             <CustomTableCell className={"Table-head text-center"}>Actions</CustomTableCell>
@@ -17,47 +53,25 @@ class VisitTable extends Component{
                     <TableBody>
                         {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                             return (
-                                <TableRow>
+                                <TableRow key={row.Id}>
                                     <CustomTableCell>
-                                        <Tooltip title="View">
+                                        <Tooltip title="Edit">
                                             <button
                                                 className="btn btn-success mr-1 float-left"
-                                                disabled={this.props.loading}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    return this.props.onEditHandler({ ...row });
-                                                }}
                                             >
-                                                <i className="fas fa-pen" />
-                                            </button>
-                                        </Tooltip>
-                                        <Tooltip title="Reject Opening">
-                                            <button
-                                                className="btn btn-danger float-left"
-                                                disabled={this.props.loading}
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    this.setState({ openConfirm: true, idToDelete: row.id });
-                                                }}
-                                            >
-                                                <i class="fas fa-eject" />
+                                                <i className="fas fa-eye"></i>
                                             </button>
                                         </Tooltip>
                                     </CustomTableCell>
-                                    <CustomTableCell>{row.Id}</CustomTableCell>
-                                    <CustomTableCell>{row.Code_User}</CustomTableCell>
-                                    <CustomTableCell>{row.Full_Name}</CustomTableCell>
-                                    <CustomTableCell>{row.quantity}</CustomTableCell>
-                                    <CustomTableCell>
-                                        {ShiftsData.map((shift) => (shift.Id == row.shift ? shift.Name : ''))}
-                                    </CustomTableCell>
-                                    <CustomTableCell>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
-                                    <CustomTableCell>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
+                                    <CustomTableCell>{row.Code}</CustomTableCell>
+                                    <CustomTableCell>{row.Name}</CustomTableCell>
+                                    <CustomTableCell>0</CustomTableCell>
+                                    <CustomTableCell>0</CustomTableCell>
                                 </TableRow>
                             );
                         })}
                     </TableBody>
-                    <TableFooter>
+                    {/* <TableFooter>
                         <TableRow>
                             {items.length > 0 && (
                                 <TablePagination
@@ -71,20 +85,20 @@ class VisitTable extends Component{
                                 />
                             )}
                         </TableRow>
-                    </TableFooter>
+                    </TableFooter> */}
                 </Table>
                 <ConfirmDialog
                     open={this.state.openConfirm}
                     closeAction={() => {
                         this.setState({ openConfirm: false });
                     }}
-                    confirmAction={() => {
-                        this.handleDelete(this.state.idToDelete);
-                    }}
+                    // confirmAction={() => {
+                    //     this.handleDelete(this.state.idToDelete);
+                    // }}
                     title={'are you sure you want to reject this opening?'}
-                    loading={this.state.removing}
+                    //loading={this.state.removing}
                 />
-            </Paper>
+            </Fragment>
         )
     }
 }
