@@ -10977,6 +10977,30 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 div[class*="MuiStepper-root-"] {
   padding: 0 !important; }
 
+.SummaryTab h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem; }
+
+.SummaryTab h4 strong span {
+  font-weight: 700; }
+
+.SummaryTab strong {
+  font-weight: 700 !important; }
+
+.SummaryTab strong, .SummaryTab span {
+  font-family: none; }
+
+.SummaryTab .pdf-container {
+  max-width: 100%; }
+
+.SummaryTab .pdf-container img {
+  border-bottom: 0 !important;
+  height: auto !important;
+  width: auto !important; }
+
+.SummaryTab .signature-information {
+  font-family: 'Tinos', serif; }
+
 .External-label, .External .Location-label {
   color: #FFF !important;
   font-family: 'Ropa Sans', sans-serif;

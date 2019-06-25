@@ -20,13 +20,19 @@ query applications($id: Int){
         gender
         expireDateId
         typeOfId
-        employee{Employees{BusinessCompany{Name}}}
-        Account
-        {bankName
-        routingNumber
-        accountNumber}
+        employee{
+            Employees{
+                hireDate
+                BusinessCompany{ Name }
+            }
+        }
+        Account {
+            bankName
+            routingNumber
+            accountNumber
+        }
         recruiter
-        {Full_Name}
+        { Full_Name }
     }
   }
 `;

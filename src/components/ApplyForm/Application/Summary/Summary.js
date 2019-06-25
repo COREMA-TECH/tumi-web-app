@@ -108,27 +108,28 @@ class Summary extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.applications[0] !== null) {
-                    this.setState({
-                        applicantName: data.applications[0].firstName +' '+data.applications[0].middleName+' '+ data.applications[0].lastName
-                      ,socialSecurityNumber:data.applications[0].socialSecurityNumber ?data.applications[0].socialSecurityNumber:'--'
-                        ,cellphone:data.applications[0].cellPhone ? data.applications[0].cellPhone:'--'
-                        ,birthDay :data.applications[0].birthDay ? data.applications[0].birthDay.substring(0, 10): '--'
-                        ,streetAddress:data.applications[0].streetAddress ? data.applications[0].streetAddress: '--'
-                        ,zipCode:data.applications[0].zipCode ? data.applications[0].zipCode.substring(0, 5): '--'
-                        ,hireDate:data.applications[0].hireDate ? data.applications[0].hireDate: '--'
-                        ,gender:data.applications[0].gender ? data.applications[0].gender : '--'
-                          ,bankName:data.applications[0].Account ? data.applications[0].Account.bankName: '--'
-                        ,routing:data.applications[0].Account  ? data.applications[0].Account.routingNumber: '--'
-                        ,account:data.applications[0].Account  ? data.applications[0].Account.accountNumber: '--'
-                        ,car:data.applications[0].car 
-                        ,hotel: data.applications[0].employee ? data.applications[0].employee.Employees.BusinessCompany.Name: '--'
-                        ,recruiter:data.applications[0].recruiter ? data.applications[0].recruiter.Full_Name : '--'
-                        ,area:data.applications[0].area ? data.applications[0].area : '--'
-                        ,typeOfId:data.applications[0].typeOfId ? (data.applications[0].typeOfId==1?'Birth certificate':(data.applications[0].typeOfId==2?'Social Security card':'State-issued drivers license')): '--'
-                        ,expireDateId:data.applications[0].expireDateId ? data.applications[0].expireDateId.substring(0, 10): '--'
-                       /* 
-                        */
+                let applications  = data.applications[0];
+                if (applications) {
+                    this.setState(prevState => {
+                        return {
+                            applicantName: applications.firstName +' '+ applications.lastName,
+                            socialSecurityNumber:applications.socialSecurityNumber ?applications.socialSecurityNumber:'--',
+                            cellphone:applications.cellPhone ? applications.cellPhone:'--',
+                            birthDay :applications.birthDay ? applications.birthDay.substring(0, 10): '--',
+                            streetAddress:applications.streetAddress ? applications.streetAddress: '--',
+                            zipCode:applications.zipCode ? applications.zipCode.substring(0, 5): '--',
+                            hireDate: applications.employee.Employees.hireDate ?  applications.employee.Employees.hireDate: '--',
+                            gender:applications.gender ? applications.gender : '--',
+                            bankName:applications.Account ? applications.Account.bankName: '--',
+                            routing:applications.Account  ? applications.Account.routingNumber: '--',
+                            account:applications.Account  ? applications.Account.accountNumber: '--',
+                            car: applications.car ? 'YES' : 'NO', 
+                            hotel: applications.employee.Employees.BusinessCompany ? applications.employee.Employees.BusinessCompany.Name: '--',
+                            recruiter:applications.recruiter ? applications.recruiter.Full_Name : '--',
+                            area:applications.area ? applications.area : '--',
+                            typeOfId:applications.typeOfId ? (applications.typeOfId==1?'Birth certificate':(applications.typeOfId==2?'Social Security card':'State-issued drivers license')): '--',                        
+                            expireDateId:applications.expireDateId ? applications.expireDateId.substring(0, 10): '--'
+                        }
                     });
                 }
             })
@@ -314,9 +315,9 @@ class Summary extends Component {
                                     
                                     <td style='width: 50%; height: 21px;'>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><strong><span style='color: #000000;'>GENDER:</span> </strong> `+ this.state.gender +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>GENDER:</strong></span>`+ this.state.gender +` </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><strong><span style='color: #000000;'>BIRTHDATE:</span></strong> `+ this.state.birthDay +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>BIRTHDATE:</strong></span>`+ this.state.birthDay +` </span></p>
                                     
                                     </td>
                                     
