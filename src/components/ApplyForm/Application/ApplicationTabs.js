@@ -147,25 +147,25 @@ class CustomizedTabs extends React.Component {
             case 1: 
                 return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />
             case 2:
-                return <ProfilePreview applicationId={this.state.applicationId} />;
-            case 3:
-                return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-            case 4:
-                return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-            case 5:
-                return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-            case 6:
-                return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-            case 7:
-                return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-            case 8:
-                return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-            case 9:
-                return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
-            case 10:
-                return <ApplicantDocument applicationId={this.state.applicationId} />;
-            case 11:
                 return <Summary applicationId={this.state.applicationId} />
+            case 3:
+                return <ProfilePreview applicationId={this.state.applicationId} />;
+            case 4:
+                return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 5:
+                return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 6:
+                return <ConductCode applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 7:
+                return <AntiHarassment applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 8:
+                return <WorkerCompensation applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 9:
+                return <FormsI9 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 10:
+                return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+            case 11:
+                return <ApplicantDocument applicationId={this.state.applicationId} />;
             case 12:
                 return <IndependentContract applicationId={this.state.applicationId} />;
 
@@ -195,6 +195,11 @@ class CustomizedTabs extends React.Component {
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[1].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
+                            label={applyTabs[11].label}
                         />
                         <Tab
                             disableRipple
@@ -241,11 +246,6 @@ class CustomizedTabs extends React.Component {
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[9].label}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
-                            label={applyTabs[11].label}
                         />
                         <Tab
                             disableRipple

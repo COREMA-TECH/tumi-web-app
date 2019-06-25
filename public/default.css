@@ -1757,7 +1757,7 @@ pre {
   color: #495057;
   background-color: #FFF;
   background-clip: padding-box;
-  border: 1px solid #ced4da;
+  border: 1px solid #868686;
   border-radius: 0.25rem;
   -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
   transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -3122,7 +3122,7 @@ input[type="button"].btn-block {
   text-align: center;
   white-space: nowrap;
   background-color: #e9ecef;
-  border: 1px solid #ced4da;
+  border: 1px solid #868686;
   border-radius: 0.25rem; }
   .input-group-text input[type="radio"],
   .input-group-text input[type="checkbox"] {
@@ -3312,7 +3312,7 @@ input[type="button"].btn-block {
   vertical-align: middle;
   background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
   background-color: #FFF;
-  border: 1px solid #ced4da;
+  border: 1px solid #868686;
   border-radius: 0.25rem;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -3386,7 +3386,7 @@ input[type="button"].btn-block {
   line-height: 1.5;
   color: #495057;
   background-color: #FFF;
-  border: 1px solid #ced4da;
+  border: 1px solid #868686;
   border-radius: 0.25rem; }
   .custom-file-label::after {
     position: absolute;
@@ -10977,6 +10977,30 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 div[class*="MuiStepper-root-"] {
   padding: 0 !important; }
 
+.SummaryTab h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem; }
+
+.SummaryTab h4 strong span {
+  font-weight: 700; }
+
+.SummaryTab strong {
+  font-weight: 700 !important; }
+
+.SummaryTab strong, .SummaryTab span {
+  font-family: none; }
+
+.SummaryTab .pdf-container {
+  max-width: 100%; }
+
+.SummaryTab .pdf-container img {
+  border-bottom: 0 !important;
+  height: auto !important;
+  width: auto !important; }
+
+.SummaryTab .signature-information {
+  font-family: 'Tinos', serif; }
+
 .External-label, .External .Location-label {
   color: #FFF !important;
   font-family: 'Ropa Sans', sans-serif;
@@ -11027,6 +11051,7 @@ div[class*="MuiStepper-root-"] {
     font-family: 'Ropa Sans', sans-serif;
     font-size: 12px;
     font-weight: 700;
+    margin-left: 1.5rem;
     padding: 8px 18px;
     text-transform: uppercase;
     -webkit-transition: all 0.25s ease;
@@ -11081,6 +11106,8 @@ div[class*="MuiStepper-root-"] {
     background-color: transparent !important;
     color: #FFF !important;
     border: none;
+    border-bottom: 1px solid #868686;
+    border-radius: 0;
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
     font-family: 'Ropa Sans', sans-serif !important;

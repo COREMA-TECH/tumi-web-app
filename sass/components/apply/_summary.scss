@@ -1,0 +1,26 @@
+.SummaryTab {
+    h4 {
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    h4 strong span {
+        font-weight: 700;
+    }
+    strong {
+        font-weight: 700 !important;
+    }
+    strong, span {
+        font-family: none;
+    }
+    .pdf-container {
+        max-width: 100%;
+    }
+    .pdf-container img {
+        border-bottom: 0 !important;
+        height: auto !important;
+        width: auto !important;
+    }
+    .signature-information {
+        font-family: 'Tinos', serif;
+    }
+}
