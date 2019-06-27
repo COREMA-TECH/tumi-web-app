@@ -12,6 +12,7 @@ class Timer extends Component {
     }
 
     handleTime() {
+        console.log('Run handleTime');
         this.setState((prevState) => {
             let time = new Date(prevState.time);
             return { time: time.setSeconds(time.getSeconds() + 1) }
@@ -19,15 +20,18 @@ class Timer extends Component {
     }
 
     handleRun = (props) => {
+        console.log(props.run, 'propety is...');
+        console.log(interval, 'interval is...');
         let { run } = props;
-        if(run)
+        if(run && interval === null)
             interval=setInterval(()=>this.handleTime(),1000)
-        else
+        else if(run === false && interval !== null)
             clearInterval(interval);
     }
     
     componentWillReceiveProps(nextProp){
-        this.handleRun(nextProp);
+        if(nextProp.run !== this.props.run)
+            this.handleRun(nextProp);
     }
 
     render() {

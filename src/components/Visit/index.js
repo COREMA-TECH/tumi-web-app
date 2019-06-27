@@ -57,7 +57,6 @@ class Visit extends Component{
     }
 
     filterOpManager = (option) => {
-        console.log(option);
         if(option.value === 0){
             this.setState((prevState) => {
                 return {
@@ -135,7 +134,7 @@ class Visit extends Component{
                     </div>
                 </div>
 
-                <MasterShift open={this.state.masterShiftOpen} handleClose={() => this.handleMasterShift(false)} />
+                <MasterShift open={this.state.masterShiftOpen} propertiesData={properties} handleClose={() => this.handleMasterShift(false)} />
 
 
             </Fragment>

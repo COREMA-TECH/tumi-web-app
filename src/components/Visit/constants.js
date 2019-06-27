@@ -1,0 +1,1 @@
+export const OP_MANAGER_ROL_ID = 3; // Rol id from Operation Manager

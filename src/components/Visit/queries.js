@@ -1,11 +1,12 @@
 import gql from 'graphql-tag';
+import { OP_MANAGER_ROL_ID } from './constants';
 
 /**
  * Query to get operation manager
  */
 export const GET_OP_MANAGER = gql`
     query getUsers {
-        user(IsActive: 1, Id_Roles: 3) {
+        user(IsActive: 1, Id_Roles: ${OP_MANAGER_ROL_ID}) {
             Id
             Code_User
             Full_Name
