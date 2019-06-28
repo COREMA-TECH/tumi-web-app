@@ -17,3 +17,27 @@ export const GET_PROPERTIES_QUERY = gql`
   }
 `;
 
+/**
+ * Query to get employees by properties
+ */
+export const GET_EMPLOYEEES_BY_PROPERTIES = gql`
+  query employeesByProperties {
+    employeesByProperties {
+      code
+      name
+      count_associate
+      operationManager
+      region
+      count_department
+      employees {
+        id
+        name
+        position
+        los
+        phone
+        startDate
+      }
+    }
+  }
+`;
+
