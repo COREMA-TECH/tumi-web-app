@@ -1,6 +1,9 @@
 import React, {Component, Fragment } from 'react';
 import Select from 'react-select';
 import Timer from './timer';
+//import FileUpload from './fileUpload';
+import AWS from 'aws-sdk';
+
 import { OP_MANAGER_ROL_ID } from './constants';
 
 import moment from 'moment';
@@ -10,7 +13,7 @@ import {withApollo} from 'react-apollo';
 import { CREATE_VISIT_QUERY, UPDATE_VISIT_QUERY } from './mutations';
 import withGlobalContent from "../Generic/Global";
 
-
+const uuidv4 = require('uuid/v4');
 const styles = (theme) => ({
     timerBox: {
         backgroundColor: grey[300]
@@ -60,7 +63,6 @@ class MasterShift extends Component{
             }
         })
         .then(({data}) => {
-            console.log(data);
             this.setState(() => {
                 return { visitId: data.addVisit[0].id }
             });
@@ -88,76 +90,120 @@ class MasterShift extends Component{
     }
 
     handleSelectHotelChange = (e) => {
-        console.log(e);
         this.setState(() => {
             return { businessCompanyId: e.value}
         })
     }
 
-    handleStartButton = () => {
-        if(this.state.rolId !== OP_MANAGER_ROL_ID){
-            if (navigator.geolocation) {
-                setTimeout(() => {
-                    navigator.geolocation.getCurrentPosition((position) => { // success callback
-                        this.setState(() => {
-                            return {
-                                runTimer: true,
-                                showStartButton: false,
-                                showFinalizeButton: true,
-                                startTime: moment(new Date()).local().format("HH:mm:ss"),
-                                latitude: position.coords.latitude,
-                                longitude: position.coords.longitude,
-                                srcIframe: `http://maps.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&hl=es;z=14&amp;output=embed`
-                            }
-                        }, () => this.createVisit())
-                    }, () => { // error callback
-                        this.setState(() =>  {
-                            return { 
-                                runTimer: true,
-                                showStartButton: false,
-                                showFinalizeButton: true,
-                                startTime: moment(new Date()).local().format("HH:mm:ss")
-                            }
-                        }, () => this.createVisit())
-                    })
+    handleUploadImage = () => {
+		// Get the file selected
+        const file = this.state.file;
 
-                },3000)
+        try {
+            if (!file)
+                return true;
+
+            console.log(this.context.extImage, 'validacion de extensiones');
+            var _validFileExtensions = [...this.context.extImage];
+            if (
+                !_validFileExtensions.find((value) => {
+                    return file.name.toLowerCase().endsWith(value);
+                })
+            ) {
+                this.props.handleOpenSnackbar('warning', 'This format is not supported!', 'bottom', 'right');
+            } else if (file.size <= 0) {
+                this.props.handleOpenSnackbar('warning', 'File is empty', 'bottom', 'right');
+            } else if (file.size > this.context.maxFileSize) {
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    `File is too big. Max ${this.context.maxFileSize / 1024 / 1024} MB`,
+                    'bottom',
+                    'right'
+                );
+            } else {
+                console.log(file, 'archivo valido');
+                // Subida de la imagen
+                let s3 = new AWS.S3(this.context.credentialsS3);
+                // Create a random file
+                let filename = `${uuidv4()}_${file.name}`;
+                let route = 'images/' + filename;
+                // Configure bucket and key
+                let params = {
+                    Bucket: this.context.bucketS3,
+                    Key: route,
+                    contentType: file.type,
+                    ACL: 'public-read',
+                    Body: file
+                };
+                
+                return s3.upload(params);
+    
+                // s3.upload(params, (err, data) => {
+                // 	if (err) {
+                // 		// Update the progress
+                // 		this.setState(() => ({ uploadValue: 0, loading: false }));
+                // 		this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
+                // 	}
+                // 	else {
+                // 		this.setState(() => ({ uploadValue: 0, loading: false }));
+                // 		this.props.updateURL(data.Location, filename)
+                // 	};
+                // }).on('httpUploadProgress', evt => {
+                // 	// Update the progress
+                // 	this.setState(() => ({ uploadValue: parseInt((evt.loaded * 100) / evt.total) }));
+                // })
             }
-            else{
-                this.setState(() =>  {
-                    return { 
+        } catch (error) {
+            return "Error al cargar la imagen"
+        }
+
+	}
+
+    handleStartButton = async () => {
+        if(this.state.rolId !== OP_MANAGER_ROL_ID){
+            let posObj = {
+                latitude: '',
+                longitude: '',
+                srcIframe: ''
+            }
+
+            try {
+                if (navigator.geolocation) {
+                    await new Promise((resolve, reject) => 
+                        navigator.geolocation.getCurrentPosition((position) => { // success callback
+                            posObj.latitude = position.coords.latitude;
+                            posObj.longitude = position.coords.longitude;
+                            posObj.srcIframe = `http://maps.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&hl=es;z=14&amp;output=embed`;
+                            
+                            resolve(posObj)
+                        }, () => reject("The location could not be obtained")) // Error callback
+                    )
+                }
+
+                console.log('Antes de la subida de la imagen');
+                let respUpload = await this.handleUploadImage();
+                console.log(respUpload, 'Respuesta de subida de la imagen');
+    
+                this.setState(() => {
+                    return {
                         runTimer: true,
                         showStartButton: false,
                         showFinalizeButton: true,
-                        startTime: moment(new Date()).local().format("HH:mm:ss")
+                        startTime: moment(new Date()).local().format("HH:mm:ss"),
+                        latitude: posObj.latitude,
+                        longitude: posObj.longitude,
+                        srcIframe: posObj.srcIframe
                     }
-                }, () => this.createVisit())
+                })//, () => this.createVisit())
+            } catch (error) {
+                console.log(error, 'error en el catch');
+                // this.props.handleOpenSnackbar(
+                //     'error',
+                //     error || 'Otro error XD',
+                //     'bottom',
+                //     'right'
+                // );
             }
-
-            // this.setState(() =>  {
-            //     return { 
-            //         runTimer: true,
-            //         showStartButton: false,
-            //         showFinalizeButton: true,
-            //         startTime: moment(new Date()).local().format("HH:mm:ss")
-            //     }
-            // }, () => {
-            //     if (navigator.geolocation) {
-            //         setTimeout(() => {
-            //             navigator.geolocation.getCurrentPosition((position) => {
-            //                 this.setState(() => {
-            //                     return {
-            //                         latitude: position.coords.latitude,
-            //                         longitude: position.coords.longitude,
-            //                         srcIframe: `http://maps.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&hl=es;z=14&amp;output=embed`
-            //                     }
-            //                 })
-            //             })
-
-            //         },3000)
-            //     }
-            // })
-
             
         }
         else{
