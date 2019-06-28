@@ -70,7 +70,8 @@
 		"smooth-dnd": "^0.6.3",
 		"throttle-debounce": "^2.1.0",
 		"uuid": "^3.3.2",
-		"webpack": "^3.11.0"
+		"webpack": "^3.11.0",
+		"aws-sdk": "^2.404.0"
 	},
 	"scripts": {
 		"start": "set PORT=3000 && react-scripts start",
