@@ -5,12 +5,14 @@ import Select from 'react-select';
 import { GET_PROPERTIES_QUERY, GET_EMPLOYEEES_BY_PROPERTIES } from './queries';
 import withApollo from 'react-apollo/withApollo';
 import moment from 'moment';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
 class EmployeesProperties extends Component{
 
     state = {
         properties: [],
-        employeesByProperties: []
+        employeesByProperties: [],
+        loading: true
     }
 
     getProperties = () => {
@@ -48,7 +50,9 @@ class EmployeesProperties extends Component{
         }).then(({ data }) => {
             this.setState(prevState => ({
                 employeesByProperties: data.employeesByProperties
-            }));
+            }), _ => {
+                this.setState(prevState => ({loading: false}))
+            });
 
         }).catch(error => {
             this.setState(() => ({ loadingProperties: false }));
@@ -80,6 +84,7 @@ class EmployeesProperties extends Component{
                         Employees by Properties
                     </div>
                     <div className="card-body p-0">
+                        {this.state.loading ? <LinearProgress />: ""}
                         {this.state.employeesByProperties.map(property => {
                             return <Accordion title={property.code + " | " + property.name}>
                                 <div className="w-100">
@@ -101,12 +106,12 @@ class EmployeesProperties extends Component{
                                                 <tr>
                                                     <td>{property.code}</td>
                                                     <td>{property.name}</td>
-                                                    <td>1</td>
+                                                    <td>{property.count_department}</td>
                                                     <td>{property.count_associate}</td>
                                                     <td>4/30/2019</td>
                                                     <td>{320}</td>
                                                     <td>Interstate Hotels</td>
-                                                    <td>Richard Ponton</td>
+                                                    <td>{property.operationManager === "null null" ? "No Name" : property.operationManager}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

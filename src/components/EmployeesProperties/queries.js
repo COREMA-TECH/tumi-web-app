@@ -26,6 +26,9 @@ export const GET_EMPLOYEEES_BY_PROPERTIES = gql`
       code
       name
       count_associate
+      operationManager
+      region
+      count_department
       employees {
         id
         name
