@@ -1,16 +1,16 @@
 import React, {Component, Fragment } from 'react';
 import Select from 'react-select';
-import Timer from './timer';
-//import FileUpload from './fileUpload';
+import Timer from './Timer';
 import AWS from 'aws-sdk';
+import PropTypes from 'prop-types';
 
-import { OP_MANAGER_ROL_ID } from './constants';
+import { OP_MANAGER_ROL_ID } from './Constants';
 
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import {withApollo} from 'react-apollo';
-import { CREATE_VISIT_QUERY, UPDATE_VISIT_QUERY } from './mutations';
+import { CREATE_VISIT_QUERY, UPDATE_VISIT_QUERY } from './Mutations';
 import withGlobalContent from "../Generic/Global";
 
 const uuidv4 = require('uuid/v4');
@@ -33,20 +33,23 @@ class MasterShift extends Component{
             businessCompanyId: 0,
             runTimer: false,
             comment: '',
-            file: {},
+            file: null,
+            urlFile: '',
             showStartButton: true,
             showFinalizeButton: false,
             startTime: null,
             endTime: null,
             latitude: '',
             longitude: '',
-            srcIframe: ''
+            srcIframe: '',
+            formDisabled: false,
+            disableFinalizeButton: false
         }
 
     }
 
     createVisit = () => {
-        let { userId, businessCompanyId, startTime, file, comment, latitude, longitude } = this.state;
+        let { userId, businessCompanyId, startTime, urlFile, comment, latitude, longitude } = this.state;
         this.props.client.mutate({
             mutation: CREATE_VISIT_QUERY,
             variables: {
@@ -55,7 +58,7 @@ class MasterShift extends Component{
                     BusinessCompanyId: businessCompanyId,
                     startTime: startTime,
                     endTime: startTime, // no null
-                    url: '',
+                    url: urlFile,
                     comment: comment,
                     startLatitude: latitude,
                     startLongitude: longitude
@@ -64,7 +67,12 @@ class MasterShift extends Component{
         })
         .then(({data}) => {
             this.setState(() => {
-                return { visitId: data.addVisit[0].id }
+                return { 
+                    visitId: data.addVisit[0].id,
+                    runTimer: true,
+                    showStartButton: false,
+                    showFinalizeButton: true,
+                }
             });
 
             this.props.handleOpenSnackbar(
@@ -74,10 +82,55 @@ class MasterShift extends Component{
                 'right'
             );
         })
-        .catch(() => {
+        .catch((error) => {
+            this.setState(() => {
+                return { formDisabled: false }
+            })
             this.props.handleOpenSnackbar(
                 'error',
                 'Error to save visit',
+                'bottom',
+                'right'
+            );
+        })
+    }
+
+    updateVisit = () => {
+        let { visitId, startTime, endTime, latitude, longitude } = this.state;
+        this.props.client.mutate({
+            mutation: UPDATE_VISIT_QUERY,
+            variables: {
+                visit: {
+                    id: visitId,
+                    startTime: startTime, // required
+                    endTime: endTime, // Finalize
+                    endLatitude: latitude,
+                    endLongitude: longitude
+                }
+            }
+        })
+        .then(({data}) => {
+            this.setState(() => {
+                return {
+                    runTimer: false,
+                    showFinalizeButton: false,
+                }
+            })
+            this.props.handleOpenSnackbar(
+                'success',
+                'Successfully updated',
+                'bottom',
+                'right'
+            );
+        })
+        .catch((error) => {
+            this.setState(() => {
+                return { disableFinalizeButton: false }
+            })
+
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error to update visit',
                 'bottom',
                 'right'
             );
@@ -98,113 +151,110 @@ class MasterShift extends Component{
     handleUploadImage = () => {
 		// Get the file selected
         const file = this.state.file;
-
-        try {
-            if (!file)
-                return true;
-
-            console.log(this.context.extImage, 'validacion de extensiones');
-            var _validFileExtensions = [...this.context.extImage];
-            if (
-                !_validFileExtensions.find((value) => {
-                    return file.name.toLowerCase().endsWith(value);
-                })
-            ) {
-                this.props.handleOpenSnackbar('warning', 'This format is not supported!', 'bottom', 'right');
-            } else if (file.size <= 0) {
-                this.props.handleOpenSnackbar('warning', 'File is empty', 'bottom', 'right');
-            } else if (file.size > this.context.maxFileSize) {
-                this.props.handleOpenSnackbar(
-                    'warning',
-                    `File is too big. Max ${this.context.maxFileSize / 1024 / 1024} MB`,
-                    'bottom',
-                    'right'
-                );
-            } else {
-                console.log(file, 'archivo valido');
-                // Subida de la imagen
-                let s3 = new AWS.S3(this.context.credentialsS3);
-                // Create a random file
-                let filename = `${uuidv4()}_${file.name}`;
-                let route = 'images/' + filename;
-                // Configure bucket and key
-                let params = {
-                    Bucket: this.context.bucketS3,
-                    Key: route,
-                    contentType: file.type,
-                    ACL: 'public-read',
-                    Body: file
-                };
-                
-                return s3.upload(params);
-    
-                // s3.upload(params, (err, data) => {
-                // 	if (err) {
-                // 		// Update the progress
-                // 		this.setState(() => ({ uploadValue: 0, loading: false }));
-                // 		this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
-                // 	}
-                // 	else {
-                // 		this.setState(() => ({ uploadValue: 0, loading: false }));
-                // 		this.props.updateURL(data.Location, filename)
-                // 	};
-                // }).on('httpUploadProgress', evt => {
-                // 	// Update the progress
-                // 	this.setState(() => ({ uploadValue: parseInt((evt.loaded * 100) / evt.total) }));
-                // })
-            }
-        } catch (error) {
-            return "Error al cargar la imagen"
-        }
-
-	}
-
-    handleStartButton = async () => {
-        if(this.state.rolId !== OP_MANAGER_ROL_ID){
-            let posObj = {
-                latitude: '',
-                longitude: '',
-                srcIframe: ''
-            }
-
+        
+        return new Promise((resolve, reject) => {
             try {
-                if (navigator.geolocation) {
-                    await new Promise((resolve, reject) => 
-                        navigator.geolocation.getCurrentPosition((position) => { // success callback
-                            posObj.latitude = position.coords.latitude;
-                            posObj.longitude = position.coords.longitude;
-                            posObj.srcIframe = `http://maps.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&hl=es;z=14&amp;output=embed`;
-                            
-                            resolve(posObj)
-                        }, () => reject("The location could not be obtained")) // Error callback
-                    )
+                if (!file) return resolve({location: '', fileName: ''});
+                var _validFileExtensions = [...this.context.extImage];
+                if (
+                    !_validFileExtensions.find((value) => {
+                        return file.name.toLowerCase().endsWith(value);
+                    })
+                ){
+                    return reject('This format is not supported!');
                 }
+                else if (file.size <= 0) return reject('File is empty');
+                else if (file.size > this.context.maxFileSize) return reject(`File is too big. Max ${this.context.maxFileSize / 1024 / 1024} MB`);
+                else {
+                    // Subida de la imagen
+                    let s3 = new AWS.S3(this.context.credentialsS3);
+                    // Create a random file
+                    let filename = `${uuidv4()}_${file.name}`;
+                    let route = 'images/' + filename;
+                    // Configure bucket and key
+                    let params = {
+                        Bucket: this.context.bucketS3,
+                        Key: route,
+                        contentType: file.type,
+                        ACL: 'public-read',
+                        Body: file
+                    };
 
-                console.log('Antes de la subida de la imagen');
-                let respUpload = await this.handleUploadImage();
-                console.log(respUpload, 'Respuesta de subida de la imagen');
-    
-                this.setState(() => {
-                    return {
-                        runTimer: true,
-                        showStartButton: false,
-                        showFinalizeButton: true,
-                        startTime: moment(new Date()).local().format("HH:mm:ss"),
-                        latitude: posObj.latitude,
-                        longitude: posObj.longitude,
-                        srcIframe: posObj.srcIframe
-                    }
-                })//, () => this.createVisit())
+                    return resolve({location: 'https://orion1-files.s3.amazonaws.com/images/9f71d9d4-448b-4f47-ac54-e77b841b5821_Bart-Simpson_gamer.jpg', fileName: filename})
+        
+                    // s3.upload(params, (err, data) => {
+                    // 	if (err)
+                    //         return reject('Error Loading File');
+                    // 	else
+                    // 	    return resolve({location: data.Location, fileName: filename});
+                    // })
+                }
             } catch (error) {
-                console.log(error, 'error en el catch');
-                // this.props.handleOpenSnackbar(
-                //     'error',
-                //     error || 'Otro error XD',
-                //     'bottom',
-                //     'right'
-                // );
+                return reject('Error Loading File');
             }
-            
+        })
+
+
+    }
+    
+    handleGeoPosition = () => {
+        return new Promise((resolve, reject) => 
+
+            setTimeout(() => {
+                navigator.geolocation.getCurrentPosition((position) => { // success callback
+                    let posObj = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        srcIframe: `http://maps.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&hl=es;z=14&amp;output=embed`
+                    }
+    
+                    return resolve(posObj)
+                }, () => reject("The location could not be obtained")) // Error callback
+                
+            }, 5000)
+        )
+    }
+
+    handleStartButton = () => {
+        if(this.state.rolId !== OP_MANAGER_ROL_ID){
+            this.setState(() => {
+                return {formDisabled: true}
+            }, async () => {
+                let posObj = {
+                    latitude: '',
+                    longitude: '',
+                    srcIframe: ''
+                }
+    
+                try {
+                    if (navigator.geolocation) {
+                        posObj = await this.handleGeoPosition();
+                    }
+    
+                    let respUpload = await this.handleUploadImage();
+        
+                    this.setState(() => {
+                        return {
+                            startTime: moment(new Date()).local().format("HH:mm:ss"),
+                            latitude: posObj.latitude,
+                            longitude: posObj.longitude,
+                            srcIframe: posObj.srcIframe,
+                            urlFile: respUpload.location
+                        }
+                    }, () => this.createVisit())
+                } catch (error) {
+                    this.setState(() => {
+                        return { formDisabled: false }
+                    });
+
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        error || 'An unexpected error has occurred, contact your system administrator',
+                        'bottom',
+                        'right'
+                    );
+                }
+            })
         }
         else{
             this.props.handleOpenSnackbar(
@@ -217,13 +267,49 @@ class MasterShift extends Component{
     }
 
     handleFinalizeButton = () => {
-        this.setState(() => {
-            return { 
-                runTimer: false,
-                showFinalizeButton: false,
-                endTime: moment(new Date()).local().format("HH:mm:ss")
-            }
-        })
+        if(this.state.rolId !== OP_MANAGER_ROL_ID){
+            this.setState(() => {
+                return { disableFinalizeButton: false }
+            }, async () => {
+                let posObj = {
+                    latitude: '',
+                    longitude: '',
+                    srcIframe: ''
+                }
+    
+                try {
+                    if (navigator.geolocation) {
+                        posObj = await this.handleGeoPosition();
+                    }
+    
+                    this.setState(() => {
+                        return {
+                            endTime: moment(new Date()).local().format("HH:mm:ss"),
+                            latitude: posObj.latitude,
+                            longitude: posObj.longitude,
+                            srcIframe: posObj.srcIframe
+                        }
+                    }, () => this.updateVisit())
+                } catch (error) {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        error || 'An unexpected error has occurred, contact your system administrator',
+                        'bottom',
+                        'right'
+                    );
+                }
+            })
+            
+        }
+        else{
+            this.props.handleOpenSnackbar(
+                'error',
+                'This functionality is exclusive for users with role operation manager',
+                'bottom',
+                'right'
+            );
+        }
+
     }
 
     handleComment = (e) => {
@@ -266,7 +352,7 @@ class MasterShift extends Component{
 
     render() {
         let { open, classes } = this.props;
-        let { showStartButton, showFinalizeButton, startTime, endTime, propertiesOpt, srcIframe } = this.state;
+        let { showStartButton, showFinalizeButton, startTime, endTime, propertiesOpt, srcIframe, formDisabled, disableFinalizeButton } = this.state;
         
         return (
             <Fragment>
@@ -295,6 +381,7 @@ class MasterShift extends Component{
                                     onChange={this.handleSelectHotelChange}
                                     placeholder="Select a Hotel"
                                     closeMenuOnSelect
+                                    isDisabled={formDisabled}
                                 />
                                 
                                 <label htmlFor="">Location</label>
@@ -307,6 +394,7 @@ class MasterShift extends Component{
                                     rows="3"
                                     className="form-control textarea-apply-form"
                                     onChange={this.handleComment}
+                                    disabled={formDisabled}
                                 />
 
                                 <label htmlFor="">Photo</label>
@@ -315,7 +403,7 @@ class MasterShift extends Component{
                                         <span className="input-group-text" id="inputGroupFileAddon01">Upload</span>
                                     </div>
                                     <div className="custom-file">
-                                        <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" onChange={this.handleFileInput} />
+                                        <input type="file" className="custom-file-input" id="inputGroupFile01" disabled={formDisabled} onChange={this.handleFileInput} />
                                         <label className="custom-file-label" htmlFor="">Choose file</label>
                                     </div>
                                 </div>
@@ -334,6 +422,7 @@ class MasterShift extends Component{
                                                         type="button" 
                                                         className="btn btn-sm btn-primary btn-block"
                                                         onClick={this.handleStartButton}
+                                                        disabled={formDisabled}
                                                         >
                                                         Start
                                                     </button>
@@ -351,6 +440,7 @@ class MasterShift extends Component{
                                                         type="button" 
                                                         className="btn btn-sm btn-danger btn-block"
                                                         onClick={this.handleFinalizeButton}
+                                                        disabled={disableFinalizeButton}
                                                         >
                                                         Finalize
                                                     </button>
@@ -372,6 +462,12 @@ class MasterShift extends Component{
             </Fragment>
         )
     }
+    static contextTypes = {
+		maxFileSize: PropTypes.number,
+		extImage: PropTypes.array,
+		credentialsS3: PropTypes.object,
+		bucketS3: PropTypes.string
+	};
 }
 
 export default withStyles(styles)(withGlobalContent(withApollo(MasterShift)));

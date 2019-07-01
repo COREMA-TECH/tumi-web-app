@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { OP_MANAGER_ROL_ID } from './constants';
+import { OP_MANAGER_ROL_ID } from './Constants';
 
 /**
  * Query to get operation manager

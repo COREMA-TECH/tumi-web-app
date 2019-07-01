@@ -144,17 +144,17 @@ class VerticalLinearStepper extends Component {
         birthDay: '',
         car: false,
         typeOfId: '',
-        expireDateId: '',
+        expireDateId: null,
         emailAddress: '',
         positionApplyingFor: 1,
         idealJob: '',
         idealJobs: [],
-        dateAvailable: '',
+        dateAvailable: null,
         scheduleRestrictions: '0',
         scheduleExplain: '',
         convicted: '0',
         convictedExplain: '',
-        socialNetwork: '',
+        socialNetwork: 0,
         comment: '',
 
         // Languages array
@@ -169,8 +169,8 @@ class VerticalLinearStepper extends Component {
 
         // Military Service state fields
         branch: '',
-        startDateMilitaryService: '',
-        endDateMilitaryService: '',
+        startDateMilitaryService: null,
+        endDateMilitaryService: null,
         rankAtDischarge: '',
         typeOfDischarge: '',
 
@@ -182,8 +182,8 @@ class VerticalLinearStepper extends Component {
         companySupervisor: '',
         companyJobTitle: '',
         companyPayRate: '',
-        companyStartDate: '',
-        companyEndDate: '',
+        companyStartDate: null,
+        companyEndDate: null,
         companyReasonForLeaving: '',
 
         percent: 50,
@@ -227,7 +227,7 @@ class VerticalLinearStepper extends Component {
         ],
 
         heardTumiOptions: [
-            { value:'', label:'Select an Option' },
+            { value: 0, label:'Select an Option' },
             { value: 1, label:'Facebook' },
             { value: 2, label:'Linkedin' },
             { value: 3, label:'Instagram' },
@@ -235,6 +235,8 @@ class VerticalLinearStepper extends Component {
             { value: 5, label:'Journals' },
             { value: 6, label:'Other' },
         ],
+
+        optionHearTumi: 0
     }
 
     constructor(props) {
@@ -269,7 +271,7 @@ class VerticalLinearStepper extends Component {
     findSelectedReference = refId => {
         const defValue = {value: "", label: `${this.state.labels.selectOption[this.state.displayLanguage]}`};
 
-        if(!refId || refId === "")
+        if(!refId || refId === "" || refId === 0)
             return defValue;
 
         const found = this.state.heardTumiOptions.find(item => {
@@ -641,7 +643,7 @@ class VerticalLinearStepper extends Component {
             });
 
             this.state.schools.forEach((item) => {
-                item.ApplicationId = this.state.applicationId;
+                item.ApplicationId = this.state.applicationId;                
             });
 
             // Then insert education list
@@ -722,7 +724,23 @@ class VerticalLinearStepper extends Component {
 
     // To insert a object with mnilitary service information
     insertMilitaryServicesApplication = () => {
-        // TODO: validate empty fields in this sections
+        // Validate empty fields in this sections
+        const {branch, startDateMilitaryService, endDateMilitaryService, rankAtDischarge, typeOfDischarge} = this.state;        
+        const formData = {branch, startDateMilitaryService, endDateMilitaryService, rankAtDischarge, typeOfDischarge};
+        
+        if(!this.validateFormHasContent(formData)) {
+            this.props.handleOpenSnackbar(
+                'warning',
+                'Please fill in at least one field',
+                'bottom',
+                'center'
+            );
+
+            return false;
+        }
+
+        console.log(formData);
+
         if (
             this.state.branch ||
             this.state.startDateMilitaryService ||
@@ -737,8 +755,8 @@ class VerticalLinearStepper extends Component {
                         application: [
                             {
                                 branch: this.state.branch,
-                                startDate: this.state.startDateMilitaryService,
-                                endDate: this.state.endDateMilitaryService,
+                                startDate: this.state.startDateMilitaryService === '' ? null : this.state.startDateMilitaryService,
+                                endDate: this.state.endDateMilitaryService === '' ? null : this.state.endDateMilitaryService,
                                 rankAtDischarge: this.state.rankAtDischarge,
                                 typeOfDischarge: parseInt(this.state.typeOfDischarge),
                                 ApplicationId: this.state.applicationId
@@ -757,7 +775,12 @@ class VerticalLinearStepper extends Component {
                     this.handleNext();
                 })
                 .catch((error) => {
-                   
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to save information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
                 });
         } else {
             this.handleNext();
@@ -1446,6 +1469,19 @@ class VerticalLinearStepper extends Component {
                         level: this.state.percent
                     };
 
+                    const formData = {description: item.description};
+                    
+                    if(!this.validateFormHasContent(formData)) {
+                        this.props.handleOpenSnackbar(
+                            'warning',
+                            'Please fill in at least one field',
+                            'bottom',
+                            'center'
+                        );
+
+                        return false;
+                    }
+
                     this.setState(
                         (prevState) => ({
                             open: false,
@@ -1519,12 +1555,25 @@ class VerticalLinearStepper extends Component {
                         schoolType: document.getElementById('studyType').value,
                         educationName: document.getElementById('institutionName').value,
                         educationAddress: document.getElementById('addressInstitution').value,
-                        startDate: document.getElementById('startPeriod').value,
-                        endDate: document.getElementById('endPeriod').value,
+                        startDate: document.getElementById('startPeriod').value === '' ? null : document.getElementById('startPeriod').value,
+                        endDate: document.getElementById('endPeriod').value === '' ? null : document.getElementById('endPeriod').value,
                         graduated: document.getElementById('graduated').checked,
                         degree: parseInt(document.getElementById('degree').value),
                         ApplicationId: 1 // Static application id
                     };
+
+                    const formData = {...item, uuid: null, ApplicationId: null};
+                    if(!this.validateFormHasContent(formData)) {
+                        this.props.handleOpenSnackbar(
+                            'warning',
+                            'Please fill in at least one field',
+                            'bottom',
+                            'center'
+                        );
+
+                        return false;
+                    }
+
                     this.setState(
                         (prevState) => {                            
                             return {
@@ -1893,7 +1942,7 @@ class VerticalLinearStepper extends Component {
                 <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
                     {labels.back[displayLanguage]}
                 </Button>
-                <Button type="submit" onClick={this.insertMilitaryServicesApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
+                <Button onClick={this.insertMilitaryServicesApplication} variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`}>
                     {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
                 </Button>             
             </div>  
@@ -1919,11 +1968,24 @@ class VerticalLinearStepper extends Component {
                         supervisor: document.getElementById('companySupervisor').value,
                         jobTitle: document.getElementById('companyJobTitle').value,
                         payRate: parseFloat(document.getElementById('companyPayRate').value),
-                        startDate: document.getElementById('companyStartDate').value,
-                        endDate: document.getElementById('companyEndDate').value,
+                        startDate: document.getElementById('companyStartDate').value === '' ? null : document.getElementById('companyStartDate').value,
+                        endDate: document.getElementById('companyEndDate').value === '' ? null : document.getElementById('companyEndDate').value,
                         reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
                         ApplicationId: 1 // Static application id
                     };
+
+                    const formData = {...item, uuid: null, ApplicationId: null};
+                    if(!this.validateFormHasContent(formData)) {
+                        this.props.handleOpenSnackbar(
+                            'warning',
+                            'Please fill in at least one field',
+                            'bottom',
+                            'center'
+                        );
+
+                        return false;
+                    }
+
                     this.setState(
                         (prevState) => ({
                             open: false,
@@ -2296,6 +2358,19 @@ class VerticalLinearStepper extends Component {
                         writing: parseInt(document.getElementById('writingLanguage').value),
                         conversation: parseInt(document.getElementById('conversationLanguage').value)
                     };
+
+                    const formData = {...item, uuid: null, ApplicationId: null};
+                    if(!this.validateFormHasContent(formData)) {
+                        this.props.handleOpenSnackbar(
+                            'warning',
+                            'Please fill in at least one field',
+                            'bottom',
+                            'center'
+                        );
+
+                        return false;
+                    }
+
                     this.setState(
                         (prevState) => ({
                             open: false,
@@ -2549,6 +2624,19 @@ class VerticalLinearStepper extends Component {
     };
 //#endregion
 
+    validateFormHasContent = fieldsObject => {
+        let hasAtLeastOneField = false;
+
+        for (const property in fieldsObject) {
+            if(fieldsObject[property] && fieldsObject[property] !== '' && fieldsObject[property] !== 0 && fieldsObject[property] !== '0') {
+                hasAtLeastOneField = true;
+                break;
+            }                                                                
+        }
+
+        return hasAtLeastOneField;
+    }
+
     render() {
         const { classes } = this.props;
         const steps = getSteps();
@@ -2612,15 +2700,7 @@ class VerticalLinearStepper extends Component {
                                             );
                                         })}
                                     </Stepper>
-                                </div>
-                                {/* {activeStep === steps.length && (
-                                    <Paper square elevation={0} className={classes.resetContainer}>
-                                        <Typography>All steps completed - you&quot;re finished</Typography>
-                                        <Button onClick={this.handleReset} className={classes.button}>
-                                            Reset
-                                        </Button>
-                                    </Paper>
-                                )} */}
+                                </div>                                
                             </div>
                             <div className="col-12 col-md-8 Application-col">
                                 <Typography className="">
@@ -2646,7 +2726,19 @@ class VerticalLinearStepper extends Component {
                                                             this.props.handleOpenSnackbar('warning', 'ZipCode needed');
                                                         else {
                                                             // Call mutation to create a application
-                                                            // const {firstName, middleName, lastName, lastName2, streetAddress, aptNumber, homePhone, cellPhone, socialSecurityNumber, car, idTypeOptions, typeOfId, emailAddress, positionApplyingFor, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain, socialNetwork} = this.state;
+                                                            const {firstName, middleName, lastName, lastName2, streetAddress, aptNumber, homePhone, cellPhone, socialSecurityNumber, car, typeOfId, emailAddress, positionApplyingFor, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain, socialNetwork} = this.state;                                                            
+                                                            const formData = {firstName, middleName, lastName, lastName2, streetAddress, aptNumber, homePhone, cellPhone, socialSecurityNumber, car, emailAddress, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain};
+                                                            
+                                                            if(!this.validateFormHasContent(formData)) {
+                                                                this.props.handleOpenSnackbar(
+                                                                    'warning',
+                                                                    'Please fill in at least one field',
+                                                                    'bottom',
+                                                                    'center'
+                                                                );
+
+                                                                return false;
+                                                            }
 
                                                             if (this.state.applicationId === null) {
                                                                 this.insertApplicationInformation(history);

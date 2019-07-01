@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import firebase from 'firebase';
+import AWS from "aws-sdk";
 
 const uuidv4 = require('uuid/v4');
+
 class ImageSelection extends Component {
     state = {
         fileURL: '',
@@ -47,77 +48,42 @@ class ImageSelection extends Component {
             this.setState({
                 loading: true
             });
-
-            // Build the reference based in the filename
-            const storageRef = firebase.storage().ref(`/images/${uuidv4()}`);
-
-            // Send the reference and save the file in Firebase Storage
-            const task = storageRef.put(file);
-
-            task.on(
-                'state_changed',
-                (snapshot) => {
-                    let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
-
-                    // Update the progress
-                    this.setState({
-                        progress: percentage
-                    });
-                },
-                (error) => {
-                    this.setState({ loading: false });
-                    this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
-                },
-                () => {
-                    storageRef.getDownloadURL().then((url) => {
-                        setTimeout(() => {
-                            this.setState({ loading: false });
-                            this.props.returnImage(url)
-                        }, 500);
-                    });
-                }
-            );
+            this.uploadImageToS3(file);
             event.target.value = '';
         }
     }
-    uploadPhotoFireBase = (image) => {
 
+    uploadImageToS3 = (image) => {
         // Loading state
-        this.setState({
+        this.setState(() => ({
             loading: true
-        });
+        }), () => {
+            let s3 = new AWS.S3(this.context.credentialsS3);
+            // Create a random file
+            let filename = uuidv4() + '.png';
+            let route = 'images/' + filename;
+            // Configure bucket and key
+            let params = {
+                Bucket: this.context.bucketS3,
+                Key: route,
+                ContentType: 'image/png',
+                ACL: 'public-read',
+                Body: image
+            };
 
-        // Build the reference based in the filename
-        const storageRef = firebase.storage().ref(`/images/${uuidv4()}`);
-
-        // Send the reference and save the file in Firebase Storage
-        const task = storageRef.putString(image, 'data_url', { contentType: 'image/png' });
-
-        task.on(
-            'state_changed',
-            (snapshot) => {
-                let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
-
+            s3.upload(params, (err, data) => {
+                if (err) {
+                    // Update the progress
+                    this.setState(() => ({ progress: 0, loading: false }));
+                    this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
+                }
+                else this.props.returnImage(data.Location);
+            }).on('httpUploadProgress', evt => {
                 // Update the progress
-                this.setState({
-                    progress: percentage
-                });
-            },
-            (error) => {
-                this.setState({ loading: false });
-                this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
-            },
-            () => {
-                storageRef.getDownloadURL().then((url) => {
-                    setTimeout(() => {
-                        this.setState({ loading: false });
-                        this.props.returnImage(url)
-                    }, 500);
-                });
-            }
-        );
-
-    }
+                this.setState(() => ({ progress: parseInt((evt.loaded * 100) / evt.total) }));
+            })
+        });
+    };
 
     showProgress = () => {
         if (this.state.loading)
@@ -212,7 +178,7 @@ class ImageSelection extends Component {
             </button>
         } else {
             return <React.Fragment>
-                <button className="btn btn-info btn-circle btn-lg" onClick={() => this.uploadPhotoFireBase(this.state.capturedImage)} disabled={this.state.loading}>
+                <button className="btn btn-info btn-circle btn-lg" onClick={() => this.uploadImageToS3(this.state.capturedImage)} disabled={this.state.loading}>
                     <i class="fas fa-check"></i>
                 </button>
                 <button className="btn btn-danger btn-circle btn-lg" onClick={() => { this.setState({ capturedImage: '' }) }} disabled={this.state.loading}>
@@ -258,7 +224,9 @@ class ImageSelection extends Component {
         </div >
     }
     static contextTypes = {
-        extImage: PropTypes.array
+        extImage: PropTypes.array,
+        credentialsS3: PropTypes.object,
+        bucketS3: PropTypes.string
     };
 }
 

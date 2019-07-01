@@ -28,7 +28,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -194,9 +194,12 @@ class General extends Component {
             DeparmentTitle: '',
             myHotels: [],
             locationAbletoWorkId: 0,
-            openVerification:false,
+            applicationEmployeeId: null,
+            openVerification: false,
             date: new Date().toISOString().substring(0, 10),
-            codeUser:'',
+            codeUser: '',
+            employeeHotelId: 0,
+            employeeHotelName: ''
 
         }
     }
@@ -364,18 +367,31 @@ class General extends Component {
     };
 
     updateContactByHotelApplication = () => {
+        let mutation = null, variables = {}
         this.setState(() => ({ removingLocationAbleToWork: true }))
+        if (this.state.locationAbletoWorkId) {
+            mutation = DISABLE_CONTACT_BY_HOTEL_APPLICATION;
+            variables = {
+                Id_Entity: this.state.locationAbletoWorkId,
+                ApplicationId: this.props.applicationId
+            }
+        } else {
+            mutation = UPDATE_EMPLOYEE;
+            variables = {
+                employees: {
+                    id: this.state.employeeHotelEmployeeId,
+                    idEntity: null
+                }
+            }
+        }
         this.props.client
             .mutate({
-                mutation: DISABLE_CONTACT_BY_HOTEL_APPLICATION,
-                variables: {
-                    Id_Entity: this.state.locationAbletoWorkId,
-                    ApplicationId: this.props.applicationId
-                }
+                mutation,
+                variables
             })
             .then(({ data }) => {
                 this.props.handleOpenSnackbar('success', 'Record deleted!');
-                this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false}), this.getMyHotels)
+                this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false, employeeHotelId: 0, employeeHotelName: '' }), this.getMyHotels)
 
             })
             .catch(error => {
@@ -384,6 +400,7 @@ class General extends Component {
                 this.setState(() => ({ removingLocationAbleToWork: false }))
 
             })
+
     };
     /**
      * To hide modal and then restart modal state values
@@ -402,7 +419,7 @@ class General extends Component {
     };
 
     handleCloseModalVerificacion = () => {
-        this.setState({openVerification: false})
+        this.setState({ openVerification: false })
     };
 
     /**
@@ -441,7 +458,7 @@ class General extends Component {
             variables: {
                 id: id
             }
-        }).then(({ data }) => { 
+        }).then(({ data }) => {
             let user = data.applicationCodeUser[0];
             this.setState((prevState, prevProps) => {
                 return { Code_User: user.Code_User || '--' }
@@ -486,13 +503,17 @@ class General extends Component {
                                 isLead: this.state.data.isLead,
                                 loading: false,
                                 directDeposit: this.state.data.directDeposit,
-                                isActive:this.state.data.isActive,
+                                isActive: this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
-                                EmployeeId: this.state.data.employee? this.state.data.employee.EmployeeId : 999999,
+                                EmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 999999,
                                 hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("YYYY-MM-DD")}` : '--',
                                 idealJobs: this.state.data.idealJobs,
-                                applicantName: this.state.data.firstName+' '+this.state.data.lastName,
-                                codeUser:this.state.data.user?this.state.data.user.Code_User:'--'
+                                applicantName: this.state.data.firstName + ' ' + this.state.data.lastName,
+                                codeUser: this.state.data.user ? this.state.data.user.Code_User : '--',
+                                employeeHotelId: this.state.data.employee ? this.state.data.employee.Employees.idEntity : 0,
+                                employeeHotelEmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 0,
+                                employeeHotelName: this.state.data.employee ? (this.state.data.employee.Employees.BusinessCompany ? this.state.data.employee.Employees.BusinessCompany.Name : '') : '',
+
                             }, _ => {
                                 this.getCodeUser(id);
                             })
@@ -543,7 +564,7 @@ class General extends Component {
                     let options = [];
                     this.state.hotels.map(item => {
                         let hotel = this.state.myHotels.find(_ => { return _.Id == item.Id });
-                        if (!hotel) {
+                        if (!hotel && item.Id != this.state.employeeHotelId) {
                             options.push({ value: item.Id, label: `${item.Code} - ${item.Name}` });
                             this.setState(prevState => ({
                                 properties: options
@@ -767,7 +788,7 @@ class General extends Component {
                         this.props.handleOpenSnackbar('success', 'Contact Inserted!');
                         this.setState(() => ({
                             openModal: false,
-                            openVerification:false,
+                            openVerification: false,
                             saving: false,
                             property: [],
                             type: null,
@@ -1264,11 +1285,11 @@ class General extends Component {
     }
 
     hanldeOpenTitleModal = () => {
-        this.setState({titleModal: !this.state.titleModal});
+        this.setState({ titleModal: !this.state.titleModal });
     }
 
     hanldeCloseTitleModal = () => {
-        this.setState({titleModal: !this.state.titleModal});
+        this.setState({ titleModal: !this.state.titleModal });
     }
 
     render() {
@@ -1517,7 +1538,7 @@ class General extends Component {
                 <ConfirmDialog
                     open={this.state.openConfirm}
                     closeAction={() => {
-                        this.setState({ openConfirm: false, locationAbletoWorkId: 0 });
+                        this.setState({ openConfirm: false, locationAbletoWorkId: 0, applicationEmployeeId: 0 });
                     }}
                     confirmAction={() => {
                         this.updateContactByHotelApplication();
@@ -1570,8 +1591,8 @@ class General extends Component {
                             </div>
                         </div>
                         <div className="row pdf-container">
-                                <div id="DocumentPDF" className="signature-information">
-                        {renderHTML(`<!DOCTYPE html>
+                            <div id="DocumentPDF" className="signature-information">
+                                {renderHTML(`<!DOCTYPE html>
 <html>
 <head>
 </head>
@@ -1605,7 +1626,7 @@ class General extends Component {
 <p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
 </body>
 </html>`)}
-                        </div>
+                            </div>
                         </div>
                     </DialogContent>
                     <DialogActions>
@@ -1625,7 +1646,7 @@ class General extends Component {
                                             className="username col-sm-12">{this.state.data.firstName + ' ' + this.state.data.lastName}</span>
                                         <span
                                             className="username-number col-sm-12">Emp #: TM-0000{this.state.data.id}</span>
-                                             <span
+                                        <span
                                             className="username-number col-sm-12">UserName: {this.state.Code_User}</span>
                                     </div>
                                 </div>
@@ -1658,9 +1679,9 @@ class General extends Component {
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
-                                                    value={ this.state.isActive}
+                                                    value={this.state.isActive}
                                                     disabled={!this.props.hasEmployee ? true : false}
-                                                    onChange={(event) => {   
+                                                    onChange={(event) => {
                                                         this.setState({
                                                             isActive: event.target.checked
                                                         }, () => {
@@ -1732,7 +1753,7 @@ class General extends Component {
                                                         this.handleClickOpenModal();
                                                     }}>Add to hotel
                                                     </button>
-                                                      {/* <button className="dropdown-item" onClick={() => {
+                                                    {/* <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenVerification();
                                                     }}>Employment Verification
                                                     </button> */}
@@ -1770,7 +1791,7 @@ class General extends Component {
                                 <div className="col-sm-12">
                                     <div className="row">
                                         {
-                                            this.state.idealJobs ? 
+                                            this.state.idealJobs ?
                                                 this.state.idealJobs.map(idealJob => {
                                                     return <div className="col-sm-12 col-md-6 col-lg-3">
                                                         <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
@@ -1778,7 +1799,7 @@ class General extends Component {
                                                         </div>
                                                     </div>
                                                 })
-                                            : ''
+                                                : ''
                                         }
                                     </div>
                                 </div>
@@ -1789,13 +1810,25 @@ class General extends Component {
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
+                                        {this.state.employeeHotelId ?
+                                            <div className="col-sm-12 col-md-6 col-lg-3">
+                                                <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                    {this.state.employeeHotelName}
+                                                    <button type="button" className="btn btn-link float-right p-0" onClick={() => {
+                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: null, applicationEmployeeId: this.state.employeeHotelEmployeeId }))
+                                                    }}>
+                                                        <i className="fas fa-trash text-white"></i>
+                                                    </button>
+                                                </div>
+                                            </div> : <React.Fragment />}
+
                                         {this.state.myHotels.map(hotel => {
                                             return <div className="col-sm-12 col-md-6 col-lg-3">
 
                                                 <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
                                                     {hotel.Name}
                                                     <button type="button" className="btn btn-link float-right p-0" onClick={() => {
-                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: hotel.Id }))
+                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
                                                     }} >
                                                         <i className="fas fa-trash text-white"></i>
                                                     </button>

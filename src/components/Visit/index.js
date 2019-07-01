@@ -1,12 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import Select from 'react-select';
-import VisitTable from './visitTable';
-import MasterShift from "./masterShift";
+import VisitTable from './VisitTable';
+import MasterShift from "./MasterShift";
 
 import Accordion from '../ui-components/Accordion';
 
 import withApollo from 'react-apollo/withApollo';
-import { GET_OP_MANAGER, GET_PROPERTIES_QUERY } from './queries';
+import { GET_OP_MANAGER, GET_PROPERTIES_QUERY } from './Queries';
 
 class Visit extends Component{
 
@@ -99,7 +99,7 @@ class Visit extends Component{
 	}
 
     render() {
-        const { properties, opManagerOptions } = this.state;
+        const { properties, opManagerOptions, opManagerFiltered } = this.state;
         return (
             <Fragment>
                 <div className="row justify-content-end">
@@ -122,7 +122,7 @@ class Visit extends Component{
                     </div>
                     <div className="card-body">
                         {
-                            this.state.opManagerFiltered.map(item => {
+                            opManagerFiltered.map(item => {
                                 return (
                                     <Accordion key={item.Id} title={item.Full_Name}>
                                         <VisitTable data={properties}/>
