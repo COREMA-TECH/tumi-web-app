@@ -461,13 +461,17 @@ class Employees extends Component {
      */
     handleClickOpenUserModal = (idEntity,email, phoneNumber, idEmployee, fullName, firstName, lastName) => {
         this.setState({ openUserModal: true });
+        let random = Math.floor(Math.random() * 10000);
+        if (random.toString().length <= 3) {
+            random = `${random}${Math.floor(Math.random() * 10)}`;
+        }
         this.setState({
             idEntity:idEntity || 1,
             email: email,
             number: phoneNumber,
             employeeId: idEmployee,
             fullName: fullName,
-            username: firstName.slice(0, 1) + lastName + Math.floor(Math.random() * 10000),
+            username: firstName.slice(0, 1) + lastName + random,
             firstNameEdit: firstName,
             lastNameEdit:lastName
         });
