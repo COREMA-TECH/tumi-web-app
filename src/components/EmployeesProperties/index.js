@@ -68,7 +68,8 @@ class EmployeesProperties extends Component{
         return(
             <Fragment>
                 <div className="row justify-content-end">
-					<div className="col-3">
+					<div className="col-2">
+                        <label htmlFor="" className="font-weight-bold">Property</label>
                         <Select
                             name="property"
                             options={this.state.properties}
@@ -108,9 +109,9 @@ class EmployeesProperties extends Component{
                                                     <td>{property.name}</td>
                                                     <td>{property.count_department}</td>
                                                     <td>{property.count_associate}</td>
-                                                    <td>4/30/2019</td>
-                                                    <td>{320}</td>
-                                                    <td>Interstate Hotels</td>
+                                                    <td>--</td>
+                                                    <td>--</td>
+                                                    <td>{property.management_company}</td>
                                                     <td>{property.operationManager === "null null" ? "No Name" : property.operationManager}</td>
                                                 </tr>
                                             </tbody>
@@ -136,7 +137,7 @@ class EmployeesProperties extends Component{
                                                         <td>{employee.name}</td>
                                                         <td>{employee.position}</td>
                                                         <td>{employee.los}</td>
-                                                        <td>{employee.startDate === "N/A" || moment(employee.startDate).format("MM/DD/YYYY")}</td>
+                                                        <td>{employee.startDate !== "N/A" ? moment(employee.startDate).format("MM/DD/YYYY") : "N/A"}</td>
                                                         <td>{employee.phone}</td>
                                                     </tr>
                                                 })}
