@@ -21,7 +21,7 @@ export const GET_PROPERTIES_QUERY = gql`
  * Query to get employees by properties
  */
 export const GET_EMPLOYEEES_BY_PROPERTIES = gql`
-  query employeesByProperties {
+ query employeesByProperties {
     employeesByProperties {
       code
       name
@@ -29,6 +29,7 @@ export const GET_EMPLOYEEES_BY_PROPERTIES = gql`
       operationManager
       region
       count_department
+      management_company
       employees {
         id
         name
