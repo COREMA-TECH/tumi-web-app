@@ -19,6 +19,7 @@ query applications($id: Int){
         area
         gender
         expireDateId
+        marital
         typeOfId
         employee{
             Employees{

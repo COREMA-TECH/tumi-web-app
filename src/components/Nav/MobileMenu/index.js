@@ -282,7 +282,14 @@ class MobileMenu extends Component {
                                                 </a>
                                             </li> : ""
                                     })}
-
+                                    {items.map(item => {
+                                        return item.Forms.Value == "/home/active-report" ?
+                                            <li className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/active-report">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Active Report
+                                                </a>
+                                            </li> : ""
+                                    })}
                                 </ul>
                             </li> : ''
                     })}

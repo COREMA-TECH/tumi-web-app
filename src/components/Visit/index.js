@@ -93,6 +93,22 @@ class Visit extends Component{
 			});
     }
 
+    getVisits = () => {
+		this.props.client
+			.query({
+				query: GET_PROPERTIES_QUERY,
+				fetchPolicy: 'no-cache'
+			})
+			.then(({ data }) => {
+				this.setState({
+					properties: data.getbusinesscompanies
+				});
+			})
+			.catch(error => {
+				console.log(error)
+			});
+    }
+
     componentWillMount() {
         this.getOpManagers();
         this.getProperties();

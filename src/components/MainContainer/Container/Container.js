@@ -190,6 +190,7 @@ class Container extends Component {
 				<Route exact path="/home/logs" component={TransactionLogs} />		
 				<Route exact path="/home/employees-properties" component={EmployeesProperties} />		
 				<Route exact path="/home/visit" component={Visit} />
+				<Route exact path="/home/active-report" component={EmployeesProperties} />		
 			</div>
 		);
 	}

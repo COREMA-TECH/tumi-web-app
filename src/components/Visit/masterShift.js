@@ -4,7 +4,7 @@ import Timer from './Timer';
 import AWS from 'aws-sdk';
 import PropTypes from 'prop-types';
 
-import { OP_MANAGER_ROL_ID } from './Constants';
+//import { OP_MANAGER_ROL_ID } from './Utilities';
 
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,6 +12,8 @@ import grey from '@material-ui/core/colors/grey';
 import {withApollo} from 'react-apollo';
 import { CREATE_VISIT_QUERY, UPDATE_VISIT_QUERY } from './Mutations';
 import withGlobalContent from "../Generic/Global";
+
+const OP_MANAGER_ROL_ID = 1; // temporal para prueba
 
 const uuidv4 = require('uuid/v4');
 const styles = (theme) => ({
@@ -34,6 +36,7 @@ class MasterShift extends Component{
             runTimer: false,
             comment: '',
             file: null,
+            fileName: null,
             urlFile: '',
             showStartButton: true,
             showFinalizeButton: false,
@@ -57,7 +60,7 @@ class MasterShift extends Component{
                     OpManagerId: userId,
                     BusinessCompanyId: businessCompanyId,
                     startTime: startTime,
-                    endTime: startTime, // no null
+                    endTime: '', // no null
                     url: urlFile,
                     comment: comment,
                     startLatitude: latitude,
@@ -199,24 +202,20 @@ class MasterShift extends Component{
     
     handleGeoPosition = () => {
         return new Promise((resolve, reject) => 
+            navigator.geolocation.getCurrentPosition((position) => { // success callback
+                let posObj = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    srcIframe: `http://maps.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&hl=es;z=14&amp;output=embed`
+                }
 
-            setTimeout(() => {
-                navigator.geolocation.getCurrentPosition((position) => { // success callback
-                    let posObj = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        srcIframe: `http://maps.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&hl=es;z=14&amp;output=embed`
-                    }
-    
-                    return resolve(posObj)
-                }, () => reject("The location could not be obtained")) // Error callback
-                
-            }, 5000)
+                return resolve(posObj)
+            }, () => reject("The location could not be obtained")) // Error callback
         )
     }
 
     handleStartButton = () => {
-        if(this.state.rolId !== OP_MANAGER_ROL_ID){
+        if(this.state.rolId === OP_MANAGER_ROL_ID){
             this.setState(() => {
                 return {formDisabled: true}
             }, async () => {
@@ -267,7 +266,7 @@ class MasterShift extends Component{
     }
 
     handleFinalizeButton = () => {
-        if(this.state.rolId !== OP_MANAGER_ROL_ID){
+        if(this.state.rolId === OP_MANAGER_ROL_ID){
             this.setState(() => {
                 return { disableFinalizeButton: false }
             }, async () => {
@@ -321,13 +320,16 @@ class MasterShift extends Component{
 
     handleFileInput = (e) => {
         e.persist();
+        let file = e.target.files[0];
         this.setState(() => {
-            return { file: e.target.files[0] || {} }
+            return { 
+                file: file || {},
+                fileName: !!file ? file.name : null
+            }
         })
     }
     
     componentWillReceiveProps({ propertiesData }){
-        
         this.setState(() => {
             let options = [];
 
@@ -342,10 +344,12 @@ class MasterShift extends Component{
     }
 
     componentDidMount(){
+        let userId = localStorage.getItem('LoginId');
+        let rolId = localStorage.getItem('IdRoles');
         this.setState(() => {
             return {
-                userId: localStorage.getItem('LoginId'),
-                rolId: localStorage.getItem('IdRoles')
+                userId: !!userId ? +userId : 0,
+                rolId: !!rolId ? +rolId : 0
             }
         })
     }
@@ -404,7 +408,7 @@ class MasterShift extends Component{
                                     </div>
                                     <div className="custom-file">
                                         <input type="file" className="custom-file-input" id="inputGroupFile01" disabled={formDisabled} onChange={this.handleFileInput} />
-                                        <label className="custom-file-label" htmlFor="">Choose file</label>
+                                        <label className="custom-file-label" htmlFor="">{this.state.fileName || "Choose file"}</label>
                                     </div>
                                 </div>
 

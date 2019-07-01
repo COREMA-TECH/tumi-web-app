@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { OP_MANAGER_ROL_ID } from './Constants';
+import { OP_MANAGER_ROL_ID } from './Utilities';
 
 /**
  * Query to get operation manager
@@ -24,6 +24,20 @@ export const GET_PROPERTIES_QUERY = gql`
       Country
       State
       City
+    }
+  }
+`;
+
+export const GET_VISITS_QUERY = gql`
+  query visitByOpManager($id: Int){
+    visits(OpManagerId: $id){
+      id
+      OpManagerId
+      BusinessCompanyId
+    }
+    user(Id: $id){
+      Id
+      Full_Name
     }
   }
 `;
