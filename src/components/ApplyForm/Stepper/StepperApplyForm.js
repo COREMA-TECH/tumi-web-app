@@ -379,7 +379,6 @@ class VerticalLinearStepper extends Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        console.log(`${name} ${value}`);
         this.setState({
             [name]: value
         });
@@ -1216,7 +1215,6 @@ class VerticalLinearStepper extends Component {
                     </div>                    
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.restrictions[displayLanguage]} </span>
-                        {console.log(`Restrictions onRender ${this.state.scheduleRestrictions}`)}
                         <div className="col-md-12">
                             <input
                                 onChange={ this.handleStateChange }
