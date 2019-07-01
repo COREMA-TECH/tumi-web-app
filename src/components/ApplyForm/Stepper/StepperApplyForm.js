@@ -145,9 +145,9 @@ class VerticalLinearStepper extends Component {
         idealJob: '',
         idealJobs: [],
         dateAvailable: null,
-        scheduleRestrictions: '0',
+        scheduleRestrictions: false,
         scheduleExplain: '',
-        convicted: '0',
+        convicted: false,
         convictedExplain: '',
         socialNetwork: 0,
         comment: '',
@@ -387,9 +387,6 @@ class VerticalLinearStepper extends Component {
 
     // To insert general applicant information
     insertApplicationInformation = () => {
-        alert(`Restrictions: ${this.state.scheduleRestrictions}`);
-        alert(`Convicted: ${this.state.convicted}`);
-        
         this.setState(
             {
                 insertDialogLoading: true
@@ -1058,11 +1055,8 @@ class VerticalLinearStepper extends Component {
                             onChange={ this.handleStateChange }
                             value={this.state.aptNumber}
                             name="aptNumber"
-                            type="number"
-                            className="form-control External-input"
-                            min="0"
-                            maxLength="50"
-                            minLength="5"
+                            type="text"
+                            className="form-control External-input"                         
                             placeholder={labels.apt[displayLanguage]}
                         />
                     </div>
@@ -1224,54 +1218,41 @@ class VerticalLinearStepper extends Component {
                         <div className="col-md-12">
                             <input
                                 onChange={ this.handleStateChange }
-                                value="1"
+                                value={true}
                                 type="radio"
                                 name="scheduleRestrictions"
                                 className=""
-                                checked={this.state.scheduleRestrictions === '1' || this.state.scheduleRestrictions === 1 || this.state.scheduleRestrictions === 'true' || this.state.scheduleRestrictions === true}
+                                checked={this.state.scheduleRestrictions === 'true' || this.state.scheduleRestrictions === true}
                             />
                             <label className="radio-label External-label"> Yes</label>
                             <input
                                 onChange={(event) => {
                                     this.setState({
-                                        scheduleRestrictions: event.target.value,
+                                        scheduleRestrictions: false,
                                         scheduleExplain: ''
                                     });
                                 }}
-                                value="0"
+                                value={false}
                                 type="radio"
                                 name="scheduleRestrictions"
                                 className=""
-                                checked={this.state.scheduleRestrictions === '0' || this.state.scheduleRestrictions === 0 || this.state.scheduleRestrictions === 'false' || this.state.scheduleRestrictions === false}
+                                checked={this.state.scheduleRestrictions === 'false' || this.state.scheduleRestrictions === false}
                             />
                             <label className="radio-label External-label"> No</label>
                         </div>
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.explain[displayLanguage]} </span>
-                        {this.state.scheduleRestrictions === '0' ? (
-                            <textarea
-                                onChange={ this.handleStateChange }
-                                value={this.state.scheduleExplain}
-                                name="scheduleExplain"
-                                cols="30"
-                                rows="3"
-                                disabled
-                                className="form-control textarea-apply-form External-input"
-                                placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
-                            />
-                        ) : (
-                                <textarea
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.scheduleExplain}
-                                    name="scheduleExplain"
-                                    cols="30"
-                                    rows="3"
-                                    
-                                    className="form-control textarea-apply-form External-input"
-                                    placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
-                                />
-                            )}
+                        <textarea
+                            onChange={ this.handleStateChange }
+                            value={this.state.scheduleExplain}
+                            name="scheduleExplain"
+                            cols="30"
+                            rows="3"
+                            disabled={!this.state.scheduleRestrictions}
+                            className="form-control textarea-apply-form External-input"
+                            placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
+                        />
                     </div>
                 </div>
                
@@ -1285,54 +1266,41 @@ class VerticalLinearStepper extends Component {
                                         convicted: event.target.value
                                     });
                                 }}
-                                value="1"
+                                value={true}
                                 type="radio"
                                 name="convicted"
                                 className=""
-                                checked={this.state.convicted === '1' || this.state.convicted === 1 || this.state.convicted === 'true' || this.state.convicted === true}
+                                checked={this.state.convicted === 'true' || this.state.convicted === true}
                             />
                             <label className="radio-label External-label"> Yes</label>
                             <input
                                 onChange={(event) => {
                                     this.setState({
-                                        convicted: event.target.value,
+                                        convicted: false,
                                         convictedExplain: ''
                                     });
                                 }}
-                                value="0"
+                                value={false}
                                 type="radio"
                                 name="convicted"
                                 className=""
-                                checked={this.state.convicted === '0' || this.state.convicted === 0 || this.state.convicted === 'false' || this.state.convicted === false}
+                                checked={this.state.convicted === 'false' || this.state.convicted === false}
                             />
                             <label className="radio-label External-label"> No</label>
                         </div>
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.explain[displayLanguage]} </span>
-                        {this.state.convicted === '0' ? (
-                            <textarea
-                                onChange={ this.handleStateChange }
-                                value={this.state.convictedExplain}
-                                name="convictedExplain"
-                                cols="30"
-                                disabled
-                                rows="3"
-                                className="form-control textarea-apply-form External-input"
-                                placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
-                            />
-                        ) : (
-                                <textarea
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.convictedExplain}
-                                    name="convictedExplain"
-                                    cols="30"
-                                    
-                                    rows="3"
-                                    className="form-control textarea-apply-form External-input"
-                                    placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
-                                />
-                            )}
+                        <textarea
+                            onChange={ this.handleStateChange }
+                            value={this.state.convictedExplain}
+                            name="convictedExplain"
+                            cols="30"
+                            disabled={!this.state.convicted}
+                            rows="3"
+                            className="form-control textarea-apply-form External-input"
+                            placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
+                        />
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.heardTumi[displayLanguage]} </span>
@@ -1362,10 +1330,7 @@ class VerticalLinearStepper extends Component {
                             )}
                     </div>
                 </div>               
-                <div className="External-formButtons">
-                    <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
-                        {labels.back[displayLanguage]}
-                    </Button>
+                <div className="External-formButtons">                   
                     <Button type="submit" variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`} disabled={this.state.searchigZipcode}>
                         {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
                     </Button>             
