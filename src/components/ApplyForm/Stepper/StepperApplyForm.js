@@ -1056,11 +1056,8 @@ class VerticalLinearStepper extends Component {
                             onChange={ this.handleStateChange }
                             value={this.state.aptNumber}
                             name="aptNumber"
-                            type="number"
-                            className="form-control External-input"
-                            min="0"
-                            maxLength="50"
-                            minLength="5"
+                            type="text"
+                            className="form-control External-input"                         
                             placeholder={labels.apt[displayLanguage]}
                         />
                     </div>
@@ -1335,10 +1332,7 @@ class VerticalLinearStepper extends Component {
                             )}
                     </div>
                 </div>               
-                <div className="External-formButtons">
-                    <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
-                        {labels.back[displayLanguage]}
-                    </Button>
+                <div className="External-formButtons">                   
                     <Button type="submit" variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`} disabled={this.state.searchigZipcode}>
                         {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
                     </Button>             
