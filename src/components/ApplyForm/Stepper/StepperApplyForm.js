@@ -6,7 +6,6 @@ import Step from '@material-ui/core/Step';
 import StepContent from '@material-ui/core/StepContent';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import './index.css';
 import '../index.css';
@@ -21,10 +20,8 @@ import languageLevelsJSON from '../data/languagesLevels';
 import InputRangeDisabled from '../ui/InputRange/InputRangeDisabled';
 import { GET_LANGUAGES_QUERY } from '../Queries.js';
 import withApollo from 'react-apollo/withApollo';
-import { GET_CITIES_QUERY, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
+import { GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY } from '../Queries';
 import {GET_APPLICATION} from './Queries';
-import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import moment from 'moment';
 
 import {
@@ -51,7 +48,6 @@ import ReactFlagsSelect from 'react-flags-select';
 
 import {debounce} from 'throttle-debounce';
 
-const spanishActions = require(`../Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
 const uuidv4 = require('uuid/v4');
 
@@ -97,7 +93,7 @@ const selectStyles = {
         flexDirection: 'row',
         fontSize: '18px'
     }),
-    singleValue: (provided, state) => ({
+    singleValue: (provided) => ({
         ...provided,
         border: 'none',
         backgroundColor: 'transparent',
@@ -119,7 +115,6 @@ function getSteps() {
         'Education',
         'Previous Employment',
         'Military Service',
-        'Skills',
         'Disclaimer'
     ];
 }
@@ -213,18 +208,7 @@ class VerticalLinearStepper extends Component {
         ],
 
         positionCatalogOptions: [
-        ],
-
-        idTypeOptions: [
-            { value:'', label:  'Select an Option' },
-            { value:'1', label: 'Birth certificate' },
-            { value:'2', label: 'Social Security card' },
-            { value:'3', label: `State-issued driver's license` },
-            { value:'4', label: `State-issued ID` },
-            { value:'5', label: `Passport` },
-            { value:'6', label: `Department of Defense Identification Card` },
-            { value:'7', label: `Green Card` },                
-        ],
+        ],        
 
         heardTumiOptions: [
             { value: 0, label:'Select an Option' },
@@ -402,7 +386,10 @@ class VerticalLinearStepper extends Component {
     
 
     // To insert general applicant information
-    insertApplicationInformation = (history) => {
+    insertApplicationInformation = () => {
+        alert(`Restrictions: ${this.state.scheduleRestrictions}`);
+        alert(`Convicted: ${this.state.convicted}`);
+        
         this.setState(
             {
                 insertDialogLoading: true
@@ -499,9 +486,9 @@ class VerticalLinearStepper extends Component {
                     applicationIdealJob: idealJobArrayObject
                 }
             })
-            .then(({ data }) => {
+            .then(() => {
             })
-            .catch(error => {
+            .catch(() => {
             })
     };
 
@@ -550,7 +537,7 @@ class VerticalLinearStepper extends Component {
                         codeuser: 0,
                         nameUser: 'Public'
                     })
-                    .then(({ data }) => {
+                    .then(() => {
                         this.props.handleOpenSnackbar(
                             'success',
                             'Successfully updated',
@@ -620,7 +607,7 @@ class VerticalLinearStepper extends Component {
 
                     this.handleNext();
                 })
-                .catch((error) => {
+                .catch(() => {
                     // Replace this alert with a Snackbar message error
                     this.props.handleOpenSnackbar(
                         'error',
@@ -664,7 +651,7 @@ class VerticalLinearStepper extends Component {
 
                     this.handleNext();
                 })
-                .catch((error) => {
+                .catch(() => {
                     // Replace this alert with a Snackbar message error
                     this.props.handleOpenSnackbar(
                         'error',
@@ -708,7 +695,7 @@ class VerticalLinearStepper extends Component {
 
                     this.handleNext();
                 })
-                .catch((error) => {
+                .catch(() => {
                     // Replace this alert with a Snackbar message error
                     this.props.handleOpenSnackbar(
                         'error',
@@ -724,23 +711,6 @@ class VerticalLinearStepper extends Component {
 
     // To insert a object with mnilitary service information
     insertMilitaryServicesApplication = () => {
-        // Validate empty fields in this sections
-        const {branch, startDateMilitaryService, endDateMilitaryService, rankAtDischarge, typeOfDischarge} = this.state;        
-        const formData = {branch, startDateMilitaryService, endDateMilitaryService, rankAtDischarge, typeOfDischarge};
-        
-        if(!this.validateFormHasContent(formData)) {
-            this.props.handleOpenSnackbar(
-                'warning',
-                'Please fill in at least one field',
-                'bottom',
-                'center'
-            );
-
-            return false;
-        }
-
-        console.log(formData);
-
         if (
             this.state.branch ||
             this.state.startDateMilitaryService ||
@@ -774,7 +744,7 @@ class VerticalLinearStepper extends Component {
 
                     this.handleNext();
                 })
-                .catch((error) => {
+                .catch(() => {
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error to save information. Please, try again!',
@@ -816,7 +786,7 @@ class VerticalLinearStepper extends Component {
 
                     this.handleNext();
                 })
-                .catch((error) => {
+                .catch(() => {
                     // Replace this alert with a Snackbar message error
                     this.props.handleOpenSnackbar(
                         'error',
@@ -911,7 +881,7 @@ class VerticalLinearStepper extends Component {
 
             const app = data.applications[0];
 
-            this.setState(prevState => {
+            this.setState(() => {
                 return {
                     applicationId: app.id,
                     firstName: app.firstName,
@@ -965,10 +935,10 @@ class VerticalLinearStepper extends Component {
         })
     }
 
-    handleIdealJobClick = (idealJobItem) => (event) => {
+    handleIdealJobClick = (idealJobItem) => () => {
         debounce( 300, 
-            this.setState((prevState) => ({
-                idealJobs: this.state.idealJobs.filter((_, i) => {
+            this.setState(() => ({
+                idealJobs: this.state.idealJobs.filter((_) => {
                     return _.uuid !== idealJobItem.uuid;
                 })
             }))
@@ -1203,37 +1173,6 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">* {labels.idType[displayLanguage]}</span>                        
-                        <Select
-                            options={this.state.idTypeOptions}
-                            value={this.findSelectedIdType(this.state.typeOfId)}
-                            onChange={this.handleIdTypeChange}
-                            closeMenuOnSelect={true}
-                            components={makeAnimated()}
-                            isMulti={false}                            
-                            styles={selectStyles}
-                        />
-                    </div>
-                </div>
-                
-                <div className="row External-row">
-                    <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label">{labels.idExpire[displayLanguage]}</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={ this.handleStateChange }
-                                value={this.state.expireDateId}
-                                name="expireDateId"
-                                type="date"
-                                className="form-control External-input"
-                                
-                                min="0"
-                                maxLength="50"
-                                minLength="10"
-                            />
-                        </div>
-                    </div>
-                    <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label">{labels.email[displayLanguage]}</span>
                         <div className="input-container--validated">
                             <input
@@ -1249,8 +1188,10 @@ class VerticalLinearStepper extends Component {
                                 placeholder={labels.email[displayLanguage]}
                             />
                         </div>
-                    </div>
+                    </div>                   
+                </div>
                 
+                <div className="row External-row">                   
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label">{labels.position[displayLanguage]}</span>
                         
@@ -1278,9 +1219,6 @@ class VerticalLinearStepper extends Component {
                             />
                         </div>
                     </div>                    
-                </div>
-               
-                <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.restrictions[displayLanguage]} </span>
                         <div className="col-md-12">
@@ -1335,7 +1273,9 @@ class VerticalLinearStepper extends Component {
                                 />
                             )}
                     </div>
-                
+                </div>
+               
+                <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.felony[displayLanguage]} </span>
                         <div className="col-md-12">
@@ -1394,8 +1334,6 @@ class VerticalLinearStepper extends Component {
                                 />
                             )}
                     </div>
-                </div>
-                <div className="row External-row">
                     <div className="col-12 col-md-4 col-xl-3 External-col">
                         <span className="External-label"> {labels.heardTumi[displayLanguage]} </span>
                         <Select
@@ -1423,7 +1361,7 @@ class VerticalLinearStepper extends Component {
                                 ''
                             )}
                     </div>
-                </div>
+                </div>               
                 <div className="External-formButtons">
                     <Button disabled={this.state.activeStep === 0} onClick={this.handleBack} className={`${this.props.classes.button} External-formButton`}>
                         {labels.back[displayLanguage]}
@@ -1437,7 +1375,7 @@ class VerticalLinearStepper extends Component {
     };
 
     // To render a dialog loading when the mutation is loading
-    renderInsertDialogLoading = (steps) => (
+    renderInsertDialogLoading = () => (
         <Dialog
             open={this.state.insertDialogLoading}
             onClose={this.handleClose}
@@ -1453,7 +1391,7 @@ class VerticalLinearStepper extends Component {
     );
 
     // To render the Skills Dialog
-    renderSkillsDialog = (steps) => {
+    renderSkillsDialog = () => {
         const { labels, displayLanguage } = this.state;
         return(
             <form
@@ -1664,8 +1602,8 @@ class VerticalLinearStepper extends Component {
                                 <Button
                                     className="deleteSkillSection"
                                     onClick={() => {
-                                        this.setState((prevState) => ({
-                                            schools: this.state.schools.filter((_, i) => {
+                                        this.setState(() => ({
+                                            schools: this.state.schools.filter((_) => {
                                                 return _.uuid !== schoolItem.uuid;
                                             })
                                         }));
@@ -1766,7 +1704,7 @@ class VerticalLinearStepper extends Component {
                         <div className="onoffswitch">
                             <input
                                 className="onoffswitch-checkbox"
-                                onChange={(e) => {
+                                onChange={() => {
                                     this.setState({
                                         graduated: document.getElementById('graduated').checked
                                     });
@@ -2075,8 +2013,8 @@ class VerticalLinearStepper extends Component {
                                     <Button
                                         className="deleteSkillSection"
                                         onClick={() => {
-                                            this.setState((prevState) => ({
-                                                previousEmployment: this.state.previousEmployment.filter((_, i) => {
+                                            this.setState(() => ({
+                                                previousEmployment: this.state.previousEmployment.filter((_) => {
                                                     return _.uuid !== employmentItem.uuid;
                                                 })
                                             }));
@@ -2328,8 +2266,8 @@ class VerticalLinearStepper extends Component {
                             <Button
                                 className="deleteSkillSection"
                                 onClick={() => {
-                                    this.setState((prevState) => ({
-                                        languages: this.state.languages.filter((_, i) => {
+                                    this.setState(() => ({
+                                        languages: this.state.languages.filter((_) => {
                                             return _.uuid !== languageItem.uuid;
                                         })
                                     }));
@@ -2495,8 +2433,8 @@ class VerticalLinearStepper extends Component {
                                         <Button
                                             className="deleteSkillSection"
                                             onClick={() => {
-                                                this.setState((prevState) => ({
-                                                    skills: this.state.skills.filter((_, i) => {
+                                                this.setState(() => ({
+                                                    skills: this.state.skills.filter((_) => {
                                                         return _.uuid !== skillItem.uuid;
                                                     })
                                                 }));
@@ -2524,7 +2462,7 @@ class VerticalLinearStepper extends Component {
     )};
 
     // To render the disclaimer section
-    renderDisclaimerSection = (history, steps) => {
+    renderDisclaimerSection = () => {
         const { labels, displayLanguage } = this.state;
 
         return (
@@ -2615,9 +2553,8 @@ class VerticalLinearStepper extends Component {
             case 4:
                 return this.renderMilitaryServiceSection(steps);
             case 5:
-                return this.renderSkillsSection(steps);
-            case 6:
                 return this.renderDisclaimerSection(history, steps);
+            case 6:
             default:
                 return 'Unknown step';
         }
@@ -2678,7 +2615,7 @@ class VerticalLinearStepper extends Component {
 
                                         <input value={this.state.leadIdSearch} name='leadIdSearch' onChange={this.handleStateChange} type="text" class="form-control External-input lead" placeholder="Lead Id" aria-label="Lead Id" aria-describedby="basic-addon2" />
                                     </div>
-                                    <button className="External-searchButton" ype="submit">Search</button>                                        
+                                    <button className="External-searchButton" type="submit">Search</button>                                        
                                 </form>   
                             </div>
                             <div className="col-12 col-md-4 Stepper-col">
@@ -2726,7 +2663,7 @@ class VerticalLinearStepper extends Component {
                                                             this.props.handleOpenSnackbar('warning', 'ZipCode needed');
                                                         else {
                                                             // Call mutation to create a application
-                                                            const {firstName, middleName, lastName, lastName2, streetAddress, aptNumber, homePhone, cellPhone, socialSecurityNumber, car, typeOfId, emailAddress, positionApplyingFor, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain, socialNetwork} = this.state;                                                            
+                                                            const {firstName, middleName, lastName, lastName2, streetAddress, aptNumber, homePhone, cellPhone, socialSecurityNumber, car, emailAddress, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain} = this.state;                                                            
                                                             const formData = {firstName, middleName, lastName, lastName2, streetAddress, aptNumber, homePhone, cellPhone, socialSecurityNumber, car, emailAddress, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain};
                                                             
                                                             if(!this.validateFormHasContent(formData)) {
