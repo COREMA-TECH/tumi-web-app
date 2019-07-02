@@ -82,7 +82,7 @@ const selectStyles = {
         border: 'none',
         backgroundColor: isFocused ? '#000000' : 'transparent',
         fontFamily: '"Ropa Sans", sans-serif !important',
-        color: isFocused ? '#FFFFFF' : '#000000'
+        color: isFocused ? '#FFFFFF' : '#000000'        
     }),
     control: _ => ({
         border: 'none',
@@ -91,7 +91,9 @@ const selectStyles = {
         color: '#ffffff',
         display: 'flex',
         flexDirection: 'row',
-        fontSize: '18px'
+        fontSize: '18px',
+        borderBottom: '1px solid #868686',
+        maxHeight: '35.6px'
     }),
     singleValue: (provided) => ({
         ...provided,
@@ -1083,7 +1085,7 @@ class VerticalLinearStepper extends Component {
                         mask="99999-99999"
                         updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
                     <div className="col-12 col-md-4 col-xl-3 External-col">
-                        <span className="External-label"> {labels.homePhone[displayLanguage]}</span>
+                        <span className="External-label homePhone"> {labels.homePhone[displayLanguage]}</span>
                         <InputMask
                             id="home-number"
                             name="homePhone"
@@ -2585,7 +2587,7 @@ class VerticalLinearStepper extends Component {
                             </div>
                             <div className="col-12 col-md-4 Stepper-col">
                                 <div className="External-logo">
-                                    <img src='../images/tumi-staffing-red-logo.png' alt="TUMI STAFFING, Inc."/>
+                                    <img src='../images/tumi-logo-old.png' alt="TUMI STAFFING, Inc."/>
                                 </div>
                                 <div className="Stepper-wrapper p-3">
                                     <Stepper activeStep={activeStep} orientation="vertical" className="main-stepper-nav External-stepper">
@@ -2667,7 +2669,7 @@ class VerticalLinearStepper extends Component {
                         <div className="row">
                             <div className="Footer-wrapper">
                                 <div className="Footer-logo">
-                                    <img src='../images/tumi-staffing-red-logo.png' alt="TUMI STAFFING, Inc." className="img-fluid"/>
+                                    <img src='../images/tumi-logo-white.png' alt="TUMI STAFFING, Inc." className="img-fluid"/>
                                 </div>
                                 <div className="Footer-info">
                                     <div className="Footer-links">
