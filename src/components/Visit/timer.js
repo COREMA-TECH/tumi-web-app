@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import moment from 'moment';
 
 let interval = null;
 class Timer extends Component {
@@ -7,23 +7,30 @@ class Timer extends Component {
     constructor(props) {
         super(props)
         this.state={
-            time: new Date().setHours(0,0,0,0)
+            time: moment('00:00:00', 'HH:mm:ss')
         }
     }
 
     handleTime() {
         this.setState((prevState) => {
-            let time = new Date(prevState.time);
-            return { time: time.setSeconds(time.getSeconds() + 1) }
+            return { time: moment(prevState.time).add(1, 'seconds') }
         })
     }
 
     handleRun = (props) => {
         let { run } = props;
-        if(run && interval === null)
-            interval=setInterval(()=>this.handleTime(),1000)
-        else if(run === false && interval !== null)
-            clearInterval(interval);
+        let startTime = props.startTime || '00:00:00';
+
+        if(interval !== null) clearInterval(interval);
+
+        if(run) {
+            this.setState(() => {
+                return {time: moment(startTime, 'HH:mm:ss')}
+            }, () => {
+                interval=setInterval(()=>this.handleTime(),1000);
+                console.log('Empezando el temporizador');
+            });
+        } 
     }
     
     componentWillReceiveProps(nextProp){
@@ -31,12 +38,10 @@ class Timer extends Component {
             this.handleRun(nextProp);
     }
 
-    render() {
-        let timeShow = new Date(this.state.time).toLocaleTimeString();
-        
+    render() {        
         return (
             <h5>
-                {timeShow}
+                {moment(this.state.time).format("HH:mm:ss")}
             </h5>
         )
     }

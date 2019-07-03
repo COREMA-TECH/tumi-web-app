@@ -4,7 +4,7 @@ import Timer from './Timer';
 import AWS from 'aws-sdk';
 import PropTypes from 'prop-types';
 
-//import { OP_MANAGER_ROL_ID } from './Utilities';
+import { /*OP_MANAGER_ROL_ID*/ getUrlMap } from './Utilities';
 
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
@@ -22,80 +22,101 @@ const styles = (theme) => ({
     }
 });
 
+const DEFAULT_STATE = {
+    visitId: 0,
+    userId: 0,
+    rolId: 0,
+    propertiesOpt: [],
+    businessCompanyId: 0,
+    runTimer: false,
+    comment: '',
+    file: null,
+    fileName: null,
+    urlFile: '',
+    showStartButton: true,
+    showFinalizeButton: false,
+    startTime: null,
+    endTime: null,
+    latitude: '',
+    longitude: '',
+    srcIframe: '',
+    formDisabled: false,
+    disableFinalizeButton: false
+}
+
 class MasterShift extends Component{
 
     constructor(props){
         super(props);
         
-        this.state = {
-            visitId: 0,
-            userId: 0,
-            rolId: 0,
-            propertiesOpt: [],
-            businessCompanyId: 0,
-            runTimer: false,
-            comment: '',
-            file: null,
-            fileName: null,
-            urlFile: '',
-            showStartButton: true,
-            showFinalizeButton: false,
-            startTime: null,
-            endTime: null,
-            latitude: '',
-            longitude: '',
-            srcIframe: '',
-            formDisabled: false,
-            disableFinalizeButton: false
-        }
+        this.state = DEFAULT_STATE;
 
     }
 
     createVisit = () => {
         let { userId, businessCompanyId, startTime, urlFile, comment, latitude, longitude } = this.state;
-        this.props.client.mutate({
-            mutation: CREATE_VISIT_QUERY,
-            variables: {
-                visits: {
-                    OpManagerId: userId,
-                    BusinessCompanyId: businessCompanyId,
-                    startTime: startTime,
-                    endTime: '', // no null
-                    url: urlFile,
-                    comment: comment,
-                    startLatitude: latitude,
-                    startLongitude: longitude
-                }
-            }
-        })
-        .then(({data}) => {
-            this.setState(() => {
-                return { 
-                    visitId: data.addVisit[0].id,
-                    runTimer: true,
-                    showStartButton: false,
-                    showFinalizeButton: true,
-                }
-            });
-
-            this.props.handleOpenSnackbar(
-                'success',
-                'Successfully created',
-                'bottom',
-                'right'
-            );
-        })
-        .catch((error) => {
-            this.setState(() => {
-                return { formDisabled: false }
-            })
-            this.props.handleOpenSnackbar(
+        console.log(businessCompanyId, 'Hotel seleccionado');
+        console.log(!businessCompanyId, '!businessCompanyId');
+        if(!businessCompanyId){
+            return this.props.handleOpenSnackbar(
                 'error',
-                'Error to save visit',
+                'The hotel field is required',
                 'bottom',
                 'right'
             );
-        })
+        }
+
+        this.setState(() => {
+            return { 
+                runTimer: true,
+                showStartButton: false,
+                showFinalizeButton: true,
+            }
+        });
+
+        // this.props.client.mutate({
+        //     mutation: CREATE_VISIT_QUERY,
+        //     variables: {
+        //         visits: {
+        //             OpManagerId: userId,
+        //             BusinessCompanyId: businessCompanyId,
+        //             startTime: startTime,
+        //             endTime: '', // no null
+        //             url: urlFile,
+        //             comment: comment,
+        //             startLatitude: latitude,
+        //             startLongitude: longitude
+        //         }
+        //     }
+        // })
+        // .then(({data}) => {
+        //     this.setState(() => {
+        //         return { 
+        //             visitId: data.addVisit[0].id,
+        //             runTimer: true,
+        //             showStartButton: false,
+        //             showFinalizeButton: true,
+        //         }
+        //     });
+
+        //     this.props.handleOpenSnackbar(
+        //         'success',
+        //         'Successfully created',
+        //         'bottom',
+        //         'right'
+        //     );
+        // })
+        // .catch((error) => {
+        //     this.setState(() => {
+        //         return { formDisabled: false }
+        //     })
+        //     this.props.handleOpenSnackbar(
+        //         'error',
+        //         'Error to save visit',
+        //         'bottom',
+        //         'right'
+        //     );
+        // })
     }
 
     updateVisit = () => {
@@ -184,10 +205,12 @@ class MasterShift extends Component{
                     };
 
                     return resolve({location: 'https://orion1-files.s3.amazonaws.com/images/9f71d9d4-448b-4f47-ac54-e77b841b5821_Bart-Simpson_gamer.jpg', fileName: filename})
-        
+
                     // s3.upload(params, (err, data) => {
-                    // 	if (err)
+                    // 	if (err){
+                    //         console.log(err);
                     //         return reject('Error Loading File');
+                    //     }
                     // 	else
                     // 	    return resolve({location: data.Location, fileName: filename});
                     // })
@@ -206,7 +229,7 @@ class MasterShift extends Component{
                 let posObj = {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
-                    srcIframe: `http://maps.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}&hl=es;z=14&amp;output=embed`
+                    srcIframe: getUrlMap(position.coords.latitude, position.coords.longitude)
                 }
 
                 return resolve(posObj)
@@ -328,22 +351,82 @@ class MasterShift extends Component{
             }
         })
     }
-    
-    componentWillReceiveProps({ propertiesData }){
-        this.setState(() => {
-            let options = [];
 
-            options = propertiesData.map((p) => {
-                return { ...p, value: p.Id, label: p.Name };
-            });
-
-            options = [{value:0, label: 'Select a Hotel'}, ...options]
-
-            return { propertiesOpt: options }
-        })
+    setNewVisitState(){
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                visitId: 0,
+                businessCompanyId: 0,
+                runTimer: false,
+                comment: '',
+                file: null,
+                fileName: null,
+                urlFile: '',
+                showStartButton: true,
+                showFinalizeButton: false,
+                startTime: null,
+                endTime: null,
+                latitude: '',
+                longitude: '',
+                srcIframe: '',
+                formDisabled: false,
+                disableFinalizeButton: false
+            }
+        });
     }
 
-    componentDidMount(){
+    setCloseVisitState(visitData){
+        let {id, startTime, comment, startLatitude, startLongitude, BusinessCompanyId, Code, Name} = visitData;
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                visitId: id,
+                businessCompanyId: BusinessCompanyId,
+                runTimer: true,
+                comment: comment,
+                showStartButton: false,
+                showFinalizeButton: true,
+                startTime: startTime,
+                endTime: null,
+                latitude: startLatitude,
+                longitude: startLongitude,
+                srcIframe: getUrlMap(startLatitude, startLongitude),
+                formDisabled: true,
+                disableFinalizeButton: false
+            }
+        })
+    }
+    
+    componentWillReceiveProps({ actions, propertiesData }){
+        if(actions.open){
+            this.setState(() => {
+                let options = [];
+    
+                options = propertiesData.map((p) => {
+                    return { ...p, value: p.Id, label: p.Name };
+                });
+    
+                options = [{value:0, label: 'Select a Hotel'}, ...options]
+    
+                return { propertiesOpt: options }
+            }, () => {
+                if(actions.closeVisit)
+                    this.setCloseVisitState(actions.data)
+                else
+                    this.setNewVisitState();
+            })
+        }
+        else{
+            this.setState(() => {
+                return {
+                    ...DEFAULT_STATE
+                }
+            });
+        }
+    }
+
+    componentWillMount(){
         let userId = localStorage.getItem('LoginId');
         let rolId = localStorage.getItem('IdRoles');
         this.setState(() => {
@@ -355,12 +438,12 @@ class MasterShift extends Component{
     }
 
     render() {
-        let { open, classes } = this.props;
+        let { actions, classes } = this.props;
         let { showStartButton, showFinalizeButton, startTime, endTime, propertiesOpt, srcIframe, formDisabled, disableFinalizeButton } = this.state;
         
         return (
             <Fragment>
-                <div className={`MasterShiftForm ${open ? 'active' : ''}`}>
+                <div className={`MasterShiftForm ${actions.open ? 'active' : ''}`}>
                     <header className="MasterShiftForm-header">
                         <div className="row">
                             <div className="col-md-10">

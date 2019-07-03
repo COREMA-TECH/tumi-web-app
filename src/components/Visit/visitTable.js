@@ -6,13 +6,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-//import TableFooter from '@material-ui/core/TableFooter';
-//import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
-import ConfirmDialog from 'material-ui/ConfirmDialog';
 
-
-//import withApollo from 'react-apollo/withApollo';
+import withApollo from 'react-apollo/withApollo';
+import { GET_VISITS_BY_OPMANAGER_QUERY } from './Queries';
 
 
 const CustomTableCell = withStyles((theme) => ({
@@ -28,15 +25,36 @@ const CustomTableCell = withStyles((theme) => ({
 class VisitTable extends Component{
 
     state = {
-        //data: [],
-        page: 0,
-        rowsPerPage: 100, //this.props.rowsPerPage || 25,
-        openConfirm: false
+        visits: []
+    }
+
+    getVisits = () => {
+        let {opManagerId} = this.props;
+		this.props.client
+			.query({
+                query: GET_VISITS_BY_OPMANAGER_QUERY,
+                variables: {
+                    opManagerId: opManagerId || 0
+                },
+				fetchPolicy: 'no-cache'
+			})
+			.then(({ data }) => {
+				this.setState({
+					visits: data.visits
+				});
+			})
+			.catch(error => {
+				console.log(error)
+			});
+    }
+
+    componentWillMount(){
+        this.getVisits();
     }
 
     render() {
-        let items = this.props.data;
-		const { rowsPerPage, page } = this.state;
+        let items = this.state.visits;
+        let { handleCloseVisit } = this.props;
         return (
             <Fragment>
                 <Table classes={{}}>
@@ -50,56 +68,31 @@ class VisitTable extends Component{
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        {items.map((row) => {
                             return (
-                                <TableRow key={row.Id}>
+                                <TableRow key={row.id}>
                                     <CustomTableCell>
                                         <Tooltip title="Edit">
                                             <button
                                                 className="btn btn-success mr-1 float-left"
+                                                onClick={() => handleCloseVisit(row.id)}
                                             >
                                                 <i className="fas fa-eye"></i>
                                             </button>
                                         </Tooltip>
                                     </CustomTableCell>
-                                    <CustomTableCell>{row.Code}</CustomTableCell>
-                                    <CustomTableCell>{row.Name}</CustomTableCell>
-                                    <CustomTableCell>0</CustomTableCell>
-                                    <CustomTableCell>0</CustomTableCell>
+                                    <CustomTableCell>{row.BusinessCompany.Code}</CustomTableCell>
+                                    <CustomTableCell>{row.BusinessCompany.Name}</CustomTableCell>
+                                    <CustomTableCell>{row.startTime}</CustomTableCell>
+                                    <CustomTableCell>{row.endTime}</CustomTableCell>
                                 </TableRow>
                             );
                         })}
                     </TableBody>
-                    {/* <TableFooter>
-                        <TableRow>
-                            {items.length > 0 && (
-                                <TablePagination
-                                    colSpan={3}
-                                    count={items.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onChangePage={this.handleChangePage}
-                                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                    ActionsComponent={TablePaginationActionsWrapped}
-                                />
-                            )}
-                        </TableRow>
-                    </TableFooter> */}
                 </Table>
-                <ConfirmDialog
-                    open={this.state.openConfirm}
-                    closeAction={() => {
-                        this.setState({ openConfirm: false });
-                    }}
-                    // confirmAction={() => {
-                    //     this.handleDelete(this.state.idToDelete);
-                    // }}
-                    title={'are you sure you want to reject this opening?'}
-                    //loading={this.state.removing}
-                />
             </Fragment>
         )
     }
 }
 
-export default VisitTable;
+export default withApollo(VisitTable);

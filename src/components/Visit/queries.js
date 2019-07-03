@@ -28,16 +28,35 @@ export const GET_PROPERTIES_QUERY = gql`
   }
 `;
 
-export const GET_VISITS_QUERY = gql`
-  query visitByOpManager($id: Int){
-    visits(OpManagerId: $id){
+export const GET_VISITS_BY_OPMANAGER_QUERY = gql`
+  query visitByOpManager($opManagerId: Int){
+    visits(OpManagerId: $opManagerId) {
       id
+      startTime
+      endTime
       OpManagerId
       BusinessCompanyId
+      BusinessCompany {
+        Code
+        Name
+      }
     }
-    user(Id: $id){
-      Id
-      Full_Name
+  }
+`;
+
+export const GET_VISIT_BY_ID_QUERY = gql`
+  query getVisitById($id: Int){
+    visits(id: $id) {
+      id
+      startTime
+      comment
+      startLatitude
+      startLongitude
+      BusinessCompanyId
+      BusinessCompany {
+          Code
+          Name
+        }
     }
   }
 `;

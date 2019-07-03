@@ -6,7 +6,9 @@ import MasterShift from "./MasterShift";
 import Accordion from '../ui-components/Accordion';
 
 import withApollo from 'react-apollo/withApollo';
-import { GET_OP_MANAGER, GET_PROPERTIES_QUERY } from './Queries';
+import { GET_OP_MANAGER, GET_PROPERTIES_QUERY, GET_VISIT_BY_ID_QUERY } from './Queries';
+
+import withGlobalContent from "../Generic/Global";
 
 class Visit extends Component{
 
@@ -16,13 +18,83 @@ class Visit extends Component{
         opManagerOptions: [],
         opManagerSelected: 0,
         properties: [],
-        masterShiftOpen: false
+        openingMasterShift: false,
+        masterShiftHandle: {
+            open: false,
+            closeVisit: false,
+            data: []
+        }
     }
 
-    handleMasterShift = (open) => {
-        this.setState((prevState) => {
-            return { masterShiftOpen: open }
-        })
+    handleCloseMasterShift = () => {
+        this.setState(() => {
+            return { 
+                masterShiftHandle:{
+                    open: false,
+                    closeVisit: false,
+                    data: []
+                }
+            }
+        });
+    }
+
+    handleNewVisit = () => {
+        this.setState(() => {
+            return { 
+                masterShiftHandle:{
+                    open: true,
+                    closeVisit: false,
+                    data: []
+                }
+            }
+        });
+    }
+
+    handleCloseVisit = (visitId) => {
+        if(this.state.openingMasterShift === false){
+            this.setState(() => {
+                return{
+                    openingMasterShift: true
+                }
+            }, () => {
+                this.props.client
+                    .query({
+                        query: GET_VISIT_BY_ID_QUERY,
+                        fetchPolicy: 'no-cache',
+                        variables: {
+                            id: visitId || 0
+                        },
+                    })
+                    .then(({ data }) => {
+                        this.setState(() => {
+                            return { 
+                                openingMasterShift: false,
+                                masterShiftHandle:{
+                                    open: true,
+                                    closeVisit: true,
+                                    data: data
+                                }
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        this.setState(() => {
+                            return { 
+                                openingMasterShift: false
+                            }
+                        }, () => {
+                            console.log(error);
+                            this.props.handleOpenSnackbar(
+                                'success',
+                                'Error when opening the visit',
+                                'bottom',
+                                'right'
+                            );
+                        });
+                    });
+            });
+
+        }
     }
 
     getOpManagers = () => {
@@ -93,22 +165,6 @@ class Visit extends Component{
 			});
     }
 
-    getVisits = () => {
-		this.props.client
-			.query({
-				query: GET_PROPERTIES_QUERY,
-				fetchPolicy: 'no-cache'
-			})
-			.then(({ data }) => {
-				this.setState({
-					properties: data.getbusinesscompanies
-				});
-			})
-			.catch(error => {
-				console.log(error)
-			});
-    }
-
     componentWillMount() {
         this.getOpManagers();
         this.getProperties();
@@ -127,7 +183,7 @@ class Visit extends Component{
                             closeMenuOnSelect
                         />
 
-                        <button type="button" className="btn btn-success mt-2 float-right" onClick={() => this.handleMasterShift(true)}>
+                        <button type="button" className="btn btn-success mt-2 float-right" onClick={this.handleNewVisit}>
                             New Visit
                         </button>
 					</div>
@@ -140,17 +196,16 @@ class Visit extends Component{
                         {
                             opManagerFiltered.map(item => {
                                 return (
-                                    <Accordion key={item.Id} title={item.Full_Name}>
-                                        <VisitTable data={properties}/>
+                                    <Accordion key={item.Id} title={item.Full_Name + '-' + item.Id}>
+                                        <VisitTable opManagerId={item.Id} handleCloseVisit={this.handleCloseVisit}/>
                                     </Accordion>
                                 )
                             })
                         }
-                        
                     </div>
                 </div>
 
-                <MasterShift open={this.state.masterShiftOpen} propertiesData={properties} handleClose={() => this.handleMasterShift(false)} />
+                <MasterShift open={this.state.masterShiftHandle.open} actions={this.state.masterShiftHandle} propertiesData={properties} handleClose={this.handleCloseMasterShift} />
 
 
             </Fragment>
@@ -158,4 +213,4 @@ class Visit extends Component{
     }
 }
 
-export default withApollo(Visit);
+export default withApollo(withGlobalContent(Visit));
