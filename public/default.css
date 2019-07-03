@@ -11007,6 +11007,28 @@ div[class*="MuiStepper-root-"] {
   font-size: 0.875rem;
   text-transform: uppercase; }
 
+.Footer-wrapper, .Footer-links, .Footer-contactInfo {
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
+
 .External {
   background-color: transparent;
   font-family: 'Ropa Sans', sans-serif; }
@@ -11082,13 +11104,14 @@ div[class*="MuiStepper-root-"] {
   .External-logo {
     margin-bottom: 22px;
     margin-left: auto;
+    padding-top: 1rem;
     max-width: 340px;
     width: 100%; }
     .External-logo img {
       display: block;
       margin-left: 0;
       margin-right: auto;
-      max-width: 95px;
+      max-width: 125px;
       width: 100%; }
   .External-row {
     margin-bottom: 35px; }
@@ -11098,6 +11121,9 @@ div[class*="MuiStepper-root-"] {
   .External-stepper .MuiStepIcon-root-60.MuiStepIcon-active-62, .External-stepper .MuiStepLabel-label-52.MuiStepLabel-active-53 {
     color: #3ca2c8;
     font-family: 'Ropa Sans', sans-serif; }
+  .External-label.homePhone {
+    display: block;
+    margin-top: 8px; }
   .External-text {
     color: #FFF;
     font-family: 'Ropa Sans', sans-serif !important;
@@ -11241,28 +11267,6 @@ div[class*="MuiStepper-root-"] {
       padding-left: 0;
       padding-right: 0; } }
 
-.Footer-wrapper, .Footer-links, .Footer-contactInfo {
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: flex-start;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-box-flex: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -ms-flex-wrap: nowrap;
-  flex-wrap: nowrap;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center; }
-
 .Footer {
   background-color: #000;
   font-family: 'Ropa Sans', sans-serif;
@@ -11277,12 +11281,11 @@ div[class*="MuiStepper-root-"] {
     padding-right: 15px;
     width: 100%; }
   .Footer-logo {
-    background-color: red;
     -ms-flex-negative: 0;
     flex-shrink: 0;
     margin-right: 150px;
-    height: 95px;
-    width: 95px; }
+    height: auto;
+    width: 125px; }
   .Footer-info {
     display: block;
     width: 100%; }
