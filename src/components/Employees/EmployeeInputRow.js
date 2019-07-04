@@ -193,7 +193,7 @@ class EmployeeInputRow extends Component {
                     />
                 </div>
                 <div className="col">
-                    <label htmlFor="">Hire Date</label>
+                    <label htmlFor="">Start Date</label>
                     {/* <input
                         onChange={(e) => {
                             this.props.onchange(hireDate, e.target.value);

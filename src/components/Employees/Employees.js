@@ -1472,7 +1472,7 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="">Hire Date</label>
+                                        <label htmlFor="">Start Date</label>
                                         {/* <input
                                             type="text"
                                             name="email"
