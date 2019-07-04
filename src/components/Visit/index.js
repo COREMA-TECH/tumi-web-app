@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import Select from 'react-select';
+//import Select from 'react-select';
 import VisitTable from './VisitTable';
 import MasterShift from "./MasterShift";
 
@@ -13,6 +13,7 @@ import withGlobalContent from "../Generic/Global";
 class Visit extends Component{
 
     state = {
+        userId: 0,
         opManagers: [],
         opManagerFiltered: [],
         opManagerOptions: [],
@@ -102,7 +103,10 @@ class Visit extends Component{
 			this.props.client
 				.query({
 					query: GET_OP_MANAGER,
-					fetchPolicy: 'no-cache'
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                        id: this.state.userId
+                    }
 				})
 				.then(({ data }) => {
                     let options = [];
@@ -166,8 +170,13 @@ class Visit extends Component{
     }
 
     componentWillMount() {
-        this.getOpManagers();
-        this.getProperties();
+        this.setState(() => {
+            let userId = 258; //localStorage.getItem('LoginId');
+            return { userId: userId }
+        }, () => {
+            this.getOpManagers();
+            this.getProperties();
+        })
 	}
 
     render() {
@@ -176,12 +185,12 @@ class Visit extends Component{
             <Fragment>
                 <div className="row justify-content-end">
 					<div className="col-3">
-                        <Select
+                        {/* <Select
                             name="opManagers"
                             options={opManagerOptions}
                             onChange={(option) => this.filterOpManager(option)}
                             closeMenuOnSelect
-                        />
+                        /> */}
 
                         <button type="button" className="btn btn-success mt-2 float-right" onClick={this.handleNewVisit}>
                             New Visit

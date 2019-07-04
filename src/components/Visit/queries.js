@@ -5,8 +5,8 @@ import { OP_MANAGER_ROL_ID } from './Utilities';
  * Query to get operation manager
  */
 export const GET_OP_MANAGER = gql`
-    query getUsers {
-        user(IsActive: 1, Id_Roles: ${OP_MANAGER_ROL_ID}) {
+    query getUsers($id: Int) {
+        user(Id:$id, IsActive: 1, Id_Roles: ${OP_MANAGER_ROL_ID}) {
             Id
             Code_User
             Full_Name
@@ -49,6 +49,7 @@ export const GET_VISIT_BY_ID_QUERY = gql`
     visits(id: $id) {
       id
       startTime
+      endTime
       comment
       startLatitude
       startLongitude

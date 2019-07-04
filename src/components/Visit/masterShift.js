@@ -3,8 +3,9 @@ import Select from 'react-select';
 import Timer from './Timer';
 import AWS from 'aws-sdk';
 import PropTypes from 'prop-types';
+import {getDefaultTime, getTime, durationToTime} from './Utilities';
 
-import { /*OP_MANAGER_ROL_ID*/ getUrlMap } from './Utilities';
+import { OP_MANAGER_ROL_ID, getUrlMap } from './Utilities';
 
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,8 +13,6 @@ import grey from '@material-ui/core/colors/grey';
 import {withApollo} from 'react-apollo';
 import { CREATE_VISIT_QUERY, UPDATE_VISIT_QUERY } from './Mutations';
 import withGlobalContent from "../Generic/Global";
-
-const OP_MANAGER_ROL_ID = 1; // temporal para prueba
 
 const uuidv4 = require('uuid/v4');
 const styles = (theme) => ({
@@ -27,8 +26,18 @@ const DEFAULT_STATE = {
     userId: 0,
     rolId: 0,
     propertiesOpt: [],
-    businessCompanyId: 0,
+    //businessCompanyId: 0,
+    selectedHotel: { 
+        value: 0,
+        label: 'Select a Hotel'
+    },
     runTimer: false,
+    duration: {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    },
     comment: '',
     file: null,
     fileName: null,
@@ -53,11 +62,38 @@ class MasterShift extends Component{
 
     }
 
+    getDuration = (startTime, endTime) => {
+        return new Promise((resolve, reject) =>{
+            //let newTime = getDefaultTime();
+            try {
+                let newStartTime = getTime(startTime);
+                let currentTime = getTime(endTime || new Date());
+                let duration = moment.duration(currentTime.diff(newStartTime));
+
+                //newTime = durationToTime(startTime,duration.days(), duration.hours(), duration.minutes(), duration.seconds());
+
+                resolve({
+                    days: duration.days(),
+                    hours: duration.hours(),
+                    minutes: duration.minutes(),
+                    seconds: duration.seconds()
+                })
+            } catch (error) {
+                console.log('Error to get duration time');
+                resolve({
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0
+                })
+            }
+            
+        })
+    }
+
     createVisit = () => {
-        let { userId, businessCompanyId, startTime, urlFile, comment, latitude, longitude } = this.state;
-        console.log(businessCompanyId, 'Hotel seleccionado');
-        console.log(!businessCompanyId, '!businessCompanyId');
-        if(!businessCompanyId){
+        let { userId, selectedHotel, startTime, urlFile, comment, latitude, longitude } = this.state;
+        if(!selectedHotel.value){
             return this.props.handleOpenSnackbar(
                 'error',
                 'The hotel field is required',
@@ -66,57 +102,63 @@ class MasterShift extends Component{
             );
         }
 
-        this.setState(() => {
-            return { 
-                runTimer: true,
-                showStartButton: false,
-                showFinalizeButton: true,
-            }
-        });
-
-        // this.props.client.mutate({
-        //     mutation: CREATE_VISIT_QUERY,
-        //     variables: {
-        //         visits: {
-        //             OpManagerId: userId,
-        //             BusinessCompanyId: businessCompanyId,
-        //             startTime: startTime,
-        //             endTime: '', // no null
-        //             url: urlFile,
-        //             comment: comment,
-        //             startLatitude: latitude,
-        //             startLongitude: longitude
+        // this.setState(() => {
+        //     return { 
+        //         runTimer: true,
+        //         showStartButton: false,
+        //         showFinalizeButton: true,
+        //         duration: {
+        //             days: 0,
+        //             hours: 0,
+        //             minutes: 0,
+        //             seconds: 0
         //         }
         //     }
-        // })
-        // .then(({data}) => {
-        //     this.setState(() => {
-        //         return { 
-        //             visitId: data.addVisit[0].id,
-        //             runTimer: true,
-        //             showStartButton: false,
-        //             showFinalizeButton: true,
-        //         }
-        //     });
+        // });
 
-        //     this.props.handleOpenSnackbar(
-        //         'success',
-        //         'Successfully created',
-        //         'bottom',
-        //         'right'
-        //     );
-        // })
-        // .catch((error) => {
-        //     this.setState(() => {
-        //         return { formDisabled: false }
-        //     })
-        //     this.props.handleOpenSnackbar(
-        //         'error',
-        //         'Error to save visit',
-        //         'bottom',
-        //         'right'
-        //     );
-        // })
+        this.props.client.mutate({
+            mutation: CREATE_VISIT_QUERY,
+            variables: {
+                visits: {
+                    OpManagerId: userId,
+                    BusinessCompanyId: selectedHotel.value,
+                    startTime: startTime,
+                    endTime: '', // no null
+                    url: urlFile,
+                    comment: comment,
+                    startLatitude: latitude,
+                    startLongitude: longitude
+                }
+            }
+        })
+        .then(({data}) => {
+            this.setState(() => {
+                return { 
+                    visitId: data.addVisit[0].id,
+                    runTimer: true,
+                    showStartButton: false,
+                    showFinalizeButton: true,
+                }
+            });
+
+            this.props.handleOpenSnackbar(
+                'success',
+                'Successfully created',
+                'bottom',
+                'right'
+            );
+        })
+        .catch((error) => {
+            this.setState(() => {
+                return { formDisabled: false }
+            })
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error to save visit',
+                'bottom',
+                'right'
+            );
+        })
     }
 
     updateVisit = () => {
@@ -166,9 +208,12 @@ class MasterShift extends Component{
         e.preventDefault();
     }
 
-    handleSelectHotelChange = (e) => {
+    handleSelectHotelChange = (hotel) => {
         this.setState(() => {
-            return { businessCompanyId: e.value}
+            return { 
+                //businessCompanyId: hotel.value,
+                selectedHotel: hotel
+            }
         })
     }
 
@@ -257,7 +302,7 @@ class MasterShift extends Component{
         
                     this.setState(() => {
                         return {
-                            startTime: moment(new Date()).local().format("HH:mm:ss"),
+                            startTime: moment(new Date()).local().format("MM/DD/YYYY HH:mm:ss"),
                             latitude: posObj.latitude,
                             longitude: posObj.longitude,
                             srcIframe: posObj.srcIframe,
@@ -306,7 +351,7 @@ class MasterShift extends Component{
     
                     this.setState(() => {
                         return {
-                            endTime: moment(new Date()).local().format("HH:mm:ss"),
+                            endTime: moment(new Date()).local().format("MM/DD/YYYY HH:mm:ss"),
                             latitude: posObj.latitude,
                             longitude: posObj.longitude,
                             srcIframe: posObj.srcIframe
@@ -352,83 +397,111 @@ class MasterShift extends Component{
         })
     }
 
-    setNewVisitState(){
-        this.setState(prevState => {
+    setNewVisitState = () => {
+        let {visitId, selectedHotel, runTimer, duration, comment, file,
+            fileName, urlFile, showStartButton, showFinalizeButton, startTime,
+            endTime, latitude, longitude, srcIframe, formDisabled, disableFinalizeButton
+        } = DEFAULT_STATE;
+
+        this.setState(() => {
             return {
-                ...prevState,
-                visitId: 0,
-                businessCompanyId: 0,
-                runTimer: false,
-                comment: '',
-                file: null,
-                fileName: null,
-                urlFile: '',
-                showStartButton: true,
-                showFinalizeButton: false,
-                startTime: null,
-                endTime: null,
-                latitude: '',
-                longitude: '',
-                srcIframe: '',
-                formDisabled: false,
-                disableFinalizeButton: false
+                visitId: visitId,
+                selectedHotel: selectedHotel,
+                runTimer: runTimer,
+                duration: duration,
+                comment: comment,
+                file: file,
+                fileName: fileName,
+                urlFile: urlFile,
+                showStartButton: showStartButton,
+                showFinalizeButton: showFinalizeButton,
+                startTime: startTime,
+                endTime: endTime,
+                latitude: latitude,
+                longitude: longitude,
+                srcIframe: srcIframe,
+                formDisabled: formDisabled,
+                disableFinalizeButton: disableFinalizeButton
             }
         });
     }
 
-    setCloseVisitState(visitData){
-        let {id, startTime, comment, startLatitude, startLongitude, BusinessCompanyId, Code, Name} = visitData;
-        this.setState(prevState => {
-            return {
-                ...prevState,
-                visitId: id,
-                businessCompanyId: BusinessCompanyId,
-                runTimer: true,
-                comment: comment,
-                showStartButton: false,
-                showFinalizeButton: true,
-                startTime: startTime,
-                endTime: null,
-                latitude: startLatitude,
-                longitude: startLongitude,
-                srcIframe: getUrlMap(startLatitude, startLongitude),
-                formDisabled: true,
-                disableFinalizeButton: false
-            }
-        })
+    setCloseVisitState = (visitData) => {
+        let {id, startTime, endTime, comment, startLatitude, startLongitude, BusinessCompanyId, BusinessCompany} = visitData;
+        console.log(startTime, 'start timeeeeeeeeeee');
+        console.log(endTime, 'end timeeeeeeeeeee');
+        this.getDuration(startTime, endTime)
+            .then((du) => {
+                console.log(du, 'durationnnnnnnnnn');
+                this.setState(() => {
+                    return {
+                        visitId: id,
+                        selectedHotel: {
+                            value: BusinessCompanyId,
+                            label: BusinessCompany.Name
+                        },
+                        runTimer: !endTime, // solo si es vacio ejecuta el timer
+                        duration: du,
+                        comment: comment,
+                        showStartButton: false,
+                        showFinalizeButton: !endTime, // solo si es vacio muestra el boton
+                        startTime: startTime,
+                        endTime: endTime || null,
+                        latitude: startLatitude,
+                        longitude: startLongitude,
+                        srcIframe: getUrlMap(startLatitude, startLongitude),
+                        formDisabled: true,
+                        disableFinalizeButton: false
+                    }
+                })
+            })
+    }
+
+    defaultHotelSelect = () => {
+        let { selectedHotel, propertiesOpt } = this.state;
+        return propertiesOpt.filter((opt) => opt.value == selectedHotel.value)
     }
     
     componentWillReceiveProps({ actions, propertiesData }){
-        if(actions.open){
-            this.setState(() => {
-                let options = [];
-    
-                options = propertiesData.map((p) => {
-                    return { ...p, value: p.Id, label: p.Name };
+        if(actions.open !== this.props.actions.open){
+            if(actions.open){
+                this.setState(() => {
+                    let options = [];
+        
+                    options = propertiesData.map((p) => {
+                        return { ...p, value: p.Id, label: p.Name };
+                    });
+        
+                    options = [{value:0, label: 'Select a Hotel'}, ...options]
+        
+                    return { propertiesOpt: options }
+                }, () => {
+                    console.log(actions, 'dataaaaaaa');
+                    if(actions.closeVisit)
+                        this.setCloseVisitState(actions.data.visits[0])
+                    else
+                        this.setNewVisitState();
+                })
+            }
+            else{
+                this.setState(() => {
+                    let {selectedHotel, comment, startTime, file, fileName} = DEFAULT_STATE;
+                    return {
+                        selectedHotel: selectedHotel,
+                        comment: comment,
+                        startTime: startTime,
+                        runTimer: false,
+                        file: file,
+                        fileName: fileName
+                    }
                 });
-    
-                options = [{value:0, label: 'Select a Hotel'}, ...options]
-    
-                return { propertiesOpt: options }
-            }, () => {
-                if(actions.closeVisit)
-                    this.setCloseVisitState(actions.data)
-                else
-                    this.setNewVisitState();
-            })
-        }
-        else{
-            this.setState(() => {
-                return {
-                    ...DEFAULT_STATE
-                }
-            });
+            }
         }
     }
 
     componentWillMount(){
-        let userId = localStorage.getItem('LoginId');
-        let rolId = localStorage.getItem('IdRoles');
+        let userId = 258; //localStorage.getItem('LoginId');
+        let rolId = 3; //localStorage.getItem('IdRoles');
         this.setState(() => {
             return {
                 userId: !!userId ? +userId : 0,
@@ -440,7 +513,6 @@ class MasterShift extends Component{
     render() {
         let { actions, classes } = this.props;
         let { showStartButton, showFinalizeButton, startTime, endTime, propertiesOpt, srcIframe, formDisabled, disableFinalizeButton } = this.state;
-        
         return (
             <Fragment>
                 <div className={`MasterShiftForm ${actions.open ? 'active' : ''}`}>
@@ -466,8 +538,8 @@ class MasterShift extends Component{
                                     name="hotel"
                                     options={propertiesOpt}
                                     onChange={this.handleSelectHotelChange}
-                                    placeholder="Select a Hotel"
                                     closeMenuOnSelect
+                                    value={this.state.selectedHotel}
                                     isDisabled={formDisabled}
                                 />
                                 
@@ -482,6 +554,7 @@ class MasterShift extends Component{
                                     className="form-control textarea-apply-form"
                                     onChange={this.handleComment}
                                     disabled={formDisabled}
+                                    value={this.state.comment}
                                 />
 
                                 <label htmlFor="">Photo</label>
@@ -497,7 +570,7 @@ class MasterShift extends Component{
 
                                 <div className={`d-flex border border-success mt-3 ${classes.timerBox}`} >
                                     <div className="w-100 d-flex align-items-center justify-content-center">
-                                        <Timer run={ this.state.runTimer } />
+                                        <Timer run={ this.state.runTimer } duration={this.state.duration} startTime={this.state.startTime} endTime={this.state.endTime}/>
                                     </div>
 
                                     <div className="flex-shrink-1 d-flex align-items-stretch justify-content-center flex-column">
