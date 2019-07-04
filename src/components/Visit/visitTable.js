@@ -52,9 +52,15 @@ class VisitTable extends Component{
         this.getVisits();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.masterShiftIsOpen !== this.props.masterShiftIsOpen)
+            this.getVisits();
+    }
+
     render() {
         let items = this.state.visits;
         let { handleCloseVisit } = this.props;
+
         return (
             <Fragment>
                 <Table classes={{}}>

@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-//import Select from 'react-select';
 import VisitTable from './VisitTable';
 import MasterShift from "./MasterShift";
 
@@ -171,7 +170,7 @@ class Visit extends Component{
 
     componentWillMount() {
         this.setState(() => {
-            let userId = 258; //localStorage.getItem('LoginId');
+            let userId = localStorage.getItem('LoginId');
             return { userId: userId }
         }, () => {
             this.getOpManagers();
@@ -180,18 +179,11 @@ class Visit extends Component{
 	}
 
     render() {
-        const { properties, opManagerOptions, opManagerFiltered } = this.state;
+        const { properties, opManagerFiltered, masterShiftHandle } = this.state;
         return (
             <Fragment>
                 <div className="row justify-content-end">
 					<div className="col-3">
-                        {/* <Select
-                            name="opManagers"
-                            options={opManagerOptions}
-                            onChange={(option) => this.filterOpManager(option)}
-                            closeMenuOnSelect
-                        /> */}
-
                         <button type="button" className="btn btn-success mt-2 float-right" onClick={this.handleNewVisit}>
                             New Visit
                         </button>
@@ -205,8 +197,8 @@ class Visit extends Component{
                         {
                             opManagerFiltered.map(item => {
                                 return (
-                                    <Accordion key={item.Id} title={item.Full_Name + '-' + item.Id}>
-                                        <VisitTable opManagerId={item.Id} handleCloseVisit={this.handleCloseVisit}/>
+                                    <Accordion key={item.Id} title={item.Full_Name}>
+                                        <VisitTable opManagerId={item.Id} handleCloseVisit={this.handleCloseVisit} masterShiftIsOpen={masterShiftHandle.open}/>
                                     </Accordion>
                                 )
                             })
@@ -214,7 +206,7 @@ class Visit extends Component{
                     </div>
                 </div>
 
-                <MasterShift open={this.state.masterShiftHandle.open} actions={this.state.masterShiftHandle} propertiesData={properties} handleClose={this.handleCloseMasterShift} />
+                <MasterShift open={masterShiftHandle.open} actions={masterShiftHandle} propertiesData={properties} handleClose={this.handleCloseMasterShift} addNewVisit={this.addNewVisit}/>
 
 
             </Fragment>

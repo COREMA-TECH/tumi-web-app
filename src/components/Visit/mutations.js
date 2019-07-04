@@ -22,6 +22,8 @@ export const UPDATE_VISIT_QUERY = gql`
     mutation updateVisit($visit: inputUpdateVisit){
         updateVisit(visit: $visit){
             id
+            startTime
+            endTime
         }
     }
 `;

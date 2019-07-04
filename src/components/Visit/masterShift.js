@@ -3,7 +3,7 @@ import Select from 'react-select';
 import Timer from './Timer';
 import AWS from 'aws-sdk';
 import PropTypes from 'prop-types';
-import {getDefaultTime, getTime, durationToTime} from './Utilities';
+import {getTime} from './Utilities';
 
 import { OP_MANAGER_ROL_ID, getUrlMap } from './Utilities';
 
@@ -94,6 +94,9 @@ class MasterShift extends Component{
     createVisit = () => {
         let { userId, selectedHotel, startTime, urlFile, comment, latitude, longitude } = this.state;
         if(!selectedHotel.value){
+            this.setState(() => {
+                return { formDisabled: false }
+            });
             return this.props.handleOpenSnackbar(
                 'error',
                 'The hotel field is required',
@@ -176,18 +179,24 @@ class MasterShift extends Component{
             }
         })
         .then(({data}) => {
-            this.setState(() => {
-                return {
-                    runTimer: false,
-                    showFinalizeButton: false,
-                }
-            })
-            this.props.handleOpenSnackbar(
-                'success',
-                'Successfully updated',
-                'bottom',
-                'right'
-            );
+            let {startTime, endTime} = data.updateVisit;
+            this.getDuration(startTime, endTime)
+                .then((duration) => {
+                    this.setState(() => {
+                        return {
+                            runTimer: false,
+                            showFinalizeButton: false,
+                            duration: duration
+                        }
+                    }, () => {
+                        this.props.handleOpenSnackbar(
+                            'success',
+                            'Successfully updated',
+                            'bottom',
+                            'right'
+                        );
+                    });
+                });
         })
         .catch((error) => {
             this.setState(() => {
@@ -210,8 +219,7 @@ class MasterShift extends Component{
 
     handleSelectHotelChange = (hotel) => {
         this.setState(() => {
-            return { 
-                //businessCompanyId: hotel.value,
+            return {
                 selectedHotel: hotel
             }
         })
@@ -249,16 +257,14 @@ class MasterShift extends Component{
                         Body: file
                     };
 
-                    return resolve({location: 'https://orion1-files.s3.amazonaws.com/images/9f71d9d4-448b-4f47-ac54-e77b841b5821_Bart-Simpson_gamer.jpg', fileName: filename})
-
-                    // s3.upload(params, (err, data) => {
-                    // 	if (err){
-                    //         console.log(err);
-                    //         return reject('Error Loading File');
-                    //     }
-                    // 	else
-                    // 	    return resolve({location: data.Location, fileName: filename});
-                    // })
+                    s3.upload(params, (err, data) => {
+                    	if (err){
+                            console.log(err);
+                            return reject('Error Loading File');
+                        }
+                    	else
+                    	    return resolve({location: data.Location, fileName: filename});
+                    })
                 }
             } catch (error) {
                 return reject('Error Loading File');
@@ -428,11 +434,8 @@ class MasterShift extends Component{
 
     setCloseVisitState = (visitData) => {
         let {id, startTime, endTime, comment, startLatitude, startLongitude, BusinessCompanyId, BusinessCompany} = visitData;
-        console.log(startTime, 'start timeeeeeeeeeee');
-        console.log(endTime, 'end timeeeeeeeeeee');
         this.getDuration(startTime, endTime)
             .then((du) => {
-                console.log(du, 'durationnnnnnnnnn');
                 this.setState(() => {
                     return {
                         visitId: id,
@@ -476,7 +479,6 @@ class MasterShift extends Component{
         
                     return { propertiesOpt: options }
                 }, () => {
-                    console.log(actions, 'dataaaaaaa');
                     if(actions.closeVisit)
                         this.setCloseVisitState(actions.data.visits[0])
                     else
@@ -500,8 +502,8 @@ class MasterShift extends Component{
     }
 
     componentWillMount(){
-        let userId = 258; //localStorage.getItem('LoginId');
-        let rolId = 3; //localStorage.getItem('IdRoles');
+        let userId = localStorage.getItem('LoginId');
+        let rolId = localStorage.getItem('IdRoles');
         this.setState(() => {
             return {
                 userId: !!userId ? +userId : 0,
