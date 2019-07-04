@@ -1,16 +1,16 @@
-import React, {Component, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import Select from 'react-select';
 import Timer from './Timer';
 import AWS from 'aws-sdk';
 import PropTypes from 'prop-types';
-import {getTime} from './Utilities';
+import { getTime } from './Utilities';
 
 import { OP_MANAGER_ROL_ID, getUrlMap } from './Utilities';
 
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
-import {withApollo} from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import { CREATE_VISIT_QUERY, UPDATE_VISIT_QUERY } from './Mutations';
 import withGlobalContent from "../Generic/Global";
 
@@ -27,7 +27,7 @@ const DEFAULT_STATE = {
     rolId: 0,
     propertiesOpt: [],
     //businessCompanyId: 0,
-    selectedHotel: { 
+    selectedHotel: {
         value: 0,
         label: 'Select a Hotel'
     },
@@ -53,17 +53,17 @@ const DEFAULT_STATE = {
     disableFinalizeButton: false
 }
 
-class MasterShift extends Component{
+class MasterShift extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        
+
         this.state = DEFAULT_STATE;
 
     }
 
     getDuration = (startTime, endTime) => {
-        return new Promise((resolve, reject) =>{
+        return new Promise((resolve, reject) => {
             //let newTime = getDefaultTime();
             try {
                 let newStartTime = getTime(startTime);
@@ -87,13 +87,13 @@ class MasterShift extends Component{
                     seconds: 0
                 })
             }
-            
+
         })
     }
 
     createVisit = () => {
         let { userId, selectedHotel, startTime, urlFile, comment, latitude, longitude } = this.state;
-        if(!selectedHotel.value){
+        if (!selectedHotel.value) {
             this.setState(() => {
                 return { formDisabled: false }
             });
@@ -134,34 +134,34 @@ class MasterShift extends Component{
                 }
             }
         })
-        .then(({data}) => {
-            this.setState(() => {
-                return { 
-                    visitId: data.addVisit[0].id,
-                    runTimer: true,
-                    showStartButton: false,
-                    showFinalizeButton: true,
-                }
-            });
+            .then(({ data }) => {
+                this.setState(() => {
+                    return {
+                        visitId: data.addVisit[0].id,
+                        runTimer: true,
+                        showStartButton: false,
+                        showFinalizeButton: true,
+                    }
+                });
 
-            this.props.handleOpenSnackbar(
-                'success',
-                'Successfully created',
-                'bottom',
-                'right'
-            );
-        })
-        .catch((error) => {
-            this.setState(() => {
-                return { formDisabled: false }
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully created',
+                    'bottom',
+                    'right'
+                );
             })
-            this.props.handleOpenSnackbar(
-                'error',
-                'Error to save visit',
-                'bottom',
-                'right'
-            );
-        })
+            .catch((error) => {
+                this.setState(() => {
+                    return { formDisabled: false }
+                })
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to save visit',
+                    'bottom',
+                    'right'
+                );
+            })
     }
 
     updateVisit = () => {
@@ -178,40 +178,40 @@ class MasterShift extends Component{
                 }
             }
         })
-        .then(({data}) => {
-            let {startTime, endTime} = data.updateVisit;
-            this.getDuration(startTime, endTime)
-                .then((duration) => {
-                    this.setState(() => {
-                        return {
-                            runTimer: false,
-                            showFinalizeButton: false,
-                            duration: duration
-                        }
-                    }, () => {
-                        this.props.handleOpenSnackbar(
-                            'success',
-                            'Successfully updated',
-                            'bottom',
-                            'right'
-                        );
+            .then(({ data }) => {
+                let { startTime, endTime } = data.updateVisit;
+                this.getDuration(startTime, endTime)
+                    .then((duration) => {
+                        this.setState(() => {
+                            return {
+                                runTimer: false,
+                                showFinalizeButton: false,
+                                duration: duration
+                            }
+                        }, () => {
+                            this.props.handleOpenSnackbar(
+                                'success',
+                                'Successfully updated',
+                                'bottom',
+                                'right'
+                            );
+                        });
                     });
-                });
-        })
-        .catch((error) => {
-            this.setState(() => {
-                return { disableFinalizeButton: false }
             })
+            .catch((error) => {
+                this.setState(() => {
+                    return { disableFinalizeButton: false }
+                })
 
-            this.props.handleOpenSnackbar(
-                'error',
-                'Error to update visit',
-                'bottom',
-                'right'
-            );
-        })
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to update visit',
+                    'bottom',
+                    'right'
+                );
+            })
     }
-    
+
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -226,18 +226,18 @@ class MasterShift extends Component{
     }
 
     handleUploadImage = () => {
-		// Get the file selected
+        // Get the file selected
         const file = this.state.file;
-        
+
         return new Promise((resolve, reject) => {
             try {
-                if (!file) return resolve({location: '', fileName: ''});
+                if (!file) return resolve({ location: '', fileName: '' });
                 var _validFileExtensions = [...this.context.extImage];
                 if (
                     !_validFileExtensions.find((value) => {
                         return file.name.toLowerCase().endsWith(value);
                     })
-                ){
+                ) {
                     return reject('This format is not supported!');
                 }
                 else if (file.size <= 0) return reject('File is empty');
@@ -258,12 +258,12 @@ class MasterShift extends Component{
                     };
 
                     s3.upload(params, (err, data) => {
-                    	if (err){
+                        if (err) {
                             console.log(err);
                             return reject('Error Loading File');
                         }
-                    	else
-                    	    return resolve({location: data.Location, fileName: filename});
+                        else
+                            return resolve({ location: data.Location, fileName: filename });
                     })
                 }
             } catch (error) {
@@ -273,9 +273,9 @@ class MasterShift extends Component{
 
 
     }
-    
+
     handleGeoPosition = () => {
-        return new Promise((resolve, reject) => 
+        return new Promise((resolve, reject) =>
             navigator.geolocation.getCurrentPosition((position) => { // success callback
                 let posObj = {
                     latitude: position.coords.latitude,
@@ -289,23 +289,23 @@ class MasterShift extends Component{
     }
 
     handleStartButton = () => {
-        if(this.state.rolId === OP_MANAGER_ROL_ID){
+        if (this.state.rolId === OP_MANAGER_ROL_ID) {
             this.setState(() => {
-                return {formDisabled: true}
+                return { formDisabled: true }
             }, async () => {
                 let posObj = {
                     latitude: '',
                     longitude: '',
                     srcIframe: ''
                 }
-    
+
                 try {
                     if (navigator.geolocation) {
                         posObj = await this.handleGeoPosition();
                     }
-    
+
                     let respUpload = await this.handleUploadImage();
-        
+
                     this.setState(() => {
                         return {
                             startTime: moment(new Date()).local().format("MM/DD/YYYY HH:mm:ss"),
@@ -329,7 +329,7 @@ class MasterShift extends Component{
                 }
             })
         }
-        else{
+        else {
             this.props.handleOpenSnackbar(
                 'error',
                 'This functionality is exclusive for users with role operation manager',
@@ -340,7 +340,7 @@ class MasterShift extends Component{
     }
 
     handleFinalizeButton = () => {
-        if(this.state.rolId === OP_MANAGER_ROL_ID){
+        if (this.state.rolId === OP_MANAGER_ROL_ID) {
             this.setState(() => {
                 return { disableFinalizeButton: false }
             }, async () => {
@@ -349,12 +349,12 @@ class MasterShift extends Component{
                     longitude: '',
                     srcIframe: ''
                 }
-    
+
                 try {
                     if (navigator.geolocation) {
                         posObj = await this.handleGeoPosition();
                     }
-    
+
                     this.setState(() => {
                         return {
                             endTime: moment(new Date()).local().format("MM/DD/YYYY HH:mm:ss"),
@@ -372,9 +372,9 @@ class MasterShift extends Component{
                     );
                 }
             })
-            
+
         }
-        else{
+        else {
             this.props.handleOpenSnackbar(
                 'error',
                 'This functionality is exclusive for users with role operation manager',
@@ -396,7 +396,7 @@ class MasterShift extends Component{
         e.persist();
         let file = e.target.files[0];
         this.setState(() => {
-            return { 
+            return {
                 file: file || {},
                 fileName: !!file ? file.name : null
             }
@@ -404,7 +404,7 @@ class MasterShift extends Component{
     }
 
     setNewVisitState = () => {
-        let {visitId, selectedHotel, runTimer, duration, comment, file,
+        let { visitId, selectedHotel, runTimer, duration, comment, file,
             fileName, urlFile, showStartButton, showFinalizeButton, startTime,
             endTime, latitude, longitude, srcIframe, formDisabled, disableFinalizeButton
         } = DEFAULT_STATE;
@@ -433,7 +433,7 @@ class MasterShift extends Component{
     }
 
     setCloseVisitState = (visitData) => {
-        let {id, startTime, endTime, comment, startLatitude, startLongitude, BusinessCompanyId, BusinessCompany} = visitData;
+        let { id, startTime, endTime, comment, startLatitude, startLongitude, BusinessCompanyId, BusinessCompany } = visitData;
         this.getDuration(startTime, endTime)
             .then((du) => {
                 this.setState(() => {
@@ -464,30 +464,30 @@ class MasterShift extends Component{
         let { selectedHotel, propertiesOpt } = this.state;
         return propertiesOpt.filter((opt) => opt.value == selectedHotel.value)
     }
-    
-    componentWillReceiveProps({ actions, propertiesData }){
-        if(actions.open !== this.props.actions.open){
-            if(actions.open){
+
+    componentWillReceiveProps({ actions, propertiesData }) {
+        if (actions.open !== this.props.actions.open) {
+            if (actions.open) {
                 this.setState(() => {
                     let options = [];
-        
+
                     options = propertiesData.map((p) => {
                         return { ...p, value: p.Id, label: p.Name };
                     });
-        
-                    options = [{value:0, label: 'Select a Hotel'}, ...options]
-        
+
+                    options = [{ value: 0, label: 'Select a Hotel' }, ...options]
+
                     return { propertiesOpt: options }
                 }, () => {
-                    if(actions.closeVisit)
+                    if (actions.closeVisit)
                         this.setCloseVisitState(actions.data.visits[0])
                     else
                         this.setNewVisitState();
                 })
             }
-            else{
+            else {
                 this.setState(() => {
-                    let {selectedHotel, comment, startTime, file, fileName} = DEFAULT_STATE;
+                    let { selectedHotel, comment, startTime, file, fileName } = DEFAULT_STATE;
                     return {
                         selectedHotel: selectedHotel,
                         comment: comment,
@@ -501,7 +501,7 @@ class MasterShift extends Component{
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         let userId = localStorage.getItem('LoginId');
         let rolId = localStorage.getItem('IdRoles');
         this.setState(() => {
@@ -544,7 +544,7 @@ class MasterShift extends Component{
                                     value={this.state.selectedHotel}
                                     isDisabled={formDisabled}
                                 />
-                                
+
                                 <label htmlFor="">Location</label>
                                 <iframe src={srcIframe} allow="geolocation" width="100%" height="180px" />
 
@@ -572,45 +572,45 @@ class MasterShift extends Component{
 
                                 <div className={`d-flex border border-success mt-3 ${classes.timerBox}`} >
                                     <div className="w-100 d-flex align-items-center justify-content-center">
-                                        <Timer run={ this.state.runTimer } duration={this.state.duration} startTime={this.state.startTime} endTime={this.state.endTime}/>
+                                        <Timer run={this.state.runTimer} duration={this.state.duration} startTime={this.state.startTime} endTime={this.state.endTime} />
                                     </div>
 
                                     <div className="flex-shrink-1 d-flex align-items-stretch justify-content-center flex-column">
                                         <div className="border border-success p-1 w-100">
                                             {
                                                 showStartButton
-                                                ?
-                                                    <button 
-                                                        type="button" 
+                                                    ?
+                                                    <button
+                                                        type="button"
                                                         className="btn btn-sm btn-primary btn-block"
                                                         onClick={this.handleStartButton}
                                                         disabled={formDisabled}
-                                                        >
+                                                    >
                                                         Start
                                                     </button>
-                                                :
+                                                    :
                                                     <p className="text-center px-3">{startTime || '00:00:00'}</p>
                                             }
-                                            
+
                                         </div>
 
                                         <div className="border border-success p-1 w-100">
                                             {
                                                 showFinalizeButton
-                                                ?
-                                                    <button 
-                                                        type="button" 
+                                                    ?
+                                                    <button
+                                                        type="button"
                                                         className="btn btn-sm btn-danger btn-block"
                                                         onClick={this.handleFinalizeButton}
                                                         disabled={disableFinalizeButton}
-                                                        >
+                                                    >
                                                         Finalize
                                                     </button>
-                                                :
+                                                    :
                                                     <p className="text-center px-3">{endTime || '00:00:00'}</p>
 
                                             }
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -625,11 +625,11 @@ class MasterShift extends Component{
         )
     }
     static contextTypes = {
-		maxFileSize: PropTypes.number,
-		extImage: PropTypes.array,
-		credentialsS3: PropTypes.object,
-		bucketS3: PropTypes.string
-	};
+        maxFileSize: PropTypes.number,
+        extImage: PropTypes.array,
+        credentialsS3: PropTypes.object,
+        bucketS3: PropTypes.string
+    };
 }
 
 export default withStyles(styles)(withGlobalContent(withApollo(MasterShift)));
