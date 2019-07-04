@@ -366,9 +366,9 @@ class MobileMenu extends Component {
                                 </Link>
                                 <ul className="SubMenu" id="1">
                                     {items.map(item => {
-                                        return item.Forms.Value == "/employment-application" ?
+                                        return item.Forms.Value == "/home/external-application" ?
                                             <li className="SubMenu-item">
-                                                <a className="SubMenu-link" href="/employment-application">
+                                                <a className="SubMenu-link" href="/home/external-application">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Public
                                                     Application
                                                 </a>
