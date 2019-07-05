@@ -53,6 +53,9 @@ const styles = (theme) => ({
         '&:hover': {
             cursor: 'pointer'
         }
+    },
+    overflowVisible:{
+        overflow: 'visible'
     }
 
 });
@@ -640,14 +643,15 @@ class RegionForm extends Component {
     }
 
     render() {
+        let { classes } = this.props;
         return (
-            <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
+            <Dialog classes={{ paperScrollPaper: classes.overflowVisible }} maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">Region's Configurations</h5>
                     </div>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent className={ classes.overflowVisible }>
                     <form action="">
                         <header className="RegionForm-header">
                             <div className="">
