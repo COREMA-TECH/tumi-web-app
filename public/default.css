@@ -11308,11 +11308,9 @@ div[class*="MuiStepper-root-"] {
     color: #868686;
     font-size: 10px;
     margin-right: 70px; }
-    .Footer-contact.address, .Footer-contact.phone {
-      max-width: 130px;
-      width: 100%; }
     .Footer-contact.copyright {
-      margin-right: 0; }
+      margin-right: 0;
+      text-align: right; }
   @media (max-width: 991.98px) {
     .Footer-logo {
       margin-bottom: 10px;
@@ -11341,7 +11339,10 @@ div[class*="MuiStepper-root-"] {
       text-align: center; }
       .Footer-contact.address, .Footer-contact.phone {
         max-width: 130px;
-        width: 100%; } }
+        width: 100%; }
+      .Footer-contact.copyright {
+        margin-right: 0;
+        text-align: center; } }
 
 .DaysWeekMonth-wrapper {
   padding-top: 1.5rem;
