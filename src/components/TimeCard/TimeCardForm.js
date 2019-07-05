@@ -594,7 +594,7 @@ class TimeCardForm extends Component {
                                             disabled={!isAdmin}
                                             onBlur={this.handleValidate}
                                         >
-                                            <option value={0}>Select a employee</option>
+                                            <option value={0}>Select a Employee</option>
                                             {this.state.employees.map((employee) => (
                                                 <option value={employee.id}>{employee.lastName + " " + employee.firstName}</option>
                                             ))}
