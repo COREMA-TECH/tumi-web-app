@@ -171,6 +171,8 @@ class ApplicationInternal extends Component {
                     .mutate({
                         mutation: id == 0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
                         variables: {
+                            codeuser: localStorage.getItem('LoginId'),
+                            nameUser: localStorage.getItem('FullName'),
                             application: {
                                 id: id,
                                 firstName: this.state.firstName,
