@@ -193,7 +193,7 @@ class EmployeesTable extends React.Component {
                             <CustomTableCell className={"Table-head"} style={{ width: '110px' }}>Actions</CustomTableCell>
                             <CustomTableCell style={{ width: '60px' }} className={"Table-head"}>Full Name</CustomTableCell>
                             <CustomTableCell style={{ width: '90px' }} className={"Table-head"}>Email</CustomTableCell>
-                            <CustomTableCell className={"Table-head"}>Hire Date</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>Start Date</CustomTableCell>
                             <CustomTableCell className={"Table-head"} style={{ width: '100px' }}>Phone Number</CustomTableCell>
                             <CustomTableCell className={"Table-head"} style={{ width: '60px' }}>Department</CustomTableCell>
                             <CustomTableCell className={"Table-head"} style={{ width: '60px' }}>Position</CustomTableCell>
