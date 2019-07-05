@@ -143,9 +143,9 @@ class CustomizedTabs extends React.Component {
     getTabContent = (step, ) => {
         switch (step) {
             case 0:
-                return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId}/>;
-            case 1: 
-                return <ApplicationInternal applicationId={this.state.applicationId} handleContract={this.handleContract} />
+                return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId} />;
+            case 1:
+                return <ApplicationInternal applicationId={this.state.applicationId} />
             case 2:
                 return <Summary applicationId={this.state.applicationId} />
             case 3:
@@ -241,18 +241,19 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[10].label}
                         />
-                        
+
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[9].label}
                         />
-                        <Tab
+                        {this.state.independentContract ? <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
-                            label={'Independent Contract'}
-                        />
-                    
+                            label={applyTabs[12].label}
+                        /> : <React.Fragment />}
+
+
                     </Tabs>
                     {this.getTabContent(value)}
                 </MuiThemeProvider>

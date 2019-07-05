@@ -334,6 +334,10 @@ class Application extends Component {
                                 hasIndependentContract: applicantData.independentContract != null
                             },
                             () => {
+
+                                if (this.state.hasIndependentContract)
+                                    this.props.handleContract();
+
                                 this.getIdealJobsByApplicationId();
                                 this.getPositionCatalog();
                             }
@@ -470,8 +474,6 @@ class Application extends Component {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
             this.getApplicationById(this.props.applicationId);
-            if (this.state.socialSecurityNumber.length === 0)
-                this.props.handleContract();
 
         } else {
             this.getPositions();
