@@ -532,7 +532,7 @@ class Application extends Component {
                 values.push(value);
             }
         })
-   
+
         if (values.length == 0)
             this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
         else {
@@ -679,6 +679,9 @@ class Application extends Component {
         const name = target.name;
         if (name === "immediately" && value == true) {
             this.setState({ dateAvailable: new Date().toISOString().substring(0, 10) })
+        }
+        if (name === "optionHearTumi" && !"3,4".includes(value)) {
+            this.setState(()=>({nameReferences: ''}))
         }
 
         this.setState({

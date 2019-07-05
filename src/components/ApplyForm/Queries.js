@@ -106,6 +106,8 @@ export const GET_APPLICATION_BY_ID = gql`
 			hireType
 			expireDateId
 			area
+			optionHearTumi
+			nameReferences
 			independentContract{
 				id
 			}
