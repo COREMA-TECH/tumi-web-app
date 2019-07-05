@@ -11,7 +11,7 @@ class ForgotPassword extends Component {
 
         this.state = {
             sending: false,
-            username: '',
+            username: null,
             reseted: false
         }
     }
@@ -53,6 +53,12 @@ class ForgotPassword extends Component {
         this.setState(() => ({ [elem.name]: elem.value }));
     }
 
+    onClickCancelHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = '/login';
+    }
+
     render() {
         let { reseted } = this.state;
 
@@ -66,30 +72,36 @@ class ForgotPassword extends Component {
                         </div>
                     </div> :
                         < form className="reset-password-form" onSubmit={this.handleSubmit} >
-                            <h4 className="reset-password-title">Forgot password?</h4>
-                            <br />
+                            <h4 className="reset-password-title w-100 text-center mb-3 pb-3 border-bottom">Forgot password?</h4>
                             <div className="input-reset-container">
-                                <label htmlFor="username" className="primary mb-1">Enter Username</label>
                                 <input
                                     name="username"
                                     id="username"
                                     onChange={this.onChangeHanler}
+                                    placeholder="Username"
                                     type="text"
                                     className="form-control mt-2"
+                                    value={this.state.username}
                                     required
                                 />
 
                             </div>
-
-                            <br />
-
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <button className="btn btn-md btn-success float-right">
-                                        Save
-                        {this.state.sending && (<i class="fas fa-spinner fa-spin ml-2" />)}
+                            <div className="row w-100">
+                                <div className="col-md-6">
+                                    <button className="btn btn-md btn-danger float-right" disabled={this.state.sending} onClick={this.onClickCancelHandler}>
+                                        Cancel <i class="fas fa-sign-out-alt ml-1"></i>
                                     </button>
                                 </div>
+                                <div className="col-md-6">
+                                    <button className="btn btn-md btn-success float-right">
+                                        Submit{this.state.sending ? <i class="fas fa-spinner fa-spin ml-2" /> : <i class="fas fa-key ml-2"></i>}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="row border-top">
+                                <span className="text-muted">
+                                    Please enter your username in the field above, once completed, you will receive an email containing a temporary password shortly.
+                                </span>
                             </div>
 
                         </form >
