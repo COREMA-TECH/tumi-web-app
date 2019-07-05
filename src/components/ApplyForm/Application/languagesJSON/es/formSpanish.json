@@ -98,5 +98,53 @@
   {
     "id": 24,
     "label": "Segundo Apellidos"
+  },
+  {
+    "id": 25,
+    "label": "Fecha del día"
+  },
+  {
+    "id": 26,
+    "label": "Puedes iniciar inmediatamente?"
+  },
+  {
+    "id": 27,
+    "label": "Como te enteraste de Tumi Staffing"
+  },
+  {
+    "id": 28,
+    "label": "Nombre de Referencia"
+  },
+  {
+    "id": 29,
+    "label": "EEOC Código de Etica"
+  },
+  {
+    "id": 30,
+    "label": "Franquicia"
+  },
+  {
+    "id": 31,
+    "label": "Area"
+  },
+  {
+    "id": 32,
+    "label": "Tipo de Contratación"
+  },
+  {
+    "id": 33,
+    "label": "Género"
+  },
+  {
+    "id": 34,
+    "label": "Estado Civil"
+  },
+  {
+    "id": 35,
+    "label": "Fecha de Contratación"
+  },
+  {
+    "id": 36,
+    "label": "Fecha de Inicio"
   }
 ]
