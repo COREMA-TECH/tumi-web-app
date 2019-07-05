@@ -1,7 +1,57 @@
 import React, { Component } from 'react';
 import { Doughnut, Line } from 'react-chartjs-2';
+import { GET_WO_BY_REGION } from './queries';
+import withApollo from 'react-apollo/withApollo';
 
 class DashBoardSponsor extends Component {
+
+    INITIAL_STATE = {
+        woByRegionData: {}
+    }
+
+    constructor(props){
+        super(props);
+
+        this.state = {
+            ...this.INITIAL_STATE,
+        }
+    }
+
+    componentDidMount = _ => {
+        this.props.client.query({
+            query: GET_WO_BY_REGION,
+            fetchPolicy: 'no-cache'
+        })
+
+        .then(({data}) => {
+            const woByRegion = data.worKOrdersByRegion.filter(item => item.workOrders_count > 0);
+            let labels = []; 
+
+            let datasets = {
+                label: "Work Order Requested Per Region",
+                data: [],
+                backgroundColor: [],
+                hoverBackgroundColor: []
+            };
+
+            woByRegion.forEach(item => {
+                labels.push(item.name.length > 0 ? item.name : 'Unnamed Region');
+                datasets.data.push(item.workOrders_count);
+                datasets.backgroundColor.push(item.color);                
+            });            
+
+            datasets.hoverBackgroundColor = [...datasets.backgroundColor];
+
+            this.setState(_ => ({
+                woByRegionData: {
+                    labels,
+                    datasets: [datasets]
+                }
+            }));
+        })
+
+        .catch(error => console.log(error));
+    }
 
     data = {
         labels: ['Banquet', 'Housemen', 'Cook'],
@@ -174,7 +224,8 @@ class DashBoardSponsor extends Component {
                                     width={200}
                                     height={200}
                                     options={{
-                                        maintainAspectRatio: false
+                                        maintainAspectRatio: false,
+                                        cutoutPercentage: 70
                                     }}
                                 />
                             </div>
@@ -185,11 +236,12 @@ class DashBoardSponsor extends Component {
                             </div>
                             <div className="StatBox-body">
                                 <Doughnut
-                                    data={this.regionData}
+                                    data={this.state.woByRegionData}
                                     width={200}
                                     height={200}
                                     options={{
-                                        maintainAspectRatio: false
+                                        maintainAspectRatio: false,
+                                        cutoutPercentage: 70
                                     }}
                                 />
                             </div>
@@ -201,7 +253,8 @@ class DashBoardSponsor extends Component {
                             width={200}
                             height={400}
                             options={{
-                                maintainAspectRatio: false
+                                maintainAspectRatio: false,
+                                cutoutPercentage: 70
                             }}
                         />
                     </div>
@@ -212,4 +265,4 @@ class DashBoardSponsor extends Component {
 
 }
 
-export default DashBoardSponsor;
+export default withApollo(DashBoardSponsor);
