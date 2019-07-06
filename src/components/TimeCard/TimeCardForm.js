@@ -238,12 +238,10 @@ class TimeCardForm extends Component {
         event.preventDefault();
         if (
             this.state.IdEntity == 0 ||
-            this.state.PositionRateId == 0 ||
-            this.state.PositionRateId == null ||
+            !!this.state.PositionRateId ||
             this.state.startDate == '' ||
             this.state.endDate == '' ||
-            this.state.employeeId == 0 ||
-            this.state.employeeId == null
+            !!this.state.employeeId
         ) {
 
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
@@ -268,16 +266,16 @@ class TimeCardForm extends Component {
             .mutate({
                 mutation: ADD_MARCKED,
                 variables: {
-                    MarkedEmployees: {
+                    MarkedEmployees: [{
                         entityId: this.state.IdEntity,
                         typeMarkedId: 30570,
                         markedDate: this.state.startDate,
                         markedTime: this.state.shift,
-                        imageMarked: "https://www.elheraldo.co/sites/default/files/articulo/2017/11/16/un-gato-bebe-433.jpg",
+                        imageMarked: "",
                         EmployeeId: this.state.employeeId,
-                        ShiftId: 1132,
+                        ShiftId: "",
                         notes: this.state.comment
-                    }
+                    }]
                 }
             })
             .then((data) => {
