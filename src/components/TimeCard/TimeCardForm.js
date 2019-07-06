@@ -24,7 +24,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
-
+import DatePicker from "react-datepicker";
 
 const styles = (theme) => ({
     wrapper: {
@@ -535,20 +535,34 @@ class TimeCardForm extends Component {
 
     DisabledTimeOut = () => {
         if (document.getElementById("disabledTimeOut").checked) {
-            this.setState(
-                {
-                    statusTimeOut: true,
-                    endDate: "CCC",
-                    endShift: "CCC"
-                })
+            this.setState({
+                statusTimeOut: true,
+                endDate: "",
+                endShift: ""
+            });
         } else {
-            this.setState(
-                {
-                    statusTimeOut: false,
-                    endDate: "",
-                    endShift: ""
-                })
+            this.setState({
+                statusTimeOut: false,
+                endShift: '16:00'
+            }, _ => { this.calculateHours() });
         }
+    }
+
+    handleChangeDate = (date) => {
+        let endDate = moment(date).add(7, "days").format();
+
+        this.setState({
+            startDate: date,
+            endDate: endDate
+        });
+    }
+
+    handleChangeEndDate = (date) => {
+        let endDate = date;
+
+        this.setState({
+            endDate: endDate
+        });
     }
 
     render() {
@@ -608,29 +622,35 @@ class TimeCardForm extends Component {
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-md-4">
-                                            <input
-                                                placeholder="Date In"
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="startDate"
-                                                onChange={this.handleChange}
-                                                value={this.state.startDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
+                                            <div class="input-group flex-nowrap">
+                                                <DatePicker
+                                                    selected={this.state.startDate}
+                                                    onChange={this.handleChangeDate}
+                                                    placeholderText="Date In"
+                                                    id="datepickerIn"
+                                                />
+                                                <div class="input-group-append">
+                                                    <label class="input-group-text" id="addon-wrapping" for="datepickerIn">
+                                                        <i class="far fa-calendar"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="col-md-4">
-                                            <input
-                                                placeholder="Date Out"
-                                                required={!this.state.statusTimeOut}
-                                                type="date"
-                                                className="form-control"
-                                                name="endDate"
-                                                disabled={this.state.statusTimeOut}
-                                                onChange={this.handleChange}
-                                                value={this.state.endDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
+                                            <div class="input-group flex-nowrap">
+                                                <DatePicker
+                                                    selected={this.state.endDate}
+                                                    onChange={this.handleChangeEndDate}
+                                                    placeholderText="Date Out"
+                                                    id="datepickerOut"
+                                                    disabled={this.state.statusTimeOut}
+                                                />
+                                                <div class="input-group-append">
+                                                    <label class="input-group-text" id="addon-wrapping" for="datepickerOut">
+                                                        <i class="far fa-calendar"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="col-md-4">
                                             <span className="float-left">
@@ -644,7 +664,7 @@ class TimeCardForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
+                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">Total Hours</label>
