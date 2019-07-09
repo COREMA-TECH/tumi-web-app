@@ -10,6 +10,7 @@ import renderHTML from 'react-render-html';
 import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
 import { CREATE_DOCUMENTS_PDF_QUERY, GET_SUMMARY_INFO } from "./Queries";
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -143,7 +144,7 @@ class Summary extends Component {
                             recruiter:applications.recruiter ? applications.recruiter.Full_Name : '--',
                             area:applications.area ? applications.area : '--',
                             typeOfId:applications.typeOfId ? (applications.typeOfId==1?'Birth certificate':(applications.typeOfId==2?'Social Security card':'State-issued drivers license')): '--',                        
-                            expireDateId:applications.expireDateId ? applications.expireDateId.substring(0, 10): '--',
+                            expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('DD/MM/YYYY'): '--',
                             marital: applications.marital ? "MARRIED" : "SINGLE"
                         }
                     });
@@ -333,7 +334,7 @@ class Summary extends Component {
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>GENDER:</strong></span>`+ this.state.gender +` </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>BIRTHDATE:</strong></span>`+ this.state.birthDay +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>BIRTHDATE:</strong></span>`+ moment(this.state.birthDay).format('DD/MM/YYYY') +` </span></p>
                                     
                                     </td>
                                     
@@ -380,7 +381,7 @@ class Summary extends Component {
                                     <br/>
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>STATUS (SINGLE/MARRIED):</strong></span>  `+ this.state.marital +` </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>NO. OF DEPARTMENT:</strong></span> 0</span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>NO. OF DEPENDENT:</strong></span> 0</span></p>
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>SOURCE (RECRUITER NAME):</strong></span> `+  this.state.recruiter +` </span></p>
                                     
