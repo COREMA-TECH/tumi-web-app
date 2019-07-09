@@ -68,7 +68,7 @@ class ApplicationInternal extends Component {
                             },
                             application: {
                                 id: id,
-                                birthDay: this.state.birthDay,
+                                birthDay: this.state.birthDay || null,
                                 gender: this.state.gender,
                                 eeoc: this.state.EEOC,
                                 marital: this.state.marital,
@@ -76,7 +76,7 @@ class ApplicationInternal extends Component {
                                 area: this.state.area,
                                 hireType: this.state.HireType,
                                 typeOfId: this.state.typeOfId,
-                                expireDateId: this.state.expireDateId
+                                expireDateId: this.state.expireDateId || null
                             }
                         }
                     })
