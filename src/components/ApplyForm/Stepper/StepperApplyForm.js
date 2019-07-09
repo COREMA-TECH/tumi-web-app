@@ -2681,9 +2681,9 @@ class VerticalLinearStepper extends Component {
                                     </div>
                                     <div className="Footer-contactInfo">
                                         <p className="Footer-contact address">
-                                            701 E. 83rd Avenue Merrillville, Indiana 46410 
+                                            PO Box 592715 San Antonio, TX 78259 
                                         </p>
-                                        <span className="Footer-contact phone">(219) 472-2900</span>
+                                        <span className="Footer-contact phone">210.853.2099</span>
                                         <p className="Footer-contact copyright">
                                             &copy; 2019 TUMI STAFFING, Inc. All rights reserved
                                         </p>
