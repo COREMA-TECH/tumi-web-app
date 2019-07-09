@@ -229,3 +229,15 @@ export const GET_APPLICANT_IDEAL_JOBS = gql`
 	}
 `;
 
+export const GET_VALIDATE_APPLICATION_UNIQUENESS = gql`
+	query validateApplicationUniqueness($firstName: String!, $lastName: String!, $socialSecurityNumber: String!,$homePhone: String!,$cellPhone: String!,$id: Int!){
+	validateApplicationUniqueness(firstName:$firstName, lastName: $lastName, socialSecurityNumber: $socialSecurityNumber,homePhone: $homePhone,cellPhone: $cellPhone, id: $id){
+			id
+			firstName
+			lastName
+			cellPhone
+			homePhone
+		}
+	}
+`;
+
