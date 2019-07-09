@@ -732,6 +732,14 @@ class Application extends Component {
         });
     }
 
+    handleScheduleExplain = (scheduleExplain) => {
+        this.setState(() => {
+            let days = scheduleExplain.weekDays.join();
+            let explain = `Days: ${days}\n from: ${scheduleExplain.startTime}\n To: ${scheduleExplain.endTime}`;
+            return { scheduleExplain: explain }
+        }, () => this.handleRestrictionModalClose())
+    }
+
     render() {
 
         return (
@@ -1206,6 +1214,7 @@ class Application extends Component {
                 </form>
                 <ShiftRestrictionModal
                     openModal={this.state.openRestrictionsModal}
+                    handleScheduleExplain={this.handleScheduleExplain}
                     handleCloseModal={this.handleRestrictionModalClose}
                 />
             </div >
