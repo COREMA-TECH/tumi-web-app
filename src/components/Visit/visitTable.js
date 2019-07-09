@@ -9,8 +9,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import withApollo from 'react-apollo/withApollo';
-import { GET_VISITS_BY_OPMANAGER_QUERY } from './Queries';
-
 
 const CustomTableCell = withStyles((theme) => ({
 	head: {
@@ -28,38 +26,20 @@ class VisitTable extends Component{
         visits: []
     }
 
-    getVisits = () => {
-        let {opManagerId} = this.props;
-		this.props.client
-			.query({
-                query: GET_VISITS_BY_OPMANAGER_QUERY,
-                variables: {
-                    opManagerId: opManagerId || 0
-                },
-				fetchPolicy: 'no-cache'
-			})
-			.then(({ data }) => {
-				this.setState({
-					visits: data.visits
-				});
-			})
-			.catch(error => {
-				console.log(error)
-			});
-    }
-
-    componentWillMount(){
-        this.getVisits();
-    }
-
     componentWillReceiveProps(nextProps) {
-        if(nextProps.masterShiftIsOpen !== this.props.masterShiftIsOpen)
-            this.getVisits();
+        let visits = nextProps.visits;
+        if(visits !== this.state.visits){
+            this.setState(() => {
+                return {
+                    visits: visits
+                }
+            });
+        }
     }
 
     render() {
         let items = this.state.visits;
-        let { handleCloseVisit } = this.props;
+        let { handleCloseVisit, handleDisableVisit } = this.props;
 
         return (
             <Fragment>
@@ -80,10 +60,20 @@ class VisitTable extends Component{
                                     <CustomTableCell>
                                         <Tooltip title="Edit">
                                             <button
+                                                type="button"
                                                 className="btn btn-success mr-1 float-left"
                                                 onClick={() => handleCloseVisit(row.id)}
                                             >
                                                 <i className="fas fa-eye"></i>
+                                            </button>
+                                        </Tooltip>
+                                        <Tooltip title="Delete">
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger mr-1 float-left"
+                                                onClick={() => handleDisableVisit(row)}
+                                            >
+                                                <i className="fa fa-trash"></i>
                                             </button>
                                         </Tooltip>
                                     </CustomTableCell>

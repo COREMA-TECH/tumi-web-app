@@ -10316,6 +10316,20 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   color: #000 !important;
   font-weight: 700; }
 
+.visitsCard * {
+  font-size: 0.8rem; }
+
+.visitsCard-pic {
+  height: 6rem;
+  width: 100%;
+  margin-top: -3rem; }
+
+.visitsCard-footer {
+  padding-top: 0;
+  border: none; }
+  .visitsCard-footer button {
+    padding: 0.25rem 0.50rem; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -13286,5 +13300,3 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
-
-/*# sourceMappingURL=default.css.map */
