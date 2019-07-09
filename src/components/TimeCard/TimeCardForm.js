@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
+import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY, GET_MARK } from './queries';
 import { ADD_MARCKED } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
@@ -232,7 +232,19 @@ class TimeCardForm extends Component {
         this.props.handleCloseModal(event);
     }
 
-
+    getPunches = () => {
+        this.props.client.query({
+            query: GET_MARK,
+            variables: {
+                typeMarkedId: 30570,
+                markedDate: this.state.startDate
+            }
+        }).then(({data}) => {
+            this.setState(prevState => ({
+                mark: data
+            }));
+        });
+    }
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -247,8 +259,9 @@ class TimeCardForm extends Component {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
             this.setState({ saving: true });
-            if (this.state.id == null) this.addIn();
-            else {
+            if (this.state.id == null) {
+                this.addIn();
+            } else {
                 //alert(this.state.employees.detailEmployee)
                 if (this.state.employees.length > 0) {
                     //  this.setState({ openConfirm: true, idToDelete: row.id });
@@ -262,34 +275,32 @@ class TimeCardForm extends Component {
     };
 
     addIn = () => {
-        this.props.client
-            .mutate({
-                mutation: ADD_MARCKED,
-                variables: {
-                    MarkedEmployees: [{
-                        entityId: this.state.IdEntity,
-                        typeMarkedId: 30570,
-                        markedDate: this.state.startDate,
-                        markedTime: this.state.shift,
-                        imageMarked: "",
-                        EmployeeId: this.state.employeeId,
-                        ShiftId: "",
-                        notes: this.state.comment
-                    }]
-                }
-            })
-            .then((data) => {
-                if (!this.state.statusTimeOut) { this.addOut(); } else {
-                    this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                    this.props.toggleRefresh();
-                    this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
-                } 0
+        this.props.client.mutate({
+            mutation: ADD_MARCKED,
+            variables: {
+                MarkedEmployees: [{
+                    entityId: this.state.IdEntity,
+                    typeMarkedId: 30570,
+                    markedDate: this.state.startDate,
+                    markedTime: this.state.shift,
+                    imageMarked: "",
+                    EmployeeId: this.state.employeeId,
+                    ShiftId: "",
+                    notes: this.state.comment
+                }]
+            }
+        }).then((data) => {
+            if (!this.state.statusTimeOut) { this.addOut(); } else {
+                this.props.handleOpenSnackbar('success', 'Record Inserted!');
+                this.props.toggleRefresh();
+                this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
+            } 0
 
-            })
-            .catch((error) => {
-                this.setState({ saving: true });
-                this.props.handleOpenSnackbar('error', 'Error: ' + error);
-            });
+        })
+        .catch((error) => {
+            this.setState({ saving: true });
+            this.props.handleOpenSnackbar('error', 'Error: ' + error);
+        });
     };
 
     addOut = () => {
