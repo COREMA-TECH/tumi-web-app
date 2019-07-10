@@ -9245,6 +9245,12 @@ table {
 .Table {
   border-radius: 5px;
   overflow: hidden; }
+  .Table-bgCyan {
+    background: #effffa; }
+    .Table-bgCyan .Table-head {
+      background: transparent !important; }
+  .Table-bgCyanDark {
+    background: #f2faf7; }
   .Table-head {
     background-color: #FFF !important;
     color: #000 !important;
