@@ -92,3 +92,4 @@ class VisitTable extends Component{
 }
 
 export default withApollo(VisitTable);
+
