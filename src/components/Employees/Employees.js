@@ -1523,11 +1523,12 @@ class Employees extends Component {
                                                     contactTitleEdit: "",
                                                 });
 
-                                                if (e.target.value == "null") {
-                                                    this.fetchDepartments();
-                                                } else {
-                                                    this.fetchDepartments(e.target.value);
-                                                }
+                                                //TODO: (LF) Quitar codigo comentado
+                                                // if (e.target.value == "null") {
+                                                //     this.fetchDepartments();
+                                                // } else {
+                                                //     this.fetchDepartments(e.target.value);
+                                                // }
                                             }}
                                             value={this.state.hotelEdit}
                                         >
