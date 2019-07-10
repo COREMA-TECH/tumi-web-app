@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY } from '../Queries';
+import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_VALIDATE_APPLICATION_UNIQUENESS } from '../Queries';
 import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION, ADD_INDEPENDENT_CONTRACT } from '../Mutations';
 import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
@@ -334,6 +334,10 @@ class Application extends Component {
                                 hasIndependentContract: applicantData.independentContract != null
                             },
                             () => {
+
+                                if (this.state.hasIndependentContract)
+                                    this.props.handleContract();
+
                                 this.getIdealJobsByApplicationId();
                                 this.getPositionCatalog();
                             }
@@ -470,8 +474,6 @@ class Application extends Component {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
             this.getApplicationById(this.props.applicationId);
-            if (this.state.socialSecurityNumber.length === 0)
-                this.props.handleContract();
 
         } else {
             this.getPositions();
@@ -532,21 +534,55 @@ class Application extends Component {
                 values.push(value);
             }
         })
-   
+
         if (values.length == 0)
             this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
         else {
-            if (socialSecurityNumber === null) {
-                this.setState(() => ({
-                    openSSNDialog: true
-                }))
-            } else {
-                if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
-                    this.setState(() => ({
-                        openSSNDialog: true
-                    }))
-                else this.InsertUpdateApplicationInformation(this.props.applicationId);
-            }
+            this.props.client
+                .query({
+                    query: GET_VALIDATE_APPLICATION_UNIQUENESS,
+                    variables: {
+                        firstName,
+                        lastName,
+                        socialSecurityNumber,
+                        homePhone,
+                        cellPhone,
+                        id: this.props.applicationId
+                    },
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({ data: { validateApplicationUniqueness } }) => {
+                    if (!validateApplicationUniqueness) {
+                        if (socialSecurityNumber === null) {
+                            this.setState(() => ({
+                                openSSNDialog: true
+                            }))
+                        } else {
+                            if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
+                                this.setState(() => ({
+                                    openSSNDialog: true
+                                }))
+                            else this.InsertUpdateApplicationInformation(this.props.applicationId);
+                        }
+                    }
+                    else {
+                        this.props.handleOpenSnackbar(
+                            'warning',
+                            'This is a Duplicated Application, someone else is already registered with this info into the system',
+                            'bottom',
+                            'right'
+                        );
+                    }
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error validating application uniqueness!',
+                        'bottom',
+                        'right'
+                    );
+                })
+
         }
 
 
@@ -642,10 +678,10 @@ class Application extends Component {
     renderSSNDialog = () => (
         <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
             <DialogTitle>
-                <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
+                <h5 className="modal-title">INDEPENDENT CONTRACT AGREEMENT</h5>
             </DialogTitle>
             <DialogContent>
-                You must sign an Independent Contract Recognition
+                You must sign an Independent Contract Agreement
             </DialogContent>
             <DialogActions>
                 <div className="applicant-card__footer">
@@ -679,6 +715,9 @@ class Application extends Component {
         const name = target.name;
         if (name === "immediately" && value == true) {
             this.setState({ dateAvailable: new Date().toISOString().substring(0, 10) })
+        }
+        if (name === "optionHearTumi" && !"3,4".includes(value)) {
+            this.setState(() => ({ nameReferences: '' }))
         }
 
         this.setState({
@@ -725,6 +764,14 @@ class Application extends Component {
         this.setState({
             editing: true
         });
+    }
+
+    handleScheduleExplain = (scheduleExplain) => {
+        this.setState(() => {
+            let days = scheduleExplain.weekDays.join();
+            let explain = `Days: ${days}\n from: ${scheduleExplain.startTime}\n To: ${scheduleExplain.endTime}`;
+            return { scheduleExplain: explain }
+        }, () => this.handleRestrictionModalClose())
     }
 
     render() {
@@ -1201,6 +1248,7 @@ class Application extends Component {
                 </form>
                 <ShiftRestrictionModal
                     openModal={this.state.openRestrictionsModal}
+                    handleScheduleExplain={this.handleScheduleExplain}
                     handleCloseModal={this.handleRestrictionModalClose}
                 />
             </div >

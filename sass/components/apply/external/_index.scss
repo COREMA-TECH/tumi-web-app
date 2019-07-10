@@ -417,13 +417,14 @@
         font-size: 10px;
         margin-right: 70px;
 
-        &.address, &.phone{
-            max-width: 130px;
-            width: 100%;
-        }
+        // &.address, &.phone{
+        //     max-width: 130px;
+        //     width: 100%;
+        // }
 
         &.copyright{
             margin-right: 0;
+            text-align: right;
         }
     }
 
@@ -459,6 +460,11 @@
             &.address, &.phone{
                 max-width: 130px;
                 width: 100%;
+            }
+
+            &.copyright{
+                margin-right: 0;
+                text-align: center;
             }
         }
     }    

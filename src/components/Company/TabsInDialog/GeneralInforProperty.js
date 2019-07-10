@@ -92,7 +92,8 @@ class GeneralInfoProperty extends Component {
             nextButton: false,
             isCorrectCity: true,
             changeCity: false,
-            parentDescription: ''
+            parentDescription: '',
+            operationManagerDescription: ''
         };
     }
 
@@ -135,6 +136,16 @@ class GeneralInfoProperty extends Component {
                 Id
                 Name
                 IsActive
+            }
+        }
+    `;
+
+    getOperationManagerByRegion = gql`
+       query configregions($regionId: Int){
+            configregions(regionId: $regionId){
+                OperationManager{
+                    Full_Name
+                }
             }
         }
     `;
@@ -198,6 +209,7 @@ class GeneralInfoProperty extends Component {
             getbusinesscompanies(Id: $id, Contract_Status: "'C'") {
                 Id
                 Name
+                Region
             }
         }
     `;
@@ -319,7 +331,7 @@ class GeneralInfoProperty extends Component {
                         }
                     })
                     .then((data) => {
-                        NewIdRegion = data.data.inscatalogitem.Id;                         
+                        NewIdRegion = data.data.inscatalogitem.Id;
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
@@ -399,41 +411,41 @@ class GeneralInfoProperty extends Component {
                                 .mutate({
                                     mutation: INSERT_USER_QUERY,
                                     variables: {
-                                        input: {                                            
-                                                Id_Entity: data.insbusinesscompanies.Id,
-                                                Id_Contact: null,
-                                                Id_Roles: 1,
-                                                Full_Name: "''",
-                                                Electronic_Address: `'${this.state.email}'`,
-                                                AllowDelete:  1,
-                                                AllowEdit:  1,
-                                                AllowExport:  1,
-                                                AllowInsert:  1	,
-                                                Id_Language: 194,
-                                                Code_User: `'${this.state.Code}'`,
-                                                Date_Created:  `'${new Date().toISOString()}'`,
-                                                Date_Updated:  `'${new Date().toISOString()}'`,
-                                                IdRegion:  null,	
-                                                IsActive:  1,
-                                                IsAdmin:  1,
-                                                Phone_Number: `'${this.state.phoneNumber}'`,
-                                                User_Created:  1,
-                                                User_Updated:  1,
-                                                IsRecruiter: 0,
-                                                IdRegion: null,
-                                                IdSchedulesManager: null,
-                                                IdSchedulesEmployees: null,
-                                                isEmployee: false,
-                                                manageApp: true                                             
-                                            }
+                                        input: {
+                                            Id_Entity: data.insbusinesscompanies.Id,
+                                            Id_Contact: null,
+                                            Id_Roles: 1,
+                                            Full_Name: "''",
+                                            Electronic_Address: `'${this.state.email}'`,
+                                            AllowDelete: 1,
+                                            AllowEdit: 1,
+                                            AllowExport: 1,
+                                            AllowInsert: 1,
+                                            Id_Language: 194,
+                                            Code_User: `'${this.state.Code}'`,
+                                            Date_Created: `'${new Date().toISOString()}'`,
+                                            Date_Updated: `'${new Date().toISOString()}'`,
+                                            IdRegion: null,
+                                            IsActive: 1,
+                                            IsAdmin: 1,
+                                            Phone_Number: `'${this.state.phoneNumber}'`,
+                                            User_Created: 1,
+                                            User_Updated: 1,
+                                            IsRecruiter: 0,
+                                            IdRegion: null,
+                                            IdSchedulesManager: null,
+                                            IdSchedulesEmployees: null,
+                                            isEmployee: false,
+                                            manageApp: true
                                         }
-                                    })
-                                    .then((data) => {
-                                    
-                                    })
-                                    .catch((error) => {
-                                        
-                                    });                        
+                                    }
+                                })
+                                .then((data) => {
+
+                                })
+                                .catch((error) => {
+
+                                });
 
                             this.setState({
                                 linearProgress: false
@@ -772,11 +784,10 @@ class GeneralInfoProperty extends Component {
 	 * Get data from property
 	 */
     getPropertyData = (idProperty, idParent) => {
-
-        this.setState(
-            {
+        this.setState(() =>
+            ({
                 linearProgress: true
-            },
+            }),
             () => {
                 this.props.client
                     .query({
@@ -793,6 +804,7 @@ class GeneralInfoProperty extends Component {
                             var Region = this.state.regions.find(function (obj) {
                                 return obj.Id === item.Region;
                             });
+                            this.getParentCompanyInfo();
                             this.setState(() => {
                                 return {
                                     RegionName: Region ? Region.Name.trim() : '',
@@ -839,12 +851,16 @@ class GeneralInfoProperty extends Component {
                                     changeCity: false,
                                     linearProgress: false,
                                     startWeekName: days[item.Start_Week - 1].Name,
-									endWeekName: days[item.End_Week - 1].Name
+                                    endWeekName: days[item.End_Week - 1].Name
                                 }
                             });
                         }
                     })
-                    .catch();
+                    .catch(() => {
+                        this.setState(() => ({
+                            linearProgress: false
+                        }))
+                    });
             }
         );
     };
@@ -879,10 +895,7 @@ class GeneralInfoProperty extends Component {
     };
 
     getParentCompanyInfo = () => {
-        this.setState(
-            {
-                linearProgress: true
-            },
+        this.setState(() => ({ linearProgressParent: true }),
             () => {
                 this.props.client
                     .query({
@@ -893,30 +906,41 @@ class GeneralInfoProperty extends Component {
                         fetchPolicy: 'no-cache'
                     })
                     .then(({ data }) => {
+                        let company = null;
                         if (data.getbusinesscompanies !== null) {
-                            this.setState({
-                                parentDescription: 'A ' + data.getbusinesscompanies[0].Name + ' Management Company'
-                            });
+                            company = data.getbusinesscompanies[0];
+                            if (company)
+                                this.setState(() => ({
+                                    parentDescription: 'A ' + company.Name + ' Management Company'
+                                }), () => {
+                                    this.setState(() => ({ linearProgressOpM: true }), () => {
+                                        this.props.client.query({ query: this.getOperationManagerByRegion, variables: { regionId: this.state.region || -1 }, fetchPolicy: 'no-cache' })
+                                            .then(({ data: { configregions } }) => {
+                                                let region = configregions[0];
+                                                if (region)
+                                                    if (region.OperationManager) this.setState(() => ({ operationManagerDescription: region.OperationManager.Full_Name }));
+                                                this.setState(() => ({ linearProgressOpM: false }));
+                                            })
+                                            .catch(() => {
+                                                this.setState(() => ({ linearProgressOpM: false }));
+                                            })
+                                    })
 
-                            this.setState({
-                                linearProgress: false
-                            });
+                                });
                         } else {
                             this.setState({
-                                parentDescription: ''
+                                parentDescription: '',
+                                operationManagerDescription: '',
+                                linearProgressParent: false
                             });
                         }
-
-                        this.setState({
-                            linearProgress: false,
-                        });
-
 
                     })
                     .catch(error => {
                         this.setState({
-                            linearProgress: false,
-                            parentDescription: ''
+                            parentDescription: '',
+                            operationManagerDescription: '',
+                            linearProgressParent: false
                         });
                     });
             }
@@ -924,8 +948,6 @@ class GeneralInfoProperty extends Component {
     }
 
     componentWillMount() {
-        this.getParentCompanyInfo();
-
         this.setState({ avatar: this.context.avatarURL });
         this.loadRegion(() => { });
         if (this.props.idProperty !== null) {
@@ -997,7 +1019,7 @@ class GeneralInfoProperty extends Component {
                         id={`${property}_edit`}
                         type="button"
                         onClick={() => {
-                            this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] });                                            
+                            this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] });
                         }}
                     >
                         <i className="fas fa-ban" />
@@ -1131,12 +1153,12 @@ class GeneralInfoProperty extends Component {
         return dayFound;
     }
 
-    updateStartWeek = ({value}) => {
+    updateStartWeek = ({ value }) => {
         //Calculate End Week
         const idStartWeek = value;
         let idEndWeek = value - 1;
 
-        if (idEndWeek <= 0) 
+        if (idEndWeek <= 0)
             idEndWeek = 7;
 
         if (value === 0) {
@@ -1161,7 +1183,7 @@ class GeneralInfoProperty extends Component {
         });
     }
 
-    updateEndWeek = ({value}) => {
+    updateEndWeek = ({ value }) => {
         //Calculate Start Week
         var idStartWeek = value + 1;
         if (idStartWeek >= 8) idStartWeek = 1;
@@ -1191,14 +1213,14 @@ class GeneralInfoProperty extends Component {
     render() {
         this.changeStylesInCompletedInputs();
 
-        if (this.state.linearProgress) {
+        if (this.state.linearProgress || this.state.linearProgress || this.state.linearProgressOpM || this.state.loadingData) {
             return <LinearProgress />;
         }
         var loading = this.state.linearProgress || this.state.searchigZipcode;
 
         const selectDays = days.map(item => {
-			return { value: item.Id, label: item.Name }
-		});
+            return { value: item.Id, label: item.Name }
+        });
 
         return <form >
             <div className="row">
@@ -1249,7 +1271,7 @@ class GeneralInfoProperty extends Component {
                     <div class="card">
                         <div class="card-header">
                             General Information
-                                        <span className="float-right text-success font-weight-bold">{this.state.parentDescription}</span>
+                            <span className="float-right text-success font-weight-bold text-center">{this.state.parentDescription}<br />{this.state.operationManagerDescription}</span>
                         </div>
                         <div class="card-body">
                             <div className="row">
@@ -1270,23 +1292,23 @@ class GeneralInfoProperty extends Component {
                                 </div>
                                 <div className="col-md-12 col-lg-12">
                                     <div className="row">
-                                    {localStorage.getItem('ShowMarkup') == 'true' ?
-                                        <div className="col-md-6 col-lg-1">
-                                            <label>* Markup</label>
-                                            <InputValid
-                                                change={(text) => {
-                                                    this.setState({
-                                                        rate: text
-                                                    });
-                                                }}
-                                                value={this.state.rate}
-                                                type="number"
-                                                maxLength="10"
-                                                required
-                                                placeholder='0'
-                                            />
-                                        </div>
-                                        :''}
+                                        {localStorage.getItem('ShowMarkup') == 'true' ?
+                                            <div className="col-md-6 col-lg-1">
+                                                <label>* Markup</label>
+                                                <InputValid
+                                                    change={(text) => {
+                                                        this.setState({
+                                                            rate: text
+                                                        });
+                                                    }}
+                                                    value={this.state.rate}
+                                                    type="number"
+                                                    maxLength="10"
+                                                    required
+                                                    placeholder='0'
+                                                />
+                                            </div>
+                                            : ''}
                                         <div className="col-md-6 col-lg-4">
                                             <label>* Hotel Name</label>
                                             <InputValid
@@ -1475,48 +1497,48 @@ class GeneralInfoProperty extends Component {
                                                 startDate: e.target.value
                                             });
                                         }}
-                                       
+
                                         className={'form-control'}
                                     />
-                                    
+
                                 </div>
                                 <div className="col-md-6 col-lg-4">
                                     <label>Number of Rooms</label>
                                     <input
-                                         type="number"
-                                        
-                                         placeholder='0'
+                                        type="number"
+
+                                        placeholder='0'
                                         value={this.state.room}
                                         onChange={(e) => {
                                             this.setState({
                                                 room: e.target.value
                                             });
                                         }}
-                                       
+
                                         className={'form-control'}
                                     />
-                                    
+
                                 </div>
                                 <div className="col-md-6 col-lg-4 tumi-forcedTop">
-                                    <label>* Week Start</label>                                   
+                                    <label>* Week Start</label>
                                     <Select
                                         options={selectDays}
-                                        value={{value: this.state.startWeek, label: this.state.startWeekName || ''}}
+                                        value={{ value: this.state.startWeek, label: this.state.startWeekName || '' }}
                                         onChange={this.updateStartWeek}
                                         closeMenuOnSelect={true}
                                         components={makeAnimated()}
-                                        isMulti={false}	
+                                        isMulti={false}
                                     />
                                 </div>
                                 <div className="col-md-6 col-lg-4 tumi-forcedTop">
-                                    <label>To</label>                                    
+                                    <label>To</label>
                                     <Select
                                         options={selectDays}
-                                        value={{value: this.state.endWeek, label: this.state.endWeekName || ''}}
+                                        value={{ value: this.state.endWeek, label: this.state.endWeekName || '' }}
                                         onChange={this.updateEndWeek}
                                         closeMenuOnSelect={true}
                                         components={makeAnimated()}
-                                        isMulti={false}	
+                                        isMulti={false}
                                     />
                                 </div>
                                 <div className="col-md-6 col-lg-6">

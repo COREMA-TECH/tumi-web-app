@@ -1652,7 +1652,7 @@ class General extends Component {
                                 </div>
                                 <div className="item col-12 col-md-2">
                                     <div className="row">
-                                        <span className="col-sm-12 font-weight-bold">Hire Date</span>
+                                        <span className="col-sm-12 font-weight-bold">Start Date</span>
                                         <span className="col-sm-12">{this.state.hireDate}</span>
                                     </div>
                                 </div>
