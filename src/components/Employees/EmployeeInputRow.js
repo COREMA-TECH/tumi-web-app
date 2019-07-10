@@ -97,7 +97,6 @@ class EmployeeInputRow extends Component {
                     fetchPolicy: 'no-cache'
                 })
                 .then((data) => {
-                    console.log('departmentid and hotelid' ,data.data.getposition);
                     if (data.data.getposition != null) {
                         this.setState({
                             arraytitles: data.data.getposition,
@@ -105,7 +104,7 @@ class EmployeeInputRow extends Component {
                     }
                 })
                 .catch((error) => {
-                    console.log('Error fetchTitles: ' + error);
+                    console.log('Error fetchTitles: ', error);
                 });
             }
         })
@@ -131,7 +130,6 @@ class EmployeeInputRow extends Component {
                     fetchPolicy: 'no-cache'
                 })
                 .then((data) => {
-                    console.log('data fetchdepartment --- ', data);
                     if (data.data.getcatalogitem != null) {
                         this.setState({
                             arrayDepartment: data.data.getcatalogitem
@@ -139,7 +137,7 @@ class EmployeeInputRow extends Component {
                     }
                 })
                 .catch((error) => {
-                    console.log('Error fetchDepartment: ' + error);
+                    console.log('Error fetchDepartment: ', error);
                 });
             }
         });
@@ -255,20 +253,8 @@ class EmployeeInputRow extends Component {
                             this.props.onchange(idEntity, e.target.value);
                             this.props.onchange(department, null);
                             this.props.onchange(contactTitle, null);
-                            // TODO: (LF) Quitar codigo comentado
-                            // this.setState({ 
-                            //     department: "",
-                            //     contactTitle: "",
-                            // });
 
                             this.fetchDepartments(e.target.value);
-
-                            // TODO: (LF) Quitar codigo comentado
-                            // if (e.target.value == "null") {
-                            //     this.fetchDepartments();
-                            // } else {
-                            //     this.fetchDepartments(e.target.value);
-                            // }
                         }}
                         value={this.state.hotelEdit}
                     >
