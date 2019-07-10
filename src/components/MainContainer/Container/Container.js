@@ -189,9 +189,9 @@ class Container extends Component {
 				<Route exact path="/home/catalogs/positions" component={PositionCatalogTable} />
 				<Route exact path="/home/catalogs/departments" component={DepartmentsCatalogTable} />
 				<Route exact path="/home/logs" component={TransactionLogs} />		
-				<Route exact path="/home/active-report-consolidated" component={EmployeesProperties} />	
-				<Route exact path="/home/active-report" component={EmployeesPropertiesConsolidated} />		
-        <Route exact path="/home/visit" component={Visit} />
+				<Route exact path="/home/active-report" component={EmployeesProperties} />	
+				<Route exact path="/home/hotel-manager-report" component={EmployeesPropertiesConsolidated} />		
+        		<Route exact path="/home/visit" component={Visit} />
 			</div>
 		);
 	}

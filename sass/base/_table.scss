@@ -6,6 +6,15 @@ table {
 .Table {
     border-radius: $border-radius-standar;
     overflow: hidden;
+    &-bgCyan {
+        background: #effffa;
+        .Table-head {
+            background: transparent !important;
+        }
+    }
+    &-bgCyanDark {
+        background: #f2faf7;
+    }
     &-head {
         background-color: $white !important;
         color: $black !important;

@@ -28,8 +28,8 @@ const CustomTableCell = withStyles((theme) => ({
     }
 }))(TableCell);
 
-const DEFAULT_PROPERTY = { value: 0, label: 'Select a Property' };
-const DEFAULT_OPERATION = { value: 0, label: 'Select a Operation Manager' };
+const DEFAULT_PROPERTY = { value: 0, label: 'Select Property' };
+const DEFAULT_OPERATION = { value: 0, label: 'Select Operation Manager' };
 
 class TableConsolidated extends Component {
 
@@ -193,33 +193,36 @@ class TableConsolidated extends Component {
 					</div>
 				</div>
                 <div className="card">
+                    <div className="card-header">
+                        Hotel Manager Report
+                    </div>
                     <div className="card-body">
                         {this.state.loading ? <LinearProgress />: ""}
                         <Table>
                             <TableHead>
-                                <TableRow>
-                                    <CustomTableCell className={"Table-head"}>Code</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Property Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Operating Department</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Last Visited</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Associates</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Avg Hours</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Management</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Ops Manager</CustomTableCell>
+                                <TableRow className="Table-bgCyan text-center">
+                                    <CustomTableCell className={"Table-head text-center"}>Code</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Property Name</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Operating Department</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Last Visited</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Associates</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Avg Hours</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Management</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Ops Manager</CustomTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                     return (
-                                        <TableRow>
-                                            <CustomTableCell>{row.code}</CustomTableCell>
-                                            <CustomTableCell>{row.name}</CustomTableCell>
-                                            <CustomTableCell>{row.count_department}</CustomTableCell>
-                                            <CustomTableCell>{row.count_associate}</CustomTableCell>
-                                            <CustomTableCell>--</CustomTableCell>
-                                            <CustomTableCell>--</CustomTableCell>
-                                            <CustomTableCell>{row.management_company}</CustomTableCell>
-                                            <CustomTableCell>{row.operationManager === "null null" ? "No Name" : row.operationManager}</CustomTableCell>
+                                        <TableRow className="text-center">
+                                            <CustomTableCell className="text-center">{row.code}</CustomTableCell>
+                                            <CustomTableCell className="text-center">{row.name}</CustomTableCell>
+                                            <CustomTableCell className="text-center">{row.count_department}</CustomTableCell>
+                                            <CustomTableCell className="text-center">--</CustomTableCell>
+                                            <CustomTableCell className="text-center">{row.count_associate}</CustomTableCell>
+                                            <CustomTableCell className="text-center">--</CustomTableCell>
+                                            <CustomTableCell className="text-center">{row.management_company}</CustomTableCell>
+                                            <CustomTableCell className="text-center">{row.operationManager === "null null" ? "No Name" : row.operationManager}</CustomTableCell>
                                         </TableRow>
                                     );
                                 })}
