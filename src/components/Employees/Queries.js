@@ -57,3 +57,16 @@ query employeepackage($EmployeeId: Int){
     }
   }
 `;
+
+export const GET_VALIDATE_EMPLOYEE_UNIQUENESS = gql`
+    query validateEmployeeUniqueness($employees: [inputEmployeeUniquenessType]) {
+        validateEmployeeUniqueness(employees: $employees) {
+            id
+            firstName
+            lastName
+            mobileNumber
+            isUnique   
+            index 
+        }
+    }
+`;
