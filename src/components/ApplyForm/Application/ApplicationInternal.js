@@ -380,13 +380,6 @@ class ApplicationInternal extends Component {
                                                     </div>
 
                                                     <div className="col-md-6">
-                                                        {/* TODO: (LF) Esto se debe quitar xq kids ya no se agregará */}
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[39].label}
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="col-md-6">
                                                         <span className="primary applicant-card__label skeleton">
                                                             {formSpanish[14].label}
                                                         </span>
@@ -411,6 +404,20 @@ class ApplicationInternal extends Component {
 
                                                     <div className="col-md-6">
                                                         <span className="primary applicant-card__label skeleton">
+                                                            {formSpanish[39].label}
+                                                        </span>
+                                                        <input
+                                                            onChange={this.handleInputChange}
+                                                            value={this.state.numberId}
+                                                            name="numberId"
+                                                            type="text"
+                                                            className="form-control"
+                                                            disabled={!this.state.editing || !this.state.hasEmployee}
+                                                        />
+                                                    </div>
+
+                                                    <div className="col-md-6">
+                                                        <span className="primary applicant-card__label skeleton">
                                                             {formSpanish[15].label}
                                                         </span>
                                                         <input
@@ -420,32 +427,6 @@ class ApplicationInternal extends Component {
                                                             type="date"
                                                             className="form-control"
                                                             disabled={!this.state.editing}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[35].label}
-                                                        </span>
-                                                        <input
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.hireDate}
-                                                            name="hireDate"
-                                                            type="date"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing || !this.state.hasEmployee}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[36].label}
-                                                        </span>
-                                                        <input
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.startDate}
-                                                            name="startDate"
-                                                            type="date"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing || !this.state.hasEmployee}
                                                         />
                                                     </div>
                                                 </div>
