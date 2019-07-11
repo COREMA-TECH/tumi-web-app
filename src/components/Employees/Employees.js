@@ -14,7 +14,7 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 import { Query } from "react-apollo";
 import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
-import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL,GET_APPLICATION_EMPLOYEES, GET_POSIT_BY_HOTEL_DEPART_QUERY } from "./Queries";
+import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL, GET_APPLICATION_EMPLOYEES, GET_POSIT_BY_HOTEL_DEPART_QUERY, GET_VALIDATE_EMPLOYEE_UNIQUENESS } from "./Queries";
 import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
@@ -602,27 +602,27 @@ class Employees extends Component {
      */
     fetchDepartments = (id) => {
         this.setState(() => {
-            return { 
+            return {
                 departments: [],
             }
         }, () => {
-            if(!!id){
+            if (!!id) {
                 this.props.client
-                .query({
-                    query: GET_DEPARTMENTS_QUERY,
-                    variables: { Id_Entity: id },
-                    fetchPolicy: 'no-cache'
-                })
-                .then((data) => {
-                    if (data.data.getcatalogitem != null) {
-                        this.setState({
-                            departments: data.data.getcatalogitem
-                        }, () => this.fetchTitles(this.state.departmentEdit));
-                    }
-                })
-                .catch((error) => {
-                    console.log('Error fetchDepartment: ', error);
-                });
+                    .query({
+                        query: GET_DEPARTMENTS_QUERY,
+                        variables: { Id_Entity: id },
+                        fetchPolicy: 'no-cache'
+                    })
+                    .then((data) => {
+                        if (data.data.getcatalogitem != null) {
+                            this.setState({
+                                departments: data.data.getcatalogitem
+                            }, () => this.fetchTitles(this.state.departmentEdit));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('Error fetchDepartment: ', error);
+                    });
             }
         });
     };
@@ -782,26 +782,26 @@ class Employees extends Component {
                 titles: []
             }
         }, () => {
-            if(!!id && !!this.state.hotelEdit){
+            if (!!id && !!this.state.hotelEdit) {
                 this.props.client
-                .query({
-                    query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
-                    variables: { 
-                        Id_Entity: this.state.hotelEdit,
-                        Id_Department: id 
-                    },
-                    fetchPolicy: 'no-cache'
-                })
-                .then((data) => {
-                    if (data.data.getposition != null) {
-                        this.setState({
-                            titles: data.data.getposition,
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.log('Error fetchTitles: ', error);
-                });
+                    .query({
+                        query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
+                        variables: {
+                            Id_Entity: this.state.hotelEdit,
+                            Id_Department: id
+                        },
+                        fetchPolicy: 'no-cache'
+                    })
+                    .then((data) => {
+                        if (data.data.getposition != null) {
+                            this.setState({
+                                titles: data.data.getposition,
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('Error fetchTitles: ', error);
+                    });
             }
         })
 
@@ -1172,7 +1172,7 @@ class Employees extends Component {
             this.setState(prevState => {
                 return { employees: data.employees }
             })
-        }).catch((error) =>{
+        }).catch((error) => {
             console.log(error);
             this.setState(() => {
                 return { loading: false }
