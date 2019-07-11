@@ -8,6 +8,8 @@ import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-load
 import { withRouter } from "react-router-dom";
 import InputForm from 'ui-components/InputForm/InputForm';
 import Skills from "./skills/Skills";
+import DatePicker from "react-datepicker";
+
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -45,7 +47,9 @@ class ApplicationInternal extends Component {
             hasEmployee: false,
 
             //TODO:(LF) Campos agregados
-
+            numberId: null,
+            employmentType: null,
+            comment: null
         };
     }
 
@@ -80,7 +84,10 @@ class ApplicationInternal extends Component {
                                 area: this.state.area,
                                 hireType: this.state.HireType,
                                 typeOfId: this.state.typeOfId,
-                                expireDateId: this.state.expireDateId || null
+                                expireDateId: this.state.expireDateId || null,
+                                numberId: this.state.numberId || null,
+                                employmentType: this.state.employmentType || null,
+                                comment: this.state.comment || null
                             }
                         }
                     })
@@ -152,6 +159,9 @@ class ApplicationInternal extends Component {
                                         ? applicantData.expireDateId.substring(0, 10)
                                         : applicantData.expireDateId,
                                 hasEmployee: applicantData.employee ? (applicantData.employee.Employees ? true : false) : false,
+                                numberId: applicantData.numberId,
+                                employmentType: applicantData.employmentType,
+                                comment: applicantData.comment,
                                 editing: false
                             }, _ => {
                                 if (this.state.hasEmployee) {
@@ -250,6 +260,13 @@ class ApplicationInternal extends Component {
         });
     }
 
+    handleDatePickerChange = (name, date) => {
+        console.log('datos de datepicker', name, date); // TODO: (LF) QUITAR ESTE CONSOLE LOG
+        this.setState({
+            [name]: date
+        });
+    }
+
     render() {
 
         return (
@@ -258,16 +275,16 @@ class ApplicationInternal extends Component {
                     <div className="col-md-6">
 
                         <div className="Apply-container--application">
-                            <form
+                            {/* <form TODO:(LF) Quitar comentarios
                                 className="general-info-apply-form"
                                 id="general-info-form"
                                 autoComplete="off"
                                 onSubmit={this.handleSubmit}
-                            >
+                            > */}
                                 <div className="applicant-card">
                                     <div className="applicant-card__header">
                                         <span className="applicant-card__title">{applyTabs[1].label}</span>
-                                        {!this.state.editing &&
+                                        {/* {!this.state.editing && TODO:(LF) Quitar comentarios
                                             <button
                                                 className="applicant-card__edit-button"
                                                 onClick={() => {
@@ -279,7 +296,7 @@ class ApplicationInternal extends Component {
                                             >
                                                 {spanishActions[1].label} <i className="far fa-edit" />
                                             </button>
-                                        }
+                                        } */}
                                     </div>
                                     <br />
                                     <div className="card-body">
@@ -290,7 +307,22 @@ class ApplicationInternal extends Component {
                                                         <span className="primary applicant-card__label skeleton">
                                                             {formSpanish[12].label}
                                                         </span>
-                                                        <input
+                                                        <div class="input-group flex-nowrap">
+                                                            <DatePicker
+                                                                selected={this.state.birthDay}
+                                                                onChange={(date) => this.handleDatePickerChange('birthDay', date)}
+                                                                placeholderText={formSpanish[12].label}
+                                                                name="birthDay"
+                                                                id="birthDay"
+                                                                disabled={!this.state.editing}
+                                                            />
+                                                            <div class="input-group-append">
+                                                                <label class="input-group-text" id="addon-wrapping" for="birthDay">
+                                                                    <i class="far fa-calendar"></i>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        {/* <input TODO:(LF) Quitar comentarios
                                                             onChange={this.handleInputChange}
                                                             value={this.state.birthDay}
                                                             name="birthDay"
@@ -300,7 +332,7 @@ class ApplicationInternal extends Component {
                                                             min="0"
                                                             maxLength="50"
                                                             minLength="10"
-                                                        />
+                                                        /> */}
                                                     </div>
 
                                                     <div className="col-md-6">
@@ -420,42 +452,36 @@ class ApplicationInternal extends Component {
                                                         <span className="primary applicant-card__label skeleton">
                                                             {formSpanish[15].label}
                                                         </span>
-                                                        <input
+                                                        <div class="input-group flex-nowrap">
+                                                            <DatePicker
+                                                                selected={this.state.expireDateId}
+                                                                onChange={this.handleInputChange}
+                                                                placeholderText={formSpanish[15].label}
+                                                                name="expireDateId"
+                                                                id="expireDateId"
+                                                                disabled={!this.state.editing}
+                                                            />
+                                                            <div class="input-group-append">
+                                                                <label class="input-group-text" id="addon-wrapping" for="expireDateId">
+                                                                    <i class="far fa-calendar"></i>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        {/* <input TODO:(LF) Quitar comentarios
                                                             onChange={this.handleInputChange}
                                                             value={this.state.expireDateId}
                                                             name="expireDateId"
                                                             type="date"
                                                             className="form-control"
                                                             disabled={!this.state.editing}
-                                                        />
+                                                        /> */}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    {this.state.editing ? (
-                                        <div className="applicant-card__footer">
-                                            <button
-                                                className="applicant-card__cancel-button"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-
-                                                    this.getApplicationById(this.props.applicationId);
-                                                }}
-                                            >
-                                                {spanishActions[2].label}
-                                            </button>
-                                            <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
-                                                {spanishActions[4].label}
-                                                {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
-                                            </button>
-                                        </div>
-                                    ) : (
-                                            ''
-                                        )}
                                 </div>
-                            </form>
+                            {/* </form> TODO:(LF) Quitar comentarios */}
                         </div>
                     </div>
                     <div className="col-md-6">
@@ -502,8 +528,8 @@ class ApplicationInternal extends Component {
                                                                 onChange={this.handleInputChange}
                                                             >
                                                                 <option value="">Select an option</option>
-                                                                <option value="FT">FT</option>
-                                                                <option value="PT">PT</option>
+                                                                <option value="1">FT</option>
+                                                                <option value="2">PT</option>
                                                             </select>
                                                         </div>
 
@@ -520,7 +546,7 @@ class ApplicationInternal extends Component {
                                                                 onChange={this.handleInputChange}
                                                             >
                                                                 <option value="">Select an option</option>
-                                                                <option value="FT">Part-Time</option>
+                                                                <option value="Part-Time">Part-Time</option>
                                                             </select>
                                                         </div>
 
@@ -528,28 +554,58 @@ class ApplicationInternal extends Component {
                                                             <span className="primary applicant-card__label skeleton">
                                                                 {formSpanish[35].label}
                                                             </span>
-                                                            <input
+                                                            <div class="input-group flex-nowrap">
+                                                                <DatePicker
+                                                                    selected={this.state.hireDate}
+                                                                    onChange={this.handleInputChange}
+                                                                    placeholderText={formSpanish[35].label}
+                                                                    name="hireDate"
+                                                                    id="hireDate"
+                                                                    disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                />
+                                                                <div class="input-group-append">
+                                                                    <label class="input-group-text" id="addon-wrapping" for="hireDate">
+                                                                        <i class="far fa-calendar"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            {/* <input TODO:(LF) Quitar comentarios
                                                                 onChange={this.handleInputChange}
                                                                 value={this.state.hireDate}
                                                                 name="hireDate"
                                                                 type="date"
                                                                 className="form-control"
                                                                 disabled={!this.state.editing || !this.state.hasEmployee}
-                                                            />
+                                                            /> */}
                                                         </div>
 
                                                         <div className="col-md-6">
                                                             <span className="primary applicant-card__label skeleton">
                                                                 {formSpanish[36].label}
                                                             </span>
-                                                            <input
+                                                            <div class="input-group flex-nowrap">
+                                                                <DatePicker
+                                                                    selected={this.state.startDate}
+                                                                    onChange={this.handleInputChange}
+                                                                    placeholderText={formSpanish[36].label}
+                                                                    name="startDate"
+                                                                    id="startDate"
+                                                                    disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                />
+                                                                <div class="input-group-append">
+                                                                    <label class="input-group-text" id="addon-wrapping" for="startDate">
+                                                                        <i class="far fa-calendar"></i>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            {/* <input TODO:(LF) Quitar comentarios
                                                                 onChange={this.handleInputChange}
                                                                 value={this.state.startDate}
                                                                 name="startDate"
                                                                 type="date"
                                                                 className="form-control"
                                                                 disabled={!this.state.editing || !this.state.hasEmployee}
-                                                            />
+                                                            /> */}
                                                         </div>
 
                                                         <div className="col-md-12">
@@ -558,8 +614,8 @@ class ApplicationInternal extends Component {
                                                             </span>
                                                             <textarea
                                                                 onChange={this.handleInputChange}
-                                                                value={this.state.comments}
-                                                                name="comments"
+                                                                value={this.state.comment}
+                                                                name="comment"
                                                                 type="text"
                                                                 rows="4"
                                                                 style={{resize:'none'}}
