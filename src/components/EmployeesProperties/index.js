@@ -7,8 +7,8 @@ import withApollo from 'react-apollo/withApollo';
 import moment from 'moment';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
-const DEFAULT_PROPERTY = { value: 0, label: 'Select a Property' };
-const DEFAULT_OPERATION = { value: 0, label: 'Select a Operation Manager' };
+const DEFAULT_PROPERTY = { value: 0, label: 'Select Property' };
+const DEFAULT_OPERATION = { value: 0, label: 'Select Operation Manager' };
 
 class EmployeesProperties extends Component{
 
@@ -179,7 +179,7 @@ class EmployeesProperties extends Component{
                                     <div className="p-3">
                                         <table className="table">
                                             <thead>
-                                                <tr>
+                                                <tr className="Table-bgCyan text-center">
                                                     <th className="Table-head">Code</th>
                                                     <th className="Table-head">PropertyName</th>
                                                     <th className="Table-head">Operating Department</th>
@@ -191,7 +191,7 @@ class EmployeesProperties extends Component{
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
+                                                <tr className="text-center Table-bgCyanDark">
                                                     <td>{property.code}</td>
                                                     <td>{property.name}</td>
                                                     <td>{property.count_department}</td>
@@ -208,7 +208,7 @@ class EmployeesProperties extends Component{
                                     <div className="mt-4 p-3">
                                         <table className="table">
                                             <thead>
-                                                <tr>
+                                                <tr className="Table-bgCyan">
                                                     <th className="Table-head">No</th>
                                                     <th className="Table-head">Associate Name</th>
                                                     <th className="Table-head">Position</th>

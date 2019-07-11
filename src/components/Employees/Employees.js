@@ -11,7 +11,10 @@ import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, INSERT_USER_QUERY, INS
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
-import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL, GET_APPLICATION_EMPLOYEES, GET_VALIDATE_EMPLOYEE_UNIQUENESS } from "./Queries";
+import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
+import { Query } from "react-apollo";
+import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
+import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL,GET_APPLICATION_EMPLOYEES, GET_POSIT_BY_HOTEL_DEPART_QUERY } from "./Queries";
 import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
@@ -111,6 +114,9 @@ class Employees extends Component {
             finishLoading: false,
             progressEditEmployee: false,
             employees: [],
+            hotels: [],
+            departments: [],
+            titles: [],
             ...this.DEFAULT_STATE
         };
     }
@@ -571,48 +577,54 @@ class Employees extends Component {
      * Fetch hotels
      */
     getHotels = () => {
-        this.props.client
-            .query({
-                query: GET_HOTELS_QUERY
-            })
-            .then(({ data }) => {
-                this.setState({
-                    hotels: data.getbusinesscompanies
-                }, () => {
-                    this.fetchContacts()
+        this.setState(() => {
+            return { hotels: [] }
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_HOTELS_QUERY
+                })
+                .then(({ data }) => {
+                    this.setState({
+                        hotels: data.getbusinesscompanies
+                    }, () => {
+                        this.fetchContacts()
+                    });
+                })
+                .catch(error => {
+                    console.log('Error to get hotels: ', error);
                 });
-            })
-            .catch(error => {
-
-            });
+        });
     };
 
     /**
      * To get a list od departments
      */
     fetchDepartments = (id) => {
-        this.props.client
-            .query({
-                query: GET_DEPARTMENTS_QUERY,
-                variables: { Id_Entity: id },
-                fetchPolicy: 'no-cache'
-            })
-            .then((data) => {
-                if (data.data.getcatalogitem != null) {
-                    this.setState({
-                        departments: data.data.getcatalogitem,
-                    }, () => {
-                        this.fetchTitles(id)
-                    });
-                }
-            })
-            .catch((error) => {
-                // TODO: show a SnackBar with error message
-
-                this.setState({
-                    loading: false
+        this.setState(() => {
+            return { 
+                departments: [],
+            }
+        }, () => {
+            if(!!id){
+                this.props.client
+                .query({
+                    query: GET_DEPARTMENTS_QUERY,
+                    variables: { Id_Entity: id },
+                    fetchPolicy: 'no-cache'
                 })
-            });
+                .then((data) => {
+                    if (data.data.getcatalogitem != null) {
+                        this.setState({
+                            departments: data.data.getcatalogitem
+                        }, () => this.fetchTitles(this.state.departmentEdit));
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error fetchDepartment: ', error);
+                });
+            }
+        });
     };
 
     fetchAllDepartments = () => {
@@ -765,27 +777,34 @@ class Employees extends Component {
      * To fetch a list of titles
      */
     fetchTitles = (id) => {
-        this.props.client
-            .query({
-                query: GET_ALL_POSITIONS_QUERY,
-                variables: { Id_Entity: id },
-                fetchPolicy: 'no-cache'
-            })
-            .then((data) => {
-                if (data.data.getposition != null) {
-                    this.setState({
-                        titles: data.data.getposition,
-                    }, () => {
-                        this.getHotels()
-                    });
-                }
-            })
-            .catch((error) => {
-                // TODO: show a SnackBar with error message
-                this.setState({
-                    loading: false
+        this.setState(() => {
+            return {
+                titles: []
+            }
+        }, () => {
+            if(!!id && !!this.state.hotelEdit){
+                this.props.client
+                .query({
+                    query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
+                    variables: { 
+                        Id_Entity: this.state.hotelEdit,
+                        Id_Department: id 
+                    },
+                    fetchPolicy: 'no-cache'
                 })
-            });
+                .then((data) => {
+                    if (data.data.getposition != null) {
+                        this.setState({
+                            titles: data.data.getposition,
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error fetchTitles: ', error);
+                });
+            }
+        })
+
     };
 
     getApplicationId = () => {
@@ -1134,6 +1153,7 @@ class Employees extends Component {
         }, () => {
             this.fetchAllDepartments();
             this.getEmployees();
+            this.getHotels();
         })
     }
 
@@ -1151,6 +1171,11 @@ class Employees extends Component {
         }).then(({ data }) => {
             this.setState(prevState => {
                 return { employees: data.employees }
+            })
+        }).catch((error) =>{
+            console.log(error);
+            this.setState(() => {
+                return { loading: false }
             })
         });
     }
@@ -1577,18 +1602,12 @@ class Employees extends Component {
                                             className="form-control"
                                             onChange={(e) => {
                                                 this.setState({
-                                                    hotelEdit: e.target.value
-                                                });
-                                                this.setState({
-                                                    departmentEdit: "",
-                                                    contactTitleEdit: "",
+                                                    hotelEdit: e.target.value,
+                                                    departmentEdit: null,
+                                                    contactTitleEdit: null
                                                 });
 
-                                                if (e.target.value == "null") {
-                                                    this.fetchDepartments();
-                                                } else {
-                                                    this.fetchDepartments(e.target.value);
-                                                }
+                                                this.fetchDepartments(e.target.value);
                                             }}
                                             value={this.state.hotelEdit}
                                         >
@@ -1609,15 +1628,16 @@ class Employees extends Component {
                                             className="form-control"
                                             onChange={(e) => {
                                                 this.setState({
-                                                    departmentEdit: e.target.value
-                                                })
+                                                    departmentEdit: e.target.value,
+                                                    contactTitleEdit: null
+                                                });
 
+                                                this.fetchTitles(e.target.value);
                                             }}
                                             value={this.state.departmentEdit}
                                         >
                                             <option value="">Select option</option>
                                             {
-
                                                 this.state.departments.map(item => {
                                                     return (
                                                         <option value={item.Id}>{item.Name.trim()}</option>
@@ -1640,11 +1660,9 @@ class Employees extends Component {
                                             <option value="">Select option</option>
                                             {
                                                 this.state.titles.map(item => {
-                                                    if (this.state.hotelEdit == item.Id_Entity) {
-                                                        return (
-                                                            <option value={item.Id}>{item.Position.trim()}</option>
-                                                        )
-                                                    }
+                                                    return (
+                                                        <option value={item.Id}>{item.Position.trim()}</option>
+                                                    )
                                                 })
                                             }
                                         </select>
@@ -1704,7 +1722,7 @@ class Employees extends Component {
                                             hotelEdit: row.idEntity
                                         }, () => {
                                             if (this.state.hotelEdit == null) {
-                                                this.fetchDepartments()
+                                                this.fetchDepartments();
                                             } else {
                                                 this.fetchDepartments(parseInt(this.state.hotelEdit))
                                             }

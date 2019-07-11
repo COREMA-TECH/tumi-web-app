@@ -9245,6 +9245,12 @@ table {
 .Table {
   border-radius: 5px;
   overflow: hidden; }
+  .Table-bgCyan {
+    background: #effffa; }
+    .Table-bgCyan .Table-head {
+      background: transparent !important; }
+  .Table-bgCyanDark {
+    background: #f2faf7; }
   .Table-head {
     background-color: #FFF !important;
     color: #000 !important;
@@ -9453,6 +9459,20 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   background: #FFF;
   border: solid 2px #e6e6e6;
   width: 100%; }
+  .StatBox.headCount {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    right: 0;
+    top: calc(50% - 42px);
+    max-width: 185px; }
+    .StatBox.headCount .StatBox-header {
+      border: none; }
+    .StatBox.headCount .StatBox-amount {
+      text-align: center; }
   .StatBox-amount {
     display: block;
     font-size: 2.3rem;
