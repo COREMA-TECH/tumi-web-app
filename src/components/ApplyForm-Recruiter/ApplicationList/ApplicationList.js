@@ -385,6 +385,17 @@ class ApplicationList extends Component {
 		</Dialog>
 	}
 
+	clearFilter = (e) => {
+		e.preventDefault();
+		let optionClear = {label: 'select...', value: null};
+		this.setState(() => {
+			return {
+				recruitersTags: optionClear,
+				property: optionClear
+			}
+		});
+	}
+
 	render() {
 
 		// If contracts query is loading, show a progress component
@@ -395,7 +406,7 @@ class ApplicationList extends Component {
 		// To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="row">
-				<div className="col-md-6 col-xl-2">
+				<div className="col-md-4 col-xl-2">
 					<div className="input-group mb-3">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="basic-addon1">
@@ -416,48 +427,57 @@ class ApplicationList extends Component {
 					</div>
 				</div>
 
+				<div className="col-md-8 col-xl-6 offset-xl-4 mb-2 ">
+					<div className="row d-flex justify-content-end">
+						<div className="col-md">
+							<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
+								{({ loading, error, data, refetch, networkStatus }) => {
+									//if (networkStatus === 4) return <LinearProgress />;
+									if (error) return <p>Error </p>;
+									if (data.user != null && data.user.length > 0) {
+										let options = [];
+										data.user.map((item) => (
+											options.push({ value: item.Id, label: item.Full_Name })
+										));
 
-				<div className="col-md-3 col-xl-2 offset-xl-6 mb-2">
-					<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
-						{({ loading, error, data, refetch, networkStatus }) => {
-							//if (networkStatus === 4) return <LinearProgress />;
-							if (error) return <p>Error </p>;
-							if (data.user != null && data.user.length > 0) {
-								let options = [];
-								data.user.map((item) => (
-									options.push({ value: item.Id, label: item.Full_Name })
-								));
+										return (
+											<div style={{
+												paddingTop: '0px',
+												paddingBottom: '2px',
+											}}>
+												<Select
+													options={options}
+													value={this.state.recruitersTags}
+													onChange={this.handleChangerecruiterTag}
+													closeMenuOnSelect={false}
+													components={makeAnimated()}
+												// isMulti
+												/>
+											</div>
+										);
+									}
+									return <SelectNothingToDisplay />;
+								}}
+							</Query>
+						</div>
+						<div className="col-md">
+							<Select
+								name="property"
+								options={this.state.properties}
+								value={this.state.property}
+								onChange={this.handlePropertyChange}
+								components={makeAnimated()}
+								closeMenuOnSelect
+							/>
+						</div>
+						<div className="col-md-auto">
+							<button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearFilter}>
+								<i class="fas fa-filter"></i> Clear
+							</button>
+						</div>
+					</div>
+				</div>
 
-								return (
-									<div style={{
-										paddingTop: '0px',
-										paddingBottom: '2px',
-									}}>
-										<Select
-											options={options}
-											value={this.state.recruitersTags}
-											onChange={this.handleChangerecruiterTag}
-											closeMenuOnSelect={false}
-											components={makeAnimated()}
-										// isMulti
-										/>
-									</div>
-								);
-							}
-							return <SelectNothingToDisplay />;
-						}}
-					</Query>
-				</div>
-				<div className="col-md-3 col-xl-2 mb-2">
-					<Select
-						name="property"
-						options={this.state.properties}
-						value={this.state.property}
-						onChange={this.handlePropertyChange}
-						components={makeAnimated()}
-						closeMenuOnSelect
-					/>
-				</div>
 				<div className="col-md-4 col-xl-12 mb-2">
 					{/* <button
 						className="btn btn-success float-right ml-2"

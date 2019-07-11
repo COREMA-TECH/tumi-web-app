@@ -57,8 +57,10 @@ const styles = (theme) => ({
         '&:hover': {
             cursor: 'pointer'
         }
+    },
+    overflowVisible:{
+        overflow: 'visible'
     }
-
 });
 
 const CustomTableCell = withStyles((theme) => ({
@@ -730,7 +732,7 @@ class WorkOrdersForm extends Component {
 
         return (
             <div>
-                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
+                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal} classes={{paperScrollPaper: classes.overflowVisible }} >
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 className="modal-title">Work Order</h5>
