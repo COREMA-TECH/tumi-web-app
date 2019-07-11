@@ -146,5 +146,17 @@
   {
     "id": 36,
     "label": "Start Date"
+  },
+  {
+    "id": 37,
+    "label": "Employment Type"
+  },
+  {
+    "id": 38,
+    "label": "Comments"
+  },
+  {
+    "id": 39,
+    "label": "Kids"
   }
 ]
