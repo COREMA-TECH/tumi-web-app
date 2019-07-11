@@ -141,6 +141,7 @@ class WorkOrdersForm extends Component {
             recruiters: [],
             contacts: [],
             Shift: [],
+            propertyStartWeek: 1,
 
             ...this.DEFAULT_STATE
         };
@@ -663,7 +664,10 @@ class WorkOrdersForm extends Component {
 
     handlePropertySelectChange = ({ value }) => {
         this.setState((prevState, props) => {
-            return { IdEntity: value }
+            let hotel = this.state.hotels.find(_ => {
+                return _.Id === parseInt(value)
+            })
+            return { IdEntity: value, propertyStartWeek: hotel ? hotel.Start_Week : null }
         }, _ => this.getDepartment(value));
     }
 
@@ -798,6 +802,7 @@ class WorkOrdersForm extends Component {
                                 return (
                                     <RowForm
                                         startDate={this.state.startDate}
+                                        propertyStartWeek={this.state.propertyStartWeek}
                                         endDate={this.state.endDate}
                                         departmentId={this.state.departmentId}
                                         IdEntity={this.state.IdEntity}
