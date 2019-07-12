@@ -177,11 +177,19 @@ class PreFilter extends Component {
             if (element.name == 'location') {
                 this.getContacts();
                 this.getDepartments();
+                this.getStartWeek(element.value);
             }
             if (element.name == 'department') {
                 this.getPositions();
             }
         })
+    }
+
+    getStartWeek = (id) => {
+        let company = this.state.locations.find(_ => _.Id == id);
+        this.setState(() => ({
+            startWeek: company.Start_Week
+        }))
     }
 
     componentWillMount() {
@@ -190,7 +198,7 @@ class PreFilter extends Component {
 
     handleApplyFilters = (event) => {
         event.preventDefault();
-        this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department, this.state.position);
+        this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department, this.state.position, this.state.startWeek);
         this.props.handleGetTextofFilters(this.state.locationName, this.state.requestedName, this.state.departmentName, this.state.positionName);
         this.setState({
             disabled: !this.state.disabled
@@ -231,7 +239,7 @@ class PreFilter extends Component {
                                     />*/}
 
 
-                                    <select name="location" id="" value={this.props.location} disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
+                                    <select name="location" value={this.state.location} disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderLocationList()}
                                     </select>
@@ -239,14 +247,14 @@ class PreFilter extends Component {
                                 </div>
                                 <div className="col-md-12">
                                     <label htmlFor="">Department</label>
-                                    <select name="department" id="" value={this.props.department} disabled={this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
+                                    <select name="department" value={this.state.department} disabled={this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderDeparmentList()}
                                     </select>
                                 </div>
                                 <div className="col-md-12">
                                     <label htmlFor="">Position</label>
-                                    <select name="position" id="" value={this.props.position} disabled={this.state.loadingPositions} required className="form-control" onChange={this.handleSelectValueChange}>
+                                    <select name="position" value={this.state.position} disabled={this.state.loadingPositions} required className="form-control" onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderPositionList()}
                                     </select>
