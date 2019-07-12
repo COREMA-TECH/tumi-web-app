@@ -30,7 +30,9 @@ class Summary extends Component {
             completed: false,
             marital: '',
             city: '',
-            state: ''
+            state: '',
+            numberId: '',
+            employmentType: ''
         }
     }
 
@@ -145,7 +147,9 @@ class Summary extends Component {
                             area:applications.area ? applications.area : '--',
                             typeOfId:applications.typeOfId ? (applications.typeOfId==1?'Birth certificate':(applications.typeOfId==2?'Social Security card':'State-issued drivers license')): '--',                        
                             expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('DD/MM/YYYY'): '--',
-                            marital: applications.marital ? "MARRIED" : "SINGLE"
+                            marital: applications.marital ? "MARRIED" : "SINGLE",
+                            numberId: applications.numberId ? applications.numberId : '--',
+                            employmentType: applications.employmentType ? applications.employmentType : '--'
                         }
                     });
                 }
@@ -366,7 +370,7 @@ class Summary extends Component {
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>HIRE DATE:</strong></span>  `+ this.state.hireDate +` </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><strong><span style='color: #b40639;'>EMPLOYMENT TYPE(FT/PT):</span></strong>  -- </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><strong><span style='color: #b40639;'>EMPLOYMENT TYPE(FT/PT):</span></strong> ${this.state.employmentType} </span></p>
                                     
                                     <p><span style="font-family: 'times new roman', times;"><strong><span style='color: #b40639;'>PAY RATE:</span></strong>  -- </span></p>
                                     
@@ -418,7 +422,7 @@ class Summary extends Component {
                                     
                                     <td style='width: 50%;'>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>ID:</strong></span> -- </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>ID:</strong></span> ${this.state.numberId} </span></p>
                                     
                                     <p><span style="font-family: 'times new roman', times;"><strong><span style='color: #b40639;'>TYPE OF ID:</span></strong> `+ this.state.typeOfId +` </span></p>
                                     
@@ -429,8 +433,6 @@ class Summary extends Component {
                                     <td style='width: 50%;'>
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>CAR:</strong></span> `+ this.state.car +` </span></p>
-                                    
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>KIDS:</strong></span> -- </span></p>
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>AREA:</strong></span> `+ this.state.area +` </span></p>
                                     

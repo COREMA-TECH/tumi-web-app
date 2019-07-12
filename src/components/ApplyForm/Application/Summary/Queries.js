@@ -27,6 +27,8 @@ query applications($id: Int){
         expireDateId
         marital
         typeOfId
+        numberId
+        employmentType
         employee{
             Employees{
                 hireDate

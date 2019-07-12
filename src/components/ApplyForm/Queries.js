@@ -108,6 +108,8 @@ export const GET_APPLICATION_BY_ID = gql`
 			area
 			optionHearTumi
 			nameReferences
+			numberId
+			employmentType
 			independentContract{
 				id
 			}
