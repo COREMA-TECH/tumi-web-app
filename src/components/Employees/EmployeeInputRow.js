@@ -7,7 +7,7 @@ import green from "@material-ui/core/colors/green";
 
 import InputMask from "react-input-mask";
 import { GET_DEPARTMENTS_QUERY } from "../ApplyForm/Application/ProfilePreview/Queries";
-import { GET_ALL_POSITIONS_QUERY } from "./Queries";
+import { GET_POSIT_BY_HOTEL_DEPART_QUERY } from "./Queries";
 import DatePicker from "react-datepicker";
 import moment from 'moment';
 
@@ -70,7 +70,6 @@ class EmployeeInputRow extends Component {
             emailAddress: '',
             phoneNumber: '',
 
-            lastRow: true,
             department: "",
             contactTitle: "",
 
@@ -80,27 +79,34 @@ class EmployeeInputRow extends Component {
     }
 
     fetchTitles = (id) => {
-        this.props.client
-            .query({
-                query: GET_ALL_POSITIONS_QUERY,
-                variables: { Id_Department: id },
-                fetchPolicy: 'no-cache'
-            })
-            .then((data) => {
-                if (data.data.getposition != null) {
-                    this.setState({
-                        arraytitles: data.data.getposition,
-                    }, () => {
-                        // this.getHotels()
-                    });
-                }
-            })
-            .catch((error) => {
-                // TODO: show a SnackBar with error message
-                this.setState({
-                    loading: false
+        this.setState(() => {
+            return {
+                arraytitles: [],
+                contactTitle: ''
+            }
+        }, () => {
+            if(!!id && !!this.state.hotelEdit){
+                this.props.client
+                .query({
+                    query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
+                    variables: { 
+                        Id_Entity: this.state.hotelEdit,
+                        Id_Department: id 
+                    },
+                    fetchPolicy: 'no-cache'
                 })
-            });
+                .then((data) => {
+                    if (data.data.getposition != null) {
+                        this.setState({
+                            arraytitles: data.data.getposition,
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error fetchTitles: ', error);
+                });
+            }
+        })
     };
 
     componentWillMount() {
@@ -108,32 +114,38 @@ class EmployeeInputRow extends Component {
     }
 
     fetchDepartments = (id) => {
-        this.props.client
-            .query({
-                query: GET_DEPARTMENTS_QUERY,
-                variables: { Id_Entity: id },
-                fetchPolicy: 'no-cache'
-            })
-            .then((data) => {
-                if (data.data.getcatalogitem != null) {
-                    this.setState({
-                        arrayDepartment: data.data.getcatalogitem,
-                        //  departments: data.data.getcatalogitem,
-                    });
-                }
-            })
-            .catch((error) => {
-                // TODO: show a SnackBar with error message
-
-                this.setState({
-                    loading: false
+        this.setState(() => {
+            return { 
+                arrayDepartment: [],
+                department: '',
+                contactTitle: ''
+            }
+        }, () => {
+            if(!!id){
+                this.props.client
+                .query({
+                    query: GET_DEPARTMENTS_QUERY,
+                    variables: { Id_Entity: id },
+                    fetchPolicy: 'no-cache'
                 })
-            });
+                .then((data) => {
+                    if (data.data.getcatalogitem != null) {
+                        this.setState({
+                            arrayDepartment: data.data.getcatalogitem
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error fetchDepartment: ', error);
+                });
+            }
+        });
+        
     };
 
     handleChangeDate = (hireDate) => (date) => {
         let _date = moment(date).format();
-        
+
         this.props.onchange(hireDate, _date);
 
         this.setState(prevState => {
@@ -144,37 +156,36 @@ class EmployeeInputRow extends Component {
     render() {
         const firstName = `firstName${this.props.index}`;
         const lastName = `lastName${this.props.index}`;
-        const email = `email${this.props.index}`;
         const phoneNumber = `phoneNumber${this.props.index}`;
         const department = `department${this.props.index}`;
         const contactTitle = `contactTitle${this.props.index}`;
         const idEntity = `idEntity${this.props.index}`;
         const hireDate = `hireDate${this.props.index}`;
-
+        const lastRow = this.props.index === this.props.lastIndex;
         return (
 
-            <div className="row Employees-row">
+            <div className="row Employees-row position-relative">
                 <div className="col">
+                    {this.props.isUnique === false ?
+                        <i className="fas fa-exclamation-triangle text-danger" style={{ position: 'absolute', left: '-25px', top: '59%' }}></i> :
+                        <React.Fragment></React.Fragment>}
                     <label htmlFor="" >* First Name</label>
                     <input
                         onChange={(e) => {
                             const value = e.target.value;
                             this.props.onchange(firstName, value);
 
-                            if (this.state.lastRow) {
+                            if (lastRow) {
                                 if (value.length > 2) {
                                     this.props.newRow();
-                                    this.setState({
-                                        lastRow: false
-                                    })
                                 }
                             }
                         }}
-                        value={this.props[firstName]}
+                        value={this.props[firstName] || ''}
                         type="text"
                         name="firstName"
                         className="form-control"
-                        required={!this.state.lastRow}
+                        required={!lastRow}
                         maxLength={50}
                     />
                 </div>
@@ -185,10 +196,10 @@ class EmployeeInputRow extends Component {
                             this.props.onchange(lastName, e.target.value);
                         }}
                         type="text"
-                        value={this.props[lastName]}
+                        value={this.props[lastName] || ''}
                         name="lastName"
                         className="form-control"
-                        required={!this.state.lastRow}
+                        required={!lastRow}
                         maxLength={50}
                     />
                 </div>
@@ -218,7 +229,7 @@ class EmployeeInputRow extends Component {
                         name="number"
                         mask="+(999) 999-9999"
                         maskChar=" "
-                        value={this.props[phoneNumber]}
+                        value={this.props[phoneNumber] || ''}
                         className="form-control"
                         onChange={(e) => {
                             this.props.onchange(phoneNumber, e.target.value);
@@ -238,22 +249,12 @@ class EmployeeInputRow extends Component {
                             });
 
                             this.props.onchange(idEntity, e.target.value);
-
-
                             this.props.onchange(department, null);
                             this.props.onchange(contactTitle, null);
-                            this.setState({
-                                department: "",
-                                contactTitle: "",
-                            });
 
-                            if (e.target.value == "null") {
-                                this.fetchDepartments();
-                            } else {
-                                this.fetchDepartments(e.target.value);
-                            }
+                            this.fetchDepartments(e.target.value);
                         }}
-                        value={this.state.hotelEdit}
+                        value={this.state.hotelEdit || ''}
                     >
                         <option value="null">Select option</option>
                         {
@@ -268,7 +269,7 @@ class EmployeeInputRow extends Component {
                 <div className="col">
                     <label htmlFor="" >Department</label>
                     <select
-                        value={this.state.department}
+                        value={this.state.department || ''}
                         name="department"
                         id="department"
                         className="form-control"
@@ -279,6 +280,7 @@ class EmployeeInputRow extends Component {
                                 this.fetchTitles(this.state.department)
                             });
                             this.props.onchange(department, e.target.value);
+                            this.props.onchange(contactTitle, null);
                         }}
                     >
                         <option value="">Select option</option>
@@ -295,7 +297,7 @@ class EmployeeInputRow extends Component {
                         id="contactTitle"
                         name="contactTitle"
                         className="form-control"
-                        value={this.state.contactTitle}
+                        value={this.state.contactTitle || ''}
                         onChange={(e) => {
                             this.setState({
                                 contactTitle: e.target.value
@@ -306,15 +308,17 @@ class EmployeeInputRow extends Component {
                         <option value="">Select option</option>
                         {
                             this.state.arraytitles.map(item => {
-                                if (this.state.hotelEdit == item.Id_Entity) {
-                                    return (
-                                        <option value={item.Id}>{item.Position.trim()}</option>
-                                    )
-                                }
+                                return (
+                                    <option value={item.Id}>{item.Position.trim()}</option>
+                                )
                             })
                         }
                     </select>
                 </div>
+
+                <button class="float-right btn btn-link mt-4" title="Delete row" onClick={this.props.onDeleteRowHandler} disabled={this.props.index === this.props.lastIndex && this.props.lastIndex}><i className="fa fa-times text-dark" /></button>
+
+
             </div>
         );
     }

@@ -105,20 +105,6 @@ class MasterShift extends Component {
             );
         }
 
-        // this.setState(() => {
-        //     return { 
-        //         runTimer: true,
-        //         showStartButton: false,
-        //         showFinalizeButton: true,
-        //         duration: {
-        //             days: 0,
-        //             hours: 0,
-        //             minutes: 0,
-        //             seconds: 0
-        //         }
-        //     }
-        // });
-
         this.props.client.mutate({
             mutation: CREATE_VISIT_QUERY,
             variables: {
@@ -270,8 +256,6 @@ class MasterShift extends Component {
                 return reject('Error Loading File');
             }
         })
-
-
     }
 
     handleGeoPosition = () => {
@@ -409,6 +393,8 @@ class MasterShift extends Component {
             endTime, latitude, longitude, srcIframe, formDisabled, disableFinalizeButton
         } = DEFAULT_STATE;
 
+        let isOpManager = this.state.rolId === OP_MANAGER_ROL_ID;
+
         this.setState(() => {
             return {
                 visitId: visitId,
@@ -426,7 +412,7 @@ class MasterShift extends Component {
                 latitude: latitude,
                 longitude: longitude,
                 srcIframe: srcIframe,
-                formDisabled: formDisabled,
+                formDisabled: isOpManager ? formDisabled : true,
                 disableFinalizeButton: disableFinalizeButton
             }
         });
@@ -434,6 +420,8 @@ class MasterShift extends Component {
 
     setCloseVisitState = (visitData) => {
         let { id, startTime, endTime, comment, startLatitude, startLongitude, BusinessCompanyId, BusinessCompany } = visitData;
+        let isOpManager = this.state.rolId === OP_MANAGER_ROL_ID;
+        
         this.getDuration(startTime, endTime)
             .then((du) => {
                 this.setState(() => {
@@ -447,7 +435,7 @@ class MasterShift extends Component {
                         duration: du,
                         comment: comment,
                         showStartButton: false,
-                        showFinalizeButton: !endTime, // solo si es vacio muestra el boton
+                        showFinalizeButton: isOpManager ? !endTime : false,
                         startTime: startTime,
                         endTime: endTime || null,
                         latitude: startLatitude,
@@ -504,12 +492,13 @@ class MasterShift extends Component {
     componentWillMount() {
         let userId = localStorage.getItem('LoginId');
         let rolId = localStorage.getItem('IdRoles');
+        
         this.setState(() => {
             return {
                 userId: !!userId ? +userId : 0,
                 rolId: !!rolId ? +rolId : 0
             }
-        })
+        });
     }
 
     render() {

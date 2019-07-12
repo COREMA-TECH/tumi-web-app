@@ -645,7 +645,7 @@ class RegionForm extends Component {
     render() {
         let { classes } = this.props;
         return (
-            <Dialog classes={{ paperScrollPaper: classes.overflowVisible }} maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
+            <Dialog classes={{ paperScrollPaper: classes.overflowVisible }} maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal} disableBackdropClick={true}>
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">Region's Configurations</h5>

@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
 import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY, GET_MARK } from './queries';
-import { ADD_MARCKED } from './mutations';
+import { ADD_MARCKED, UPDATE_MARKED } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
 import { parse } from 'path';
@@ -60,51 +60,20 @@ const CustomTableCell = withStyles((theme) => ({
     }
 }))(TableCell);
 
-const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
-
 class TimeCardForm extends Component {
     DEFAULT_STATE = {
         id: null,
-        hotel: 0,
+        clockInId: null,
+        clockOutId: null,
         IdEntity: null,
-        date: new Date().toISOString().substring(0, 10),
-        quantity: 0,
-        status: 1,
+        employeeId: null,
         shift: moment('08:00', "HH:mm").format("HH:mm"),
         endShift: moment('16:00', "HH:mm").format("HH:mm"),
         startDate: '',
         endDate: '',
-        needExperience: false,
-        needEnglish: false,
-        comment: '',
-        EspecialComment: '',
-        Electronic_Address: '',
-        position: 0,
-        PositionRateId: 0,
-        PositionName: '',
-        RecruiterId: 0,
-        contactId: 0,
-        userId: localStorage.getItem('LoginId'),
-        ShiftsData: ShiftsData,
-        saving: false,
-        isAdmin: Boolean(localStorage.getItem('IsAdmin')),
         employees: [],
-        employeesarray: [],
-        openConfirm: false,
-        idToDelete: 0,
-        Monday: 'MO,',
-        Tuesday: 'TU,',
-        Wednesday: 'WE,',
-        Thursday: 'TH,',
-        Friday: 'FR,',
-        Saturday: 'SA,',
-        Sunday: 'SU,',
-        dayWeek: '',
-        DateContract: '',
-        departmentId: 0,
-        dayWeeks: '',
-        statusTimeOut: false
-
+        positions: [],
+        PositionRateId: 0
     };
 
     constructor(props) {
@@ -126,75 +95,30 @@ class TimeCardForm extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.item && nextProps.openModal) {
-
             this.setState(
                 {
-                    id: nextProps.item.id,
-                    contactId: nextProps.item.contactId,
-                    IdEntity: nextProps.item.IdEntity,
-                    date: nextProps.item.date,
-                    quantity: nextProps.item.quantity,
-                    status: nextProps.item.status,
-                    shift: nextProps.item.shift,
-                    endShift: nextProps.item.endShift,
-                    startDate: nextProps.item.startDate,
-                    endDate: nextProps.item.endDate,
-                    sameContractDate: nextProps.item.endDate,
-                    needExperience: nextProps.item.needExperience,
-                    needEnglish: nextProps.item.needEnglish,
-                    comment: nextProps.item.comment,
-                    userId: localStorage.getItem('LoginId'),
-                    EspecialComment: nextProps.item.EspecialComment,
-                    PositionName: nextProps.item.positionName,
-                    dayWeeks: nextProps.item.dayWeek
-                },
-                () => {
-
-                    this.ReceiveStatus = true;
+                    id: nextProps.item.clockInId,
+                    clockInId: nextProps.item.clockInId,
+                    clockOutId: nextProps.item.clockOutId,
+                    IdEntity: nextProps.item.hotelId,
+                    employeeId: nextProps.item.employeeId,
+                    startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
+                    endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
+                    shift: nextProps.item.clockIn,
+                    endShift: nextProps.item.clockOut
                 }
             );
         } else if (!nextProps.openModal) {
             this.setState({
                 id: null,
-                hotel: 0,
-                IdEntity: null,
-                date: new Date().toISOString().substring(0, 10),
-                quantity: 0,
-                status: 1,
+                clockInId: null,
+                clockOutId: null,
+                IdEntity: 0,
+                employeeId: 0,
                 shift: moment('08:00', "HH:mm").format("HH:mm"),
                 endShift: moment('16:00', "HH:mm").format("HH:mm"),
                 startDate: '',
-                endDate: '',
-                needExperience: false,
-                needEnglish: false,
-                comment: '',
-                EspecialComment: '',
-                Electronic_Address: '',
-                position: 0,
-                PositionRateId: 0,
-                PositionName: '',
-                RecruiterId: 0,
-                contactId: 0,
-                userId: localStorage.getItem('LoginId'),
-                ShiftsData: ShiftsData,
-                saving: false,
-                isAdmin: Boolean(localStorage.getItem('IsAdmin')),
-                employees: [],
-                employeesarray: [],
-                openConfirm: false,
-                idToDelete: 0,
-                Monday: 'MO,',
-                Tuesday: 'TU,',
-                Wednesday: 'WE,',
-                Thursday: 'TH,',
-                Friday: 'FR,',
-                Saturday: 'SA,',
-                Sunday: 'SU,',
-                dayWeek: '',
-                DateContract: '',
-                departmentId: 0,
-                dayWeeks: '',
-                statusTimeOut: false
+                endDate: ''
             });
         }
 
@@ -203,26 +127,10 @@ class TimeCardForm extends Component {
         this.getEmployees();
     }
 
-    getWorkOrders = () => {
-        this.props.client
-            .query({
-                query: GET_WORKORDERS_QUERY,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                this.setState({
-                    data: data.workOrder
-                });
-            })
-            .catch();
-    }
-
-
     componentWillMount() {
         this.getHotels();
         this.getEmployees();
-
-
+        this.getPositions();
     }
 
     handleCloseModal = (event) => {
@@ -248,49 +156,109 @@ class TimeCardForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        console.log(this.state.PositionRateId)
         if (
-            this.state.IdEntity == 0 ||
-            !!this.state.PositionRateId ||
+            this.state.IdEntity == null ||
+            this.state.PositionRateId == null ||
             this.state.startDate == '' ||
-            this.state.endDate == '' ||
-            !!this.state.employeeId
+            this.state.endDate == ''
         ) {
 
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
             this.setState({ saving: true });
             if (this.state.id == null) {
-                this.addIn();
-            } else {
-                //alert(this.state.employees.detailEmployee)
-                if (this.state.employees.length > 0) {
-                    //  this.setState({ openConfirm: true, idToDelete: row.id });
-                    this.props.handleOpenSnackbar('error', 'This work order has assigned employees, to update them you must eliminate them');
-                    this.setState({ saving: false });
-                } else {
-                    //this.update();
+                //if (this.state.PositionRateId == 0)
+                let mark = {
+                    entityId: this.state.IdEntity === 0 ? 180 : this.state.IdEntity,
+                    typeMarkedId: this.state.IdEntity === 0 ? 30572 : 30570,
+                    markedDate: this.state.startDate,
+                    markedTime: this.state.shift,
+                    imageMarked: "",
+                    EmployeeId: this.state.employeeId,
+                    ShiftId: null,
+                    notes: this.state.comment
                 }
+
+                this.setState(prevState => {
+                    return { marks: mark }
+                }, _ => { this.addIn(); });
+                
+            } else {
+                let markIn = {};
+                if (this.state.clockInId) {
+                    markIn = {
+                        id: this.state.clockInId,
+                        entityId: this.state.IdEntity,
+                        markedDate: moment(this.state.startDate).format('DD/MM/YYYY'),
+                        markedTime: this.state.shift,
+                        imageMarked: "",
+                        EmployeeId: this.state.employeeId,
+                        ShiftId: null,
+                        notes: this.state.comment
+                    };
+                }
+                
+                let markOut = {};
+
+                if (this.state.clockOutId) {
+
+                    markOut = {
+                        id: this.state.clockOutId,
+                        entityId: this.state.IdEntity,
+                        markedDate: moment(this.state.endDate).format('DD/MM/YYYY'),
+                        markedTime: this.state.endShift,
+                        imageMarked: "",
+                        EmployeeId: this.state.employeeId,
+                        ShiftId: null,
+                        notes: this.state.comment
+                    }
+
+                }
+
+                let marks = [markIn, markOut];
+
+                marks.map(mark => {
+                    this.updateMark(mark);
+                });
             }
         }
     };
+
+    updateMark = (mark) => {
+        if (!mark) return;
+        this.props.client
+        .mutate({
+            mutation: UPDATE_MARKED,
+            variables: {
+                MarkedEmployees: mark
+            }
+        })
+        .then((data) => {
+            this.props.handleOpenSnackbar('success', 'Record Updated!');
+            this.props.toggleRefresh();
+            this.setState({ saving: false }, () => {
+                this.props.handleCloseModal();
+                //this.props.getReport();
+            });
+            // window.location.reload();
+        })
+        .catch((error) => {
+            this.setState({ saving: true });
+            this.props.handleOpenSnackbar('error', 'Error: ' + error);
+        });
+    }
 
     addIn = () => {
         this.props.client.mutate({
             mutation: ADD_MARCKED,
             variables: {
-                MarkedEmployees: [{
-                    entityId: this.state.IdEntity,
-                    typeMarkedId: 30570,
-                    markedDate: this.state.startDate,
-                    markedTime: this.state.shift,
-                    imageMarked: "",
-                    EmployeeId: this.state.employeeId,
-                    ShiftId: "",
-                    notes: this.state.comment
-                }]
+                MarkedEmployees: this.state.marks
             }
         }).then((data) => {
-            if (!this.state.statusTimeOut) { this.addOut(); } else {
+            if (!this.state.statusTimeOut) 
+                this.addOut() 
+            else {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.props.toggleRefresh();
                 this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
@@ -313,9 +281,9 @@ class TimeCardForm extends Component {
                         typeMarkedId: 30571,
                         markedDate: this.state.endDate,
                         markedTime: this.state.endShift,
-                        imageMarked: "https://www.elheraldo.co/sites/default/files/articulo/2017/11/16/un-gato-bebe-433.jpg",
+                        imageMarked: "",
                         EmployeeId: this.state.employeeId,
-                        ShiftId: 1132,
+                        ShiftId: null,
                         notes: this.state.comment
                     }
                 }
@@ -406,8 +374,7 @@ class TimeCardForm extends Component {
             .then(({ data }) => {
 
                 this.setState({
-                    positions: data.getposition,
-                    PositionRateId: PositionId
+                    positions: data.getposition
                 });
             })
             .catch();
@@ -690,7 +657,7 @@ class TimeCardForm extends Component {
                                                 value={this.state.PositionRateId}
                                                 onBlur={this.handleValidate}
                                             >
-                                                <option value="0">Select a Position</option>
+                                                <option value="0">Lunch Break</option>
                                                 {this.state.positions.map((position) => (
                                                     <option value={position.Id}>{position.Position} </option>
 

@@ -13,7 +13,13 @@ query applications($id: Int){
         birthDay
         streetAddress
         city
+        cityInfo {
+            Name
+        }
         state
+        stateInfo {
+            Name
+        }
         zipCode
         car
         area
@@ -21,6 +27,8 @@ query applications($id: Int){
         expireDateId
         marital
         typeOfId
+        numberId
+        employmentType
         employee{
             Employees{
                 hireDate

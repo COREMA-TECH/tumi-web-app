@@ -15,7 +15,6 @@ import Language from "./Languages/Language";
 import Education from "./Education/Education";
 import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
 import MilitaryService from "./MilitaryService/MilitaryService";
-import Skills from "./skills/Skills";
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 
@@ -131,8 +130,6 @@ class VerticalLinearStepper extends Component {
                     return <PreviousEmployment applicationId={this.state.applicationId} />;
                 case 4:
                     return <MilitaryService applicationId={this.state.applicationId} />;
-                case 5:
-                    return <Skills applicationId={this.state.applicationId} />;
             }
         };
 

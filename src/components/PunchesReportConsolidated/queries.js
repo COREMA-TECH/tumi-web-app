@@ -6,6 +6,8 @@ export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
           key
           date
           punches {
+            clockInId
+            clockOutId
             key
             name
             employeeId
@@ -14,6 +16,7 @@ export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
             duration
             job
             hotelCode
+            hotelId
           }
       }
     }

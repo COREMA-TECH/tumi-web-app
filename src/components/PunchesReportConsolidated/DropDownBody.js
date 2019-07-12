@@ -62,7 +62,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                             return (
                                 <tr>
                                     <th>
-                                        <button type="button" className="btn btn-success">
+                                        <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({...item}) }>
                                             <i className="fas fa-pen"></i>
                                         </button>
                                     </th>

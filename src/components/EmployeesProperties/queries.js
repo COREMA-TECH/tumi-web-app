@@ -17,12 +17,22 @@ export const GET_PROPERTIES_QUERY = gql`
   }
 `;
 
+export const GET_USERS_QUERY = gql`
+  query user {
+    user(Id_Roles: 3, IsActive: 1) {
+      Id
+      firstName
+      lastName
+    }
+  }
+`;
+
 /**
  * Query to get employees by properties
  */
 export const GET_EMPLOYEEES_BY_PROPERTIES = gql`
- query employeesByProperties {
-    employeesByProperties {
+query employeesByProperties($property: inputInsertBusinessCompany, $operationManagerId: Int) {
+  employeesByProperties(property: $property, operationManagerId: $operationManagerId) {
       code
       name
       count_associate

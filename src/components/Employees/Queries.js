@@ -42,6 +42,16 @@ export const GET_ALL_POSITIONS_QUERY = gql`
     }
 `;
 
+export const GET_POSIT_BY_HOTEL_DEPART_QUERY = gql`
+    query getPosition($Id_Entity: Int, $Id_Department: Int){
+        getposition(Id_Entity:$Id_Entity, Id_Department: $Id_Department) {
+            Id
+            Position
+            Id_Entity
+        }
+    }
+`;
+
 export const SEND_EMAIL = gql`
     query sendemail($username: String,$password: String,$email: String,$title:String) {
         sendemail(username:$username,password:$password,email:$email,title:$title)
@@ -56,4 +66,17 @@ query employeepackage($EmployeeId: Int){
       ApplicationId
     }
   }
+`;
+
+export const GET_VALIDATE_EMPLOYEE_UNIQUENESS = gql`
+    query validateEmployeeUniqueness($employees: [inputEmployeeUniquenessType]) {
+        validateEmployeeUniqueness(employees: $employees) {
+            id
+            firstName
+            lastName
+            mobileNumber
+            isUnique   
+            index 
+        }
+    }
 `;
