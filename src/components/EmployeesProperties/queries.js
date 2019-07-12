@@ -19,7 +19,7 @@ export const GET_PROPERTIES_QUERY = gql`
 
 export const GET_USERS_QUERY = gql`
   query user {
-    user {
+    user(Id_Roles: 3, IsActive: 1) {
       Id
       firstName
       lastName

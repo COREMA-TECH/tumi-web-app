@@ -67,7 +67,6 @@ class TimeCard extends Component {
     };
 
     onEditHandler = (item) => {
-
         this.setState({
             openModal: true,
             item: item

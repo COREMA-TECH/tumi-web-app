@@ -48,7 +48,7 @@ class PunchesConsolidatedDropDown extends Component {
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className="panel-dropdown-body">
                         <Typography>
-                            <DropDownBody data={item.punches}></DropDownBody>
+                            <DropDownBody data={item.punches} handleEditModal={this.props.handleEditModal}></DropDownBody>
                         </Typography>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>

@@ -47,6 +47,14 @@ query employees($id:Int){
 	  }
 	`;
 
+export const GET_MARK = gql`
+	query markedEmployees($id:Int, $typeMarkedId:Int, $markedDate:Date){
+		markedEmployees (id:$id,typeMarkedId:$typeMarkedId,markedDate:$markedDate) {
+			id
+		}
+	}
+`;
+
 export const GET_WORKORDERS_QUERY = gql`
 query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany,$workOrder: inputQueryWorkOrder,) {
 	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity,workOrder:$workOrder)  {

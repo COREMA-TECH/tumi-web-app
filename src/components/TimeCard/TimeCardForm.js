@@ -6,8 +6,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
-import { ADD_MARCKED } from './mutations';
+import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY, GET_MARK } from './queries';
+import { ADD_MARCKED, UPDATE_MARKED } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
 import { parse } from 'path';
@@ -24,7 +24,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
-
+import DatePicker from "react-datepicker";
 
 const styles = (theme) => ({
     wrapper: {
@@ -60,51 +60,20 @@ const CustomTableCell = withStyles((theme) => ({
     }
 }))(TableCell);
 
-const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
-
 class TimeCardForm extends Component {
     DEFAULT_STATE = {
         id: null,
-        hotel: 0,
+        clockInId: null,
+        clockOutId: null,
         IdEntity: null,
-        date: new Date().toISOString().substring(0, 10),
-        quantity: 0,
-        status: 1,
+        employeeId: null,
         shift: moment('08:00', "HH:mm").format("HH:mm"),
         endShift: moment('16:00', "HH:mm").format("HH:mm"),
         startDate: '',
         endDate: '',
-        needExperience: false,
-        needEnglish: false,
-        comment: '',
-        EspecialComment: '',
-        Electronic_Address: '',
-        position: 0,
-        PositionRateId: 0,
-        PositionName: '',
-        RecruiterId: 0,
-        contactId: 0,
-        userId: localStorage.getItem('LoginId'),
-        ShiftsData: ShiftsData,
-        saving: false,
-        isAdmin: Boolean(localStorage.getItem('IsAdmin')),
         employees: [],
-        employeesarray: [],
-        openConfirm: false,
-        idToDelete: 0,
-        Monday: 'MO,',
-        Tuesday: 'TU,',
-        Wednesday: 'WE,',
-        Thursday: 'TH,',
-        Friday: 'FR,',
-        Saturday: 'SA,',
-        Sunday: 'SU,',
-        dayWeek: '',
-        DateContract: '',
-        departmentId: 0,
-        dayWeeks: '',
-        statusTimeOut: false
-
+        positions: [],
+        PositionRateId: 0
     };
 
     constructor(props) {
@@ -126,75 +95,30 @@ class TimeCardForm extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.item && nextProps.openModal) {
-
             this.setState(
                 {
-                    id: nextProps.item.id,
-                    contactId: nextProps.item.contactId,
-                    IdEntity: nextProps.item.IdEntity,
-                    date: nextProps.item.date,
-                    quantity: nextProps.item.quantity,
-                    status: nextProps.item.status,
-                    shift: nextProps.item.shift,
-                    endShift: nextProps.item.endShift,
-                    startDate: nextProps.item.startDate,
-                    endDate: nextProps.item.endDate,
-                    sameContractDate: nextProps.item.endDate,
-                    needExperience: nextProps.item.needExperience,
-                    needEnglish: nextProps.item.needEnglish,
-                    comment: nextProps.item.comment,
-                    userId: localStorage.getItem('LoginId'),
-                    EspecialComment: nextProps.item.EspecialComment,
-                    PositionName: nextProps.item.positionName,
-                    dayWeeks: nextProps.item.dayWeek
-                },
-                () => {
-
-                    this.ReceiveStatus = true;
+                    id: nextProps.item.clockInId,
+                    clockInId: nextProps.item.clockInId,
+                    clockOutId: nextProps.item.clockOutId,
+                    IdEntity: nextProps.item.hotelId,
+                    employeeId: nextProps.item.employeeId,
+                    startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
+                    endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
+                    shift: nextProps.item.clockIn,
+                    endShift: nextProps.item.clockOut
                 }
             );
         } else if (!nextProps.openModal) {
             this.setState({
                 id: null,
-                hotel: 0,
-                IdEntity: null,
-                date: new Date().toISOString().substring(0, 10),
-                quantity: 0,
-                status: 1,
+                clockInId: null,
+                clockOutId: null,
+                IdEntity: 0,
+                employeeId: 0,
                 shift: moment('08:00', "HH:mm").format("HH:mm"),
                 endShift: moment('16:00', "HH:mm").format("HH:mm"),
                 startDate: '',
-                endDate: '',
-                needExperience: false,
-                needEnglish: false,
-                comment: '',
-                EspecialComment: '',
-                Electronic_Address: '',
-                position: 0,
-                PositionRateId: 0,
-                PositionName: '',
-                RecruiterId: 0,
-                contactId: 0,
-                userId: localStorage.getItem('LoginId'),
-                ShiftsData: ShiftsData,
-                saving: false,
-                isAdmin: Boolean(localStorage.getItem('IsAdmin')),
-                employees: [],
-                employeesarray: [],
-                openConfirm: false,
-                idToDelete: 0,
-                Monday: 'MO,',
-                Tuesday: 'TU,',
-                Wednesday: 'WE,',
-                Thursday: 'TH,',
-                Friday: 'FR,',
-                Saturday: 'SA,',
-                Sunday: 'SU,',
-                dayWeek: '',
-                DateContract: '',
-                departmentId: 0,
-                dayWeeks: '',
-                statusTimeOut: false
+                endDate: ''
             });
         }
 
@@ -203,26 +127,10 @@ class TimeCardForm extends Component {
         this.getEmployees();
     }
 
-    getWorkOrders = () => {
-        this.props.client
-            .query({
-                query: GET_WORKORDERS_QUERY,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                this.setState({
-                    data: data.workOrder
-                });
-            })
-            .catch();
-    }
-
-
     componentWillMount() {
         this.getHotels();
         this.getEmployees();
-
-
+        this.getPositions();
     }
 
     handleCloseModal = (event) => {
@@ -232,66 +140,135 @@ class TimeCardForm extends Component {
         this.props.handleCloseModal(event);
     }
 
-
+    getPunches = () => {
+        this.props.client.query({
+            query: GET_MARK,
+            variables: {
+                typeMarkedId: 30570,
+                markedDate: this.state.startDate
+            }
+        }).then(({data}) => {
+            this.setState(prevState => ({
+                mark: data
+            }));
+        });
+    }
 
     handleSubmit = (event) => {
         event.preventDefault();
+        console.log(this.state.PositionRateId)
         if (
-            this.state.IdEntity == 0 ||
-            this.state.PositionRateId == 0 ||
+            this.state.IdEntity == null ||
             this.state.PositionRateId == null ||
             this.state.startDate == '' ||
-            this.state.endDate == '' ||
-            this.state.employeeId == 0 ||
-            this.state.employeeId == null
+            this.state.endDate == ''
         ) {
 
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
             this.setState({ saving: true });
-            if (this.state.id == null) this.addIn();
-            else {
-                //alert(this.state.employees.detailEmployee)
-                if (this.state.employees.length > 0) {
-                    //  this.setState({ openConfirm: true, idToDelete: row.id });
-                    this.props.handleOpenSnackbar('error', 'This work order has assigned employees, to update them you must eliminate them');
-                    this.setState({ saving: false });
-                } else {
-                    //this.update();
+            if (this.state.id == null) {
+                //if (this.state.PositionRateId == 0)
+                let mark = {
+                    entityId: this.state.IdEntity === 0 ? 180 : this.state.IdEntity,
+                    typeMarkedId: this.state.IdEntity === 0 ? 30572 : 30570,
+                    markedDate: this.state.startDate,
+                    markedTime: this.state.shift,
+                    imageMarked: "",
+                    EmployeeId: this.state.employeeId,
+                    ShiftId: null,
+                    notes: this.state.comment
                 }
+
+                this.setState(prevState => {
+                    return { marks: mark }
+                }, _ => { this.addIn(); });
+                
+            } else {
+                let markIn = {};
+                if (this.state.clockInId) {
+                    markIn = {
+                        id: this.state.clockInId,
+                        entityId: this.state.IdEntity,
+                        markedDate: moment(this.state.startDate).format('DD/MM/YYYY'),
+                        markedTime: this.state.shift,
+                        imageMarked: "",
+                        EmployeeId: this.state.employeeId,
+                        ShiftId: null,
+                        notes: this.state.comment
+                    };
+                }
+                
+                let markOut = {};
+
+                if (this.state.clockOutId) {
+
+                    markOut = {
+                        id: this.state.clockOutId,
+                        entityId: this.state.IdEntity,
+                        markedDate: moment(this.state.endDate).format('DD/MM/YYYY'),
+                        markedTime: this.state.endShift,
+                        imageMarked: "",
+                        EmployeeId: this.state.employeeId,
+                        ShiftId: null,
+                        notes: this.state.comment
+                    }
+
+                }
+
+                let marks = [markIn, markOut];
+
+                marks.map(mark => {
+                    this.updateMark(mark);
+                });
             }
         }
     };
 
-    addIn = () => {
+    updateMark = (mark) => {
+        if (!mark) return;
         this.props.client
-            .mutate({
-                mutation: ADD_MARCKED,
-                variables: {
-                    MarkedEmployees: {
-                        entityId: this.state.IdEntity,
-                        typeMarkedId: 30570,
-                        markedDate: this.state.startDate,
-                        markedTime: this.state.shift,
-                        imageMarked: "https://www.elheraldo.co/sites/default/files/articulo/2017/11/16/un-gato-bebe-433.jpg",
-                        EmployeeId: this.state.employeeId,
-                        ShiftId: 1132,
-                        notes: this.state.comment
-                    }
-                }
-            })
-            .then((data) => {
-                if (!this.state.statusTimeOut) { this.addOut(); } else {
-                    this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                    this.props.toggleRefresh();
-                    this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
-                } 0
-
-            })
-            .catch((error) => {
-                this.setState({ saving: true });
-                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+        .mutate({
+            mutation: UPDATE_MARKED,
+            variables: {
+                MarkedEmployees: mark
+            }
+        })
+        .then((data) => {
+            this.props.handleOpenSnackbar('success', 'Record Updated!');
+            this.props.toggleRefresh();
+            this.setState({ saving: false }, () => {
+                this.props.handleCloseModal();
+                //this.props.getReport();
             });
+            // window.location.reload();
+        })
+        .catch((error) => {
+            this.setState({ saving: true });
+            this.props.handleOpenSnackbar('error', 'Error: ' + error);
+        });
+    }
+
+    addIn = () => {
+        this.props.client.mutate({
+            mutation: ADD_MARCKED,
+            variables: {
+                MarkedEmployees: this.state.marks
+            }
+        }).then((data) => {
+            if (!this.state.statusTimeOut) 
+                this.addOut() 
+            else {
+                this.props.handleOpenSnackbar('success', 'Record Inserted!');
+                this.props.toggleRefresh();
+                this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
+            } 0
+
+        })
+        .catch((error) => {
+            this.setState({ saving: true });
+            this.props.handleOpenSnackbar('error', 'Error: ' + error);
+        });
     };
 
     addOut = () => {
@@ -304,9 +281,9 @@ class TimeCardForm extends Component {
                         typeMarkedId: 30571,
                         markedDate: this.state.endDate,
                         markedTime: this.state.endShift,
-                        imageMarked: "https://www.elheraldo.co/sites/default/files/articulo/2017/11/16/un-gato-bebe-433.jpg",
+                        imageMarked: "",
                         EmployeeId: this.state.employeeId,
-                        ShiftId: 1132,
+                        ShiftId: null,
                         notes: this.state.comment
                     }
                 }
@@ -397,8 +374,7 @@ class TimeCardForm extends Component {
             .then(({ data }) => {
 
                 this.setState({
-                    positions: data.getposition,
-                    PositionRateId: PositionId
+                    positions: data.getposition
                 });
             })
             .catch();
@@ -535,20 +511,34 @@ class TimeCardForm extends Component {
 
     DisabledTimeOut = () => {
         if (document.getElementById("disabledTimeOut").checked) {
-            this.setState(
-                {
-                    statusTimeOut: true,
-                    endDate: "CCC",
-                    endShift: "CCC"
-                })
+            this.setState({
+                statusTimeOut: true,
+                endDate: "",
+                endShift: ""
+            });
         } else {
-            this.setState(
-                {
-                    statusTimeOut: false,
-                    endDate: "",
-                    endShift: ""
-                })
+            this.setState({
+                statusTimeOut: false,
+                endShift: '16:00'
+            }, _ => { this.calculateHours() });
         }
+    }
+
+    handleChangeDate = (date) => {
+        let endDate = moment(date).add(7, "days").format();
+
+        this.setState({
+            startDate: date,
+            endDate: endDate
+        });
+    }
+
+    handleChangeEndDate = (date) => {
+        let endDate = date;
+
+        this.setState({
+            endDate: endDate
+        });
     }
 
     render() {
@@ -558,162 +548,153 @@ class TimeCardForm extends Component {
 
         return (
             <div>
-                <Dialog maxWidth="md" open={this.props.openModal} onClose={this.props.handleCloseModal}>
-                    <DialogTitle style={{ padding: '0px' }}>
-                        <div className="modal-header">
-                            <h5 className="modal-title">Add Time +</h5>
-                        </div>
-                    </DialogTitle>
-                    <DialogContent className="tumi-noPadding pb-6">
-                        <form action="" onSubmit={this.handleSubmit}>
-                            <div className="container-fluid">
-                                <div className="">
-                                    <div className="">
-                                        <div className="">
-                                            <div className="">
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="">* Property</label>
-                                                        <select
-                                                            required
-                                                            name="IdEntity"
-                                                            className="form-control"
-                                                            id=""
-                                                            onChange={this.handleChange}
-                                                            value={this.state.IdEntity}
-                                                            disabled={!isAdmin}
-                                                            onBlur={this.handleValidate}
-                                                        >
-                                                            <option value={0}>Select a Property</option>
-                                                            {this.state.hotels.map((hotel) => (
-                                                                <option value={hotel.Id}>{hotel.Name}</option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="">* Employee</label>
-                                                        <select
-                                                            required
-                                                            name="employeeId"
-                                                            className="form-control"
-                                                            id=""
-                                                            onChange={this.handleChange}
-                                                            value={this.state.employeeId}
-                                                            disabled={!isAdmin}
-                                                            onBlur={this.handleValidate}
-                                                        >
-                                                            <option value={0}>Select a employee</option>
-                                                            {this.state.employees.map((employee) => (
-                                                                <option value={employee.id}>{employee.lastName + " " + employee.firstName}</option>
-                                                            ))}
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-3">
-                                                    </div>
-                                                    <div className="col-md-3">
-                                                        <span className="float-left">
-                                                            <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} />
-                                                            <label htmlFor="">&nbsp; Currently working</label>
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                    </div>
-                                                    <div className="col-md-3">
-                                                        <label htmlFor="">* Date In</label>
-                                                        <input
-                                                            required
-                                                            type="date"
-                                                            className="form-control"
-                                                            name="startDate"
-                                                            onChange={this.handleChange}
-                                                            value={this.state.startDate.substring(0, 10)}
-                                                            onBlur={this.handleValidate}
-                                                        />
-
-                                                        <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""}  Date Out</label>
-                                                        <input
-                                                            required={!this.state.statusTimeOut}
-                                                            type="date"
-                                                            className="form-control"
-                                                            name="endDate"
-                                                            disabled={this.state.statusTimeOut}
-                                                            onChange={this.handleChange}
-                                                            value={this.state.endDate.substring(0, 10)}
-                                                            onBlur={this.handleValidate}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-3">
-                                                        <label htmlFor="">* Time In</label>
-                                                        <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
-
-                                                        <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
-                                                        <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
-                                                    </div>
-
-
-                                                    <div className="col-md-3">
-                                                        <label htmlFor="">Total Hours</label>
-                                                        <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
-                                                    </div>
-
-
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="">* Job</label>
-                                                        <select
-                                                            required
-                                                            name="PositionRateId"
-                                                            className="form-control"
-                                                            id=""
-                                                            onChange={this.handleChange}
-                                                            value={this.state.PositionRateId}
-                                                            onBlur={this.handleValidate}
-                                                        >
-                                                            <option value="0">Select a Position</option>
-                                                            {this.state.positions.map((position) => (
-                                                                <option value={position.Id}>{position.Position} </option>
-
-                                                            ))}
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <label htmlFor="">Notes</label>
-                                                        <textarea
-                                                            onChange={this.handleChange}
-                                                            name="comment"
-                                                            className="form-control"
-                                                            id=""
-                                                            cols="30"
-                                                            rows="3"
-                                                            value={this.state.comment}
-                                                        />
-                                                    </div>
-                                                    <div className="col-md-9">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="tumi-buttonWrapper">
-                                        <button
-                                            type="button"
-                                            className="btn btn-danger float-right tumi-button"
-                                            onClick={this.handleCloseModal}
+                <Dialog fullScreen={false} maxWidth='sm' open={this.props.openModal} onClose={this.props.handleCloseModal}>
+                    <form action="" onSubmit={this.handleSubmit}>
+                        <DialogTitle style={{ padding: '0px' }}>
+                            <div className="modal-header">
+                                <h5 className="modal-title">Add Time +</h5>
+                            </div>
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <select
+                                            required
+                                            name="IdEntity"
+                                            className="form-control"
+                                            id=""
+                                            onChange={this.handleChange}
+                                            value={this.state.IdEntity}
+                                            disabled={!isAdmin}
+                                            onBlur={this.handleValidate}
                                         >
-                                            Cancel<i className="fas fa-ban ml-2" />
-                                        </button>
-
-                                        <button className="btn btn-success float-right tumi-button" type="submit">
-                                            Save {!this.state.saving && <i className="fas fa-save ml2" />}
-                                            {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
-                                        </button>
+                                            <option value={0}>Select a Property</option>
+                                            {this.state.hotels.map((hotel) => (
+                                                <option value={hotel.Id}>{hotel.Name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <select
+                                            required
+                                            name="employeeId"
+                                            className="form-control"
+                                            id=""
+                                            onChange={this.handleChange}
+                                            value={this.state.employeeId}
+                                            disabled={!isAdmin}
+                                            onBlur={this.handleValidate}
+                                        >
+                                            <option value={0}>Select a Employee</option>
+                                            {this.state.employees.map((employee) => (
+                                                <option value={employee.id}>{employee.lastName + " " + employee.firstName}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                        </form >
-                    </DialogContent >
+                        </DialogTitle>
+                        <DialogContent style={{ backgroundColor: "#f5f5f5" }}>
+                            <div className="card">
+                                <div className="container">
+                                    <div className="row">
+                                        <div className="col-md-4">
+                                            <div class="input-group flex-nowrap">
+                                                <DatePicker
+                                                    selected={this.state.startDate}
+                                                    onChange={this.handleChangeDate}
+                                                    placeholderText="Date In"
+                                                    id="datepickerIn"
+                                                />
+                                                <div class="input-group-append">
+                                                    <label class="input-group-text" id="addon-wrapping" for="datepickerIn">
+                                                        <i class="far fa-calendar"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <div class="input-group flex-nowrap">
+                                                <DatePicker
+                                                    selected={this.state.endDate}
+                                                    onChange={this.handleChangeEndDate}
+                                                    placeholderText="Date Out"
+                                                    id="datepickerOut"
+                                                    disabled={this.state.statusTimeOut}
+                                                />
+                                                <div class="input-group-append">
+                                                    <label class="input-group-text" id="addon-wrapping" for="datepickerOut">
+                                                        <i class="far fa-calendar"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <span className="float-left">
+                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} />
+                                                <label htmlFor="">&nbsp; Currently working</label>
+                                            </span>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="">* Time In</label>
+                                            <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
+                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="">Total Hours</label>
+                                            <input type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="">* Job</label>
+                                            <select
+                                                required
+                                                name="PositionRateId"
+                                                className="form-control"
+                                                id=""
+                                                onChange={this.handleChange}
+                                                value={this.state.PositionRateId}
+                                                onBlur={this.handleValidate}
+                                            >
+                                                <option value="0">Lunch Break</option>
+                                                {this.state.positions.map((position) => (
+                                                    <option value={position.Id}>{position.Position} </option>
+
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="">Notes</label>
+                                            <textarea
+                                                onChange={this.handleChange}
+                                                name="comment"
+                                                className="form-control"
+                                                id=""
+                                                cols="30"
+                                                rows="3"
+                                                value={this.state.comment}
+                                            />
+                                        </div>
+                                        <div className="col-md-12 text-right">
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger mr-1"
+                                                onClick={this.handleCloseModal}
+                                            >
+                                                Cancel<i className="fas fa-ban ml-2" />
+                                            </button>
+
+                                            <button className="btn btn-success" type="submit">
+                                                Save {!this.state.saving && <i className="fas fa-save ml2" />}
+                                                {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </DialogContent >
+                    </form >
                 </Dialog >
             </div >
         );
