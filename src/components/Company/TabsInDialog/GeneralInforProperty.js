@@ -1271,7 +1271,11 @@ class GeneralInfoProperty extends Component {
                     <div class="card">
                         <div class="card-header">
                             General Information
-                            <span className="float-right text-success font-weight-bold text-center">{this.state.parentDescription}<br />{this.state.operationManagerDescription}</span>
+                            <span className="float-right text-success font-weight-bold text-center">
+                            {this.state.parentDescription}
+                            <br />
+                            {this.state.operationManagerDescription? `Operation Manager: ${this.state.operationManagerDescription}`:'' }
+                            </span>
                         </div>
                         <div class="card-body">
                             <div className="row">
