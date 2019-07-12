@@ -46,7 +46,6 @@ class ApplicationInternal extends Component {
             employeeId: null,
             hasEmployee: false,
 
-            //TODO:(LF) Campos agregados
             numberId: null,
             employmentType: null,
             comment: null
@@ -143,7 +142,6 @@ class ApplicationInternal extends Component {
                     })
                     .then(({ data }) => {
                         let applicantData = data.applications[0];
-                        console.log(' datos provenientes de applicantdata', applicantData);
                         this.setState(
                             {
                                 birthDay:
@@ -262,7 +260,6 @@ class ApplicationInternal extends Component {
     }
 
     handleDatePickerChange = (name, date) => {
-        console.log('datos de datepicker', name, date); // TODO: (LF) QUITAR ESTE CONSOLE LOG
         this.setState({
             [name]: date
         });
@@ -276,28 +273,9 @@ class ApplicationInternal extends Component {
                     <div className="col-md-6">
 
                         <div className="Apply-container--application">
-                            {/* <form TODO:(LF) Quitar comentarios
-                                className="general-info-apply-form"
-                                id="general-info-form"
-                                autoComplete="off"
-                                onSubmit={this.handleSubmit}
-                            > */}
                                 <div className="applicant-card">
                                     <div className="applicant-card__header">
                                         <span className="applicant-card__title">{applyTabs[1].label}</span>
-                                        {/* {!this.state.editing && TODO:(LF) Quitar comentarios
-                                            <button
-                                                className="applicant-card__edit-button"
-                                                onClick={() => {
-                                                    this.setState({
-                                                        editing: true
-                                                    });
-                                                }}
-                                                disabled={this.state.searchigZipcode}
-                                            >
-                                                {spanishActions[1].label} <i className="far fa-edit" />
-                                            </button>
-                                        } */}
                                     </div>
                                     <br />
                                     <div className="card-body">
@@ -323,17 +301,6 @@ class ApplicationInternal extends Component {
                                                                 </label>
                                                             </div>
                                                         </div>
-                                                        {/* <input TODO:(LF) Quitar comentarios
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.birthDay}
-                                                            name="birthDay"
-                                                            type="date"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            min="0"
-                                                            maxLength="50"
-                                                            minLength="10"
-                                                        /> */}
                                                     </div>
 
                                                     <div className="col-md-6">
@@ -468,21 +435,12 @@ class ApplicationInternal extends Component {
                                                                 </label>
                                                             </div>
                                                         </div>
-                                                        {/* <input TODO:(LF) Quitar comentarios
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.expireDateId}
-                                                            name="expireDateId"
-                                                            type="date"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                        /> */}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            {/* </form> TODO:(LF) Quitar comentarios */}
                         </div>
                     </div>
                     <div className="col-md-6">
@@ -495,7 +453,6 @@ class ApplicationInternal extends Component {
                                 >
                                     <div className="applicant-card">
                                         <div className="applicant-card__header">
-                                            {/* <span className="applicant-card__title">{applyTabs[1].label}</span> TODO:(LF) Quitar linea comentada */}
                                             <span className="applicant-card__title"></span>
                                             {!this.state.editing &&
                                                 <button
@@ -570,14 +527,6 @@ class ApplicationInternal extends Component {
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                            {/* <input TODO:(LF) Quitar comentarios
-                                                                onChange={this.handleInputChange}
-                                                                value={this.state.hireDate}
-                                                                name="hireDate"
-                                                                type="date"
-                                                                className="form-control"
-                                                                disabled={!this.state.editing || !this.state.hasEmployee}
-                                                            /> */}
                                                         </div>
 
                                                         <div className="col-md-6">
@@ -599,14 +548,6 @@ class ApplicationInternal extends Component {
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                            {/* <input TODO:(LF) Quitar comentarios
-                                                                onChange={this.handleInputChange}
-                                                                value={this.state.startDate}
-                                                                name="startDate"
-                                                                type="date"
-                                                                className="form-control"
-                                                                disabled={!this.state.editing || !this.state.hasEmployee}
-                                                            /> */}
                                                         </div>
 
                                                         <div className="col-md-12">

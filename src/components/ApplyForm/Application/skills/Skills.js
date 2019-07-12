@@ -7,7 +7,6 @@ import CircularProgressLoading from '../../../material-ui/CircularProgressLoadin
 import withGlobalContent from '../../../Generic/Global';
 import SkillCard from '../../../ui-components/SkillCard/SkillCard';
 
-//const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`); TODO:(LF) Quitar codigo comentado
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
 const skillsLabels = require(`../languagesJSON/${localStorage.getItem('languageForm')}/skills`);
@@ -269,7 +268,6 @@ class Skills extends Component {
 					<div className="">
 						<div className="applicant-card">
 							<div className="applicant-card__header">
-								{/* TODO: (LF) Quitar codigo comentado <span className="applicant-card__title">{menuSpanish[5].label}</span> */}
 								<span className="applicant-card__title"></span>
 							</div>
 							<div className="card-body">
