@@ -143,6 +143,7 @@ class ApplicationInternal extends Component {
                     })
                     .then(({ data }) => {
                         let applicantData = data.applications[0];
+                        console.log(' datos provenientes de applicantdata', applicantData);
                         this.setState(
                             {
                                 birthDay:
@@ -455,7 +456,7 @@ class ApplicationInternal extends Component {
                                                         <div class="input-group flex-nowrap">
                                                             <DatePicker
                                                                 selected={this.state.expireDateId}
-                                                                onChange={this.handleInputChange}
+                                                                onChange={(date) => this.handleDatePickerChange('expireDateId', date)}
                                                                 placeholderText={formSpanish[15].label}
                                                                 name="expireDateId"
                                                                 id="expireDateId"
@@ -541,7 +542,7 @@ class ApplicationInternal extends Component {
                                                                 name="employmentType"
                                                                 id="employmentType"
                                                                 className="form-control"
-                                                                disabled={!this.state.editing}
+                                                                disabled={!this.state.editing || !this.state.hasEmployee}
                                                                 value={this.state.employmentType}
                                                                 onChange={this.handleInputChange}
                                                             >
@@ -557,7 +558,7 @@ class ApplicationInternal extends Component {
                                                             <div class="input-group flex-nowrap">
                                                                 <DatePicker
                                                                     selected={this.state.hireDate}
-                                                                    onChange={this.handleInputChange}
+                                                                    onChange={(date) => this.handleDatePickerChange('hireDate', date)}
                                                                     placeholderText={formSpanish[35].label}
                                                                     name="hireDate"
                                                                     id="hireDate"
@@ -586,7 +587,7 @@ class ApplicationInternal extends Component {
                                                             <div class="input-group flex-nowrap">
                                                                 <DatePicker
                                                                     selected={this.state.startDate}
-                                                                    onChange={this.handleInputChange}
+                                                                    onChange={(date) => this.handleDatePickerChange('startDate', date)}
                                                                     placeholderText={formSpanish[36].label}
                                                                     name="startDate"
                                                                     id="startDate"
