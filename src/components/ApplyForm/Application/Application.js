@@ -152,7 +152,8 @@ class Application extends Component {
      */
     InsertUpdateApplicationInformation = (id, saveIndependentContract = () => { }) => {
         this.setState({
-            insertDialogLoading: true
+            insertDialogLoading: true,
+            savingIndependentContract: true
         },
             () => {
                 this.props.client
@@ -206,7 +207,8 @@ class Application extends Component {
                             applicationId = data.updateApplication.id;
                         this.setState({
                             editing: false,
-                            insertDialogLoading: false
+                            insertDialogLoading: false,
+                            savingIndependentContract: false
                         }, () => {
                             let object = [];
                             this.state.positionsTags.map(item => {
@@ -223,7 +225,7 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
-                        this.setState(() => ({ insertDialogLoading: false }));
+                        this.setState(() => ({ insertDialogLoading: false, savingIndependentContract: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.props.handleOpenSnackbar(
                                 'error',
@@ -299,9 +301,9 @@ class Application extends Component {
                                 state: applicantData.state,
                                 zipCode: applicantData.zipCode,
                                 homePhone: applicantData.homePhone,
-                                homePhoneNumberValid: homePhoneNumberValid.length > 0,
+                                homePhoneNumberValid: true,
                                 cellPhone: applicantData.cellPhone,
-                                cellPhoneNumberValid: cellPhoneNumberValid.length > 0,
+                                cellPhoneNumberValid: true,
                                 birthDay:
                                     applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
                                 socialSecurityNumber: applicantData.socialSecurityNumber,
@@ -538,15 +540,18 @@ class Application extends Component {
         if (values.length == 0)
             this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
         else {
+            this.setState(() => ({
+                insertDialogLoading: true
+            }));
             this.props.client
                 .query({
                     query: GET_VALIDATE_APPLICATION_UNIQUENESS,
                     variables: {
-                        firstName,
-                        lastName,
-                        socialSecurityNumber,
-                        homePhone,
-                        cellPhone,
+                        firstName: firstName || '',
+                        lastName: lastName || lastName,
+                        socialSecurityNumber: socialSecurityNumber || '',
+                        homePhone: homePhone || '',
+                        cellPhone: cellPhone || '',
                         id: this.props.applicationId
                     },
                     fetchPolicy: 'no-cache'
@@ -555,12 +560,14 @@ class Application extends Component {
                     if (!validateApplicationUniqueness) {
                         if (socialSecurityNumber === null) {
                             this.setState(() => ({
-                                openSSNDialog: true
+                                openSSNDialog: true,
+                                insertDialogLoading: false
                             }))
                         } else {
                             if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
                                 this.setState(() => ({
-                                    openSSNDialog: true
+                                    openSSNDialog: true,
+                                    insertDialogLoading: false
                                 }))
                             else this.InsertUpdateApplicationInformation(this.props.applicationId);
                         }
@@ -572,6 +579,9 @@ class Application extends Component {
                             'bottom',
                             'right'
                         );
+                        this.setState(() => ({
+                            insertDialogLoading: false
+                        }));
                     }
                 })
                 .catch(error => {
@@ -581,6 +591,9 @@ class Application extends Component {
                         'bottom',
                         'right'
                     );
+                    this.setState(() => ({
+                        insertDialogLoading: false
+                    }));
                 })
 
         }
@@ -637,6 +650,9 @@ class Application extends Component {
                 inputs[i].disabled = true;
             }
 
+            this.setState(() => ({
+                savingIndependentContract: true
+            }))
             //Insert record into database
             this.props.client
                 .mutate({
@@ -653,11 +669,16 @@ class Application extends Component {
                         'bottom',
                         'right'
                     );
+                    this.setState(() => ({
+                        savingIndependentContract: false
+                    }))
                     this.handleVisivilityIndependentContractDialog(false)();
                     this.getApplicationById(id);
                 })
                 .catch(error => {
-                    console.log(error)
+                    this.setState(() => ({
+                        savingIndependentContract: false
+                    }))
                     // If there's an error show a snackbar with a error message
                     this.props.handleOpenSnackbar(
                         'error',
@@ -702,7 +723,7 @@ class Application extends Component {
                             this.setState(() => ({ openIndependentContractDialog: true, openSSNDialog: false }));
                         }}
                         className="applicant-card__save-button">
-                        Accept
+                        {spanishActions[4].label}
                     </button>
                 </div>
             </DialogActions>
@@ -786,6 +807,7 @@ class Application extends Component {
                     handleVisibility={this.handleVisivilityIndependentContractDialog}
                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                     onHandleSave={this.onHanldeSave}
+                    saving={this.state.savingIndependentContract}
                 />
 
                 <form
