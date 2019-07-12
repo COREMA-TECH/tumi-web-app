@@ -48,7 +48,10 @@ class IndependentContractModal extends Component {
                         >
                             {spanishActions[2].label}
                         </button>
-                        <button type="submit" className="applicant-card__save-button" > Accept </button>
+                        <button type="submit" className="applicant-card__save-button" >
+                            {spanishActions[4].label}
+                            {this.props.saving && <i class="fas fa-spinner fa-spin ml-1" />}
+                        </button>
 
                     </div>
                 </DialogActions>

@@ -62,11 +62,16 @@ class IndependentContract extends Component {
         var random = uuidv4();
         this.setState(() => ({ downloading: true }),
             () => {
+                let divContent = document.getElementById('independentContractPDF')
+                let divClone = divContent.cloneNode(true);
+
+                divClone.style.zoom = '70%';
+
                 this.props.client
                     .query({
                         query: CREATE_DOCUMENTS_PDF_QUERY,
                         variables: {
-                            contentHTML: document.getElementById('independentContractPDF').innerHTML,
+                            contentHTML: divClone.innerHTML,
                             Name: "independentContract-" + random + this.state.applicant
                         },
                         fetchPolicy: 'no-cache'
