@@ -545,10 +545,10 @@ class General extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                    DeparmentTitle: data.applicationEmployees[0].Employees.Deparment ? data.applicationEmployees[0].Employees.Deparment.DisplayLabel : ''
+                    DeparmentTitle: (data.applicationEmployees[0] && data.applicationEmployees[0].Employees && data.applicationEmployees[0].Employees.Deparment) ? data.applicationEmployees[0].Employees.Deparment.DisplayLabel : ''
                 })
             })
-            .catch(error => { console.log("Informacion de las error  ", error) })
+            .catch(error => { console.log(error) })
     };
 
     getHotels = () => {

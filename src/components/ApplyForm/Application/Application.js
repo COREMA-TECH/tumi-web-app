@@ -201,6 +201,9 @@ class Application extends Component {
                     .then(({ data }) => {
                         let applicationId;
                         if (id == 0) {
+                            //Application saved, it is now safe to check the other tabs
+                            this.props.enableTabs();
+
                             this.props.setApplicantId(data.addApplication.id);
                             applicationId = data.addApplication.id;
                         } else
@@ -336,6 +339,9 @@ class Application extends Component {
                                 hasIndependentContract: applicantData.independentContract != null
                             },
                             () => {
+                                //Enable tabs
+                                this.props.enableTabs();
+
 
                                 if (this.state.hasIndependentContract)
                                     this.props.handleContract();
