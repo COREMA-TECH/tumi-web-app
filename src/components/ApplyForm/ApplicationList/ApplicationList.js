@@ -38,6 +38,7 @@ class ApplicationList extends Component {
 		super(props);
 
 		this.state = {
+			applications: [],
 			loadingContracts: false,
 			data: [],
 			filterText: '',
@@ -85,8 +86,8 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-		query applicationsByUser($idUsers: Int,$Id_Department: Int, $idEntity: Int, $isActive:[Boolean] ){
-			applicationsByUser(idUsers: $idUsers, Id_Department: $Id_Department, idEntity: $idEntity, isActive: $isActive) {
+		query applicationsByUser($idUsers: Int,$Id_Deparment: Int, $idEntity: Int, $isActive:[Boolean] ){
+			applicationsByUser(idUsers: $idUsers, Id_Deparment: $Id_Deparment, idEntity: $idEntity, isActive: $isActive) {
 				id
 				firstName
 				middleName
@@ -151,8 +152,8 @@ class ApplicationList extends Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Application Deleted!');
-						this.setState({ opendialog: false, loadingConfirm: false });
-						this.setState({ state: this.state });
+						this.setState({ opendialog: false, loadingConfirm: false }, () => this.getApplications());
+						//this.setState({ state: this.state });
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Position and Rates: ' + error);
@@ -180,13 +181,14 @@ class ApplicationList extends Component {
 			departments: prevState.property.value != property.value ? [] : prevState.departments
 		}), () => {
 			this.getDepartments();
+			this.getApplications();
 		});
 	}
 	handleDepartmentChange = (department) => {
-		this.setState(() => ({ department }));
+		this.setState(() => ({ department }), () => this.getApplications());
 	}
 	handleStatusChange = (statu) => {
-		this.setState(() => ({ statu }));
+		this.setState(() => ({ statu }), () => this.getApplications());
 	}
 
 	getProperties = () => {
@@ -255,14 +257,67 @@ class ApplicationList extends Component {
 		})
 	}
 
+	getApplications = () => {
+		this.setState(() => {
+			return { loading: true, applications: [] }
+		}, () => {
+			console.log('Entrando a getaplications'); // TODO: (LF) QUITAR CONSOLE LOG
+			let property = this.state.property.value;
+			let department = this.state.department.value;
+			let variables = {
+				idEntity: property ? property : null,
+				idUsers: localStorage.getItem('isEmployee') == 'true' ? localStorage.getItem('LoginId') : null
+			};
+
+			if(!!department)
+				variables = { ...variables, Id_Deparment: department };
+
+			switch (this.state.statu.value) {
+				case 1: 
+					variables = { ...variables, isActive: [true] };
+					break;
+				case 2: 
+					variables = { ...variables, isActive: [false] };
+					break;
+				case 3: 
+					variables = { ...variables, isActive: [true, false] };
+					break;
+				default:
+					break;
+			}
+
+			console.log('Variables .. ', variables); // TODO: (LF) QUITAR CONSOLE LOG
+
+			this.props.client
+				.query({
+					query: this.GET_APPLICATION_QUERY,
+					variables,
+					fetchPolicy: 'no-cache'
+				})
+				.then(({ data }) => {
+					console.log('Datos traidos desde la consulta', data.applicationsByUser); // TODO: (LF) QUITAR CONSOLE LOG
+					this.setState(() => ({
+						applications: data.applicationsByUser,
+						loading: false
+					}));
+				})
+				.catch(error => {
+					this.setState(() => ({ loading: false }));
+				});
+		});
+
+	}
+
 	componentWillMount() {
 		this.getProperties();
 		this.getDepartments();
+		this.getApplications();
 	}
 
 	render() {
 		var loading = this.state.loadingConfirm || this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
 		var variables = {};
+		let {applications} = this.state;
 
 		/**
 		 * Start - Define variables for application query
@@ -273,7 +328,7 @@ class ApplicationList extends Component {
 		if (this.state.property.value != '')
 			variables = { ...variables, idEntity: this.state.property.value };
 		if (this.state.department.value != '')
-			variables = { ...variables, Id_Department: this.state.department.value };
+			variables = { ...variables, Id_Deparment: this.state.department.value };
 		if (this.state.statu.value != '') {
 			if (this.state.statu.value == 1) { variables = { ...variables, isActive: [true] }; }
 			if (this.state.statu.value == 2) { variables = { ...variables, isActive: [false] }; }
@@ -345,6 +400,67 @@ class ApplicationList extends Component {
 			</div>
 		);
 
+		let renderContent = () => {
+			if(this.state.loading && !this.state.opendialog) return <LinearProgress />
+
+			let {applications} = this.state;
+			// if (applications != null && applications.length > 0) {
+				let dataApplication =
+					this.state.filterText === ''
+						? applications
+						: applications.filter((_, i) => {
+							if (
+								(_.firstName +
+									_.middleName +
+									_.lastName +
+									(_.position ? _.position.position.Position.trim() : 'Open Position') +
+									(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
+									(_.position ? _.position.BusinessCompany.Name : '') +
+									(_.recruiter ? _.recruiter.Full_Name : '') +
+									(_.user ? _.user.Full_Name : '') +
+									_.emailAddress)
+									.toLocaleLowerCase()
+									.indexOf(this.state.filterText.toLocaleLowerCase()) > -1
+							) {
+								return true;
+							}
+						});
+
+				return (
+					<div className="row pt-0">
+						{localStorage.getItem('isEmployee') == 'false' &&
+							<div className="col-md-12">
+								<button
+									className="btn btn-success float-right"
+									onClick={() => {
+										this.redirectToCreateApplication();
+									}}
+								>
+									Add Application
+										</button>
+							</div>}
+						<div className="col-md-12">
+							<div className="card">
+								<ApplicationTable
+									data={dataApplication}
+									onDeleteHandler={this.onDeleteHandler}
+								/>
+							</div>
+						</div>
+					</div>
+				);
+			// }else {
+			// 	return (
+			// 		<NothingToDisplay
+			// 			title="Oops!"
+			// 			message={'There are no applications'}
+			// 			type="Error-success"
+			// 			icon="wow"
+			// 		/>
+			// 	);
+			// }
+		}
+
 		return (
 			<div className="main-application">
 				<AlertDialogSlide
@@ -356,9 +472,12 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query fetchPolicy="network-only" query={this.GET_APPLICATION_QUERY} variables={variables} >
-						{({ loading, error, data, refetch, networkStatus }) => {
+					{ renderContent() }
 
+					{/* TODO: (LF) QUITAR CODIGO COMENTADO */}
+					{/* <Query fetchPolicy="network-only" query={this.GET_APPLICATION_QUERY} variables={variables} >
+						{({ loading, error, data, refetch, networkStatus }) => {
+console.log('mostrando variables ', variables); // TODO: (LF) QUITAR ESTE CONSOLE LOG
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
 							}
@@ -429,7 +548,7 @@ class ApplicationList extends Component {
 								);
 							}
 						}}
-					</Query>
+					</Query> */}
 				</div>
 			</div>
 		);
