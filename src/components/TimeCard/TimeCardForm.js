@@ -94,7 +94,8 @@ class TimeCardForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.item && nextProps.openModal) {
+        console.log(nextProps.item)
+        if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {
             this.setState(
                 {
                     id: nextProps.item.clockInId,
@@ -156,10 +157,9 @@ class TimeCardForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        console.log(this.state.PositionRateId)
         if (
             this.state.IdEntity == null ||
-            this.state.PositionRateId == null ||
+            this.state.PositionRateId === null ||
             this.state.startDate == '' ||
             this.state.endDate == ''
         ) {
@@ -171,7 +171,7 @@ class TimeCardForm extends Component {
                 //if (this.state.PositionRateId == 0)
                 let mark = {
                     entityId: this.state.IdEntity === 0 ? 180 : this.state.IdEntity,
-                    typeMarkedId: this.state.IdEntity === 0 ? 30572 : 30570,
+                    typeMarkedId: this.state.PositionRateId === 0 ? 30572 : 30570,
                     markedDate: this.state.startDate,
                     markedTime: this.state.shift,
                     imageMarked: "",
@@ -325,7 +325,7 @@ class TimeCardForm extends Component {
         event.preventDefault();
         if (
             this.state.IdEntity == 0 ||
-            this.state.PositionRateId == 0 ||
+            this.state.PositionRateId == null ||
             this.state.contactId == 0 ||
             this.state.quantity == '' ||
             this.state.quantity == 0 ||
@@ -636,11 +636,11 @@ class TimeCardForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">* Time In</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                            <Datetime dateFormat={false} value={this.state.shift ? moment(this.state.shift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
-                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
+                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">Total Hours</label>
