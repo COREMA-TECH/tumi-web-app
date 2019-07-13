@@ -235,6 +235,7 @@ class Employees extends Component {
         e.preventDefault();
         e.stopPropagation();
 
+        this.setState(() => ({ progressNewEmployee: true }));
         // Build the employee object
         const datos = [], hasError = false, dataToValidate = [];
         this.state.rowsInput.map(index => {
@@ -272,6 +273,7 @@ class Employees extends Component {
             .then(({ data: { validateEmployeeUniqueness } }) => {
                 if (validateEmployeeUniqueness.filter(_ => { return _.isUnique === false }).length > 0) {
                     this.props.handleOpenSnackbar("warning", "Some Employees already exist into the system, please delete them to continue saving info");
+                    this.setState(() => ({ progressNewEmployee: false }));
                     validateEmployeeUniqueness.map(_ => {
                         this.setState(() => ({
                             [`isUnique${_.index}`]: _.isUnique
@@ -1436,7 +1438,6 @@ class Employees extends Component {
                                 return (
                                     <EmployeeInputRow
                                         newRow={this.addNewRow}
-                                        isUnique={this.state[`isUnique${index}`]}
                                         index={index}
                                         lastIndex={this.state.rowsInput[this.state.rowsInput.length - 1]}
                                         onchange={this.handleChange}
