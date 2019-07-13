@@ -1395,7 +1395,8 @@ class VerticalLinearStepper extends Component {
                         () => {
 
 
-                            document.getElementById('skill-form').reset();
+                            const skillForm = document.getElementById('skill-form');
+                            skillForm ? skillForm.reset() : null;
                         }
                     );
                 }}

@@ -82,7 +82,8 @@ class CustomizedTabs extends React.Component {
         applicationId: null,
         openSignature: false,
         applicationStatus: {},
-        independentContract: false
+        independentContract: false,
+        disableTabs: true
     };
 
     handleChange = (event, value) => {
@@ -143,7 +144,7 @@ class CustomizedTabs extends React.Component {
     getTabContent = (step, ) => {
         switch (step) {
             case 0:
-                return <ApplicationInfo applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId} />;
+                return <ApplicationInfo enableTabs={this.enableTabs} applicationId={this.state.applicationId} handleContract={this.handleContract} setApplicantId={this.setApplicantId} />;
             case 1:
                 return <ApplicationInternal applicationId={this.state.applicationId} />
             case 2:
@@ -172,6 +173,12 @@ class CustomizedTabs extends React.Component {
         }
     };
 
+    enableTabs = (enable = false) => {
+        this.setState(_ => ({
+            disableTabs: enable
+        }));
+    }
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
@@ -195,57 +202,68 @@ class CustomizedTabs extends React.Component {
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[1].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[11].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[2].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[3].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantDisclosure ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[4].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantConductCode ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[5].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantHarassmentPolicy ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[6].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantWorkerCompensation ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[7].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantI9 ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[8].label}
+                            disabled={this.state.disableTabs}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[10].label}
+                            disabled={this.state.disableTabs}
                         />
 
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[9].label}
+                            disabled={this.state.disableTabs}
                         />
                         {this.state.independentContract ? <Tab
                             disableRipple
