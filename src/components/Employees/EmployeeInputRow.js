@@ -85,26 +85,26 @@ class EmployeeInputRow extends Component {
                 contactTitle: ''
             }
         }, () => {
-            if(!!id && !!this.state.hotelEdit){
+            if (!!id && !!this.state.hotelEdit) {
                 this.props.client
-                .query({
-                    query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
-                    variables: { 
-                        Id_Entity: this.state.hotelEdit,
-                        Id_Department: id 
-                    },
-                    fetchPolicy: 'no-cache'
-                })
-                .then((data) => {
-                    if (data.data.getposition != null) {
-                        this.setState({
-                            arraytitles: data.data.getposition,
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.log('Error fetchTitles: ', error);
-                });
+                    .query({
+                        query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
+                        variables: {
+                            Id_Entity: this.state.hotelEdit,
+                            Id_Department: id
+                        },
+                        fetchPolicy: 'no-cache'
+                    })
+                    .then((data) => {
+                        if (data.data.getposition != null) {
+                            this.setState({
+                                arraytitles: data.data.getposition,
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('Error fetchTitles: ', error);
+                    });
             }
         })
     };
@@ -115,32 +115,32 @@ class EmployeeInputRow extends Component {
 
     fetchDepartments = (id) => {
         this.setState(() => {
-            return { 
+            return {
                 arrayDepartment: [],
                 department: '',
                 contactTitle: ''
             }
         }, () => {
-            if(!!id){
+            if (!!id) {
                 this.props.client
-                .query({
-                    query: GET_DEPARTMENTS_QUERY,
-                    variables: { Id_Entity: id },
-                    fetchPolicy: 'no-cache'
-                })
-                .then((data) => {
-                    if (data.data.getcatalogitem != null) {
-                        this.setState({
-                            arrayDepartment: data.data.getcatalogitem
-                        });
-                    }
-                })
-                .catch((error) => {
-                    console.log('Error fetchDepartment: ', error);
-                });
+                    .query({
+                        query: GET_DEPARTMENTS_QUERY,
+                        variables: { Id_Entity: id },
+                        fetchPolicy: 'no-cache'
+                    })
+                    .then((data) => {
+                        if (data.data.getcatalogitem != null) {
+                            this.setState({
+                                arrayDepartment: data.data.getcatalogitem
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('Error fetchDepartment: ', error);
+                    });
             }
         });
-        
+
     };
 
     handleChangeDate = (hireDate) => (date) => {
@@ -162,11 +162,13 @@ class EmployeeInputRow extends Component {
         const idEntity = `idEntity${this.props.index}`;
         const hireDate = `hireDate${this.props.index}`;
         const lastRow = this.props.index === this.props.lastIndex;
+        const isUnique = `isUnique${this.props.index}`;
+
         return (
 
             <div className="row Employees-row position-relative">
                 <div className="col">
-                    {this.props.isUnique === false ?
+                    {this.props[isUnique] === false ?
                         <i className="fas fa-exclamation-triangle text-danger" style={{ position: 'absolute', left: '-25px', top: '59%' }}></i> :
                         <React.Fragment></React.Fragment>}
                     <label htmlFor="" >* First Name</label>

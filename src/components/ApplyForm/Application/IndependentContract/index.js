@@ -65,13 +65,11 @@ class IndependentContract extends Component {
                 let divContent = document.getElementById('independentContractPDF')
                 let divClone = divContent.cloneNode(true);
 
-                divClone.style.zoom = '70%';
-
                 this.props.client
                     .query({
                         query: CREATE_DOCUMENTS_PDF_QUERY,
                         variables: {
-                            contentHTML: divClone.innerHTML,
+                            contentHTML: `<html style="zoom: 70%;">${divClone.innerHTML}</html>`,
                             Name: "independentContract-" + random + this.state.applicant
                         },
                         fetchPolicy: 'no-cache'
