@@ -20,7 +20,8 @@ class PunchesReportConsolidatedFilter extends Component {
         endDate: "",
         employee: "",
         property: { value: "", label: "Property (All)" },
-        department: this.props.department
+        department: this.props.department,
+        item: {}
     }
 
     constructor(props) {
@@ -104,7 +105,7 @@ class PunchesReportConsolidatedFilter extends Component {
     };
 
     handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+        this.setState({ openModal: true, item: {} });
     };
 
     componentWillReceiveProps(nextProps) {
@@ -116,6 +117,8 @@ class PunchesReportConsolidatedFilter extends Component {
             this.setState(() => ({ department: nextProps.department }));
         if (this.props.editModal != nextProps.editModal)
             this.setState(_ => ({ openModal: true }));
+        if (this.props.item !== nextProps.item)
+            this.setState(_ => { return { item: nextProps.item } });
     }
 
     getReportCSV = () => {
@@ -258,7 +261,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         onEditHandler={this.onEditHandler}
                         toggleRefresh={this.toggleRefresh}
                         handleCloseModal={this.handleCloseModal}
-                        item={this.props.item}
+                        item={this.state.item}
                     />
                 </div>
             </div>

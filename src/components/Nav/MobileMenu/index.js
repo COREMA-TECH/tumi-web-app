@@ -356,6 +356,14 @@ class MobileMenu extends Component {
                                     <span>Reports</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
+                                    {items.map((item, i) => {
+                                        return item.Forms.Value == "/home/schedules-vs-worked" ?
+                                            <li key={i} className="SubMenu-item">
+                                                <a className="SubMenu-link" href="/home/schedules-vs-worked">
+                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Schedules Hours vs Worked Hours
+                                                </a>
+                                            </li> : ""
+                                    })}
                                 </ul>
                             </li> : ''
                     })}
