@@ -10,13 +10,14 @@ export const GET_OP_MANAGER = gql`
             Id
             Code_User
             Full_Name
+            IdRegion
         }
     }
 `;
 
 export const GET_PROPERTIES_QUERY = gql`
-  query hotels {
-    getbusinesscompanies( IsActive: 1, Contract_Status: "'C'", Id_Parent : -1) {
+  query hotels($Region: Int) {
+    getbusinesscompanies( IsActive: 1, Contract_Status: "'C'", Id_Parent : -1, Region: $Region) {
       Id
       Id_Parent
       Code
