@@ -54,6 +54,7 @@ import TransactionLogs from '../../TransactionLogs';
 import EmployeesProperties from '../../EmployeesProperties';
 import EmployeesPropertiesConsolidated from '../../EmployeesProperties/TableConsolidated';
 import Visit from '../../Visit';
+import SchedulesvsWorkedHours from '../../SchedulesvsWorkedHours';
 
 class Container extends Component {
 	constructor(props) {
@@ -193,6 +194,7 @@ class Container extends Component {
 				<Route exact path="/home/active-report-consolidated" component={EmployeesPropertiesConsolidated} />		
 				<Route exact path="/home/hotel-manager-report" component={EmployeesPropertiesConsolidated} />		
         		<Route exact path="/home/visit" component={Visit} />
+				<Route exact path="/home/schedules-vs-worked" component={SchedulesvsWorkedHours} />
 			</div>
 		);
 	}
