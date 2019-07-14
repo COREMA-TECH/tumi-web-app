@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import Select from 'react-select';
 import { withStyles } from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "Generic/Global";
@@ -60,6 +61,10 @@ const styles = theme => ({
     }
 });
 
+const DEFAULT_HOTEL_OPT = { value: null, label: 'Select a Hotel' };
+const DEFAULT_DEPARTMENT_OPT = { value: null, label: 'Select a Department' };
+const DEFAULT_TITLE_OPT = { value: null, label: 'Select a Position' };
+
 class EmployeeInputRow extends Component {
     constructor(props) {
         super(props);
@@ -70,8 +75,9 @@ class EmployeeInputRow extends Component {
             emailAddress: '',
             phoneNumber: '',
 
-            department: "",
-            contactTitle: "",
+            hotelEdit: DEFAULT_HOTEL_OPT,
+            department: DEFAULT_DEPARTMENT_OPT,
+            contactTitle: DEFAULT_TITLE_OPT,
 
             arrayDepartment: [],
             arraytitles: []
@@ -82,15 +88,15 @@ class EmployeeInputRow extends Component {
         this.setState(() => {
             return {
                 arraytitles: [],
-                contactTitle: ''
+                contactTitle: DEFAULT_TITLE_OPT
             }
         }, () => {
-            if (!!id && !!this.state.hotelEdit) {
+            if (!!id && !!this.state.hotelEdit.value) {
                 this.props.client
                     .query({
                         query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
                         variables: {
-                            Id_Entity: this.state.hotelEdit,
+                            Id_Entity: this.state.hotelEdit.value,
                             Id_Department: id
                         },
                         fetchPolicy: 'no-cache'
@@ -98,7 +104,9 @@ class EmployeeInputRow extends Component {
                     .then((data) => {
                         if (data.data.getposition != null) {
                             this.setState({
-                                arraytitles: data.data.getposition,
+                                arraytitles: data.data.getposition.map(t => {
+                                    return { value: t.Id, label: t.Position ? t.Position.trim() : '' }
+                                })
                             });
                         }
                     })
@@ -117,8 +125,8 @@ class EmployeeInputRow extends Component {
         this.setState(() => {
             return {
                 arrayDepartment: [],
-                department: '',
-                contactTitle: ''
+                department: DEFAULT_DEPARTMENT_OPT,
+                contactTitle: DEFAULT_TITLE_OPT
             }
         }, () => {
             if (!!id) {
@@ -131,7 +139,9 @@ class EmployeeInputRow extends Component {
                     .then((data) => {
                         if (data.data.getcatalogitem != null) {
                             this.setState({
-                                arrayDepartment: data.data.getcatalogitem
+                                arrayDepartment: data.data.getcatalogitem.map(d => {
+                                    return { value: d.Id, label: d.Name ? d.Name.trim() : '' }
+                                })
                             });
                         }
                     })
@@ -151,6 +161,31 @@ class EmployeeInputRow extends Component {
         this.setState(prevState => {
             return { hireDateSelected: _date }
         })
+    }
+
+    handleOnChangeHotel = (opt, idEntity, department, contactTitle) => {
+        this.setState({
+            hotelEdit: opt
+        }, () => this.fetchDepartments(opt.value));
+
+        this.props.onchange(idEntity, opt.value);
+        this.props.onchange(department, null);
+        this.props.onchange(contactTitle, null);
+    }
+
+    handleOnChangeDepartment = (opt, department, contactTitle) => {
+        this.setState({
+            department: opt
+        }, () => this.fetchTitles(opt.value));
+
+        this.props.onchange(department, opt.value);
+        this.props.onchange(contactTitle, null);
+    }
+
+    handleOnChangeTitle = (opt, contactTitle) => {
+        this.setState({
+            contactTitle: opt
+        }, () => this.props.onchange(contactTitle, opt.value));
     }
 
     render() {
@@ -243,79 +278,34 @@ class EmployeeInputRow extends Component {
                 </div>
                 <div className="col">
                     <label htmlFor="">Hotel</label>
-                    <select
-                        className="form-control"
-                        onChange={(e) => {
-                            this.setState({
-                                hotelEdit: e.target.value
-                            });
-
-                            this.props.onchange(idEntity, e.target.value);
-                            this.props.onchange(department, null);
-                            this.props.onchange(contactTitle, null);
-
-                            this.fetchDepartments(e.target.value);
-                        }}
-                        value={this.state.hotelEdit || ''}
-                    >
-                        <option value="null">Select option</option>
-                        {
-                            this.props.hotels.map(item => {
-                                return (
-                                    <option value={item.Id}>{item.Name.trim()}</option>
-                                )
-                            })
-                        }
-                    </select>
+                    <Select
+                        options={this.props.hotels}
+                        value={this.state.hotelEdit}
+                        onChange={(opt) => this.handleOnChangeHotel(opt, idEntity, department, contactTitle)}
+                        closeMenuOnSelect={true}
+                    />
                 </div>
                 <div className="col">
                     <label htmlFor="" >Department</label>
-                    <select
-                        value={this.state.department || ''}
+                    <Select
                         name="department"
                         id="department"
-                        className="form-control"
-                        onChange={(e) => {
-                            this.setState({
-                                department: e.target.value
-                            }, () => {
-                                this.fetchTitles(this.state.department)
-                            });
-                            this.props.onchange(department, e.target.value);
-                            this.props.onchange(contactTitle, null);
-                        }}
-                    >
-                        <option value="">Select option</option>
-                        {
-                            this.state.arrayDepartment.map(item => (
-                                <option value={item.Id}>{item.Name.trim()}</option>
-                            ))
-                        }
-                    </select>
+                        options={this.state.arrayDepartment}
+                        value={this.state.department}
+                        onChange={(opt) => this.handleOnChangeDepartment(opt, department, contactTitle)}
+                        closeMenuOnSelect={true}
+                    />
                 </div>
                 <div className="col">
                     <label htmlFor="" >Position</label>
-                    <select
+                    <Select
                         id="contactTitle"
                         name="contactTitle"
-                        className="form-control"
-                        value={this.state.contactTitle || ''}
-                        onChange={(e) => {
-                            this.setState({
-                                contactTitle: e.target.value
-                            });
-                            this.props.onchange(contactTitle, e.target.value);
-                        }}
-                    >
-                        <option value="">Select option</option>
-                        {
-                            this.state.arraytitles.map(item => {
-                                return (
-                                    <option value={item.Id}>{item.Position.trim()}</option>
-                                )
-                            })
-                        }
-                    </select>
+                        options={this.state.arraytitles}
+                        value={this.state.contactTitle}
+                        onChange={(opt) => this.handleOnChangeTitle(opt, contactTitle)}
+                        closeMenuOnSelect={true}
+                    />
                 </div>
 
                 <button class="float-right btn btn-link mt-4" title="Delete row" onClick={this.props.onDeleteRowHandler} disabled={this.props.index === this.props.lastIndex && this.props.lastIndex}><i className="fa fa-times text-dark" /></button>

@@ -10,6 +10,7 @@ import withApollo from "react-apollo/withApollo";
 import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, INSERT_USER_QUERY, INSERT_CONTACT } from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
+import Select from 'react-select';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 import { Query } from "react-apollo";
@@ -30,6 +31,10 @@ import { GET_LANGUAGES_QUERY } from "../ApplyForm-Recruiter/Queries";
 import DatePicker from "react-datepicker";
 import moment from 'moment';
 const uuidv4 = require('uuid/v4');
+
+const DEFAULT_HOTEL_OPT = { value: null, label: 'Select a hotel'};
+const DEFAULT_DEPARTMENT_OPT = { value: null, label: 'Select a department'};
+const DEFAULT_TITLE_OPT = { value: null, label: 'Select a position'};
 
 const styles = theme => ({
     container: {
@@ -117,6 +122,11 @@ class Employees extends Component {
             hotels: [],
             departments: [],
             titles: [],
+            hotelEdit: DEFAULT_HOTEL_OPT,
+            departmentEdit: DEFAULT_DEPARTMENT_OPT,
+            contactTitleEdit: DEFAULT_TITLE_OPT,
+            roles: [],
+            languages: [],
             ...this.DEFAULT_STATE
         };
     }
@@ -219,8 +229,8 @@ class Employees extends Component {
             lastNameEdit: "",
             hireDateEdit: "",
             numberEdit: "",
-            departmentEdit: "",
-            contactTitleEdit: "",
+            departmentEdit: DEFAULT_DEPARTMENT_OPT,
+            contactTitleEdit: DEFAULT_TITLE_OPT,
             idEntityEdit: "",
             isUnique: undefined
         });
@@ -338,9 +348,9 @@ class Employees extends Component {
                                         lastName: form.elements[1].value,
                                         hireDate: form.elements[2].value,
                                         mobileNumber: form.elements[3].value,
-                                        Id_Deparment: parseInt(this.state.departmentEdit),
-                                        Contact_Title: parseInt(this.state.contactTitleEdit),
-                                        idEntity: parseInt(this.state.hotelEdit),
+                                        Id_Deparment: parseInt(this.state.departmentEdit.value),
+                                        Contact_Title: parseInt(this.state.contactTitleEdit.value),
+                                        idEntity: parseInt(this.state.hotelEdit.value),
                                         idRole: 1,
                                         isActive: true,
                                         userCreated: 1,
@@ -588,7 +598,9 @@ class Employees extends Component {
                 })
                 .then(({ data }) => {
                     this.setState({
-                        hotels: data.getbusinesscompanies
+                        hotels: data.getbusinesscompanies.map(h => {
+                            return { value: h.Id, label: h.Name ? h.Name.trim() : '' }
+                        })
                     }, () => {
                         this.fetchContacts()
                     });
@@ -618,8 +630,10 @@ class Employees extends Component {
                     .then((data) => {
                         if (data.data.getcatalogitem != null) {
                             this.setState({
-                                departments: data.data.getcatalogitem
-                            }, () => this.fetchTitles(this.state.departmentEdit));
+                                departments: data.data.getcatalogitem.map(d => {
+                                    return { value: d.Id, label: d.Name ? d.Name.trim() : '' }
+                                })
+                            }, () => this.fetchTitles(this.state.departmentEdit && this.state.departmentEdit.value));
                         }
                     })
                     .catch((error) => {
@@ -784,12 +798,12 @@ class Employees extends Component {
                 titles: []
             }
         }, () => {
-            if (!!id && !!this.state.hotelEdit) {
+            if (!!id && !!this.state.hotelEdit.value) {
                 this.props.client
                     .query({
                         query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
                         variables: {
-                            Id_Entity: this.state.hotelEdit,
+                            Id_Entity: this.state.hotelEdit.value,
                             Id_Department: id
                         },
                         fetchPolicy: 'no-cache'
@@ -797,7 +811,9 @@ class Employees extends Component {
                     .then((data) => {
                         if (data.data.getposition != null) {
                             this.setState({
-                                titles: data.data.getposition,
+                                titles: data.data.getposition.map(t => {
+                                    return { value: t.Id, label: t.Position ? t.Position.trim() : '' }
+                                })
                             });
                         }
                     })
@@ -1217,6 +1233,27 @@ class Employees extends Component {
         }))
     }
 
+    handleOnChangeHotel = (opt) => {
+        this.setState({
+            hotelEdit: opt,
+            departmentEdit: DEFAULT_DEPARTMENT_OPT,
+            contactTitleEdit: DEFAULT_TITLE_OPT
+        }, () => this.fetchDepartments(opt.value));        
+    }
+
+    handleOnChangeDepartment = (opt) => {
+        this.setState({
+            departmentEdit: opt,
+            contactTitleEdit: DEFAULT_TITLE_OPT
+        }, () => this.fetchTitles(opt.value));
+    }
+
+    handleOnChangeTitle = (opt) => {
+        this.setState({
+            contactTitleEdit: opt
+        });
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -1599,74 +1636,31 @@ class Employees extends Component {
                                     </div>
                                     <div className="col">
                                         <label htmlFor="">Hotel</label>
-                                        <select
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    hotelEdit: e.target.value,
-                                                    departmentEdit: null,
-                                                    contactTitleEdit: null
-                                                });
-
-                                                this.fetchDepartments(e.target.value);
-                                            }}
+                                        <Select
+                                            options={this.state.hotels}
                                             value={this.state.hotelEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-                                                this.state.hotels.map(item => {
-                                                    return (
-                                                        <option value={item.Id}>{item.Name.trim()}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
+                                            onChange={this.handleOnChangeHotel}
+                                            closeMenuOnSelect={true}
+                                        />
+                                        
                                     </div>
                                     <div className="col">
                                         <label htmlFor="">Department</label>
-                                        <select
-                                            name="departmentEmployee"
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    departmentEdit: e.target.value,
-                                                    contactTitleEdit: null
-                                                });
-
-                                                this.fetchTitles(e.target.value);
-                                            }}
+                                        <Select
+                                            options={this.state.departments}
                                             value={this.state.departmentEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-                                                this.state.departments.map(item => {
-                                                    return (
-                                                        <option value={item.Id}>{item.Name.trim()}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
+                                            onChange={this.handleOnChangeDepartment}
+                                            closeMenuOnSelect={true}
+                                        />
                                     </div>
                                     <div className="col">
                                         <label htmlFor="">Position</label>
-                                        <select
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    contactTitleEdit: e.target.value
-                                                })
-                                            }}
+                                        <Select
+                                            options={this.state.titles}
                                             value={this.state.contactTitleEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-                                                this.state.titles.map(item => {
-                                                    return (
-                                                        <option value={item.Id}>{item.Position.trim()}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
+                                            onChange={this.handleOnChangeTitle}
+                                            closeMenuOnSelect={true}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -1713,19 +1707,24 @@ class Employees extends Component {
                                     }}
                                     update={(id, row) => {
                                         this.updateEmployeeById(id);
-                                        this.setState({
-                                            firstNameEdit: row.firstName,
-                                            lastNameEdit: row.lastName,
-                                            hireDateEdit: row.hireDate ? moment.utc(row.hireDate).format() : '',
-                                            numberEdit: row.mobileNumber,
-                                            departmentEdit: row.Id_Deparment,
-                                            contactTitleEdit: row.Contact_Title,
-                                            hotelEdit: row.idEntity
+                                        this.setState(() => {
+                                            let departmentEdit = this.state.departments.filter(d => d.value === row.Id_Deparment).shift();
+                                            let contactTitleEdit = this.state.titles.filter(t => t.value === row.Contact_Title).shift();
+                                            let hotelEdit = this.state.hotels.filter(h => h.value === row.idEntity).shift();
+                                            return {
+                                                firstNameEdit: row.firstName,
+                                                lastNameEdit: row.lastName,
+                                                hireDateEdit: row.hireDate ? moment.utc(row.hireDate).format() : '',
+                                                numberEdit: row.mobileNumber,
+                                                departmentEdit: departmentEdit ? departmentEdit : DEFAULT_DEPARTMENT_OPT,
+                                                contactTitleEdit: contactTitleEdit ? contactTitleEdit : DEFAULT_TITLE_OPT,
+                                                hotelEdit: hotelEdit ? hotelEdit : DEFAULT_HOTEL_OPT
+                                            }
                                         }, () => {
-                                            if (this.state.hotelEdit == null) {
+                                            if (this.state.hotelEdit.value == null) {
                                                 this.fetchDepartments();
                                             } else {
-                                                this.fetchDepartments(parseInt(this.state.hotelEdit))
+                                                this.fetchDepartments(parseInt(this.state.hotelEdit.value))
                                             }
                                         });
 
