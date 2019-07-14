@@ -25,6 +25,7 @@ export const GET_PROPERTIES_QUERY = gql`
       Country
       State
       City
+      Region
     }
   }
 `;
