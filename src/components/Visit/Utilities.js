@@ -2,7 +2,7 @@ import moment from 'moment';
 
 export const OP_MANAGER_ROL_ID = 3; // Rol id from Operation Manager
 
-export const getUrlMap = (latitude, longitude) => `http://maps.google.com/maps?q=${latitude},${longitude}&hl=es;z=14&amp;output=embed`;
+export const getUrlMap = (latitude, longitude) => `https://www.google.com/maps/embed/v1/place?key=AIzaSyBC2IjBT-AA9frz0ZHpfo8IxzFQ0LlIEhA&q=${latitude},${longitude}`;
 
 export const getDefaultTime = () => moment(new Date(), 'MM/DD/YYYY HH:mm:ss').set({hour:0,minute:0,second:0,millisecond:0});
 

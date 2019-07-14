@@ -26,6 +26,7 @@ class Visit extends Component{
         userId: 0,
         rolId: 0,
         isOpManager: false,
+        regionId: null, // solo se llenará cuando el usuario sea op manager
         opManagers: [],
         opManagerFiltered: [],
         opManagerOptions: [],
@@ -133,14 +134,18 @@ class Visit extends Component{
                     });
 
                     options = [{value:0, label: 'All Op. Manager'}, ...options]
+
+                    let loggedOpManager = null;
+                    if(isOpManager) loggedOpManager = opManagerList[0];
                     
                     //Set values to state
 					this.setState(() => ({
                         opManagers: opManagerList,
                         opManagerFiltered: opManagerList,
                         opManagerOptions: options,
-						loading: false
-					}));
+                        loading: false,
+                        regionId: loggedOpManager ? loggedOpManager.IdRegion : null
+					}), () => this.getProperties());
 
 				})
 				.catch(error => {
@@ -229,10 +234,15 @@ class Visit extends Component{
     }
 
     getProperties = () => {
+        let{ isOpManager, regionId } = this.state;
+        let variables = isOpManager 
+                        ? { Region: regionId ? regionId : 0 }
+                        : {}  
 		this.props.client
 			.query({
 				query: GET_PROPERTIES_QUERY,
-				fetchPolicy: 'no-cache'
+                fetchPolicy: 'no-cache',
+                variables
 			})
 			.then(({ data }) => {
 				this.setState({
@@ -261,7 +271,6 @@ class Visit extends Component{
             }
         }, () => {
             this.getOpManagers();
-            this.getProperties();
             this.getVisits();
         })
     }
