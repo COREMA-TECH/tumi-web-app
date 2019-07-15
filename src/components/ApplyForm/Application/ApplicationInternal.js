@@ -413,7 +413,7 @@ class ApplicationInternal extends Component {
                                                             type="text"
                                                             className="form-control"
                                                             disabled={!this.state.editing}
-                                                        />|
+                                                        />
                                                     </div>
 
                                                     <div className="col-md-6">
