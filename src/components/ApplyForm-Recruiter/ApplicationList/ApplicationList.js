@@ -433,7 +433,7 @@ class ApplicationList extends Component {
 		if (typeDateFiltered.value == "W") {
 			while (weeks > 0) {
 				endDate = moment.utc(today).format("MM/DD/YYYY"); //get Start Date
-				today = moment.utc(today).subtract(1, "weeks")._d;//Substract a week
+				today = moment.utc(today).subtract(1, "weeks").add('days', 1)._d;//Substract a week
 				startDate = moment.utc(today).format("MM/DD/YYYY");//get End Date
 				today = moment.utc(today).subtract(1, "days")._d;//Substract a day to start new week
 				data.push({ value: `${startDate}||${endDate}`, label: `${startDate} - ${endDate}` })
@@ -470,6 +470,7 @@ class ApplicationList extends Component {
 	render() {
 		let {filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
 		let rectuiterFilterValue = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? recruiterFiltered.value : null;
+		let variables = rectuiterFilterValue != null ? { idRecruiter: rectuiterFilterValue  } : {}; // variable para la consulta
 
 		// If contracts query is loading, show a progress component
 		if (this.state.loadingContracts) {
@@ -612,7 +613,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={{ idRecruiter: rectuiterFilterValue }} fetchPolicy="no-cache">
+					<Query query={this.GET_APPLICATION_QUERY} variables={variables} fetchPolicy="no-cache">
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;

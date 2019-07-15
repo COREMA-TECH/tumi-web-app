@@ -235,8 +235,8 @@ class ApplicationTable extends React.Component {
 												{row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
 											</CustomTableCell>
 											<CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
-											<CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
+											<CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>
 
