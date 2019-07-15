@@ -45,7 +45,8 @@ class SchedulesvsWorkedHours extends Component {
         operation: 0,
         filterType: DEFAULT_FILTER_TYPE,
         typeDateFiltered: DEFAULT_FILTER_TYPE, // opcion seleccinada para filtro de fecha en indice
-        dateRangeApp: DEFAULT_DATA_RANGE_APP
+        dateRangeApp: DEFAULT_DATA_RANGE_APP,
+        detail: []
     }
 
     constructor(props) {
@@ -83,7 +84,8 @@ class SchedulesvsWorkedHours extends Component {
         }).then(({ data }) => {
             this.setState(prevState => ({
                 loading: true,
-                schedules: data.shiftVsWorkedHours
+                schedules: data.shiftVsWorkedHours,
+                detail: data.shiftVsWorkedHours.detail
             }), _ => {
                 this.setState(prevState => ({loading: false}))
             });
@@ -160,7 +162,7 @@ class SchedulesvsWorkedHours extends Component {
 	}
 
     render() {
-        let items = this.state.schedules;
+        let items = this.state.detail;
         const { rowsPerPage, page } = this.state;
         let {filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
         return(
@@ -169,7 +171,7 @@ class SchedulesvsWorkedHours extends Component {
 					<div className="row p-0 d-flex justify-content-end">
 						<div className="col-md">
 							<div className="row p-0">
-								<div className="col-md-12">
+								<div className="col-md-6">
 									<Select
 										name="typeDateFiltered"
 										options={filterTypes}
@@ -179,52 +181,50 @@ class SchedulesvsWorkedHours extends Component {
 										closeMenuOnSelect
 									/>
 								</div>
-							</div>
-							<div className="row mt-1 p-0">
-								{typeDateFiltered.value != "C" ?
-									<div className="col-md-12">
-										<Select
-											name="dateRangeApp"
-											options={this.getDateRangeApp()}
-											value={dateRangeApp}
-											onChange={this.handleDateRangeApp}
-											components={makeAnimated()}
-											closeMenuOnSelect
-										/>
-									</div> :
-									<React.Fragment>
-										<div className="col-md-6">
-											<div class="input-group">
-												<DatePicker
-													selected={this.state.startDateApp}
-													onChange={this.handleStartDateApp}
-													placeholderText="Start date"
-													id="startDateApp"
-												/>
-												<div class="input-group-append">
-													<label class="input-group-text" id="addon-wrapping" for="startDateApp">
-														<i class="far fa-calendar"></i>
-													</label>
-												</div>
-											</div>
-										</div>
-										<div className="col-md-6">
-											<div class="input-group">
-												<DatePicker
-													selected={this.state.endDateApp}
-													onChange={this.handleEndDateApp}
-													placeholderText="End date"
-													id="endDateApp"
-												/>
-												<div class="input-group-append">
-													<label class="input-group-text" id="addon-wrapping" for="endDateApp">
-														<i class="far fa-calendar"></i>
-													</label>
-												</div>
-											</div>
-										</div>
-									</React.Fragment>
-								}
+                                {typeDateFiltered.value != "C" ?
+                                    <div className="col-md-6">
+                                        <Select
+                                            name="dateRangeApp"
+                                            options={this.getDateRangeApp()}
+                                            value={dateRangeApp}
+                                            onChange={this.handleDateRangeApp}
+                                            components={makeAnimated()}
+                                            closeMenuOnSelect
+                                        />
+                                    </div> :
+                                    <React.Fragment>
+                                        <div className="col-md-3">
+                                            <div class="input-group">
+                                                <DatePicker
+                                                    selected={this.state.startDateApp}
+                                                    onChange={this.handleStartDateApp}
+                                                    placeholderText="Start date"
+                                                    id="startDateApp"
+                                                />
+                                                <div class="input-group-append">
+                                                    <label class="input-group-text" id="addon-wrapping" for="startDateApp">
+                                                        <i class="far fa-calendar"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <div class="input-group">
+                                                <DatePicker
+                                                    selected={this.state.endDateApp}
+                                                    onChange={this.handleEndDateApp}
+                                                    placeholderText="End date"
+                                                    id="endDateApp"
+                                                />
+                                                <div class="input-group-append">
+                                                    <label class="input-group-text" id="addon-wrapping" for="endDateApp">
+                                                        <i class="far fa-calendar"></i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </React.Fragment>
+                                }
 							</div>
 						</div>
 						<div className="col-md-auto">
@@ -262,21 +262,13 @@ class SchedulesvsWorkedHours extends Component {
                                         </TableRow>
                                     );
                                 })}
+                                <TableRow className="text-center">
+                                    <CustomTableCell className="text-center font-weight-bold">Total</CustomTableCell>
+                                    <CustomTableCell className="text-center font-weight-bold">{this.state.schedules.schedulesHours}</CustomTableCell>
+                                    <CustomTableCell className="text-center font-weight-bold">{this.state.schedules.workedHours}</CustomTableCell>
+                                    <CustomTableCell className="text-center font-weight-bold">{this.state.schedules.difference}</CustomTableCell>
+                                </TableRow>
                             </TableBody>
-                            <TableFooter>
-
-                                {items.length > 0 && (
-                                    <TablePagination
-                                        colSpan={1}
-                                        count={items.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        onChangePage={this.handleChangePage}
-                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                    />
-                                )}
-
-                            </TableFooter>
                         </Table>
                     </div>
                 </div>

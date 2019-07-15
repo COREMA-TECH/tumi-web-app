@@ -468,9 +468,11 @@ class ApplicationList extends Component {
 	}
 
 	render() {
-		let {filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
+		let { filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
 		let rectuiterFilterValue = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? recruiterFiltered.value : null;
 		let variables = rectuiterFilterValue != null ? { idRecruiter: rectuiterFilterValue  } : {}; // variable para la consulta
+
+		let Filters = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? { idRecruiter: rectuiterFilterValue } : {};
 
 		// If contracts query is loading, show a progress component
 		if (this.state.loadingContracts) {
@@ -613,7 +615,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={variables} fetchPolicy="no-cache">
+					<Query query={this.GET_APPLICATION_QUERY} variables={{ ...Filters }} fetchPolicy="no-cache">
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;

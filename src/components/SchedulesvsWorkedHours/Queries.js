@@ -3,11 +3,16 @@ import gql from 'graphql-tag';
 export const GET_SHIFTVSWORKEDHOURS = gql`
 query {
     shiftVsWorkedHours {
-        id
-        name
         schedulesHours
         workedHours
         difference
+      	detail {
+          id
+          schedulesHours
+          workedHours
+          difference
+          name
+        }
     }
 }
 `;
