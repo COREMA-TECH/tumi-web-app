@@ -1052,7 +1052,7 @@ class NewContract extends Component {
 
                 break;
             case 'User_Signed_Title':
-                User_Signed_TitleValid = value !== null? value.trim().length >= 3:'';
+                User_Signed_TitleValid = value !== null ? value.trim().length >= 3 : '';
                 Id_User_SignedValid = true;
                 break;
             case 'Signed_Date':
@@ -1147,7 +1147,8 @@ class NewContract extends Component {
         let Id_EntityValid = this.state.Id_Entity !== null && this.state.Id_Entity !== 0 && this.state.Id_Entity !== '';
         let Id_User_SignedValid =
             this.state.Id_User_Signed !== null && this.state.Id_User_Signed !== 0 && this.state.Id_User_Signed !== '';
-        let User_Signed_TitleValid = this.state.User_Signed_Title.trim().length >= 5;
+        let User_Signed_TitleValid = true;// this.state.User_Signed_Title ? (this.state.User_Signed_Title.trim().length >= 5 ? true: false) : false;
+
         let Signed_DateValid = this.state.Signed_Date.trim().length == 10;
         let IsActiveValid = this.state.IsActive !== null && this.state.IsActive !== '';
         let Contract_StatusValid = this.state.Contract_StatusValid !== null && this.state.Contract_StatusValid !== '';
