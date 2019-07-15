@@ -94,7 +94,6 @@ class TimeCardForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.item)
         if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {
             this.setState(
                 {
@@ -106,7 +105,8 @@ class TimeCardForm extends Component {
                     startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
                     endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
                     shift: nextProps.item.clockIn,
-                    endShift: nextProps.item.clockOut
+                    endShift: nextProps.item.clockOut,
+                    comment: nextProps.item.noteIn
                 }
             );
         } else if (!nextProps.openModal) {
@@ -190,7 +190,7 @@ class TimeCardForm extends Component {
                     markIn = {
                         id: this.state.clockInId,
                         entityId: this.state.IdEntity,
-                        markedDate: moment(this.state.startDate).format('DD/MM/YYYY'),
+                        markedDate: moment(this.state.startDate).format('YYYY-MM-DD'),
                         markedTime: this.state.shift,
                         imageMarked: "",
                         EmployeeId: this.state.employeeId,
@@ -206,7 +206,7 @@ class TimeCardForm extends Component {
                     markOut = {
                         id: this.state.clockOutId,
                         entityId: this.state.IdEntity,
-                        markedDate: moment(this.state.endDate).format('DD/MM/YYYY'),
+                        markedDate: moment(this.state.endDate).format('YYYY-MM-DD'),
                         markedTime: this.state.endShift,
                         imageMarked: "",
                         EmployeeId: this.state.employeeId,
