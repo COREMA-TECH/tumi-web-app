@@ -780,6 +780,20 @@ class GeneralInfoProperty extends Component {
         }
     };
 
+    getRegionInformation=(regionId)=>{
+        this.setState(() => ({ linearProgressOpM: true }), () => {
+            this.props.client.query({ query: this.getOperationManagerByRegion, variables: { regionId: regionId || -1 }, fetchPolicy: 'no-cache' })
+                .then(({ data: { configregions } }) => {
+                    let region = configregions[0];
+                    if (region)
+                        if (region.OperationManager) this.setState(() => ({ operationManagerDescription: region.OperationManager.Full_Name }));
+                    this.setState(() => ({ linearProgressOpM: false }));
+                })
+                .catch(() => {
+                    this.setState(() => ({ linearProgressOpM: false }));
+                })
+        })
+    }
 	/**
 	 * Get data from property
 	 */
@@ -805,6 +819,7 @@ class GeneralInfoProperty extends Component {
                                 return obj.Id === item.Region;
                             });
                             this.getParentCompanyInfo();
+                            this.getRegionInformation(item.Region);
                             this.setState(() => {
                                 return {
                                     RegionName: Region ? Region.Name.trim() : '',
@@ -912,25 +927,10 @@ class GeneralInfoProperty extends Component {
                             if (company)
                                 this.setState(() => ({
                                     parentDescription: 'A ' + company.Name + ' Management Company'
-                                }), () => {
-                                    this.setState(() => ({ linearProgressOpM: true }), () => {
-                                        this.props.client.query({ query: this.getOperationManagerByRegion, variables: { regionId: this.state.region || -1 }, fetchPolicy: 'no-cache' })
-                                            .then(({ data: { configregions } }) => {
-                                                let region = configregions[0];
-                                                if (region)
-                                                    if (region.OperationManager) this.setState(() => ({ operationManagerDescription: region.OperationManager.Full_Name }));
-                                                this.setState(() => ({ linearProgressOpM: false }));
-                                            })
-                                            .catch(() => {
-                                                this.setState(() => ({ linearProgressOpM: false }));
-                                            })
-                                    })
-
-                                });
+                                }));
                         } else {
                             this.setState({
                                 parentDescription: '',
-                                operationManagerDescription: '',
                                 linearProgressParent: false
                             });
                         }
@@ -939,7 +939,6 @@ class GeneralInfoProperty extends Component {
                     .catch(error => {
                         this.setState({
                             parentDescription: '',
-                            operationManagerDescription: '',
                             linearProgressParent: false
                         });
                     });
