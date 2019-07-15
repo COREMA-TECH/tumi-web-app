@@ -412,8 +412,8 @@ class ApplicationInternal extends Component {
                                                             name="numberId"
                                                             type="text"
                                                             className="form-control"
-                                                            disabled={!this.state.editing || !this.state.hasEmployee}
-                                                        />
+                                                            disabled={!this.state.editing}
+                                                        />|
                                                     </div>
 
                                                     <div className="col-md-6">
@@ -499,7 +499,7 @@ class ApplicationInternal extends Component {
                                                                 name="employmentType"
                                                                 id="employmentType"
                                                                 className="form-control"
-                                                                disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                disabled={!this.state.editing}
                                                                 value={this.state.employmentType}
                                                                 onChange={this.handleInputChange}
                                                             >
@@ -519,7 +519,7 @@ class ApplicationInternal extends Component {
                                                                     placeholderText={formSpanish[35].label}
                                                                     name="hireDate"
                                                                     id="hireDate"
-                                                                    disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                    disabled={!this.state.editing}
                                                                 />
                                                                 <div class="input-group-append">
                                                                     <label class="input-group-text" id="addon-wrapping" for="hireDate">
@@ -540,7 +540,7 @@ class ApplicationInternal extends Component {
                                                                     placeholderText={formSpanish[36].label}
                                                                     name="startDate"
                                                                     id="startDate"
-                                                                    disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                    disabled={!this.state.editing}
                                                                 />
                                                                 <div class="input-group-append">
                                                                     <label class="input-group-text" id="addon-wrapping" for="startDate">
