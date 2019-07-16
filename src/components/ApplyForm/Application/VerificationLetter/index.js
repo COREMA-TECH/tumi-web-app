@@ -104,6 +104,7 @@ class VerificationLetter extends Component {
                         <button
                             type="submit"
                             className={'btn btn-info'}
+                            disabled={downloading}
                         >
                             Send
                             {!downloading && <i className="fas fa-envelope ml-1" />}
@@ -112,6 +113,7 @@ class VerificationLetter extends Component {
                         <button
                             className={'btn btn-danger'}
                             onClick={this.onClickCancelHanler}
+                            disabled={downloading}
                         >
                             Close <i class="fas fa-times ml-1"></i>
                         </button>

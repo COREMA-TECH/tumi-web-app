@@ -1532,7 +1532,6 @@ class General extends Component {
 
                 <Dialog
                     open={this.state.openVerification}
-                    onClose={this.handleCloseModalVerificacion}
                     maxWidth="md"
                 >
                     <DialogTitle style={{ padding: '0px' }}>
