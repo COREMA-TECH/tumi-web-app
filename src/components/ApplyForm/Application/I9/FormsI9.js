@@ -108,8 +108,7 @@ class FormsI9 extends Component {
                         isCreated: true,
                         html: data.applicantI9[0].html
                     }, () => {
-                        // TODO: (LF) Descomentariar codigo
-                        //let pdf = document.getElementById('pdf-ready').innerHTML = this.state.html;
+                        let pdf = document.getElementById('pdf-ready').innerHTML = this.state.html;
                     });
                 } else {
                     this.setState({
@@ -290,7 +289,7 @@ class FormsI9 extends Component {
                                 }
                             </div>
                             {
-                                this.state.html.length > 10000000000 ? (
+                                this.state.html.length > 0 ? (
                                     <div id="pdf-ready" style={{width: '100%', margin: '0 auto'}}>
                                     </div>
                                 ) : (
