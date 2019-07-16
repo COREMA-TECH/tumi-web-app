@@ -261,7 +261,6 @@ class ApplicationList extends Component {
 		this.setState(() => {
 			return { loading: true, applications: [] }
 		}, () => {
-			console.log('Entrando a getaplications'); // TODO: (LF) QUITAR CONSOLE LOG
 			let property = this.state.property.value;
 			let department = this.state.department.value;
 			let variables = {
@@ -286,8 +285,6 @@ class ApplicationList extends Component {
 					break;
 			}
 
-			console.log('Variables .. ', variables); // TODO: (LF) QUITAR CONSOLE LOG
-
 			this.props.client
 				.query({
 					query: this.GET_APPLICATION_QUERY,
@@ -295,7 +292,6 @@ class ApplicationList extends Component {
 					fetchPolicy: 'no-cache'
 				})
 				.then(({ data }) => {
-					console.log('Datos traidos desde la consulta', data.applicationsByUser); // TODO: (LF) QUITAR CONSOLE LOG
 					this.setState(() => ({
 						applications: data.applicationsByUser,
 						loading: false
@@ -473,82 +469,6 @@ class ApplicationList extends Component {
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
 					{ renderContent() }
-
-					{/* TODO: (LF) QUITAR CODIGO COMENTADO */}
-					{/* <Query fetchPolicy="network-only" query={this.GET_APPLICATION_QUERY} variables={variables} >
-						{({ loading, error, data, refetch, networkStatus }) => {
-console.log('mostrando variables ', variables); // TODO: (LF) QUITAR ESTE CONSOLE LOG
-							if (this.state.filterText === '') {
-								if (loading && !this.state.opendialog) return <LinearProgress />;
-							}
-
-							if (error)
-								return (
-									<ErrorMessageComponent
-										title="Oops!"
-										message={'Error loading applications'}
-										type="Error-danger"
-										icon="danger"
-									/>
-								);
-
-							if (data.applicationsByUser != null && data.applicationsByUser.length > 0) {
-								const dataApplication =
-									this.state.filterText === ''
-										? data.applicationsByUser
-										: data.applicationsByUser.filter((_, i) => {
-											if (
-												(_.firstName +
-													_.middleName +
-													_.lastName +
-													(_.position ? _.position.position.Position.trim() : 'Open Position') +
-													(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
-													(_.position ? _.position.BusinessCompany.Name : '') +
-													(_.recruiter ? _.recruiter.Full_Name : '') +
-													(_.user ? _.user.Full_Name : '') +
-													_.emailAddress)
-													.toLocaleLowerCase()
-													.indexOf(this.state.filterText.toLocaleLowerCase()) > -1
-											) {
-												return true;
-											}
-										});
-
-								return (
-									<div className="row pt-0">
-										{localStorage.getItem('isEmployee') == 'false' &&
-											<div className="col-md-12">
-												<button
-													className="btn btn-success float-right"
-													onClick={() => {
-														this.redirectToCreateApplication();
-													}}
-												>
-													Add Application
-														</button>
-											</div>}
-										<div className="col-md-12">
-											<div className="card">
-												<ApplicationTable
-													data={dataApplication}
-													onDeleteHandler={this.onDeleteHandler}
-												/>
-											</div>
-										</div>
-									</div>
-								);
-							} else {
-								return (
-									<NothingToDisplay
-										title="Oops!"
-										message={'There are no applications'}
-										type="Error-success"
-										icon="wow"
-									/>
-								);
-							}
-						}}
-					</Query> */}
 				</div>
 			</div>
 		);

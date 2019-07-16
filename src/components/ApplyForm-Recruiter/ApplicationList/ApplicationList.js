@@ -503,9 +503,9 @@ class ApplicationList extends Component {
 					</div>
 				</div>
 
-				<div className="col-md-10 col-xl-7 offset-xl-3 mb-2 ">
+				<div className="col-md-10 col-xl-10 mb-2 ">
 					<div className="row p-0 d-flex justify-content-end">
-						<div className="col-md-3">
+						<div className="col-md-4 col-xl-3">
 							<Select
 								name="recruiterFiltered"
 								options={filterRecruiters}
@@ -515,7 +515,7 @@ class ApplicationList extends Component {
 								closeMenuOnSelect
 							/>
 						</div>
-						<div className="col-md">
+						<div className="col-md-5 col-lg-4 col-xl-3">
 							<div className="row p-0">
 								<div className="col-md-12">
 									<Select
@@ -541,7 +541,7 @@ class ApplicationList extends Component {
 										/>
 									</div> :
 									<React.Fragment>
-										<div className="col-md-6">
+										<div className="col-md-12">
 											<div class="input-group">
 												<DatePicker
 													selected={this.state.startDateApp}
@@ -556,7 +556,7 @@ class ApplicationList extends Component {
 												</div>
 											</div>
 										</div>
-										<div className="col-md-6">
+										<div className="col-md-12">
 											<div class="input-group">
 												<DatePicker
 													selected={this.state.endDateApp}
