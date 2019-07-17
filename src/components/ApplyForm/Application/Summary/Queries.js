@@ -35,7 +35,7 @@ query applications($id: Int){
                 BusinessCompany{ Name }
             }
         }
-        Account {
+        Accounts {
             bankName
             routingNumber
             accountNumber
