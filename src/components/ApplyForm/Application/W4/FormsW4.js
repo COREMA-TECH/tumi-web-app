@@ -309,7 +309,7 @@ class FormsW4 extends Component {
         // }
 
         return (
-            <div className="Apply-container--application">
+            <div className="Apply-container--application" style={{width: '900px', margin: '0 auto'}}>
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">
@@ -348,11 +348,11 @@ class FormsW4 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{ width: '1000px', margin: '0 auto' }}>
+                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
                                     </div>
                                 ) : (
-                                        <div style={{ width: '1000px', margin: '0 auto' }}>
-                                            <div className="row pdf-container--i9-w4" id="w4Html">
+                                        <div style={{ width: '100%', margin: '0 auto' }}>
+                                            <div className="row pdf-container" id="w4Html" style={{maxWidth: '100%'}}>
                                                 <div id="DocumentPDF" className="signature-information">
                                                     {
                                                         console.log("El lenguaje seleccionado es: ", localStorage.getItem('languageForm'))
@@ -1215,6 +1215,9 @@ class FormsW4 extends Component {
                                                             </div>
                                                         ) : (
                                                             <div>
+                                                                {/* <div style={}>
+
+                                                                </div> */}
                                                                 <table style={{
                                                                     fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
                                                                     fontSize: '14px',
@@ -1224,23 +1227,41 @@ class FormsW4 extends Component {
                                                                 }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{ width: '33.33%', verticalAlign: 'top' }}>
-                                                                            <h1 style={{ textDecoration: 'underline' }}><strong>Form W-4
-                                                                                (2019) </strong></h1>
-                                                                            <p>Future developments. For the latest information about any future developments related to Form W-4, such as legislation enacted after it was published, go to www.irs.gov/FormW4.</p><br /><p> Purpose. Complete Form W-4 so that your employer can withhold the correct federal income tax from your pay. Consider completing a new Form W-4 each year and when your personal or financial situation changes.</p><br /><p> Exemption from withholding. You may claim exemption from withholding for 2019 if both of the following apply. • For 2018 you had a right to a refund of all federal income tax withheld because you had no tax liability, and • For 2019 you expect a refund of all federal income tax withheld because you expect to have no tax liability. If you’re exempt, complete only lines 1, 2, 3, 4, and 7 and sign the form to validate it. Your exemption for 2019 expires February 17, 2020. See Pub. 505, Tax Withholding and Estimated Tax, to learn more about whether you qualify for exemption from withholding.</p><br /><p> General Instructions If you aren’t exempt, follow the rest of these instructions to determine the number of withholding allowances you should claim for withholding for 2019 and any additional amount of tax to have withheld. For regular wages, withholding must be based on allowances you claimed and may not be a flat amount or percentage of wages. You can also use the calculator at www.irs.gov/W4App to determine your tax withholding more accurately. Consider</p>
+                                                                        <td style={{ width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
+                                                                            <h2 style={{ textDecoration: 'underline' }}>Form W-4
+                                                                                (2019) </h2>
+                                                                            <p><span style={{fontWeight: '900'}}>Future developments.</span> For the latest information about any future developments related to Form W-4, such as legislation enacted after it was published, go to www.irs.gov/FormW4.</p><br />
+                                                                            <p><span style={{fontWeight: '900'}}>Purpose.</span> Complete Form W-4 so that your employer can withhold the correct federal income tax from your pay. Consider completing a new Form W-4 each year and when your personal or financial situation changes.</p><br />
+                                                                            <p><span style={{fontWeight: '900'}}>Exemption from withholding.</span> You may claim exemption from withholding for 2019 if <span style={{fontWeight: '900'}}>both</span> of the following apply. <br />
+                                                                            • For 2018 you had a right to a refund of <span style={{fontWeight: '900'}}>all</span> federal income tax withheld because you had <span style={{fontWeight: '900'}}>no</span> tax liability, <span style={{fontWeight: '900'}}>and</span> <br />
+                                                                            • For 2019 you expect a refund of <span style={{fontWeight: '900'}}>all</span> federal income tax withheld because you expect to have <span style={{fontWeight: '900'}}>no</span> tax liability. <br />
+                                                                            If you’re exempt, complete only lines 1, 2, 3, 4, and 7 and sign the form to validate it. Your exemption for 2019 expires February 17, 2020. 
+                                                                            See Pub. 505, Tax Withholding and Estimated Tax, to learn more about whether you qualify for exemption from withholding.</p><br />
+                                                                            <h4>General Instructions</h4>
+                                                                            <p>If you aren’t exempt, follow the rest of these instructions to determine the number of withholding allowances you should claim for withholding for 2019 and any additional amount of tax to have withheld. For regular wages, withholding must be based on allowances you claimed and may not be a flat amount or percentage of wages. You can also use the calculator at <span style={{fontWeight: '900'}}>www.irs.gov/W4App</span> to determine your tax withholding more accurately. Consider</p>
                                                                         </td>
-                                                                        <td style={{ width: '33.33%', verticalAlign: 'top' }}>
-                                                                            <p style={{ textAlign: 'left' }}>using this calculator if you have a more complicated tax situation, such as if you have a working spouse, more than one job, or a large amount of nonwage income not subject to withholding outside of your job. After your Form W-4 takes effect, you can also use this calculator to see how the amount of tax you’re having withheld compares to your projected total tax for 2019. If you use the calculator, you don’t need to complete any of the worksheets for Form W-4. Note that if you have too much tax withheld, you will receive a refund when you file your tax return. If you have too little tax withheld, you will owe tax when you file your tax return, and you might owe a penalty. Filers with multiple jobs or working spouses. If you have more than one job at a time, or if you’re married filing jointly and your spouse is also working, read all of the instructions including the instructions for the Two-Earners/Multiple Jobs Worksheet before beginning. Nonwage income. If you have a large amount of nonwage income not subject to withholding, such as interest or dividends, consider making estimated tax payments using Form 1040-ES, Estimated Tax for Individuals. Otherwise, you might owe additional tax. Or, you can use the Deductions, Adjustments, and Additional Income Worksheet on page 3 or the calculator at www.irs.gov/W4App to make sure you have enough tax withheld from your paycheck. If you have pension or annuity income, see Pub. 505 or use the calculator at www.irs.gov/W4App to find out if you should adjust your withholding on Form W-4 or W-4P. Nonresident alien. If you’re a nonresident alien, see Notice 1392, Supplemental Form W-4 Instructions for Nonresident Aliens, before completing this form.</p>
+                                                                        <td style={{ width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
+                                                                            <p style={{ textAlign: 'left' }}>using this calculator if you have a more complicated tax situation, such as if you have a working spouse, more than one job, or a large amount of nonwage income not subject to withholding outside of your job. After your Form W-4 takes effect, you can also use this calculator to see how the amount of tax you’re having withheld compares to your projected total tax for 2019. If you use the calculator, you don’t need to complete any of the worksheets for Form W-4.</p>
+                                                                            <p>Note that if you have too much tax withheld, you will receive a refund when you file your tax return. If you have too little tax withheld, you will owe tax when you file your tax return, and you might owe a penalty.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Filers with multiple jobs or working spouses.</span> If you have more than one job at a time, or if you’re married filing jointly and your spouse is also working, read all of the instructions including the instructions for the Two-Earners/Multiple Jobs Worksheet before beginning.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Nonwage income.</span> If you have a large amount of nonwage income not subject to withholding, such as interest or dividends, consider making estimated tax payments using Form 1040-ES, Estimated Tax for Individuals. Otherwise, you might owe additional tax. Or, you can use the Deductions, Adjustments, and Additional Income Worksheet on page 3 or the calculator at www.irs.gov/W4App to make sure you have enough tax withheld from your paycheck. If you have pension or annuity income, see Pub. 505 or use the calculator at www.irs.gov/W4App to find out if you should adjust your withholding on Form W-4 or W-4P.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Nonresident alien.</span> If you’re a nonresident alien, see Notice 1392, Supplemental Form W-4 Instructions for Nonresident Aliens, before completing this form.</p>
                                                                         </td>
-                                                                        <td style={{ width: '33.33%', verticalAlign: 'top' }}>
-                                                                            <h2>Specific Instructions</h2> <br />
-                                                                            <p>Personal Allowances Worksheet Complete this worksheet on page 3 first to determine the number of withholding allowances to claim. Line C. Head of household please note: Generally, you may claim head of household filing status on your tax return only if you’re unmarried and pay more than 50% of the costs of keeping up a home for yourself and a qualifying individual. See Pub. 501 for more information about filing status. Line E. Child tax credit. When you file your tax return, you may be eligible to claim a child tax credit for each of your eligible children. To qualify, the child must be under age 17 as of December 31, must be your dependent who lives with you for more than half the year, and must have a valid social security number. To learn more about this credit, see Pub. 972, Child Tax Credit. To reduce the tax withheld from your pay by taking this credit into account, follow the instructions on line E of the worksheet. On the worksheet you will be asked about your total income. For this purpose, total income includes all of your wages and other income, including income earned by a spouse if you are filing a joint return. Line F. Credit for other dependents. When you file your tax return, you may be eligible to claim a credit for other dependents for whom a child tax credit can’t be claimed, such as a qualifying child who doesn’t meet the age or social security number requirement for the child tax credit, or a qualifying relative. To learn more about this credit, see Pub. 972. To reduce the tax withheld from your pay by taking this credit into account, follow the instructions on line F of the worksheet. On the worksheet, you will be asked about your total income. For this purpose, total</p>
+                                                                        <td style={{ width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
+                                                                            <h4>Specific Instructions</h4>
+                                                                            <p>
+                                                                                <h6><span style={{fontWeight: '900'}}>Personal Allowances Worksheet</span></h6>
+                                                                                Complete this worksheet on page 3 first to determine the number of withholding allowances to claim.
+                                                                            </p>
+                                                                            <p><span style={{fontWeight: '900'}}>Line C. Head of household please note: </span>Generally, you may claim head of household filing status on your tax return only if you’re unmarried and pay more than 50% of the costs of keeping up a home for yourself and a qualifying individual. See Pub. 501 for more information about filing status.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Line E. Child tax credit.</span> When you file your tax return, you may be eligible to claim a child tax credit for each of your eligible children. To qualify, the child must be under age 17 as of December 31, must be your dependent who lives with you for more than half the year, and must have a valid social security number. To learn more about this credit, see Pub. 972, Child Tax Credit. To reduce the tax withheld from your pay by taking this credit into account, follow the instructions on line E of the worksheet. On the worksheet you will be asked about your total income. For this purpose, total income includes all of your wages and other income, including income earned by a spouse if you are filing a joint return.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Line F. Credit for other dependents.</span> When you file your tax return, you may be eligible to claim a credit for other dependents for whom a child tax credit can’t be claimed, such as a qualifying child who doesn’t meet the age or social security number requirement for the child tax credit, or a qualifying relative. To learn more about this credit, see Pub. 972. To reduce the tax withheld from your pay by taking this credit into account, follow the instructions on line F of the worksheet. On the worksheet, you will be asked about your total income. For this purpose, total</p>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
                                                                 </table>
                                                                 <p><img src="https://i.imgur.com/wJ2ancW.png"
-                                                                        style={{ width: '100% !important' }} />
+                                                                        style={{ width: '100%' }} />
                                                                 </p>
                                                                 <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                     <tbody>
@@ -1248,7 +1269,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '50%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             1 Your first name and middle initial
@@ -1267,7 +1288,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '25%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             Last name
@@ -1286,10 +1307,10 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '25%',
                                                                             verticalAlign: 'top'
                                                                         }}>
-                                                                            2 Your social security Number
+                                                                            <span style={{fontWeight: '900'}}>2 Your social security Number</span>
                                                                             <input
                                                                                 disabled={this.state.isCreated}
                                                                                 type="text" style={{ width: '100%', border: 0 }}
@@ -1339,7 +1360,7 @@ class FormsW4 extends Component {
                                                                             colSpan="2">
                                                                             <div data-font-name="g_d8_f2" data-angle={0}
                                                                                  data-canvas-width="408.9536499999999">
-                                                                                3. 3. <input
+                                                                                3. <input
                                                                                 type="radio"
                                                                                 name="estadoCivil"
                                                                                 value={this.state.estadoCivil}
@@ -1365,9 +1386,8 @@ class FormsW4 extends Component {
                                                                                         })
                                                                                     }}
                                                                                 /> Married
-                                                                                <input type="checkbox" /> Married, but withhold at higher Single rate
-                                                                                <strong> Nota: </strong> <br />
-                                                                                Note: If married filing separately, check “Married, but withhold at higher Single rate.”
+                                                                                <input type="checkbox" /> Married, but withhold at higher Single rate <br />
+                                                                                <span style={{fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
                                                                             </div>
                                                                         </td>
                                                                     </tr>
@@ -1435,19 +1455,14 @@ class FormsW4 extends Component {
                                                                             verticalAlign: 'top',
                                                                             width: '100%'
                                                                         }}>
-                                                                            5  Total number of allowances you’re claiming (from the applicable worksheet on the following pages)<br />
-                                                                            6  Additional amount, if any, you want withheld from each paycheck <br />
-                                                                            7  I claim exemption from withholding for 2019, and I certify that I meet both of the following conditions for exemption.<br />
-                                                                            <ul>
-                                                                                <li>
-                                                                                    Last year I had a right to a refund of all federal income tax withheld because I had no tax liability, and
-                                                                                </li>
-                                                                                <li>
-                                                                                    This year I expect a refund of all federal income tax withheld because I expect to have no tax liability. If you meet both conditions, write “Exempt” here
-                                                                                </li>
-                                                                            </ul>
-                                                                            Si cumple con ambas condiciones, escriba “Exempt” (Exento)
-                                                                            aquí
+                                                                            <div>
+                                                                                5  Total number of allowances you’re claiming (from the applicable worksheet on the following pages)<br />
+                                                                                6  Additional amount, if any, you want withheld from each paycheck <br />
+                                                                                7  I claim exemption from withholding for 2019, and I certify that I meet both of the following conditions for exemption.<br />
+                                                                                &emsp;• Last year I had a right to a refund of all federal income tax withheld because I had no tax liability, and <br />
+                                                                                &emsp;• This year I expect a refund of all federal income tax withheld because I expect to have no tax liability. <br />
+                                                                                If you meet both conditions, write “Exempt” here
+                                                                            </div>
                                                                         </td>
                                                                         <td style={{ verticalAlign: 'top', borderCollapse: 'collapse' }}>
                                                                             <table style={{ borderCollapse: 'collapse' }}>
@@ -1504,7 +1519,6 @@ class FormsW4 extends Component {
                                                                                             id="excention"
                                                                                             value={this.state.excention}
                                                                                             onChange={(e) => {
-                                                                                                console.log(e.target.value);
                                                                                                 this.setState({ excention: e.target.value })
                                                                                             }}
                                                                                         />
@@ -1523,7 +1537,6 @@ class FormsW4 extends Component {
                                                                                             id="payCheck"
                                                                                             value={this.state.payCheck}
                                                                                             onChange={(e) => {
-                                                                                                console.log(e.target.value);
                                                                                                 this.setState({ payCheck: e.target.value })
                                                                                             }}
                                                                                         />
@@ -1547,7 +1560,6 @@ class FormsW4 extends Component {
                                                                                             id="excention-year"
                                                                                             value={this.state.excentionYear}
                                                                                             onChange={(e) => {
-                                                                                                console.log(e.target.value);
                                                                                                 this.setState({ excentionYear: e.target.value })
                                                                                             }}
                                                                                         />
@@ -1559,7 +1571,8 @@ class FormsW4 extends Component {
                                                                     </tr>
                                                                     <tr>
                                                                         <td colSpan="3">
-                                                                            Under penalties of perjury, I declare that I have examined this certificate and, to the best of my knowledge and belief, it is true, correct, and complete.  Employee’s signature
+                                                                            Under penalties of perjury, I declare that I have examined this certificate and, to the best of my knowledge and belief, it is true, correct, and complete.  <br />
+                                                                            <span style={{fontWeight: '900'}}>Employee’s signature</span> <br />                                                                            
                                                                             (This form is not valid unless you sign it).  ▶  <img style={{
                                                                             width: '100px',
                                                                             height: '30px',
@@ -1585,7 +1598,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '65%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             8 Employer’s name and address (Employer: Complete boxes 8 and 10 if sending to IRS and complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)
@@ -1603,7 +1616,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '15%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             9 First date of employment
@@ -1622,7 +1635,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '20%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             Employer identification number (EIN)
@@ -1651,14 +1664,28 @@ class FormsW4 extends Component {
                                                                 }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top' }}>
-                                                                            <p>income includes all of your wages and other income, including income earned by a spouse if you are filing a joint return. Line G. Other credits. You may be able to reduce the tax withheld from your paycheck if you expect to claim other tax credits, such as tax credits for education (see Pub. 970). If you do so, your paycheck will be larger, but the amount of any refund that you receive when you file your tax return will be smaller. Follow the instructions for Worksheet 1-6 in Pub. 505 if you want to reduce your withholding to take these credits into account. Enter “-0-” on lines E and F if you use Worksheet 1-6. <h5>Deductions, Adjustments, and Additional Income Worksheet</h5> Complete this worksheet to determine if you’re able to reduce the tax withheld from your paycheck to account for your itemized deductions and other adjustments to income, such as IRA contributions. If you do so, your refund at the end of the year will be smaller, but your paycheck will be larger. You’re not required to complete this worksheet or reduce your withholding if you don’t wish to do so. You can also use this worksheet to figure out how much to increase the tax withheld from your paycheck if you have a large amount of nonwage income not subject to withholding, such as interest or dividends. Another option is to take these items into account and make your withholding more accurate by using the calculator at www.irs.gov/W4App. If you use the calculator, you don’t need to complete any of the worksheets for Form W-4. <h5>Two-Earners/Multiple Jobs Worksheet</h5> Complete this worksheet if you have more than one job at a time or are married filing jointly and have a working spouse. If you</p>
+                                                                        <td style={{ width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
+                                                                            <p>income includes all of your wages and other income, including income earned by a spouse if you are filing a join return.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Line G. Other credits.</span> You may be able to reduce the tax withheld from your paycheck if you expect to claim other tax credits, such as tax credits for education (see Pub. 970). If you do so, your paycheck will be larger, but the amount of any refund that you receive when you file your tax return will be smaller. Follow the instructions for Worksheet 1-6 in Pub. 505 if you want to reduce your withholding to take these credits into account. Enter “-0-” on lines E and F if you use Worksheet 1-6.</p>
+                                                                            <p><h5>Deductions, Adjustments, and Additional Income Worksheet</h5> Complete this worksheet to determine if you’re able to reduce the tax withheld from your paycheck to account for your itemized deductions and other adjustments to income, such as IRA contributions. If you do so, your refund at the end of the year will be smaller, but your paycheck will be larger. You’re not required to complete this worksheet or reduce your withholding if you don’t wish to do so.</p>
+                                                                            <p>You can also use this worksheet to figure out how much to increase the tax withheld from your paycheck if you have a large amount of nonwage income not subject to withholding, such as interest or dividends.</p>
+                                                                            <p>Another option is to take these items into account and make your withholding more accurate by using the calculator at www.irs.gov/W4App. If you use the calculator, you don’t need to complete any of the worksheets for Form W-4.</p>
+                                                                            <p><h5>Two-Earners/Multiple Jobs Worksheet</h5> Complete this worksheet if you have more than one job at a time or are married filing jointly and have a working spouse. If you</p>
                                                                         </td>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top' }}>
-                                                                            <p>don't complete this worksheet, you might have too little tax withheld. If so, you will owe tax when you file your tax return and might be subject to a penalty. Figure the total number of allowances you’re entitled to claim and any additional amount of tax to withhold on all jobs using worksheets from only one Form W-4. Claim all allowances on the W-4 that you or your spouse file for the highest paying job in your family and claim zero allowances on Forms W-4 filed for all other jobs. For example, if you earn $60,000 per year and your spouse earns $20,000, you should complete the worksheets to determine what to enter on lines 5 and 6 of your Form W-4, and your spouse should enter zero (“-0-”) on lines 5 and 6 of his or her Form W-4. See Pub. 505 for details. Another option is to use the calculator at www.irs.gov/W4App to make your withholding more accurate. Tip: If you have a working spouse and your incomes are similar, you can check the “Married, but withhold at higher Single rate” box instead of using this worksheet. If you choose this option, then each spouse should fill out the Personal Allowances Worksheet and check the “Married, but withhold at higher Single rate” box on Form W-4, but only one spouse should claim any allowances for credits or fill out the Deductions, Adjustments, and Additional Income Worksheet. <h5>Instructions for Employer</h5> Employees, do not complete box 8, 9, or 10. Your employer will complete these boxes if necessary. New hire reporting. Employers are required by law to report new employees to a designated State Directory of New Hires. Employers may use Form W-4, boxes 8, 9,</p>
+                                                                        <td style={{ width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
+                                                                            <p>don't complete this worksheet, you might have too little tax withheld. If so, you will owe tax when you file your tax return and might be subject to a penalty.</p>
+                                                                            <p>Figure the total number of allowances you’re entitled to claim and any additional amount of tax to withhold on all jobs using worksheets from only one Form W-4. Claim all allowances on the W-4 that you or your spouse file for the highest paying job in your family and claim zero allowances on Forms W-4 filed for all other jobs. For example, if you earn $60,000 per year and your spouse earns $20,000, you should complete the worksheets to determine what to enter on lines 5 and 6 of your Form W-4, and your spouse should enter zero (“-0-”) on lines 5 and 6 of his or her Form W-4. See Pub. 505 for details.</p>
+                                                                            <p>Another option is to use the calculator at www.irs.gov/W4App to make your withholding more accurate.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Tip:</span> If you have a working spouse and your incomes are similar, you can check the “Married, but withhold at higher Single rate” box instead of using this worksheet. If you choose this option, then each spouse should fill out the Personal Allowances Worksheet and check the “Married, but withhold at higher Single rate” box on Form W-4, but only one spouse should claim any allowances for credits or fill out the Deductions, Adjustments, and Additional Income Worksheet.</p>
+                                                                            <p><h5>Instructions for Employer</h5> <span style={{fontWeight: '900'}}> Employees, do not complete box 8, 9, or 10. Your employer will complete these boxes if necessary.</span></p>
+                                                                            <p><span style={{fontWeight: '900'}}>New hire reporting.</span> Employers are required by law to report new employees to a designated State Directory of New Hires. Employers may use Form W-4, boxes 8, 9,</p>
                                                                         </td>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top' }}>
-                                                                            <p>and 10 to comply with the new hire reporting requirement for a newly hired employee. A newly hired employee is an employee who hasn’t previously been employed by the employer, or who was previously employed by the employer but has been separated from such prior employment for at least 60 consecutive days. Employers should contact the appropriate State Directory of New Hires to find out how to submit a copy of the completed Form W-4. For information and links to each designated State Directory of New Hires (including for U.S. territories), go to www.acf.hhs.gov/css/employers. If an employer is sending a copy of Form W-4 to a designated State Directory of New Hires to comply with the new hire reporting requirement for a newly hired employee, complete boxes 8, 9, and 10 as follows. Box 8. Enter the employer’s name and address. If the employer is sending a copy of this form to a State Directory of New Hires, enter the address where child support agencies should send income withholding orders. Box 9. If the employer is sending a copy of this form to a State Directory of New Hires, enter the employee’s first date of employment, which is the date services for payment were first performed by the employee. If the employer rehired the employee after the employee had been separated from the employer’s service for at least 60 days, enter the rehire date. Box 10. Enter the employer’s employer identification number (EIN).</p>
+                                                                        <td style={{ width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
+                                                                            <p>and 10 to comply with the new hire reporting requirement for a newly hired employee. A newly hired employee is an employee who hasn’t previously been employed by the employer, or who was previously employed by the employer but has been separated from such prior employment for at least 60 consecutive days. Employers should contact the appropriate State Directory of New Hires to find out how to submit a copy of the completed Form W-4. For information and links to each designated State Directory of New Hires (including for U.S. territories), go to <span style={{fontWeight: '900'}}>www.acf.hhs.gov/css/employers.</span></p>
+                                                                            <p>If an employer is sending a copy of Form W-4 to a designated State Directory of New Hires to comply with the new hire reporting requirement for a newly hired employee, complete boxes 8, 9, and 10 as follows.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Box 8.</span> Enter the employer’s name and address. If the employer is sending a copy of this form to a State Directory of New Hires, enter the address where child support agencies should send income withholding orders.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Box 9.</span> If the employer is sending a copy of this form to a State Directory of New Hires, enter the employee’s first date of employment, which is the date services for payment were first performed by the employee. If the employer rehired the employee after the employee had been separated from the employer’s service for at least 60 days, enter the rehire date.</p>
+                                                                            <p><span style={{fontWeight: '900'}}>Box 10.</span> Enter the employer’s employer identification number (EIN).</p>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
