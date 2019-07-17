@@ -52,8 +52,8 @@ class Main extends Component {
 
 
                 {/*<PrivateRoute path="/application/info" component={ApplicationInfo} />*/}
-                <PrivateRoute path="/employment-application" component={ExternalApplyWrapper} />
-                <PrivateRoute path="/external-application" component={StepperApplyForm} />
+                <PrivateRoute path="/employment-application" component={StepperApplyForm} />
+                <PrivateRoute path="/external-application" component={ExternalApplyWrapper} />
                 <PrivateRoute path="/home/signature" component={Signature} />
                 <PrivateRoute path="/employment-application-message" component={ApplyFormMessage} />
                 <PrivateRoute path="/reset" component={ResetPassword} />
