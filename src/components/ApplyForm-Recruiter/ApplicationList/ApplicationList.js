@@ -40,8 +40,8 @@ const styles = (theme) => ({
 
 const DEFAULT_RECRUITER_VALUE = "ND";
 const DEFAULT_FILTER_TYPE = { value: "W", label: "By week" };
-const DEFAULT_FILTER_RECRUITER = { value: DEFAULT_RECRUITER_VALUE, label: "Select Recruiter" };
-const DEFAULT_DATA_RANGE_APP = { value: null, label: 'select date range'};
+const DEFAULT_FILTER_RECRUITER = { value: DEFAULT_RECRUITER_VALUE, label: "Recruited by" };
+const DEFAULT_DATA_RANGE_APP = { value: null, label: 'Report Date'};
 
 class ApplicationList extends Component {
 	constructor(props) {
@@ -459,7 +459,7 @@ class ApplicationList extends Component {
 		e.preventDefault();
 		this.setState(() => {
 			return {
-				recruiterFiltered: DEFAULT_RECRUITER_VALUE,
+				recruiterFiltered: DEFAULT_FILTER_RECRUITER,
 				startDateApp: null,
 				endDateApp: null,
 				dateRangeApp: DEFAULT_DATA_RANGE_APP
