@@ -366,9 +366,6 @@ class ConductCode extends Component {
 		baseUrl: PropTypes.string
 	};
 
-	static contextTypes = {
-		baseUrl: PropTypes.string
-	};
 }
 
 export default withApollo(withGlobalContent(ConductCode));

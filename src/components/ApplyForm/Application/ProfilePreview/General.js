@@ -36,9 +36,8 @@ import Select from 'react-select';
 import PunchesReportDetail from '../../../PunchesReportDetail';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import Titles from './Titles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import renderHTML from 'react-render-html';
 import moment from 'moment';
+import VerificationLetter from '../VerificationLetter';
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -258,7 +257,10 @@ class General extends Component {
         loadingConfirm: false,
         openModal: false,
         showCircularLoading: false,
-        titleModal: false
+        titleModal: false,
+        employmentType: null,
+        startDate: null,
+        positionName: null
     };
 
     /**
@@ -513,8 +515,12 @@ class General extends Component {
                                 employeeHotelId: this.state.data.employee ? this.state.data.employee.Employees.idEntity : 0,
                                 employeeHotelEmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 0,
                                 employeeHotelName: this.state.data.employee ? (this.state.data.employee.Employees.BusinessCompany ? this.state.data.employee.Employees.BusinessCompany.Name : '') : '',
+                                employmentType: this.state.data.employmentType ? this.state.data.employmentType.replace('FT', 'FULL TIME').replace('PT', 'PART TIME') : 'N/D',
+                                startDate: this.state.data.employee ? (this.state.data.employee.Employees ? this.state.data.employee.Employees.startDate : 'N/D') : 'N/D',
+                                positionName: this.state.data.position ? (this.state.data.position.position ? this.state.data.position.position.Position : 'N/D') : 'N/D'
 
                             }, _ => {
+                                console.log({ status: this.state })
                                 this.getCodeUser(id);
                             })
                         });
@@ -580,32 +586,6 @@ class General extends Component {
             });
     };
 
-    /**
-     * To get a list od departments
-     */
-    // fetchDepartments = () => {
-    //     this.props.client
-    //         .query({
-    //             query: GET_DEPARTMENTS_QUERY,
-    //             fetchPolicy: 'no-cache'
-    //         })
-    //         .then((data) => {
-    //             if (data.data.getcatalogitem != null) {
-    //                 this.setState({
-    //                     departments: data.data.getcatalogitem,
-    //                 }, () => {
-    //                     this.fetchTitles()
-    //                 });
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             // TODO: show a SnackBar with error message
-
-    //             this.setState({
-    //                 loading: false
-    //             })
-    //         });
-    // };
 
     /**
      * To fetch a list of contacts
@@ -1532,6 +1512,8 @@ class General extends Component {
             </Dialog>
         }
 
+        let { firstname, middlename, lastname, employmentType, startDate, positionName } = this.state;
+        let employeeName = `${firstname || ''} ${middlename || ''} ${lastname || ''}`;
         return (
             <div className="Apply-container--application">
                 <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} />
@@ -1549,91 +1531,23 @@ class General extends Component {
 
 
                 <Dialog
-                    fullScreen={true}
                     open={this.state.openVerification}
-                    onClose={this.handleCloseModalVerificacion}
-                    aria-labelledby="responsive-dialog-title"
-                    style={{ width: '90%', padding: '0px', margin: '0 auto' }}
+                    maxWidth="md"
                 >
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
-                            {' '}
-                            {this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
-                                'Edit  Position/Rate'
-                            ) : (
-                                    <h5 className="modal-title">Employment Verification</h5>
-                                )}
+                            <h5 className="modal-title">Employment Verification</h5>
                         </div>
                     </DialogTitle>
-                    <DialogContent style={{ minWidth: 750, padding: '0px' }}>
-                        <div className="row">
-                            <div className="col-md-12">
-                                <button
-                                    //	disabled={this.state.loading || !this.state.enableCancelButton}
-                                    variant="fab"
-                                    color="secondary"
-                                    className={'btn btn-danger pull-right'}
-                                    onClick={this.handleCloseModalVerificacion}
-                                >
-                                    Close <i class="fas fa-times"></i>
-                                </button>
-                                <button
-                                    //	disabled={this.state.loading || !this.state.enableCancelButton}
-                                    variant="fab"
-                                    color="primary"
-                                    className={'btn btn-info mr-1 pull-right'}
-                                    onClick={this.handleCloseModalVerificacion}
-                                >
-                                    Send <i class="fas fa-envelope"></i>
-                                </button>
-
-
-                            </div>
-                        </div>
-                        <div className="row pdf-container">
-                            <div id="DocumentPDF" className="signature-information">
-                                {renderHTML(`<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
-<p style="text-align: center; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;" align="center"><strong><u><span style="font-size: 12.0pt;">VERIFICATION OF EMPLOYMENT</span></u></strong></p>
-<p style="text-align: center; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;" align="center"><strong><u><span style="font-size: 12.0pt;">&nbsp;</span></u></strong></p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Today&rsquo;s Date</p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Tumi Staffing</strong></p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Po Box 592715</strong></p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>San Antonio, TX 78259</strong></p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">RE: Verification of Employment for ___________________________ [Name of Employee]</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">To whom it may concern:</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Please accept this letter as confirmation that _______________________ [Name of Employee] has been employed with <strong>Tumi Staffing</strong> since ___________________ [Employee Start Date].</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Currently, ___________________________ [Name of Employee] holds the Title of _____________________and works on a ___________________ [Full time / Part time] basis.</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><a name="_GoBack"></a>&nbsp;</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">If you have any questions or require further information, please don&rsquo;t hesitate to contact me at 210-853-2099.</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Sincerely yours,</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Claudia Robbins</strong></p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Owner</strong></p>
-<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
-</body>
-</html>`)}
-                            </div>
-                        </div>
+                    <DialogContent >
+                        <VerificationLetter employeeName={employeeName}
+                            employmentType={employmentType}
+                            startDate={startDate}
+                            positionName={positionName}
+                            handleCloseModalVerificacion={this.handleCloseModalVerificacion}
+                            ApplicationId={this.props.applicationId}
+                            handleOpenSnackbar={this.props.handleOpenSnackbar} />
                     </DialogContent>
-                    <DialogActions>
-                        <div className="exhibit-button-right">
-                            {loading && <CircularProgress size={68} className={classes.fabProgress} />}
-                        </div>
-                    </DialogActions>
                 </Dialog>
 
                 <div className="">
@@ -1753,10 +1667,10 @@ class General extends Component {
                                                         this.handleClickOpenModal();
                                                     }}>Add to hotel
                                                     </button>
-                                                    {/* <button className="dropdown-item" onClick={() => {
+                                                    <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenVerification();
                                                     }}>Employment Verification
-                                                    </button> */}
+                                                    </button>
                                                     {
                                                         userExist || this.state.createdProfile ? (
                                                             ''
