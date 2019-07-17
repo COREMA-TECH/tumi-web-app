@@ -90,7 +90,7 @@
         position: relative;
 
         &::before{
-            content: '&nbsp;';
+            content: ' ';
 
             //background-image: url('#{$img-path}/external-application-bg.jpg');
             background-color: #F5F7F9;

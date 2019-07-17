@@ -11122,7 +11122,7 @@ div[class*="MuiStepper-root-"] {
     padding-top: 52px;
     position: relative; }
     .External-bg::before {
-      content: '&nbsp;';
+      content: ' ';
       background-color: #F5F7F9;
       background-position: center;
       background-repeat: no-repeat;
