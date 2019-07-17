@@ -31,10 +31,12 @@ class Timer extends Component {
     
     
     componentWillReceiveProps(nextProp){
-        let { duration, startTime, endTime } = nextProp;
-        this.setState(() => {
-            return { time: durationToTime(startTime, duration.days, duration.hours, duration.minutes, duration.seconds) }
-        }, () => this.handleRun(nextProp));
+        let { duration, startTime, endTime, run } = nextProp;
+        if(run !== this.props.run || startTime !== this.props.startTime){
+            this.setState(() => {
+                return { time: durationToTime(startTime, duration.days, duration.hours, duration.minutes, duration.seconds) }
+            }, () => this.handleRun(nextProp));
+        }
     }
 
     render() {
