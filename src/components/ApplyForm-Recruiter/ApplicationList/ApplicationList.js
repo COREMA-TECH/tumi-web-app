@@ -433,7 +433,7 @@ class ApplicationList extends Component {
 		if (typeDateFiltered.value == "W") {
 			while (weeks > 0) {
 				endDate = moment.utc(today).format("MM/DD/YYYY"); //get Start Date
-				today = moment.utc(today).subtract(1, "weeks")._d;//Substract a week
+				today = moment.utc(today).subtract(1, "weeks").add('days', 1)._d;//Substract a week
 				startDate = moment.utc(today).format("MM/DD/YYYY");//get End Date
 				today = moment.utc(today).subtract(1, "days")._d;//Substract a day to start new week
 				data.push({ value: `${startDate}||${endDate}`, label: `${startDate} - ${endDate}` })
@@ -468,8 +468,11 @@ class ApplicationList extends Component {
 	}
 
 	render() {
-		let {filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
+		let { filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
 		let rectuiterFilterValue = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? recruiterFiltered.value : null;
+		let variables = rectuiterFilterValue != null ? { idRecruiter: rectuiterFilterValue  } : {}; // variable para la consulta
+
+		let Filters = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? { idRecruiter: rectuiterFilterValue } : {};
 
 		// If contracts query is loading, show a progress component
 		if (this.state.loadingContracts) {
@@ -500,9 +503,9 @@ class ApplicationList extends Component {
 					</div>
 				</div>
 
-				<div className="col-md-10 col-xl-7 offset-xl-3 mb-2 ">
+				<div className="col-md-10 col-xl-10 mb-2 ">
 					<div className="row p-0 d-flex justify-content-end">
-						<div className="col-md-3">
+						<div className="col-md-4 col-xl-3">
 							<Select
 								name="recruiterFiltered"
 								options={filterRecruiters}
@@ -512,7 +515,7 @@ class ApplicationList extends Component {
 								closeMenuOnSelect
 							/>
 						</div>
-						<div className="col-md">
+						<div className="col-md-5 col-lg-4 col-xl-3">
 							<div className="row p-0">
 								<div className="col-md-12">
 									<Select
@@ -538,7 +541,7 @@ class ApplicationList extends Component {
 										/>
 									</div> :
 									<React.Fragment>
-										<div className="col-md-6">
+										<div className="col-md-12">
 											<div class="input-group">
 												<DatePicker
 													selected={this.state.startDateApp}
@@ -553,7 +556,7 @@ class ApplicationList extends Component {
 												</div>
 											</div>
 										</div>
-										<div className="col-md-6">
+										<div className="col-md-12">
 											<div class="input-group">
 												<DatePicker
 													selected={this.state.endDateApp}
@@ -612,7 +615,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={{ idRecruiter: rectuiterFilterValue }} fetchPolicy="no-cache">
+					<Query query={this.GET_APPLICATION_QUERY} variables={{ ...Filters }} fetchPolicy="no-cache">
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;

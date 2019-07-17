@@ -17,6 +17,8 @@ export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
             job
             hotelCode
             hotelId
+            noteIn
+            noteOut
           }
       }
     }

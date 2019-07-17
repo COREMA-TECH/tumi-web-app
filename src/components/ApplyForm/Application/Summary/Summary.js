@@ -32,7 +32,8 @@ class Summary extends Component {
             city: '',
             state: '',
             numberId: '',
-            employmentType: ''
+            employmentType: '',
+            accounts: []
         }
     }
 
@@ -138,9 +139,10 @@ class Summary extends Component {
                             state: applications.state ? applications.stateInfo.Name : '',
                             hireDate: hireDate,
                             gender: gender,
-                            bankName:applications.Account ? applications.Account.bankName: '--',
-                            routing:applications.Account  ? applications.Account.routingNumber: '--',
-                            account:applications.Account  ? applications.Account.accountNumber: '--',
+                            //bankName:applications.Account ? applications.Account.bankName: '--',
+                            //routing:applications.Account  ? applications.Account.routingNumber: '--',
+                            //account:applications.Account  ? applications.Account.accountNumber: '--',
+                            accounts: applications.Accounts,
                             car: applications.car ? 'YES' : 'NO', 
                             hotel: hotel,
                             recruiter:applications.recruiter ? applications.recruiter.Full_Name : '--',
@@ -223,6 +225,7 @@ class Summary extends Component {
     }
 
     render() {
+        let appAccount = Array.isArray(this.state.accounts) && this.state.accounts.length ? this.state.accounts[0] : null; // Temporal para mostrar solo una cuenta
         let renderSignatureDialog = () => (
             <div>
                 <Dialog
@@ -399,11 +402,11 @@ class Summary extends Component {
                                     
                                     <td style='width: 100%;>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>DIRECT DEPOSIT ACCOUNT NO:</strong></span> `+  this.state.account +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>DIRECT DEPOSIT ACCOUNT NO:</strong></span> ${appAccount ? appAccount.accountNumber : '--' } </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>BANK NAME:</strong></span> `+  this.state.bankName +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>BANK NAME:</strong></span> ${appAccount ? appAccount.bankName : '--' } </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>ROUTING NO:</strong></span> `+ this.state.routing +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>ROUTING NO:</strong></span> ${appAccount ? appAccount.routingNumber : '--' } </span></p>
                                     
                                     </td>
                                     

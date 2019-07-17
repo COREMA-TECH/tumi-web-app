@@ -1,5 +1,5 @@
 %external-form-label{
-    color: $white !important;
+    color: $black !important;
 
     font-family: 'Ropa Sans', sans-serif;
     font-size: 0.875rem;
@@ -92,7 +92,8 @@
         &::before{
             content: '&nbsp;';
 
-            background-image: url('#{$img-path}/external-application-bg.jpg');
+            //background-image: url('#{$img-path}/external-application-bg.jpg');
+            background-color: #F5F7F9;
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -164,11 +165,10 @@
 
     & &-input{
         background-color: transparent !important;
-        color: $white !important;
+        color: $black !important;
 
-        border: none;
-        border-bottom: 1px solid $placeholder-color;
-        border-radius: 0;
+        border: 1px solid $placeholder-color;
+        border-radius: 3px;
 
         box-shadow: none !important;
 
@@ -185,7 +185,6 @@
 
         &:disabled{
             background-color: transparent !important;
-            border: none !important;
             box-shadow: none !important;
         }
 
@@ -272,14 +271,15 @@
 
     .ApplyForm{
         background-color: transparent;
+        padding: 1rem;
     }
 
     .ApplyBlock {   
-        background-color: rgba($color: $black, $alpha: 0.65);
+        background-color: $white;
         
-        border-radius: 0;
+        border-radius: 0 0 5px 5px;
 
-        box-shadow: none;
+        box-shadow: 0 3px 5px rgba(112, 112, 112, 0.10);
 
         font-family: 'Ropa Sans', sans-serif;     
 
@@ -294,9 +294,14 @@
 
         padding-top: 30px;
 
+        &-head {
+            background: $white;
+            border-radius: 5px 5px 0 0;
+        }
+
         &-title{
             background-color: transparent;
-            color: $white;
+            color: $black;
 
             font-size: 24px;
             font-weight: 700;

@@ -779,7 +779,7 @@ class WorkOrdersForm extends Component {
                             <div className="card">
                                 <div className="card-header bg-light">
                                     <div className="row">
-                                        <div className="col-md-4 col-xl-2 mb-2">
+                                        <div className="col-md-12 col-lg-4 mb-2">
                                             <Select
                                                 options={departmentList}
                                                 value={this.findSelectedDepartment(this.state.departmentId)}
@@ -792,7 +792,7 @@ class WorkOrdersForm extends Component {
                                             />
 
                                         </div>
-                                        <div className="col-md-3">
+                                        <div className="col-md-12 col-lg-3">
                                             {!this.state.isEditing &&
                                                 <button type="button" className="btn btn-link" onClick={this.newWorkOrder}>New +</button>
                                             }
