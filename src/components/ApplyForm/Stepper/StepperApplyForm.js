@@ -2558,40 +2558,45 @@ class VerticalLinearStepper extends Component {
                 <div className="main-stepper-container External">
                     <div className="container-fluid">                        
                         <div className="row External-bg">
-                            <div className="col-12 pr-0 pl-0">
-                                <form className="form-inline External-search" onSubmit={this.handleSearch}>                                    
-                                    <div class="input-group External-searchInputGroup">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-phone"></i></span>
-                                        </div>
-                                        <InputMask
-                                            id="phoneSearch"
-                                            name="phoneSearch"
-                                            mask="+(999) 999-9999"
-                                            maskChar=" "
-                                            value={this.state.phoneSearch}
-                                            className="form-control External-input"
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    phoneSearch: event.target.value
-                                                });
-                                            }}
-                                            placeholder="+(___) ___-____"
-                                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                                            minLength="15"
-                                        />
-                                    </div>                                           
-                                
-                                    <div class="input-group External-searchInputGroup">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                        </div>
+                            {
+                                //Show the searchbar only if the External Application is called from within the system.
+                                this.props.isInternalCall ? (
+                                    <div className="col-12 pr-0 pl-0">
+                                        <form className="form-inline External-search" onSubmit={this.handleSearch}>                                    
+                                            <div class="input-group External-searchInputGroup">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-phone"></i></span>
+                                                </div>
+                                                <InputMask
+                                                    id="phoneSearch"
+                                                    name="phoneSearch"
+                                                    mask="+(999) 999-9999"
+                                                    maskChar=" "
+                                                    value={this.state.phoneSearch}
+                                                    className="form-control External-input"
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            phoneSearch: event.target.value
+                                                        });
+                                                    }}
+                                                    placeholder="+(___) ___-____"
+                                                    pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                                                    minLength="15"
+                                                />
+                                            </div>                                           
+                                        
+                                            <div class="input-group External-searchInputGroup">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                                </div>
 
-                                        <input value={this.state.leadIdSearch} name='leadIdSearch' onChange={this.handleStateChange} type="text" class="form-control External-input lead" placeholder="Lead Id" aria-label="Lead Id" aria-describedby="basic-addon2" />
+                                                <input value={this.state.leadIdSearch} name='leadIdSearch' onChange={this.handleStateChange} type="text" class="form-control External-input lead" placeholder="Lead Id" aria-label="Lead Id" aria-describedby="basic-addon2" />
+                                            </div>
+                                            <button className="External-searchButton" type="submit">Search</button>                                        
+                                        </form>   
                                     </div>
-                                    <button className="External-searchButton" type="submit">Search</button>                                        
-                                </form>   
-                            </div>
+                                ) : ''
+                            }                            
                             <div className="col-12 col-md-4 Stepper-col">
                                 <div className="External-logo">
                                     <img src='../images/tumi-logo-old.png' alt="TUMI STAFFING, Inc."/>
