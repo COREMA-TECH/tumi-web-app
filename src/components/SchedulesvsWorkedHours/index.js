@@ -245,7 +245,7 @@ class SchedulesvsWorkedHours extends Component {
                         <Table>
                             <TableHead>
                                 <TableRow className="text-center">
-                                    <CustomTableCell className={"Table-head text-center"}>Employee</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"} style={{width: 'auto'}}>Employee</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Schedules Hours</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Worked Hours</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Difference</CustomTableCell>

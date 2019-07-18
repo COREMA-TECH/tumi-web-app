@@ -1067,6 +1067,43 @@ class VerticalLinearStepper extends Component {
                                 placeholder={labels.apt[displayLanguage]}
                             />
                         </div>
+                        <div className="col-12 col-md-4 col-xl-3 External-col">
+                            <span className="External-label">{labels.cellPhone[displayLanguage]}</span>
+                            <div className="input-container--validated">
+                                <InputMask
+                                    id="cell-number"
+                                    name="cellPhone"
+                                    mask="+(999) 999-9999"
+                                    maskChar=" "
+                                    value={this.state.cellPhone}
+                                    className="form-control External-input"
+                                    onChange={ this.handleStateChange }
+                                    pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                                    placeholder="+(___) ___-____"
+                                    
+                                    minLength="15"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-12 col-md-4 col-xl-3 External-col">
+                            <span className="External-label homePhone"> {labels.homePhone[displayLanguage]}</span>
+                            <InputMask
+                                id="home-number"
+                                name="homePhone"
+                                mask="+(999) 999-9999"
+                                maskChar=" "
+                                value={this.state.homePhone}
+                                className="form-control"
+                                onChange={(event) => {
+                                    this.setState({
+                                        homePhone: event.target.value
+                                    });
+                                }}
+                                placeholder="+(___) ___-____"
+                                pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                                minLength="15"
+                            />
+                        </div>
                     </div>
 
                     <div className="row External-row">
@@ -1090,48 +1127,7 @@ class VerticalLinearStepper extends Component {
                             mask="99999-99999"
                             updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
                         <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label homePhone"> {labels.homePhone[displayLanguage]}</span>
-                            <InputMask
-                                id="home-number"
-                                name="homePhone"
-                                mask="+(999) 999-9999"
-                                maskChar=" "
-                                value={this.state.homePhone}
-                                className="form-control External-input"
-                                onChange={(event) => {
-                                    this.setState({
-                                        homePhone: event.target.value
-                                    });
-                                }}
-                                placeholder="+(___) ___-____"
-                                pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                                minLength="15"
-                            />
-                        </div>
-                    </div>
-                    <div className="row External-row">
-
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.cellPhone[displayLanguage]}</span>
-                            <div className="input-container--validated">
-                                <InputMask
-                                    id="cell-number"
-                                    name="cellPhone"
-                                    mask="+(999) 999-9999"
-                                    maskChar=" "
-                                    value={this.state.cellPhone}
-                                    className="form-control External-input"
-                                    onChange={ this.handleStateChange }
-                                    pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                                    placeholder="+(___) ___-____"
-                                    
-                                    minLength="15"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.ssn[displayLanguage]}</span>
+                            <span className="External-label homePhone">{labels.ssn[displayLanguage]}</span>
                             <div className="input-container--validated">
                                 <InputMask
                                     id="socialSecurityNumber"
@@ -1148,6 +1144,8 @@ class VerticalLinearStepper extends Component {
                                 />
                             </div>
                         </div>
+                    </div>
+                    <div className="row External-row">
                         <div className="col-12 col-md-4 col-xl-3 External-col">
                             <div className="col-md-12">
                                 <span className="External-label">{labels.transport[displayLanguage]}</span>
@@ -1190,12 +1188,8 @@ class VerticalLinearStepper extends Component {
                                 />
                             </div>
                         </div>                   
-                    </div>
-                    
-                    <div className="row External-row">                   
                         <div className="col-12 col-md-4 col-xl-3 External-col">
                             <span className="External-label">{labels.position[displayLanguage]}</span>
-                            
                             <Select
                                 options={this.state.positionApplyOptions}
                                 value={this.findSelectedPositionApply(this.state.positionApplyingFor)}
@@ -1220,6 +1214,9 @@ class VerticalLinearStepper extends Component {
                                 />
                             </div>
                         </div>                    
+                    </div>
+                    
+                    <div className="row External-row">                   
                         <div className="col-12 col-md-4 col-xl-3 External-col">
                             <span className="External-label"> {labels.restrictions[displayLanguage]} </span>
                             <div className="col-md-12">
@@ -1261,9 +1258,6 @@ class VerticalLinearStepper extends Component {
                                 placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                             />
                         </div>
-                    </div>
-                
-                    <div className="row External-row">
                         <div className="col-12 col-md-4 col-xl-3 External-col">
                             <span className="External-label"> {labels.felony[displayLanguage]} </span>
                             <div className="col-md-12">
@@ -1309,6 +1303,9 @@ class VerticalLinearStepper extends Component {
                                 placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
                             />
                         </div>
+                    </div>
+                
+                    <div className="row External-row">
                         <div className="col-12 col-md-4 col-xl-3 External-col">
                             <span className="External-label"> {labels.heardTumi[displayLanguage]} </span>
                             <Select
