@@ -251,7 +251,7 @@ class FormsI9 extends Component {
         );
 
         return (
-            <div className="Apply-container--application" style={{width: '900px', margin: '0 auto'}}>
+            <div className="Apply-container--application">
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">
@@ -290,37 +290,33 @@ class FormsI9 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{width: '100%', margin: '0 auto'}}>
+                                    <div id="pdf-ready" style={{width: '1600px', margin: '0 auto'}}>
                                     </div>
                                 ) : (
-                                    <div style={{width: '100%', margin: '0 auto'}}>
-                                        <div className="row pdf-container" id="i9Html" style={{maxWidth: '100%'}}>
+                                    <div style={{width: '1200px', margin: '0 auto'}}>
+                                        <div className="row pdf-container--i9-w4" id="i9Html">
                                             <div id="DocumentPDF" className="signature-information">
                                                 <div style={{ width: '100%'}}>
-                                                    <img src="https://i.imgur.com/EXoWtMF.png" style={{ width: '100%' }}  alt/>
+                                                    <img src="https://i.imgur.com/EXoWtMF.png" width="100%" alt/>
                                                     <div data-font-name="g_d0_f3" data-angle={0}
                                                          data-canvas-width="16.334999999999997"><span style={{
                                                         color: '#000000',
                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                        fontSize: '8pt',
-                                                        fontWeight: '900'
-                                                                                            }}>
-                                                        ►&nbsp;START HERE: Read instructions carefully before completing this form. The instructions must be
-                                                        available, either in paper or electronically, during completion of this form. Employers are liable for
-                                                        errors in the completion of this form.</span>
-                                                    </div>
+                                                        fontSize: '10pt'
+                                                                                            }}><strong>►&nbsp;START
+                                                      HERE:</strong> Read instructions carefully before completing this form. The instructions must be
+                                                    available, either in paper or electronically, during completion of this form. Employers are liable for
+                                                    errors in the completion of this form.</span></div>
                                                     <div data-font-name="Helvetica" data-angle={0}
                                                          data-canvas-width="234.99000000000004"><span style={{
                                                         color: '#000000',
                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                        fontSize: '8pt'
-                                                    }}>
-                                                        <span style={{fontWeight: '900'}}>ANTI-DISCRIMINATION NOTICE: </span>
-                                                        It is illegal to discriminate against work-authorized individuals. Employers
-                                                        <span style={{fontWeight: '900'}}>CANNOT</span> specify which document(s) an employee may present to establish employment
-                                                        authorization and identity. The refusal to hire or continue to employ an individual because the
-                                                        documentation presented has a future expiration date may also constitute illegal discrimination.
-                                                    </span>
+                                                        fontSize: '10pt'
+                                                    }}><strong>ANTI-DISCRIMINATION
+                                                      NOTICE:&nbsp;</strong>It is illegal to discriminate against work-authorized individuals. Employers
+                                                    <strong>CANNOT</strong> specify which document(s) an employee may present to establish employment
+                                                    authorization and identity. The refusal to hire or continue to employ an individual because the
+                                                    documentation presented has a future expiration date may also constitute illegal discrimination.</span>
                                                     </div>
                                                     <div data-font-name="Helvetica" data-angle={0}
                                                          data-canvas-width="234.99000000000004">&nbsp;</div>
@@ -340,12 +336,11 @@ class FormsI9 extends Component {
                                                                         style={{
                                                                             color: '#000000',
                                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                                            fontSize: '8pt'
-                                                                        }}>
-                                                                            <span style={{fontWeight: '900'}}>Section 1. Employee Information and Attestation</span> (Employees must complete
-                                                                            and sign Section 1 of Form I-9 no later than the<em> <span style={{fontWeight: '900'}}>first day of employment</span> </em>, but not before accepting a job offer.)
-                                                                        </span>
-                                                                    </div>
+                                                                            fontSize: '10pt'
+                                                                        }}>Section
+                      <strong>1. Employee Information and Attestation</strong>&nbsp;(Employees must complete
+                      and sign Section 1 of Form I-9 no later than the<em><strong> first day of
+                          employment</strong> </em>, but not before accepting a job offer.)</span></div>
                                                                 </td>
                                                             </tr>
                                                             </tbody>
@@ -360,8 +355,9 @@ class FormsI9 extends Component {
                                                                         style={{
                                                                             color: '#000000',
                                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                                            fontSize: '8pt'
-                                                                        }}>Last Name&nbsp;(Family Name) <input
+                                                                            fontSize: '10pt'
+                                                                        }}>Last
+                      Name&nbsp;(Family Name) <input
                                                                             value={this.state.lastName}
                                                                             onChange={(e) => {
                                                                                 this.setState({
@@ -372,38 +368,33 @@ class FormsI9 extends Component {
                                                                             id="lastName"/></span>
                                                                     </div>
                                                                 </td>
-                                                                <td style={{width: '25%'}}>
-                                                                    <span style={{
-                                                                        color: '#000000',
-                                                                        fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
-                                                                    }}>First Name (Given Name) 
-                                                                        <input value={this.state.firstName}
-                                                                            onChange={(e) => {
-                                                                                this.setState({
-                                                                                    firstName: e.target.value
-                                                                                })
-                                                                            }} style={{border: 0, width: '100%'}} type="text" id="firstName"/>
-                                                                    </span>
-                                                                </td>
-                                                                <td style={{width: '25%'}}>
-                                                                    <span style={{
-                                                                        color: '#000000',
-                                                                        fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
-                                                                    }}>Middle Initial 
-                                                                        <input value={this.state.middleName}
-                                                                        onChange={(e) => {
-                                                                            this.setState({
-                                                                                middleName: e.target.value
-                                                                            })
-                                                                        }} style={{border: 0, width: '100%'}} type="text" id="middleInitia"/>
-                                                                    </span>
+                                                                <td style={{width: '25%'}}><span style={{
+                                                                    color: '#000000',
+                                                                    fontFamily: 'arial, helvetica, sans-serif',
+                                                                    fontSize: '10pt'
+                                                                }}>First
+                    Name (Given Name) <input value={this.state.firstName}
+                                             onChange={(e) => {
+                                                 this.setState({
+                                                     firstName: e.target.value
+                                                 })
+                                             }} style={{border: 0, width: '100%'}} type="text" id="firstName"/></span>
                                                                 </td>
                                                                 <td style={{width: '25%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
+                                                                }}>Middle
+                    Initial <input value={this.state.middleName}
+                                   onChange={(e) => {
+                                       this.setState({
+                                           middleName: e.target.value
+                                       })
+                                   }} style={{border: 0, width: '100%'}} type="text" id="middleInitia"/></span></td>
+                                                                <td style={{width: '25%'}}><span style={{
+                                                                    color: '#000000',
+                                                                    fontFamily: 'arial, helvetica, sans-serif',
+                                                                    fontSize: '10pt'
                                                                 }}>Other
                     Last Names Used (if any) <input value={this.state.otherLastName}
                                                     onChange={(e) => {
@@ -434,7 +425,7 @@ class FormsI9 extends Component {
                                                                         style={{
                                                                             color: '#000000',
                                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                                            fontSize: '8pt'
+                                                                            fontSize: '10pt'
                                                                         }}>Address
                       (Street Number and Name) <input value={this.state.streetNumber}
                                                       onChange={(e) => {
@@ -452,7 +443,7 @@ class FormsI9 extends Component {
                                                                 }}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Apt.
                     Number <input value={this.state.aptNumber}
                                   onChange={(e) => {
@@ -467,7 +458,7 @@ class FormsI9 extends Component {
                                                                 }}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>City or
                     Town <input value={this.state.city}
                                 onChange={(e) => {
@@ -482,7 +473,7 @@ class FormsI9 extends Component {
                                                                 }}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>State
                     <input value={this.state.state}
                            onChange={(e) => {
@@ -497,7 +488,7 @@ class FormsI9 extends Component {
                                                                 }}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>ZIP Code
                     <input value={this.state.zipCode}
                            onChange={(e) => {
@@ -515,7 +506,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '25%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Date of
                     Birth (mm/dd/yyyy) <input value={this.state.dateOfBirth}
                                               onChange={(e) => {
@@ -528,7 +519,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '25%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>U.S.
                     Social Security Number <input value={this.state.socialSecurityNumber}
                                                   onChange={(e) => {
@@ -540,7 +531,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '25%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Employee's
                     E-mail Address <input value={this.state.email}
                                           onChange={(e) => {
@@ -551,7 +542,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '25%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Employee's
                     Telephone Number <input value={this.state.telephone}
                                             onChange={(e) => {
@@ -563,25 +554,19 @@ class FormsI9 extends Component {
                                                             </tr>
                                                             </tbody>
                                                         </table>
-                                                        <p>
-                                                            <span style={{
-                                                                color: '#000000',
-                                                                fontFamily: 'arial, helvetica, sans-serif',
-                                                                fontSize: '8pt',
-                                                                fontWeight: '900'
-                                                            }}>
-                                                                I am aware that federal law provides for imprisonment and/or fines for false statements or use of false documents in connection with the completion of this form.
-                                                            </span>
-                                                        </p>
-                                                        <p>
-                                                            <span style={{
-                                                                color: '#000000',
-                                                                fontFamily: 'arial, helvetica, sans-serif',
-                                                                fontSize: '8pt',
-                                                                fontWeight: '900'
-                                                            }}>I attest, under penalty of perjury, that I am (check one of the following boxes):
-                                                            </span>
-                                                        </p>
+                                                        <p><span style={{
+                                                            color: '#000000',
+                                                            fontFamily: 'arial, helvetica, sans-serif',
+                                                            fontSize: '10pt'
+                                                        }}><strong>I am aware
+                that federal law provides for imprisonment and/or fines for false statements or use of false
+                documents in connection with the completion of this form.</strong></span></p>
+                                                        <p><span style={{
+                                                            color: '#000000',
+                                                            fontFamily: 'arial, helvetica, sans-serif',
+                                                            fontSize: '10pt'
+                                                        }}><strong>I attest,
+                under penalty of perjury, that I am (check one of the following boxes):</strong></span></p>
                                                         <table style={{borderCollapse: 'collapse', width: '100%'}}
                                                                border={1}>
                                                             <tbody>
@@ -589,7 +574,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '100%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}> <input
                                                                     name="status"
                                                                     value={this.state.oneCheck}
@@ -608,7 +593,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '100%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}> <input value={this.state.oneCheck1}
                                                                            defaultChecked={this.state.oneCheck1}
                                                                            name="status"
@@ -626,7 +611,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '100%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}> <input value={this.state.oneCheck2}
                                                                            defaultChecked={this.state.oneCheck2}
                                                                            name="status"
@@ -674,7 +659,7 @@ class FormsI9 extends Component {
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>
                       <input value={this.state.oneCheck3}
                              name="status"
@@ -703,14 +688,14 @@ class FormsI9 extends Component {
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>&nbsp;
                                                                         &nbsp; Some aliens may write "N/A" in the expiration date field. (See
                       instructions)</span></p>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}><em>Aliens
                         authorized to work must provide only one of the following document numbers to
                         complete Form I-9: An Alien Registration Number/USCIS Number OR Form I-94 Admission
@@ -718,7 +703,7 @@ class FormsI9 extends Component {
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>1.Alien
                       Registration Number/USCIS Number: <input
                                                                             value={this.state.alienRegister}
@@ -734,18 +719,16 @@ class FormsI9 extends Component {
                                                                             type="text"
                                                                             id="alien-register-number"/></span>
                                                                     </p>
-                                                                    <p style={{paddingLeft: '80px'}}>
-                                                                        <span style={{
-                                                                            color: '#000000',
-                                                                            fontFamily: 'arial, helvetica, sans-serif',
-                                                                            fontSize: '8pt'
-                                                                        }}><span style={{fontWeight: '900'}}>OR</span>
-                                                                        </span>
+                                                                    <p style={{paddingLeft: '80px'}}><span style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>OR</strong></span>
                                                                     </p>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>2.Form
                       I-94 Admission Number: <input
                                                                             value={this.state.admissionNumber}
@@ -762,13 +745,13 @@ class FormsI9 extends Component {
                                                                     <p style={{paddingLeft: '80px'}}><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
-                                                                    }}><span style={{fontWeight: '900'}}>OR</span>
-                                                                    </span></p>
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>OR</strong>
+                    </span></p>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>3.Foreign
                       Passport Number: <input
                                                                             value={this.state.foreignPassport}
@@ -785,7 +768,7 @@ class FormsI9 extends Component {
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>&nbsp;
                                                                         &nbsp; Country of Issuance: <input
                                                                             value={this.state.countryIssuance}
@@ -821,7 +804,7 @@ class FormsI9 extends Component {
                                                                                 textAlign: 'center'
                                                                             }}>
                           <span
-                              style={{color: '#000000', fontFamily: 'arial, helvetica, sans-serif', fontSize: '8pt'}}>QR
+                              style={{color: '#000000', fontFamily: 'arial, helvetica, sans-serif', fontSize: '10pt'}}>QR
                             Code - Section 1 Do Not Write In This Space</span></td>
                                                                         </tr>
                                                                         </tbody>
@@ -833,7 +816,7 @@ class FormsI9 extends Component {
                                                         <p><span style={{
                                                             color: '#000000',
                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                            fontSize: '8pt'
+                                                            fontSize: '10pt'
                                                         }}>&nbsp;</span></p>
                                                         <table style={{borderCollapse: 'collapse', width: '100%'}}
                                                                border={1}>
@@ -842,7 +825,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '50%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Signature
                     of Employee:
                                                                     {/*<input*/}
@@ -875,7 +858,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '50%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Today's
                     Date (mm/dd/yyyy) <input
                                                                         value={this.state.todayDate}
@@ -894,7 +877,7 @@ class FormsI9 extends Component {
                                                         <p><span style={{
                                                             color: '#000000',
                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                            fontSize: '8pt'
+                                                            fontSize: '10pt'
                                                         }}>&nbsp;</span></p>
                                                         <table style={{
                                                             borderCollapse: 'collapse',
@@ -905,19 +888,16 @@ class FormsI9 extends Component {
                                                             <tbody>
                                                             <tr style={{height: '17px'}}>
                                                                 <td style={{width: '100%', height: '17px'}}>
-                                                                    <h3>
-                                                                        <span style={{
-                                                                            color: '#000000',
-                                                                            fontFamily: 'arial, helvetica, sans-serif',
-                                                                            fontSize: '11pt',
-                                                                            fontWeight: '900'
-                                                                        }}>Preparer and/or Translator Certification (check one):
-                                                                        </span>
-                                                                    </h3>
+                                                                    <h3><span style={{
+                                                                        color: '#000000',
+                                                                        fontFamily: 'arial, helvetica, sans-serif',
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>Preparer
+                        and/or Translator Certification (check one):</strong></span></h3>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>
                       <input
                           value={this.state.preparer0}
@@ -938,7 +918,7 @@ class FormsI9 extends Component {
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}><em>(Fields
                         below must be completed and signed when preparers and/or translators assist an
                         employee in completing Section 1.)</em></span></p>
@@ -949,11 +929,10 @@ class FormsI9 extends Component {
                                                         <p><span style={{
                                                             color: '#000000',
                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                            fontSize: '8pt',
-                                                            fontWeight: '900'
-                                                        }}>I attest,
+                                                            fontSize: '10pt'
+                                                        }}><strong>I attest,
                 under penalty of perjury, that I have assisted in the completion of Section 1 of this form and that
-                to the best of my knowledge the information is true and correct.</span></p>
+                to the best of my knowledge the information is true and correct.</strong></span></p>
                                                         <table style={{borderCollapse: 'collapse', width: '100%'}}
                                                                border={1}>
                                                             <tbody>
@@ -961,7 +940,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '65.2979%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Signature
                     of Preparer or Translator <img style={{
                                                                         width: '100px',
@@ -984,7 +963,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '34.7021%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Today's
                     Date (mm/dd/yyyy) <input
                                                                         value={this.state.todayDate2}
@@ -1010,7 +989,7 @@ class FormsI9 extends Component {
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>Last
                     Name (Family Name) <input
                                                                         value={this.state.lastName2}
@@ -1025,7 +1004,7 @@ class FormsI9 extends Component {
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>First
                     Name (Given Name) <input
                                                                         value={this.state.firstName2}
@@ -1050,7 +1029,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '31.9243%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Address
                     (Street Number and Name) <input
                                                                         value={this.state.address2}
@@ -1064,7 +1043,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '41.2641%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>City or
                     Town <input
                                                                         value={this.state.city2}
@@ -1078,7 +1057,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '6.80349%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>State
                     <input
                         value={this.state.state2}
@@ -1091,7 +1070,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '20.0081%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>ZIP Code
                     <input
                         value={this.state.zipCode2}
@@ -1104,8 +1083,8 @@ class FormsI9 extends Component {
                                                             </tr>
                                                             </tbody>
                                                         </table>
-                                                        <img src="https://i.imgur.com/yP3pq57.png" style={{width: '100%'}} alt/>
-                                                        <img src="https://i.imgur.com/EXoWtMF.png" style={{width: '100%'}} alt/>
+                                                        <img src="https://i.imgur.com/yP3pq57.png" width="100%" alt/>
+                                                        <img src="https://i.imgur.com/EXoWtMF.png" width="100%" alt/>
                                                         <table style={{
                                                             borderCollapse: 'collapse',
                                                             width: '100%',
@@ -1117,15 +1096,14 @@ class FormsI9 extends Component {
                                                                     <h3><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '11pt',
-                                                                        fontWeight: '900'
-                                                                    }}>Section 2. Employer or Authorized Representative Review and Verification 
-                                                                    </span>
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>Section
+                        2. Employer or Authorized Representative Review and Verification </strong></span>
                                                                     </h3>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>(Employers
                       or their authorized representative must complete and sign Section 2 within 3 business
                       days of the employee's first day of employment. You must physically examine one document
@@ -1142,63 +1120,37 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '18.438%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}><strong>Employee
                       Info from Section 1</strong></span></td>
                                                                 <td style={{width: '25.7381%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Last
                     Name (Family Name)</span></td>
                                                                 <td style={{width: '32.9576%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>First
                     Name (Given Name)</span></td>
                                                                 <td style={{width: '6.19971%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>M.I.</span>
                                                                 </td>
                                                                 <td style={{width: '16.6667%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Citizenship/Immigration
                     Status</span></td>
                                                             </tr>
                                                             </tbody>
                                                         </table>
-                                                        
-                                                        <table style={{
-                                                            borderCollapse: 'collapse',
-                                                            width: '100%',
-                                                            fontSize: '8pt'
-                                                        }}
-                                                        >
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td style={{width: '31.07%', textAlign:'center', fontWeight: '900'}}>
-                                                                        List A <br />
-                                                                        Identity and employment Authorization
-                                                                    </td>
-                                                                    <td style={{width: '5%', textAlign:'center', fontWeight: '900', verticalAlign:'top'}}>OR</td>
-                                                                    <td style={{width: '28.83%', textAlign:'center', fontWeight: '900'}}>
-                                                                        List B <br />
-                                                                        Identity
-                                                                    </td>
-                                                                    <td style={{width: '5%', textAlign:'center', fontWeight: '900', verticalAlign: 'top'}}>AND</td>
-                                                                    <td style={{width: '30%', textAlign:'center', fontWeight: '900'}}>
-                                                                        List C <br />
-                                                                        Employment Authorization
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-
+                                                        <p>&nbsp;</p>
                                                         <table style={{
                                                             borderCollapse: 'collapse',
                                                             width: '100%',
@@ -1219,7 +1171,7 @@ class FormsI9 extends Component {
                                                                             <td style={{width: '100%'}}><span style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
-                                                                                fontSize: '8pt'
+                                                                                fontSize: '10pt'
                                                                             }}>Document
                             Title <input
                                                                                     value={this.state.docTitle}
@@ -1235,7 +1187,7 @@ class FormsI9 extends Component {
                                                                             <td style={{width: '100%'}}><span style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
-                                                                                fontSize: '8pt'
+                                                                                fontSize: '10pt'
                                                                             }}>Issuing
                             Authority <input
                                                                                     value={this.state.Issuing}
@@ -1251,7 +1203,7 @@ class FormsI9 extends Component {
                                                                             <td style={{width: '100%'}}><span style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
-                                                                                fontSize: '8pt'
+                                                                                fontSize: '10pt'
                                                                             }}>Document
                             Number <input
                                                                                     value={this.state.docNumber}
@@ -1267,7 +1219,7 @@ class FormsI9 extends Component {
                                                                             <td style={{width: '100%'}}><span style={{
                                                                                 color: '#000000',
                                                                                 fontFamily: 'arial, helvetica, sans-serif',
-                                                                                fontSize: '8pt'
+                                                                                fontSize: '10pt'
                                                                             }}>
                             Expiration Date (if any)(mm/dd/yyyy) <input
                                                                                 value={this.state.expireDate2}
@@ -1296,7 +1248,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Document
                             Title <input
                                                                                     value={this.state.docTitle2}
@@ -1316,7 +1268,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Issuing
                             Authority <input
                                                                                     value={this.state.Issuing2}
@@ -1336,7 +1288,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Document
                             Number <input
                                                                                     value={this.state.docNumb3}
@@ -1356,7 +1308,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>
                             Expiration Date (if any)(mm/dd/yyyy) <input
                                                                                 value={this.state.expDate3}
@@ -1385,7 +1337,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Document
                             Title <input
                                                                                     value={this.state.docT15}
@@ -1405,7 +1357,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Issuing
                             Authority <input
                                                                                     value={this.state.IssuingT15}
@@ -1425,7 +1377,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Document
                             Number <input
                                                                                     value={this.state.docT16}
@@ -1445,7 +1397,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>
                             Expiration Date (if any)(mm/dd/yyyy) <input
                                                                                 value={this.state.docT17}
@@ -1485,7 +1437,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Document
                             Title <input
                                                                                     value={this.state.docT18}
@@ -1507,7 +1459,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Document
                             Title <input
                                                                                     value={this.state.docT19}
@@ -1531,7 +1483,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Issuing
                             Authority <input
                                                                                     value={this.state.docT20}
@@ -1553,7 +1505,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Issuing
                             Authority <input
                                                                                     value={this.state.docT21}
@@ -1577,7 +1529,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Document
                             Number <input
                                                                                     value={this.state.docT22}
@@ -1599,7 +1551,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Document
                             Number<input
                                                                                     value={this.state.docL1}
@@ -1623,7 +1575,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Expiration
                             Date (if any)(mm/dd/yyyy) <input
                                                                                     value={this.state.docL2}
@@ -1644,7 +1596,7 @@ class FormsI9 extends Component {
                                                                                 style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Expiration
                             Date (if any)(mm/dd/yyyy) <input
                                                                                     value={this.state.docL3}
@@ -1682,7 +1634,7 @@ class FormsI9 extends Component {
                                                                                 }}><span style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>Additional
                               Information</span></div>
                                                                             </td>
@@ -1697,7 +1649,7 @@ class FormsI9 extends Component {
                                                                                 }}><span style={{
                                                                                     color: '#000000',
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                                    fontSize: '8pt'
+                                                                                    fontSize: '10pt'
                                                                                 }}>QR
                               Code - Sections 2 &amp; 3</span></div>
                                                                             </td>
@@ -1711,24 +1663,22 @@ class FormsI9 extends Component {
                                                         <p><span style={{
                                                             color: '#000000',
                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                            fontSize: '8pt',
-                                                            fontWeight: '900'
-                                                        }}>Certification:
+                                                            fontSize: '10pt'
+                                                        }}><strong>Certification:
                 I attest, under penalty of perjury, that (1) I have examined the document(s) presented by the
                 above-named employee, (2) the above-listed document(s) appear to be genuine and to relate to the
                 employee named, and (3) to the best of my knowledge the employee is authorized to work in the United
-                States.</span></p>
+                States.</strong></span></p>
                                                         <p><span style={{
                                                             color: '#000000',
                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                            fontSize: '8pt',
-                                                            fontWeight: '900'
-                                                        }}>The
+                                                            fontSize: '10pt'
+                                                        }}><strong>The
                 employee's first day of employment (mm/dd/yyyy):&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                                             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                                             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                                             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (See instructions for exemptions)</span>
+                                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (See instructions for exemptions)</strong></span>
                                                         </p>
                                                         <table style={{borderCollapse: 'collapse', width: '100%'}}
                                                                border={1}>
@@ -1737,7 +1687,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '39.6135%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Signature
                     of Employer or Authorized Representative <img style={{
                                                                         width: '100px',
@@ -1760,7 +1710,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '19.431%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Today's
                     Date(mm/dd/yyyy) <input
                                                                         value={this.state.docL5}
@@ -1774,7 +1724,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '40.9554%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Title of
                     Employer or Authorized Representative <input
                                                                         value={this.state.docL6}
@@ -1796,7 +1746,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '33.3333%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Last
                     Name of Employer or Authorized Representative <input
                                                                         value={this.state.docL7}
@@ -1810,7 +1760,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '33.3333%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>First
                     Name of Employer or Authorized Representative <input
                                                                         value={this.state.docL8}
@@ -1825,15 +1775,15 @@ class FormsI9 extends Component {
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>Employer's
                       Business or Organization Name</span></p>
                                                                     <p style={{paddingLeft: '40px'}}><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt',
-                                                                        fontWeight: '900'
-                                                                    }}>Tummi Staffing, Inc.</span></p>
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>Tummi
+                        Staffing, Inc.</strong></span></p>
                                                                 </td>
                                                             </tr>
                                                             </tbody>
@@ -1842,61 +1792,60 @@ class FormsI9 extends Component {
                                                                border={1}>
                                                             <tbody>
                                                             <tr>
-                                                                <td style={{width: '50%'}}>
+                                                                <td style={{width: '35.5207%'}}>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>Employer's
                       Business or Organization Address (Street Number and Name)</span></p>
                                                                     <p style={{paddingLeft: '40px'}}><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt',
-                                                                        fontWeight: '900'
-                                                                    }}>PO Box 592715</span></p>
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>PO
+                        Box 592715</strong></span></p>
                                                                 </td>
-                                                                <td style={{width: '30%'}}>
+                                                                <td style={{width: '45.2361%'}}>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>City
                       or Town</span></p>
                                                                     <p style={{paddingLeft: '40px'}}><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt',
-                                                                        fontWeight: '900'
-                                                                    }}>San Antonio </span></p>
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>
+                        San Antonio </strong></span></p>
                                                                 </td>
-                                                                <td style={{width: '5%'}}>
+                                                                <td style={{width: '6.3205%'}}>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>State</span>
                                                                     </p>
                                                                     <p style={{paddingLeft: '40px'}}><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt',
-                                                                        fontWeight: '900'
-                                                                    }}>TX</span></p>
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>TX</strong></span>
+                                                                    </p>
                                                                 </td>
-                                                                <td style={{width: '15%'}}>
+                                                                <td style={{width: '12.9227%'}}>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>Zip
                       Code</span></p>
                                                                     <p style={{paddingLeft: '40px'}}><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt',
-                                                                        fontWeight: '900'
-                                                                    }}>78259</span>
+                                                                        fontSize: '10pt'
+                                                                    }}><strong>78259</strong></span>
                                                                     </p>
                                                                 </td>
                                                             </tr>
@@ -1918,9 +1867,10 @@ class FormsI9 extends Component {
                                                                 }} colSpan={4}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
-                                                                }}> <span style={{fontWeight: '900'}}>Section 3. Reverification and Rehires</span> (To be completed and signed by employer or authorized representative.)
-                                                                </span></td>
+                                                                    fontSize: '10pt'
+                                                                }}><strong>Section
+                      3. Reverification and Rehires (To be completed and signed by employer or authorized
+                      representative.)</strong></span></td>
                                                             </tr>
                                                             <tr style={{height: '17px'}}>
                                                                 <td style={{width: '25%', height: '17px'}}
@@ -1928,7 +1878,7 @@ class FormsI9 extends Component {
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}><strong>A.</strong>
                     New Name (if applicable)</span></td>
                                                                 <td style={{width: '25%', height: '17px'}}>&nbsp;</td>
@@ -1936,7 +1886,7 @@ class FormsI9 extends Component {
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}><strong>B.</strong>
                     Date of Rehire (if applicable)</span></td>
                                                             </tr>
@@ -1945,7 +1895,7 @@ class FormsI9 extends Component {
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>Last
                     Name (Family Name) <input
                                                                         value={this.state.docL9}
@@ -1960,7 +1910,7 @@ class FormsI9 extends Component {
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>First
                     Name (Given Name) <input
                                                                         value={this.state.docP1}
@@ -1975,7 +1925,7 @@ class FormsI9 extends Component {
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>Middle
                     Initial <input
                                                                         value={this.state.docP2}
@@ -1990,7 +1940,7 @@ class FormsI9 extends Component {
                                                                     style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
-                                                                        fontSize: '8pt'
+                                                                        fontSize: '10pt'
                                                                     }}>Date
                     (mm/dd/yyyy) <input
                                                                         value={this.state.docP3}
@@ -2007,7 +1957,7 @@ class FormsI9 extends Component {
                                                         <p><span style={{
                                                             color: '#000000',
                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                            fontSize: '8pt'
+                                                            fontSize: '10pt'
                                                         }}>&nbsp;</span></p>
                                                         <table style={{borderCollapse: 'collapse', width: '100%'}}
                                                                border={1}>
@@ -2020,7 +1970,7 @@ class FormsI9 extends Component {
                                                                     colSpan={3}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}><strong>C.</strong>
                     If the employee's previous grant of employment authorization has expired, provide the
                     information for the document or receipt that establishes continuing employment authorization
@@ -2030,50 +1980,54 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '37.5841%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
-                                                                }}> Document Title
-                                                                    <input
-                                                                        // value={this.state}
-                                                                        onChange={(e) => {
-                                                                            // this.setState({
-                                                                            //     docL9: e.target.value
-                                                                            // })
-                                                                        }}
-                                                                        style={{width: '100%', border: 0}}
-                                                                        type="text"/>
-                                                                </span></td>
+                                                                    fontSize: '10pt'
+                                                                }}>Signature
+                    of Employer or Authorized Representative <img style={{
+                                                                        width: '100px',
+                                                                        height: '30px',
+                                                                        display: 'inline-block',
+                                                                        backgroundColor: '#f9f9f9',
+                                                                        cursor: 'pointer'
+                                                                    }} onClick={() => {
+                                                                        if (this.state.isCreated === false) {
+                                                                            this.setState({
+                                                                                signType: 3
+                                                                            }, () => {
+                                                                                this.setState({
+                                                                                    openSignature: true,
+                                                                                })
+                                                                            });
+                                                                        }
+                                                                    }}
+                                                                  src={this.state.signature3} alt=""/></span></td>
                                                                 <td style={{width: '28.3386%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
-                                                                }}>
-                                                                    Document Number
-                                                                    <input
-                                                                        // value={this.state}
+                                                                    fontSize: '10pt'
+                                                                }}>Today's
+                    Date (mm/dd/yyyy) <input
+                                                                        value={this.state.tdayDate}
                                                                         onChange={(e) => {
-                                                                            // this.setState({
-                                                                            //     docL9: e.target.value
-                                                                            // })
+                                                                            this.setState({
+                                                                                tdayDate: e.target.value
+                                                                            })
                                                                         }}
                                                                         style={{width: '100%', border: 0}}
-                                                                        type="text"/>
-                                                                </span></td>
+                                                                        type="text"/></span></td>
                                                                 <td style={{width: '34.0772%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
-                                                                }}>
-                                                                    Expiration Date (if any) (mm/dd/yyyy)
-                                                                    <input
-                                                                        // value={this.state}
+                                                                    fontSize: '10pt'
+                                                                }}>Name of
+                    Employer or Authorized Representative <input
+                                                                        value={this.state.employeerAuth2}
                                                                         onChange={(e) => {
-                                                                            // this.setState({
-                                                                            //     docL9: e.target.value
-                                                                            // })
+                                                                            this.setState({
+                                                                                employeerAuth2: e.target.value
+                                                                            })
                                                                         }}
                                                                         style={{width: '100%', border: 0}}
-                                                                        type="text"/>
-                                                                </span>
+                                                                        type="text"/></span>
                                                                 </td>
                                                             </tr>
                                                             </tbody>
@@ -2081,11 +2035,11 @@ class FormsI9 extends Component {
                                                         <p><span style={{
                                                             color: '#000000',
                                                             fontFamily: 'arial, helvetica, sans-serif',
-                                                            fontSize: '8pt',
-                                                            fontWeight: '900'
-                                                        }}>I attest, under penalty of perjury, that to the best of my knowledge, this employee is authorized to work in
+                                                            fontSize: '10pt'
+                                                        }}><strong>I attest,
+                under penalty of perjury, that to the best of my knowledge, this employee is authorized to work in
                 the United States, and if the employee presented document(s), the document(s) I have examined appear
-                to be genuine and to relate to the individual.</span></p>
+                to be genuine and to relate to the individual.</strong></span></p>
                                                         <table style={{borderCollapse: 'collapse', width: '100%'}}
                                                                border={1}>
                                                             <tbody>
@@ -2093,7 +2047,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '37.5841%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Signature
                     of Employer or Authorized Representative <img style={{
                                                                         width: '100px',
@@ -2116,7 +2070,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '27.0634%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Today's
                     Date (mm/dd/yyyy) <input
                                                                         value={this.state.todayDateDay1}
@@ -2130,7 +2084,7 @@ class FormsI9 extends Component {
                                                                 <td style={{width: '35.3524%'}}><span style={{
                                                                     color: '#000000',
                                                                     fontFamily: 'arial, helvetica, sans-serif',
-                                                                    fontSize: '8pt'
+                                                                    fontSize: '10pt'
                                                                 }}>Name of
                     Employer or Authorized Representative <input
                                                                         value={this.state.empAuth15}
@@ -2146,7 +2100,7 @@ class FormsI9 extends Component {
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    
+                                                    <img src="https://i.imgur.com/yP3pq57.png" width="100%" alt/>
                                                 </div>
                                             </div>
                                         </div>

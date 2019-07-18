@@ -79,13 +79,13 @@ const styles = (theme) => ({
 const selectStyles = {
     option: (provided, {isFocused}) => ({
         ...provided,
-        border: '0',
+        border: 'none',
         backgroundColor: isFocused ? '#000000' : 'transparent',
         fontFamily: '"Ropa Sans", sans-serif !important',
         color: isFocused ? '#FFFFFF' : '#000000'        
     }),
     control: _ => ({
-        border: '1px solid #868686',
+        border: 'none',
         backgroundColor: 'transparent',
         fontFamily: '"Ropa Sans", sans-serif !important',
         color: '#ffffff',
@@ -97,7 +97,7 @@ const selectStyles = {
     }),
     singleValue: (provided) => ({
         ...provided,
-        border: '0',
+        border: 'none',
         backgroundColor: 'transparent',
         fontFamily: '"Ropa Sans", sans-serif !important',
         color: '#ffffff'
@@ -956,391 +956,388 @@ class VerticalLinearStepper extends Component {
     renderApplicantInformationSection = (steps) => {
         const { labels, displayLanguage } = this.state;
      
-        return (      
-            <React.Fragment>
-                <div className="ApplyBlock-head">
-                    <div className="applicant-card__header">
-                        <ReactFlagsSelect 
-                            defaultCountry="US" 
-                            onSelect={this.handleDisplayLanguageChange}
-                            countries={["US", "ES"]}
-                            customLabels={{"US":"English", "ES": "Español"}}
-                            className="ApplyForm-language"
-                        />  
-                        <h4 className="ApplyBlock-title">{labels.formTitle[displayLanguage]}</h4>
-                    </div>
-                </div>
-                <div className="ApplyBlock">
-                    <div className="row External-row">
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.firstName[displayLanguage]}</span>
-                            <div className="input-container--validated">
-                                <input
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.firstName}
-                                    name="firstName"
-                                    type="text"
-                                    className="form-control External-input"
-                                    
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                    placeholder={labels.firstName[displayLanguage]}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.midName[displayLanguage]}</span>
+        return (        
+            <div className="ApplyBlock">
+                    <ReactFlagsSelect 
+                    defaultCountry="US" 
+                    onSelect={this.handleDisplayLanguageChange}
+                    countries={["US", "ES"]}
+                    customLabels={{"US":"English", "ES": "Español"}}
+                    className="ApplyForm-language"
+                />  
+                <h4 className="ApplyBlock-title">{labels.formTitle[displayLanguage]}</h4>
+                <div className="row External-row">
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.firstName[displayLanguage]}</span>
+                        <div className="input-container--validated">
                             <input
                                 onChange={ this.handleStateChange }
-                                value={this.state.middleName}
-                                name="middleName"
+                                value={this.state.firstName}
+                                name="firstName"
+                                type="text"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder={labels.firstName[displayLanguage]}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.midName[displayLanguage]}</span>
+                        <input
+                            onChange={ this.handleStateChange }
+                            value={this.state.middleName}
+                            name="middleName"
+                            type="text"
+                            className="form-control External-input"
+                            min="0"
+                            maxLength="50"
+                            minLength="1"
+                            placeholder={labels.midName[displayLanguage]}
+                        />
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.lastName[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.lastName}
+                                name="lastName"
+                                type="text"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                                placeholder={labels.lastName[displayLanguage]}
+                            />
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.secLastName[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.lastName2}
+                                name="lastName2"
                                 type="text"
                                 className="form-control External-input"
                                 min="0"
                                 maxLength="50"
-                                minLength="1"
-                                placeholder={labels.midName[displayLanguage]}
+                                minLength="3"
+                                placeholder={labels.secLastName[displayLanguage]}
                             />
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.lastName[displayLanguage]}</span>
-                            <div className="input-container--validated">
-                                <input
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.lastName}
-                                    name="lastName"
-                                    type="text"
-                                    className="form-control External-input"
-                                    
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                    placeholder={labels.lastName[displayLanguage]}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.secLastName[displayLanguage]}</span>
-                            <div className="input-container--validated">
-                                <input
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.lastName2}
-                                    name="lastName2"
-                                    type="text"
-                                    className="form-control External-input"
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                    placeholder={labels.secLastName[displayLanguage]}
-                                />
-                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div className="row External-row">
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.stAddress[displayLanguage]}</span>
-                            <div className="input-container--validated">
-                                <input
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.streetAddress}
-                                    name="streetAddress"
-                                    type="text"
-                                    className="form-control External-input"
-                                    
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="5"
-                                    placeholder={labels.stAddress[displayLanguage]}
-                                />
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.apt[displayLanguage]}</span>
+                <div className="row External-row">
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.stAddress[displayLanguage]}</span>
+                        <div className="input-container--validated">
                             <input
                                 onChange={ this.handleStateChange }
-                                value={this.state.aptNumber}
-                                name="aptNumber"
+                                value={this.state.streetAddress}
+                                name="streetAddress"
                                 type="text"
-                                className="form-control External-input"                         
-                                placeholder={labels.apt[displayLanguage]}
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="5"
+                                placeholder={labels.stAddress[displayLanguage]}
                             />
                         </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.cellPhone[displayLanguage]}</span>
-                            <div className="input-container--validated">
-                                <InputMask
-                                    id="cell-number"
-                                    name="cellPhone"
-                                    mask="+(999) 999-9999"
-                                    maskChar=" "
-                                    value={this.state.cellPhone}
-                                    className="form-control External-input"
-                                    onChange={ this.handleStateChange }
-                                    pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                                    placeholder="+(___) ___-____"
-                                    
-                                    minLength="15"
-                                />
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label homePhone"> {labels.homePhone[displayLanguage]}</span>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.apt[displayLanguage]}</span>
+                        <input
+                            onChange={ this.handleStateChange }
+                            value={this.state.aptNumber}
+                            name="aptNumber"
+                            type="text"
+                            className="form-control External-input"                         
+                            placeholder={labels.apt[displayLanguage]}
+                        />
+                    </div>
+                </div>
+
+                <div className="row External-row">
+                    <LocationForm
+                        onChangeCity={this.updateCity}
+                        onChangeState={this.updateState}
+                        onChageZipCode={this.updateZipCode}
+                        city={this.state.city}
+                        state={this.state.state}
+                        zipCode={this.state.zipCode}
+                        changeCity={this.state.changeCity}
+                        cityClass={`form-control ${!this.state.validCity && ' _invalid'} External-input`}
+                        stateClass={`form-control ${!this.state.validState && ' _invalid'} External-input`}
+                        zipCodeClass={`form-control ${!this.state.validZipCode && ' _invalid'} External-input`}
+
+                        cityColClass="col-12 col-md-4 col-xl-3 External-col"
+                        stateColClass="col-12 col-md-4 col-xl-3 External-col"
+                        zipCodeColClass="col-12 col-md-4 col-xl-3 External-col"
+                        cssTitle={"primary"}
+                        placeholder="99999-99999"
+                        mask="99999-99999"
+                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label homePhone"> {labels.homePhone[displayLanguage]}</span>
+                        <InputMask
+                            id="home-number"
+                            name="homePhone"
+                            mask="+(999) 999-9999"
+                            maskChar=" "
+                            value={this.state.homePhone}
+                            className="form-control External-input"
+                            onChange={(event) => {
+                                this.setState({
+                                    homePhone: event.target.value
+                                });
+                            }}
+                            placeholder="+(___) ___-____"
+                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                            minLength="15"
+                        />
+                    </div>
+                </div>
+                <div className="row External-row">
+
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.cellPhone[displayLanguage]}</span>
+                        <div className="input-container--validated">
                             <InputMask
-                                id="home-number"
-                                name="homePhone"
+                                id="cell-number"
+                                name="cellPhone"
                                 mask="+(999) 999-9999"
                                 maskChar=" "
-                                value={this.state.homePhone}
-                                className="form-control"
-                                onChange={(event) => {
-                                    this.setState({
-                                        homePhone: event.target.value
-                                    });
-                                }}
-                                placeholder="+(___) ___-____"
+                                value={this.state.cellPhone}
+                                className="form-control External-input"
+                                onChange={ this.handleStateChange }
                                 pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                                placeholder="+(___) ___-____"
+                                
                                 minLength="15"
                             />
                         </div>
                     </div>
 
-                    <div className="row External-row">
-                        <LocationForm
-                            onChangeCity={this.updateCity}
-                            onChangeState={this.updateState}
-                            onChageZipCode={this.updateZipCode}
-                            city={this.state.city}
-                            state={this.state.state}
-                            zipCode={this.state.zipCode}
-                            changeCity={this.state.changeCity}
-                            cityClass={`form-control ${!this.state.validCity && ' _invalid'} External-input`}
-                            stateClass={`form-control ${!this.state.validState && ' _invalid'} External-input`}
-                            zipCodeClass={`form-control ${!this.state.validZipCode && ' _invalid'} External-input`}
-
-                            cityColClass="col-12 col-md-4 col-xl-3 External-col"
-                            stateColClass="col-12 col-md-4 col-xl-3 External-col"
-                            zipCodeColClass="col-12 col-md-4 col-xl-3 External-col"
-                            cssTitle={"primary"}
-                            placeholder="99999-99999"
-                            mask="99999-99999"
-                            updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label homePhone">{labels.ssn[displayLanguage]}</span>
-                            <div className="input-container--validated">
-                                <InputMask
-                                    id="socialSecurityNumber"
-                                    name="socialSecurityNumber"
-                                    mask="999-99-9999"
-                                    maskChar=" "
-                                    className="form-control External-input"
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.socialSecurityNumber}
-                                    placeholder="___-__-____"
-                                    pattern="^\d{3}-\d{2}-\d{4}$"
-                                    
-                                    minLength="15"
-                                />
-                            </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.ssn[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <InputMask
+                                id="socialSecurityNumber"
+                                name="socialSecurityNumber"
+                                mask="999-99-9999"
+                                maskChar=" "
+                                className="form-control External-input"
+                                onChange={ this.handleStateChange }
+                                value={this.state.socialSecurityNumber}
+                                placeholder="___-__-____"
+                                pattern="^\d{3}-\d{2}-\d{4}$"
+                                
+                                minLength="15"
+                            />
                         </div>
                     </div>
-                    <div className="row External-row">
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <div className="col-md-12">
-                                <span className="External-label">{labels.transport[displayLanguage]}</span>
-                            </div>
-                            <div className="col-md-12">
-                                <div className="onoffswitch">
-                                    <input
-                                        id="carSwitch"
-                                        className="onoffswitch-checkbox"
-                                        onChange={ this.handleStateChange }
-                                        checked={this.state.car}
-                                        value={this.state.car}
-                                        name="car"
-                                        type="checkbox"
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="10"
-                                    />
-                                    <label className="onoffswitch-label" htmlFor="carSwitch">
-                                        <span className="onoffswitch-inner" />
-                                        <span className="onoffswitch-switch" />
-                                    </label>
-                                </div>
-                            </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <div className="col-md-12">
+                            <span className="External-label">{labels.transport[displayLanguage]}</span>
                         </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.email[displayLanguage]}</span>
-                            <div className="input-container--validated">
+                        <div className="col-md-12">
+                            <div className="onoffswitch">
                                 <input
+                                    id="carSwitch"
+                                    className="onoffswitch-checkbox"
                                     onChange={ this.handleStateChange }
-                                    value={this.state.emailAddress}
-                                    name="emailAddress"
-                                    type="email"
-                                    className="form-control External-input"
-                                    
+                                    checked={this.state.car}
+                                    value={this.state.car}
+                                    name="car"
+                                    type="checkbox"
                                     min="0"
                                     maxLength="50"
-                                    minLength="8"
-                                    placeholder={labels.email[displayLanguage]}
+                                    minLength="10"
                                 />
+                                <label className="onoffswitch-label" htmlFor="carSwitch">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
                             </div>
-                        </div>                   
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.position[displayLanguage]}</span>
-                            <Select
-                                options={this.state.positionApplyOptions}
-                                value={this.findSelectedPositionApply(this.state.positionApplyingFor)}
-                                onChange={this.handlePositionApplyChange}
-                                closeMenuOnSelect={true}
-                                components={makeAnimated()}
-                                isMulti={false}
-                                styles={selectStyles}
-                            />
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label">{labels.available[displayLanguage]}</span>
-                            <div className="input-container--validated">
-                                <input
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.dateAvailable}
-                                    name="dateAvailable"
-                                    type="date"
-                                    className="form-control External-input"                                
-                                    min="0"
-                                    maxLength="50"
-                                />
-                            </div>
-                        </div>                    
-                    </div>
-                    
-                    <div className="row External-row">                   
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label"> {labels.restrictions[displayLanguage]} </span>
-                            <div className="col-md-12">
-                                <input
-                                    onChange={ this.handleStateChange }
-                                    value={true}
-                                    type="radio"
-                                    name="scheduleRestrictions"
-                                    className=""
-                                    checked={this.state.scheduleRestrictions === 'true' || this.state.scheduleRestrictions === true}
-                                />
-                                <label className="radio-label External-label"> Yes</label>
-                                <input
-                                    onChange={(event) => {
-                                        this.setState({
-                                            scheduleRestrictions: false,
-                                            scheduleExplain: ''
-                                        });
-                                    }}
-                                    value={false}
-                                    type="radio"
-                                    name="scheduleRestrictions"
-                                    className=""
-                                    checked={this.state.scheduleRestrictions === 'false' || this.state.scheduleRestrictions === false}
-                                />
-                                <label className="radio-label External-label"> No</label>
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label"> {labels.explain[displayLanguage]} </span>
-                            <textarea
-                                onChange={ this.handleStateChange }
-                                value={this.state.scheduleExplain}
-                                name="scheduleExplain"
-                                cols="30"
-                                rows="3"
-                                disabled={!this.state.scheduleRestrictions}
-                                className="form-control textarea-apply-form External-input"
-                                placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
-                            />
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label"> {labels.felony[displayLanguage]} </span>
-                            <div className="col-md-12">
-                                <input
-                                    onChange={(event) => {
-                                        this.setState({
-                                            convicted: event.target.value
-                                        });
-                                    }}
-                                    value={true}
-                                    type="radio"
-                                    name="convicted"
-                                    className=""
-                                    checked={this.state.convicted === 'true' || this.state.convicted === true}
-                                />
-                                <label className="radio-label External-label"> Yes</label>
-                                <input
-                                    onChange={(event) => {
-                                        this.setState({
-                                            convicted: false,
-                                            convictedExplain: ''
-                                        });
-                                    }}
-                                    value={false}
-                                    type="radio"
-                                    name="convicted"
-                                    className=""
-                                    checked={this.state.convicted === 'false' || this.state.convicted === false}
-                                />
-                                <label className="radio-label External-label"> No</label>
-                            </div>
-                        </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label"> {labels.explain[displayLanguage]} </span>
-                            <textarea
-                                onChange={ this.handleStateChange }
-                                value={this.state.convictedExplain}
-                                name="convictedExplain"
-                                cols="30"
-                                disabled={!this.state.convicted}
-                                rows="3"
-                                className="form-control textarea-apply-form External-input"
-                                placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
-                            />
                         </div>
                     </div>
-                
-                    <div className="row External-row">
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label"> {labels.heardTumi[displayLanguage]} </span>
-                            <Select
-                                options={this.state.heardTumiOptions}
-                                value={this.findSelectedReference(this.state.socialNetwork)}
-                                onChange={this.handleReferenceChange}
-                                closeMenuOnSelect={true}
-                                components={makeAnimated()}
-                                isMulti={false}                            
-                                styles={selectStyles}
-                            />                        
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.email[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.emailAddress}
+                                name="emailAddress"
+                                type="email"
+                                className="form-control External-input"
+                                
+                                min="0"
+                                maxLength="50"
+                                minLength="8"
+                                placeholder={labels.email[displayLanguage]}
+                            />
                         </div>
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
-                            {this.state.socialNetwork === 'others' ? (
-                                <textarea
-                                    onChange={ this.handleStateChange }
-                                    value={this.state.comment}                                
-                                    name="comment"
-                                    cols="20"
-                                    rows="4"
-                                    className="form-control textarea-apply-form External-input"
-                                    placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
-                                />
-                            ) : (
-                                    ''
-                                )}
-                        </div>
-                    </div>               
-                    <div className="External-formButtons">                   
-                        <Button type="submit" variant="contained" color="primary" className={`${this.props.classes.button}`} disabled={this.state.searchigZipcode}>
-                            {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
-                        </Button>             
-                    </div>                            
+                    </div>                   
                 </div>
-            </React.Fragment>  
+                
+                <div className="row External-row">                   
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.position[displayLanguage]}</span>
+                        
+                        <Select
+                            options={this.state.positionApplyOptions}
+                            value={this.findSelectedPositionApply(this.state.positionApplyingFor)}
+                            onChange={this.handlePositionApplyChange}
+                            closeMenuOnSelect={true}
+                            components={makeAnimated()}
+                            isMulti={false}
+                            styles={selectStyles}
+                        />
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label">{labels.available[displayLanguage]}</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={this.state.dateAvailable}
+                                name="dateAvailable"
+                                type="date"
+                                className="form-control External-input"                                
+                                min="0"
+                                maxLength="50"
+                            />
+                        </div>
+                    </div>                    
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label"> {labels.restrictions[displayLanguage]} </span>
+                        <div className="col-md-12">
+                            <input
+                                onChange={ this.handleStateChange }
+                                value={true}
+                                type="radio"
+                                name="scheduleRestrictions"
+                                className=""
+                                checked={this.state.scheduleRestrictions === 'true' || this.state.scheduleRestrictions === true}
+                            />
+                            <label className="radio-label External-label"> Yes</label>
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        scheduleRestrictions: false,
+                                        scheduleExplain: ''
+                                    });
+                                }}
+                                value={false}
+                                type="radio"
+                                name="scheduleRestrictions"
+                                className=""
+                                checked={this.state.scheduleRestrictions === 'false' || this.state.scheduleRestrictions === false}
+                            />
+                            <label className="radio-label External-label"> No</label>
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label"> {labels.explain[displayLanguage]} </span>
+                        <textarea
+                            onChange={ this.handleStateChange }
+                            value={this.state.scheduleExplain}
+                            name="scheduleExplain"
+                            cols="30"
+                            rows="3"
+                            disabled={!this.state.scheduleRestrictions}
+                            className="form-control textarea-apply-form External-input"
+                            placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
+                        />
+                    </div>
+                </div>
+               
+                <div className="row External-row">
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label"> {labels.felony[displayLanguage]} </span>
+                        <div className="col-md-12">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        convicted: event.target.value
+                                    });
+                                }}
+                                value={true}
+                                type="radio"
+                                name="convicted"
+                                className=""
+                                checked={this.state.convicted === 'true' || this.state.convicted === true}
+                            />
+                            <label className="radio-label External-label"> Yes</label>
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        convicted: false,
+                                        convictedExplain: ''
+                                    });
+                                }}
+                                value={false}
+                                type="radio"
+                                name="convicted"
+                                className=""
+                                checked={this.state.convicted === 'false' || this.state.convicted === false}
+                            />
+                            <label className="radio-label External-label"> No</label>
+                        </div>
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label"> {labels.explain[displayLanguage]} </span>
+                        <textarea
+                            onChange={ this.handleStateChange }
+                            value={this.state.convictedExplain}
+                            name="convictedExplain"
+                            cols="30"
+                            disabled={!this.state.convicted}
+                            rows="3"
+                            className="form-control textarea-apply-form External-input"
+                            placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
+                        />
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <span className="External-label"> {labels.heardTumi[displayLanguage]} </span>
+                        <Select
+                            options={this.state.heardTumiOptions}
+                            value={this.findSelectedReference(this.state.socialNetwork)}
+                            onChange={this.handleReferenceChange}
+                            closeMenuOnSelect={true}
+                            components={makeAnimated()}
+                            isMulti={false}                            
+                            styles={selectStyles}
+                        />                        
+                    </div>
+                    <div className="col-12 col-md-4 col-xl-3 External-col">
+                        {this.state.socialNetwork === 'others' ? (
+                            <textarea
+                                onChange={ this.handleStateChange }
+                                value={this.state.comment}                                
+                                name="comment"
+                                cols="20"
+                                rows="4"
+                                className="form-control textarea-apply-form External-input"
+                                placeholder={`${this.state.labels.details[this.state.displayLanguage]}`}
+                            />
+                        ) : (
+                                ''
+                            )}
+                    </div>
+                </div>               
+                <div className="External-formButtons">                   
+                    <Button type="submit" variant="contained" color="primary" className={`${this.props.classes.button} External-formButton`} disabled={this.state.searchigZipcode}>
+                        {this.state.activeStep === steps.length - 1 ? 'Finish' : `${labels.next[displayLanguage]}`}
+                    </Button>             
+                </div>                            
+            </div>
         )
     };
 
@@ -1398,8 +1395,7 @@ class VerticalLinearStepper extends Component {
                         () => {
 
 
-                            const skillForm = document.getElementById('skill-form');
-                            skillForm ? skillForm.reset() : null;
+                            document.getElementById('skill-form').reset();
                         }
                     );
                 }}
@@ -2555,45 +2551,40 @@ class VerticalLinearStepper extends Component {
                 <div className="main-stepper-container External">
                     <div className="container-fluid">                        
                         <div className="row External-bg">
-                            {
-                                //Show the searchbar only if the External Application is called from within the system.
-                                this.props.isInternalCall ? (
-                                    <div className="col-12 pr-0 pl-0">
-                                        <form className="form-inline External-search" onSubmit={this.handleSearch}>                                    
-                                            <div class="input-group External-searchInputGroup">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-phone"></i></span>
-                                                </div>
-                                                <InputMask
-                                                    id="phoneSearch"
-                                                    name="phoneSearch"
-                                                    mask="+(999) 999-9999"
-                                                    maskChar=" "
-                                                    value={this.state.phoneSearch}
-                                                    className="form-control External-input"
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            phoneSearch: event.target.value
-                                                        });
-                                                    }}
-                                                    placeholder="+(___) ___-____"
-                                                    pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                                                    minLength="15"
-                                                />
-                                            </div>                                           
-                                        
-                                            <div class="input-group External-searchInputGroup">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
-                                                </div>
+                            <div className="col-12 pr-0 pl-0">
+                                <form className="form-inline External-search" onSubmit={this.handleSearch}>                                    
+                                    <div class="input-group External-searchInputGroup">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1"><i class="fas fa-phone"></i></span>
+                                        </div>
+                                        <InputMask
+                                            id="phoneSearch"
+                                            name="phoneSearch"
+                                            mask="+(999) 999-9999"
+                                            maskChar=" "
+                                            value={this.state.phoneSearch}
+                                            className="form-control External-input"
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    phoneSearch: event.target.value
+                                                });
+                                            }}
+                                            placeholder="+(___) ___-____"
+                                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                                            minLength="15"
+                                        />
+                                    </div>                                           
+                                
+                                    <div class="input-group External-searchInputGroup">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon2"><i class="fas fa-search"></i></span>
+                                        </div>
 
-                                                <input value={this.state.leadIdSearch} name='leadIdSearch' onChange={this.handleStateChange} type="text" class="form-control External-input lead" placeholder="Lead Id" aria-label="Lead Id" aria-describedby="basic-addon2" />
-                                            </div>
-                                            <button className="External-searchButton" type="submit">Search</button>                                        
-                                        </form>   
+                                        <input value={this.state.leadIdSearch} name='leadIdSearch' onChange={this.handleStateChange} type="text" class="form-control External-input lead" placeholder="Lead Id" aria-label="Lead Id" aria-describedby="basic-addon2" />
                                     </div>
-                                ) : ''
-                            }                            
+                                    <button className="External-searchButton" type="submit">Search</button>                                        
+                                </form>   
+                            </div>
                             <div className="col-12 col-md-4 Stepper-col">
                                 <div className="External-logo">
                                     <img src='../images/tumi-logo-old.png' alt="TUMI STAFFING, Inc."/>
@@ -2692,7 +2683,7 @@ class VerticalLinearStepper extends Component {
                                         <p className="Footer-contact address">
                                             PO Box 592715 San Antonio, TX 78259 
                                         </p>
-                                        <span className="Footer-contact phone">210.853.2099</span>
+                                        <span className="Footer-contact phone" style={{width:'200px'}}>(219) 853-2099</span>
                                         <p className="Footer-contact copyright">
                                             &copy; 2019 TUMI STAFFING, Inc. All rights reserved
                                         </p>

@@ -5,40 +5,33 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Datetime from 'react-datetime';
 import moment from 'moment';
-import { withStyles } from '@material-ui/core/styles';
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU";
-
-const styles = () => ({
-    overflowVisible:{
-        overflow: 'visible'
-    }
-});
 
 class ApplicationRestrictionModal extends Component{
     constructor(props){
         super(props);
 
         this.state = {
+            dayWeeks: '',
             startTime: '12:00:00',
-            endTime: '12:00:00',
-            weekDays: []
+            endTime: '12:00:00' 
         }
     }
 
     selectWeekDay = (dayName) => {
-        this.setState((prevState) => {
-            let weekDays = this.state.weekDays.includes(dayName)
-                            ? prevState.weekDays.filter(d => d !== dayName)
-                            : [...prevState.weekDays, dayName]
-            return {
-                weekDays: weekDays
-            }
-        });
+        if (this.state.dayWeeks.includes(dayName))
+            this.setState((prevState) => {
+                return { dayWeeks: prevState.dayWeeks.replace(dayName, '') }
+            })
+        else
+            this.setState((prevState) => {
+                return { dayWeeks: prevState.dayWeeks.concat(dayName) }
+            })
     }
 
     getWeekDayStyle = (dayName) => {
-        return `btn btn-secondary RowForm-day ${this.state.weekDays.includes(dayName) ? 'btn-success' : ''}`;
+        return `btn btn-secondary RowForm-day ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
     }
 
     handleTimeChange = (name) => (text) => {
@@ -47,22 +40,10 @@ class ApplicationRestrictionModal extends Component{
         })
     }
 
-    handleAddRestriction = (e) => {
-        e.preventDefault();
-        let {weekDays, startTime, endTime} = this.state;
-        let rest = {
-            weekDays: weekDays,
-            startTime: startTime,
-            endTime: endTime
-        }
-        this.props.handleScheduleExplain(rest);
-    }
-
     render(){
-        let {classes} = this.props;
         return(
-            <Dialog maxWidth="sm" open={this.props.openModal} onClose={this.props.handleCloseModal} classes={{paperScrollPaper: classes.overflowVisible }}>
-                <DialogContent className={classes.overflowVisible} style={{ backgroundColor: "#ffffff" }}>                    
+            <Dialog maxWidth="sm" open={this.props.openModal} onClose={this.props.handleCloseModal}>
+                <DialogContent className="" style={{ backgroundColor: "#ffffff" }}>                    
                     <div className="row">
                         <div className="col-12 mb-2">
                             <div className="btn-group RowForm-days in-modal" role="group" aria-label="Basic example">
@@ -83,13 +64,10 @@ class ApplicationRestrictionModal extends Component{
                         </div>
                         <div className="col-12">
                             <div className="tumi-buttonRow">
-                                <button 
-                                    className="btn btn-success tumi-button" 
-                                    type="button"
-                                    onClick={this.handleAddRestriction}
-                                >
-                                    Add Restriction 
-                                    <i className="fas fa-save ml-2" />
+                                <button className="btn btn-success tumi-button" type="submit">
+                                    Add Restriction <i className="fas fa-save ml-2" />
+                                    {/* Save {!this.state.saving && <i className="fas fa-save ml2" />}
+                                    {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />} */}
                                 </button>
                                 <button type="button" className="btn btn-danger tumi-button float-right" onClick={this.props.handleCloseModal}>
                                     Cancel<i className="fas fa-ban ml-2" /> 
@@ -103,4 +81,4 @@ class ApplicationRestrictionModal extends Component{
     }
 }
 
-export default withStyles(styles)(ApplicationRestrictionModal);
+export default ApplicationRestrictionModal;

@@ -7,6 +7,7 @@ import CircularProgressLoading from '../../../material-ui/CircularProgressLoadin
 import withGlobalContent from '../../../Generic/Global';
 import SkillCard from '../../../ui-components/SkillCard/SkillCard';
 
+const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
 const skillsLabels = require(`../languagesJSON/${localStorage.getItem('languageForm')}/skills`);
@@ -164,32 +165,34 @@ class Skills extends Component {
 	render() {
 		// To render the skills section
 		let renderSkillsSection = () => (
-			<div className="row p-0">
-				<div className="row-skill">
-					{this.state.skills.map((skillItem) => (
-						<SkillCard
-							skillDescription={skillItem.description}
-							skillLevel={skillItem.level}
-							removeSkill={() => {
-								this.setState(
-									(prevState) => ({
-										skills: this.state.skills.filter((_, i) => {
-											return _.uuid !== skillItem.uuid;
-										})
-									}),
-									() => {
-										if (skillItem.id !== undefined) {
-											this.removeSkillById(skillItem.id);
+			<div className="">
+				<div className="row">
+					<div className="row-skill">
+						{this.state.skills.map((skillItem) => (
+							<SkillCard
+								skillDescription={skillItem.description}
+								skillLevel={skillItem.level}
+								removeSkill={() => {
+									this.setState(
+										(prevState) => ({
+											skills: this.state.skills.filter((_, i) => {
+												return _.uuid !== skillItem.uuid;
+											})
+										}),
+										() => {
+											if (skillItem.id !== undefined) {
+												this.removeSkillById(skillItem.id);
+											}
 										}
-									}
-								);
-							}}
-						/>
-					))}
-				</div>
-				<div className="col-md-12">
-					<hr />
-					{renderSkillsDialog()}
+									);
+								}}
+							/>
+						))}
+					</div>
+					<div className="col-md-12">
+						<hr />
+						{renderSkillsDialog()}
+					</div>
 				</div>
 			</div>
 		);
@@ -261,18 +264,31 @@ class Skills extends Component {
 		);
 
 		return (
-
-			this.state.loading ? (
-				<div className="loading-container">
-					{renderSkillsSection()}
-					<div className="circular-progress-container">
-						<CircularProgressLoading />
+			<div className="Apply-container--application">
+				<div className="">
+					<div className="">
+						<div className="applicant-card">
+							<div className="applicant-card__header">
+								<span className="applicant-card__title">{menuSpanish[5].label}</span>
+							</div>
+							<div className="card-body">
+								<div className="row">
+									{this.state.loading ? (
+										<div className="loading-container">
+											{renderSkillsSection()}
+											<div className="circular-progress-container">
+												<CircularProgressLoading />
+											</div>
+										</div>
+									) : (
+											<div className="col-md-12">{renderSkillsSection()}</div>
+										)}
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-			) : (
-					<div className="col-md-12">{renderSkillsSection()}</div>
-				)
-
+			</div>
 		);
 	}
 }

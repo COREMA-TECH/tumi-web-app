@@ -153,7 +153,7 @@ class Signature extends React.Component {
             this.setState({ openModal: false, disableButtonLetter: true, allowSave: true, empty: false }, () => {
                 this.sigPad.off();
                 this.setState({ signature: this.sigPad.toDataURL() }, () => {
-                    this.props.signatureValue ? this.props.signatureValue(this.state.signature) : null;
+                    this.props.signatureValue(this.state.signature);
                 });
             });
         }
@@ -265,7 +265,7 @@ class Signature extends React.Component {
         );
 
         if (this.props.showSaveIcon !== null) {
-            this.props.signatureValue ? this.props.signatureValue('') : null;
+            this.props.signatureValue('');
         }
     };
 
@@ -400,7 +400,7 @@ class Signature extends React.Component {
                                     signature: this.sigPad.toDataURL()
                                 }, () => {
                                     if (this.props.showSaveIcon !== null) {
-                                        this.props.signatureValue ? this.props.signatureValue(this.state.signature) : null;
+                                        this.props.signatureValue(this.state.signature);
                                     }
                                 });
                             }}
@@ -565,7 +565,7 @@ class Signature extends React.Component {
                     <DialogContent>
                         <div className="tumi-col-centered">
                             <p className="text-center mb-2">
-                                Thank you, you are done!
+                                Thank you for your application!! Please let our office staff know that you’re ready for the next step!
                             </p>
                             <a href="#" onClick={this.handleCloseFinishModal} className="btn btn-success">Ok!</a>
                         </div>

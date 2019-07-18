@@ -1,151 +1,7 @@
 import React, { Component } from 'react';
 import { Doughnut, Line } from 'react-chartjs-2';
-import { GET_WO_BY_REGION, GET_WO_BY_CATEGORY, GET_EMPLOYEES_BY_HOTEL } from './queries';
-import withApollo from 'react-apollo/withApollo';
 
 class DashBoardSponsor extends Component {
-
-    INITIAL_STATE = {
-        woByRegionData: {},
-        woByCategoryData: {},
-        empByHotelData: {},
-        headcount: 0,
-        colors: ["#40B5BC", "#5AC6C6", "#8FD0CA", "#08B6CE", "#74D5DD", "#779ECB", "#87CEEB", "#87CEFF", "#7EC0EE", "#BCF1EC", "#99E1DC", "#8EEDD6", "#5BBFD9"],
-        prevColor: ''
-    }
-
-
-    constructor(props){
-        super(props);
-
-        this.state = {
-            ...this.INITIAL_STATE,
-        }
-    }
-
-    getRandomColor = _ => {
-        let color = this.state.colors[Math.floor(Math.random() * this.state.colors.length)];
-
-        if(color === '' || color === this.state.prevColor)
-            color = this.getRandomColor();
-
-        return color;
-    }
-
-    fetchEmployeesByHotel = _ => {
-        this.props.client.query({
-            query: GET_EMPLOYEES_BY_HOTEL,
-            fetchPolicy: 'no-cache'
-        })
-        .then(({data}) => {
-            let labels = [];
-            let count = 0;
-
-            let datasets = {
-                label: "Employees per Hotel",
-                data: [],
-                backgroundColor: [],
-                hoverBackgroundColor: []
-            }
-
-            data.employeesByHotel.forEach(item => {
-                labels.push(item.name);
-                datasets.data.push(item.employeeCount);
-                datasets.backgroundColor.push(this.getRandomColor());
-                count += item.employeeCount;
-            })
-
-            datasets.hoverBackgroundColor = [...datasets.backgroundColor];
-
-            this.setState(_ => ({
-                empByHotelData: {
-                    labels,
-                    datasets: [datasets]
-                },
-
-                headcount: count
-            }));
-        })
-        .catch(error => console.log(error));
-    }
-
-    fetchWOByRegion = _ => {
-        this.props.client.query({
-            query: GET_WO_BY_REGION,
-            fetchPolicy: 'no-cache'
-        })
-
-        .then(({data}) => {
-            const woByRegion = data.worKOrdersByRegion.filter(item => item.workOrders_count > 0);
-            let labels = []; 
-
-            let datasets = {
-                label: "Work Orders Requested Per Region",
-                data: [],
-                backgroundColor: [],
-                hoverBackgroundColor: []
-            };
-
-            woByRegion.forEach(item => {
-                labels.push(item.name.length > 0 ? item.name : 'Unnamed Region');
-                datasets.data.push(item.workOrders_count);
-                datasets.backgroundColor.push(this.getRandomColor());                
-            });            
-
-            datasets.hoverBackgroundColor = [...datasets.backgroundColor];
-
-            this.setState(_ => ({
-                woByRegionData: {
-                    labels,
-                    datasets: [datasets]
-                }
-            }));
-        })
-
-        .catch(error => console.log(error));
-    }
-
-    fetchWOByCategory = _ => {
-        this.props.client.query({
-            query: GET_WO_BY_CATEGORY,
-            fetchPolicy: 'no-cache'
-        })
-
-        .then(({data}) => {
-            const woByCategory = data.worKOrdersByCategory.filter(item => item.workOrders_count > 0);
-            let labels = []; 
-
-            let datasets = {
-                label: "Work Orders Requested Per Category",
-                data: [],
-                backgroundColor: [],
-                hoverBackgroundColor: []
-            };
-
-            woByCategory.forEach(item => {
-                labels.push(item.name.length > 0 ? item.name : 'Unnamed Category');
-                datasets.data.push(item.workOrders_count);
-                datasets.backgroundColor.push(this.getRandomColor());                
-            });            
-
-            datasets.hoverBackgroundColor = [...datasets.backgroundColor];
-
-            this.setState(_ => ({
-                woByCategoryData: {
-                    labels,
-                    datasets: [datasets]
-                }
-            }));
-        })
-
-        .catch(error => console.log(error));
-    }
-
-    componentDidMount = _ => {
-        this.fetchEmployeesByHotel();
-        this.fetchWOByRegion();
-        this.fetchWOByCategory();
-    }
 
     data = {
         labels: ['Banquet', 'Housemen', 'Cook'],
@@ -186,7 +42,7 @@ class DashBoardSponsor extends Component {
     render() {
         return (
             <div className="container Stats">
-                <div className="row position-relative">
+                <div className="row">
                     <div className="col-lg-12 col-md-12 col-xl-5">
                         <div className="row">
                             <div className="col-md-6 mb-1">
@@ -240,13 +96,9 @@ class DashBoardSponsor extends Component {
 
                         </div>
                     </div>
-                    <div className="StatBox headCount">
-                        <div className="StatBox-header">Headcount</div>
-                        <div className="StatBox-amount">{this.state.headcount}</div>
-                    </div>
                     <div className="FloatingChart">
                         <Doughnut
-                            data={this.state.empByHotelData}
+                            data={this.data}
                             width={300}
                             height={300}
                             options={{
@@ -254,7 +106,6 @@ class DashBoardSponsor extends Component {
                                 legend: {
                                     display: false,
                                 },
-                                cutoutPercentage: 70
                             }}
                         />
                     </div>
@@ -311,7 +162,7 @@ class DashBoardSponsor extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="row">                
+                <div className="row">
                     <div className="col-md-5">
                         <div className="StatBox mb-1">
                             <div className="StatBox-header">
@@ -319,12 +170,11 @@ class DashBoardSponsor extends Component {
                             </div>
                             <div className="StatBox-body">
                                 <Doughnut
-                                    data={this.state.woByCategoryData}
+                                    data={this.data}
                                     width={200}
                                     height={200}
                                     options={{
-                                        maintainAspectRatio: false,
-                                        cutoutPercentage: 70
+                                        maintainAspectRatio: false
                                     }}
                                 />
                             </div>
@@ -335,12 +185,11 @@ class DashBoardSponsor extends Component {
                             </div>
                             <div className="StatBox-body">
                                 <Doughnut
-                                    data={this.state.woByRegionData}
+                                    data={this.regionData}
                                     width={200}
                                     height={200}
                                     options={{
-                                        maintainAspectRatio: false,
-                                        cutoutPercentage: 70
+                                        maintainAspectRatio: false
                                     }}
                                 />
                             </div>
@@ -352,8 +201,7 @@ class DashBoardSponsor extends Component {
                             width={200}
                             height={400}
                             options={{
-                                maintainAspectRatio: false,
-                                cutoutPercentage: 70
+                                maintainAspectRatio: false
                             }}
                         />
                     </div>
@@ -364,4 +212,4 @@ class DashBoardSponsor extends Component {
 
 }
 
-export default withApollo(DashBoardSponsor);
+export default DashBoardSponsor;

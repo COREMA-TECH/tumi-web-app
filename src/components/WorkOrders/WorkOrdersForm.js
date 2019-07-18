@@ -57,10 +57,8 @@ const styles = (theme) => ({
         '&:hover': {
             cursor: 'pointer'
         }
-    },
-    overflowVisible:{
-        overflow: 'visible'
     }
+
 });
 
 const CustomTableCell = withStyles((theme) => ({
@@ -143,7 +141,6 @@ class WorkOrdersForm extends Component {
             recruiters: [],
             contacts: [],
             Shift: [],
-            propertyStartWeek: 1,
 
             ...this.DEFAULT_STATE
         };
@@ -666,10 +663,7 @@ class WorkOrdersForm extends Component {
 
     handlePropertySelectChange = ({ value }) => {
         this.setState((prevState, props) => {
-            let hotel = this.state.hotels.find(_ => {
-                return _.Id === parseInt(value)
-            })
-            return { IdEntity: value, propertyStartWeek: hotel ? hotel.Start_Week : null }
+            return { IdEntity: value }
         }, _ => this.getDepartment(value));
     }
 
@@ -736,7 +730,7 @@ class WorkOrdersForm extends Component {
 
         return (
             <div>
-                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal} classes={{paperScrollPaper: classes.overflowVisible }} >
+                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 className="modal-title">Work Order</h5>
@@ -779,7 +773,7 @@ class WorkOrdersForm extends Component {
                             <div className="card">
                                 <div className="card-header bg-light">
                                     <div className="row">
-                                        <div className="col-md-12 col-lg-4 mb-2">
+                                        <div className="col-md-4 col-xl-2 mb-2">
                                             <Select
                                                 options={departmentList}
                                                 value={this.findSelectedDepartment(this.state.departmentId)}
@@ -792,7 +786,7 @@ class WorkOrdersForm extends Component {
                                             />
 
                                         </div>
-                                        <div className="col-md-12 col-lg-3">
+                                        <div className="col-md-3">
                                             {!this.state.isEditing &&
                                                 <button type="button" className="btn btn-link" onClick={this.newWorkOrder}>New +</button>
                                             }
@@ -804,7 +798,6 @@ class WorkOrdersForm extends Component {
                                 return (
                                     <RowForm
                                         startDate={this.state.startDate}
-                                        propertyStartWeek={this.state.propertyStartWeek}
                                         endDate={this.state.endDate}
                                         departmentId={this.state.departmentId}
                                         IdEntity={this.state.IdEntity}

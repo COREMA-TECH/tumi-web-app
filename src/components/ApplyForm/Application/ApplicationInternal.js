@@ -1,24 +1,36 @@
-import React, { Component } from 'react';
+    import React, { Component } from 'react';
 import './index.css';
+import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import { GET_APPLICATION_BY_ID, } from '../Queries';
-import { UPDATE_INTERNAL_APPLICATION } from '../Mutations';
+import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY } from '../Queries';
+import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION } from '../Mutations';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
+import LocationForm from '../../ui-components/LocationForm'
 import { withRouter } from "react-router-dom";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import ShiftRestrictionModal from './ShiftRestrictionModal';
 import InputForm from 'ui-components/InputForm/InputForm';
-import Skills from "./skills/Skills";
-import DatePicker from "react-datepicker";
-
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
 }
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
+const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const formSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/formSpanish`);
 
+const KeyCodes = {
+    comma: 188,
+    enter: 13,
+};
 
 class ApplicationInternal extends Component {
     constructor(props) {
@@ -26,37 +38,130 @@ class ApplicationInternal extends Component {
 
         this.state = {
             activeStep: 0,
+            open: false,
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            lastName2: '',
+
+            date: new Date().toISOString().substring(0, 10),
+            streetAddress: '',
+            aptNumber: '',
+            city: 0,
+            state: 0,
+            zipCode: '',
+            homePhone: '',
+            cellPhone: '',
+            socialSecurityNumber: '',
+            birthDay: '',
+            car: false,
+            typeOfId: '',
+            expireDateId: null,
+            emailAddress: '',
+            positionApplyingFor: 1,
+            idealJob: '',
+            dateAvailable: '',
+            scheduleRestrictions: '',
+            scheduleExplain: '',
+            convicted: '',
+            convictedExplain: '',
+            socialNetwork: '',
+            comment: '',
+            isLead: '',
+            dateCreation: new Date().toISOString().substring(0, 10),
+            immediately: 0,
+            optionHearTumi: '',
+            nameReferences:'',
+            EEOC:0,
+            Exemptions:'',
+            area:'',
+            HireType:'',
+            gender:'',
+            marital:'',
+            hireDate: '',
+            // Languages array
+            languages: [],
+
+            // Skills array
+            skills: [],
+
+            // Schools array
+            schools: [],
+
+            // Military Service state fields
+            branch: '',
+            startDateMilitaryService: '',
+            endDateMilitaryService: '',
+            rankAtDischarge: '',
+            typeOfDischarge: '',
+
+            // Previous Employment
+            previousEmployment: [],
+            companyName: '',
+            companyPhone: '',
+            companyAddress: '',
+            companySupervisor: '',
+            companyJobTitle: '',
+            companyPayRate: '',
+            companyStartDate: '',
+            companyEndDate: '',
+            companyReasonForLeaving: '',
+
+            percent: 50,
             insertDialogLoading: false,
+            graduated: false,
+            previousEmploymentPhone: '',
+
             // Application id property state is used to save languages, education, mulitary services, skills
             applicationId: null,
+
+            // Languages catalog
+            languagesLoaded: [],
+
             // Editing state properties - To edit general info
             editing: false,
-            loading: false,
-            birthDay: null,
-            gender: null,
-            EEOC: 0,
-            marital: null,
-            Exemptions: '',
-            area: '',
-            HireType: '',
-            typeOfId: null,
-            expireDateId: null,
-            hireDate: null,
-            startDate: null,
-            employeeId: null,
-            hasEmployee: false,
 
-            numberId: null,
-            employmentType: null,
-            comment: null
+            loading: false,
+            tags: [],
+
+
+            // React tag input with suggestions
+            positionsTags: [],
+
+
+            // Validation
+            homePhoneNumberValid: true,
+            cellPhoneNumberValid: true,
+            isCorrectCity: true,
+
+            positionCatalog: [],
+            positionCatalogTag: [],
+            dataWorkOrder: [],
+
+
+            openSSNDialog: false,
+            //Open/Close schedule restrictions modal
+            openRestrictionsModal: false
         };
     }
 
 
+    handleChangePositionTag = (positionsTags) => {
+        this.setState({ positionsTags });
+    };
+
+    handleChange = (positionsTags) => {
+        this.setState({ positionsTags });
+    };
+
+    handleRestrictionModalClose = () => {
+        this.setState({ openRestrictionsModal: false });
+    };
+
     /**<
      * To update a application by id
      */
-    updateApplication = (id) => {
+    InsertUpdateApplicationInformation = (id) => {
         this.setState(
             {
                 insertDialogLoading: true
@@ -64,29 +169,47 @@ class ApplicationInternal extends Component {
             () => {
                 this.props.client
                     .mutate({
-                        mutation: UPDATE_INTERNAL_APPLICATION,
+                        mutation: id == 0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
                         variables: {
-                            codeuser: localStorage.getItem('LoginId'),
-                            nameUser: localStorage.getItem('FullName'),
-                            employee: {
-                                id: this.state.employeeId,
-                                hireDate: this.state.hireDate || null,
-                                startDate: this.state.startDate || null,
-                            },
                             application: {
                                 id: id,
-                                birthDay: this.state.birthDay || null,
-                                gender: this.state.gender,
-                                eeoc: this.state.EEOC,
-                                marital: this.state.marital,
-                                exemptions: this.state.Exemptions,
-                                area: this.state.area,
-                                hireType: this.state.HireType,
-                                typeOfId: this.state.typeOfId,
-                                expireDateId: this.state.expireDateId || null,
-                                numberId: this.state.numberId || null,
-                                employmentType: this.state.employmentType || null,
-                                comment: this.state.comment || null
+                                firstName: this.state.firstName,
+                                middleName: this.state.middleName,
+                                lastName: this.state.lastName,
+                                lastName2: this.state.lastName2,
+                                date: this.state.date,
+                                streetAddress: this.state.streetAddress,
+                                aptNumber: this.state.aptNumber,
+                                city: this.state.city,
+                                state: this.state.state,
+                                zipCode: this.state.zipCode,
+                                homePhone: this.state.homePhone,
+                                cellPhone: this.state.cellPhone,
+                                socialSecurityNumber: this.state.socialSecurityNumber,
+                                birthDay: this.state.birthDay,
+                                car: this.state.car,
+                                typeOfId: parseInt(this.state.typeOfId),
+                                expireDateId: this.state.expireDateId,
+                                emailAddress: this.state.emailAddress,
+                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                                dateAvailable: this.state.dateAvailable,
+                                scheduleRestrictions: this.state.scheduleRestrictions,
+                                scheduleExplain: this.state.scheduleExplain,
+                                convicted: this.state.convicted,
+                                convictedExplain: this.state.convictedExplain,
+                                comment: this.state.comment,
+                                idealJob: this.state.idealJob,
+                                isLead: id==0 ? false:this.state.isLead,
+                                dateCreation: new Date().toISOString().substring(0, 10),
+                                immediately: this.state.immediately,
+                                optionHearTumi: this.state.optionHearTumi,
+                                nameReferences:this.state.nameReferences,
+                                eeoc:this.state.EEOC,
+                                exemptions:this.state.Exemptions,
+                                area:this.state.area,
+                                hireType:this.state.HireType,
+                                gender:this.state.gender,
+                                marital:this.state.marital
                             }
                         }
                     })
@@ -95,14 +218,26 @@ class ApplicationInternal extends Component {
                             editing: false,
                             insertDialogLoading: false
                         }, () => {
+                            let object = [];
+                            this.state.positionsTags.map(item => {
+                                object.push({
+                                    ApplicationId: this.props.applicationId,
+                                    idPosition: item.value,
+                                    description: item.label
+                                })
+                            });
                             this.getApplicationById(this.props.applicationId);
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
+                        console.log("App error ", error)
                         this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
+                            this.setState({
+                                socialSecurityNumber: ''
+                            });
                             this.props.handleOpenSnackbar(
                                 'error',
                                 'Something went wrong!',
@@ -144,33 +279,61 @@ class ApplicationInternal extends Component {
                         let applicantData = data.applications[0];
                         this.setState(
                             {
+                                firstName: applicantData.firstName,
+                                middleName: applicantData.middleName,
+                                lastName: applicantData.lastName,
+                                lastName2: applicantData.lastName2,
+                                date:
+                                    applicantData.date !== null
+                                        ? applicantData.date.substring(0, 10)
+                                        : applicantData.date,
+                                streetAddress: applicantData.streetAddress,
+                                emailAddress: applicantData.emailAddress,
+                                aptNumber: applicantData.aptNumber,
+                                city: applicantData.city,
+                                state: applicantData.state,
+                                zipCode: applicantData.zipCode,
+                                homePhone: applicantData.homePhone,
+                                homePhoneNumberValid: this.state.homePhone.length > 0,
+                                cellPhone: applicantData.cellPhone,
+                                cellPhoneNumberValid: applicantData.cellPhone.length > 0,
                                 birthDay:
-                                    applicantData.birthDay ? applicantData.birthDay.substring(0, 10) : null,
-                                gender: applicantData.gender,
-                                EEOC: applicantData.eeoc,
-                                marital: applicantData.marital,
-                                Exemptions: applicantData.exemptions,
-                                area: applicantData.area,
-                                HireType: applicantData.hireType,
+                                    applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
+                                socialSecurityNumber: applicantData.socialSecurityNumber,
+                                positionApplyingFor: applicantData.positionApplyingFor,
+                                car: applicantData.car,
                                 typeOfId: applicantData.typeOfId,
                                 expireDateId:
                                     applicantData.expireDateId !== null
                                         ? applicantData.expireDateId.substring(0, 10)
                                         : applicantData.expireDateId,
-                                hasEmployee: applicantData.employee ? (applicantData.employee.Employees ? true : false) : false,
-                                numberId: applicantData.numberId,
-                                employmentType: applicantData.employmentType,
+                                dateAvailable:
+                                    applicantData.dateAvailable !== null
+                                        ? applicantData.dateAvailable.substring(0, 10)
+                                        : applicantData.dateAvailable,
+                                scheduleRestrictions: applicantData.scheduleRestrictions,
+                                scheduleExplain: applicantData.scheduleExplain,
+                                convicted: applicantData.convicted,
+                                convictedExplain: applicantData.convictedExplain,
                                 comment: applicantData.comment,
-                                editing: false
+                                editing: false,
+                                tags: applicantData.idealJob
+                                    ? applicantData.idealJob.split(',').map((d) => d.trim())
+                                    : [],
+                                idealJob: applicantData.idealJob,
+                                isLead: applicantData.isLead,
+                                dateCreation:  applicantData.dateCreation,
+                                immediately: applicantData.immediately,
+                                optionHearTumi: applicantData.optionHearTumi,
+                                nameReferences: applicantData.nameReferences,
+                                EEOC:applicantData.eeoc,
+                                Exemptions:applicantData.exemptions,
+                                area:applicantData.area,
+                                HireType:applicantData.hireType,
+                                gender:applicantData.gender,
+                                marital:applicantData.marital,
+                                hireDate: applicantData.hireDate
                             }, _ => {
-                                if (this.state.hasEmployee) {
-                                    let employee = applicantData.employee.Employees;
-                                    this.setState(() => ({
-                                        hireDate: employee.hireDate,
-                                        startDate: employee.startDate,
-                                        employeeId: employee.id
-                                    }))
-                                }
                                 this.removeSkeletonAnimation();
                             }
                         );
@@ -188,6 +351,19 @@ class ApplicationInternal extends Component {
         );
     };
 
+    // To validate all the inputs and set a red border when the input is invalid
+    validateInvalidInput = () => {
+        if (document.addEventListener) {
+            document.addEventListener(
+                'invalid',
+                (e) => {
+                    e.target.className += ' invalid-apply-form';
+                },
+                true
+            );
+        }
+    };
+
     // To show skeleton animation in css
     removeSkeletonAnimation = () => {
         let inputs, index;
@@ -201,7 +377,11 @@ class ApplicationInternal extends Component {
     componentWillMount() {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
+
             this.getApplicationById(this.props.applicationId);
+            if ((this.state.socialSecurityNumber || '').length === 0) {
+                this.props.handleContract();
+            }
         }
 
         if (this.props.applicationId == 0) {
@@ -210,7 +390,7 @@ class ApplicationInternal extends Component {
             });
         }
 
-
+        
     }
 
     componentWillReceiveProps(nextProps) {
@@ -230,15 +410,35 @@ class ApplicationInternal extends Component {
     }
 
     submitForm = () => {
-        this.updateApplication(this.props.applicationId);
+        if (!this.state.typeOfId) {  
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    'some fields are required',
+                    'bottom',
+                    'right'
+                ); 
+             }else{this.InsertUpdateApplicationInformation(this.props.applicationId);}
+        
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.submitForm();
+        this.submitForm()
+        
     }
 
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
+
+    handleCloseSSNDialog = () => {
+        this.setState({
+            openSSNDialog: false
+        })
+    };
 
     handleInputChange = (event) => {
         const target = event.target;
@@ -250,201 +450,25 @@ class ApplicationInternal extends Component {
         });
     }
 
-    handleDatePickerChange = (name, date) => {
-        this.setState({
-            [name]: date
-        });
-    }
-
     render() {
+        //this.validateInvalidInput();
+        const { tags, suggestions } = this.state;
 
         return (
             <React.Fragment>
                 <div className="row">
                     <div className="col-md-6">
-
+                
                         <div className="Apply-container--application">
-                                <div className="applicant-card">
-                                    <div className="applicant-card__header">
-                                        <span className="applicant-card__title">{applyTabs[1].label}</span>
-                                    </div>
-                                    <br />
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <div className="col-md-12 form-section-1">
-                                                <div className="row">
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[12].label}
-                                                        </span>
-                                                        <div class="input-group flex-nowrap">
-                                                            <DatePicker
-                                                                selected={this.state.birthDay}
-                                                                onChange={(date) => this.handleDatePickerChange('birthDay', date)}
-                                                                placeholderText={formSpanish[12].label}
-                                                                name="birthDay"
-                                                                id="birthDay"
-                                                                disabled={!this.state.editing}
-                                                            />
-                                                            <div class="input-group-append">
-                                                                <label class="input-group-text" id="addon-wrapping" for="birthDay">
-                                                                    <i class="far fa-calendar"></i>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[34].label}
-                                                        </span>
-                                                        <select
-                                                            name="marital"
-                                                            id="marital"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.marital}
-                                                        >
-                                                            <option value="">Select an option</option>
-                                                            <option value="1">Single</option>
-                                                            <option value="2">Married</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[33].label}
-                                                        </span>
-                                                        <select
-                                                            name="gender"
-                                                            id="gender"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            value={this.state.gender}
-                                                            onChange={this.handleInputChange}
-                                                        >
-                                                            <option value="">Select an option</option>
-                                                            <option value="1">Male</option>
-                                                            <option value="2">Female</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[29].label}
-                                                        </span>
-                                                        <select
-                                                            name="EEOC"
-                                                            id="EEOC"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            value={this.state.EEOC}
-                                                            onChange={this.handleInputChange}
-                                                        >
-                                                            <option value="">Select an option</option>
-                                                            <option value="1">White</option>
-                                                            <option value="2">Black or African American</option>
-                                                            <option value="3">Hispanic or Latino</option>
-                                                            <option value="4">Asian</option>
-                                                            <option value="5">American Indian or Alaska Native</option>
-                                                            <option value="6">Native Hawaiian or Other Pacific Islander</option>
-                                                            <option value="7">Two or more races</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[30].label}
-                                                        </span>
-                                                        <input
-                                                            type="number"
-                                                            step="0.01"
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.Exemptions}
-                                                            name="Exemptions"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            maxLength="50"
-
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[14].label}
-                                                        </span>
-                                                        <select
-                                                            name="typeOfId"
-                                                            id="typeOfId"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            value={this.state.typeOfId}
-                                                            onChange={this.handleInputChange}
-                                                        >
-                                                            <option value="">Select an option</option>
-                                                            <option value="1">Birth certificate</option>
-                                                            <option value="2">Social Security card</option>
-                                                            <option value="3">State-issued driver's license</option>
-                                                            <option value="4">State-issued ID</option>
-                                                            <option value="5">Passport</option>
-                                                            <option value="6">Department of Defense Identification Card</option>
-                                                            <option value="7">Green Card</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[39].label}
-                                                        </span>
-                                                        <input
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.numberId}
-                                                            name="numberId"
-                                                            type="text"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[15].label}
-                                                        </span>
-                                                        <div class="input-group flex-nowrap">
-                                                            <DatePicker
-                                                                selected={this.state.expireDateId}
-                                                                onChange={(date) => this.handleDatePickerChange('expireDateId', date)}
-                                                                placeholderText={formSpanish[15].label}
-                                                                name="expireDateId"
-                                                                id="expireDateId"
-                                                                disabled={!this.state.editing}
-                                                            />
-                                                            <div class="input-group-append">
-                                                                <label class="input-group-text" id="addon-wrapping" for="expireDateId">
-                                                                    <i class="far fa-calendar"></i>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <div className="Apply-container--application">
-                                <form
-                                    className="general-info-apply-form"
-                                    id="general-info-form"
-                                    autoComplete="off"
-                                    onSubmit={this.handleSubmit}
-                                >
+                            <form
+                                className="general-info-apply-form"
+                                id="general-info-form"
+                                autoComplete="off"
+                                onSubmit={this.handleSubmit}
+                            >
                                     <div className="applicant-card">
                                         <div className="applicant-card__header">
-                                            <span className="applicant-card__title"></span>
+                                            <span className="applicant-card__title">{applyTabs[1].label}</span>
                                             {!this.state.editing &&
                                                 <button
                                                     className="applicant-card__edit-button"
@@ -466,6 +490,122 @@ class ApplicationInternal extends Component {
                                                     <div className="row">
                                                         <div className="col-md-6">
                                                             <span className="primary applicant-card__label skeleton">
+                                                                * {formSpanish[12].label}
+                                                            </span>
+                                                            <input
+                                                                onChange={this.handleInputChange}
+                                                                value={this.state.birthDay}
+                                                                name="birthDay"
+                                                                type="date"
+                                                                className="form-control"
+                                                                disabled={!this.state.editing}
+                                                                required
+                                                                min="0"
+                                                                maxLength="50"
+                                                                minLength="10"
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-md-6">
+                                                            <span className="primary applicant-card__label skeleton">
+                                                                * {formSpanish[33].label}
+                                                                </span>
+                                                                <select
+                                                                    name="gender"
+                                                                    id="gender"
+                                                                    className="form-control"
+                                                                    disabled={!this.state.editing}
+                                                                    value={this.state.gender}
+                                                                    onChange={this.handleInputChange}
+                                                                >
+                                                                    <option value="">Select an option</option>
+                                                                    <option value="1">Male</option>
+                                                                    <option value="2">Female</option>
+                                                                </select>
+                                                            </div>
+
+                                                        <div className="col-md-6">
+                                                            <span className="primary applicant-card__label skeleton">
+                                                                {formSpanish[29].label}
+                                                            </span>
+                                                            <select
+                                                                name="EEOC"
+                                                                id="EEOC"
+                                                                className="form-control"
+                                                                disabled={!this.state.editing}
+                                                                value={this.state.EEOC}
+                                                                onChange={this.handleInputChange}
+                                                            >
+                                                                <option value="">Select an option</option>
+                                                                <option value="1">White</option>
+                                                                <option value="2">Black or African American</option>
+                                                                <option value="3">Hispanic or Latino</option>
+                                                                <option value="4">Asian</option>
+                                                                <option value="5">American Indian or Alaska Native</option>
+                                                                <option value="6">Native Hawaiian or Other Pacific Islander</option>
+                                                                <option value="7">Two or more races</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div className="col-md-6">
+                                                            <span className="primary applicant-card__label skeleton">
+                                                            * {formSpanish[34].label}
+                                                            </span>
+                                                            <select
+                                                                name="marital"
+                                                                id="marital"
+                                                                className="form-control"
+                                                                disabled={!this.state.editing}
+                                                                onChange={this.handleInputChange}
+                                                                value={this.state.marital}
+                                                            >
+                                                                <option value="">Select an option</option>
+                                                                <option value="1">Single</option>
+                                                                <option value="2">Married</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div className="col-md-6">
+                                                            <span className="primary applicant-card__label skeleton">
+                                                                {formSpanish[30].label}
+                                                            </span>
+                                                            <input
+                                                                type="number"
+                                                                step="0.01"
+                                                                onChange={this.handleInputChange}
+                                                                value={this.state.Exemptions}
+                                                                name="Exemptions"
+                                                                className="form-control"
+                                                                disabled={!this.state.editing}
+                                                                maxLength="50"
+                                                            
+                                                            />
+                                                        </div>
+
+                                                        
+
+                                                        <div className="col-md-6">
+                                                            <span className="primary applicant-card__label skeleton">
+                                                                {formSpanish[31].label}
+                                                            </span>
+                                                            <InputForm
+                                                                change={(event) => {
+                                                                    this.setState({
+                                                                        area: event
+                                                                    });
+                                                                }}
+                                                                value={this.state.area}
+                                                                name="area"
+                                                                className="form-control"
+                                                                disabled={!this.state.editing}
+                                                                maxLength="50"
+                                                            />
+                                                        </div>
+                                                            
+
+
+                                                        <div className="col-md-6">
+                                                            <span className="primary applicant-card__label skeleton">
                                                                 {formSpanish[32].label}
                                                             </span>
                                                             <select
@@ -477,7 +617,7 @@ class ApplicationInternal extends Component {
                                                                 onChange={this.handleInputChange}
                                                             >
                                                                 <option value="">Select an option</option>
-                                                                <option value="1">New Hire</option>
+                                                                <option value="1">New hire</option>
                                                                 <option value="2">Rehire</option>
                                                                 <option value="3">Transfer</option>
                                                                 <option value="4">Promotion</option>
@@ -486,79 +626,43 @@ class ApplicationInternal extends Component {
 
                                                         <div className="col-md-6">
                                                             <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[37].label}
+                                                            * {formSpanish[14].label}
                                                             </span>
                                                             <select
-                                                                name="employmentType"
-                                                                id="employmentType"
+                                                                name="typeOfId"
+                                                                id="typeOfId"
                                                                 className="form-control"
                                                                 disabled={!this.state.editing}
-                                                                value={this.state.employmentType}
+                                                                value={this.state.typeOfId}
                                                                 onChange={this.handleInputChange}
                                                             >
                                                                 <option value="">Select an option</option>
-                                                                <option value="Part-Time">PT</option>
-                                                                <option value="Full-Time">FT</option>
+                                                                <option value="1">Birth certificate</option>
+                                                                <option value="2">Social Security card</option>
+                                                                <option value="3">State-issued driver's license</option>
+                                                                <option value="4">State-issued ID</option>
+                                                                <option value="5">Passport</option>
+                                                                <option value="6">Department of Defense Identification Card</option>
+                                                                <option value="7">Green Card</option>
                                                             </select>
                                                         </div>
-
+                                                        
                                                         <div className="col-md-6">
                                                             <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[35].label}
+                                                            * {formSpanish[15].label}
                                                             </span>
-                                                            <div class="input-group flex-nowrap">
-                                                                <DatePicker
-                                                                    selected={this.state.hireDate}
-                                                                    onChange={(date) => this.handleDatePickerChange('hireDate', date)}
-                                                                    placeholderText={formSpanish[35].label}
-                                                                    name="hireDate"
-                                                                    id="hireDate"
-                                                                    disabled={!this.state.editing}
-                                                                />
-                                                                <div class="input-group-append">
-                                                                    <label class="input-group-text" id="addon-wrapping" for="hireDate">
-                                                                        <i class="far fa-calendar"></i>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-md-6">
-                                                            <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[36].label}
-                                                            </span>
-                                                            <div class="input-group flex-nowrap">
-                                                                <DatePicker
-                                                                    selected={this.state.startDate}
-                                                                    onChange={(date) => this.handleDatePickerChange('startDate', date)}
-                                                                    placeholderText={formSpanish[36].label}
-                                                                    name="startDate"
-                                                                    id="startDate"
-                                                                    disabled={!this.state.editing}
-                                                                />
-                                                                <div class="input-group-append">
-                                                                    <label class="input-group-text" id="addon-wrapping" for="startDate">
-                                                                        <i class="far fa-calendar"></i>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-md-12">
-                                                            <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[38].label}
-                                                            </span>
-                                                            <textarea
+                                                            <input
                                                                 onChange={this.handleInputChange}
-                                                                value={this.state.comment}
-                                                                name="comment"
-                                                                type="text"
-                                                                rows="4"
-                                                                style={{resize:'none'}}
+                                                                value={this.state.expireDateId}
+                                                                name="expireDateId"
+                                                                type="date"
                                                                 className="form-control"
                                                                 disabled={!this.state.editing}
+                                                                min="0"
+                                                                maxLength="50"
+                                                                minLength="10"
                                                             />
-                                                        </div>
+                                                        </div> 
 
                                                     </div>
                                                 </div>
@@ -582,37 +686,15 @@ class ApplicationInternal extends Component {
                                                     {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
                                                 </button>
                                             </div>
-                                        ) : ('')}
+                                        ) : (
+                                                ''
+                                            )}
                                     </div>
-                                </form>
-                            </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="applicant-card">
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col-md-3">
-                                        <span className="primary applicant-card__label skeleton">
-                                            {formSpanish[31].label}
-                                        </span>
-                                        <InputForm
-                                            change={(event) => {
-                                                this.setState({
-                                                    area: event
-                                                });
-                                            }}
-                                            value={this.state.area}
-                                            name="area"
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            maxLength="50"
-                                        />
-                                    </div>
-                                </div>
-                                <Skills applicationId={this.props.applicationId} />
-                            </div>
+                            </form>
+                            <ShiftRestrictionModal
+                                openModal={this.state.openRestrictionsModal}
+                                handleCloseModal={this.handleRestrictionModalClose}
+                            />
                         </div>
                     </div>
                 </div>

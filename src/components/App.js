@@ -156,9 +156,7 @@ class App extends Component {
 		extPdf: PropTypes.array,
 		acceptAttachFile: PropTypes.string,
 		UID: PropTypes.func,
-		getDistance: PropTypes.func,
-		credentialsS3: PropTypes.object,
-		bucketS3: PropTypes.string
+		getDistance: PropTypes.func
 	};
 
 	getChildContext = () => ({
@@ -175,14 +173,7 @@ class App extends Component {
 		UID: () => {
 			return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
 		},
-		getDistance,
-		credentialsS3:
-			{
-				accessKeyId: 'AKIAZTTPXWUZ6OPRW2P6',
-				secretAccessKey: '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',
-				region: 'us-east-1'
-		},
-		bucketS3:'orion1-files'
+		getDistance
 	});
 }
 

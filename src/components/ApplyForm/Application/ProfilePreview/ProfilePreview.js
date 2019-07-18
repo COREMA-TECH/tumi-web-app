@@ -128,14 +128,13 @@ class VerticalLinearStepper extends Component {
                 }
             })
             .then(({ data }) => {
-                let application = data.applications[0];
                 this.setState({
-                    username: application.firstName + ' ' + application.lastName,
-                    Urlphoto: application.Urlphoto,
-                    employee: application.employee
+                    username: data.applications[0].firstName + ' ' + data.applications[0].lastName,
+                    Urlphoto: data.applications[0].Urlphoto,
+                    employee: data.applications[0].employee
                 }, () => {
 
-                    if (this.state.employee)
+                    if(this.state.employee)
                         this.checkUserActiveByMarks();
                     else
                         this.setState({
@@ -186,7 +185,7 @@ class VerticalLinearStepper extends Component {
             }
         }).then(({ data }) => {
             this.setState({
-                activeEmployee: data.activeEmployeesByMarks[0]
+               activeEmployee: data.activeEmployeesByMarks[0]
             }, () => {
                 this.setState({
                     loading: false
@@ -210,7 +209,7 @@ class VerticalLinearStepper extends Component {
                 this.setState({
                     loading: true
                 }, () => {
-                    this.getProfileInformation();
+                    this.getProfileInformation();                    
                 })
             });
 
@@ -244,7 +243,7 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <General applicationId={this.props.applicationId} activeUser={this.state.activeEmployee ? true : false} hasEmployee={this.state.employee || null} />;
+                    return <General applicationId={this.props.applicationId} activeUser={this.state.activeEmployee ? true : false } hasEmployee={this.state.employee || null} />;
                 case 1:
                     return <div className="card mt-0">
                         <Shifts

@@ -15,6 +15,7 @@ import Language from "./Languages/Language";
 import Education from "./Education/Education";
 import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
 import MilitaryService from "./MilitaryService/MilitaryService";
+import Skills from "./skills/Skills";
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 
@@ -121,7 +122,7 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <Application enableTabs={this.props.enableTabs} applicationId={this.state.applicationId} handleContract={this.props.handleContract} setApplicantId={this.setApplicantId}/>;
+                    return <Application applicationId={this.state.applicationId} handleContract={this.props.handleContract} setApplicantId={this.setApplicantId}/>;
                 case 1:
                     return <Language applicationId={this.state.applicationId} />;
                 case 2:
@@ -130,6 +131,8 @@ class VerticalLinearStepper extends Component {
                     return <PreviousEmployment applicationId={this.state.applicationId} />;
                 case 4:
                     return <MilitaryService applicationId={this.state.applicationId} />;
+                case 5:
+                    return <Skills applicationId={this.state.applicationId} />;
             }
         };
 

@@ -50,7 +50,7 @@ class IndependentContractContent extends Component {
                     <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
                 </DialogTitle>
                 <DialogContent>
-                    <SignatureForm signatureValue={this.handleSignature} showSaveIcon={null} />
+                    <SignatureForm signatureValue={this.handleSignature} />
                 </DialogContent>
             </Dialog>
         </div>
@@ -74,32 +74,25 @@ class IndependentContractContent extends Component {
         return <React.Fragment>
             {this.renderSignatureDialog()}
             <div id='independenContractContainer'>
+                <p></p>
                 <p ><span >RECONOCIMIENTO DE CONTRATO INDEPENDIENTE</span></p>
-                <p >
-                    <span style={{ fontSize: 13 }} >Comprendo que Tumi Staffing me ofrece un empleo condicional como contratista independiente en espera de que complete la documentaci&oacute;n requerida para la nueva contrataci&oacute;n. Hasta que se complete mi documentaci&oacute;n y cumpla con toda la documentaci&oacute;n bajo las leyes estatales y federales, mi estado como contratista independiente es d&iacute;a a d&iacute;a hasta que cumpla los requisitos.</span>
-                    <br />
-                    <span style={{ fontSize: 13, textTransform: 'uppercase' }}>INICIAL<input id='initialFirst' maxLength="2" type='text' style={{ fontSize: 13, textTransform: 'uppercase' }} className='ml-1 border-bottom' onChange={this.handleOnChange} value={this.state.initialFirst} required /></span>
-                    <br />
-                </p>
-                <p >
-                    <span style={{ fontSize: 13 }}>Entiendo que, como contratista independiente, no estar&eacute; cubierto por el seguro de compensaci&oacute;n para trabajadores, y que soy el &uacute;nico responsable de cualquier gasto medico que resulte de una lesi&oacute;n o accidente en mi empleo condicional.</span>
-                    <br />
-                    <span >INICIAL <input id='initialSecond' maxLength="2" type='text' style={{ fontSize: 13, textTransform: 'uppercase' }} className='ml-1 border-bottom' onChange={this.handleOnChange} value={this.state.initialSecond} required /></span>
-                    <br />
-                </p>
-                <p >
-                    <span style={{ fontSize: 13 }}>Como contratista independiente, no ser&eacute; elegible para el plan de Beneficios de Personal de Tumi Staffing hasta que cumpla con los requisitos. No ser&eacute; elegible para ning&uacute;n pago acumulado de vacaciones hasta el momento en que cumpla con los requisitos. Entiendo que los beneficios de vacaciones lo recibir&eacute; al ano de haber cumplido con los requisitos. No estar&eacute; sujeto a ning&uacute;n aumento salarial hasta que cumpla con los requisitos.</span>
-                    <br />
-                    <span >INICIAL <input id='initialThird' maxLength="2" type='text' style={{ fontSize: 13, textTransform: 'uppercase' }} className='ml-1 border-bottom' onChange={this.handleOnChange} value={this.state.initialThird} required /></span>
-                    <br />
-                </p>
-                <p >
-                    <span style={{ fontSize: 13 }}>Me comprometo a proporcionar toda la documentaci&oacute;n necesaria para cumplir lo antes posible con mi contrataci&oacute;n y trabajare para proporcionar cualquiera o todos los elementos faltantes necesarios para mi nuevo registro de contrataci&oacute;n.</span>
-                    <br />
-                    <span >INICIAL <input id='initialFourth' maxlength="2" type='text' style={{ fontSize: 13, textTransform: 'uppercase' }} className='ml-1 border-bottom' onChange={this.handleOnChange} value={this.state.initialFourth} required /></span>
-                    <br />
-                </p>
-                <br />
+                <p ><span >Comprendo que Tumi Staffing me ofrece un empleo condicional como contratista independiente en espera de que complete la documentaci&oacute;n requerida para la nueva contrataci&oacute;n. Hasta que se complete mi documentaci&oacute;n y cumpla con toda la documentaci&oacute;n bajo las leyes estatales y federales, mi estado como contratista independiente es d&iacute;a a d&iacute;a hasta que cumpla los requisitos.</span></p>
+                <p >&nbsp;</p>
+                <p ><span >INICIAL<input id='initialFirst' maxLength="2" type='text' className='ml-1 border-bottom text-uppercase' onChange={this.handleOnChange} value={this.state.initialFirst} required /></span></p>
+                <p >&nbsp;</p>
+                <p ><span ><strong>Entiendo que, como contratista independiente, no estar&eacute; cubierto por el seguro de compensaci&oacute;n para trabajadores, y que soy el &uacute;nico responsable de cualquier gasto medico que resulte de una lesi&oacute;n o accidente en mi empleo condicional.</strong></span></p>
+                <p >&nbsp;</p>
+                <p ><span >INICIAL <input id='initialSecond' maxLength="2" type='text' className='ml-1 border-bottom text-uppercase' onChange={this.handleOnChange} value={this.state.initialSecond} required /></span></p>
+                <p >&nbsp;</p>
+                <p ><span >Como contratista independiente, no ser&eacute; elegible para el plan de Beneficios de Personal de Tumi Staffing hasta que cumpla con los requisitos. No ser&eacute; elegible para ning&uacute;n pago acumulado de vacaciones hasta el momento en que cumpla con los requisitos. Entiendo que los beneficios de vacaciones lo recibir&eacute; al ano de haber cumplido con los requisitos. No estar&eacute; sujeto a ning&uacute;n aumento salarial hasta que cumpla con los requisitos.</span></p>
+                <p >&nbsp;</p>
+                <p ><span >INICIAL <input id='initialThird' maxLength="2" type='text' className='ml-1 border-bottom text-uppercase' onChange={this.handleOnChange} value={this.state.initialThird} required /></span></p>
+                <p >&nbsp;</p>
+                <p ><span >Me comprometo a proporcionar toda la documentaci&oacute;n necesaria para cumplir lo antes posible con mi contrataci&oacute;n y trabajare para proporcionar cualquiera o todos los elementos faltantes necesarios para mi nuevo registro de contrataci&oacute;n.</span></p>
+                <p >&nbsp;</p>
+                <p ><span >INICIAL <input id='initialFourth' maxlength="2" type='text' className='ml-1 border-bottom text-uppercase' onChange={this.handleOnChange} value={this.state.initialFourth} required /></span></p>
+                <p >&nbsp;</p>
+                <p >&nbsp;</p>
                 <table>
                     <tr>
                         <td valign='bottom'>

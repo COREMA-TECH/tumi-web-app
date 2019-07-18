@@ -382,11 +382,7 @@ class Catalogs extends React.Component {
         }, () => {
             this.validateField(name, value);
             if (name == "firstName" || name == "lastName") {
-                let random = Math.floor(Math.random() * 10000);
-                if (random.toString().length <= 3) {
-                    random = `${random}${Math.floor(Math.random() * 10)}`;
-                }
-                username = this.state.firstName.slice(0, 1) + this.state.lastName + random;
+                username = this.state.firstName.slice(0, 1) + this.state.lastName + Math.floor(Math.random() * 10000);
                 this.setState({ username: username });
             }
         });
@@ -935,8 +931,6 @@ class Catalogs extends React.Component {
                 .then((data) => {
                     if (this.state.idToEdit == null) {
                         this.sendMail();
-                    } else {
-
                     }
                     this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
 
@@ -1003,25 +997,6 @@ class Catalogs extends React.Component {
             }
         );
     };
-
-    getApplicationByEmployees = () => {
-        this.props.client.query({
-            query: this.SEND_EMAIL,
-            variables: {
-                username: this.state.username,
-                password: `TEMP`,
-                email: this.state.email,
-                title: `Credential Information`
-            }
-        }).then((data) => {
-            this.props.handleOpenSnackbar('success', 'Email Sent!');
-        }).catch((error) => {
-            this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);
-            this.setState({
-                loadingConfirm: false
-            });
-        });
-    }
 
     sendMail = () => {
         this.setState(
@@ -1230,6 +1205,7 @@ class Catalogs extends React.Component {
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div className="row">
+
                                         <div className="col-md-12 col-lg-6">
                                             <label>* First Name</label>
                                             <InputForm

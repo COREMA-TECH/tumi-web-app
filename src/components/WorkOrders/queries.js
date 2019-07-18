@@ -131,7 +131,6 @@ export const GET_HOTEL_QUERY = gql`
 			Id
 			Name
 			Contract_Expiration_Date
-			Start_Week
 		}
 	}
 `;

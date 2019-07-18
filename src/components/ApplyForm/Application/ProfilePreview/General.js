@@ -28,7 +28,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -36,8 +36,9 @@ import Select from 'react-select';
 import PunchesReportDetail from '../../../PunchesReportDetail';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import Titles from './Titles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import renderHTML from 'react-render-html';
 import moment from 'moment';
-import VerificationLetter from '../VerificationLetter';
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -193,12 +194,9 @@ class General extends Component {
             DeparmentTitle: '',
             myHotels: [],
             locationAbletoWorkId: 0,
-            applicationEmployeeId: null,
-            openVerification: false,
+            openVerification:false,
             date: new Date().toISOString().substring(0, 10),
-            codeUser: '',
-            employeeHotelId: 0,
-            employeeHotelName: ''
+            codeUser:'',
 
         }
     }
@@ -257,10 +255,7 @@ class General extends Component {
         loadingConfirm: false,
         openModal: false,
         showCircularLoading: false,
-        titleModal: false,
-        employmentType: null,
-        startDate: null,
-        positionName: null
+        titleModal: false
     };
 
     /**
@@ -369,31 +364,18 @@ class General extends Component {
     };
 
     updateContactByHotelApplication = () => {
-        let mutation = null, variables = {}
         this.setState(() => ({ removingLocationAbleToWork: true }))
-        if (this.state.locationAbletoWorkId) {
-            mutation = DISABLE_CONTACT_BY_HOTEL_APPLICATION;
-            variables = {
-                Id_Entity: this.state.locationAbletoWorkId,
-                ApplicationId: this.props.applicationId
-            }
-        } else {
-            mutation = UPDATE_EMPLOYEE;
-            variables = {
-                employees: {
-                    id: this.state.employeeHotelEmployeeId,
-                    idEntity: null
-                }
-            }
-        }
         this.props.client
             .mutate({
-                mutation,
-                variables
+                mutation: DISABLE_CONTACT_BY_HOTEL_APPLICATION,
+                variables: {
+                    Id_Entity: this.state.locationAbletoWorkId,
+                    ApplicationId: this.props.applicationId
+                }
             })
             .then(({ data }) => {
                 this.props.handleOpenSnackbar('success', 'Record deleted!');
-                this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false, employeeHotelId: 0, employeeHotelName: '' }), this.getMyHotels)
+                this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false}), this.getMyHotels)
 
             })
             .catch(error => {
@@ -402,7 +384,6 @@ class General extends Component {
                 this.setState(() => ({ removingLocationAbleToWork: false }))
 
             })
-
     };
     /**
      * To hide modal and then restart modal state values
@@ -421,7 +402,7 @@ class General extends Component {
     };
 
     handleCloseModalVerificacion = () => {
-        this.setState({ openVerification: false })
+        this.setState({openVerification: false})
     };
 
     /**
@@ -460,7 +441,7 @@ class General extends Component {
             variables: {
                 id: id
             }
-        }).then(({ data }) => {
+        }).then(({ data }) => { 
             let user = data.applicationCodeUser[0];
             this.setState((prevState, prevProps) => {
                 return { Code_User: user.Code_User || '--' }
@@ -505,22 +486,14 @@ class General extends Component {
                                 isLead: this.state.data.isLead,
                                 loading: false,
                                 directDeposit: this.state.data.directDeposit,
-                                isActive: this.state.data.isActive,
+                                isActive:this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
-                                EmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 999999,
+                                EmployeeId: this.state.data.employee? this.state.data.employee.EmployeeId : 999999,
                                 hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("YYYY-MM-DD")}` : '--',
                                 idealJobs: this.state.data.idealJobs,
-                                applicantName: this.state.data.firstName + ' ' + this.state.data.lastName,
-                                codeUser: this.state.data.user ? this.state.data.user.Code_User : '--',
-                                employeeHotelId: this.state.data.employee ? this.state.data.employee.Employees.idEntity : 0,
-                                employeeHotelEmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 0,
-                                employeeHotelName: this.state.data.employee ? (this.state.data.employee.Employees.BusinessCompany ? this.state.data.employee.Employees.BusinessCompany.Name : '') : '',
-                                employmentType: this.state.data.employmentType ? this.state.data.employmentType.replace('FT', 'FULL TIME').replace('PT', 'PART TIME') : 'N/D',
-                                startDate: this.state.data.employee ? (this.state.data.employee.Employees ? this.state.data.employee.Employees.startDate : 'N/D') : 'N/D',
-                                positionName: this.state.data.position ? (this.state.data.position.position ? this.state.data.position.position.Position : 'N/D') : 'N/D'
-
+                                applicantName: this.state.data.firstName+' '+this.state.data.lastName,
+                                codeUser:this.state.data.user?this.state.data.user.Code_User:'--'
                             }, _ => {
-                                console.log({ status: this.state })
                                 this.getCodeUser(id);
                             })
                         });
@@ -551,10 +524,10 @@ class General extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                    DeparmentTitle: (data.applicationEmployees[0] && data.applicationEmployees[0].Employees && data.applicationEmployees[0].Employees.Deparment) ? data.applicationEmployees[0].Employees.Deparment.DisplayLabel : ''
+                    DeparmentTitle: data.applicationEmployees[0].Employees.Deparment ? data.applicationEmployees[0].Employees.Deparment.DisplayLabel : ''
                 })
             })
-            .catch(error => { console.log(error) })
+            .catch(error => { console.log("Informacion de las error  ", error) })
     };
 
     getHotels = () => {
@@ -570,7 +543,7 @@ class General extends Component {
                     let options = [];
                     this.state.hotels.map(item => {
                         let hotel = this.state.myHotels.find(_ => { return _.Id == item.Id });
-                        if (!hotel && item.Id != this.state.employeeHotelId) {
+                        if (!hotel) {
                             options.push({ value: item.Id, label: `${item.Code} - ${item.Name}` });
                             this.setState(prevState => ({
                                 properties: options
@@ -586,6 +559,32 @@ class General extends Component {
             });
     };
 
+    /**
+     * To get a list od departments
+     */
+    // fetchDepartments = () => {
+    //     this.props.client
+    //         .query({
+    //             query: GET_DEPARTMENTS_QUERY,
+    //             fetchPolicy: 'no-cache'
+    //         })
+    //         .then((data) => {
+    //             if (data.data.getcatalogitem != null) {
+    //                 this.setState({
+    //                     departments: data.data.getcatalogitem,
+    //                 }, () => {
+    //                     this.fetchTitles()
+    //                 });
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             // TODO: show a SnackBar with error message
+
+    //             this.setState({
+    //                 loading: false
+    //             })
+    //         });
+    // };
 
     /**
      * To fetch a list of contacts
@@ -768,7 +767,7 @@ class General extends Component {
                         this.props.handleOpenSnackbar('success', 'Contact Inserted!');
                         this.setState(() => ({
                             openModal: false,
-                            openVerification: false,
+                            openVerification:false,
                             saving: false,
                             property: [],
                             type: null,
@@ -1265,11 +1264,11 @@ class General extends Component {
     }
 
     hanldeOpenTitleModal = () => {
-        this.setState({ titleModal: !this.state.titleModal });
+        this.setState({titleModal: !this.state.titleModal});
     }
 
     hanldeCloseTitleModal = () => {
-        this.setState({ titleModal: !this.state.titleModal });
+        this.setState({titleModal: !this.state.titleModal});
     }
 
     render() {
@@ -1512,15 +1511,13 @@ class General extends Component {
             </Dialog>
         }
 
-        let { firstname, middlename, lastname, employmentType, startDate, positionName } = this.state;
-        let employeeName = `${firstname || ''} ${middlename || ''} ${lastname || ''}`;
         return (
             <div className="Apply-container--application">
                 <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} />
                 <ConfirmDialog
                     open={this.state.openConfirm}
                     closeAction={() => {
-                        this.setState({ openConfirm: false, locationAbletoWorkId: 0, applicationEmployeeId: 0 });
+                        this.setState({ openConfirm: false, locationAbletoWorkId: 0 });
                     }}
                     confirmAction={() => {
                         this.updateContactByHotelApplication();
@@ -1531,23 +1528,91 @@ class General extends Component {
 
 
                 <Dialog
+                    fullScreen={true}
                     open={this.state.openVerification}
-                    maxWidth="md"
+                    onClose={this.handleCloseModalVerificacion}
+                    aria-labelledby="responsive-dialog-title"
+                    style={{ width: '90%', padding: '0px', margin: '0 auto' }}
                 >
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
-                            <h5 className="modal-title">Employment Verification</h5>
+                            {' '}
+                            {this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
+                                'Edit  Position/Rate'
+                            ) : (
+                                    <h5 className="modal-title">Employment Verification</h5>
+                                )}
                         </div>
                     </DialogTitle>
-                    <DialogContent >
-                        <VerificationLetter employeeName={employeeName}
-                            employmentType={employmentType}
-                            startDate={startDate}
-                            positionName={positionName}
-                            handleCloseModalVerificacion={this.handleCloseModalVerificacion}
-                            ApplicationId={this.props.applicationId}
-                            handleOpenSnackbar={this.props.handleOpenSnackbar} />
+                    <DialogContent style={{ minWidth: 750, padding: '0px' }}>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <button
+                                    //	disabled={this.state.loading || !this.state.enableCancelButton}
+                                    variant="fab"
+                                    color="secondary"
+                                    className={'btn btn-danger pull-right'}
+                                    onClick={this.handleCloseModalVerificacion}
+                                >
+                                    Close <i class="fas fa-times"></i>
+                                </button>
+                                <button
+                                    //	disabled={this.state.loading || !this.state.enableCancelButton}
+                                    variant="fab"
+                                    color="primary"
+                                    className={'btn btn-info mr-1 pull-right'}
+                                    onClick={this.handleCloseModalVerificacion}
+                                >
+                                    Send <i class="fas fa-envelope"></i>
+                                </button>
+
+
+                            </div>
+                        </div>
+                        <div className="row pdf-container">
+                                <div id="DocumentPDF" className="signature-information">
+                        {renderHTML(`<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<p style="text-align: center; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;" align="center"><strong><u><span style="font-size: 12.0pt;">VERIFICATION OF EMPLOYMENT</span></u></strong></p>
+<p style="text-align: center; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;" align="center"><strong><u><span style="font-size: 12.0pt;">&nbsp;</span></u></strong></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Today&rsquo;s Date</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Tumi Staffing</strong></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Po Box 592715</strong></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>San Antonio, TX 78259</strong></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">RE: Verification of Employment for ___________________________ [Name of Employee]</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">To whom it may concern:</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Please accept this letter as confirmation that _______________________ [Name of Employee] has been employed with <strong>Tumi Staffing</strong> since ___________________ [Employee Start Date].</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Currently, ___________________________ [Name of Employee] holds the Title of _____________________and works on a ___________________ [Full time / Part time] basis.</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><a name="_GoBack"></a>&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">If you have any questions or require further information, please don&rsquo;t hesitate to contact me at 210-853-2099.</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">Sincerely yours,</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Claudia Robbins</strong></p>
+<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;"><strong>Owner</strong></p>
+<p style="text-align: justify; line-height: 150%; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Calibri, sans-serif;">&nbsp;</p>
+</body>
+</html>`)}
+                        </div>
+                        </div>
                     </DialogContent>
+                    <DialogActions>
+                        <div className="exhibit-button-right">
+                            {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+                        </div>
+                    </DialogActions>
                 </Dialog>
 
                 <div className="">
@@ -1560,13 +1625,13 @@ class General extends Component {
                                             className="username col-sm-12">{this.state.data.firstName + ' ' + this.state.data.lastName}</span>
                                         <span
                                             className="username-number col-sm-12">Emp #: TM-0000{this.state.data.id}</span>
-                                        <span
+                                             <span
                                             className="username-number col-sm-12">UserName: {this.state.Code_User}</span>
                                     </div>
                                 </div>
                                 <div className="item col-12 col-md-2">
                                     <div className="row">
-                                        <span className="col-sm-12 font-weight-bold">Start Date</span>
+                                        <span className="col-sm-12 font-weight-bold">Hire Date</span>
                                         <span className="col-sm-12">{this.state.hireDate}</span>
                                     </div>
                                 </div>
@@ -1593,9 +1658,9 @@ class General extends Component {
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
-                                                    value={this.state.isActive}
+                                                    value={ this.state.isActive}
                                                     disabled={!this.props.hasEmployee ? true : false}
-                                                    onChange={(event) => {
+                                                    onChange={(event) => {   
                                                         this.setState({
                                                             isActive: event.target.checked
                                                         }, () => {
@@ -1667,10 +1732,10 @@ class General extends Component {
                                                         this.handleClickOpenModal();
                                                     }}>Add to hotel
                                                     </button>
-                                                    <button className="dropdown-item" onClick={() => {
+                                                      {/* <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenVerification();
                                                     }}>Employment Verification
-                                                    </button>
+                                                    </button> */}
                                                     {
                                                         userExist || this.state.createdProfile ? (
                                                             ''
@@ -1705,7 +1770,7 @@ class General extends Component {
                                 <div className="col-sm-12">
                                     <div className="row">
                                         {
-                                            this.state.idealJobs ?
+                                            this.state.idealJobs ? 
                                                 this.state.idealJobs.map(idealJob => {
                                                     return <div className="col-sm-12 col-md-6 col-lg-3">
                                                         <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
@@ -1713,7 +1778,7 @@ class General extends Component {
                                                         </div>
                                                     </div>
                                                 })
-                                                : ''
+                                            : ''
                                         }
                                     </div>
                                 </div>
@@ -1724,25 +1789,13 @@ class General extends Component {
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
-                                        {this.state.employeeHotelId ?
-                                            <div className="col-sm-12 col-md-6 col-lg-3">
-                                                <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
-                                                    {this.state.employeeHotelName}
-                                                    <button type="button" className="btn btn-link float-right p-0" onClick={() => {
-                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: null, applicationEmployeeId: this.state.employeeHotelEmployeeId }))
-                                                    }}>
-                                                        <i className="fas fa-trash text-white"></i>
-                                                    </button>
-                                                </div>
-                                            </div> : <React.Fragment />}
-
                                         {this.state.myHotels.map(hotel => {
                                             return <div className="col-sm-12 col-md-6 col-lg-3">
 
                                                 <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
                                                     {hotel.Name}
                                                     <button type="button" className="btn btn-link float-right p-0" onClick={() => {
-                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
+                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: hotel.Id }))
                                                     }} >
                                                         <i className="fas fa-trash text-white"></i>
                                                     </button>

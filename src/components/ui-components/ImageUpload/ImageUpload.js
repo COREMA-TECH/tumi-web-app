@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
+import firebase from 'firebase';
 import PropTypes from 'prop-types';
-import AWS from 'aws-sdk';
-
 const uuidv4 = require('uuid/v4');
 
 class ImageUpload extends Component {
@@ -23,42 +22,6 @@ class ImageUpload extends Component {
 		event.preventDefault();
 		document.getElementById(this.props.id).click();
 	};
-
-	uploadImageToS3 = (image) => {
-		// Loading state
-		this.setState(() => ({
-			loading: true
-		}), () => {
-			let s3 = new AWS.S3(this.context.credentialsS3);
-			// Create a random file
-			let filename = `${uuidv4()}_${image.name}`;
-			let route = 'images/' + filename;
-			// Configure bucket and key
-			let params = {
-				Bucket: this.context.bucketS3,
-				Key: route,
-				contentType: image.type,
-				ACL: 'public-read',
-				Body: image
-			};
-
-			s3.upload(params, (err, data) => {
-				if (err) {
-					// Update the progress
-					this.setState(() => ({ uploadValue: 0, loading: false }));
-					this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
-				}
-				else {
-					this.setState(() => ({ uploadValue: 0, loading: false }));
-					this.props.updateAvatar(data.Location);
-				};
-			}).on('httpUploadProgress', evt => {
-				// Update the progress
-				this.setState(() => ({ uploadValue: parseInt((evt.loaded * 100) / evt.total) }));
-			})
-		});
-	}
-
 	handleUpload(event) {
 		// Get the file selected
 		const file = event.target.files[0];
@@ -85,7 +48,42 @@ class ImageUpload extends Component {
 			);
 			event.target.value = '';
 			event.preventDefault();
-		} else this.uploadImageToS3(file);
+		} else {
+			// Loading state
+			this.setState({
+				loading: true
+			});
+
+			// Build the reference based in the filename
+			const storageRef = firebase.storage().ref(`/images/${uuidv4()}`);
+
+			// Send the reference and save the file in Firebase Storage
+			const task = storageRef.put(file);
+
+			task.on(
+				'state_changed',
+				(snapshot) => {
+					let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+
+					// Update the progress
+					this.setState({
+						uploadValue: percentage
+					});
+				},
+				(error) => {
+					this.setState({ loading: false });
+					this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
+				},
+				() => {
+					storageRef.getDownloadURL().then((url) => {
+						this.props.updateAvatar(url);
+						this.setState({
+							loading: false
+						});
+					});
+				}
+			);
+		}
 	}
 
 	render() {
@@ -126,9 +124,7 @@ class ImageUpload extends Component {
 	}
 	static contextTypes = {
 		avatarURL: PropTypes.string,
-		extImage: PropTypes.object,
-		credentialsS3: PropTypes.object,
-		bucketS3: PropTypes.string
+		extImage: PropTypes.object
 	};
 }
 

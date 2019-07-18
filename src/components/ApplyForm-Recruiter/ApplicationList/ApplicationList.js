@@ -40,8 +40,7 @@ const styles = (theme) => ({
 
 const DEFAULT_RECRUITER_VALUE = "ND";
 const DEFAULT_FILTER_TYPE = { value: "W", label: "By week" };
-const DEFAULT_FILTER_RECRUITER = { value: DEFAULT_RECRUITER_VALUE, label: "Recruited by" };
-const DEFAULT_DATA_RANGE_APP = { value: null, label: 'Report Date'};
+const DEFAULT_FILTER_RECRUITER = { value: DEFAULT_RECRUITER_VALUE, label: "Select Recruiter" };
 
 class ApplicationList extends Component {
 	constructor(props) {
@@ -56,12 +55,7 @@ class ApplicationList extends Component {
 			showNoShowPrefilterModal: false,
 			filterType: DEFAULT_FILTER_TYPE,
 			filterRecruiter: DEFAULT_FILTER_RECRUITER,
-			filterRecruiters: [],
-			recruiterFiltered: DEFAULT_FILTER_RECRUITER, // opcion seleccionada para filtro de recruiter en indice
-			typeDateFiltered: DEFAULT_FILTER_TYPE, // opcion seleccinada para filtro de fecha en indice
-			startDateApp: null,
-			endDateApp: null,
-			dateRangeApp: DEFAULT_DATA_RANGE_APP
+			filterRecruiters: []
 		};
 	}
 
@@ -90,9 +84,7 @@ class ApplicationList extends Component {
 				cellPhone
 				isLead
 				idWorkOrder
-				date
 				recruiter{
-					Id
 					Full_Name
 				}
 				user{
@@ -393,86 +385,7 @@ class ApplicationList extends Component {
 		</Dialog>
 	}
 
-	handleRecruiterFiltered = (option) => {
-		this.setState(() => {
-			return {
-				recruiterFiltered: option
-			}
-		});
-	}
-
-	handleTypeDateFiltered = (option) => {
-		this.setState(() => {
-			return { typeDateFiltered: option }
-		});
-	}
-
-	handleDateRangeApp = (dateRangeApp) => {
-		let dates = dateRangeApp.value.split('||');
-		this.setState(() => ({ dateRangeApp, startDateApp: new Date(dates[0]), endDateApp: new Date(dates[1]) }))
-	}
-
-	handleStartDateApp = (value) => {
-		this.setState(() => ({
-			startDateApp: value
-		}));
-	}
-
-	handleEndDateApp = (value) => {
-		this.setState(() => ({
-			endDateApp: value
-		}));
-	}
-
-	getDateRangeApp = (type) => {
-		let today = new Date(), weeks = 4, months = 6, value, label, startDate, endDate, data = [], endDateValue, startDateValue;
-		let { typeDateFiltered } = this.state;
-
-		today = moment.utc(today).subtract(6 - moment.utc(today).day(), "days")._d;
-
-		if (typeDateFiltered.value == "W") {
-			while (weeks > 0) {
-				endDate = moment.utc(today).format("MM/DD/YYYY"); //get Start Date
-				today = moment.utc(today).subtract(1, "weeks").add('days', 1)._d;//Substract a week
-				startDate = moment.utc(today).format("MM/DD/YYYY");//get End Date
-				today = moment.utc(today).subtract(1, "days")._d;//Substract a day to start new week
-				data.push({ value: `${startDate}||${endDate}`, label: `${startDate} - ${endDate}` })
-				weeks--;
-			}
-		}
-
-		if (typeDateFiltered.value == "M") {
-			while (months > 0) {
-				endDate = moment.utc(today).format("MM/YYYY"); //get Start Date
-				endDateValue = moment.utc(today).endOf("month").format("MM/DD/YYYY");
-				startDateValue = moment.utc(today).startOf("month").format("MM/DD/YYYY");
-				today = moment.utc(today).subtract(1, "months")._d;//Substract a month
-
-				data.push({ value: `${startDateValue}||${endDateValue}`, label: `${endDate}` })
-				months--;
-			}
-		}
-		return data;
-	}
-
-	clearFilter = (e) => {
-		e.preventDefault();
-		this.setState(() => {
-			return {
-				recruiterFiltered: DEFAULT_FILTER_RECRUITER,
-				startDateApp: null,
-				endDateApp: null,
-				dateRangeApp: DEFAULT_DATA_RANGE_APP
-			}
-		});
-	}
-
 	render() {
-		let { filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
-		let rectuiterFilterValue = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? recruiterFiltered.value : null;
-		let variables = rectuiterFilterValue != null ? { idRecruiter: rectuiterFilterValue  } : {}; // variable para la consulta
-
-		let Filters = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? { idRecruiter: rectuiterFilterValue } : {};
 
 		// If contracts query is loading, show a progress component
 		if (this.state.loadingContracts) {
@@ -482,7 +395,7 @@ class ApplicationList extends Component {
 		// To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="row">
-				<div className="col-md-2 col-xl-2">
+				<div className="col-md-6 col-xl-2">
 					<div className="input-group mb-3">
 						<div className="input-group-prepend">
 							<span className="input-group-text" id="basic-addon1">
@@ -503,86 +416,48 @@ class ApplicationList extends Component {
 					</div>
 				</div>
 
-				<div className="col-md-10 col-xl-10 mb-2 ">
-					<div className="row p-0 d-flex justify-content-end">
-						<div className="col-md-4 col-xl-3">
-							<Select
-								name="recruiterFiltered"
-								options={filterRecruiters}
-								value={recruiterFiltered}
-								onChange={this.handleRecruiterFiltered}
-								components={makeAnimated()}
-								closeMenuOnSelect
-							/>
-						</div>
-						<div className="col-md-5 col-lg-4 col-xl-3">
-							<div className="row p-0">
-								<div className="col-md-12">
-									<Select
-										name="typeDateFiltered"
-										options={filterTypes}
-										value={typeDateFiltered}
-										onChange={this.handleTypeDateFiltered}
-										components={makeAnimated()}
-										closeMenuOnSelect
-									/>
-								</div>
-							</div>
-							<div className="row mt-1 p-0">
-								{typeDateFiltered.value != "C" ?
-									<div className="col-md-12">
-										<Select
-											name="dateRangeApp"
-											options={this.getDateRangeApp()}
-											value={dateRangeApp}
-											onChange={this.handleDateRangeApp}
-											components={makeAnimated()}
-											closeMenuOnSelect
-										/>
-									</div> :
-									<React.Fragment>
-										<div className="col-md-12">
-											<div class="input-group">
-												<DatePicker
-													selected={this.state.startDateApp}
-													onChange={this.handleStartDateApp}
-													placeholderText="Start date"
-													id="startDateApp"
-												/>
-												<div class="input-group-append">
-													<label class="input-group-text" id="addon-wrapping" for="startDateApp">
-														<i class="far fa-calendar"></i>
-													</label>
-												</div>
-											</div>
-										</div>
-										<div className="col-md-12">
-											<div class="input-group">
-												<DatePicker
-													selected={this.state.endDateApp}
-													onChange={this.handleEndDateApp}
-													placeholderText="End date"
-													id="endDateApp"
-												/>
-												<div class="input-group-append">
-													<label class="input-group-text" id="addon-wrapping" for="endDateApp">
-														<i class="far fa-calendar"></i>
-													</label>
-												</div>
-											</div>
-										</div>
-									</React.Fragment>
-								}
-							</div>
-						</div>
-						<div className="col-md-auto">
-							<button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearFilter}>
-								<i class="fas fa-filter"></i> Clear
-							</button>
-						</div>
-					</div>
-				</div>
 
+				<div className="col-md-3 col-xl-2 offset-xl-6 mb-2">
+					<Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
+						{({ loading, error, data, refetch, networkStatus }) => {
+							//if (networkStatus === 4) return <LinearProgress />;
+							if (error) return <p>Error </p>;
+							if (data.user != null && data.user.length > 0) {
+								let options = [];
+								data.user.map((item) => (
+									options.push({ value: item.Id, label: item.Full_Name })
+								));
+
+								return (
+									<div style={{
+										paddingTop: '0px',
+										paddingBottom: '2px',
+									}}>
+										<Select
+											options={options}
+											value={this.state.recruitersTags}
+											onChange={this.handleChangerecruiterTag}
+											closeMenuOnSelect={false}
+											components={makeAnimated()}
+										// isMulti
+										/>
+									</div>
+								);
+							}
+							return <SelectNothingToDisplay />;
+						}}
+					</Query>
+				</div>
+				<div className="col-md-3 col-xl-2 mb-2">
+					<Select
+						name="property"
+						options={this.state.properties}
+						value={this.state.property}
+						onChange={this.handlePropertyChange}
+						components={makeAnimated()}
+						closeMenuOnSelect
+					/>
+				</div>
 				<div className="col-md-4 col-xl-12 mb-2">
 					{/* <button
 						className="btn btn-success float-right ml-2"
@@ -615,7 +490,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={{ ...Filters }} fetchPolicy="no-cache">
+					<Query query={this.GET_APPLICATION_QUERY} variables={{ idRecruiter: this.state.recruitersTags.value }} fetchPolicy="no-cache">
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
@@ -631,7 +506,6 @@ class ApplicationList extends Component {
 									/>
 								);
 							if (data.applications != null && data.applications.length > 0) {
-								
 								let dataApplication = data.applications.filter((_, i) => {
 									if (this.state.filterText === '') {
 										return true;
@@ -652,11 +526,9 @@ class ApplicationList extends Component {
 									) {
 										return true;
 									}
-								}).filter((_, i) => {
-									// Filtro por fecha
-									return((!startDateApp || new Date(startDateApp.setUTCHours(0, 0, 0)) <= new Date(_.date)) 
-									&& (!endDateApp || new Date(endDateApp.setUTCHours(23, 59, 59)) >= new Date(_.date)))
 								});
+
+
 
 								return (
 									<div className="row">

@@ -12,7 +12,7 @@
 
     .reset-password-form {
         width: 80%;
-        height: 55%;
+        height: 50%;
 
         display: flex;
         flex-direction: column;
@@ -74,14 +74,14 @@
 @media (min-width: 768px){
     .reset-password-form {
         width: 50%;
-        height: 55%;
+        height: 45%;
     }
 }
 
 @media (min-width: 992px){
     .reset-password-form {
         width: 30%;
-        height: 55%;
+        height: 45%;
     }
 }
 

@@ -18,5 +18,9 @@
 	{
 		"id": 5,
 		"label": "Military Service"
+	},
+	{
+		"id": 6,
+		"label": "Skills"
 	}
 ]

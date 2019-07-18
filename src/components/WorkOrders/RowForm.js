@@ -3,15 +3,8 @@ import moment from 'moment';
 import Datetime from 'react-datetime';
 import AdvancedDropdown from './AdvancedDropdown';
 
-const WEEK_DAYS = [
-    { day: 1, code: "MO" },
-    { day: 2, code: "TU" },
-    { day: 3, code: "WE" },
-    { day: 4, code: "TH" },
-    { day: 5, code: "FR" },
-    { day: 6, code: "SA" },
-    { day: 7, code: "SU" }
-]
+const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
+
 class RowForm extends Component {
 
     constructor(props) {
@@ -145,16 +138,12 @@ class RowForm extends Component {
     }
 
     handleAdvancedSectionDisplay = () => {
-        this.setState({ showAdvancedDropdown: !this.state.showAdvancedDropdown });
+        this.setState({showAdvancedDropdown: !this.state.showAdvancedDropdown});
     }
 
 
     render() {
         const isAdmin = localStorage.getItem('IsAdmin') == "true";
-
-        let weekDaysInit = WEEK_DAYS.filter(_ => _.day >= this.props.propertyStartWeek);
-        let weekDaysEnd = WEEK_DAYS.filter(_ => _.day < this.props.propertyStartWeek);
-        let weekDaysFinal = [...weekDaysInit, ...weekDaysEnd];
         return (
             <div className="card">
                 <div className="card-body">
@@ -201,7 +190,7 @@ class RowForm extends Component {
                         </div>
                         <div className="col-md-4 mb-2">
                             <button className="btn btn-link tumi-buttonCentered" onClick={this.handleAdvancedSectionDisplay} type="button">
-                                Advanced
+                                Advanced                                
                             </button>
                             <AdvancedDropdown isVisible={this.state.showAdvancedDropdown} closeAction={this.handleAdvancedSectionDisplay}>
                                 <div className="tumi-col-centered">
@@ -212,7 +201,7 @@ class RowForm extends Component {
                                             name="needExperience"
                                             className="onoffswitch-checkbox"
                                             id="needExperience"
-                                            value={this.state.needExperience}
+                                            value={ this.state.needExperience}
                                             onChange={this.handleChange}
                                         />
                                         <label className="onoffswitch-label" htmlFor="needExperience">
@@ -227,7 +216,7 @@ class RowForm extends Component {
                                             name="needEnglish"
                                             className="onoffswitch-checkbox"
                                             id="needEnglish"
-                                            value={this.state.needEnglish}
+                                            value={ this.state.needEnglish}
                                             onChange={this.handleChange}
                                         />
                                         <label className="onoffswitch-label" htmlFor="needEnglish">
@@ -242,9 +231,13 @@ class RowForm extends Component {
                     <div className="row">
                         <div className="col-md-7">
                             <div className="btn-group RowForm-days" role="group" aria-label="Basic example">
-                                {weekDaysFinal.map(_ => {
-                                    return <button key={_.day} type="button" className={this.getWeekDayStyle(_.code)} onClick={() => this.selectWeekDay(_.code)}>{_.code}</button>
-                                })}
+                                <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
+                                <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
+                                <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
+                                <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
+                                <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
+                                <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
+                                <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
                             </div>
                         </div>
                         <div className="col-md-5">

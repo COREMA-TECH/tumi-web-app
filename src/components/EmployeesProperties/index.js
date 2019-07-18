@@ -2,31 +2,17 @@ import React, { Component, Fragment } from 'react';
 import Accordion from '../ui-components/Accordion';
 import Select from 'react-select';
 
-import { GET_PROPERTIES_QUERY, GET_EMPLOYEEES_BY_PROPERTIES, GET_USERS_QUERY } from './queries';
+import { GET_PROPERTIES_QUERY, GET_EMPLOYEEES_BY_PROPERTIES } from './queries';
 import withApollo from 'react-apollo/withApollo';
 import moment from 'moment';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
-const DEFAULT_PROPERTY = { value: 0, label: 'Select Property' };
-const DEFAULT_OPERATION = { value: 0, label: 'Select Operation Manager' };
-
 class EmployeesProperties extends Component{
 
-    DEFAULT_STATE = {
+    state = {
         properties: [],
         employeesByProperties: [],
-        loading: true,
-        property: '',
-        users: [],
-        propertyId: 0,
-        operation: 0
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            ...this.DEFAULT_STATE
-        }
+        loading: true
     }
 
     getProperties = () => {
@@ -37,19 +23,17 @@ class EmployeesProperties extends Component{
 					fetchPolicy: 'no-cache'
 				})
 				.then(({ data }) => {
-
-                    //Create structure based on property data
-					const _options = data.getbusinesscompanies.map((property) => {
-                        return { value: property.Id, label: property.Code + " | " + property.Name, key: property.Id };
-                    });
+                    let options = [];
                     
-                    //Set default value for dropdown
-                    let option = [...DEFAULT_PROPERTY, ..._options];
+					//Create structure based on property data
+					data.getbusinesscompanies.map((property) => {
+						options.push({ value: property.Id, label: property.Code + " | " + property.Name, key: property.Id });
+					});
+
 					//Set values to state
 					this.setState(() => ({
-						properties: option,
-                        loadingProperties: false,
-                        property: DEFAULT_PROPERTY
+						properties: options,
+						loadingProperties: false
 					}));
 
 				})
@@ -59,53 +43,12 @@ class EmployeesProperties extends Component{
 		})
     }
 
-    getUsers = () => {
-        this.props.client.query({
-            query: GET_USERS_QUERY,
-            fetchPolicy: 'no-cache'
-        }).then(({data}) => {
-            const _options = data.user.map((user) => {
-                return { value: user.Id, label: user.firstName + " " + user.lastName, key: user.Id };
-            });
-            
-            //Set default value for dropdown
-            let options = [...DEFAULT_OPERATION, ..._options];
-            this.setState(() => ({
-                users: options,
-                user: DEFAULT_OPERATION
-            }));
-
-        }).catch((error) => {
-            this.setState(() => ({ loadingProperties: false }));
-        });
-    }
-
-    getDataFilters = () => {
-        let variables;
-        if (this.state.propertyId !== 0) {
-            variables = {
-                ...variables,
-                property: {
-                    Id: this.state.propertyId
-                },
-            };
-        } else if (this.state.operation != 0) {
-            variables = {
-                ...variables,
-                operationManagerId: this.state.operation
-            };
-        } 
-        return variables;
-    }
-
     getEmployeesByProperties = () => {
         this.props.client.query({
             query: GET_EMPLOYEEES_BY_PROPERTIES,
-            variables: { ...this.getDataFilters() },
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
             this.setState(prevState => ({
-                loading: true,
                 employeesByProperties: data.employeesByProperties
             }), _ => {
                 this.setState(prevState => ({loading: false}))
@@ -119,49 +62,19 @@ class EmployeesProperties extends Component{
     componentWillMount() {
         this.getProperties();
         this.getEmployeesByProperties();
-        this.getUsers();
-    }
-    
-    handlePropertyChange = (property) => {
-        this.setState(() => ({ 
-            property,
-            propertyId: property.value,
-            loading: true,
-        }), _ => {
-            this.getEmployeesByProperties();
-        });
-    };
-
-    handleUserChange = (user) => {
-        this.setState(() => ({ 
-            user,
-            operation: user.value,
-            loading: true,
-        }), _ => {
-            this.getEmployeesByProperties();
-        });
-    };
+	}
 
     render(){
         return(
             <Fragment>
                 <div className="row justify-content-end">
 					<div className="col-2">
+                        <label htmlFor="" className="font-weight-bold">Property</label>
                         <Select
                             name="property"
                             options={this.state.properties}
-                            value={this.state.property}
-                            onChange={this.handlePropertyChange}
-                            // components={makeAnimated()}
-                            closeMenuOnSelect
-                        />
-					</div>
-                    <div className="col-2">
-                        <Select
-                            name="user"
-                            options={this.state.users}
-                            value={this.state.user}
-                            onChange={this.handleUserChange}
+                            // value={this.state.property}
+                            // onChange={this.handlePropertyChange}
                             // components={makeAnimated()}
                             closeMenuOnSelect
                         />
@@ -169,7 +82,7 @@ class EmployeesProperties extends Component{
 				</div>
                 <div className="card">
                     <div className="card-header">
-                        Active Report
+                        Employees by Properties
                     </div>
                     <div className="card-body p-0">
                         {this.state.loading ? <LinearProgress />: ""}
@@ -179,7 +92,7 @@ class EmployeesProperties extends Component{
                                     <div className="p-3">
                                         <table className="table">
                                             <thead>
-                                                <tr className="Table-bgCyan text-center">
+                                                <tr>
                                                     <th className="Table-head">Code</th>
                                                     <th className="Table-head">PropertyName</th>
                                                     <th className="Table-head">Operating Department</th>
@@ -191,7 +104,7 @@ class EmployeesProperties extends Component{
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr className="text-center Table-bgCyanDark">
+                                                <tr>
                                                     <td>{property.code}</td>
                                                     <td>{property.name}</td>
                                                     <td>{property.count_department}</td>
@@ -208,7 +121,7 @@ class EmployeesProperties extends Component{
                                     <div className="mt-4 p-3">
                                         <table className="table">
                                             <thead>
-                                                <tr className="Table-bgCyan">
+                                                <tr>
                                                     <th className="Table-head">No</th>
                                                     <th className="Table-head">Associate Name</th>
                                                     <th className="Table-head">Position</th>

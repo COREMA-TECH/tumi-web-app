@@ -13,8 +13,7 @@ query data($idEntity: Int, $idUsers: Int, $Id: Int) {
     getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: null, Id_Parent: -1) {
           Id
           Code
-          Name  
-          Start_Week       
+          Name         
     } 
   }
 `;

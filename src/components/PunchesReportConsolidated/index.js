@@ -24,9 +24,7 @@ class PunchesReportConsolidated extends Component {
         endDate: '',
         openModal: false,
         openModalPicture: false,
-        urlPicture: '',
-        item: {},
-        editModal: false
+        urlPicture: ''
     }
 
     constructor(props) {
@@ -44,13 +42,9 @@ class PunchesReportConsolidated extends Component {
         this.getProperties();
     }
 
-    handleClickOpenModal = (item) => {
-        this.setState({ openModal: true, item: item, editModal: true });
+    handleClickOpenModal = () => {
+        this.setState({ openModal: true });
     };
-
-    handleClickCloseModal = () => {
-        this.setState({ openModal: false });
-    }
 
     getPunchesReport = () => {
         this.setState(() => ({ loadingReport: true }), () => {
@@ -223,8 +217,8 @@ class PunchesReportConsolidated extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
-                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal}/>
-                        <DropDown data={this.state.data} handleEditModal={this.handleClickOpenModal}></DropDown>
+                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} />
+                        <DropDown data={this.state.data}></DropDown>
                     </div>
                 </div>
             </div>

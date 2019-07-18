@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_VALIDATE_APPLICATION_UNIQUENESS } from '../Queries';
+import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY } from '../Queries';
 import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION, ADD_INDEPENDENT_CONTRACT } from '../Mutations';
 import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
@@ -152,8 +152,7 @@ class Application extends Component {
      */
     InsertUpdateApplicationInformation = (id, saveIndependentContract = () => { }) => {
         this.setState({
-            insertDialogLoading: true,
-            savingIndependentContract: true
+            insertDialogLoading: true
         },
             () => {
                 this.props.client
@@ -201,17 +200,13 @@ class Application extends Component {
                     .then(({ data }) => {
                         let applicationId;
                         if (id == 0) {
-                            //Application saved, it is now safe to check the other tabs
-                            this.props.enableTabs();
-
                             this.props.setApplicantId(data.addApplication.id);
                             applicationId = data.addApplication.id;
                         } else
                             applicationId = data.updateApplication.id;
                         this.setState({
                             editing: false,
-                            insertDialogLoading: false,
-                            savingIndependentContract: false
+                            insertDialogLoading: false
                         }, () => {
                             let object = [];
                             this.state.positionsTags.map(item => {
@@ -228,7 +223,7 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
-                        this.setState(() => ({ insertDialogLoading: false, savingIndependentContract: false }));
+                        this.setState(() => ({ insertDialogLoading: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.props.handleOpenSnackbar(
                                 'error',
@@ -304,9 +299,9 @@ class Application extends Component {
                                 state: applicantData.state,
                                 zipCode: applicantData.zipCode,
                                 homePhone: applicantData.homePhone,
-                                homePhoneNumberValid: true,
+                                homePhoneNumberValid: homePhoneNumberValid.length > 0,
                                 cellPhone: applicantData.cellPhone,
-                                cellPhoneNumberValid: true,
+                                cellPhoneNumberValid: cellPhoneNumberValid.length > 0,
                                 birthDay:
                                     applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
                                 socialSecurityNumber: applicantData.socialSecurityNumber,
@@ -339,13 +334,6 @@ class Application extends Component {
                                 hasIndependentContract: applicantData.independentContract != null
                             },
                             () => {
-                                //Enable tabs
-                                this.props.enableTabs();
-
-
-                                if (this.state.hasIndependentContract)
-                                    this.props.handleContract();
-
                                 this.getIdealJobsByApplicationId();
                                 this.getPositionCatalog();
                             }
@@ -482,6 +470,8 @@ class Application extends Component {
         //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
             this.getApplicationById(this.props.applicationId);
+            if (this.state.socialSecurityNumber.length === 0)
+                this.props.handleContract();
 
         } else {
             this.getPositions();
@@ -542,66 +532,21 @@ class Application extends Component {
                 values.push(value);
             }
         })
-
+   
         if (values.length == 0)
             this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
         else {
-            this.setState(() => ({
-                insertDialogLoading: true
-            }));
-            this.props.client
-                .query({
-                    query: GET_VALIDATE_APPLICATION_UNIQUENESS,
-                    variables: {
-                        firstName: firstName || '',
-                        lastName: lastName || lastName,
-                        socialSecurityNumber: socialSecurityNumber || '',
-                        homePhone: homePhone || '',
-                        cellPhone: cellPhone || '',
-                        id: this.props.applicationId
-                    },
-                    fetchPolicy: 'no-cache'
-                })
-                .then(({ data: { validateApplicationUniqueness } }) => {
-                    if (!validateApplicationUniqueness) {
-                        if (socialSecurityNumber === null) {
-                            this.setState(() => ({
-                                openSSNDialog: true,
-                                insertDialogLoading: false
-                            }))
-                        } else {
-                            if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
-                                this.setState(() => ({
-                                    openSSNDialog: true,
-                                    insertDialogLoading: false
-                                }))
-                            else this.InsertUpdateApplicationInformation(this.props.applicationId);
-                        }
-                    }
-                    else {
-                        this.props.handleOpenSnackbar(
-                            'warning',
-                            'This is a Duplicated Application, someone else is already registered with this info into the system',
-                            'bottom',
-                            'right'
-                        );
-                        this.setState(() => ({
-                            insertDialogLoading: false
-                        }));
-                    }
-                })
-                .catch(error => {
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error validating application uniqueness!',
-                        'bottom',
-                        'right'
-                    );
+            if (socialSecurityNumber === null) {
+                this.setState(() => ({
+                    openSSNDialog: true
+                }))
+            } else {
+                if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
                     this.setState(() => ({
-                        insertDialogLoading: false
-                    }));
-                })
-
+                        openSSNDialog: true
+                    }))
+                else this.InsertUpdateApplicationInformation(this.props.applicationId);
+            }
         }
 
 
@@ -656,9 +601,6 @@ class Application extends Component {
                 inputs[i].disabled = true;
             }
 
-            this.setState(() => ({
-                savingIndependentContract: true
-            }))
             //Insert record into database
             this.props.client
                 .mutate({
@@ -675,16 +617,11 @@ class Application extends Component {
                         'bottom',
                         'right'
                     );
-                    this.setState(() => ({
-                        savingIndependentContract: false
-                    }))
                     this.handleVisivilityIndependentContractDialog(false)();
                     this.getApplicationById(id);
                 })
                 .catch(error => {
-                    this.setState(() => ({
-                        savingIndependentContract: false
-                    }))
+                    console.log(error)
                     // If there's an error show a snackbar with a error message
                     this.props.handleOpenSnackbar(
                         'error',
@@ -705,10 +642,10 @@ class Application extends Component {
     renderSSNDialog = () => (
         <Dialog maxWidth="md" open={this.state.openSSNDialog} onClose={this.handleCloseSSNDialog}>
             <DialogTitle>
-                <h5 className="modal-title">INDEPENDENT CONTRACT AGREEMENT</h5>
+                <h5 className="modal-title">INDEPENDENT CONTRACT RECOGNITION</h5>
             </DialogTitle>
             <DialogContent>
-                You must sign an Independent Contract Agreement
+                You must sign an Independent Contract Recognition
             </DialogContent>
             <DialogActions>
                 <div className="applicant-card__footer">
@@ -729,7 +666,7 @@ class Application extends Component {
                             this.setState(() => ({ openIndependentContractDialog: true, openSSNDialog: false }));
                         }}
                         className="applicant-card__save-button">
-                        {spanishActions[4].label}
+                        Accept
                     </button>
                 </div>
             </DialogActions>
@@ -742,9 +679,6 @@ class Application extends Component {
         const name = target.name;
         if (name === "immediately" && value == true) {
             this.setState({ dateAvailable: new Date().toISOString().substring(0, 10) })
-        }
-        if (name === "optionHearTumi" && !"3,4".includes(value)) {
-            this.setState(() => ({ nameReferences: '' }))
         }
 
         this.setState({
@@ -793,14 +727,6 @@ class Application extends Component {
         });
     }
 
-    handleScheduleExplain = (scheduleExplain) => {
-        this.setState(() => {
-            let days = scheduleExplain.weekDays.join();
-            let explain = `Days: ${days}\n from: ${scheduleExplain.startTime}\n To: ${scheduleExplain.endTime}`;
-            return { scheduleExplain: explain }
-        }, () => this.handleRestrictionModalClose())
-    }
-
     render() {
 
         return (
@@ -813,7 +739,6 @@ class Application extends Component {
                     handleVisibility={this.handleVisivilityIndependentContractDialog}
                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                     onHandleSave={this.onHanldeSave}
-                    saving={this.state.savingIndependentContract}
                 />
 
                 <form
@@ -1276,7 +1201,6 @@ class Application extends Component {
                 </form>
                 <ShiftRestrictionModal
                     openModal={this.state.openRestrictionsModal}
-                    handleScheduleExplain={this.handleScheduleExplain}
                     handleCloseModal={this.handleRestrictionModalClose}
                 />
             </div >

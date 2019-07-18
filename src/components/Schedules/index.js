@@ -41,8 +41,7 @@ class Schedules extends Component {
             templateEndDate: '',
             viewType: 1,
             filterFormDiabled: false,
-            openWorkOrderForm: false,
-            weekDayStart: 1
+            openWorkOrderForm: false
         }
     }
 
@@ -116,9 +115,9 @@ class Schedules extends Component {
         });
     }
 
-    handleApplyFilters = (location, requested, department, position, weekDayStart) => {
+    handleApplyFilters = (location, requested, department, position) => {
         this.setState((prevState) => {
-            return { location, requested, openPreFilter: false, filtered: true, department, position, weekDayStart }
+            return { location, requested, openPreFilter: false, filtered: true, department, position }
         })
     }
 
@@ -248,25 +247,26 @@ class Schedules extends Component {
                                         <GridTabs location={this.state.location} position={this.state.position} department={this.state.department}/>
                                     ) : ('')
                                 } */}
-
-                                <Shifts
-                                    editConfirmOpened={this.state.editConfirmOpened}
-                                    openEditConfirm={this.openEditConfirm}
-                                    refresh={this.state.refresh}
-                                    getSelectedValue={this.getSelectedValue}
-                                    cityId={this.state.cityId}
-                                    shiftId={this.state.shiftId}
-                                    entityId={this.state.location}
-                                    saveTemplateShift={this.saveTemplateShift}
-                                    previousWeekShifts={this.previousWeekShifts}
-                                    changeViewType={this.changeViewType}
-                                    location={this.state.location}
-                                    department={this.state.department}
-                                    position={this.state.position}
-                                    selectedEmployee={this.state.selectedEmployee}
-                                    weekDayStart={this.state.weekDayStart}
-                                />
-
+                                {
+                                    this.state.filtered == true /* && this.state.gridView*/ ? (
+                                        <Shifts
+                                            editConfirmOpened={this.state.editConfirmOpened}
+                                            openEditConfirm={this.openEditConfirm}
+                                            refresh={this.state.refresh}
+                                            getSelectedValue={this.getSelectedValue}
+                                            cityId={this.state.cityId}
+                                            shiftId={this.state.shiftId}
+                                            entityId={this.state.location}
+                                            saveTemplateShift={this.saveTemplateShift}
+                                            previousWeekShifts={this.previousWeekShifts}
+                                            changeViewType={this.changeViewType}
+                                            location={this.state.location}
+                                            department={this.state.department}
+                                            position={this.state.position}
+                                            selectedEmployee={this.state.selectedEmployee}
+                                        />
+                                    ) : ('')
+                                }
                             </div>
                         </div>
                     </div>

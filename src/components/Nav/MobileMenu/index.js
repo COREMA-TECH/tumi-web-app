@@ -201,9 +201,9 @@ class MobileMenu extends Component {
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/punches/report/consolidated" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/punches/report/consolidated">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Punches
                                                     Report
@@ -213,9 +213,9 @@ class MobileMenu extends Component {
                                 </ul>
                             </li> : ""
                     })}
-                    {items.map((item, i) => {
+                    {items.map(item => {
                         return item.Forms.Value == "HotelManager" ?
-                            <li key={i} className="MainMenu-option">
+                            <li className="MainMenu-option">
                                 <Link
                                     to={`/home/application`}
                                     className="MenuMobile-link"
@@ -226,25 +226,25 @@ class MobileMenu extends Component {
                                     <span>Hotel Manager</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/dashboard/hotel" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/hotel">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/work-orders" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/work-orders">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/approve-punches" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/approve-punches">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Approve/Reject punches
                                                 </a>
@@ -253,9 +253,9 @@ class MobileMenu extends Component {
                                 </ul>
                             </li> : ''
                     })}
-                    {items.map((item, i) => {
+                    {items.map(item => {
                         return item.Forms.Value == "HotelManager" ?
-                            <li key={i} className="MainMenu-option">
+                            <li className="MainMenu-option">
                                 <Link
                                     to={`/home/owner`}
                                     className="MenuMobile-link"
@@ -266,17 +266,17 @@ class MobileMenu extends Component {
                                     <span>Owner</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/dashboard/sponsor" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/sponsor">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/logs" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/logs">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> User Activity Logs
                                                 </a>
@@ -290,20 +290,12 @@ class MobileMenu extends Component {
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
-                                        return item.Forms.Value == "/home/hotel-manager-report" ?
-                                            <li key={i} className="SubMenu-item">
-                                                <a className="SubMenu-link" href="/home/hotel-manager-report">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Hotel Manager Report
-                                                </a>
-                                            </li> : ""
-                                    })}
                                 </ul>
                             </li> : ''
                     })}
-                    {items.map((item, i) => {
+                    {items.map(item => {
                         return item.Forms.Value == "Recruiter" ?
-                            <li key={i} className="MainMenu-option">
+                            <li className="MainMenu-option">
                                 <Link
                                     to={`/home/application`}
                                     className="MenuMobile-link"
@@ -315,25 +307,25 @@ class MobileMenu extends Component {
                                     <span>Recruiter</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/dashboard/recruiter" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/dashboard/recruiter">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/board/recruiter" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/board/recruiter">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Board
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/Recruiter" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/Recruiter">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Lead
                                                 </a>
@@ -342,9 +334,9 @@ class MobileMenu extends Component {
                                 </ul>
                             </li> : ''
                     })}
-                    {items.map((item, i) => {
+                    {items.map(item => {
                         return item.Forms.Value == "Reports" ?
-                            <li key={i} className="MainMenu-option">
+                            <li className="MainMenu-option">
                                 <Link
                                     to={`/home/application`}
                                     className="MenuMobile-link"
@@ -356,20 +348,12 @@ class MobileMenu extends Component {
                                     <span>Reports</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map((item, i) => {
-                                        return item.Forms.Value == "/home/schedules-vs-worked" ?
-                                            <li key={i} className="SubMenu-item">
-                                                <a className="SubMenu-link" href="/home/schedules-vs-worked">
-                                                    <i className="fas fa-angle-double-right SubMenu-icon" /> Schedules Hours vs Worked Hours
-                                                </a>
-                                            </li> : ""
-                                    })}
                                 </ul>
                             </li> : ''
                     })}
-                    {items.map((item, i) => {
+                    {items.map(item => {
                         return item.Forms.Value == "Security" ?
-                            <li key={i} className="MainMenu-option">
+                            <li className="MainMenu-option">
                                 <Link
                                     to={`/home/application`}
                                     className="MenuMobile-link"
@@ -381,82 +365,82 @@ class MobileMenu extends Component {
                                     <span>Admin</span>
                                 </Link>
                                 <ul className="SubMenu" id="1">
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/employment-application" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/employment-application">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Public
                                                     Application
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/Roles" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/roles">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Roles
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/Forms" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/forms">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Forms
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/RolesForms" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/rolesforms">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" />Roles & Forms
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/Users" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/users">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Users
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/catalogs" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/catalogs">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Catalogs
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/region" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/region">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Regions
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/payroll" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/payroll">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> PayRoll
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/catalogs/departments" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/catalogs/departments">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Departments
                                                 </a>
                                             </li> : ""
                                     })}
-                                    {items.map((item, i) => {
+                                    {items.map(item => {
                                         return item.Forms.Value == "/home/catalogs/positions" ?
-                                            <li key={i} className="SubMenu-item">
+                                            <li className="SubMenu-item">
                                                 <a className="SubMenu-link" href="/home/catalogs/positions">
                                                     <i className="fas fa-angle-double-right SubMenu-icon" /> Positions
                                                 </a>

@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
+import firebase from 'firebase';
 import './ApplicantDocument.css';
 import './Circular.css';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../../Generic/Global';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import PropTypes from 'prop-types';
-import AWS from 'aws-sdk';
-
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
-const uuidv4 = require('uuid/v4');
 
 class InputFileCard extends Component {
 	constructor(props) {
@@ -62,13 +60,10 @@ class InputFileCard extends Component {
 			return 'far fa-file-image fa-7x';
 		return 'far fa-file-alt fa-7x';
 	};
-
-
-
 	handleUpload = (event, id, docName, typeId) => {
 		// Get the file selected
 		const file = event.target.files[0];
-		var _validFileExtensions = [...this.context.extImage, ...this.context.extWord, ...this.context.extPdf];
+		var _validFileExtensions = [ ...this.context.extImage, ...this.context.extWord, ...this.context.extPdf ];
 		if (
 			!_validFileExtensions.find((value) => {
 				return file.name.toLowerCase().endsWith(value);
@@ -91,43 +86,52 @@ class InputFileCard extends Component {
 			event.target.value = '';
 			event.preventDefault();
 		} else {
-			this.setState(() => ({
+			this.setState({
 				uploading: true,
 				catalogItemId: id,
 				fileExtension: _validFileExtensions.find((value) => {
 					return file.name.toLowerCase().endsWith(value);
 				})
-			}), () => {
-				let s3 = new AWS.S3(this.context.credentialsS3);
-				// Create a random file
-				let filename = `${uuidv4()}_${file.name}`;
-				let route = 'images/' + filename;
-				// Configure bucket and key
-				let params = {
-					Bucket: this.context.bucketS3,
-					Key: route,
-					contentType: file.type,
-					ACL: 'public-read',
-					Body: file
-				};
-
-				s3.upload(params, (err, data) => {
-					if (err) {
-						// Update the progress
-						this.setState(() => ({ progress: 0, uploading: false }));
-						this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
-					}
-					else {
-						this.setState(() => ({ progress: 100, uploading: false, fileURL: data.Location, fileName: docName || file.name }),
-							() => {
-								this.props.addDocument(data.Location, this.state.fileName, typeId, this.state.fileExtension);
-							});
-					};
-				}).on('httpUploadProgress', evt => {
-					// Update the progress
-					this.setState(() => ({ progress: parseInt((evt.loaded * 100) / evt.total) }));
-				})
 			});
+
+			// Build the reference based in the filename
+			const storageRef = firebase.storage().ref(`/files/${this.context.UID()}${file.name}`);
+
+			// Send the reference and save the file in Firebase Storage
+			const task = storageRef.put(file);
+
+			task.on(
+				'state_changed',
+				(snapshot) => {
+					let percentage = parseInt(snapshot.bytesTransferred / snapshot.totalBytes * 100);
+
+					// Update the progress
+					this.setState({
+						progress: percentage
+					});
+				},
+				(error) => {
+					this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
+					this.setState({
+						uploading: false
+					});
+				},
+				() => {
+					storageRef.getDownloadURL().then((url) => {
+						this.setState(
+							{
+								progress: 100,
+								uploading: false,
+								fileURL: url,
+								fileName: docName || file.name
+							},
+							() => {
+								this.props.addDocument(url, this.state.fileName, typeId, this.state.fileExtension);
+							}
+						);
+					});
+				}
+			);
 		}
 	};
 	renderStaticElement = () => {
@@ -226,53 +230,53 @@ class InputFileCard extends Component {
 				<i className="far fa-edit" />
 			</div>
 		) : (
-				<div className="fa-container-option">
-					<div
-						className="fa-container-save bg-success"
-						onClick={(e) => {
-							if (this.state.updating) return true;
-							this.setState(
-								{
-									updating: true
-								},
-								() => {
-									const doc = this.props.item;
+			<div className="fa-container-option">
+				<div
+					className="fa-container-save bg-success"
+					onClick={(e) => {
+						if (this.state.updating) return true;
+						this.setState(
+							{
+								updating: true
+							},
+							() => {
+								const doc = this.props.item;
 
-									const callUpdate = this.props.updateDocument({
-										applicationId: doc.applicationId,
-										catalogItemId: doc.catalogItemId,
-										fileName: this.state.title,
-										id: doc.id,
-										url: doc.url,
-										ApplicationId: doc.ApplicationId
+								const callUpdate = this.props.updateDocument({
+									applicationId: doc.applicationId,
+									catalogItemId: doc.catalogItemId,
+									fileName: this.state.title,
+									id: doc.id,
+									url: doc.url,
+									ApplicationId: doc.ApplicationId
+								});
+								callUpdate
+									.then((result) => {
+										this.setState({ updating: false, editName: true });
+									})
+									.catch((error) => {
+										this.setState({ updating: false });
 									});
-									callUpdate
-										.then((result) => {
-											this.setState({ updating: false, editName: true });
-										})
-										.catch((error) => {
-											this.setState({ updating: false });
-										});
-								}
-							);
-						}}
-					>
-						{!this.state.updating && <i className="far fa-save" />}
-						{this.state.updating && <i className="fa fa-spinner fa-spin" />}
-					</div>
-					<div
-						className="fa-container-cancel bg-danger"
-						onClick={() => {
-							this.setState({
-								editName: true,
-								title: this.state.startTitle
-							});
-						}}
-					>
-						<i className="fas fa-ban" />
-					</div>
+							}
+						);
+					}}
+				>
+					{!this.state.updating && <i className="far fa-save" />}
+					{this.state.updating && <i className="fa fa-spinner fa-spin" />}
 				</div>
-			);
+				<div
+					className="fa-container-cancel bg-danger"
+					onClick={() => {
+						this.setState({
+							editName: true,
+							title: this.state.startTitle
+						});
+					}}
+				>
+					<i className="fas fa-ban" />
+				</div>
+			</div>
+		);
 	};
 	renderDocumentList = () => {
 		return (
@@ -345,9 +349,7 @@ class InputFileCard extends Component {
 		extPdf: PropTypes.array,
 		extWord: PropTypes.array,
 		acceptAttachFile: PropTypes.string,
-		UID: PropTypes.func,
-		credentialsS3: PropTypes.object,
-		bucketS3: PropTypes.string
+		UID: PropTypes.func
 	};
 }
 

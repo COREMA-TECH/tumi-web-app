@@ -28,10 +28,6 @@ import Datetime from 'react-datetime';
 import { GET_HOTEL_QUERY, GET_USERS, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
 import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY, UPDATE_RECRUITERS_BY_REGIONS_QUERY, UPDATE_HOTELS_BY_REGIONS_QUERY } from './mutations';
 
-const OPERATION_MANAGER_ID = 3;
-const REGIONAL_RECRUITER_ID = 4;
-const REGIONAL_MANAGER_ID = 15;
-
 
 const styles = (theme) => ({
     wrapper: {
@@ -53,9 +49,6 @@ const styles = (theme) => ({
         '&:hover': {
             cursor: 'pointer'
         }
-    },
-    overflowVisible:{
-        overflow: 'visible'
     }
 
 });
@@ -87,66 +80,9 @@ class RegionForm extends Component {
             formValid: true,
             loading: false,
             openModal: false,
-            saving: false,
-            regionalManagerOpt: [],
-            operationManagerOpt: [],
-            regionalRecruiterOpt: [],
-            HotelsOpt: []
+            saving: false
         };
 
-    }
-
-    getUsers = () => {
-        this.props.client
-            .query({
-                query: GET_USERS,
-                fetchPolicy: 'no-cache',
-                variables: {
-                    Id_Roles: [REGIONAL_MANAGER_ID,REGIONAL_RECRUITER_ID,OPERATION_MANAGER_ID]
-                }
-            })
-            .then(({ data }) => {
-                let regManagers = [], opManagers = [], regRecruiters = [];
-                
-                regManagers = data.user.filter(u => u.Id_Roles === REGIONAL_MANAGER_ID)
-                                        .map(u => { return { value: u.Id, label: u.Full_Name }});
-                opManagers = data.user.filter(u => u.Id_Roles === OPERATION_MANAGER_ID)
-                                        .map(u => { return { value: u.Id, label: u.Full_Name }});
-                regRecruiters = data.user.filter(u => u.Id_Roles === REGIONAL_RECRUITER_ID)
-                                        .map(u => { return { value: u.Id, label: u.Full_Name }});
-
-                //Set values to state
-                this.setState(() => ({
-                    regionalManagerOpt: regManagers,
-                    operationManagerOpt: opManagers,
-                    regionalRecruiterOpt: regRecruiters
-                }));
-
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
-
-    getHotels = () => {
-        this.props.client
-            .query({
-                query: GET_HOTEL_QUERY,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                let options = [];
-                
-                options = data.getbusinesscompanies.map(h => { return { value: h.Id, label: h.Code + ' - ' + h.Name }});
-
-                this.setState(() => ({
-                    HotelsOpt: options
-                }));
-
-            })
-            .catch(error => {
-                console.log(error);
-            });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -637,21 +573,15 @@ class RegionForm extends Component {
         this.setState({ IdRegionalManager: managerTags.value });
     };
 
-    componentWillMount() {
-        this.getUsers();
-        this.getHotels();
-    }
-
     render() {
-        let { classes } = this.props;
         return (
-            <Dialog classes={{ paperScrollPaper: classes.overflowVisible }} maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal} disableBackdropClick={true}>
+            <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">Region's Configurations</h5>
                     </div>
                 </DialogTitle>
-                <DialogContent className={ classes.overflowVisible }>
+                <DialogContent>
                     <form action="">
                         <header className="RegionForm-header">
                             <div className="">
@@ -686,18 +616,35 @@ class RegionForm extends Component {
                                     </div>
                                     <div className="col-md-4">
                                         <label htmlFor="">* Regional Manager</label>
-                                        <div style={{
-                                            paddingTop: '0px',
-                                            paddingBottom: '2px',
-                                        }}>
-                                            <Select
-                                                options={this.state.regionalManagerOpt}
-                                                value={this.state.directorTags}
-                                                onChange={this.handleChangeDirectorTag}
-                                                closeMenuOnSelect={false}
-                                                components={makeAnimated()}
-                                            />
-                                        </div>
+                                        <Query query={GET_USERS} variables={{ Id_Roles: 15 }}>
+                                            {({ loading, error, data, refetch, networkStatus }) => {
+                                                //if (networkStatus === 4) return <LinearProgress />;
+                                                if (error) return <p>Error </p>;
+                                                if (data.user != null && data.user.length > 0) {
+                                                    let options = [];
+                                                    data.user.map((item) => (
+                                                        options.push({ value: item.Id, label: item.Full_Name })
+                                                    ));
+
+                                                    return (
+                                                        <div style={{
+                                                            paddingTop: '0px',
+                                                            paddingBottom: '2px',
+                                                        }}>
+                                                            <Select
+                                                                options={options}
+                                                                value={this.state.directorTags}
+                                                                onChange={this.handleChangeDirectorTag}
+                                                                closeMenuOnSelect={false}
+                                                                components={makeAnimated()}
+                                                            //isMulti
+                                                            />
+                                                        </div>
+                                                    );
+                                                }
+                                                return <SelectNothingToDisplay />;
+                                            }}
+                                        </Query>
                                     </div>
                                 </div>
                             </div>
@@ -709,55 +656,104 @@ class RegionForm extends Component {
                                        
                                             <div className="col-lg-12">
                                                 <label htmlFor="">* Operation Manager</label>
-                                                <div style={{
-                                                    paddingTop: '0px',
-                                                    paddingBottom: '2px',
-                                                }}>
-                                                    <Select
-                                                        options={this.state.operationManagerOpt}
-                                                        value={this.state.managerTags}
-                                                        onChange={this.handleChangeManagerTag}
-                                                        closeMenuOnSelect={false}
-                                                        components={makeAnimated()}
-                                                    />
-                                                </div>
+                                                <Query query={GET_USERS} variables={{ Id_Roles: 3 }} >
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.user != null && data.user.length > 0) {
+                                                            let options = [];
+                                                            data.user.map((item) => (
+                                                                options.push({ value: item.Id, label: item.Full_Name })
+                                                            ));
+
+                                                            return (
+                                                                <div style={{
+                                                                    paddingTop: '0px',
+                                                                    paddingBottom: '2px',
+                                                                }}>
+                                                                    <Select
+                                                                        options={options}
+                                                                        value={this.state.managerTags}
+                                                                        onChange={this.handleChangeManagerTag}
+                                                                        closeMenuOnSelect={false}
+                                                                        components={makeAnimated()}
+                                                                    //isMulti
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
                                             </div>
                                         
                                         
                                             <div className="col-lg-12">
                                                 <label htmlFor="">Regional Recruiter</label>
-                                                <div style={{
-                                                    paddingTop: '0px',
-                                                    paddingBottom: '2px',
-                                                }}>
-                                                    <Select
-                                                        options={this.state.regionalRecruiterOpt}
-                                                        value={this.state.recruitersTags}
-                                                        onChange={this.handleChangerecruiterTag}
-                                                        closeMenuOnSelect={false}
-                                                        components={makeAnimated()}
-                                                        isMulti
-                                                    />
-                                                </div>
+                                                <Query query={GET_USERS} variables={{ Id_Roles: 4 }} >
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.user != null && data.user.length > 0) {
+                                                            let options = [];
+                                                            data.user.map((item) => (
+                                                                options.push({ value: item.Id, label: item.Full_Name })
+                                                            ));
+
+                                                            return (
+                                                                <div style={{
+                                                                    paddingTop: '0px',
+                                                                    paddingBottom: '2px',
+                                                                }}>
+                                                                    <Select
+                                                                        options={options}
+                                                                        value={this.state.recruitersTags}
+                                                                        onChange={this.handleChangerecruiterTag}
+                                                                        closeMenuOnSelect={false}
+                                                                        components={makeAnimated()}
+                                                                        isMulti
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
                                             </div>
 
                                        
                                         
                                             <div className="col-lg-12">
                                                 <label htmlFor="">Property Name</label>
-                                                <div style={{
-                                                    paddingTop: '0px',
-                                                    paddingBottom: '2px',
-                                                }}>
-                                                    <Select
-                                                        options={this.state.HotelsOpt}
-                                                        value={this.state.hotelsTags}
-                                                        onChange={this.handleChangePositionTag}
-                                                        closeMenuOnSelect={false}
-                                                        components={makeAnimated()}
-                                                        isMulti
-                                                    />
-                                                </div>
+                                                <Query query={GET_HOTEL_QUERY} >
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
+                                                            let options = [];
+                                                            data.getbusinesscompanies.map((item) => (
+                                                                options.push({ value: item.Id, label: item.Code + ' - ' + item.Name })
+                                                            ));
+
+                                                            return (
+                                                                <div style={{
+                                                                    paddingTop: '0px',
+                                                                    paddingBottom: '2px',
+                                                                }}>
+                                                                    <Select
+                                                                        options={options}
+                                                                        value={this.state.hotelsTags}
+                                                                        onChange={this.handleChangePositionTag}
+                                                                        closeMenuOnSelect={false}
+                                                                        components={makeAnimated()}
+                                                                        isMulti
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
                                             </div>
                                        
                                     </div>

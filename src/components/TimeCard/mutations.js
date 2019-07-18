@@ -126,11 +126,3 @@ export const ADD_MARCKED = gql`
         }
     }
 `;
-
-export const UPDATE_MARKED = gql`
-    mutation updateMarkedEmployees($MarkedEmployees: inputUpdateMarkedEmployees) {
-        updateMarkedEmployees(markedemployees: $MarkedEmployees) {
-            id
-        }
-    }
-`;

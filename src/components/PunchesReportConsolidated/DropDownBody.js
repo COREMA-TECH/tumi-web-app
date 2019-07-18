@@ -40,7 +40,6 @@ class PunchesConsolidatedDropDownBody extends Component {
                 <table className="table DropdownBody-table">
                     <thead>
                         <tr>
-                            <th>Actions</th>
                             <th className="Table-boldHead" scope="col">Name</th>
                             <th className="Table-boldHead" scope="col">Time in-out</th>
                             <th className="Table-boldHead" scope="col">Duration</th>
@@ -49,7 +48,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                             <th className="Table-boldHead" scope="col">Faces</th>
                         </tr>
                     </thead>
-                    <tbody className="MuiTableBody-custom">
+                    <tbody>
                         {data.map((item) => {
                             let fileSrcIn = "/images/placeholder.png";
                             let fileSrcOut = "/images/placeholder.png";
@@ -61,11 +60,6 @@ class PunchesConsolidatedDropDownBody extends Component {
                             }
                             return (
                                 <tr>
-                                    <th>
-                                        <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({...item}) }>
-                                            <i className="fas fa-pen"></i>
-                                        </button>
-                                    </th>
                                     <td>{item.name}</td>
                                     <td>{item.clockIn} - {item.clockOut}</td>
                                     <td>{item.duration}</td>

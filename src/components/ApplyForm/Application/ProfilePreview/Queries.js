@@ -14,7 +14,6 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             Urlphoto
             directDeposit
             isActive
-            employmentType
             position{
                 id
                 position {
@@ -35,10 +34,6 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
                     idUsers         
                     idEntity    
                     hireDate   
-                    startDate
-                    BusinessCompany{
-                        Name
-                    } 
                 }     
             }   
             idealJobs {
