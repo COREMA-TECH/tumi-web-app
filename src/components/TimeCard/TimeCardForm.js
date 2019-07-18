@@ -26,6 +26,9 @@ import moment from 'moment';
 import Datetime from 'react-datetime';
 import DatePicker from "react-datepicker";
 
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
+
 const styles = (theme) => ({
     wrapper: {
         margin: theme.spacing.unit,
@@ -541,10 +544,72 @@ class TimeCardForm extends Component {
         });
     }
 
+    getPropertyFilterList = _ => {
+        const propertyList = this.state.hotels.map(item => {
+            return { value: item.Id, label: item.Name }
+        });
+
+        const options = [{ value: 0, label: "Select a Property" }, ...propertyList];
+        return options;
+    }
+
+    getEmployeeFilterList = _ => {
+        const employeeList = this.state.employees.map(item => {
+            return { value: item.id, label: item.firstName + " " + item.lastName }
+        });
+
+        const options = [{ value: 0, label: "Select a Property" }, ...employeeList];
+        return options;
+    }
+
+    handlePropertySelectChange = ({ value }) => {
+        this.setState((prevState, props) => {
+            let hotel = this.state.hotels.find(_ => {
+                return _.Id === parseInt(value)
+            })
+            return { IdEntity: value, propertyStartWeek: hotel ? hotel.Start_Week : null }
+        });
+    }
+
+    handleEmployeeSelectChange = ({ value }) => {
+        this.setState((prevState, props) => {
+            return { employeeId: value }
+        });
+    }
+
+    findSelectedProperty = propertyId => {
+        const defValue = { value: 0, label: "Select a Property" };
+
+        if (propertyId === 'null' || propertyId === 0)
+            return defValue;
+
+        const found = this.state.hotels.find(item => {
+            return item.Id === propertyId;
+        });
+
+        return found ? { value: found.Id, label: found.Name.trim() } : defValue;
+    }
+
+    findSelectedEmployee = employeeId => {
+        const defValue = { value: 0, label: "Select a Employee" };
+
+        if (employeeId === 'null' || employeeId === 0)
+            return defValue;
+
+        const found = this.state.employees.find(item => {
+            return item.id === employeeId;
+        });
+
+        return found ? { value: found.id, label: found.firstName.trim() + " " + found.lastName.trim() } : defValue;
+    }
+
     render() {
 
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
+
+        const propertyList = this.getPropertyFilterList();
+        const employeeList = this.getEmployeeFilterList();
 
         return (
             <div>
@@ -557,38 +622,28 @@ class TimeCardForm extends Component {
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-6">
-                                        <select
-                                            required
-                                            name="IdEntity"
-                                            className="form-control"
-                                            id=""
-                                            onChange={this.handleChange}
-                                            value={this.state.IdEntity}
-                                            disabled={!isAdmin}
+                                        <Select
+                                            options={propertyList}
+                                            value={this.findSelectedProperty(this.state.IdEntity)}
+                                            onChange={this.handlePropertySelectChange}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
                                             onBlur={this.handleValidate}
-                                        >
-                                            <option value={0}>Select a Property</option>
-                                            {this.state.hotels.map((hotel) => (
-                                                <option value={hotel.Id}>{hotel.Name}</option>
-                                            ))}
-                                        </select>
+                                            className="WorkOrders-dropdown"
+                                        />
                                     </div>
                                     <div className="col-md-6">
-                                        <select
-                                            required
-                                            name="employeeId"
-                                            className="form-control"
-                                            id=""
-                                            onChange={this.handleChange}
-                                            value={this.state.employeeId}
-                                            disabled={!isAdmin}
+                                        <Select
+                                            options={employeeList}
+                                            value={this.findSelectedEmployee(this.state.employeeId)}
+                                            onChange={this.handleEmployeeSelectChange}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
                                             onBlur={this.handleValidate}
-                                        >
-                                            <option value={0}>Select a Employee</option>
-                                            {this.state.employees.map((employee) => (
-                                                <option value={employee.id}>{employee.lastName + " " + employee.firstName}</option>
-                                            ))}
-                                        </select>
+                                            className="WorkOrders-dropdown"
+                                        />
                                     </div>
                                 </div>
                             </div>
