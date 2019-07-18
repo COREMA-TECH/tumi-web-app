@@ -164,34 +164,32 @@ class Skills extends Component {
 	render() {
 		// To render the skills section
 		let renderSkillsSection = () => (
-			<div className="">
-				<div className="row">
-					<div className="row-skill">
-						{this.state.skills.map((skillItem) => (
-							<SkillCard
-								skillDescription={skillItem.description}
-								skillLevel={skillItem.level}
-								removeSkill={() => {
-									this.setState(
-										(prevState) => ({
-											skills: this.state.skills.filter((_, i) => {
-												return _.uuid !== skillItem.uuid;
-											})
-										}),
-										() => {
-											if (skillItem.id !== undefined) {
-												this.removeSkillById(skillItem.id);
-											}
+			<div className="row p-0">
+				<div className="row-skill">
+					{this.state.skills.map((skillItem) => (
+						<SkillCard
+							skillDescription={skillItem.description}
+							skillLevel={skillItem.level}
+							removeSkill={() => {
+								this.setState(
+									(prevState) => ({
+										skills: this.state.skills.filter((_, i) => {
+											return _.uuid !== skillItem.uuid;
+										})
+									}),
+									() => {
+										if (skillItem.id !== undefined) {
+											this.removeSkillById(skillItem.id);
 										}
-									);
-								}}
-							/>
-						))}
-					</div>
-					<div className="col-md-12">
-						<hr />
-						{renderSkillsDialog()}
-					</div>
+									}
+								);
+							}}
+						/>
+					))}
+				</div>
+				<div className="col-md-12">
+					<hr />
+					{renderSkillsDialog()}
 				</div>
 			</div>
 		);
@@ -263,31 +261,18 @@ class Skills extends Component {
 		);
 
 		return (
-			<div className="Apply-container--application">
-				<div className="">
-					<div className="">
-						<div className="applicant-card">
-							<div className="applicant-card__header">
-								<span className="applicant-card__title"></span>
-							</div>
-							<div className="card-body">
-								<div className="row">
-									{this.state.loading ? (
-										<div className="loading-container">
-											{renderSkillsSection()}
-											<div className="circular-progress-container">
-												<CircularProgressLoading />
-											</div>
-										</div>
-									) : (
-											<div className="col-md-12">{renderSkillsSection()}</div>
-										)}
-								</div>
-							</div>
-						</div>
+
+			this.state.loading ? (
+				<div className="loading-container">
+					{renderSkillsSection()}
+					<div className="circular-progress-container">
+						<CircularProgressLoading />
 					</div>
 				</div>
-			</div>
+			) : (
+					<div className="col-md-12">{renderSkillsSection()}</div>
+				)
+
 		);
 	}
 }
