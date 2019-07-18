@@ -230,22 +230,13 @@ class ApplicationInternal extends Component {
     }
 
     submitForm = () => {
-        if (!this.state.typeOfId) {
-            this.props.handleOpenSnackbar(
-                'warning',
-                'some fields are required',
-                'bottom',
-                'right'
-            );
-        } else { this.updateApplication(this.props.applicationId); }
-
+        this.updateApplication(this.props.applicationId);
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.submitForm()
-
+        this.submitForm();
     }
 
 
@@ -486,8 +477,10 @@ class ApplicationInternal extends Component {
                                                                 onChange={this.handleInputChange}
                                                             >
                                                                 <option value="">Select an option</option>
-                                                                <option value="1">FT</option>
-                                                                <option value="2">PT</option>
+                                                                <option value="1">New Hire</option>
+                                                                <option value="2">Rehire</option>
+                                                                <option value="3">Transfer</option>
+                                                                <option value="4">Promotion</option>
                                                             </select>
                                                         </div>
 
@@ -504,7 +497,8 @@ class ApplicationInternal extends Component {
                                                                 onChange={this.handleInputChange}
                                                             >
                                                                 <option value="">Select an option</option>
-                                                                <option value="Part-Time">Part-Time</option>
+                                                                <option value="Part-Time">PT</option>
+                                                                <option value="Full-Time">FT</option>
                                                             </select>
                                                         </div>
 
