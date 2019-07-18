@@ -10342,7 +10342,11 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 .visitsCard-pic {
   height: 6rem;
   width: 100%;
-  margin-top: -3rem; }
+  margin-top: -3rem;
+  -o-object-fit: cover;
+  object-fit: cover;
+  -o-object-position: center;
+  object-position: center; }
 
 .visitsCard-footer {
   padding-top: 0;

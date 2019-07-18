@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
+
+const imgDefaultUser = '../../../images/tumi-user.png';
 
 const visitsCards = ({ opManager, visit, handleCloseVisit, handleDisableVisit }) => {
     return (
@@ -9,7 +11,7 @@ const visitsCards = ({ opManager, visit, handleCloseVisit, handleDisableVisit })
                 <div className="card-body py-0">
                     <div className="row pt-0">
                         <div className="col-5 p-0 pl-2"  >
-                            <img src={visit.url} alt={opManager.Full_Name} className="rounded visitsCard-pic" />
+                            <img src={visit.url || imgDefaultUser} alt={opManager.Full_Name} className="rounded visitsCard-pic" />
                         </div>
                         <div className="col-7 p-0 pl-1">
                             <small>visitor</small>
