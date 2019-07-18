@@ -101,7 +101,7 @@ class PunchesReportConsolidatedFilter extends Component {
     handleCloseModal = () => {
         this.setState({
             openModal: false
-        }, _ => { this.props.handleClickCloseModal() });
+        });
     };
 
     handleClickOpenModal = () => {
