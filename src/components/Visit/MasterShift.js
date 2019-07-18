@@ -116,7 +116,8 @@ class MasterShift extends Component {
                     url: urlFile,
                     comment: comment,
                     startLatitude: latitude,
-                    startLongitude: longitude
+                    startLongitude: longitude,
+                    isActive: true
                 }
             }
         })

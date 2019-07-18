@@ -366,66 +366,52 @@ class FormsW4 extends Component {
                                                                     border: '0px #FFF',
                                                                     borderCollapse: 'collapse',
                                                                     width: '100%'
-                                                                }} border={1}>
+                                                                }} border={1} cellspacing={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top' }}>
-                                                                            <h1 style={{ textDecoration: 'underline' }}><strong>Form W-4
-                                                                                (2019) </strong></h1>
-                                                                            <p>Acontecimientos futuros. Toda información sobre
-                                                                                acontecimientos
-                                                                                futuros que afecten al
-                                                                                Formulario W-4(SP) (como legislación aprobada después de
-                                                                                que el
-                                                                                formulario ha sido
-                                                                                publicado) será anunciada en <a
-                                                                                    href="www.irs.gov/FormW4SP.Prop">www.irs.gov/FormW4SP.</a>
+                                                                        <td style={{ width: '50%', verticalAlign: 'top', padding: '5px' }}>
+                                                                            <h2 style={{ textDecoration: 'underline' }}>Formulario W-4(SP) (2019)</h2>
+                                                                            <p>
+                                                                                <span style={{fontWeight: '900'}}>Acontecimientos futuros.</span> Toda información sobre acontecimientos futuros que afecten al Formulario W-4(SP) (como legislación aprobada después de
+                                                                                que el formulario ha sido publicado) será anunciada en <a href="www.irs.gov/FormW4SP.Prop">www.irs.gov/FormW4SP.</a>
                                                                             </p>
-                                                                            <p>Propósito. Complete el Formulario W-4(SP) para que su
-                                                                                empleador
-                                                                                pueda retener la cantidad
-                                                                                correcta del impuesto federal sobre los ingresos de su
-                                                                                paga.
-                                                                                Considere completar un nuevo
-                                                                                Formulario
-                                                                                W-4(SP) cada año y cuando su situación personal o
-                                                                                financiera
-                                                                                cambie.</p>
-                                                                            <p>Exención de la retención. Puede reclamar la exención de
-                                                                                la
-                                                                                retención
-                                                                                para
-                                                                                2019 si ambas de las siguientes situaciones le
-                                                                                corresponde:</p>
-                                                                            <ul>
-                                                                                <li>Para 2018 tenía derecho a un reembolso de todo el
-                                                                                    impuesto
-                                                                                    federal sobre los ingresos
-                                                                                    retenido porque notenía obligación tributaria y
-                                                                                </li>
-                                                                                <li>Para 2019 espera un reembolso de todo el impuesto
-                                                                                    federal
-                                                                                    sobre ingreso retenido porque
-                                                                                    usted
-                                                                                    espera notener obligación tributaria.
-                                                                                </li>
-                                                                                <li>Si está exento, complete sólo las líneas 1,2,3,4 y 7
-                                                                                    y firme
-                                                                                    el
-                                                                                    formulario
-                                                                                    para validarlo. Su exención para 2019 vence el 17 de
-                                                                                    febrero
-                                                                                    de 2020. Vea la
-                                                                                    Publicación 505, Tax Withholding and Estimated Tax
-                                                                                    (Retención de impuestos e
-                                                                                    impuesto estimado), en inglés, para saber más sobre
-                                                                                    si reúne
-                                                                                    los
-                                                                                    requisitos
-                                                                                    para la exención de la retención.
-                                                                                </li>
-                                                                            </ul>
-                                                                            <p>Instrucciones Generales</p>
+                                                                            <p>
+                                                                                <span style={{fontWeight: '900'}}>Propósito.</span> Complete el Formulario W-4(SP) para que su empleador
+                                                                                pueda retener la cantidad correcta del impuesto federal sobre los ingresos de su paga. Considere completar un nuevo
+                                                                                Formulario W-4(SP) cada año y cuando su situación personal o financiera cambie.
+                                                                            </p>
+                                                                            <p>
+                                                                                <span style={{fontWeight: '900'}}>Exención de la retención.</span> Puede reclamar la exención de la retención
+                                                                                para 2019 si <span style={{fontWeight: '900'}}>ambas</span> de las siguientes situaciones le corresponde:
+                                                                            </p>
+                                                                            <p>
+                                                                                • Para 2018 tenía derecho a un reembolso de <span style={{fontWeight: '900'}}>todo</span> el impuesto federal sobre los ingresos 
+                                                                                retenido porque <span style={{fontWeight: '900'}}>no</span> tenía obligación tributaria <span style={{fontWeight: '900'}}>y</span> 
+                                                                            </p>
+                                                                            <p>
+                                                                                • Para 2019 espera un reembolso de <span style={{fontWeight: '900'}}>todo</span> el impuesto 
+                                                                                federal
+                                                                                sobre ingreso retenido porque
+                                                                                usted
+                                                                                espera notener obligación tributaria.
+                                                                            </p>
+                                                                            <p>
+                                                                                Si está exento, complete <span style={{fontWeight: '900'}}>sólo</span> las líneas <span style={{fontWeight: '900'}}>1,2,3,4 y 7</span> y firme
+                                                                                el
+                                                                                formulario
+                                                                                para validarlo. Su exención para 2019 vence el 17 de
+                                                                                febrero
+                                                                                de 2020. Vea la
+                                                                                Publicación 505, Tax Withholding and Estimated Tax
+                                                                                (Retención de impuestos e
+                                                                                impuesto estimado), en inglés, para saber más sobre
+                                                                                si reúne
+                                                                                los
+                                                                                requisitos
+                                                                                para la exención de la retención.
+                                                                            </p>
+                                                                            <br />
+                                                                            <h4>Instrucciones Generales</h4>
                                                                             <p>Si no está exento, siga el resto de estas instrucciones
                                                                                 para
                                                                                 determinar el número
@@ -440,15 +426,18 @@ class FormsW4 extends Component {
                                                                                 puede ser
                                                                                 una cantidad fija ni un
                                                                                 porcentaje de los salarios.</p>
-                                                                            <p>También puede usar la calculadora en <a
-                                                                                href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a>
-                                                                                para determinar su retención de impuestos con mayor
+                                                                            <p>También puede usar la calculadora 
+                                                                                en <span style={{fontWeight: '900'}}>
+                                                                                    <a href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a>
+                                                                                </span> para 
+                                                                                determinar su retención de impuestos con mayor
                                                                                 precisión.
                                                                                 Considere usar esta
                                                                                 calculadora si</p>
                                                                         </td>
-                                                                        <td style={{ width: '49.9468%', verticalAlign: 'top' }}>
-                                                                            <p style={{ textAlign: 'left' }}>tiene una situación
+                                                                        <td style={{ width: '49.9468%', verticalAlign: 'top', padding: '5px' }}>
+                                                                            <p style={{ textAlign: 'left' }}>
+                                                                                tiene una situación
                                                                                 tributaria más
                                                                                 complicada, como por
                                                                                 ejemplo, si tiene un cónyuge que trabaja, si tiene más
@@ -482,22 +471,25 @@ class FormsW4 extends Component {
                                                                                 podría
                                                                                 estar
                                                                                 sujeto a una multa.</p>
-                                                                            <p style={{ textAlign: 'left' }}>Personas con múltiples
-                                                                                trabajos o con
-                                                                                cónyuges que
-                                                                                trabajan.
-                                                                                Si tiene más de un trabajo a la vez, o si es casado que
+                                                                            <p style={{ textAlign: 'left' }}>
+                                                                                <span style={{fontWeight: '900'}}>
+                                                                                    Personas con múltiples
+                                                                                    trabajos o con
+                                                                                    cónyuges que
+                                                                                    trabajan.
+                                                                                </span> Si tiene más de un trabajo a la vez, o si es casado que
                                                                                 presenta
                                                                                 una declaración
                                                                                 conjunta y su cónyuge trabaja, lea todas las
                                                                                 instrucciones,
                                                                                 incluyendo las instrucciones
-                                                                                para
-                                                                                la Hoja de Trabajo para Dos Asalariados o Múltiples
-                                                                                Empleos
-                                                                                antes de comenzar.</p>
-                                                                            <p style={{ textAlign: 'left' }}>Ingresos no derivados del
-                                                                                trabajo. Si
+                                                                                para la <span style={{fontWeight: '900'}}>
+                                                                                    Hoja de Trabajo para Dos Asalariados o Múltiples
+                                                                                    Empleos
+                                                                                </span> antes de comenzar.</p>
+                                                                            <p style={{ textAlign: 'left' }}>
+                                                                                <span style={{fontWeight: '900'}}>Ingresos no derivados del trabajo.
+                                                                                </span> Si
                                                                                 tiene una cantidad alta de
                                                                                 ingresos
                                                                                 no derivados del trabajo no sujetos a retención, tales
@@ -511,11 +503,11 @@ class FormsW4 extends Component {
                                                                                 lo
                                                                                 contrario, puede
                                                                                 adeudar
-                                                                                impuestos adicionales. O bien, puede usar la Hoja de
-                                                                                Trabajo
-                                                                                para Deducciones, Ajustes e Ingreso
-                                                                                Adicional en la página 4 o la calculadora en <a
-                                                                                    href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a> para
+                                                                                impuestos adicionales. O bien, puede usar 
+                                                                                la <span style={{fontWeight: '900'}}>Hoja de Trabajo para Deducciones,
+                                                                                Ajustes e Ingreso Adicional </span> en
+                                                                                la página <span style={{fontWeight: '900'}}>4</span> o la calculadora en 
+                                                                                <a href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a> para
                                                                                 asegurarse de tener suficientes
                                                                                 impuestos retenidos de su cheque de paga. Si tiene
                                                                                 ingresos por
@@ -527,7 +519,8 @@ class FormsW4 extends Component {
                                                                                 retención en el Formulario W-4(SP) o el Formulario W-4P,
                                                                                 en
                                                                                 inglés.</p>
-                                                                            <p style={{ textAlign: 'left' }}>Extranjero no residente. Si
+                                                                            <p style={{ textAlign: 'left' }}>
+                                                                                <span style={{fontWeight: '900'}}>Extranjero no residente.</span> Si
                                                                                 es
                                                                                 extranjero no residente, vea el Aviso
                                                                                 1392,
@@ -543,7 +536,7 @@ class FormsW4 extends Component {
                                                                     </tbody>
                                                                 </table>
                                                                 <p><img src="https://i.imgur.com/wJ2ancW.png"
-                                                                        style={{ width: '1000px !important' }} />
+                                                                        style={{ width: '100%' }} />
                                                                 </p>
                                                                 <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                     <tbody>
@@ -551,7 +544,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '50%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             1 Su primer nombre e inicial del segundo
@@ -571,7 +564,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '25%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             Apellido
@@ -590,10 +583,10 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '25%',
                                                                             verticalAlign: 'top'
                                                                         }}>
-                                                                            2 Su número de Seguro Social
+                                                                            <span style={{fontWeight: '900'}}>2 Su número de Seguro Social</span>
                                                                             <input
                                                                                 disabled={this.state.isCreated}
                                                                                 type="text" style={{ width: '100%', border: 0 }}
@@ -681,9 +674,8 @@ class FormsW4 extends Component {
                                                                                             estadoCivil1: false,
                                                                                         })
                                                                                     }}
-                                                                                /> Casado, pero retiene con la tasa mayor de Solter
-                                                                                <strong> Nota: </strong> <br />
-                                                                                Si es casado, pero está legalmente separado, marque el recuadro “Casado, pero retiene con la tasa mayor de Soltero”.
+                                                                                /> Casado, pero retiene con la tasa mayor de Soltero <br />
+                                                                                <span style={{fontWeight: '900'}}>Nota: </span> Si es casado, pero está legalmente separado, marque el recuadro “Casado, pero retiene con la tasa mayor de Soltero”.
                                                                             </div>
                                                                         </td>
                                                                     </tr>
@@ -725,12 +717,15 @@ class FormsW4 extends Component {
                                                                         }}
                                                                             colSpan="2">
                                                                             <div data-font-name="g_d8_f2" data-angle={0}
-                                                                                 data-canvas-width="408.9536499999999"><strong>4 Si su
-                                                                                apellido es distinto al que aparece en su tarjeta de
-                                                                                Seguro
-                                                                                Social, marque este recuadro.
-                                                                                Debe llamar al 800-772-1213 para recibir una tarjeta de
-                                                                                reemplazo. ▶
+                                                                                 data-canvas-width="408.9536499999999">
+                                                                                <span style={{fontWeight: '900'}}>
+                                                                                    4 Si su
+                                                                                    apellido es distinto al que aparece en su tarjeta de
+                                                                                    Seguro
+                                                                                    Social, marque este recuadro.
+                                                                                    Debe llamar al 800-772-1213 para recibir una tarjeta de
+                                                                                    reemplazo. ▶ 
+                                                                                </span>
                                                                                 <input
                                                                                     disabled={this.state.isCreated}
                                                                                     type="checkbox"
@@ -742,7 +737,7 @@ class FormsW4 extends Component {
                                                                                         this.setState({ socialSecurityExtention: e.target.checked })
                                                                                     }}
                                                                                 />
-                                                                            </strong></div>
+                                                                            </div>
                                                                         </td>
                                                                     </tr>
                                                                     </tbody>
@@ -765,25 +760,20 @@ class FormsW4 extends Component {
                                                                             de cada
                                                                             cheque de paga<br />
                                                                             7 Reclamo exención de la retención para 2019 y certifico que
-                                                                            cumplo
-                                                                            con ambas condiciones, a continuación, para la
+                                                                            cumplo con <span style={{fontWeight: '900'}}>ambas</span> condiciones,
+                                                                            a continuación, para la
                                                                             exención:<br />
-                                                                            <ul>
-                                                                                <li>
-                                                                                    El año pasado tuve derecho a un reembolso de todos
-                                                                                    los
-                                                                                    impuestos federales sobre el ingreso retenidos
-                                                                                    porque no
-                                                                                    tuve obligación tributaria alguna y
-                                                                                </li>
-                                                                                <li>
-                                                                                    Este año tengo previsto un reembolso de todos los
-                                                                                    impuestos
-                                                                                    federales sobre los ingresos retenidos porque tengo
-                                                                                    previsto
-                                                                                    no tener una obligación tributaria
-                                                                                </li>
-                                                                            </ul>
+                                                                            • El año pasado tuve derecho a un reembolso
+                                                                            de <span style={{fontWeight: '900'}}>todos</span> los
+                                                                            impuestos federales sobre el ingreso retenidos
+                                                                            porque no
+                                                                            tuve obligación tributaria alguna y <br />
+                                                                            • Este año tengo previsto un reembolso 
+                                                                            de <span style={{fontWeight: '900'}}>todos</span> los
+                                                                            impuestos
+                                                                            federales sobre los ingresos retenidos porque tengo
+                                                                            previsto
+                                                                            no tener una obligación tributaria <br />
                                                                             Si cumple con ambas condiciones, escriba “Exempt” (Exento)
                                                                             aquí
                                                                         </td>
@@ -897,7 +887,8 @@ class FormsW4 extends Component {
                                                                     </tr>
                                                                     <tr>
                                                                         <td colSpan="3">
-                                                                            Bajo pena de perjurio, declaro haber examinado este certificado y que a mi leal saber y entender, es verídico, correcto y completo.  Firma del empleado
+                                                                            Bajo pena de perjurio, declaro haber examinado este certificado y que a mi leal saber y entender, es verídico, correcto y completo. <br />
+                                                                            <span style={{fontWeight: '900'}}>Firma del empleado</span><br />
                                                                             (Este formulario no es válido a menos que usted lo firme).  ▶ <img style={{
                                                                             width: '100px',
                                                                             height: '30px',
@@ -965,15 +956,16 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '65%',
                                                                             verticalAlign: 'top'
                                                                         }}>
-                                                                            8 Nombre y dirección del empleador (Empleador: Complete las
-                                                                            líneas 8
-                                                                            y 10 si
+                                                                            8 Nombre y dirección del empleador (<span style={{fontWeight: '900'}}>Empleador:</span> Complete
+                                                                            las líneas <span style={{fontWeight: '900'}}>8 y 10</span> si
                                                                             envía este
                                                                             certificado
-                                                                            alIRS y complete las líneas 8, 9 y 10 si lo envía al State
+                                                                            alIRS y complete las 
+                                                                            líneas <span style={{fontWeight: '900'}}>8, 9 y 10</span> si 
+                                                                            lo envía al State
                                                                             Directory
                                                                             of New Hires
                                                                             (Directorio
@@ -992,7 +984,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '15%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             9 Primera fecha de empleo
@@ -1011,7 +1003,7 @@ class FormsW4 extends Component {
                                                                         <td style={{
                                                                             fontSize: '11px',
                                                                             fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-                                                                            width: '33.3333%',
+                                                                            width: '20%',
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             10 Número de identificación del empleador(EIN)
@@ -1040,17 +1032,19 @@ class FormsW4 extends Component {
                                                                 }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top' }}>
-                                                                            <p><strong>Instrucciones Específicas.</strong></p>
-                                                                            <p>Hoja de Trabajo para Descuentos Personales Complete esta
+                                                                        <td style={{ width: '50%', verticalAlign: 'top', padding: '5px' }}>
+                                                                            <h3>Instrucciones Específicas.</h3><br />
+                                                                            <h5>Hoja de Trabajo para Descuentos Personales</h5>
+                                                                            <p>Complete esta
                                                                                 hoja de
-                                                                                trabajo en la página 4
-                                                                                primero para determinar el número de descuentos
+                                                                                trabajo en la 
+                                                                                página <span style={{fontWeight: '900'}}>4</span> primero
+                                                                                para determinar el número de descuentos
                                                                                 personales de
                                                                                 retención que debe
                                                                                 reclamar.</p>
-                                                                            <p><strong>Línea C. Cabeza de familia, tenga en
-                                                                                cuenta:</strong> Por
+                                                                            <p>
+                                                                                <span style={{fontWeight: '900'}}>Línea C. Cabeza de familia, tenga en cuenta:</span> Por
                                                                                 lo general, usted
                                                                                 podría reclamar el estado de cabeza de familia para
                                                                                 efectos de
@@ -1066,7 +1060,9 @@ class FormsW4 extends Component {
                                                                                 efectos de la
                                                                                 declaración.
                                                                             </p>
-                                                                            <p>Línea E. Crédito tributario por hijos. Cuando presente su
+                                                                            <p>
+                                                                                <span style={{fontWeight: '900'}}>Línea E. Crédito tributario por hijos.</span> Cuando
+                                                                                presente su
                                                                                 declaración de
                                                                                 impuestos, usted podría reunir los requisitos para
                                                                                 reclamar el
@@ -1103,8 +1099,8 @@ class FormsW4 extends Component {
                                                                                 incluyendo
                                                                                 los ingresos obtenidos por un
                                                                                 cónyuge si presenta una declaración conjunta.</p>
-                                                                            <p><strong>Línea F. Crédito para otros
-                                                                                dependientes.</strong> Cuando
+                                                                            <p>
+                                                                                <span style={{fontWeight: '900'}}>Línea F. Crédito para otros dependientes.</span> Cuando
                                                                                 presente su
                                                                                 declaración de impuestos, usted podría reunir los
                                                                                 requisitos
@@ -1125,7 +1121,7 @@ class FormsW4 extends Component {
                                                                                 consulte la
                                                                                 Publicación 972, en inglés.</p>
                                                                         </td>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top' }}>
+                                                                        <td style={{ width: '50%', verticalAlign: 'top', padding: '5px' }}>
                                                                             <p>Para reducir el impuesto retenido de su paga teniendo en
                                                                                 cuenta
                                                                                 este crédito, siga las
@@ -1140,8 +1136,9 @@ class FormsW4 extends Component {
                                                                                 ingresos
                                                                                 obtenidos por un cónyuge si
                                                                                 presenta una declaración conjunta.</p>
-                                                                            <p><strong>Línea G. Otros créditos.</strong> Usted podría
-                                                                                reducir el
+                                                                            <p>
+                                                                                <span style={{fontWeight: '900'}}>Línea G. Otros créditos.</span> Usted
+                                                                                podría reducir el
                                                                                 impuesto
                                                                                 retenido de su cheque de paga si espera reclamar otros
                                                                                 créditos
@@ -1166,10 +1163,8 @@ class FormsW4 extends Component {
                                                                                 Trabajo
                                                                                 1-6, anote
                                                                                 “-0-”
-                                                                                en las líneas E y F.</p>
-                                                                            <p><strong>Hoja de Trabajo para Deducciones, Ajustes e
-                                                                                Ingreso
-                                                                                Adicional</strong></p>
+                                                                                en las líneas <span style={{fontWeight: '900'}}>E y F.</span> </p>
+                                                                            <h3>Hoja de Trabajo para Deducciones, Ajustes e Ingreso Adicional</h3>
                                                                             <p>Complete esta hoja de trabajo para determinar si puede
                                                                                 reducir
                                                                                 los impuestos retenidos de su
