@@ -845,6 +845,7 @@ class NewContract extends Component {
     };
 
     geManagementbyId = (id) => {
+        console.log(`ManagementId ${id}`);
         if (id <= 0) {
             this.setState({
                 Management_Billing_Street: '',
@@ -864,6 +865,7 @@ class NewContract extends Component {
                     }
                 })
                 .then(({ data }) => {
+                    console.log(data);
                     this.setState({
                         Management_Billing_Street: this.getString(data.getbusinesscompanies[0].Location),
                         Management_Billing_Zip_Code: this.getString(data.getbusinesscompanies[0].Zipcode),
@@ -997,14 +999,17 @@ class NewContract extends Component {
             this.setState({
                 contractExpiration: expireDate.toISOString().substring(0, 10)
             })
-        }
-
-        if (this.props.Id_Parent !== undefined) {
+        }        
+        
+        if (this.props.Id_Entity){            
             this.state.editing = false;
-        }
-        else {
+            this.updateEntity(this.props.Id_Entity);
+        } else {
             this.state.editing = true;
         }
+
+        if(this.props.Id_Parent)
+            this.updateManagement(this.props.Id_Parent);
     }
 
 
@@ -1258,23 +1263,24 @@ class NewContract extends Component {
     }
 
     updateEntity = (id) => {
+        console.log('Hotel changed')
         this.getBusinessCompaniesbyId(id);
     }
 
     updateAddress = () => {
         if (document.getElementById("correctAddress").checked) {
-            const isManagement = this.state.IdManagement && this.state.IdManagement != 0;
+            const useHotelAddress = this.state.Id_Entity || false;
 
             this.setState({
-                Old_Billing_City: isManagement ? this.state.Management_Billing_City : this.state.city,
-                Old_Billing_State: isManagement ? this.state.Management_Billing_State : this.state.state,
-                Old_Billing_Street: isManagement ? this.state.Management_Billing_Street : this.state.address,
-                Old_Billing_Zip_Code: isManagement ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
+                Old_Billing_City: useHotelAddress ? this.state.city : this.state.Management_Billing_City,
+                Old_Billing_State: useHotelAddress ? this.state.state : this.state.Management_Billing_State,
+                Old_Billing_Street: useHotelAddress ? this.state.address : this.state.Management_Billing_Street,
+                Old_Billing_Zip_Code: useHotelAddress ? this.state.zipCode : this.state.Management_Billing_Zip_Code,
 
-                Billing_City: isManagement ? this.state.Management_Billing_City : this.state.city,
-                Billing_State: isManagement ? this.state.Management_Billing_State : this.state.state,
-                Billing_Street: isManagement ? this.state.Management_Billing_Street : this.state.address,
-                Billing_Zip_Code: isManagement ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
+                Billing_City: useHotelAddress ? this.state.city : this.state.Management_Billing_City,
+                Billing_State: useHotelAddress ? this.state.state : this.state.Management_Billing_State,
+                Billing_Street: useHotelAddress ? this.state.address : this.state.Management_Billing_Street,
+                Billing_Zip_Code: useHotelAddress ? this.state.zipCode : this.state.Management_Billing_Zip_Code,
                 Disable_Billing_Street: true,
                 Disable_Billing_Zip_Code: true
 
