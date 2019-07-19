@@ -491,8 +491,9 @@ class MasterShift extends Component {
     }
 
     componentWillMount() {
-        let userId = localStorage.getItem('LoginId');
-        let rolId = localStorage.getItem('IdRoles');
+        // TODO: (LF) DESCOEMNTAR LECTURA DE LOCAL STORAGE
+        let userId = 258; //localStorage.getItem('LoginId');
+        let rolId = 3; //localStorage.getItem('IdRoles');
         
         this.setState(() => {
             return {

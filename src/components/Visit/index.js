@@ -262,8 +262,9 @@ class Visit extends Component{
 
     componentWillMount() {
         this.setState(() => {
-            let userId = localStorage.getItem('LoginId');
-            let rolId = localStorage.getItem('IdRoles');
+            // TODO: (LF) DESCOMENTAR LECTURA DE LOCAL STORAGE
+            let userId = 258; //localStorage.getItem('LoginId');
+            let rolId = 3; //localStorage.getItem('IdRoles');
             return { 
                 userId: !!userId ? +userId : 0,
                 rolId: !!rolId ? +rolId : 0,
@@ -327,25 +328,25 @@ class Visit extends Component{
         return (
             <Fragment>
                 <div className="row align-items-end justify-content-end">
-                    <div className="col-1">
-                        <label htmlFor="">Grid View</label>
+                    <div className="col-sm-5 d-flex justify-content-end">
+                        <label htmlFor="" className="pt-1">Grid View</label>
                         <Switch
                             checked={gridView}
                             onChange={this.handleGridView}
                             color="primary"
                         />
                     </div>
-                    <div className={`col-${isOpManager ? '1' : '2'} pl-1`}>
+                    <div className={`${isOpManager ? 'col-auto' : 'col-sm-4 col-md-3 col-xl-2'} pl-3`}>
                     {
                         !isOpManager && 
                             <Fragment>
-                                <label htmlFor="">Op. Managers</label>
                                 <Select
                                     name="opManager"
                                     options={opManagerOptions}
                                     onChange={this.filterOpManager}
                                     closeMenuOnSelect
                                     value={opManagerSelected}
+                                    className="pb-1"
                                 />
                             </Fragment>
                     }
