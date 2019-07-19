@@ -11163,7 +11163,7 @@ div[class*="MuiStepper-root-"] {
     display: block;
     margin-top: 8px; }
   .External-text {
-    color: #FFF;
+    color: #000;
     font-family: 'Ropa Sans', sans-serif !important;
     font-size: 18px; }
   .External .External-input {
@@ -11222,9 +11222,9 @@ div[class*="MuiStepper-root-"] {
     -ms-flex-wrap: nowrap;
     flex-wrap: nowrap; }
   .External .External-formButton {
-    background-color: transparent;
+    background-color: #3ca2c8;
     color: #FFF;
-    border: 1px solid #FFF;
+    border: 1px solid #3ca2c8;
     font-family: 'Ropa Sans', sans-serif;
     font-size: 12px;
     text-transform: uppercase;
@@ -11237,12 +11237,12 @@ div[class*="MuiStepper-root-"] {
       font-size: 12px;
       font-weight: 700; }
     .External .External-formButton:hover {
-      background-color: #FFF;
-      color: #000; }
+      background-color: transparent;
+      color: #3ca2c8; }
     .External .External-formButton:first-child {
       margin-left: auto; }
     .External .External-formButton[disabled] {
-      color: #FFF;
+      color: #3ca2c8;
       cursor: not-allowed; }
   .External .Slider-skillLabel, .External .Slider-percentageLabel {
     color: #FFF;
@@ -13326,3 +13326,5 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
+
+/*# sourceMappingURL=default.css.map */
