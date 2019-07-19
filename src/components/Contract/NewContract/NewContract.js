@@ -845,7 +845,6 @@ class NewContract extends Component {
     };
 
     geManagementbyId = (id) => {
-        console.log(`ManagementId ${id}`);
         if (id <= 0) {
             this.setState({
                 Management_Billing_Street: '',
@@ -864,7 +863,6 @@ class NewContract extends Component {
                     }
                 })
                 .then(({ data }) => {
-                    console.log(data);
                     this.setState({
                         Management_Billing_Street: this.getString(data.getbusinesscompanies[0].Location),
                         Management_Billing_Zip_Code: this.getString(data.getbusinesscompanies[0].Zipcode),
@@ -1262,7 +1260,6 @@ class NewContract extends Component {
     }
 
     updateEntity = (id) => {
-        console.log('Hotel changed')
         this.getBusinessCompaniesbyId(id);
     }
 
