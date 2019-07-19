@@ -870,7 +870,7 @@ class NewContract extends Component {
                         Management_Billing_Zip_Code: this.getString(data.getbusinesscompanies[0].Zipcode),
                         Management_Billing_State: data.getbusinesscompanies[0].State,
                         Management_Billing_City: data.getbusinesscompanies[0].City
-                    });
+                    }, _ => this.updateAddress());
                 })
                 .catch((error) => {
                     console.log(error);
@@ -904,7 +904,7 @@ class NewContract extends Component {
                         state: data.getbusinesscompanies[0].State,
                         city: data.getbusinesscompanies[0].City,
 
-                    }, () => { });
+                    }, _ => this.updateAddress());
                 })
                 .catch((error) => {
                     console.log(error);
