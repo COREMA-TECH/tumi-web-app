@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -78,11 +78,13 @@ class FormsW4 extends Component {
             })
             .then(({ data }) => {
                 if (data.applicantW4.length > 0) {
+                    console.log("Received applicant data");
+                    console.log(data.applicantW4[0].html.replace('style="zoom: 70%;"', ''));
+
                     this.setState({
                         isCreated: true,
-                        html: data.applicantW4[0].html != null ? data.applicantW4[0].html.replace('style="zoom: 70%;"', "") : '',
+                        html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 70%;"', '') : '',
                         pdfUrl: data.applicantW4[0].url
-                    }, () => {                        
                     });
                 } else {
                     this.setState({
@@ -352,8 +354,9 @@ class FormsW4 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
-                                    </div>
+                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }} dangerouslySetInnerHTML={{
+                                        __html: `${this.state.html}`
+                                    }} />                                    
                                 ) : (
                                         <div style={{ width: '100%', margin: '0 auto' }}>
                                             <div className="row pdf-container" id="w4Html" style={{maxWidth: '100%'}}>
