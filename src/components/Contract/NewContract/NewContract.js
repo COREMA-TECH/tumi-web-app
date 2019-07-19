@@ -852,7 +852,6 @@ class NewContract extends Component {
                 Management_Billing_Zip_Code: '',
                 Management_Billing_State: 0,
                 Management_Billing_City: 0,
-
             });
         }
         else {
@@ -1269,18 +1268,18 @@ class NewContract extends Component {
 
     updateAddress = () => {
         if (document.getElementById("correctAddress").checked) {
-            const useHotelAddress = this.state.Id_Entity || false;
+            const useManagementAddress = this.props.Id_Parent || false;
 
             this.setState({
-                Old_Billing_City: useHotelAddress ? this.state.city : this.state.Management_Billing_City,
-                Old_Billing_State: useHotelAddress ? this.state.state : this.state.Management_Billing_State,
-                Old_Billing_Street: useHotelAddress ? this.state.address : this.state.Management_Billing_Street,
-                Old_Billing_Zip_Code: useHotelAddress ? this.state.zipCode : this.state.Management_Billing_Zip_Code,
+                Old_Billing_City: this.state.Billing_City,
+                Old_Billing_State: this.state.Billing_State,
+                Old_Billing_Street: this.state.Billing_Street,
+                Old_Billing_Zip_Code: this.state.Billing_Zip_Code,
 
-                Billing_City: useHotelAddress ? this.state.city : this.state.Management_Billing_City,
-                Billing_State: useHotelAddress ? this.state.state : this.state.Management_Billing_State,
-                Billing_Street: useHotelAddress ? this.state.address : this.state.Management_Billing_Street,
-                Billing_Zip_Code: useHotelAddress ? this.state.zipCode : this.state.Management_Billing_Zip_Code,
+                Billing_City: useManagementAddress ? this.state.Management_Billing_City : this.state.city,
+                Billing_State: useManagementAddress ? this.state.Management_Billing_State : this.state.state,
+                Billing_Street: useManagementAddress ? this.state.Management_Billing_Street : this.state.address,
+                Billing_Zip_Code: useManagementAddress ? this.state.Management_Billing_Zip_Code : this.state.zipCode,
                 Disable_Billing_Street: true,
                 Disable_Billing_Zip_Code: true
 
@@ -1291,11 +1290,11 @@ class NewContract extends Component {
                 Billing_State: this.state.Old_Billing_State,
                 Billing_Street: this.state.Old_Billing_Street,
                 Billing_Zip_Code: this.state.Old_Billing_Zip_Code,
+
                 Disable_Billing_Street: false,
                 Disable_Billing_Zip_Code: false,
                 Billing_Street: '',
                 Billing_StreetValid: true
-
             });
         }
     }
