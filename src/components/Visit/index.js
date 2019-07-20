@@ -262,9 +262,8 @@ class Visit extends Component{
 
     componentWillMount() {
         this.setState(() => {
-            // TODO: (LF) DESCOMENTAR LECTURA DE LOCAL STORAGE
-            let userId = 258; //localStorage.getItem('LoginId');
-            let rolId = 3; //localStorage.getItem('IdRoles');
+            let userId = localStorage.getItem('LoginId');
+            let rolId = localStorage.getItem('IdRoles');
             return { 
                 userId: !!userId ? +userId : 0,
                 rolId: !!rolId ? +rolId : 0,

@@ -37,6 +37,7 @@ export const GET_VISIT_BY_ID_QUERY = gql`
       startTime
       endTime
       comment
+      url
       startLatitude
       startLongitude
       BusinessCompanyId
