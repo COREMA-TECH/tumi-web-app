@@ -165,7 +165,7 @@ class Visit extends Component{
                 })
                 .then(({ data }) => {
                     this.setState({
-                        visits: data.visits,
+                        visits: data.visits.sort((a,b) => (a.startTime < b.startTime) ? 1 : -1),
                         loading: false
                     });
                 })

@@ -93,13 +93,13 @@ class MasterShift extends Component {
 
     validateFields = () => {
         return new Promise((resolve, reject) => {
-            let { selectedHotel, urlFile } = this.state;
+            let { selectedHotel, fileName } = this.state;
             let fieldsReq = [], msg;
 
-            if(selectedHotel.value && urlFile) return resolve();
+            if(selectedHotel.value && fileName) return resolve();
 
             if(!selectedHotel.value) fieldsReq.push('Hotel');
-            if(!urlFile) fieldsReq.push('Photo');
+            if(!fileName) fieldsReq.push('Photo');
 
             msg = fieldsReq.length > 1 
                 ? `The ${fieldsReq.map(i => i)} fields are required` 
