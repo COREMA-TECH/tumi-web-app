@@ -142,7 +142,7 @@ class MasterShift extends Component {
                     'success',
                     'Successfully created',
                     'bottom',
-                    'right'
+                    'center'
                 );
             })
             .catch((error) => {
@@ -153,7 +153,7 @@ class MasterShift extends Component {
                     'error',
                     'Error to save visit',
                     'bottom',
-                    'right'
+                    'center'
                 );
             })
     }
@@ -187,7 +187,7 @@ class MasterShift extends Component {
                                 'success',
                                 'Successfully updated',
                                 'bottom',
-                                'right'
+                                'center'
                             );
                         });
                     });
@@ -201,7 +201,7 @@ class MasterShift extends Component {
                     'error',
                     'Error to update visit',
                     'bottom',
-                    'right'
+                    'center'
                 );
             })
     }
@@ -363,7 +363,7 @@ class MasterShift extends Component {
                         'error',
                         error || 'An unexpected error has occurred, contact your system administrator',
                         'bottom',
-                        'right'
+                        'center'
                     );
                 }
             })
@@ -374,7 +374,7 @@ class MasterShift extends Component {
                 'error',
                 'This functionality is exclusive for users with role operation manager',
                 'bottom',
-                'right'
+                'center'
             );
         }
 
