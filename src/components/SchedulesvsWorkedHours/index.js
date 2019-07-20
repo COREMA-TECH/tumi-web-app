@@ -167,11 +167,11 @@ class SchedulesvsWorkedHours extends Component {
         let {filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
         return(
             <React.Fragment>
-               <div className="col-md-10 col-xl-7 offset-xl-5 mb-2 mt-2">
+               <div className="col-md-10 col-xl-8 offset-xl-4 mb-2 mt-2">
 					<div className="row p-0 d-flex justify-content-end">
 						<div className="col-md">
 							<div className="row p-0">
-								<div className="col-md-6">
+								<div className="col-md-4">
 									<Select
 										name="typeDateFiltered"
 										options={filterTypes}
@@ -182,7 +182,7 @@ class SchedulesvsWorkedHours extends Component {
 									/>
 								</div>
                                 {typeDateFiltered.value != "C" ?
-                                    <div className="col-md-6">
+                                    <div className="col-md-8">
                                         <Select
                                             name="dateRangeApp"
                                             options={this.getDateRangeApp()}
@@ -193,7 +193,7 @@ class SchedulesvsWorkedHours extends Component {
                                         />
                                     </div> :
                                     <React.Fragment>
-                                        <div className="col-md-3">
+                                        <div className="col-md-4">
                                             <div class="input-group">
                                                 <DatePicker
                                                     selected={this.state.startDateApp}
@@ -208,7 +208,7 @@ class SchedulesvsWorkedHours extends Component {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-md-3">
+                                        <div className="col-md-4">
                                             <div class="input-group">
                                                 <DatePicker
                                                     selected={this.state.endDateApp}

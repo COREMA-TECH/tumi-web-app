@@ -49,7 +49,9 @@ class PunchesReportConsolidated extends Component {
     };
 
     handleClickCloseModal = () => {
-        this.setState({ openModal: false });
+        this.setState({ openModal: false }, _ => {
+            this.getPunchesReport();
+        });
     }
 
     getPunchesReport = () => {
