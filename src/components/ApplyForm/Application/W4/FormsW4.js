@@ -8,6 +8,7 @@ import { ADD_W4 } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
+import w4_form_english from './w4_header_eng.png';
 const uuidv4 = require('uuid/v4');
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -1262,8 +1263,7 @@ class FormsW4 extends Component {
                                                                     </tr>
                                                                     </tbody>
                                                                 </table>
-                                                                <p><img src="https://i.imgur.com/wJ2ancW.png"
-                                                                        style={{ width: '100%' }} />
+                                                                <p><img src={w4_form_english}  style={{ width: '100%' }} />
                                                                 </p>
                                                                 <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                     <tbody>
