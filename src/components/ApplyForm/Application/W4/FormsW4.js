@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -46,6 +46,7 @@ class FormsW4 extends Component {
             estadoCivil: false,
             estadoCivil1: false,
             estadoCivil2: false,
+            pdfUrl: ''
         }
     }
 
@@ -60,6 +61,12 @@ class FormsW4 extends Component {
         });
     };
 
+    cloneForm  = _ => {
+        let contentPDF = document.getElementById('w4Html');
+        let contentPDFClone = contentPDF.cloneNode(true);
+        return `<html style="zoom: 70%;">${contentPDFClone.innerHTML}</html>`;
+    }
+
     getApplicantInformation = (id) => {
         this.props.client
             .query({
@@ -71,15 +78,13 @@ class FormsW4 extends Component {
             })
             .then(({ data }) => {
                 if (data.applicantW4.length > 0) {
+                    console.log("Received applicant data");
+                    console.log(data.applicantW4[0].html.replace('style="zoom: 70%;"', ''));
+
                     this.setState({
                         isCreated: true,
-                        html: data.applicantW4[0].html != null ? data.applicantW4[0].html : ''
-                    }, () => {
-                        console.log("HTML: ", this.state.html);
-
-                        if(this.state.html.length > 0){
-                            let pdf = document.getElementById('pdf-ready').innerHTML = this.state.html;
-                        }
+                        html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 70%;"', '') : '',
+                        pdfUrl: data.applicantW4[0].url
                     });
                 } else {
                     this.setState({
@@ -141,7 +146,7 @@ class FormsW4 extends Component {
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
                 variables: {
-                    contentHTML: document.getElementById('DocumentPDF').outerHTML,
+                    contentHTML: this.cloneForm(),
                     Name: "W4-" + random + this.state.applicantName
                 },
                 fetchPolicy: 'no-cache'
@@ -165,7 +170,7 @@ class FormsW4 extends Component {
 
 
     downloadDocumentsHandler = (random) => {
-        var url = this.context.baseUrl + '/public/Documents/' + "W4-" + random + this.state.applicantName + '.pdf';
+        var url = this.context.baseUrl + this.state.pdfUrl.replace(".", "");
         window.open(url, '_blank');
         this.setState({ downloading: false });
     };
@@ -215,13 +220,13 @@ class FormsW4 extends Component {
             postalCode.disabled = true;
             socialSecurityExtention.disabled = true;
 
-            let html = document.getElementById('w4Html');
+            let html = this.cloneForm();
 
             this.props.client
                 .mutate({
                     mutation: ADD_W4,
                     variables: {
-                        html: html.outerHTML,
+                        html,
                         ApplicantId: this.props.applicationId
                     }
                 })
@@ -321,14 +326,15 @@ class FormsW4 extends Component {
                                     ) : (
                                             this.state.isCreated ? (
                                                 <button className="applicant-card__edit-button" onClick={() => {
-                                                    let random = uuidv4();
+                                                    // let random = uuidv4();
 
-                                                    this.createDocumentsPDF(random);
-                                                    this.sleep().then(() => {
-                                                        this.downloadDocumentsHandler(random);
-                                                    }).catch(error => {
-                                                        this.setState({ downloading: false })
-                                                    })
+                                                    // this.createDocumentsPDF(random);
+                                                    // this.sleep().then(() => {
+                                                    this.downloadDocumentsHandler();
+                                                    // this.downloadDocumentsHandler(random);
+                                                    // }).catch(error => {
+                                                    //     this.setState({ downloading: false })
+                                                    // })
                                                 }}>{this.state.downloading && (
                                                     <React.Fragment>Downloading <i
                                                         class="fas fa-spinner fa-spin" /></React.Fragment>)}
@@ -348,8 +354,9 @@ class FormsW4 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
-                                    </div>
+                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }} dangerouslySetInnerHTML={{
+                                        __html: `${this.state.html}`
+                                    }} />                                    
                                 ) : (
                                         <div style={{ width: '100%', margin: '0 auto' }}>
                                             <div className="row pdf-container" id="w4Html" style={{maxWidth: '100%'}}>
