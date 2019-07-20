@@ -91,19 +91,26 @@ class MasterShift extends Component {
         })
     }
 
+    validateFields = () => {
+        return new Promise((resolve, reject) => {
+            let { selectedHotel, urlFile } = this.state;
+            let fieldsReq = [], msg;
+
+            if(selectedHotel.value && urlFile) return resolve();
+
+            if(!selectedHotel.value) fieldsReq.push('Hotel');
+            if(!urlFile) fieldsReq.push('Photo');
+
+            msg = fieldsReq.length > 1 
+                ? `The ${fieldsReq.map(i => i)} fields are required` 
+                : `The ${fieldsReq[0]} field is required`
+            
+            return reject(msg);
+        });
+    }
+
     createVisit = () => {
         let { userId, selectedHotel, startTime, urlFile, comment, latitude, longitude } = this.state;
-        if (!selectedHotel.value) {
-            this.setState(() => {
-                return { formDisabled: false }
-            });
-            return this.props.handleOpenSnackbar(
-                'error',
-                'The hotel field is required',
-                'bottom',
-                'right'
-            );
-        }
 
         this.props.client.mutate({
             mutation: CREATE_VISIT_QUERY,
@@ -285,6 +292,9 @@ class MasterShift extends Component {
                 }
 
                 try {
+
+                    await this.validateFields(); // validacion de campos
+
                     if (navigator.geolocation) {
                         posObj = await this.handleGeoPosition();
                     }
@@ -309,7 +319,7 @@ class MasterShift extends Component {
                         'error',
                         error || 'An unexpected error has occurred, contact your system administrator',
                         'bottom',
-                        'right'
+                        'center'
                     );
                 }
             })
@@ -319,7 +329,7 @@ class MasterShift extends Component {
                 'error',
                 'This functionality is exclusive for users with role operation manager',
                 'bottom',
-                'right'
+                'center'
             );
         }
     }
@@ -420,7 +430,7 @@ class MasterShift extends Component {
     }
 
     setCloseVisitState = (visitData) => {
-        let { id, startTime, endTime, comment, startLatitude, startLongitude, BusinessCompanyId, BusinessCompany } = visitData;
+        let { id, startTime, endTime, comment, startLatitude, startLongitude, BusinessCompanyId, BusinessCompany, url } = visitData;
         let isOpManager = this.state.rolId === OP_MANAGER_ROL_ID;
         
         this.getDuration(startTime, endTime)
@@ -443,7 +453,8 @@ class MasterShift extends Component {
                         longitude: startLongitude,
                         srcIframe: getUrlMap(startLatitude, startLongitude),
                         formDisabled: true,
-                        disableFinalizeButton: false
+                        disableFinalizeButton: false,
+                        fileName: url ? url.substring(url.indexOf('_')+1) : 'a photo has not been selected'
                     }
                 })
             })
@@ -465,7 +476,7 @@ class MasterShift extends Component {
                     });
 
                     options = [{ value: 0, label: 'Select a Hotel' }, ...options]
-
+                    
                     return { propertiesOpt: options }
                 }, () => {
                     if (actions.closeVisit)
@@ -525,7 +536,7 @@ class MasterShift extends Component {
                     <div className="row">
                         <div className="col-12">
                             <form onSubmit={this.preventDefault}>
-                                <label htmlFor="">Hotel</label>
+                                <label htmlFor="">* Hotel</label>
                                 <Select
                                     name="hotel"
                                     options={propertiesOpt}
@@ -533,6 +544,7 @@ class MasterShift extends Component {
                                     closeMenuOnSelect
                                     value={this.state.selectedHotel}
                                     isDisabled={formDisabled}
+                                    isRequired={true}
                                 />
 
                                 <label htmlFor="">Location</label>
@@ -549,13 +561,20 @@ class MasterShift extends Component {
                                     value={this.state.comment}
                                 />
 
-                                <label htmlFor="">Photo</label>
+                                <label htmlFor="">* Photo</label>
                                 <div className="input-group mb-3">
                                     <div className="input-group-prepend">
                                         <span className="input-group-text border border-success" id="inputGroupFileAddon01">Upload</span>
                                     </div>
                                     <div className="custom-file">
-                                        <input type="file" className="custom-file-input" id="inputGroupFile01" disabled={formDisabled} onChange={this.handleFileInput} />
+                                        <input 
+                                            type="file" 
+                                            className="custom-file-input" 
+                                            id="inputGroupFile01" 
+                                            disabled={formDisabled} 
+                                            onChange={this.handleFileInput} 
+                                            required={true}
+                                            />
                                         <label className="custom-file-label border border-success" htmlFor="">{this.state.fileName || "Choose file"}</label>
                                     </div>
                                 </div>
