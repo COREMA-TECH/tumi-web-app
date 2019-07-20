@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import './index.css';
 import '../index.css';
 import Dialog from '@material-ui/core/Dialog/Dialog';
+import ModalStart from './ModalStart';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 import CircularProgressLoading from '../../material-ui/CircularProgressLoading';
@@ -44,7 +45,7 @@ import LocationForm from '../../ui-components/LocationForm';
 
 import labels from './labels.json';
 
-import ReactFlagsSelect from 'react-flags-select';
+import LanguageSelect from './LanguageSelect';
 
 import {debounce} from 'throttle-debounce';
 
@@ -110,14 +111,14 @@ const selectStyles = {
     })
 }
 
-function getSteps() {
+function getSteps(lang) {
     return [
-        'Applicant Information',
-        'Languages',
-        'Education',
-        'Previous Employment',
-        'Military Service',
-        'Disclaimer'
+        labels.applicantInfoStep[lang],
+        labels.languagesStep[lang],
+        labels.educationStep[lang],
+        labels.previousEmploymentStep[lang],
+        labels.militaryServiceStep[lang],
+        labels.disclaimerServiceStep[lang]
     ];
 }
 
@@ -222,7 +223,11 @@ class VerticalLinearStepper extends Component {
             { value: 6, label:'Other' },
         ],
 
-        optionHearTumi: 0
+        optionHearTumi: 0,
+
+        // modal start
+        openModalStart: true
+
     }
 
     constructor(props) {
@@ -271,6 +276,15 @@ class VerticalLinearStepper extends Component {
         this.setState(_ => {
             return {
                 socialNetwork: value
+            }
+        })
+    }
+
+    handleLangChangeModalStart = language => {
+        this.setState(_ => {
+            return {
+                openModalStart: false,
+                displayLanguage: language
             }
         })
     }
@@ -960,13 +974,11 @@ class VerticalLinearStepper extends Component {
             <React.Fragment>
                 <div className="ApplyBlock-head">
                     <div className="applicant-card__header">
-                        <ReactFlagsSelect 
-                            defaultCountry="US" 
-                            onSelect={this.handleDisplayLanguageChange}
-                            countries={["US", "ES"]}
-                            customLabels={{"US":"English", "ES": "Español"}}
-                            className="ApplyForm-language"
-                        />  
+                        <LanguageSelect 
+                            country={displayLanguage}
+                            classes="ApplyForm-language"
+                            handleChange={this.handleDisplayLanguageChange} 
+                            />
                         <h4 className="ApplyBlock-title">{labels.formTitle[displayLanguage]}</h4>
                     </div>
                 </div>
@@ -1742,13 +1754,11 @@ class VerticalLinearStepper extends Component {
 
         return (
         <div className="ApplyBlock">
-            <ReactFlagsSelect 
-                defaultCountry="US" 
-                onSelect={this.handleDisplayLanguageChange}
-                countries={["US", "ES"]}
-                customLabels={{"US":"English", "ES": "Español"}}
-                className="ApplyForm-language"
-            />
+            <LanguageSelect 
+                country={displayLanguage}
+                classes="ApplyForm-language"
+                handleChange={this.handleDisplayLanguageChange} 
+                />
             <h4 className="ApplyBlock-title">{labels.military[displayLanguage]}</h4>
             <div className="row External-row">
                 <div className="col-12 col-md-4 col-xl-3 External-col">
@@ -2178,13 +2188,11 @@ class VerticalLinearStepper extends Component {
         
         return(
         <div className="ApplyBlock">
-            <ReactFlagsSelect 
-                defaultCountry="US" 
-                onSelect={this.handleDisplayLanguageChange}
-                countries={["US", "ES"]}
-                customLabels={{"US":"English", "ES": "Español"}}
-                className="ApplyForm-language"
-            />
+            <LanguageSelect 
+                country={displayLanguage}
+                classes="ApplyForm-language"
+                handleChange={this.handleDisplayLanguageChange} 
+                />
             <h4 className="ApplyBlock-title">Languages</h4>
             {this.state.languages.length > 0 ? (
                 <div className="skills-container skills-container--header">
@@ -2357,13 +2365,11 @@ class VerticalLinearStepper extends Component {
 
         return(
         <div className="ApplyBlock">
-            <ReactFlagsSelect 
-                defaultCountry="US" 
-                onSelect={this.handleDisplayLanguageChange}
-                countries={["US", "ES"]}
-                customLabels={{"US":"English", "ES": "Español"}}
-                className="ApplyForm-language"
-            />
+            <LanguageSelect 
+                country={displayLanguage}
+                classes="ApplyForm-language"
+                handleChange={this.handleDisplayLanguageChange} 
+                />
             <h4 className="ApplyBlock-title">{labels.skills[displayLanguage]}</h4>
             <div className="row External-row">
                 <div className="col-md-12">
@@ -2438,13 +2444,11 @@ class VerticalLinearStepper extends Component {
 
         return (
         <div className="ApplyBlock">
-            <ReactFlagsSelect 
-                defaultCountry="US" 
-                onSelect={this.handleDisplayLanguageChange}
-                countries={["US", "ES"]}
-                customLabels={{"US":"English", "ES": "Español"}}
-                className="ApplyForm-language"
-            />
+            <LanguageSelect 
+                country={displayLanguage}
+                classes="ApplyForm-language"
+                handleChange={this.handleDisplayLanguageChange} 
+                />
             <h4 className="ApplyBlock-title">Disclaimer</h4>
             <div className="row External-row">
                 <div className="col-md-12 mb-4">
@@ -2547,11 +2551,13 @@ class VerticalLinearStepper extends Component {
 
     render() {
         const { classes } = this.props;
-        const steps = getSteps();
-        const { activeStep } = this.state;            
+        const steps = getSteps(this.state.displayLanguage);
+        const { activeStep, openModalStart } = this.state;   
 
         return (
             <React.Fragment>
+                <ModalStart open={openModalStart} handleClose={this.handleLangChangeModalStart} />
+                
                 <div className="main-stepper-container External">
                     <div className="container-fluid">                        
                         <div className="row External-bg">

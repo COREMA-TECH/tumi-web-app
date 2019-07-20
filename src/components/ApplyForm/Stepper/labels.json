@@ -258,6 +258,29 @@
     "new": {
         "US": "New Application",
         "ES": "Nueva Aplicación"
+    },
+    "applicantInfoStep": {
+        "US": "Applicant Information",
+        "ES": "Información del aplicante"
+    },
+    "languagesStep": {
+        "US": "Languages",
+        "ES": "Idiomas"
+    },
+    "educationStep": {
+        "US": "Education",
+        "ES": "Educación"
+    },
+    "previousEmploymentStep": {
+        "US": "Previous Employment",
+        "ES": "Empleo anterior"
+    },
+    "militaryServiceStep": {
+        "US": "Military Service",
+        "ES": "Servicio militar"
+    },
+    "disclaimerServiceStep": {
+        "US": "Disclaimer",
+        "ES": "Renuncia"
     }
-
 }
