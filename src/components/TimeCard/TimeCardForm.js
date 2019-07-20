@@ -98,20 +98,19 @@ class TimeCardForm extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {
-            this.setState(
-                {
-                    id: nextProps.item.clockInId,
-                    clockInId: nextProps.item.clockInId,
-                    clockOutId: nextProps.item.clockOutId,
-                    IdEntity: nextProps.item.hotelId,
-                    employeeId: nextProps.item.employeeId,
-                    startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
-                    endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
-                    shift: nextProps.item.clockIn,
-                    endShift: nextProps.item.clockOut,
-                    comment: nextProps.item.noteIn
-                }
-            );
+            this.setState({
+                id: nextProps.item.clockInId,
+                clockInId: nextProps.item.clockInId,
+                clockOutId: nextProps.item.clockOutId,
+                IdEntity: nextProps.item.hotelId,
+                employeeId: nextProps.item.employeeId,
+                startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
+                endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
+                shift: nextProps.item.clockIn,
+                endShift: nextProps.item.clockOut,
+                comment: nextProps.item.noteIn,
+                duration: nextProps.item.clockOut && nextProps.item.clockIn ? moment(nextProps.item.clockOut,'HH:mm').diff(moment(nextProps.item.clockIn,'HH:mm'),'hours') : ''
+            });
         } else if (!nextProps.openModal) {
             this.setState({
                 id: null,
@@ -122,7 +121,8 @@ class TimeCardForm extends Component {
                 shift: moment('08:00', "HH:mm").format("HH:mm"),
                 endShift: moment('16:00', "HH:mm").format("HH:mm"),
                 startDate: '',
-                endDate: ''
+                endDate: '',
+                duration: 0
             });
         }
 
@@ -163,8 +163,7 @@ class TimeCardForm extends Component {
         if (
             this.state.IdEntity == null ||
             this.state.PositionRateId === null ||
-            this.state.startDate == '' ||
-            this.state.endDate == ''
+            this.state.startDate == ''
         ) {
 
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
@@ -698,11 +697,9 @@ class TimeCardForm extends Component {
                                             <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
                                         </div>
                                         <div className="col-md-4">
-                                            <label htmlFor="">Total Hours</label>
-                                            <input type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
+                                            <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
                                         </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="">* Job</label>
+                                        <div className="col-md-12 mt-2">
                                             <select
                                                 required
                                                 name="PositionRateId"
@@ -710,7 +707,6 @@ class TimeCardForm extends Component {
                                                 id=""
                                                 onChange={this.handleChange}
                                                 value={this.state.PositionRateId}
-                                                onBlur={this.handleValidate}
                                             >
                                                 <option value="0">Lunch Break</option>
                                                 {this.state.positions.map((position) => (
@@ -719,8 +715,7 @@ class TimeCardForm extends Component {
                                                 ))}
                                             </select>
                                         </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Notes</label>
+                                        <div className="col-md-12 mt-2">
                                             <textarea
                                                 onChange={this.handleChange}
                                                 name="comment"
@@ -729,6 +724,7 @@ class TimeCardForm extends Component {
                                                 cols="30"
                                                 rows="3"
                                                 value={this.state.comment}
+                                                placeholder="Notes"
                                             />
                                         </div>
                                         <div className="col-md-12 text-right">

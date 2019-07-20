@@ -101,6 +101,8 @@ class PunchesReportConsolidatedFilter extends Component {
     handleCloseModal = () => {
         this.setState({
             openModal: false
+        }, _ => {
+            this.props.handleClickCloseModal()
         });
     };
 
@@ -116,7 +118,7 @@ class PunchesReportConsolidatedFilter extends Component {
         if (this.props.department.value != nextProps.department.value)
             this.setState(() => ({ department: nextProps.department }));
         if (this.props.editModal != nextProps.editModal)
-            this.setState(_ => ({ openModal: true }));
+            this.setState(_ => ({ openModal: nextProps.editModal }));
         if (this.props.item !== nextProps.item)
             this.setState(_ => { return { item: nextProps.item } });
     }
