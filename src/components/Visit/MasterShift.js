@@ -93,13 +93,13 @@ class MasterShift extends Component {
 
     validateFields = () => {
         return new Promise((resolve, reject) => {
-            let { selectedHotel, urlFile } = this.state;
+            let { selectedHotel, fileName } = this.state;
             let fieldsReq = [], msg;
 
-            if(selectedHotel.value && urlFile) return resolve();
+            if(selectedHotel.value && fileName) return resolve();
 
             if(!selectedHotel.value) fieldsReq.push('Hotel');
-            if(!urlFile) fieldsReq.push('Photo');
+            if(!fileName) fieldsReq.push('Photo');
 
             msg = fieldsReq.length > 1 
                 ? `The ${fieldsReq.map(i => i)} fields are required` 
@@ -142,7 +142,7 @@ class MasterShift extends Component {
                     'success',
                     'Successfully created',
                     'bottom',
-                    'right'
+                    'center'
                 );
             })
             .catch((error) => {
@@ -153,7 +153,7 @@ class MasterShift extends Component {
                     'error',
                     'Error to save visit',
                     'bottom',
-                    'right'
+                    'center'
                 );
             })
     }
@@ -187,7 +187,7 @@ class MasterShift extends Component {
                                 'success',
                                 'Successfully updated',
                                 'bottom',
-                                'right'
+                                'center'
                             );
                         });
                     });
@@ -201,7 +201,7 @@ class MasterShift extends Component {
                     'error',
                     'Error to update visit',
                     'bottom',
-                    'right'
+                    'center'
                 );
             })
     }
@@ -363,7 +363,7 @@ class MasterShift extends Component {
                         'error',
                         error || 'An unexpected error has occurred, contact your system administrator',
                         'bottom',
-                        'right'
+                        'center'
                     );
                 }
             })
@@ -374,7 +374,7 @@ class MasterShift extends Component {
                 'error',
                 'This functionality is exclusive for users with role operation manager',
                 'bottom',
-                'right'
+                'center'
             );
         }
 
