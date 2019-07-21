@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_SHIFTVSWORKEDHOURS = gql`
-query {
-    shiftVsWorkedHours {
+query($startDate: Date, $endDate: Date) {
+    shiftVsWorkedHours(startDate: $startDate, endDate: $endDate) {
         schedulesHours
         workedHours
         difference

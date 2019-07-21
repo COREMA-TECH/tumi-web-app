@@ -46,7 +46,9 @@ class SchedulesvsWorkedHours extends Component {
         filterType: DEFAULT_FILTER_TYPE,
         typeDateFiltered: DEFAULT_FILTER_TYPE, // opcion seleccinada para filtro de fecha en indice
         dateRangeApp: DEFAULT_DATA_RANGE_APP,
-        detail: []
+        detail: [],
+        startDateApp: '',
+        endDateApp: ''
     }
 
     constructor(props) {
@@ -60,17 +62,12 @@ class SchedulesvsWorkedHours extends Component {
 
     getDataFilters = () => {
         let variables;
-        if (this.state.propertyId !== 0) {
+        console.log()
+        if (this.state.startDateApp !== '' && this.state.endDateApp !== '') {
             variables = {
                 ...variables,
-                property: {
-                    Id: this.state.propertyId
-                },
-            };
-        } else if (this.state.operation != 0) {
-            variables = {
-                ...variables,
-                operationManagerId: this.state.operation
+                startDate: this.state.startDateApp,
+                endDate: this.state.endDateApp
             };
         } 
         return variables;
@@ -99,15 +96,7 @@ class SchedulesvsWorkedHours extends Component {
         this.getSchedules();
     }
 
-    handleRecruiterFiltered = (option) => {
-		this.setState(() => {
-			return {
-				recruiterFiltered: option
-			}
-		});
-	}
-
-	handleTypeDateFiltered = (option) => {
+    handleTypeDateFiltered = (option) => {
 		this.setState(() => {
 			return { typeDateFiltered: option }
 		});
@@ -115,7 +104,11 @@ class SchedulesvsWorkedHours extends Component {
 
 	handleDateRangeApp = (dateRangeApp) => {
 		let dates = dateRangeApp.value.split('||');
-		this.setState(() => ({ dateRangeApp, startDateApp: new Date(dates[0]), endDateApp: new Date(dates[1]) }))
+		this.setState(() => ({ 
+            dateRangeApp, startDateApp: new Date(dates[0]), endDateApp: new Date(dates[1]) 
+        }), _ => {
+            this.getSchedules();
+        })
 	}
 
 	handleStartDateApp = (value) => {
@@ -159,6 +152,18 @@ class SchedulesvsWorkedHours extends Component {
 			}
 		}
 		return data;
+    }
+    
+    clearFilter = () => {
+		this.setState(() => {
+			return {
+				startDateApp: null,
+				endDateApp: null,
+				dateRangeApp: DEFAULT_DATA_RANGE_APP
+			}
+		}, _ => {
+            this.getSchedules();
+        });
 	}
 
     render() {

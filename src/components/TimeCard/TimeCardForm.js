@@ -109,7 +109,8 @@ class TimeCardForm extends Component {
                 shift: nextProps.item.clockIn,
                 endShift: nextProps.item.clockOut,
                 comment: nextProps.item.noteIn,
-                duration: nextProps.item.clockOut && nextProps.item.clockIn ? moment(nextProps.item.clockOut,'HH:mm').diff(moment(nextProps.item.clockIn,'HH:mm'),'hours') : ''
+                duration: nextProps.item.clockOut && nextProps.item.clockIn ? moment(nextProps.item.clockOut,'HH:mm').diff(moment(nextProps.item.clockIn,'HH:mm'),'hours') : '',
+                statusTimeOut: !nextProps.item.clockOut ? true : false
             });
         } else if (!nextProps.openModal) {
             this.setState({
@@ -129,6 +130,7 @@ class TimeCardForm extends Component {
 
         this.getHotels();
         this.getEmployees();
+        this.getPositions();
     }
 
     componentWillMount() {
@@ -527,7 +529,7 @@ class TimeCardForm extends Component {
     }
 
     handleChangeDate = (date) => {
-        let endDate = moment(date).add(7, "days").format();
+        let endDate = date;//moment(date).add(7, "days").format();
 
         this.setState({
             startDate: date,
@@ -561,6 +563,15 @@ class TimeCardForm extends Component {
         return options;
     }
 
+    getPositionFilterList = _ => {
+        const positionList = this.state.positions.map(item => {
+            return { value: item.Id, label: item.Position }
+        });
+
+        const options = [{ value: 0, label: "Lunch Break" }, ...positionList];
+        return options;
+    }
+
     handlePropertySelectChange = ({ value }) => {
         this.setState((prevState, props) => {
             let hotel = this.state.hotels.find(_ => {
@@ -576,6 +587,12 @@ class TimeCardForm extends Component {
         });
     }
 
+    handlePositionChange = ({ value }) => {
+        this.setState((prevState, props) => {
+            return { PositionRateId: value }
+        });
+    }
+
     findSelectedProperty = propertyId => {
         const defValue = { value: 0, label: "Select a Property" };
 
@@ -583,7 +600,7 @@ class TimeCardForm extends Component {
             return defValue;
 
         const found = this.state.hotels.find(item => {
-            return item.Id === propertyId;
+            return parseInt(item.Id) === parseInt(propertyId);
         });
 
         return found ? { value: found.Id, label: found.Name.trim() } : defValue;
@@ -602,6 +619,19 @@ class TimeCardForm extends Component {
         return found ? { value: found.id, label: found.firstName.trim() + " " + found.lastName.trim() } : defValue;
     }
 
+    findSelectedPosition = positionId => {
+        const defValue = { value: 0, label: "Select a Position" };
+
+        if (positionId === 'null' || positionId === 0)
+            return defValue;
+
+        const found = this.state.positions.find(item => {
+            return item.Id === positionId;
+        });
+
+        return found ? { value: found.Id, label: found.Position.trim() } : defValue;
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -609,6 +639,7 @@ class TimeCardForm extends Component {
 
         const propertyList = this.getPropertyFilterList();
         const employeeList = this.getEmployeeFilterList();
+        const positionList = this.getPositionFilterList();
 
         return (
             <div>
@@ -684,7 +715,7 @@ class TimeCardForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <span className="float-left">
-                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} />
+                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} checked={this.state.statusTimeOut} />
                                                 <label htmlFor="">&nbsp; Currently working</label>
                                             </span>
                                         </div>
@@ -700,20 +731,15 @@ class TimeCardForm extends Component {
                                             <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
                                         </div>
                                         <div className="col-md-12 mt-2">
-                                            <select
-                                                required
-                                                name="PositionRateId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.PositionRateId}
-                                            >
-                                                <option value="0">Lunch Break</option>
-                                                {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position} </option>
-
-                                                ))}
-                                            </select>
+                                            <Select
+                                                options={positionList}
+                                                value={this.findSelectedPosition(this.state.PositionRateId)}
+                                                onChange={this.handlePositionChange}
+                                                closeMenuOnSelect={true}
+                                                components={makeAnimated()}
+                                                isMulti={false}
+                                                className="WorkOrders-dropdown"
+                                            />
                                         </div>
                                         <div className="col-md-12 mt-2">
                                             <textarea
