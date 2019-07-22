@@ -1086,7 +1086,7 @@ class VerticalLinearStepper extends Component {
                             </div>
                         </div>
                         <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label homePhone"> {labels.homePhone[displayLanguage]}</span>
+                            <span className="External-label"> {labels.homePhone[displayLanguage]}</span>
                             <InputMask
                                 id="home-number"
                                 name="homePhone"
