@@ -16,6 +16,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
 import IndependentContractDialog from './IndependentContract/Modal';
+import moment from 'moment';
 
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null)
@@ -61,7 +62,7 @@ class Application extends Component {
             socialNetwork: '',
             comment: '',
             isLead: '',
-            dateCreation: new Date().toISOString().substring(0, 10),
+            dateCreation: moment().local().format("MM/DD/YYYY"),
             immediately: 0,
             optionHearTumi: 0,
             nameReferences: '',
@@ -189,7 +190,7 @@ class Application extends Component {
                                 comment: this.state.comment,
                                 idealJob: this.state.idealJob,
                                 isLead: id == 0 ? false : this.state.isLead,
-                                dateCreation: new Date().toISOString().substring(0, 10),
+                                dateCreation: moment().local().format("MM/DD/YYYY"),
                                 immediately: this.state.immediately,
                                 optionHearTumi: this.state.optionHearTumi,
                                 nameReferences: this.state.nameReferences
@@ -332,7 +333,7 @@ class Application extends Component {
                                     : [],
                                 idealJob: applicantData.idealJob,
                                 isLead: applicantData.isLead,
-                                dateCreation: applicantData.dateCreation,
+                                dateCreation: applicantData.dateCreation ? moment(applicantData.dateCreation).utc().format("MM/DD/YYYY") : null,
                                 immediately: applicantData.immediately,
                                 optionHearTumi: applicantData.optionHearTumi,
                                 nameReferences: applicantData.nameReferences,
@@ -1027,12 +1028,12 @@ class Application extends Component {
                                                     onChange={this.handleInputChange}
                                                     value={this.state.dateCreation}
                                                     name="dateCreation"
-                                                    type="date"
+                                                    type="text"
                                                     className="form-control"
                                                     disabled={true}
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="10"
+                                                    //min="0"
+                                                    //maxLength="50"
+                                                    //minLength="10"
                                                 />
                                             </div>
                                             <div className="col-md-6">
