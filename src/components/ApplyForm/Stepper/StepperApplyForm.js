@@ -83,7 +83,7 @@ const selectStyles = {
         border: '0',
         backgroundColor: isFocused ? '#000000' : 'transparent',
         fontFamily: '"Ropa Sans", sans-serif !important',
-        color: isFocused ? '#FFFFFF' : '#000000'        
+        color: isFocused ? '#000000' : '#000000'        
     }),
     control: _ => ({
         border: '1px solid #868686',
@@ -101,11 +101,11 @@ const selectStyles = {
         border: '0',
         backgroundColor: 'transparent',
         fontFamily: '"Ropa Sans", sans-serif !important',
-        color: '#ffffff'
+        color: '#000000'
     }),
     placeholder: styles => ({
         ...styles,
-        color: '#FFFFFF',
+        color: '#000000',
         fontSize: '18px',
         fontFamily: '"Ropa Sans", sans-serif !important',
     })
@@ -1098,7 +1098,7 @@ class VerticalLinearStepper extends Component {
                             </div>
                         </div>
                         <div className="col-12 col-md-4 col-xl-3 External-col">
-                            <span className="External-label homePhone"> {labels.homePhone[displayLanguage]}</span>
+                            <span className="External-label"> {labels.homePhone[displayLanguage]}</span>
                             <InputMask
                                 id="home-number"
                                 name="homePhone"

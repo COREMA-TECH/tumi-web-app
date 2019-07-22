@@ -158,7 +158,7 @@
     }
 
     &-text{
-        color: $white;
+        color: $black;
         font-family: 'Ropa Sans', sans-serif !important;
         font-size: 18px;
     }
@@ -209,10 +209,10 @@
     }
 
     & &-formButton{
-        background-color: transparent;
+        background-color: $success;
         color: $white;
         
-        border: 1px solid $white;
+        border: 1px solid $success;
 
         font-family: 'Ropa Sans', sans-serif;
         font-size: 12px;
@@ -229,8 +229,8 @@
         }
 
         &:hover{
-            background-color: $white;
-            color: $black;
+            background-color: transparent;
+            color: $success;
         }
 
         &:first-child{
@@ -238,7 +238,7 @@
         }
 
         &[disabled]{
-            color: $white;
+            color: $success;
             cursor: not-allowed;
         }
     }
