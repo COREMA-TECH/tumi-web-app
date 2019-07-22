@@ -176,7 +176,7 @@ class SchedulesvsWorkedHours extends Component {
 					<div className="row p-0 d-flex justify-content-end">
 						<div className="col-md">
 							<div className="row p-0">
-								<div className="col-md-4">
+								<div className={typeDateFiltered.value != "C" ? 'offset-md-4 col-md-4 ' : 'col-md-4'}>
 									<Select
 										name="typeDateFiltered"
 										options={filterTypes}
@@ -187,7 +187,7 @@ class SchedulesvsWorkedHours extends Component {
 									/>
 								</div>
                                 {typeDateFiltered.value != "C" ?
-                                    <div className="col-md-8">
+                                    <div className="col-md-4">
                                         <Select
                                             name="dateRangeApp"
                                             options={this.getDateRangeApp()}
@@ -260,7 +260,7 @@ class SchedulesvsWorkedHours extends Component {
                                 {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                     return (
                                         <TableRow className="text-center">
-                                            <CustomTableCell className="text-center">{row.name}</CustomTableCell>
+                                            <CustomTableCell>{row.name}</CustomTableCell>
                                             <CustomTableCell className="text-center">{row.schedulesHours}</CustomTableCell>
                                             <CustomTableCell className="text-center">{row.workedHours}</CustomTableCell>
                                             <CustomTableCell className="text-center">{row.difference}</CustomTableCell>

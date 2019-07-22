@@ -271,7 +271,7 @@ class TimeCardForm extends Component {
         })
         .catch((error) => {
             this.setState({ saving: true });
-            this.props.handleOpenSnackbar('error', 'Error: ' + error);
+            this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
         });
     };
 
@@ -303,7 +303,7 @@ class TimeCardForm extends Component {
             })
             .catch((error) => {
                 this.setState({ saving: true });
-                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+                this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
             });
     };
 
