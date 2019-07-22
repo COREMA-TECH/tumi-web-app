@@ -68,11 +68,10 @@ class ApplicationInternal extends Component {
                         variables: {
                             codeuser: localStorage.getItem('LoginId'),
                             nameUser: localStorage.getItem('FullName'),
-                            employee: {
-                                id: this.state.employeeId,
-                                hireDate: this.state.hireDate || null,
-                                startDate: this.state.startDate || null,
-                            },
+                            id: this.state.employeeId,
+                            hireDate: this.state.hireDate || null,
+                            startDate: this.state.startDate || null,
+                            ApplicationId: id,
                             application: {
                                 id: id,
                                 birthDay: this.state.birthDay || null,
@@ -463,7 +462,6 @@ class ApplicationInternal extends Component {
                                         </div>
                                         <div className="col-12 col-md-6">
                                             <form
-                                                className="general-info-apply-form"
                                                 id="general-info-form"
                                                 autoComplete="off"
                                                 onSubmit={this.handleSubmit}
@@ -518,7 +516,7 @@ class ApplicationInternal extends Component {
                                                                 placeholderText={formSpanish[35].label}
                                                                 name="hireDate"
                                                                 id="hireDate"
-                                                                disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                disabled={!this.state.editing}
                                                             />
                                                             <div class="input-group-append">
                                                                 <label class="input-group-text" id="addon-wrapping" for="hireDate">
@@ -539,7 +537,7 @@ class ApplicationInternal extends Component {
                                                                 placeholderText={formSpanish[36].label}
                                                                 name="startDate"
                                                                 id="startDate"
-                                                                disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                disabled={!this.state.editing}
                                                             />
                                                             <div class="input-group-append">
                                                                 <label class="input-group-text" id="addon-wrapping" for="startDate">

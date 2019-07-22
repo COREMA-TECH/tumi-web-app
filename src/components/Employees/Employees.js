@@ -32,9 +32,9 @@ import DatePicker from "react-datepicker";
 import moment from 'moment';
 const uuidv4 = require('uuid/v4');
 
-const DEFAULT_HOTEL_OPT = { value: null, label: 'Select a hotel'};
-const DEFAULT_DEPARTMENT_OPT = { value: null, label: 'Select a department'};
-const DEFAULT_TITLE_OPT = { value: null, label: 'Select a position'};
+const DEFAULT_HOTEL_OPT = { value: null, label: 'Select a hotel' };
+const DEFAULT_DEPARTMENT_OPT = { value: null, label: 'Select a department' };
+const DEFAULT_TITLE_OPT = { value: null, label: 'Select a position' };
 
 const styles = theme => ({
     container: {
@@ -372,8 +372,9 @@ class Employees extends Component {
                                         finishLoading: true,
                                         progressEditEmployee: false,
                                         isUnique: undefined
-                                    });
+                                    }, this.getEmployees);
                                 });
+
                             })
                             .catch(error => {
                                 this.props.handleOpenSnackbar("error", "Error updating Employee!");
@@ -418,9 +419,7 @@ class Employees extends Component {
                         this.setState({
                             progressNewEmployee: false,
                             finishLoading: true
-                        }, _ => {
-                            this.getEmployees();
-                        });
+                        }, this.getEmployees);
 
                     })
                     .catch(error => {
@@ -446,7 +445,7 @@ class Employees extends Component {
                     opendialog: true,
                     loadingRemoving: false,
                     loadingContracts: false
-                });
+                }, this.getEmployees);
             }
         );
     };
@@ -1191,7 +1190,6 @@ class Employees extends Component {
                 return { employees: data.employees }
             })
         }).catch((error) => {
-            console.log(error);
             this.setState(() => {
                 return { loading: false }
             })
@@ -1238,7 +1236,7 @@ class Employees extends Component {
             hotelEdit: opt,
             departmentEdit: DEFAULT_DEPARTMENT_OPT,
             contactTitleEdit: DEFAULT_TITLE_OPT
-        }, () => this.fetchDepartments(opt.value));        
+        }, () => this.fetchDepartments(opt.value));
     }
 
     handleOnChangeDepartment = (opt) => {
@@ -1642,7 +1640,7 @@ class Employees extends Component {
                                             onChange={this.handleOnChangeHotel}
                                             closeMenuOnSelect={true}
                                         />
-                                        
+
                                     </div>
                                     <div className="col">
                                         <label htmlFor="">Department</label>
