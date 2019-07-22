@@ -124,7 +124,8 @@ class TimeCardForm extends Component {
                 startDate: '',
                 endDate: '',
                 duration: 8,
-                comment: ''
+                comment: '',
+                PositionRateId: 0
             });
         }
 

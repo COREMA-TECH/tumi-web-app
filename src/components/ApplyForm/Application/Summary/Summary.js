@@ -225,6 +225,7 @@ class Summary extends Component {
     }
 
     render() {
+        const address = this.state.streetAddress !== '--' && this.state.zipCode !== '--' && this.state.city !== '--' ? `${this.state.streetAddress}, ${this.state.city} ${this.state.state}, ${this.state.zipCode}` : '--';
         let appAccount = Array.isArray(this.state.accounts) && this.state.accounts.length ? this.state.accounts[0] : null; // Temporal para mostrar solo una cuenta
         let renderSignatureDialog = () => (
             <div>
@@ -351,7 +352,7 @@ class Summary extends Component {
                                     
                                     </table>
                                     
-                                    <h4><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>ADDRESS:</strong></span> `+ this.state.streetAddress +`,`+ this.state.zipCode +`, ${this.state.city} ${this.state.state}</span></h4>
+                                    <h4><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>ADDRESS:</strong></span> ${address} </span></h4>
                                     
                                     <table style='border-collapse: collapse; width: 100%; background-color: #ecf0f1; border-color: #ffffff;' border='0'>
                                     
