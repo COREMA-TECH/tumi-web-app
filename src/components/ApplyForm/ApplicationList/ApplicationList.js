@@ -405,21 +405,10 @@ class ApplicationList extends Component {
 					this.state.filterText === ''
 						? applications
 						: applications.filter((_, i) => {
-							if (
-								(_.firstName +
-									_.middleName +
-									_.lastName +
-									(_.position ? _.position.position.Position.trim() : 'Open Position') +
-									(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
-									(_.position ? _.position.BusinessCompany.Name : '') +
-									(_.recruiter ? _.recruiter.Full_Name : '') +
-									(_.user ? _.user.Full_Name : '') +
-									_.emailAddress)
-									.toLocaleLowerCase()
-									.indexOf(this.state.filterText.toLocaleLowerCase()) > -1
-							) {
-								return true;
-							}
+							return (
+								(_.firstName + _.middleName + _.lastName)
+									.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
+							);
 						});
 
 				return (

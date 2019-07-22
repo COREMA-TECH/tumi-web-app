@@ -632,31 +632,19 @@ class ApplicationList extends Component {
 								);
 							if (data.applications != null && data.applications.length > 0) {
 								
-								let dataApplication = data.applications.filter((_, i) => {
-									if (this.state.filterText === '') {
-										return true;
-									}
-
-									if (
-										(_.firstName +
-											_.middleName +
-											_.lastName +
-											(_.position ? _.position.position.Position.trim() : 'Open Position') +
-											(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
-											(_.position ? _.position.BusinessCompany.Name : '') +
-											(_.recruiter ? _.recruiter.Full_Name : '') +
-											(_.user ? _.user.Full_Name : '') +
-											_.emailAddress)
-											.toLocaleLowerCase()
-											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1
-									) {
-										return true;
-									}
-								}).filter((_, i) => {
-									// Filtro por fecha
-									return((!startDateApp || new Date(startDateApp.setUTCHours(0, 0, 0)) <= new Date(_.date)) 
-									&& (!endDateApp || new Date(endDateApp.setUTCHours(23, 59, 59)) >= new Date(_.date)))
-								});
+								let dataApplication = (this.state.filterText === '' && !startDateApp && !endDateApp)
+									? data.applications
+									: data.applications.filter((_, i) => {
+										return (
+											(this.state.filterText === '' || 
+											(_.firstName + _.middleName + _.lastName)
+												.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1)
+											&&
+											(!startDateApp || new Date(startDateApp.setUTCHours(0, 0, 0)) <= new Date(_.date))
+											&&
+											(!endDateApp || new Date(endDateApp.setUTCHours(23, 59, 59)) >= new Date(_.date))
+										)
+									});
 
 								return (
 									<div className="row">
