@@ -264,9 +264,200 @@ class ApplicationInternal extends Component {
                     <div className="col-md-6">
 
                         <div className="Apply-container--application">
+                            <div className="applicant-card">
+                                <div className="applicant-card__header">
+                                    <span className="applicant-card__title">{applyTabs[1].label}</span>
+                                </div>
+                                <br />
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="col-md-12 form-section-1">
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[12].label}
+                                                    </span>
+                                                    <div class="input-group flex-nowrap">
+                                                        <DatePicker
+                                                            selected={this.state.birthDay}
+                                                            onChange={(date) => this.handleDatePickerChange('birthDay', date)}
+                                                            placeholderText={formSpanish[12].label}
+                                                            name="birthDay"
+                                                            id="birthDay"
+                                                            disabled={!this.state.editing}
+                                                        />
+                                                        <div class="input-group-append">
+                                                            <label class="input-group-text" id="addon-wrapping" for="birthDay">
+                                                                <i class="far fa-calendar"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[34].label}
+                                                    </span>
+                                                    <select
+                                                        name="marital"
+                                                        id="marital"
+                                                        className="form-control"
+                                                        disabled={!this.state.editing}
+                                                        onChange={this.handleInputChange}
+                                                        value={this.state.marital}
+                                                    >
+                                                        <option value="">Select an option</option>
+                                                        <option value="1">Single</option>
+                                                        <option value="2">Married</option>
+                                                    </select>
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[33].label}
+                                                    </span>
+                                                    <select
+                                                        name="gender"
+                                                        id="gender"
+                                                        className="form-control"
+                                                        disabled={!this.state.editing}
+                                                        value={this.state.gender}
+                                                        onChange={this.handleInputChange}
+                                                    >
+                                                        <option value="">Select an option</option>
+                                                        <option value="1">Male</option>
+                                                        <option value="2">Female</option>
+                                                    </select>
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[29].label}
+                                                    </span>
+                                                    <select
+                                                        name="EEOC"
+                                                        id="EEOC"
+                                                        className="form-control"
+                                                        disabled={!this.state.editing}
+                                                        value={this.state.EEOC}
+                                                        onChange={this.handleInputChange}
+                                                    >
+                                                        <option value="">Select an option</option>
+                                                        <option value="1">White</option>
+                                                        <option value="2">Black or African American</option>
+                                                        <option value="3">Hispanic or Latino</option>
+                                                        <option value="4">Asian</option>
+                                                        <option value="5">American Indian or Alaska Native</option>
+                                                        <option value="6">Native Hawaiian or Other Pacific Islander</option>
+                                                        <option value="7">Two or more races</option>
+                                                    </select>
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[30].label}
+                                                    </span>
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        onChange={this.handleInputChange}
+                                                        value={this.state.Exemptions}
+                                                        name="Exemptions"
+                                                        className="form-control"
+                                                        disabled={!this.state.editing}
+                                                        maxLength="50"
+
+                                                    />
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[14].label}
+                                                    </span>
+                                                    <select
+                                                        name="typeOfId"
+                                                        id="typeOfId"
+                                                        className="form-control"
+                                                        disabled={!this.state.editing}
+                                                        value={this.state.typeOfId}
+                                                        onChange={this.handleInputChange}
+                                                    >
+                                                        <option value="">Select an option</option>
+                                                        <option value="1">Birth certificate</option>
+                                                        <option value="2">Social Security card</option>
+                                                        <option value="3">State-issued driver's license</option>
+                                                        <option value="4">State-issued ID</option>
+                                                        <option value="5">Passport</option>
+                                                        <option value="6">Department of Defense Identification Card</option>
+                                                        <option value="7">Green Card</option>
+                                                    </select>
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[39].label}
+                                                    </span>
+                                                    <input
+                                                        onChange={this.handleInputChange}
+                                                        value={this.state.numberId}
+                                                        name="numberId"
+                                                        type="text"
+                                                        className="form-control"
+                                                        disabled={!this.state.editing}
+                                                    />
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[15].label}
+                                                    </span>
+                                                    <div class="input-group flex-nowrap">
+                                                        <DatePicker
+                                                            selected={this.state.expireDateId}
+                                                            onChange={(date) => this.handleDatePickerChange('expireDateId', date)}
+                                                            placeholderText={formSpanish[15].label}
+                                                            name="expireDateId"
+                                                            id="expireDateId"
+                                                            disabled={!this.state.editing}
+                                                        />
+                                                        <div class="input-group-append">
+                                                            <label class="input-group-text" id="addon-wrapping" for="expireDateId">
+                                                                <i class="far fa-calendar"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                        <div className="Apply-container--application">
+                            <form
+                                className="general-info-apply-form"
+                                id="general-info-form"
+                                autoComplete="off"
+                                onSubmit={this.handleSubmit}
+                            >
                                 <div className="applicant-card">
                                     <div className="applicant-card__header">
-                                        <span className="applicant-card__title">{applyTabs[1].label}</span>
+                                        <span className="applicant-card__title"></span>
+                                        {!this.state.editing &&
+                                            <button
+                                                className="applicant-card__edit-button"
+                                                onClick={() => {
+                                                    this.setState({
+                                                        editing: true
+                                                    });
+                                                }}
+                                                disabled={this.state.searchigZipcode}
+                                            >
+                                                {spanishActions[1].label} <i className="far fa-edit" />
+                                            </button>
+                                        }
                                     </div>
                                     <br />
                                     <div className="card-body">
@@ -275,19 +466,57 @@ class ApplicationInternal extends Component {
                                                 <div className="row">
                                                     <div className="col-md-6">
                                                         <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[12].label}
+                                                            {formSpanish[32].label}
+                                                        </span>
+                                                        <select
+                                                            name="HireType"
+                                                            id="HireType"
+                                                            className="form-control"
+                                                            disabled={!this.state.editing}
+                                                            value={this.state.HireType}
+                                                            onChange={this.handleInputChange}
+                                                        >
+                                                            <option value="">Select an option</option>
+                                                            <option value="1">New Hire</option>
+                                                            <option value="2">Rehire</option>
+                                                            <option value="3">Transfer</option>
+                                                            <option value="4">Promotion</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div className="col-md-6">
+                                                        <span className="primary applicant-card__label skeleton">
+                                                            {formSpanish[37].label}
+                                                        </span>
+                                                        <select
+                                                            name="employmentType"
+                                                            id="employmentType"
+                                                            className="form-control"
+                                                            disabled={!this.state.editing}
+                                                            value={this.state.employmentType}
+                                                            onChange={this.handleInputChange}
+                                                        >
+                                                            <option value="">Select an option</option>
+                                                            <option value="Part-Time">PT</option>
+                                                            <option value="Full-Time">FT</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div className="col-md-6">
+                                                        <span className="primary applicant-card__label skeleton">
+                                                            {formSpanish[35].label}
                                                         </span>
                                                         <div class="input-group flex-nowrap">
                                                             <DatePicker
-                                                                selected={this.state.birthDay}
-                                                                onChange={(date) => this.handleDatePickerChange('birthDay', date)}
-                                                                placeholderText={formSpanish[12].label}
-                                                                name="birthDay"
-                                                                id="birthDay"
-                                                                disabled={!this.state.editing}
+                                                                selected={this.state.hireDate}
+                                                                onChange={(date) => this.handleDatePickerChange('hireDate', date)}
+                                                                placeholderText={formSpanish[35].label}
+                                                                name="hireDate"
+                                                                id="hireDate"
+                                                                disabled={!this.state.editing || !this.state.hasEmployee}
                                                             />
                                                             <div class="input-group-append">
-                                                                <label class="input-group-text" id="addon-wrapping" for="birthDay">
+                                                                <label class="input-group-text" id="addon-wrapping" for="hireDate">
                                                                     <i class="far fa-calendar"></i>
                                                                 </label>
                                                             </div>
@@ -296,296 +525,67 @@ class ApplicationInternal extends Component {
 
                                                     <div className="col-md-6">
                                                         <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[34].label}
+                                                            {formSpanish[36].label}
                                                         </span>
-                                                        <select
-                                                            name="marital"
-                                                            id="marital"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.marital}
-                                                        >
-                                                            <option value="">Select an option</option>
-                                                            <option value="1">Single</option>
-                                                            <option value="2">Married</option>
-                                                        </select>
+                                                        <div class="input-group flex-nowrap">
+                                                            <DatePicker
+                                                                selected={this.state.startDate}
+                                                                onChange={(date) => this.handleDatePickerChange('startDate', date)}
+                                                                placeholderText={formSpanish[36].label}
+                                                                name="startDate"
+                                                                id="startDate"
+                                                                disabled={!this.state.editing || !this.state.hasEmployee}
+                                                            />
+                                                            <div class="input-group-append">
+                                                                <label class="input-group-text" id="addon-wrapping" for="startDate">
+                                                                    <i class="far fa-calendar"></i>
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-12">
                                                         <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[33].label}
+                                                            {formSpanish[38].label}
                                                         </span>
-                                                        <select
-                                                            name="gender"
-                                                            id="gender"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            value={this.state.gender}
+                                                        <textarea
                                                             onChange={this.handleInputChange}
-                                                        >
-                                                            <option value="">Select an option</option>
-                                                            <option value="1">Male</option>
-                                                            <option value="2">Female</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[29].label}
-                                                        </span>
-                                                        <select
-                                                            name="EEOC"
-                                                            id="EEOC"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            value={this.state.EEOC}
-                                                            onChange={this.handleInputChange}
-                                                        >
-                                                            <option value="">Select an option</option>
-                                                            <option value="1">White</option>
-                                                            <option value="2">Black or African American</option>
-                                                            <option value="3">Hispanic or Latino</option>
-                                                            <option value="4">Asian</option>
-                                                            <option value="5">American Indian or Alaska Native</option>
-                                                            <option value="6">Native Hawaiian or Other Pacific Islander</option>
-                                                            <option value="7">Two or more races</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[30].label}
-                                                        </span>
-                                                        <input
-                                                            type="number"
-                                                            step="0.01"
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.Exemptions}
-                                                            name="Exemptions"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            maxLength="50"
-
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[14].label}
-                                                        </span>
-                                                        <select
-                                                            name="typeOfId"
-                                                            id="typeOfId"
-                                                            className="form-control"
-                                                            disabled={!this.state.editing}
-                                                            value={this.state.typeOfId}
-                                                            onChange={this.handleInputChange}
-                                                        >
-                                                            <option value="">Select an option</option>
-                                                            <option value="1">Birth certificate</option>
-                                                            <option value="2">Social Security card</option>
-                                                            <option value="3">State-issued driver's license</option>
-                                                            <option value="4">State-issued ID</option>
-                                                            <option value="5">Passport</option>
-                                                            <option value="6">Department of Defense Identification Card</option>
-                                                            <option value="7">Green Card</option>
-                                                        </select>
-                                                    </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[39].label}
-                                                        </span>
-                                                        <input
-                                                            onChange={this.handleInputChange}
-                                                            value={this.state.numberId}
-                                                            name="numberId"
+                                                            value={this.state.comment}
+                                                            name="comment"
                                                             type="text"
+                                                            rows="4"
+                                                            style={{ resize: 'none' }}
                                                             className="form-control"
                                                             disabled={!this.state.editing}
                                                         />
                                                     </div>
 
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[15].label}
-                                                        </span>
-                                                        <div class="input-group flex-nowrap">
-                                                            <DatePicker
-                                                                selected={this.state.expireDateId}
-                                                                onChange={(date) => this.handleDatePickerChange('expireDateId', date)}
-                                                                placeholderText={formSpanish[15].label}
-                                                                name="expireDateId"
-                                                                id="expireDateId"
-                                                                disabled={!this.state.editing}
-                                                            />
-                                                            <div class="input-group-append">
-                                                                <label class="input-group-text" id="addon-wrapping" for="expireDateId">
-                                                                    <i class="far fa-calendar"></i>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    {this.state.editing ? (
+                                        <div className="applicant-card__footer">
+                                            <button
+                                                className="applicant-card__cancel-button"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+
+                                                    this.getApplicationById(this.props.applicationId);
+                                                }}
+                                            >
+                                                {spanishActions[2].label}
+                                            </button>
+                                            <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
+                                                {spanishActions[4].label}
+                                                {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
+                                            </button>
+                                        </div>
+                                    ) : ('')}
                                 </div>
+                            </form>
                         </div>
-                    </div>
-                    <div className="col-md-6">
-                        <div className="Apply-container--application">
-                                <form
-                                    className="general-info-apply-form"
-                                    id="general-info-form"
-                                    autoComplete="off"
-                                    onSubmit={this.handleSubmit}
-                                >
-                                    <div className="applicant-card">
-                                        <div className="applicant-card__header">
-                                            <span className="applicant-card__title"></span>
-                                            {!this.state.editing &&
-                                                <button
-                                                    className="applicant-card__edit-button"
-                                                    onClick={() => {
-                                                        this.setState({
-                                                            editing: true
-                                                        });
-                                                    }}
-                                                    disabled={this.state.searchigZipcode}
-                                                >
-                                                    {spanishActions[1].label} <i className="far fa-edit" />
-                                                </button>
-                                            }
-                                        </div>
-                                        <br />
-                                        <div className="card-body">
-                                            <div className="row">
-                                                <div className="col-md-12 form-section-1">
-                                                    <div className="row">
-                                                        <div className="col-md-6">
-                                                            <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[32].label}
-                                                            </span>
-                                                            <select
-                                                                name="HireType"
-                                                                id="HireType"
-                                                                className="form-control"
-                                                                disabled={!this.state.editing}
-                                                                value={this.state.HireType}
-                                                                onChange={this.handleInputChange}
-                                                            >
-                                                                <option value="">Select an option</option>
-                                                                <option value="1">New Hire</option>
-                                                                <option value="2">Rehire</option>
-                                                                <option value="3">Transfer</option>
-                                                                <option value="4">Promotion</option>
-                                                            </select>
-                                                        </div>
-
-                                                        <div className="col-md-6">
-                                                            <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[37].label}
-                                                            </span>
-                                                            <select
-                                                                name="employmentType"
-                                                                id="employmentType"
-                                                                className="form-control"
-                                                                disabled={!this.state.editing}
-                                                                value={this.state.employmentType}
-                                                                onChange={this.handleInputChange}
-                                                            >
-                                                                <option value="">Select an option</option>
-                                                                <option value="Part-Time">PT</option>
-                                                                <option value="Full-Time">FT</option>
-                                                            </select>
-                                                        </div>
-
-                                                        <div className="col-md-6">
-                                                            <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[35].label}
-                                                            </span>
-                                                            <div class="input-group flex-nowrap">
-                                                                <DatePicker
-                                                                    selected={this.state.hireDate}
-                                                                    onChange={(date) => this.handleDatePickerChange('hireDate', date)}
-                                                                    placeholderText={formSpanish[35].label}
-                                                                    name="hireDate"
-                                                                    id="hireDate"
-                                                                    disabled={!this.state.editing}
-                                                                />
-                                                                <div class="input-group-append">
-                                                                    <label class="input-group-text" id="addon-wrapping" for="hireDate">
-                                                                        <i class="far fa-calendar"></i>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-md-6">
-                                                            <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[36].label}
-                                                            </span>
-                                                            <div class="input-group flex-nowrap">
-                                                                <DatePicker
-                                                                    selected={this.state.startDate}
-                                                                    onChange={(date) => this.handleDatePickerChange('startDate', date)}
-                                                                    placeholderText={formSpanish[36].label}
-                                                                    name="startDate"
-                                                                    id="startDate"
-                                                                    disabled={!this.state.editing}
-                                                                />
-                                                                <div class="input-group-append">
-                                                                    <label class="input-group-text" id="addon-wrapping" for="startDate">
-                                                                        <i class="far fa-calendar"></i>
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="col-md-12">
-                                                            <span className="primary applicant-card__label skeleton">
-                                                                {formSpanish[38].label}
-                                                            </span>
-                                                            <textarea
-                                                                onChange={this.handleInputChange}
-                                                                value={this.state.comment}
-                                                                name="comment"
-                                                                type="text"
-                                                                rows="4"
-                                                                style={{resize:'none'}}
-                                                                className="form-control"
-                                                                disabled={!this.state.editing}
-                                                            />
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {this.state.editing ? (
-                                            <div className="applicant-card__footer">
-                                                <button
-                                                    className="applicant-card__cancel-button"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-
-                                                        this.getApplicationById(this.props.applicationId);
-                                                    }}
-                                                >
-                                                    {spanishActions[2].label}
-                                                </button>
-                                                <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
-                                                    {spanishActions[4].label}
-                                                    {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
-                                                </button>
-                                            </div>
-                                        ) : ('')}
-                                    </div>
-                                </form>
-                            </div>
                     </div>
                 </div>
                 <div className="row">
