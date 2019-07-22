@@ -123,7 +123,8 @@ class TimeCardForm extends Component {
                 endShift: moment('16:00', "HH:mm").format("HH:mm"),
                 startDate: '',
                 endDate: '',
-                duration: 0
+                duration: 8,
+                comment: ''
             });
         }
 
