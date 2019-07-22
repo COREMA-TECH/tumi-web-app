@@ -65,7 +65,7 @@ class FormsW4 extends Component {
     cloneForm  = _ => {
         let contentPDF = document.getElementById('w4Html');
         let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 70%;">${contentPDFClone.innerHTML}</html>`;
+        return `<html style="zoom: 50%;">${contentPDFClone.innerHTML}</html>`;
     }
 
     getApplicantInformation = (id) => {
@@ -79,12 +79,9 @@ class FormsW4 extends Component {
             })
             .then(({ data }) => {
                 if (data.applicantW4.length > 0) {
-                    console.log("Received applicant data");
-                    console.log(data.applicantW4[0].html.replace('style="zoom: 70%;"', ''));
-
                     this.setState({
                         isCreated: true,
-                        html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 70%;"', '') : '',
+                        html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 50%;"', '') : '',
                         pdfUrl: data.applicantW4[0].url
                     });
                 } else {
@@ -369,7 +366,7 @@ class FormsW4 extends Component {
                                                         localStorage.getItem('languageForm') == 'es' ? (
                                                             <div>
                                                                 <table style={{
-                                                                    fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                    fontFamily: 'Arial, sans-serif',
                                                                     fontSize: '14px',
                                                                     border: '0px #FFF',
                                                                     borderCollapse: 'collapse',
@@ -377,7 +374,7 @@ class FormsW4 extends Component {
                                                                 }} border={1} cellspacing={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top', padding: '5px' }}>
+                                                                        <td style={{ lineHeight: "1", width: '50%', verticalAlign: 'top', padding: '5px' }}>
                                                                             <h2 style={{ textDecoration: 'underline' }}>Formulario W-4(SP) (2019)</h2>
                                                                             <p>
                                                                                 <span style={{fontWeight: '900'}}>Acontecimientos futuros.</span> Toda información sobre acontecimientos futuros que afecten al Formulario W-4(SP) (como legislación aprobada después de
@@ -418,7 +415,6 @@ class FormsW4 extends Component {
                                                                                 requisitos
                                                                                 para la exención de la retención.
                                                                             </p>
-                                                                            <br />
                                                                             <h4>Instrucciones Generales</h4>
                                                                             <p>Si no está exento, siga el resto de estas instrucciones
                                                                                 para
@@ -443,8 +439,8 @@ class FormsW4 extends Component {
                                                                                 Considere usar esta
                                                                                 calculadora si</p>
                                                                         </td>
-                                                                        <td style={{ width: '49.9468%', verticalAlign: 'top', padding: '5px' }}>
-                                                                            <p style={{ textAlign: 'left' }}>
+                                                                        <td style={{ lineHeight: "1", width: '49.9468%', verticalAlign: 'top', padding: '5px' }}>
+                                                                             <p style={{  marginBottom: "0",  textAlign: 'left' }}>
                                                                                 tiene una situación
                                                                                 tributaria más
                                                                                 complicada, como por
@@ -467,7 +463,7 @@ class FormsW4 extends Component {
                                                                                 necesita completar ninguna de las
                                                                                 hojas
                                                                                 de trabajo para el Formulario W-4(SP).</p>
-                                                                            <p style={{ textAlign: 'left' }}>Tenga en cuenta que si
+                                                                             <p style={{  marginBottom: "0",  textAlign: 'left' }}>Tenga en cuenta que si
                                                                                 retiene
                                                                                 demasiados impuestos recibirá un
                                                                                 reembolso cuando presente su declaración de impuestos.
@@ -479,7 +475,7 @@ class FormsW4 extends Component {
                                                                                 podría
                                                                                 estar
                                                                                 sujeto a una multa.</p>
-                                                                            <p style={{ textAlign: 'left' }}>
+                                                                             <p style={{  marginBottom: "0",  textAlign: 'left' }}>
                                                                                 <span style={{fontWeight: '900'}}>
                                                                                     Personas con múltiples
                                                                                     trabajos o con
@@ -495,7 +491,7 @@ class FormsW4 extends Component {
                                                                                     Hoja de Trabajo para Dos Asalariados o Múltiples
                                                                                     Empleos
                                                                                 </span> antes de comenzar.</p>
-                                                                            <p style={{ textAlign: 'left' }}>
+                                                                             <p style={{  marginBottom: "0",  textAlign: 'left' }}>
                                                                                 <span style={{fontWeight: '900'}}>Ingresos no derivados del trabajo.
                                                                                 </span> Si
                                                                                 tiene una cantidad alta de
@@ -527,7 +523,7 @@ class FormsW4 extends Component {
                                                                                 retención en el Formulario W-4(SP) o el Formulario W-4P,
                                                                                 en
                                                                                 inglés.</p>
-                                                                            <p style={{ textAlign: 'left' }}>
+                                                                             <p style={{  marginBottom: "0",  textAlign: 'left' }}>
                                                                                 <span style={{fontWeight: '900'}}>Extranjero no residente.</span> Si
                                                                                 es
                                                                                 extranjero no residente, vea el Aviso
@@ -549,9 +545,9 @@ class FormsW4 extends Component {
                                                                 <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '50%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -569,9 +565,9 @@ class FormsW4 extends Component {
                                                                             />
 
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '25%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -588,9 +584,9 @@ class FormsW4 extends Component {
                                                                                 }}
                                                                             />
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '25%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -608,9 +604,9 @@ class FormsW4 extends Component {
                                                                         </td>
                                                                     </tr>
                                                                     <tr style={{ height: '34px' }}>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
@@ -633,12 +629,12 @@ class FormsW4 extends Component {
                                                                                 />
                                                                             </div>
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
                                                                             height: '34px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top'
                                                                         }}
                                                                             colSpan="2">
@@ -682,16 +678,16 @@ class FormsW4 extends Component {
                                                                                             estadoCivil1: false,
                                                                                         })
                                                                                     }}
-                                                                                /> Casado, pero retiene con la tasa mayor de Soltero <br />
+                                                                                /> Casado, pero retiene con la tasa mayor de Soltero  
                                                                                 <span style={{fontWeight: '900'}}>Nota: </span> Si es casado, pero está legalmente separado, marque el recuadro “Casado, pero retiene con la tasa mayor de Soltero”.
                                                                             </div>
                                                                         </td>
                                                                     </tr>
 
                                                                     <tr style={{ height: '34px' }}>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
@@ -715,12 +711,12 @@ class FormsW4 extends Component {
                                                                                 />
                                                                             </div>
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
                                                                             height: '34px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top'
                                                                         }}
                                                                             colSpan="2">
@@ -754,51 +750,52 @@ class FormsW4 extends Component {
                                                                        border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top',
                                                                             width: '100%'
                                                                         }}>
                                                                             5 Número total de exenciones que reclama (de la hoja de
                                                                             trabajo que
                                                                             le corresponda en las
-                                                                            siguientes páginas)<br />
+                                                                            siguientes páginas) 
                                                                             6 Cantidad adicional, si la hay, que desea que se le retenga
                                                                             de cada
-                                                                            cheque de paga<br />
+                                                                            cheque de paga 
                                                                             7 Reclamo exención de la retención para 2019 y certifico que
                                                                             cumplo con <span style={{fontWeight: '900'}}>ambas</span> condiciones,
                                                                             a continuación, para la
-                                                                            exención:<br />
+                                                                            exención: 
                                                                             • El año pasado tuve derecho a un reembolso
                                                                             de <span style={{fontWeight: '900'}}>todos</span> los
                                                                             impuestos federales sobre el ingreso retenidos
                                                                             porque no
-                                                                            tuve obligación tributaria alguna y <br />
+                                                                            tuve obligación tributaria alguna y  
                                                                             • Este año tengo previsto un reembolso 
                                                                             de <span style={{fontWeight: '900'}}>todos</span> los
                                                                             impuestos
                                                                             federales sobre los ingresos retenidos porque tengo
                                                                             previsto
-                                                                            no tener una obligación tributaria <br />
+                                                                            no tener una obligación tributaria  
                                                                             Si cumple con ambas condiciones, escriba “Exempt” (Exento)
                                                                             aquí
                                                                         </td>
-                                                                        <td style={{ verticalAlign: 'top', borderCollapse: 'collapse' }}>
+                                                                        <td style={{ lineHeight: "1", verticalAlign: 'top', borderCollapse: 'collapse' }}>
                                                                             <table style={{ borderCollapse: 'collapse' }}>
                                                                                 <tbody>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse',
-                                                                                        borderBottom: 'solid 1px #000'
+                                                                                        borderBottom: 'solid 1px #000',
+                                                                                        
                                                                                     }}>
                                                                                         5
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse',
                                                                                         borderBottom: 'solid 1px #000'
@@ -806,7 +803,7 @@ class FormsW4 extends Component {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         height: '68px',
                                                                                         background: '#CCC',
@@ -815,7 +812,7 @@ class FormsW4 extends Component {
                                                                                     }} />
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse'
                                                                                     }}>7
@@ -824,11 +821,11 @@ class FormsW4 extends Component {
                                                                                 </tbody>
                                                                             </table>
                                                                         </td>
-                                                                        <td style={{ verticalAlign: 'top', borderCollapse: 'collapse' }}>
+                                                                        <td style={{ lineHeight: "1", verticalAlign: 'top', borderCollapse: 'collapse' }}>
                                                                             <table>
                                                                                 <tbody>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse',
                                                                                         borderBottom: 'solid 1px #000'
@@ -847,7 +844,7 @@ class FormsW4 extends Component {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse',
                                                                                         borderBottom: 'solid 1px #000'
@@ -866,7 +863,7 @@ class FormsW4 extends Component {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         height: '66px',
                                                                                         background: '#CCC',
@@ -875,7 +872,7 @@ class FormsW4 extends Component {
                                                                                     }} />
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{ verticalAlign: 'top' }}>
+                                                                                    <td style={{ lineHeight: "1", verticalAlign: 'top' }}>
                                                                                         <input
                                                                                             disabled={this.state.isCreated}
                                                                                             type="text"
@@ -895,8 +892,8 @@ class FormsW4 extends Component {
                                                                     </tr>
                                                                     <tr>
                                                                         <td colSpan="3">
-                                                                            Bajo pena de perjurio, declaro haber examinado este certificado y que a mi leal saber y entender, es verídico, correcto y completo. <br />
-                                                                            <span style={{fontWeight: '900'}}>Firma del empleado</span><br />
+                                                                            Bajo pena de perjurio, declaro haber examinado este certificado y que a mi leal saber y entender, es verídico, correcto y completo.  
+                                                                            <span style={{fontWeight: '900'}}>Firma del empleado</span> 
                                                                             (Este formulario no es válido a menos que usted lo firme).  ▶ <img style={{
                                                                             width: '100px',
                                                                             height: '30px',
@@ -923,9 +920,9 @@ class FormsW4 extends Component {
                                                                 {/*}} border={1}>*/}
                                                                 {/*<tbody>*/}
                                                                 {/*<tr style={{ height: '17px' }}>*/}
-                                                                {/*<td style={{*/}
+                                                                {/*<td style={{ lineHeight: "1",*/}
                                                                 {/*fontSize: '11px',*/}
-                                                                {/*fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',*/}
+                                                                {/*fontFamily: 'Arial, sans-serif',*/}
                                                                 {/*verticalAlign: 'top',*/}
                                                                 {/*width: '50%',*/}
                                                                 {/*borderTop: '0px #ffffff',*/}
@@ -946,8 +943,8 @@ class FormsW4 extends Component {
                                                                 {/*}}*/}
                                                                 {/*/>*/}
                                                                 {/*</td>*/}
-                                                                {/*<td style={{*/}
-                                                                {/*fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',*/}
+                                                                {/*<td style={{ lineHeight: "1",*/}
+                                                                {/*fontFamily: 'Arial, sans-serif',*/}
                                                                 {/*verticalAlign: 'top',*/}
                                                                 {/*width: '50%',*/}
                                                                 {/*borderTop: '0px #ffffff',*/}
@@ -961,9 +958,9 @@ class FormsW4 extends Component {
                                                                 <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '65%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -989,9 +986,9 @@ class FormsW4 extends Component {
                                                                                 }}
                                                                             />
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '15%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -1008,9 +1005,9 @@ class FormsW4 extends Component {
                                                                                 }}
                                                                             />
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '20%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -1035,13 +1032,13 @@ class FormsW4 extends Component {
                                                                     borderCollapse: 'collapse',
                                                                     border: '0px #FFF',
                                                                     width: '100%',
-                                                                    fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                    fontFamily: 'Arial, sans-serif',
                                                                     fontSize: '14px'
                                                                 }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top', padding: '5px' }}>
-                                                                            <h3>Instrucciones Específicas.</h3><br />
+                                                                        <td style={{ lineHeight: "1", width: '50%', verticalAlign: 'top', padding: '5px' }}>
+                                                                            <h3>Instrucciones Específicas.</h3> 
                                                                             <h5>Hoja de Trabajo para Descuentos Personales</h5>
                                                                             <p>Complete esta
                                                                                 hoja de
@@ -1129,7 +1126,7 @@ class FormsW4 extends Component {
                                                                                 consulte la
                                                                                 Publicación 972, en inglés.</p>
                                                                         </td>
-                                                                        <td style={{ width: '50%', verticalAlign: 'top', padding: '5px' }}>
+                                                                        <td style={{ lineHeight: "1", width: '50%', verticalAlign: 'top', padding: '5px' }}>
                                                                             <p>Para reducir el impuesto retenido de su paga teniendo en
                                                                                 cuenta
                                                                                 este crédito, siga las
@@ -1222,7 +1219,7 @@ class FormsW4 extends Component {
 
                                                                 </div> */}
                                                                 <table style={{
-                                                                    fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                    fontFamily: 'Arial, sans-serif',
                                                                     fontSize: '14px',
                                                                     border: '0px #FFF',
                                                                     borderCollapse: 'collapse',
@@ -1230,27 +1227,27 @@ class FormsW4 extends Component {
                                                                 }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{ width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
+                                                                        <td style={{ lineHeight: "1", width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
                                                                             <h2 style={{ textDecoration: 'underline' }}>Form W-4
                                                                                 (2019) </h2>
-                                                                            <p><span style={{fontWeight: '900'}}>Future developments.</span> For the latest information about any future developments related to Form W-4, such as legislation enacted after it was published, go to www.irs.gov/FormW4.</p><br />
-                                                                            <p><span style={{fontWeight: '900'}}>Purpose.</span> Complete Form W-4 so that your employer can withhold the correct federal income tax from your pay. Consider completing a new Form W-4 each year and when your personal or financial situation changes.</p><br />
-                                                                            <p><span style={{fontWeight: '900'}}>Exemption from withholding.</span> You may claim exemption from withholding for 2019 if <span style={{fontWeight: '900'}}>both</span> of the following apply. <br />
-                                                                            • For 2018 you had a right to a refund of <span style={{fontWeight: '900'}}>all</span> federal income tax withheld because you had <span style={{fontWeight: '900'}}>no</span> tax liability, <span style={{fontWeight: '900'}}>and</span> <br />
-                                                                            • For 2019 you expect a refund of <span style={{fontWeight: '900'}}>all</span> federal income tax withheld because you expect to have <span style={{fontWeight: '900'}}>no</span> tax liability. <br />
+                                                                            <p><span style={{fontWeight: '900'}}>Future developments.</span> For the latest information about any future developments related to Form W-4, such as legislation enacted after it was published, go to www.irs.gov/FormW4.</p> 
+                                                                            <p><span style={{fontWeight: '900'}}>Purpose.</span> Complete Form W-4 so that your employer can withhold the correct federal income tax from your pay. Consider completing a new Form W-4 each year and when your personal or financial situation changes.</p> 
+                                                                            <p><span style={{fontWeight: '900'}}>Exemption from withholding.</span> You may claim exemption from withholding for 2019 if <span style={{fontWeight: '900'}}>both</span> of the following apply.  
+                                                                            • For 2018 you had a right to a refund of <span style={{fontWeight: '900'}}>all</span> federal income tax withheld because you had <span style={{fontWeight: '900'}}>no</span> tax liability, <span style={{fontWeight: '900'}}>and</span>  
+                                                                            • For 2019 you expect a refund of <span style={{fontWeight: '900'}}>all</span> federal income tax withheld because you expect to have <span style={{fontWeight: '900'}}>no</span> tax liability.  
                                                                             If you’re exempt, complete only lines 1, 2, 3, 4, and 7 and sign the form to validate it. Your exemption for 2019 expires February 17, 2020. 
-                                                                            See Pub. 505, Tax Withholding and Estimated Tax, to learn more about whether you qualify for exemption from withholding.</p><br />
+                                                                            See Pub. 505, Tax Withholding and Estimated Tax, to learn more about whether you qualify for exemption from withholding.</p> 
                                                                             <h4>General Instructions</h4>
                                                                             <p>If you aren’t exempt, follow the rest of these instructions to determine the number of withholding allowances you should claim for withholding for 2019 and any additional amount of tax to have withheld. For regular wages, withholding must be based on allowances you claimed and may not be a flat amount or percentage of wages. You can also use the calculator at <span style={{fontWeight: '900'}}>www.irs.gov/W4App</span> to determine your tax withholding more accurately. Consider</p>
                                                                         </td>
-                                                                        <td style={{ width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
-                                                                            <p style={{ textAlign: 'left' }}>using this calculator if you have a more complicated tax situation, such as if you have a working spouse, more than one job, or a large amount of nonwage income not subject to withholding outside of your job. After your Form W-4 takes effect, you can also use this calculator to see how the amount of tax you’re having withheld compares to your projected total tax for 2019. If you use the calculator, you don’t need to complete any of the worksheets for Form W-4.</p>
+                                                                        <td style={{ lineHeight: "1", width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
+                                                                             <p style={{  marginBottom: "0",  textAlign: 'left' }}>using this calculator if you have a more complicated tax situation, such as if you have a working spouse, more than one job, or a large amount of nonwage income not subject to withholding outside of your job. After your Form W-4 takes effect, you can also use this calculator to see how the amount of tax you’re having withheld compares to your projected total tax for 2019. If you use the calculator, you don’t need to complete any of the worksheets for Form W-4.</p>
                                                                             <p>Note that if you have too much tax withheld, you will receive a refund when you file your tax return. If you have too little tax withheld, you will owe tax when you file your tax return, and you might owe a penalty.</p>
                                                                             <p><span style={{fontWeight: '900'}}>Filers with multiple jobs or working spouses.</span> If you have more than one job at a time, or if you’re married filing jointly and your spouse is also working, read all of the instructions including the instructions for the Two-Earners/Multiple Jobs Worksheet before beginning.</p>
                                                                             <p><span style={{fontWeight: '900'}}>Nonwage income.</span> If you have a large amount of nonwage income not subject to withholding, such as interest or dividends, consider making estimated tax payments using Form 1040-ES, Estimated Tax for Individuals. Otherwise, you might owe additional tax. Or, you can use the Deductions, Adjustments, and Additional Income Worksheet on page 3 or the calculator at www.irs.gov/W4App to make sure you have enough tax withheld from your paycheck. If you have pension or annuity income, see Pub. 505 or use the calculator at www.irs.gov/W4App to find out if you should adjust your withholding on Form W-4 or W-4P.</p>
                                                                             <p><span style={{fontWeight: '900'}}>Nonresident alien.</span> If you’re a nonresident alien, see Notice 1392, Supplemental Form W-4 Instructions for Nonresident Aliens, before completing this form.</p>
                                                                         </td>
-                                                                        <td style={{ width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
+                                                                        <td style={{ lineHeight: "1", width: '33.33%', verticalAlign: 'top', padding:'2px' }}>
                                                                             <h4>Specific Instructions</h4>
                                                                             <p>
                                                                                 <h6><span style={{fontWeight: '900'}}>Personal Allowances Worksheet</span></h6>
@@ -1268,9 +1265,9 @@ class FormsW4 extends Component {
                                                                 <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '50%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -1287,9 +1284,9 @@ class FormsW4 extends Component {
                                                                             />
 
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '25%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -1306,9 +1303,9 @@ class FormsW4 extends Component {
                                                                                 }}
                                                                             />
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '25%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -1326,9 +1323,9 @@ class FormsW4 extends Component {
                                                                         </td>
                                                                     </tr>
                                                                     <tr style={{ height: '34px' }}>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
@@ -1351,12 +1348,12 @@ class FormsW4 extends Component {
                                                                                 />
                                                                             </div>
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
                                                                             height: '34px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top'
                                                                         }}
                                                                             colSpan="2">
@@ -1388,16 +1385,16 @@ class FormsW4 extends Component {
                                                                                         })
                                                                                     }}
                                                                                 /> Married
-                                                                                <input type="checkbox" /> Married, but withhold at higher Single rate <br />
+                                                                                <input type="checkbox" /> Married, but withhold at higher Single rate  
                                                                                 <span style={{fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
                                                                             </div>
                                                                         </td>
                                                                     </tr>
 
                                                                     <tr style={{ height: '34px' }}>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
@@ -1420,12 +1417,12 @@ class FormsW4 extends Component {
                                                                                 />
                                                                             </div>
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
                                                                             height: '34px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top'
                                                                         }}
                                                                             colSpan="2">
@@ -1451,26 +1448,26 @@ class FormsW4 extends Component {
                                                                        border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             verticalAlign: 'top',
                                                                             width: '100%'
                                                                         }}>
                                                                             <div>
-                                                                                5  Total number of allowances you’re claiming (from the applicable worksheet on the following pages)<br />
-                                                                                6  Additional amount, if any, you want withheld from each paycheck <br />
-                                                                                7  I claim exemption from withholding for 2019, and I certify that I meet both of the following conditions for exemption.<br />
-                                                                                &emsp;• Last year I had a right to a refund of all federal income tax withheld because I had no tax liability, and <br />
-                                                                                &emsp;• This year I expect a refund of all federal income tax withheld because I expect to have no tax liability. <br />
+                                                                                5  Total number of allowances you’re claiming (from the applicable worksheet on the following pages) 
+                                                                                6  Additional amount, if any, you want withheld from each paycheck  
+                                                                                7  I claim exemption from withholding for 2019, and I certify that I meet both of the following conditions for exemption. 
+                                                                                &emsp;• Last year I had a right to a refund of all federal income tax withheld because I had no tax liability, and  
+                                                                                &emsp;• This year I expect a refund of all federal income tax withheld because I expect to have no tax liability.  
                                                                                 If you meet both conditions, write “Exempt” here
                                                                             </div>
                                                                         </td>
-                                                                        <td style={{ verticalAlign: 'top', borderCollapse: 'collapse' }}>
+                                                                        <td style={{ lineHeight: "1", verticalAlign: 'top', borderCollapse: 'collapse' }}>
                                                                             <table style={{ borderCollapse: 'collapse' }}>
                                                                                 <tbody>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse',
                                                                                         borderBottom: 'solid 1px #000'
@@ -1479,7 +1476,7 @@ class FormsW4 extends Component {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse',
                                                                                         borderBottom: 'solid 1px #000'
@@ -1487,7 +1484,7 @@ class FormsW4 extends Component {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         height: '68px',
                                                                                         background: '#CCC',
@@ -1496,7 +1493,7 @@ class FormsW4 extends Component {
                                                                                     }} />
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse'
                                                                                     }}>7
@@ -1505,11 +1502,11 @@ class FormsW4 extends Component {
                                                                                 </tbody>
                                                                             </table>
                                                                         </td>
-                                                                        <td style={{ verticalAlign: 'top', borderCollapse: 'collapse' }}>
+                                                                        <td style={{ lineHeight: "1", verticalAlign: 'top', borderCollapse: 'collapse' }}>
                                                                             <table>
                                                                                 <tbody>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse',
                                                                                         borderBottom: 'solid 1px #000'
@@ -1527,7 +1524,7 @@ class FormsW4 extends Component {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         borderCollapse: 'collapse',
                                                                                         borderBottom: 'solid 1px #000'
@@ -1545,7 +1542,7 @@ class FormsW4 extends Component {
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{
+                                                                                    <td style={{ lineHeight: "1",
                                                                                         verticalAlign: 'top',
                                                                                         height: '66px',
                                                                                         background: '#CCC',
@@ -1554,7 +1551,7 @@ class FormsW4 extends Component {
                                                                                     }} />
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td style={{ verticalAlign: 'top' }}>
+                                                                                    <td style={{ lineHeight: "1", verticalAlign: 'top' }}>
                                                                                         <input
                                                                                             disabled={this.state.isCreated}
                                                                                             type="text"
@@ -1573,8 +1570,8 @@ class FormsW4 extends Component {
                                                                     </tr>
                                                                     <tr>
                                                                         <td colSpan="3">
-                                                                            Under penalties of perjury, I declare that I have examined this certificate and, to the best of my knowledge and belief, it is true, correct, and complete.  <br />
-                                                                            <span style={{fontWeight: '900'}}>Employee’s signature</span> <br />                                                                            
+                                                                            Under penalties of perjury, I declare that I have examined this certificate and, to the best of my knowledge and belief, it is true, correct, and complete.   
+                                                                            <span style={{fontWeight: '900'}}>Employee’s signature</span>                                                                              
                                                                             (This form is not valid unless you sign it).  ▶  <img style={{
                                                                             width: '100px',
                                                                             height: '30px',
@@ -1597,9 +1594,9 @@ class FormsW4 extends Component {
                                                                 <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '65%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -1615,9 +1612,9 @@ class FormsW4 extends Component {
                                                                                 }}
                                                                             />
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '15%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -1634,9 +1631,9 @@ class FormsW4 extends Component {
                                                                                 }}
                                                                             />
                                                                         </td>
-                                                                        <td style={{
+                                                                        <td style={{ lineHeight: "1",
                                                                             fontSize: '11px',
-                                                                            fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                            fontFamily: 'Arial, sans-serif',
                                                                             width: '20%',
                                                                             verticalAlign: 'top'
                                                                         }}>
@@ -1661,12 +1658,12 @@ class FormsW4 extends Component {
                                                                     borderCollapse: 'collapse',
                                                                     border: '0px #FFF',
                                                                     width: '100%',
-                                                                    fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+                                                                    fontFamily: 'Arial, sans-serif',
                                                                     fontSize: '14px'
                                                                 }} border={1}>
                                                                     <tbody>
                                                                     <tr>
-                                                                        <td style={{ width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
+                                                                        <td style={{ lineHeight: "1", width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
                                                                             <p>income includes all of your wages and other income, including income earned by a spouse if you are filing a join return.</p>
                                                                             <p><span style={{fontWeight: '900'}}>Line G. Other credits.</span> You may be able to reduce the tax withheld from your paycheck if you expect to claim other tax credits, such as tax credits for education (see Pub. 970). If you do so, your paycheck will be larger, but the amount of any refund that you receive when you file your tax return will be smaller. Follow the instructions for Worksheet 1-6 in Pub. 505 if you want to reduce your withholding to take these credits into account. Enter “-0-” on lines E and F if you use Worksheet 1-6.</p>
                                                                             <p><h5>Deductions, Adjustments, and Additional Income Worksheet</h5> Complete this worksheet to determine if you’re able to reduce the tax withheld from your paycheck to account for your itemized deductions and other adjustments to income, such as IRA contributions. If you do so, your refund at the end of the year will be smaller, but your paycheck will be larger. You’re not required to complete this worksheet or reduce your withholding if you don’t wish to do so.</p>
@@ -1674,7 +1671,7 @@ class FormsW4 extends Component {
                                                                             <p>Another option is to take these items into account and make your withholding more accurate by using the calculator at www.irs.gov/W4App. If you use the calculator, you don’t need to complete any of the worksheets for Form W-4.</p>
                                                                             <p><h5>Two-Earners/Multiple Jobs Worksheet</h5> Complete this worksheet if you have more than one job at a time or are married filing jointly and have a working spouse. If you</p>
                                                                         </td>
-                                                                        <td style={{ width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
+                                                                        <td style={{ lineHeight: "1", width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
                                                                             <p>don't complete this worksheet, you might have too little tax withheld. If so, you will owe tax when you file your tax return and might be subject to a penalty.</p>
                                                                             <p>Figure the total number of allowances you’re entitled to claim and any additional amount of tax to withhold on all jobs using worksheets from only one Form W-4. Claim all allowances on the W-4 that you or your spouse file for the highest paying job in your family and claim zero allowances on Forms W-4 filed for all other jobs. For example, if you earn $60,000 per year and your spouse earns $20,000, you should complete the worksheets to determine what to enter on lines 5 and 6 of your Form W-4, and your spouse should enter zero (“-0-”) on lines 5 and 6 of his or her Form W-4. See Pub. 505 for details.</p>
                                                                             <p>Another option is to use the calculator at www.irs.gov/W4App to make your withholding more accurate.</p>
@@ -1682,7 +1679,7 @@ class FormsW4 extends Component {
                                                                             <p><h5>Instructions for Employer</h5> <span style={{fontWeight: '900'}}> Employees, do not complete box 8, 9, or 10. Your employer will complete these boxes if necessary.</span></p>
                                                                             <p><span style={{fontWeight: '900'}}>New hire reporting.</span> Employers are required by law to report new employees to a designated State Directory of New Hires. Employers may use Form W-4, boxes 8, 9,</p>
                                                                         </td>
-                                                                        <td style={{ width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
+                                                                        <td style={{ lineHeight: "1", width: '33.3333%', verticalAlign: 'top', padding:'2px' }}>
                                                                             <p>and 10 to comply with the new hire reporting requirement for a newly hired employee. A newly hired employee is an employee who hasn’t previously been employed by the employer, or who was previously employed by the employer but has been separated from such prior employment for at least 60 consecutive days. Employers should contact the appropriate State Directory of New Hires to find out how to submit a copy of the completed Form W-4. For information and links to each designated State Directory of New Hires (including for U.S. territories), go to <span style={{fontWeight: '900'}}>www.acf.hhs.gov/css/employers.</span></p>
                                                                             <p>If an employer is sending a copy of Form W-4 to a designated State Directory of New Hires to comply with the new hire reporting requirement for a newly hired employee, complete boxes 8, 9, and 10 as follows.</p>
                                                                             <p><span style={{fontWeight: '900'}}>Box 8.</span> Enter the employer’s name and address. If the employer is sending a copy of this form to a State Directory of New Hires, enter the address where child support agencies should send income withholding orders.</p>
