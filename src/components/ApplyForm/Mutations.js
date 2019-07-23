@@ -176,11 +176,11 @@ export const ADD_INDEPENDENT_CONTRACT = gql`
 
 /*This is for internal application */
 export const UPDATE_INTERNAL_APPLICATION = gql`
-	mutation updateApplication($application: inputUpdateApplication, $codeuser: Int, $nameUser: String,$employee: inputUpdateEmployees) {
+	mutation updateApplication($application: inputUpdateApplication, $codeuser: Int, $nameUser: String, $id: Int, $hireDate: String, $startDate: String,$ApplicationId: Int) {
 		updateApplication(application: $application, codeuser: $codeuser, nameUser: $nameUser) {
 			id
 		}
-		updateEmployees(employees: $employee,codeuser: $codeuser, nameUser: $nameUser){
+		createEmployeeBasedOnApplicationOrUpdateEmployee(id: $id, hireDate: $hireDate, startDate: $startDate, ApplicationId: $ApplicationId,codeuser: $codeuser, nameUser: $nameUser){
 			id
 		}
 	}

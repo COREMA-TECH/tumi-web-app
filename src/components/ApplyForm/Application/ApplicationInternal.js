@@ -68,11 +68,10 @@ class ApplicationInternal extends Component {
                         variables: {
                             codeuser: localStorage.getItem('LoginId'),
                             nameUser: localStorage.getItem('FullName'),
-                            employee: {
-                                id: this.state.employeeId,
-                                hireDate: this.state.hireDate || null,
-                                startDate: this.state.startDate || null,
-                            },
+                            id: this.state.employeeId,
+                            hireDate: this.state.hireDate || null,
+                            startDate: this.state.startDate || null,
+                            ApplicationId: id,
                             application: {
                                 id: id,
                                 birthDay: this.state.birthDay || null,
@@ -261,17 +260,31 @@ class ApplicationInternal extends Component {
         return (
             <React.Fragment>
                 <div className="row">
-                    <div className="col-md-6">
-
+                    <div className="col-md-12">
                         <div className="Apply-container--application">
                             <div className="applicant-card">
                                 <div className="applicant-card__header">
-                                    <span className="applicant-card__title">{applyTabs[1].label}</span>
+                                    <span className="applicant-card__title">
+                                        {applyTabs[1].label}
+                                    </span>
+                                    {!this.state.editing &&
+                                        <button
+                                            className="applicant-card__edit-button"
+                                            onClick={() => {
+                                                this.setState({
+                                                    editing: true
+                                                });
+                                            }}
+                                            disabled={this.state.searchigZipcode}
+                                        >
+                                            {spanishActions[1].label} <i className="far fa-edit" />
+                                        </button>
+                                    }
                                 </div>
                                 <br />
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-md-12 form-section-1">
+                                        <div className="col-12 col-md-6">
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <span className="primary applicant-card__label skeleton">
@@ -427,43 +440,33 @@ class ApplicationInternal extends Component {
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div className="col-md-6">
+                                                    <span className="primary applicant-card__label skeleton">
+                                                        {formSpanish[31].label}
+                                                    </span>
+                                                    <InputForm
+                                                        change={(event) => {
+                                                            this.setState({
+                                                                area: event
+                                                            });
+                                                        }}
+                                                        value={this.state.area}
+                                                        name="area"
+                                                        className="form-control"
+                                                        disabled={!this.state.editing}
+                                                        maxLength="50"
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <div className="Apply-container--application">
-                            <form
-                                className="general-info-apply-form"
-                                id="general-info-form"
-                                autoComplete="off"
-                                onSubmit={this.handleSubmit}
-                            >
-                                <div className="applicant-card">
-                                    <div className="applicant-card__header">
-                                        <span className="applicant-card__title"></span>
-                                        {!this.state.editing &&
-                                            <button
-                                                className="applicant-card__edit-button"
-                                                onClick={() => {
-                                                    this.setState({
-                                                        editing: true
-                                                    });
-                                                }}
-                                                disabled={this.state.searchigZipcode}
+                                        <div className="col-12 col-md-6">
+                                            <form
+                                                id="general-info-form"
+                                                autoComplete="off"
+                                                onSubmit={this.handleSubmit}
                                             >
-                                                {spanishActions[1].label} <i className="far fa-edit" />
-                                            </button>
-                                        }
-                                    </div>
-                                    <br />
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <div className="col-md-12 form-section-1">
-                                                <div className="row">
+                                                <div className="row">                                                    
                                                     <div className="col-md-6">
                                                         <span className="primary applicant-card__label skeleton">
                                                             {formSpanish[32].label}
@@ -513,7 +516,7 @@ class ApplicationInternal extends Component {
                                                                 placeholderText={formSpanish[35].label}
                                                                 name="hireDate"
                                                                 id="hireDate"
-                                                                disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                disabled={!this.state.editing}
                                                             />
                                                             <div class="input-group-append">
                                                                 <label class="input-group-text" id="addon-wrapping" for="hireDate">
@@ -534,7 +537,7 @@ class ApplicationInternal extends Component {
                                                                 placeholderText={formSpanish[36].label}
                                                                 name="startDate"
                                                                 id="startDate"
-                                                                disabled={!this.state.editing || !this.state.hasEmployee}
+                                                                disabled={!this.state.editing}
                                                             />
                                                             <div class="input-group-append">
                                                                 <label class="input-group-text" id="addon-wrapping" for="startDate">
@@ -559,57 +562,45 @@ class ApplicationInternal extends Component {
                                                             disabled={!this.state.editing}
                                                         />
                                                     </div>
+                                                    {this.state.editing ? (
+                                                        <div className="applicant-card__footer">
+                                                            <button
+                                                                className="applicant-card__cancel-button"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
 
+                                                                    this.getApplicationById(this.props.applicationId);
+                                                                }}
+                                                            >
+                                                                {spanishActions[2].label}
+                                                            </button>
+                                                            <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
+                                                                {spanishActions[4].label}
+                                                                {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
+                                                            </button>
+                                                        </div>
+                                                    ) : ('')}
                                                 </div>
-                                            </div>
+                                            </form>
+                                        
                                         </div>
                                     </div>
-                                    {this.state.editing ? (
-                                        <div className="applicant-card__footer">
-                                            <button
-                                                className="applicant-card__cancel-button"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-
-                                                    this.getApplicationById(this.props.applicationId);
-                                                }}
-                                            >
-                                                {spanishActions[2].label}
-                                            </button>
-                                            <button type="submit" className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
-                                                {spanishActions[4].label}
-                                                {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
-                                            </button>
-                                        </div>
-                                    ) : ('')}
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
+                    {/* <div className="col-md-6">
+                        <div className="Apply-container--application">
+                        </div>
+                    </div> */}
                 </div>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="applicant-card">
                             <div className="card-body">
                                 <div className="row">
-                                    <div className="col-md-3">
-                                        <span className="primary applicant-card__label skeleton">
-                                            {formSpanish[31].label}
-                                        </span>
-                                        <InputForm
-                                            change={(event) => {
-                                                this.setState({
-                                                    area: event
-                                                });
-                                            }}
-                                            value={this.state.area}
-                                            name="area"
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            maxLength="50"
-                                        />
-                                    </div>
+                                    
                                 </div>
                                 <Skills applicationId={this.props.applicationId} />
                             </div>
