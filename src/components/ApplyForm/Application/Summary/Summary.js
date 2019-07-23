@@ -121,14 +121,43 @@ class Summary extends Component {
                         let gender = "--";
                         let hireDate = "--";
                         let hotel = "--";
+                        let typeOfId = applications.typeOfId;
                         if (applications.gender)
-                            gender = applications.gender ? 'FEMALE' : "MALE"
+                            gender = applications.gender === 1 ? 'MALE' : 'FEMALE';
                         if (applications.employee)
                             hireDate = applications.employee.Employees.hireDate ? applications.employee.Employees.hireDate : '--';
                         if (applications.employee)
                             hotel = applications.employee.Employees.BusinessCompany ? applications.employee.Employees.BusinessCompany.Name: '--';
 
-                            return {
+                        
+                        switch(typeOfId) {
+                            case 1: 
+                                typeOfId = 'Birth certificate';
+                                break;
+                            case 2: 
+                                typeOfId = 'Social Security card';
+                                break;
+                            case 3: 
+                                typeOfId = 'State-issued drivers license';
+                                break;
+                            case 4: 
+                                typeOfId = 'State-issued ID';
+                                break;
+                            case 5: 
+                                typeOfId = 'Passport';
+                                break;
+                            case 6: 
+                                typeOfId = 'Department of Defense Identification Card';
+                                break;
+                            case 7: 
+                                typeOfId = 'Green Card';
+                                break;
+                            default: 
+                                typeOfId = '--';
+                                break;
+                        }
+
+                        return {
                             applicantName: applications.firstName +' '+ applications.lastName,
                             socialSecurityNumber:applications.socialSecurityNumber ?applications.socialSecurityNumber:'--',
                             cellphone:applications.cellPhone ? applications.cellPhone:'--',
@@ -147,7 +176,7 @@ class Summary extends Component {
                             hotel: hotel,
                             recruiter:applications.recruiter ? applications.recruiter.Full_Name : '--',
                             area:applications.area ? applications.area : '--',
-                            typeOfId:applications.typeOfId ? (applications.typeOfId==1?'Birth certificate':(applications.typeOfId==2?'Social Security card':'State-issued drivers license')): '--',                        
+                            typeOfId: typeOfId,                        
                             expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('DD/MM/YYYY'): '--',
                             marital: applications.marital ? "MARRIED" : "SINGLE",
                             numberId: applications.numberId ? applications.numberId : '--',
