@@ -11295,7 +11295,7 @@ div[class*="MuiStepper-root-"] {
       position: absolute;
       top: -5px; }
   .External .skills-label, .External .skills-desc {
-    color: #FFF !important;
+    color: #000 !important;
     font-family: 'Ropa Sans', sans-serif;
     font-size: 14px; }
   .External .skills-desc {
