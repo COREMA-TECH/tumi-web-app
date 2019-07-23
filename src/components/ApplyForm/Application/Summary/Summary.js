@@ -125,7 +125,7 @@ class Summary extends Component {
                         if (applications.gender)
                             gender = applications.gender === 1 ? 'MALE' : 'FEMALE';
                         if (applications.employee)
-                            hireDate = applications.employee.Employees.hireDate ? applications.employee.Employees.hireDate : '--';
+                            hireDate = applications.employee.Employees.hireDate ? moment(applications.employee.Employees.hireDate).format('DD/MM/YYYY') : '--';
                         if (applications.employee)
                             hotel = applications.employee.Employees.BusinessCompany ? applications.employee.Employees.BusinessCompany.Name: '--';
 
@@ -161,7 +161,7 @@ class Summary extends Component {
                             applicantName: applications.firstName +' '+ applications.lastName,
                             socialSecurityNumber:applications.socialSecurityNumber ?applications.socialSecurityNumber:'--',
                             cellphone:applications.cellPhone ? applications.cellPhone:'--',
-                            birthDay :applications.birthDay ? applications.birthDay.substring(0, 10): '--',
+                            birthDay :applications.birthDay ? moment(applications.birthDay.substring(0, 10)).format('DD/MM/YYYY') : '--',
                             streetAddress:applications.streetAddress ? applications.streetAddress: '--',
                             zipCode:applications.zipCode ? applications.zipCode.substring(0, 5): '--',
                             city: applications.city ? applications.cityInfo.Name : '',
@@ -371,7 +371,7 @@ class Summary extends Component {
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>GENDER:</strong></span>`+ this.state.gender +` </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>BIRTHDATE:</strong></span>`+ moment(this.state.birthDay).format('DD/MM/YYYY') +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>BIRTHDATE:</strong></span>`+ this.state.birthDay +` </span></p>
                                     
                                     </td>
                                     
