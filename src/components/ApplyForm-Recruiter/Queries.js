@@ -104,6 +104,7 @@ export const GET_APPLICATION_BY_ID = gql`
             lastName
             lastName2
             date
+            dateCreation
             streetAddress
             emailAddress
             aptNumber
