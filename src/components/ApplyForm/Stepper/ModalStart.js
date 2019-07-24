@@ -27,7 +27,7 @@ class modalStart extends Component {
             <Fragment>
                 <Dialog open={open} maxWidth="md" disableBackdropClick={true} >
                     <DialogTitle>
-                        <h4> Welcome </h4>
+                        <h4 className="text-center"> Welcome </h4>
                     </DialogTitle>
                     <DialogContent>
                         {
@@ -55,14 +55,14 @@ class modalStart extends Component {
                                 : null
                                 
                         }
+                        { !this.state.selectLanguage && 
+                            <DialogActions>
+                                <button className="btn btn-primary btn-lg mx-auto m-2" type="button" onClick={this.showLanguageSelector}>
+                                    <span className="display-4">Start</span>
+                                </button>
+                            </DialogActions>
+                        }
                     </DialogContent>
-                    { !this.state.selectLanguage && 
-                        <DialogActions>
-                            <button className="btn btn-primary mx-auto m-2" type="button" onClick={this.showLanguageSelector}>
-                                Start
-                            </button>
-                        </DialogActions>
-                    }
                 </Dialog>
             </Fragment>
         )

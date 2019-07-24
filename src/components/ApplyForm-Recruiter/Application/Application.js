@@ -14,6 +14,7 @@ import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
 import LocationForm from '../../ui-components/LocationForm'
 import { withStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -109,7 +110,8 @@ class Application extends Component {
 
         loading: false,
         idRecruiter: localStorage.getItem('LoginId'),
-        date: new Date().toISOString().substring(0, 10),
+        date: moment().local().format("MM/DD/YYYY"),
+        dateCreation: moment().local().format("MM/DD/YYYY"),
 
         positions: [],
         positionsCatalogs: [],
@@ -205,6 +207,7 @@ class Application extends Component {
                                     lastName: this.state.lastName,
                                     lastName2: this.state.lastName2,
                                     date: this.state.date,
+                                    dateCreation: this.state.dateCreation,
                                     aptNumber: this.state.aptNumber,
                                     city: this.state.city,
                                     state: this.state.state,
@@ -411,6 +414,7 @@ class Application extends Component {
                                     zipCode: applicantData.zipCode,
                                     homePhone: applicantData.homePhone,
                                     cellPhone: applicantData.cellPhone,
+                                    dateCreation: applicantData.dateCreation ? moment(applicantData.dateCreation).utc().format('MM/DD/YYYY') : '',
                                     positionApplyingFor: applicantData.positionApplyingFor == null ? 0 : applicantData.positionApplyingFor,
                                     car: applicantData.car,
                                     generalComment: applicantData.generalComment,
@@ -663,6 +667,30 @@ class Application extends Component {
 
 
                             <div className="col-md-12 col-lg-6 form-section-1">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[25].label}
+                                        </span>
+                                        <input
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    firstName: event.target.value
+                                                },
+                                                    () => {
+                                                        this.props.SetFirstName(this.state)
+                                                    }
+                                                );
+
+                                            }}
+                                            value={this.state.dateCreation}
+                                            name="dateCreation"
+                                            type="text"
+                                            className="form-control"
+                                            disabled={true}
+                                        />
+                                    </div>
+                                </div>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">

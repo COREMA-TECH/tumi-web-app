@@ -98,5 +98,9 @@
   {
     "id": 24,
     "label": "Second Last Name"
+  },
+  {
+    "id": 25,
+    "label": "Creation date"
   }
 ]
