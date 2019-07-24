@@ -508,7 +508,7 @@ class General extends Component {
                                 isActive: this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
                                 EmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 999999,
-                                hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("YYYY-MM-DD")}` : '--',
+                                hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("MM/DD/YYYY")}` : '--',
                                 idealJobs: this.state.data.idealJobs,
                                 applicantName: this.state.data.firstName + ' ' + this.state.data.lastName,
                                 codeUser: this.state.data.user ? this.state.data.user.Code_User : '--',
