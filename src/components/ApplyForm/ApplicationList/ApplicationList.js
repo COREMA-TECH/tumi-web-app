@@ -101,7 +101,8 @@ class ApplicationList extends Component {
 				employee {
 					Employees {
 					  idEntity
-						BusinessCompany {
+					  idUsers
+					  BusinessCompany {
 						Name
 					  }
 					}
@@ -268,17 +269,17 @@ class ApplicationList extends Component {
 				idUsers: localStorage.getItem('isEmployee') == 'true' ? localStorage.getItem('LoginId') : null
 			};
 
-			if(!!department)
+			if (!!department)
 				variables = { ...variables, Id_Deparment: department };
 
 			switch (this.state.statu.value) {
-				case 1: 
+				case 1:
 					variables = { ...variables, isActive: [true] };
 					break;
-				case 2: 
+				case 2:
 					variables = { ...variables, isActive: [false] };
 					break;
-				case 3: 
+				case 3:
 					variables = { ...variables, isActive: [true, false] };
 					break;
 				default:
@@ -313,7 +314,7 @@ class ApplicationList extends Component {
 	render() {
 		var loading = this.state.loadingConfirm || this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
 		var variables = {};
-		let {applications} = this.state;
+		let { applications } = this.state;
 
 		/**
 		 * Start - Define variables for application query
@@ -397,43 +398,44 @@ class ApplicationList extends Component {
 		);
 
 		let renderContent = () => {
-			if(this.state.loading && !this.state.opendialog) return <LinearProgress />
+			if (this.state.loading && !this.state.opendialog) return <LinearProgress />
 
-			let {applications} = this.state;
+			let { applications } = this.state;
 			// if (applications != null && applications.length > 0) {
-				let dataApplication =
-					this.state.filterText === ''
-						? applications
-						: applications.filter((_, i) => {
-							return (
-								(_.firstName + _.middleName + _.lastName)
-									.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
-							);
-						});
+			let dataApplication =
+				this.state.filterText === ''
+					? applications
+					: applications.filter((_, i) => {
+						return (
+							(_.firstName + _.middleName + _.lastName)
+								.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
+						);
+					});
 
-				return (
-					<div className="row pt-0">
-						{localStorage.getItem('isEmployee') == 'false' &&
-							<div className="col-md-12">
-								<button
-									className="btn btn-success float-right"
-									onClick={() => {
-										this.redirectToCreateApplication();
-									}}
-								>
-									Add Application
-										</button>
-							</div>}
+			return (
+				<div className="row pt-0">
+					{localStorage.getItem('isEmployee') == 'false' &&
 						<div className="col-md-12">
-							<div className="card">
-								<ApplicationTable
-									data={dataApplication}
-									onDeleteHandler={this.onDeleteHandler}
-								/>
-							</div>
+							<button
+								className="btn btn-success float-right"
+								onClick={() => {
+									this.redirectToCreateApplication();
+								}}
+							>
+								Add Application
+										</button>
+						</div>}
+					<div className="col-md-12">
+						<div className="card">
+							<ApplicationTable
+								data={dataApplication}
+								onDeleteHandler={this.onDeleteHandler}
+								getApplications={this.getApplications}
+							/>
 						</div>
 					</div>
-				);
+				</div>
+			);
 			// }else {
 			// 	return (
 			// 		<NothingToDisplay
@@ -457,7 +459,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					{ renderContent() }
+					{renderContent()}
 				</div>
 			</div>
 		);

@@ -6,10 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuItem from '@material-ui/core/MenuItem';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -21,7 +18,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import Select from '@material-ui/core/Select';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import UserFormModal from './UserFormModal';
+import UserFormModal from '../../ui-components/UserForm/UserContactForm';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -149,7 +146,6 @@ class ContactsTable extends React.Component {
 			page: 0,
 			rowsPerPage: 5,
 			openModal: false,
-			username: '',
 			contact: null
 		};
 	}
