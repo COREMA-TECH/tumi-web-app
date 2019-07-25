@@ -99,7 +99,9 @@ class BackgroundCheck extends Component {
                 }
             })
             .catch(error => {
+                console.log(error);
                 this.setState({
+                    loadingApplicantData: false,
                     loading: false
                 });
             })
@@ -142,6 +144,12 @@ class BackgroundCheck extends Component {
                     loadingApplicantData: false,
                     statesCompletes: dataInfo
                 })
+            })
+            .catch( error => {
+                this.setState({
+                    loadingApplicantData: false
+                });
+                console.log(error);
             })
     };
 
@@ -194,6 +202,12 @@ class BackgroundCheck extends Component {
 
                 this.getStates(stateId)
             })
+            .catch(error => {
+                this.setState({
+                    loadingApplicantData: false
+                });
+                console.log(error);
+            });
     };
 
     /**
@@ -431,6 +445,12 @@ class BackgroundCheck extends Component {
         }
     }
 
+    cloneForm  = _ => {
+        let contentPDF = document.getElementById('DocumentPDF');
+        let contentPDFClone = contentPDF.cloneNode(true);
+        return `<html style="zoom: 50%;">${contentPDFClone.innerHTML}</html>`;
+    }
+
     createDocumentsPDF = (random) => {
 
         this.setState(
@@ -442,15 +462,13 @@ class BackgroundCheck extends Component {
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
                 variables: {
-                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
+                    contentHTML: this.cloneForm(),
                     Name: "background-check-" + random
                 },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.createdocumentspdf != null) {
-
-                } else {
+                if (data.data.createdocumentspdf === null) {
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
@@ -529,9 +547,8 @@ class BackgroundCheck extends Component {
             </div>
         );
 
-
         return (
-            <div className="Apply-container--application">
+            <div className="Apply-container--application" style={{width: '900px', margin: '0 auto'}}>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="applicant-card">
@@ -581,8 +598,8 @@ class BackgroundCheck extends Component {
 
                             </div>
 
-                            <div className="row" id="">
-                                <div className="col-md-8 offset-md-2">
+                            <div className="row" id="" style={{margin: '0 auto', maxWidth: '100%'}}>
+                                <div className="col-md-12">
                                     {renderHTML(`
                                             <p dir="ltr">In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</p>
                                             <br>
@@ -596,7 +613,7 @@ class BackgroundCheck extends Component {
                                 </div>
                                 <form id="background-check-form" className="background-check-form"
                                     onSubmit={this.handleSubmit}>
-                                    <div className="col-md-8 offset-md-2 form-section-1 loading-container">
+                                    <div className="col-md-12 form-section-1 loading-container">
                                         {
                                             this.state.loading ? (
                                                 <div className="card-loading">
@@ -906,7 +923,7 @@ class BackgroundCheck extends Component {
                                         }
                                     </div>
                                 </form>
-                                <div className="col-md-8 offset-md-2">
+                                <div className="col-md-12">
                                     <br /><br />
                                     <h5>In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry.</h5>
                                     <br /><br />
@@ -925,13 +942,13 @@ class BackgroundCheck extends Component {
                                 </div>
                             </div>
                             <div style={{
-                                position: 'relative', display: 'none', width: '1200px',
+                                position: 'relative', display: 'none', width: '100%',
                                 margin: 'auto'
                             }}>
                                 {
                                     this.state.isCreated ? (
-                                        <div className="row" id="DocumentPDF">
-                                            <div style={{ width: '600px', margin: '0 auto' }}>
+                                        <div className="row" id="DocumentPDF" style={{maxWidth: '100%' }}>
+                                            <div style={{ width: '100%', margin: '0 auto' }}>
                                                 <p><img style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }} src="https://i.imgur.com/bHDSsLu.png" alt width={600} height={140} /></p>
                                                 <div title="Page 1">
                                                     <table style={{ borderCollapse: 'collapse', width: '96.9636%', height: '59px' }} border={0}>
