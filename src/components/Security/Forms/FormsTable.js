@@ -149,6 +149,13 @@ class FormsTable extends React.Component {
 		this.setState({ rowsPerPage: event.target.value });
 	};
 
+	shouldComponentUpdate(nextProps, nextState) {
+		if (JSON.stringify(nextProps) != JSON.stringify(this.props) || JSON.stringify(nextState) != JSON.stringify(this.state)) {
+			return true;
+		}
+		return false;
+	}
+
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;
@@ -165,6 +172,7 @@ class FormsTable extends React.Component {
 							<CustomTableCell>Code</CustomTableCell>
 							<CustomTableCell>Name</CustomTableCell>
 							<CustomTableCell>Value</CustomTableCell>
+							<CustomTableCell>Sort</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -203,21 +211,16 @@ class FormsTable extends React.Component {
 									<CustomTableCell>{row.Code}</CustomTableCell>
 									<CustomTableCell>{row.Name}</CustomTableCell>
 									<CustomTableCell>{row.Value}</CustomTableCell>
+									<CustomTableCell>{row.sort}</CustomTableCell>
 								</TableRow>
 							);
 						})}
-
-						{emptyRows > 0 && (
-							<TableRow style={{ height: 48 * emptyRows }}>
-								<TableCell colSpan={4} />
-							</TableRow>
-						)}
 					</TableBody>
 					<TableFooter>
 						<TableRow>
 							{items.length > 0 && (
 								<TablePagination
-									colSpan={1}
+									colSpan={4}
 									count={items.length}
 									rowsPerPage={rowsPerPage}
 									page={page}
