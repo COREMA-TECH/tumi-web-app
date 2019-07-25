@@ -43,7 +43,14 @@ class FormsI9 extends Component {
             oneCheck1: false,
             oneCheck2: false,
             oneCheck3: false,
+            pdfUrl: '',
         }
+    }
+
+    cloneForm  = _ => {
+        let contentPDF = document.getElementById('i9Html');
+        let contentPDFClone = contentPDF.cloneNode(true);
+        return `<html style="zoom: 50%;">${contentPDFClone.innerHTML}</html>`;
     }
 
 
@@ -106,9 +113,9 @@ class FormsI9 extends Component {
                 if (data.applicantI9.length > 0) {
                     this.setState({
                         isCreated: true,
-                        html: data.applicantI9[0].html
-                    }, () => {
-                        let pdf = document.getElementById('pdf-ready').innerHTML = this.state.html;
+                        html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 50%;"', '') : '',
+                        pdfUrl: data.applicantI9[0].url
+
                     });
                 } else {
                     this.setState({
@@ -131,7 +138,7 @@ class FormsI9 extends Component {
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
                 variables: {
-                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
+                    contentHTML: this.cloneForm(),
                     Name: "I9-" + random + this.state.applicantName
                 },
                 fetchPolicy: 'no-cache'
@@ -152,8 +159,8 @@ class FormsI9 extends Component {
     };
 
 
-    downloadDocumentsHandler = (random) => {
-        var url = this.context.baseUrl + '/public/Documents/' + "I9-" + random + this.state.applicantName + '.pdf';
+    downloadDocumentsHandler = () => {
+        var url = this.context.baseUrl + this.state.pdfUrl.replace(".", "");
         window.open(url, '_blank');
         this.setState({downloading: false});
     };
@@ -186,13 +193,13 @@ class FormsI9 extends Component {
             inputs[i].disabled = true;
         }
 
-        let html = document.getElementById('i9Html');
+        let html = this.cloneForm();
 
         this.props.client
             .mutate({
                 mutation: ADD_I9,
                 variables: {
-                    html: html.outerHTML,
+                    html,
                     ApplicantId: this.props.applicationId,
                 }
             })
@@ -263,14 +270,15 @@ class FormsI9 extends Component {
                                     ) : (
                                         this.state.isCreated ? (
                                             <button className="applicant-card__edit-button" onClick={() => {
-                                                let random = uuidv4();
+                                                this.downloadDocumentsHandler();
+                                                // let random = uuidv4();
 
-                                                this.createDocumentsPDF(random);
-                                                this.sleep().then(() => {
-                                                    this.downloadDocumentsHandler(random);
-                                                }).catch(error => {
-                                                    this.setState({downloading: false})
-                                                })
+                                                // this.createDocumentsPDF(random);
+                                                // this.sleep().then(() => {
+                                                //     this.downloadDocumentsHandler(random);
+                                                // }).catch(error => {
+                                                //     this.setState({downloading: false})
+                                                // })
                                             }}>{this.state.downloading && (
                                                 <React.Fragment>Downloading <i
                                                     class="fas fa-spinner fa-spin"/></React.Fragment>)}
@@ -290,8 +298,9 @@ class FormsI9 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{width: '100%', margin: '0 auto'}}>
-                                    </div>
+                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }} dangerouslySetInnerHTML={{
+                                        __html: `${this.state.html}`
+                                    }} /> 
                                 ) : (
                                     <div style={{width: '100%', margin: '0 auto'}}>
                                         <div className="row pdf-container" id="i9Html" style={{maxWidth: '100%'}}>
