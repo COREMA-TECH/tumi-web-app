@@ -30,8 +30,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
                 EmployeeId
                 Employees       
                 {         
-                    id         
-                    firstName                 
+                    id                     
                     idUsers         
                     BusinessCompanyByDefaultId    
                     hireDate   

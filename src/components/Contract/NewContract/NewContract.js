@@ -368,7 +368,7 @@ class NewContract extends Component {
                         Id_Entity: data.getcontracts[0].Id_Entity,
                         Id_User_Signed: data.getcontracts[0].Id_User_Signed,
                         Contract_Status: data.getcontracts[0].Contract_Status,
-                        User_Signed_Title: this.getString(data.getcontracts[0].User_Signed_Title),
+                        User_Signed_Title: data.getcontracts[0].User_Signed_Title ? this.getString(data.getcontracts[0].User_Signed_Title) : '',
                         Id_User_Billing_Contact: data.getcontracts[0].Id_User_Billing_Contact,
                         Signed_Date: data.getcontracts[0].Signed_Date,
                         Contract_Start_Date: data.getcontracts[0].Contract_Start_Date,
@@ -443,7 +443,7 @@ class NewContract extends Component {
                                     IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
-                                    User_Signed_Title: `'${this.state.User_Signed_Title}'`,
+                                    User_Signed_Title: `${this.state.User_Signed_Title ? this.state.User_Signed_Title : ''}`,
                                     Signed_Date: `'${this.state.Signed_Date}'`,
                                     Contract_Status: `'${this.state.Contract_Status}'`,
                                     Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
@@ -530,7 +530,7 @@ class NewContract extends Component {
                                     IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
-                                    User_Signed_Title: `'${this.state.User_Signed_Title}'`,
+                                    User_Signed_Title: `${this.state.User_Signed_Title ? this.state.User_Signed_Title : ''}`,
                                     Signed_Date: `'${this.state.Signed_Date}'`,
                                     Contract_Status: `'${this.state.Contract_Status}'`,
                                     Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
@@ -616,7 +616,7 @@ class NewContract extends Component {
                                     IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
-                                    User_Signed_Title: `'${this.state.User_Signed_Title}'`,
+                                    User_Signed_Title: `${this.state.User_Signed_Title ? this.state.User_Signed_Title : ''}`,
                                     Signed_Date: `'${this.getNewDate()}'`,
                                     Contract_Status: `'0'`,
                                     Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
@@ -1265,7 +1265,7 @@ class NewContract extends Component {
 
     updateAddress = () => {
         if (document.getElementById("correctAddress").checked) {
-            const useManagementAddress = this.props.Id_Parent || false;
+            const useManagementAddress = !(this.state.Management_Billing_City <= 0);
 
             this.setState({
                 Old_Billing_City: this.state.Billing_City,
@@ -1598,7 +1598,7 @@ class NewContract extends Component {
                                                         this.setState(
                                                             {
 
-                                                                User_Signed_Title: value
+                                                                User_Signed_Title: value ? value : ''
                                                             },
                                                             () => {
                                                                 this.validateField('User_Signed_Title', value);

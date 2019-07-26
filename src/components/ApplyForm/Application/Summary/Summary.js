@@ -125,7 +125,7 @@ class Summary extends Component {
                         if (applications.gender)
                             gender = applications.gender === 1 ? 'MALE' : 'FEMALE';
                         if (applications.employee)
-                            hireDate = applications.employee.Employees.hireDate ? moment(applications.employee.Employees.hireDate).format('DD/MM/YYYY') : '--';
+                            hireDate = applications.employee.Employees.hireDate ? moment(applications.employee.Employees.hireDate).format('MM/DD/YYYY') : '--';
                         if (applications.employee)
                             hotel = applications.employee.Employees.BusinessCompany ? applications.employee.Employees.BusinessCompany.Name: '--';
 
@@ -161,7 +161,7 @@ class Summary extends Component {
                             applicantName: applications.firstName +' '+ applications.lastName,
                             socialSecurityNumber:applications.socialSecurityNumber ?applications.socialSecurityNumber:'--',
                             cellphone:applications.cellPhone ? applications.cellPhone:'--',
-                            birthDay :applications.birthDay ? moment(applications.birthDay.substring(0, 10)).format('DD/MM/YYYY') : '--',
+                            birthDay :applications.birthDay ? moment(applications.birthDay.substring(0, 10)).format('MM/DD/YYYY') : '--',
                             streetAddress:applications.streetAddress ? applications.streetAddress: '--',
                             zipCode:applications.zipCode ? applications.zipCode.substring(0, 5): '--',
                             city: applications.city ? applications.cityInfo.Name : '',
@@ -177,7 +177,7 @@ class Summary extends Component {
                             recruiter:applications.recruiter ? applications.recruiter.Full_Name : '--',
                             area:applications.area ? applications.area : '--',
                             typeOfId: typeOfId,                        
-                            expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('DD/MM/YYYY'): '--',
+                            expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('MM/DD/YYYY'): '--',
                             marital: applications.marital ? "MARRIED" : "SINGLE",
                             numberId: applications.numberId ? applications.numberId : '--',
                             employmentType: applications.employmentType ? applications.employmentType : '--'

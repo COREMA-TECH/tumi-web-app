@@ -508,7 +508,7 @@ class General extends Component {
                                 isActive: this.state.data.isActive,
                                 username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
                                 EmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 999999,
-                                hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("YYYY-MM-DD")}` : '--',
+                                hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("MM/DD/YYYY")}` : '--',
                                 idealJobs: this.state.data.idealJobs,
                                 applicantName: this.state.data.firstName + ' ' + this.state.data.lastName,
                                 codeUser: this.state.data.user ? this.state.data.user.Code_User : '--',
@@ -1568,7 +1568,7 @@ class General extends Component {
                                 <div className="item col-12 col-md-2">
                                     <div className="row">
                                         <span className="col-sm-12 font-weight-bold">Start Date</span>
-                                        <span className="col-sm-12">{this.state.hireDate}</span>
+                                        <span className="col-sm-12">{this.state.startDate}</span>
                                     </div>
                                 </div>
                                 <div className="item col-12 col-md-2">
