@@ -60,7 +60,7 @@ query employees($id:Int){
 		  lastName
 		  electronicAddress
 		  isActive
-		  BusinessCompanyByDefaultId
+		  idEntity
 		}
 	  }
 	`;

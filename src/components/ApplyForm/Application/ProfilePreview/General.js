@@ -382,7 +382,7 @@ class General extends Component {
             variables = {
                 employees: {
                     id: this.state.employeeHotelEmployeeId,
-                    //idEntity: null
+                    idEntity: null
                 }
             }
         }
@@ -512,8 +512,7 @@ class General extends Component {
                                 idealJobs: this.state.data.idealJobs,
                                 applicantName: this.state.data.firstName + ' ' + this.state.data.lastName,
                                 codeUser: this.state.data.user ? this.state.data.user.Code_User : '--',
-                                //employeeHotelId: this.state.data.employee ? this.state.data.employee.Employees.idEntity : 0,
-                                employeeHotelId: this.state.data.employee ? this.state.data.employee.Employees.BusinessCompanyByDefaultId : 0,
+                                employeeHotelId: this.state.data.employee ? this.state.data.employee.Employees.idEntity : 0,
                                 employeeHotelEmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 0,
                                 employeeHotelName: this.state.data.employee ? (this.state.data.employee.Employees.BusinessCompany ? this.state.data.employee.Employees.BusinessCompany.Name : '') : '',
                                 employmentType: this.state.data.employmentType ? this.state.data.employmentType.replace('FT', 'FULL TIME').replace('PT', 'PART TIME') : 'N/D',
