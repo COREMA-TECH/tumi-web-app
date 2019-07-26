@@ -5,11 +5,12 @@ import gql from 'graphql-tag';
  */
 export const GET_FORMS_QUERY = gql`
     {
-        getforms(Id: null, IsActive: 1){
+        forms( IsActive: 1){
             Id
             Code
             Name
             Value
+            sort
         }
     }
 `;
