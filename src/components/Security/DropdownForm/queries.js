@@ -11,6 +11,10 @@ export const GET_FORMS_QUERY = gql`
             Name
             Value
             sort
+            Parent {
+               Id
+               Name
+            }
         }
     }
 `;

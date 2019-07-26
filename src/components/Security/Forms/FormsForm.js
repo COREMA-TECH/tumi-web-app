@@ -17,6 +17,10 @@ import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 import withGlobalContent from 'Generic/Global';
+import Select from 'react-select';
+import makeAnimated from "react-select/lib/animated";
+import Switch from '@material-ui/core/Switch';
+
 import { GET_FORMS_QUERY } from './queries';
 import { INSERT_FORMS_QUERY, UPDATE_FORMS_QUERY } from './mutations';
 
@@ -46,6 +50,10 @@ const styles = (theme) => ({
 
 	resize: {
 		//width: '200px'
+	},
+	resizeCombo: {
+		width: '200px',
+		top: '15px'
 	},
 	divStyle: {
 		width: '80%',
@@ -99,6 +107,9 @@ class FormsForm extends React.Component {
 		name: '',
 		value: '',
 		sort: '',
+		show: true,
+		ParentId: null,
+		parentName: '',
 
 		codeValid: true,
 		nameValid: true,
@@ -122,6 +133,7 @@ class FormsForm extends React.Component {
 		this.state = {
 			data: [],
 			forms: [],
+			parents: [],
 
 			//idCompany: this.props.idCompany,
 			...this.DEFAULT_STATE
@@ -229,7 +241,7 @@ class FormsForm extends React.Component {
 	handleConfirmAlertDialog = () => {
 		this.deleteForm(this.state.idToDelete);
 	};
-	onEditHandler = ({ Id, Code, Name, Value, sort }) => {
+	onEditHandler = ({ Id, Code, Name, Value, sort, ParentId, show }) => {
 		this.setState(
 			{
 				idToEdit: Id,
@@ -237,6 +249,7 @@ class FormsForm extends React.Component {
 				name: Name.trim(),
 				value: Value,
 				sort,
+				show,
 				formValid: true,
 				codeValid: true,
 				nameValid: true,
@@ -245,7 +258,9 @@ class FormsForm extends React.Component {
 				codeHasValue: true,
 				nameHasValue: true,
 
-				buttonTitle: this.TITLE_EDIT
+				buttonTitle: this.TITLE_EDIT,
+				ParentId,
+				parentName: this.state.parents.find(_ => _.value == ParentId).label
 			},
 			() => {
 				this.focusTextInput();
@@ -269,7 +284,11 @@ class FormsForm extends React.Component {
 			})
 			.then(({ data: { forms } }) => {
 				if (forms != null)
-					this.setState(() => ({ data: forms }), this.resetState);
+					this.setState(() => {
+						let parents = [];
+						parents = forms.map(_ => ({ value: _.Id, label: _.Name }));
+						return { data: forms, parents: [{ value: 0, label: 'Parent' }, ...parents] }
+					}, this.resetState);
 				else this.props.handleOpenSnackbar('error', 'Error: Loading forms: getforms not exists in query data');
 			})
 			.catch((error) => {
@@ -302,6 +321,8 @@ class FormsForm extends React.Component {
 					Name: this.state.name,
 					Value: this.state.value,
 					sort: this.state.sort || 0,
+					ParentId: this.state.ParentId || 0,
+					show: this.state.show,
 					IsActive: 1,
 					User_Updated: localStorage.getItem('LoginId'),
 					Date_Updated: date
@@ -391,6 +412,21 @@ class FormsForm extends React.Component {
 		this.resetState();
 	};
 
+	updateParent = ({ value: id, label }) => {
+		this.setState(() => ({ ParentId: id, parentName: label }));
+	};
+
+	getSelectedParent = () => {
+		if (this.state.ParentId !== null)
+			return { value: this.state.ParentId, label: this.state.parentName }
+		return null;
+	}
+
+	handleShowChange = name => event => {
+		let element = event.target;
+		this.setState(() => ({ [name]: element.checked }));
+	};
+
 	render() {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
@@ -478,6 +514,29 @@ class FormsForm extends React.Component {
 									input: classes.valueControl
 								}
 							}}
+						/>
+					</FormControl>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<InputLabel htmlFor="sort">Show In Menu</InputLabel>
+						<Select
+							options={this.state.parents}
+							value={this.getSelectedParent()}
+							onChange={this.updateParent}
+							closeMenuOnSelect={true}
+							components={makeAnimated()}
+							isMulti={false}
+							className={classes.resizeCombo}
+							placeholder="Parent"
+
+						/>
+					</FormControl>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<Switch
+							name="show"
+							checked={this.state.show}
+							onChange={this.handleShowChange('show')}
+							color="primary"
+							inputProps={{ 'aria-label': 'primary checkbox' }}
 						/>
 					</FormControl>
 					<div className={classes.root}>

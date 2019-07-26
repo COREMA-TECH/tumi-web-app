@@ -1,4 +1,4 @@
-import gql  from 'graphql-tag';
+import gql from 'graphql-tag';
 
 export const GET_FORMS_QUERY = gql`
     query getforms {
@@ -13,6 +13,12 @@ export const GET_FORMS_QUERY = gql`
             Value04
             sort
             IsActive
+            ParentId
+            show
+            Parent {
+               Id
+               Name
+            }
         }
     }
 `;
