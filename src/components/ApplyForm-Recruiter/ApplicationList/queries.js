@@ -52,14 +52,13 @@ export const GET_CONFIGREGIONS = gql`
 
 export const GET_EMPLOYEES_WITHOUT_ENTITY = gql`
 query employees($id:Int){
-	employees (id:$id , idEntity:null, isActive:true)
+	employees (id:$id , isActive:true)
 		{
 		  id
 		  firstName
 		  lastName
 		  electronicAddress
 		  isActive
-		  idEntity
 		}
 	  }
 	`;

@@ -239,7 +239,7 @@ class VerticalLinearStepper extends Component {
 
 
         if (this.state.employee)
-            idEntity = this.state.employee.Employees.idEntity, Id_Department = this.state.employee.Employees.Id_Department, EmployeeId = this.state.employee.Employees.id;
+            idEntity = this.state.employee.Employees.BusinessCompanyByDefaultId, Id_Department = this.state.employee.Employees.Id_Department, EmployeeId = this.state.employee.Employees.id;
 
         let getStepContent = (step) => {
             switch (step) {
