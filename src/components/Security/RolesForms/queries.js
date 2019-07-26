@@ -15,7 +15,7 @@ export const GET_ROLES_QUERY = gql`
             Id
             Id_Company
             Description
-            IsActive
+            IsActive            
         }
     }
 `;

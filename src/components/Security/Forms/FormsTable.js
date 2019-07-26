@@ -11,14 +11,13 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
 import TablePagination from '@material-ui/core/TablePagination';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import TableFooter from '@material-ui/core/TableFooter';
+import Checkbox from '@material-ui/core/Checkbox';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -173,6 +172,8 @@ class FormsTable extends React.Component {
 							<CustomTableCell>Name</CustomTableCell>
 							<CustomTableCell>Value</CustomTableCell>
 							<CustomTableCell>Sort</CustomTableCell>
+							<CustomTableCell>Parent</CustomTableCell>
+							<CustomTableCell className={'text-center'}>Show In Menu</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -212,6 +213,16 @@ class FormsTable extends React.Component {
 									<CustomTableCell>{row.Name}</CustomTableCell>
 									<CustomTableCell>{row.Value}</CustomTableCell>
 									<CustomTableCell>{row.sort}</CustomTableCell>
+									<CustomTableCell>{row.Parent ? row.Parent.Name : ''}</CustomTableCell>
+									<CustomTableCell className={'text-center'}>
+										<Checkbox
+											color="default"
+											checked={row.show}
+											inputProps={{
+												'aria-label': 'checkbox with default color',
+											}}
+										/>
+									</CustomTableCell>
 								</TableRow>
 							);
 						})}
@@ -220,7 +231,7 @@ class FormsTable extends React.Component {
 						<TableRow>
 							{items.length > 0 && (
 								<TablePagination
-									colSpan={4}
+									colSpan={6}
 									count={items.length}
 									rowsPerPage={rowsPerPage}
 									page={page}
