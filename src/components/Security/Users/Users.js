@@ -20,10 +20,9 @@ import InputMask from 'react-input-mask';
 import 'ui-components/InputForm/index.css';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
-import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import withGlobalContent from 'Generic/Global';
-import ErrorMessageComponent from "../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
-import TablesContracts from "../../Contract/Main/MainContract/TablesContracts";
+import {GET_USER_APPLICATION, GET_USER_CONTACT} from './Queries';
+import {UPDATE_APPLICATION_INFO, UPDATE_CONTACT_INFO} from './Mutations';
 
 const styles = (theme) => ({
     container: {
@@ -304,7 +303,10 @@ class Catalogs extends React.Component {
         lastNameValid: true,
 
         firstName: '',
-        lastName: ''
+        lastName: '',
+
+        userContact: {},
+        userApplication: {}
     };
 
     constructor(props) {
@@ -633,6 +635,39 @@ class Catalogs extends React.Component {
     handleConfirmAlertDialog = () => {
         this.deleteUser();
     };
+
+    fetchUserApplication = userId => {
+        this.props.client.query({
+            query: GET_USER_APPLICATION,
+            fetchPolicy: 'no-cache',
+            variables: {
+                Id: userId
+            }
+        })
+
+        .then(({data}) => {
+            this.setState(_ => ({
+                userApplication: data.userApplication
+            }), console.log(data.userApplication));
+        })
+    }
+
+    fetchUserContact = userId => {
+        this.props.client.query({
+            query: GET_USER_CONTACT,
+            fetchPolicy: 'no-cache',
+            variables: {
+                Id: userId
+            }
+        })
+
+        .then(({data}) => {
+            this.setState(_ => ({
+                userContact: data.userContact
+            }), console.log(data.userContact))
+        })
+    }
+
     onEditHandler = ({
         Id,
         Id_Contact,
@@ -655,7 +690,8 @@ class Catalogs extends React.Component {
         IdSchedulesManager,
         firstName,
         lastName
-    }) => {
+    }) => 
+    {
         this.setState({ showCircularLoading: false }, () => {
             this.setState(
                 {
@@ -701,8 +737,11 @@ class Catalogs extends React.Component {
                     idLanguageHasValue: true,
                     openModal: true,
                     buttonTitle: this.TITLE_EDIT
-                },
-                this.focusTextInput,
+                }, _ => {
+                    this.fetchUserApplication(Id);
+                    this.fetchUserContact(Id);
+                    this.focusTextInput();
+                }
             );
         });
     };
@@ -891,6 +930,62 @@ class Catalogs extends React.Component {
 
         return { isEdition: isEdition, query: query, id: this.state.idToEdit };
     };
+
+    updateUserApplication = (user) => {
+        if(!this.state.userApplication || !user)
+            return;
+
+        this.props.client.mutate({
+            mutation: UPDATE_APPLICATION_INFO,
+            variables: {
+                codeuser: localStorage.getItem('LoginId'),
+                nameUser: localStorage.getItem('FullName'),
+                application: {
+                    id: this.state.userApplication.id,
+                    firstName: user.firstName.trim(),
+                    lastName: user.lastName.trim(),
+                    emailAddress: user.Electronic_Address.trim(),
+                    cellPhone: user.Phone_Number.trim(),
+                    idLanguage: user.Id_Language
+                }
+            }
+        })
+
+        .then(({ data }) => {
+            this.props.handleOpenSnackbar("success", "User Application updated!");
+        })
+
+        .catch(error => {
+            this.props.handleOpenSnackbar("error", `Error to update application: ${error}`);
+        })
+    }
+
+    updateUserContact = (user) => {
+        if(!this.state.userContact || !user)
+            return;
+
+        this.props.client.mutate({
+            mutation: UPDATE_CONTACT_INFO,
+            variables: {
+                contact: {
+                    Id: this.state.userContact.Id,
+                    First_Name: user.firstName.trim(),
+                    Last_Name: user.lastName.trim(),
+                    Electronic_Address: user.Electronic_Address.trim(),
+                    Phone_Number: user.Phone_Number.trim(),
+                }
+            }
+        })
+
+        .then(({ data }) => {
+            this.props.handleOpenSnackbar("success", "User Contact info updated!");
+        })
+
+        .catch(error => {
+            this.props.handleOpenSnackbar("error", `Error to update contact: ${error}`);
+        })
+    }
+
     insertUser = () => {
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
@@ -924,7 +1019,11 @@ class Catalogs extends React.Component {
                 IdSchedulesEmployees: parseInt(this.state.IdSchedulesEmployees),
                 IdSchedulesManager: parseInt(this.state.IdSchedulesManager),
             }
-            if (isEdition) user = { ...user, Id: id }
+            if (isEdition) {
+                user = { ...user, Id: id }
+                this.updateUserApplication(user);
+                this.updateUserContact(user);
+            }
             this.props.client
                 .mutate({
                     mutation: query,
@@ -936,7 +1035,7 @@ class Catalogs extends React.Component {
                     if (this.state.idToEdit == null) {
                         this.sendMail();
                     } else {
-
+                        
                     }
                     this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
 
