@@ -32,7 +32,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
                 {         
                     id                     
                     idUsers         
-                    idEntity    
+                    BusinessCompanyByDefaultId    
                     hireDate   
                     startDate
                     BusinessCompany{

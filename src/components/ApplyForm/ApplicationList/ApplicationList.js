@@ -100,10 +100,12 @@ class ApplicationList extends Component {
 				statusCompleted
 				employee {
 					Employees {
-					  idEntity
+					  BusinessCompanyByDefaultId
 					  idUsers
-					  BusinessCompany {
-						Name
+					  EmployeeByHotels {
+						BusinessCompany{
+						  Name
+						}
 					  }
 					}
 				  }
