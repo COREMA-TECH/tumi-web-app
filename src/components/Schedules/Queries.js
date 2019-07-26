@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const GET_INITIAL_DATA = gql`
 query data($idEntity: Int, $idUsers: Int, $Id: Int) {
-    employees(isActive:true, idEntity:  $idEntity, idUsers: $idUsers) {
+    employees(isActive:true, EmployeeByHotel: {BusinessCompanyId: $idEntity}, idUsers: $idUsers) {
       id
       firstName
       lastName
