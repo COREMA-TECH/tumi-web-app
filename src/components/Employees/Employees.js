@@ -257,7 +257,7 @@ class Employees extends Component {
                 isActive: true,
                 userCreated: 1,
                 userUpdated: 1,
-                //idEntity: parseInt(this.state[`idEntity${index}`]),
+                idEntity: parseInt(this.state[`idEntity${index}`]),
             };
 
             datos.push(record);
@@ -347,7 +347,7 @@ class Employees extends Component {
                                         mobileNumber: form.elements[3].value,
                                         Id_Deparment: parseInt(this.state.departmentEdit.value),
                                         Contact_Title: parseInt(this.state.contactTitleEdit.value),
-                                        //idEntity: parseInt(this.state.hotelEdit.value),
+                                        idEntity: parseInt(this.state.hotelEdit.value),
                                         idRole: 1,
                                         isActive: true,
                                         userCreated: 1,

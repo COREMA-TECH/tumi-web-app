@@ -16,7 +16,7 @@ export const LIST_EMPLOYEES = gql`
             Id_Deparment
             Contact_Title
             idUsers
-            BusinessCompanyByDefaultId
+            idEntity
             hireDate
         }
     }
