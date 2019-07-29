@@ -564,6 +564,7 @@ class General extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
+                console.log('mostrando data', data); // TODO: (LF) Quitar console log
                 this.setState({
                     hotels: data.getbusinesscompanies
                 }, () => {
@@ -1663,10 +1664,10 @@ class General extends Component {
                                                         // ) : ('')
 
                                                     }
-                                                    <button className="dropdown-item" onClick={() => {
+                                                    {/* <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenModal();
                                                     }}>Add to hotel
-                                                    </button>
+                                                    </button> */}
                                                     <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenVerification();
                                                     }}>Employment Verification
@@ -1720,7 +1721,10 @@ class General extends Component {
                             </div>
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <h5>Location able to work</h5>
+                                    <h5 className="float-left">Location able to work</h5>
+                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.handleClickOpenModal}>
+                                        <i class="far fa-plus-square"></i>
+                                    </button>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
