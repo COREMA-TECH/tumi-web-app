@@ -564,7 +564,6 @@ class General extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                console.log('mostrando data', data); // TODO: (LF) Quitar console log
                 this.setState({
                     hotels: data.getbusinesscompanies
                 }, () => {
@@ -748,7 +747,7 @@ class General extends Component {
                         First_Name: this.state.firstname,
                         Middle_Name: this.state.middlename,
                         Last_Name: this.state.lastname,
-                        Electronic_Address: this.state.email,
+                        Electronic_Address: this.state.email || '',
                         Phone_Number: this.state.number,
                         Contact_Type: 1,
                         IsActive: 1,
