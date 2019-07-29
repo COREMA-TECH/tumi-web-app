@@ -105,6 +105,24 @@ class Summary extends Component {
             })
     };
 
+    getSource = (opt, nameReference) => {
+        let source;
+        switch (opt) {
+            case 1: source = "Facebook";
+                break;
+            case 2: source = "Newspaper";
+                break;
+            case 3: source = nameReference + " (Employee)";
+                break;
+            case 4: source = nameReference + " (Recruiter)";
+                break;
+            default: source = '';
+                break;
+        }
+
+        return source;
+    }
+
     getInformation = () => {
         this.props.client
             .query({
@@ -174,7 +192,7 @@ class Summary extends Component {
                             accounts: applications.Accounts,
                             car: applications.car ? 'YES' : 'NO', 
                             hotel: hotel,
-                            recruiter:applications.recruiter ? applications.recruiter.Full_Name : '--',
+                            source: this.getSource(applications.optionHearTumi, applications.nameReferences),
                             area:applications.area ? applications.area : '--',
                             typeOfId: typeOfId,                        
                             expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('MM/DD/YYYY'): '--',
@@ -420,7 +438,7 @@ class Summary extends Component {
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>NO. OF DEPENDENT:</strong></span> 0</span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>SOURCE (RECRUITER NAME):</strong></span> `+  this.state.recruiter +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>SOURCE:</strong></span> `+  this.state.source +` </span></p>
                                     
                                     <br/>
                                     <br/>
