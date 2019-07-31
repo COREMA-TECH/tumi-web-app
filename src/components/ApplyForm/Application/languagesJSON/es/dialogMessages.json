@@ -12,8 +12,12 @@
     "label": "Hasta"
   },
   {
-    "id": 0,
+    "id": 3,
     "label": "¿Estás seguro de que quieres establecerlo como predeterminado?"
+  },
+  {
+    "id": 4,
+    "label": "Proceder"
   }
 ]
 
