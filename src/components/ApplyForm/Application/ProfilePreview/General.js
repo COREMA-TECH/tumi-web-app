@@ -13,7 +13,8 @@ import {
     GET_TYPES_QUERY,
     GET_CONTACTS_BY_APP_HOTEL_QUERY,
     GET_HOTELS_BY_APPLICATION_QUERY,
-    GET_APPLICATION_CODE_USER
+    GET_APPLICATION_CODE_USER,
+    GET_HOTELS_BY_EMPLOYEE
 } from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import InputMask from "react-input-mask";
@@ -526,7 +527,9 @@ class General extends Component {
 
                             }, _ => {
                                 console.log({ status: this.state })
+                                alert(this.state.employeeHotelEmployeeId);
                                 this.getCodeUser(id);
+                                this.getMyHotels();
                             })
                         });
                     })
@@ -709,24 +712,24 @@ class General extends Component {
     /**
  * Get Hotels associated to application
  */
-    getMyHotels = () => {
+    getMyHotels = () => {       
         this.setState(() => ({ loadingMyHotels: true }));
         this.props.client
             .query({
-                query: GET_HOTELS_BY_APPLICATION_QUERY,
+                query: GET_HOTELS_BY_EMPLOYEE,
                 fetchPolicy: 'no-cache',
                 variables: {
-                    id: this.props.applicationId
+                    EmployeeId: this.state.employeeHotelEmployeeId
                 }
             })
-            .then(({ data: { companiesByApplications } }) => {
-                this.setState(() => ({ myHotels: companiesByApplications }), this.getHotels);
+            .then(({ data: { EmployeeByHotels } }) => {
+                this.setState(() => ({ myHotels: EmployeeByHotels.map(item => ({...item.BusinessCompany, defaultProperty: item.isDefault })) }), this.getHotels);
             })
             .catch((error) => {
                 this.setState(() => ({ loadingMyHotels: false }));
                 this.props.handleOpenSnackbar('error', 'Error loading my hotels!');
             });
-    }
+    }    
 
     /**
    * To insert contact objects
@@ -805,7 +808,7 @@ class General extends Component {
           }, () => {*/
         this.getProfileInformation(this.props.applicationId);
         this.getApplicationEmployees(this.props.applicationId);
-        this.getMyHotels();
+        // this.getMyHotels();
 
         // this.getApplicationEmployees(this.props.applicationId);
         //  })
@@ -1757,23 +1760,11 @@ class General extends Component {
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
-                                        {this.state.employeeHotelId ?
-                                            <div className="col-sm-12 col-md-6 col-lg-3">
-                                                <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
-                                                    {this.state.employeeHotelName}
-                                                    <button type="button" className="btn btn-link float-right p-0" onClick={() => {
-                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: null, applicationEmployeeId: this.state.employeeHotelEmployeeId }))
-                                                    }}>
-                                                        <i className="fas fa-trash text-white"></i>
-                                                    </button>
-                                                </div>
-                                            </div> : <React.Fragment />}
-
                                         {this.state.myHotels.map(hotel => {
                                             return <div className="col-sm-12 col-md-6 col-lg-3">
 
                                                 <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
-                                                    {hotel.Name}
+                                                    {hotel.Name.trim()}
                                                     <button type="button" className="btn btn-link float-right p-0" onClick={() => {
                                                         this.setState(() => ({ openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
                                                     }} >
