@@ -1118,7 +1118,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
 
-                    <div className="row External-row">
+                    <div className="row External-row align-items-end">
                         <LocationForm
                             onChangeCity={this.updateCity}
                             onChangeState={this.updateState}
