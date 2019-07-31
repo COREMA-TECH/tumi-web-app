@@ -747,7 +747,7 @@ class General extends Component {
                         First_Name: this.state.firstname,
                         Middle_Name: this.state.middlename,
                         Last_Name: this.state.lastname,
-                        Electronic_Address: this.state.email,
+                        Electronic_Address: this.state.email || '',
                         Phone_Number: this.state.number,
                         Contact_Type: 1,
                         IsActive: 1,
@@ -1663,10 +1663,10 @@ class General extends Component {
                                                         // ) : ('')
 
                                                     }
-                                                    <button className="dropdown-item" onClick={() => {
+                                                    {/* <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenModal();
                                                     }}>Add to hotel
-                                                    </button>
+                                                    </button> */}
                                                     <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenVerification();
                                                     }}>Employment Verification
@@ -1720,7 +1720,10 @@ class General extends Component {
                             </div>
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <h5>Location able to work</h5>
+                                    <h5 className="float-left">Location able to work</h5>
+                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.handleClickOpenModal}>
+                                        <i class="far fa-plus-square"></i>
+                                    </button>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
