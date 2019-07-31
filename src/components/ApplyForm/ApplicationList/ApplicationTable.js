@@ -151,7 +151,7 @@ class ApplicationTable extends React.Component {
         rowsPerPage: 25,
         completed: false,
         openModal: false,
-        ApplicationId: 0, 
+        ApplicationId: 0,
         openUserModal: false,
         application: null
     };
@@ -175,7 +175,7 @@ class ApplicationTable extends React.Component {
             this.state.page !== nextState.page ||
             this.state.rowsPerPage !== nextState.rowsPerPage ||
             this.state.openModal !== nextState.openModal ||
-             this.state.openUserModal !== nextState.openUserModal ||
+            this.state.openUserModal !== nextState.openUserModal ||
             this.state.ApplicationId !== nextState.ApplicationId
             //this.state.orderBy !== nextState.orderBy
         ) {
@@ -288,21 +288,11 @@ class ApplicationTable extends React.Component {
                                             </CustomTableCell>
                                             <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.emailAddress}</CustomTableCell>
-                                            <CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
-                                            <CustomTableCell>
-                                                {row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
-                                            </CustomTableCell>
-                                            <CustomTableCell>
-                                                {
-                                                    (() => {
-                                                        if (row.employee)
-                                                            if (row.employee.Employees.BusinessCompany)
-                                                                return row.employee.Employees.BusinessCompany.Name ? row.employee.Employees.BusinessCompany.Name : '';
-                                                    })()
-                                                }
-                                            </CustomTableCell>
-                                            <CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.workOrderId ? `000000${row.workOrderId}`.slice(-6) : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.Position ? `${row.Position.Position.trim()} ${row.PositionCompany ? `(${row.PositionCompany.Code.trim()})` : ''}` : 'Open Position'}</CustomTableCell>
+                                            <CustomTableCell>{row.DefaultCompany ? row.DefaultCompany.Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.User ? row.user.Full_Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.Recruiter ? row.Recruiter.Full_Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
                                         </TableRow>
                                     );

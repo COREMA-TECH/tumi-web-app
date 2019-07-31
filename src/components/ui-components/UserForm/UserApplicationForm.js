@@ -322,7 +322,6 @@ class UserApplicationForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log({nextProps});
         if (nextProps.application) {
             if (JSON.stringify(nextProps.application) != JSON.stringify(this.props.application)) {
                 let { firstName, lastName, emailAddress, cellPhone, id } = nextProps.application;
