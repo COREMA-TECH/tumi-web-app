@@ -4,13 +4,9 @@ import { gql } from 'apollo-boost';
 import withApollo from 'react-apollo/withApollo';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import ApplicationTable from './ApplicationTable';
-import { Query } from 'react-apollo';
-import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import withGlobalContent from 'Generic/Global';
-import ErrorMessageComponent from 'ui-components/ErrorMessageComponent/ErrorMessageComponent';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
 import makeAnimated from 'react-select/lib/animated';
@@ -98,32 +94,28 @@ class ApplicationList extends Component {
 				isLead
 				idWorkOrder
 				statusCompleted
-				employee {
-					Employees {
-					  idEntity
-					  idUsers
-					  BusinessCompany {
-						Name
-					  }
-					}
-				  }
-				recruiter{
+				Employee{
+					idUsers
+				}
+				DefaultCompany{
+					Id
+					Name
+				}
+				Companies{
+					Id,
+					Code,
+					Name
+				}
+				Recruiter {
 					Full_Name
 				}
-				user{
-					Full_Name
+				Position{
+					Position      
 				}
-				position{
-					id
-					position {
-							Position
-						}
-					BusinessCompany {
-							Id
-							Code
-							Name
-						}
-				}
+				PositionCompany{
+     				Code
+    			}
+				workOrderId    
 			}
 		}
 	`;
@@ -315,7 +307,6 @@ class ApplicationList extends Component {
 	render() {
 		var loading = this.state.loadingConfirm || this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
 		var variables = {};
-		let { applications } = this.state;
 
 		/**
 		 * Start - Define variables for application query
@@ -437,16 +428,6 @@ class ApplicationList extends Component {
 					</div>
 				</div>
 			);
-			// }else {
-			// 	return (
-			// 		<NothingToDisplay
-			// 			title="Oops!"
-			// 			message={'There are no applications'}
-			// 			type="Error-success"
-			// 			icon="wow"
-			// 		/>
-			// 	);
-			// }
 		}
 
 		return (
