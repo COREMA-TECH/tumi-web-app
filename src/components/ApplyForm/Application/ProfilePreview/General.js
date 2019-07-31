@@ -38,9 +38,11 @@ import ConfirmDialog from 'material-ui/ConfirmDialog';
 import Titles from './Titles';
 import moment from 'moment';
 import VerificationLetter from '../VerificationLetter';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
+const TITLE_CONTEXT_MENU = 'titleContextMenu';
 
 const styles = (theme) => ({
     container: {
@@ -260,7 +262,10 @@ class General extends Component {
         titleModal: false,
         employmentType: null,
         startDate: null,
-        positionName: null
+        positionName: null,
+
+        openConfirmDefaultTitle: false,
+        titleToSetDefault: null
     };
 
     /**
@@ -1272,6 +1277,43 @@ class General extends Component {
         this.setState({ titleModal: !this.state.titleModal });
     }
 
+    setTitleDefault = (e, trigger) => {
+        let title = trigger.attributes.appIdealJob;
+        this.setState(() => {
+            return {
+                openConfirmDefaultTitle: true,
+                titleToSetDefault: title
+            }
+        });
+    }
+
+    setTitleDefaultConfirm = () => {
+        let appIdealJob = this.state.appIdealJobToSetDefault;
+        this.props.client
+            .mutate({
+                mutation: UPDATE_APPLICANT,
+                variables: {
+                    id: appIdealJob.id,
+                    isDefault: true
+                }
+            })
+            .then(({ data }) => {
+                this.setState(() => {
+                    return {
+                        appIdealJob: null
+                    }
+                });
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to set default title',
+                    'bottom',
+                    'right'
+                );
+            });
+    }
+
     render() {
         const { loading, success } = this.state;
         const { classes } = this.props;
@@ -1517,6 +1559,7 @@ class General extends Component {
         return (
             <div className="Apply-container--application">
                 <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} />
+                {/* Confirmacion para eliminar location */}
                 <ConfirmDialog
                     open={this.state.openConfirm}
                     closeAction={() => {
@@ -1527,6 +1570,16 @@ class General extends Component {
                     }}
                     title={dialogMessages[0].label}
                     loading={this.props.removingLocationAbleToWork}
+                />
+
+                {/* Confirmacion para establecer el title(position) por defecto */}
+                <ConfirmDialog
+                    open={this.state.openConfirmDefaultTitle}
+                    closeAction={() => {
+                        this.setState({ openConfirmDefaultTitle: false });
+                    }}
+                    confirmAction={this.setTitleDefaultConfirm}
+                    title={dialogMessages[3].label}
                 />
 
 
@@ -1697,29 +1750,6 @@ class General extends Component {
                             <br />
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <h5 className="float-left">Titles</h5>
-                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
-                                        <i class="far fa-plus-square"></i>
-                                    </button>
-                                </div>
-                                <div className="col-sm-12">
-                                    <div className="row">
-                                        {
-                                            this.state.idealJobs ?
-                                                this.state.idealJobs.map(idealJob => {
-                                                    return <div className="col-sm-12 col-md-6 col-lg-3">
-                                                        <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
-                                                            {idealJob.description}
-                                                        </div>
-                                                    </div>
-                                                })
-                                                : ''
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-sm-12">
                                     <h5 className="float-left">Location able to work</h5>
                                     <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.handleClickOpenModal}>
                                         <i class="far fa-plus-square"></i>
@@ -1752,6 +1782,36 @@ class General extends Component {
                                                 </div>
                                             </div>
                                         })}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-12">
+                                    <h5 className="float-left">Titles</h5>
+                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
+                                        <i class="far fa-plus-square"></i>
+                                    </button>
+                                </div>
+                                <div className="col-sm-12">
+                                    <div className="row">
+                                        {
+                                            this.state.idealJobs ?
+                                                this.state.idealJobs.map((idealJob, i) => {
+                                                    return <div className="col-sm-12 col-md-6 col-lg-3" key={i}>
+                                                        <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{appIdealJob: idealJob}}>
+                                                            <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                                {idealJob.description}
+                                                            </div>
+                                                        </ContextMenuTrigger>
+                                                    </div>
+                                                })
+                                                : ''
+                                        }
+                                        <ContextMenu id={TITLE_CONTEXT_MENU} onShow={t => console.log(t)}>
+                                            <MenuItem data={{ action: 'setTitleDefault' }} onClick={this.setTitleDefault}>
+                                                Set as default
+                                            </MenuItem>
+                                        </ContextMenu>
                                     </div>
                                 </div>
                             </div>
