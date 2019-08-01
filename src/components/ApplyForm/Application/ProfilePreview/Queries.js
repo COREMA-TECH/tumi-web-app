@@ -226,6 +226,7 @@ export const GET_HOTELS_BY_EMPLOYEE = gql`
                 Name
             }
             isDefault
+            isActive
         }
     } 
 `;

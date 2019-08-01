@@ -29,7 +29,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, CREATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -44,6 +44,7 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
 const TITLE_CONTEXT_MENU = 'titleContextMenu';
+const HOTEL_CONTEXT_MENU = 'hotelContextMenu';
 
 const styles = (theme) => ({
     container: {
@@ -201,8 +202,8 @@ class General extends Component {
             date: new Date().toISOString().substring(0, 10),
             codeUser: '',
             employeeHotelId: 0,
-            employeeHotelName: ''
-
+            employeeHotelName: '',
+            relationToUpdate: null
         }
     }
 
@@ -374,42 +375,7 @@ class General extends Component {
             })
     };
 
-    updateContactByHotelApplication = () => {
-        let mutation = null, variables = {}
-        this.setState(() => ({ removingLocationAbleToWork: true }))
-        if (this.state.locationAbletoWorkId) {
-            mutation = DISABLE_CONTACT_BY_HOTEL_APPLICATION;
-            variables = {
-                Id_Entity: this.state.locationAbletoWorkId,
-                ApplicationId: this.props.applicationId
-            }
-        } else {
-            mutation = UPDATE_EMPLOYEE;
-            variables = {
-                employees: {
-                    id: this.state.employeeHotelEmployeeId,
-                    idEntity: null
-                }
-            }
-        }
-        this.props.client
-            .mutate({
-                mutation,
-                variables
-            })
-            .then(({ data }) => {
-                this.props.handleOpenSnackbar('success', 'Record deleted!');
-                this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false, employeeHotelId: 0, employeeHotelName: '' }), this.getMyHotels)
-
-            })
-            .catch(error => {
-
-                this.props.handleOpenSnackbar('error', 'Error deleting relation!');
-                this.setState(() => ({ removingLocationAbleToWork: false }))
-
-            })
-
-    };
+    
     /**
      * To hide modal and then restart modal state values
      */
@@ -526,8 +492,6 @@ class General extends Component {
                                 positionName: this.state.data.position ? (this.state.data.position.position ? this.state.data.position.position.Position : 'N/D') : 'N/D'
 
                             }, _ => {
-                                console.log({ status: this.state })
-                                alert(this.state.employeeHotelEmployeeId);
                                 this.getCodeUser(id);
                                 this.getMyHotels();
                             })
@@ -578,7 +542,7 @@ class General extends Component {
                     let options = [];
                     this.state.hotels.map(item => {
                         let hotel = this.state.myHotels.find(_ => { return _.Id == item.Id });
-                        if (!hotel && item.Id != this.state.employeeHotelId) {
+                        if ((!hotel || !hotel.relationActive) && item.Id != this.state.employeeHotelId) {
                             options.push({ value: item.Id, label: `${item.Code} - ${item.Name}` });
                             this.setState(prevState => ({
                                 properties: options
@@ -723,7 +687,7 @@ class General extends Component {
                 }
             })
             .then(({ data: { EmployeeByHotels } }) => {
-                this.setState(() => ({ myHotels: EmployeeByHotels.map(item => ({...item.BusinessCompany, defaultProperty: item.isDefault })) }), this.getHotels);
+                this.setState(() => ({ myHotels: EmployeeByHotels.map(item => ({...item.BusinessCompany, defaultProperty: item.isDefault, relationId: item.id, relationActive: item.isActive })) }), this.getHotels);
             })
             .catch((error) => {
                 this.setState(() => ({ loadingMyHotels: false }));
@@ -732,71 +696,98 @@ class General extends Component {
     }    
 
     /**
-   * To insert contact objects
-   * @param idDepartment int value
-   * @param idTitle int value
+   * To insert contact objects 
    */
-    insertContacts = () => {
-        if (!this.state.property.length) {
+    findRelatedHotel = hotelId => {        
+        const found = this.state.myHotels.find(item => {
+            return item.Id === hotelId;
+        });
+
+        return found ? found : false;
+    }
+
+    insertRelations = () => {
+        if (this.state.property.length <= 0) {
             this.props.handleOpenSnackbar('warning', 'You have to select the Property!');
-            return true;
-        }
-        else
-            this.getContacts(() => {
-                this.setState(() => ({ saving: true }));
-                let date = new Date().toISOString();
-                let ids = this.getHotelIds();
-                let contacts = [];
+            return;
+        }        
 
-                ids.map(id => {
-                    contacts.push({
-                        Id_Entity: id,
-                        ApplicationId: this.props.applicationId,
-                        First_Name: this.state.firstname,
-                        Middle_Name: this.state.middlename,
-                        Last_Name: this.state.lastname,
-                        Electronic_Address: this.state.email || '',
-                        Phone_Number: this.state.number,
-                        Contact_Type: 1,
-                        IsActive: 1,
-                        User_Created: 1,
-                        User_Updated: 1,
-                        Date_Created: date,
-                        Date_Updated: date
-                    })
+        let reenable = [];
+
+        const insertData = this.state.property.filter(item => {
+            const found = this.findRelatedHotel(item.value);
+
+            if(found && !found.relationActive)
+                reenable.push(found);
+            else    
+                return true; //If the hotel wasn't found in the EmployeeHotels list, then we grab it for insert.                        
+        })
+        .map(item => {
+            return { EmployeeId: this.state.employeeHotelEmployeeId, BusinessCompanyId: item.value, isDefault: false, isActive: true }
+        });
+
+        this.props.client.mutate({
+            mutation: CREATE_EMPLOYEE_HOTEL_RELATION,
+            variables: {
+                employeeByHotels: insertData
+            }            
+        })
+        .then(({data}) => {
+            if(reenable.length > 0){
+                this.props.client.mutate({
+                    mutation: BULK_UPDATE_EMPLOYEE_HOTEL_RELATION,
+                    variables: {
+                        relationList: reenable.map(item => ({ id: item.relationId, EmployeeId: this.state.employeeHotelEmployeeId,  BusinessCompanyId: item.Id, isDefault: false, isActive: true }))
+                    }
                 })
-                this.props.client
-                    .mutate({
-                        mutation: INSERT_CONTACT,
-                        variables: {
-                            contacts
-                        }
-                    })
-                    .then((data) => {
-                        this.props.handleOpenSnackbar('success', 'Contact Inserted!');
-                        this.setState(() => ({
-                            openModal: false,
-                            openVerification: false,
-                            saving: false,
-                            property: [],
-                            type: null,
-                            departmentName: '',
-                            titleName: ''
-                        }));
-                        this.getMyHotels();
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error: Inserting Contact: ' + error
-                        );
-                        this.setState(() => ({
-                            saving: false
-                        }));
-                        return false;
-                    });
-            })
+                .then(({data}) => {
+                    console.log("Updated disabled relations");
+                });
+            }
 
+            this.props.handleOpenSnackbar('success', 'Hotels Linked!');
+            this.setState(() => ({
+                openModal: false,
+                openVerification: false,
+                saving: false,
+                property: [],
+                type: null,
+                departmentName: '',
+                titleName: ''
+            }), _ => {
+                this.getMyHotels();
+            });
+        })
+    };
+
+    removeRelation = () => {
+        if(!this.state.relationToUpdate)
+            return;
+
+        const insertData = {
+            id: this.state.relationToUpdate.relationId,
+            EmployeeId: this.state.employeeHotelEmployeeId,
+            isActive: false,
+            isDefault: false,
+        }
+
+        this.props.client.mutate({
+            mutation: UPDATE_EMPLOYEE_HOTEL_RELATION,
+            variables: {
+                employeeByHotel: insertData
+            }
+        })
+        .then(({ data }) => {
+            this.props.handleOpenSnackbar('success', 'Record deleted!');
+            this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false, employeeHotelId: 0, employeeHotelName: '' }), this.getMyHotels)
+
+        })
+        .catch(error => {
+
+            this.props.handleOpenSnackbar('error', 'Error deleting relation!');
+            this.setState(() => ({ removingLocationAbleToWork: false }))
+
+        })
     };
 
     /**
@@ -1532,7 +1523,7 @@ class General extends Component {
                                 <button
                                     variant="fab"
                                     className="btn btn-success"
-                                    onClick={this.insertContacts}
+                                    onClick={this.insertRelations}
                                 >
                                     Save {!this.state.saving && <i className="fas fa-save" />}
                                     {this.state.saving && <i className="fas fa-spinner fa-spin" />}
@@ -1566,10 +1557,10 @@ class General extends Component {
                 <ConfirmDialog
                     open={this.state.openConfirm}
                     closeAction={() => {
-                        this.setState({ openConfirm: false, locationAbletoWorkId: 0, applicationEmployeeId: 0 });
+                        this.setState({ relationToUpdate: null, openConfirm: false, locationAbletoWorkId: 0, applicationEmployeeId: 0 });
                     }}
                     confirmAction={() => {
-                        this.updateContactByHotelApplication();
+                        this.removeRelation();
                     }}
                     title={dialogMessages[0].label}
                     loading={this.props.removingLocationAbleToWork}
@@ -1761,17 +1752,18 @@ class General extends Component {
                                 <div className="col-sm-12">
                                     <div className="row">
                                         {this.state.myHotels.map(hotel => {
-                                            return <div className="col-sm-12 col-md-6 col-lg-3">
-
-                                                <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
-                                                    {hotel.Name.trim()}
-                                                    <button type="button" className="btn btn-link float-right p-0" onClick={() => {
-                                                        this.setState(() => ({ openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
-                                                    }} >
-                                                        <i className="fas fa-trash text-white"></i>
-                                                    </button>
+                                            return hotel.relationActive ? (
+                                                <div className="col-sm-12 col-md-6 col-lg-3">
+                                                    <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                        {hotel.Name.trim()}
+                                                        <button type="button" className="btn btn-link float-right p-0" onClick={() => {
+                                                            this.setState(() => ({relationToUpdate: hotel, openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
+                                                        }} >
+                                                            <i className="fas fa-trash text-white"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            ) : ''                                            
                                         })}
                                     </div>
                                 </div>
@@ -1802,7 +1794,7 @@ class General extends Component {
                                             <MenuItem data={{ action: 'setTitleDefault' }} onClick={this.setTitleDefault}>
                                                 Set as default
                                             </MenuItem>
-                                        </ContextMenu>
+                                        </ContextMenu>                                        
                                     </div>
                                 </div>
                             </div>

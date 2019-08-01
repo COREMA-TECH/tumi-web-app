@@ -82,3 +82,26 @@ export const ADD_IDEAL_JOB = gql`
         }
     }
 `;
+
+export const CREATE_EMPLOYEE_HOTEL_RELATION = gql`
+    mutation addEmployeeByHotel($employeeByHotels: [inputInsertEmployeeByHotel]) {
+        addEmployeeByHotel(employeeByHotels: $employeeByHotels) {
+            id
+        }
+    }
+`;
+
+export const UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
+    mutation updateEmployeeByHotel($employeeByHotel: inputUpdateEmployeeByHotel) {
+        updateEmployeeByHotel(employeeByHotel: $employeeByHotel) {
+            id
+        }
+    }
+`;
+
+export const BULK_UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
+    mutation bulkUpdateEmployeeByHotel($relationList: [inputUpdateEmployeeByHotel]) {
+        bulkUpdateEmployeeByHotel(relationList: $relationList)
+        
+    }
+`;
