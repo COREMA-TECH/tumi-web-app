@@ -82,3 +82,11 @@ export const ADD_IDEAL_JOB = gql`
         }
     }
 `;
+
+export const SET_IDEAL_JOB_DEFAULT = gql `
+    mutation setDefaultApplicantIdealJob($id: Int) {
+        setDefaultApplicantIdealJob(id: $id) {
+            id
+        }
+    }
+`;

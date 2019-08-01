@@ -4,8 +4,6 @@ import Filter from './Filter';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY, GET_PUNCHES_REPORT_CONSOLIDATED } from './queries';
 import withApollo from 'react-apollo/withApollo';
-
-import PreFilter from './PreFilter';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 
 const PROPERTY_DEFAULT = { value: '', label: 'Property(All)' };
@@ -83,7 +81,7 @@ class PunchesReportConsolidated extends Component {
             if (this.state.property.value)
                 variables = { Id_Entity: this.state.property.value };
             if (idRol == 5) variables = { Id_Entity: idEntity };
-            
+
             this.props.client
                 .query({
                     query: GET_DEPARTMENTS_QUERY,
@@ -131,7 +129,7 @@ class PunchesReportConsolidated extends Component {
                 .query({
                     query: GET_PROPERTIES_QUERY,
                     fetchPolicy: 'no-cache',
-                    variables:{
+                    variables: {
                         ...filter
                     }
                 })
@@ -174,7 +172,7 @@ class PunchesReportConsolidated extends Component {
             filters = { ...filters, startDate };
         if (endDate)
             filters = { ...filters, endDate };
-        if (idRol == 5)   filters = { ...filters, idEntity };
+        if (idRol == 5) filters = { ...filters, idEntity };
 
         return filters;
     }
@@ -220,12 +218,10 @@ class PunchesReportConsolidated extends Component {
         return <React.Fragment>
             {loading && <LinearProgress />}
             {renderDialogPicture()}
-
-            <PreFilter changeFilter={this.changeFilter} />
             <div className="row">
                 <div className="col-md-12">
                     <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
-                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal}/>
+                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                         <DropDown data={this.state.data} handleEditModal={this.handleClickOpenModal}></DropDown>
                     </div>
                 </div>

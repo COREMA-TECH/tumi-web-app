@@ -58,20 +58,24 @@ class Titles extends Component {
     }
 
     getPositions = () => {
+        let myHotels = this.props.myHotels;
         this.props.client
             .query({
                 query: GET_POSITION
             })
             .then(({ data }) => {
+                let posCatalog = [], newGroup = [];
                 let dataAPI = data.catalogitem;
-                dataAPI.map(item => {
-                    this.setState(prevState => ({
-                        positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label: item.Code.trim(), key: item.Id
-                        }]
-                    }))
+                myHotels.forEach(h => {
+                    newGroup = dataAPI.filter(da => da.Id_Entity === h.Id).map(item => {
+                                    return { value: item.Id, label: item.Code.trim(), key: item.Id }
+                                })
+                    posCatalog = [...posCatalog, {label: h.Name, options: newGroup}];
                 });
 
+                this.setState(() => {
+                    return {positionCatalogTag: posCatalog}
+                });
             }).catch(error => {
                     this.props.handleOpenSnackbar(
                         'error',
