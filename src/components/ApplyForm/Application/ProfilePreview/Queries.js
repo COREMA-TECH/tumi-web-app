@@ -43,6 +43,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             idealJobs {
                 id
                 description
+                isDefault
             }
             user{
                 Code_User
@@ -203,6 +204,7 @@ export const GET_POSITION = gql`
             Id
             Code: Name
             Description
+            Id_Entity
             IsActive
         }
     }

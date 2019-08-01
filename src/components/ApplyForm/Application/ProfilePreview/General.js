@@ -29,7 +29,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, CREATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, CREATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -267,7 +267,7 @@ class General extends Component {
         positionName: null,
 
         openConfirmDefaultTitle: false,
-        titleToSetDefault: null
+        appIdealJobToSetDefault: null
     };
 
     /**
@@ -1275,31 +1275,37 @@ class General extends Component {
     }
 
     setTitleDefault = (e, trigger) => {
-        let title = trigger.attributes.appIdealJob;
+        let idealJob = trigger.attributes.appIdealJob;
         this.setState(() => {
             return {
                 openConfirmDefaultTitle: true,
-                titleToSetDefault: title
+                appIdealJobToSetDefault: idealJob
             }
         });
     }
 
     setTitleDefaultConfirm = () => {
         let appIdealJob = this.state.appIdealJobToSetDefault;
+        let idealJobs = this.state.idealJobs;
         this.props.client
             .mutate({
-                mutation: UPDATE_APPLICANT,
+                mutation: SET_IDEAL_JOB_DEFAULT,
                 variables: {
-                    id: appIdealJob.id,
-                    isDefault: true
+                    id: appIdealJob ? appIdealJob.id : 0
                 }
             })
-            .then(({ data }) => {
-                this.setState(() => {
-                    return {
-                        appIdealJob: null
-                    }
-                });
+            .then((data) => {
+                let idealJob = data.data.setDefaultApplicantIdealJob;
+                if(idealJob){
+                    this.setState(prevState => {
+                        return {
+                            idealJobs: prevState.idealJobs.map(i => {
+                                i.isDefault = (i.id === idealJob.id)
+                                return i;
+                            })
+                        }
+                    });
+                }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar(
@@ -1555,7 +1561,7 @@ class General extends Component {
         let employeeName = `${firstname || ''} ${middlename || ''} ${lastname || ''}`;
         return (
             <div className="Apply-container--application">
-                <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} />
+                <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} myHotels={this.state.myHotels} />
                 {/* Confirmacion para eliminar location */}
                 <ConfirmDialog
                     open={this.state.openConfirm}
@@ -1575,7 +1581,8 @@ class General extends Component {
                     closeAction={() => {
                         this.setState({ openConfirmDefaultTitle: false });
                     }}
-                    confirmAction={this.setTitleDefaultConfirm}
+                    confirmAction={() => {this.setState({openConfirmDefaultTitle: false}, this.setTitleDefaultConfirm())} }
+                    confirmActionLabel={dialogMessages[4].label}
                     title={dialogMessages[3].label}
                 />
 
@@ -1785,7 +1792,7 @@ class General extends Component {
                                                 this.state.idealJobs.map((idealJob, i) => {
                                                     return <div className="col-sm-12 col-md-6 col-lg-3" key={i}>
                                                         <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{appIdealJob: idealJob}}>
-                                                            <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                            <div className={`${idealJob.isDefault ? 'bg-info text-white border-info' : 'bg-light border-secondary'} border p-2 text-center rounded m-1 col text-truncate`}>
                                                                 {idealJob.description}
                                                             </div>
                                                         </ContextMenuTrigger>

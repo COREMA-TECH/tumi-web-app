@@ -83,17 +83,23 @@ class PunchesReportConsolidatedFilter extends Component {
         })
     }
 
-    handleChangeDate = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
+    handleChangeStartDate = (value) => {
         this.setState(() => ({
-            [name]: value,
+            startDate: value,
             endDateDisabled: false
         }),
             () => {
-                if (this.props.updateFilter)
+                if (this.props.updateFilter && this.state.endDate)
+                    this.props.updateFilter(this.state)
+            });
+    }
+
+    handleChangeEndDate = (value) => {
+        this.setState(() => ({
+            endDate: value
+        }),
+            () => {
+                if (this.state.startDate)
                     this.props.updateFilter(this.state)
             });
     }
@@ -194,12 +200,12 @@ class PunchesReportConsolidatedFilter extends Component {
                     <div class="input-group flex-nowrap">
                         <DatePicker
                             selected={this.state.startDate}
-                            onChange={this.handleChangeDate}
+                            onChange={this.handleChangeStartDate}
                             placeholderText="Start date"
-                            id="datepicker"
+                            id="startDate"
                         />
                         <div class="input-group-append">
-                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                            <label class="input-group-text" id="addon-wrapping" for="startDate">
                                 <i class="far fa-calendar"></i>
                             </label>
                         </div>
@@ -209,12 +215,12 @@ class PunchesReportConsolidatedFilter extends Component {
                     <div class="input-group flex-nowrap">
                         <DatePicker
                             selected={this.state.endDate}
-                            onChange={this.handleChangeDate}
+                            onChange={this.handleChangeEndDate}
                             placeholderText="End date"
-                            id="datepicker"
+                            id="endDate"
                         />
                         <div class="input-group-append">
-                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                            <label class="input-group-text" id="addon-wrapping" for="endDate">
                                 <i class="far fa-calendar"></i>
                             </label>
                         </div>

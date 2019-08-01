@@ -104,4 +104,12 @@ export const BULK_UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
         bulkUpdateEmployeeByHotel(relationList: $relationList)
         
     }
+`
+
+export const SET_IDEAL_JOB_DEFAULT = gql `
+    mutation setDefaultApplicantIdealJob($id: Int) {
+        setDefaultApplicantIdealJob(id: $id) {
+            id
+        }
+    }
 `;

@@ -41,6 +41,7 @@ class ConfirmDialog extends React.Component {
 	}
 
 	render() {
+		let {confirmActionLabel} = this.props;
 		return (
 			<Dialog open={this.state.open} onClose={this.props.closeAction} aria-labelledby="form-dialog-title">
 				<DialogTitle>{this.props.title}</DialogTitle>
@@ -56,7 +57,7 @@ class ConfirmDialog extends React.Component {
 						}}
 					>
 						{this.props.loading && <i className="fac fa fa-spinner fa-spin" />}
-						{spanishActions[3].label}
+						{confirmActionLabel || spanishActions[3].label}
 					</button>
 				</DialogActions>
 			</Dialog>
