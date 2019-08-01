@@ -29,7 +29,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, CREATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -730,24 +730,13 @@ class General extends Component {
         });
 
         this.props.client.mutate({
-            mutation: CREATE_EMPLOYEE_HOTEL_RELATION,
+            mutation: CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION,
             variables: {
-                employeeByHotels: insertData
+                employeeByHotels: insertData,
+                relationList: reenable.map(item => ({ id: item.relationId, EmployeeId: this.state.employeeHotelEmployeeId,  BusinessCompanyId: item.Id, isDefault: false, isActive: true }))
             }            
         })
         .then(({data}) => {
-            if(reenable.length > 0){
-                this.props.client.mutate({
-                    mutation: BULK_UPDATE_EMPLOYEE_HOTEL_RELATION,
-                    variables: {
-                        relationList: reenable.map(item => ({ id: item.relationId, EmployeeId: this.state.employeeHotelEmployeeId,  BusinessCompanyId: item.Id, isDefault: false, isActive: true }))
-                    }
-                })
-                .then(({data}) => {
-                    console.log("Updated disabled relations");
-                });
-            }
-
             this.props.handleOpenSnackbar('success', 'Hotels Linked!');
             this.setState(() => ({
                 openModal: false,
@@ -1764,12 +1753,12 @@ class General extends Component {
                                         {this.state.myHotels.map(hotel => {
                                             return hotel.relationActive ? (
                                                 <div className="col-sm-12 col-md-6 col-lg-3">
-                                                    <div className="bg-success p-2 text-white text-center rounded m-1 col text-truncate">
+                                                    <div className={`border p-2 text-center rounded m-1 col text-truncate ${hotel.isDefault ? 'bg-info text-white border-info' : 'bg-light border-secondary'} `}>
                                                         {hotel.Name.trim()}
-                                                        <button type="button" className="btn btn-link float-right p-0" onClick={() => {
+                                                        <button type="button" className="btn btn-link float-right p-0" style={{color: "red"}} onClick={() => {
                                                             this.setState(() => ({relationToUpdate: hotel, openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
                                                         }} >
-                                                            <i className="fas fa-trash text-white"></i>
+                                                            <i className="fas fa-trash"></i>
                                                         </button>
                                                     </div>
                                                 </div>
