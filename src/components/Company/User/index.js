@@ -3,6 +3,7 @@ import { INSERT_USER_QUERY } from './Mutations';
 import { GET_COMPANY_QUERY, GET_USER } from './Queries';
 import moment from 'moment';
 import withApollo from "react-apollo/withApollo";
+import BreakRules from '../../BreakRules';
 
 class User extends Component {
 
@@ -155,6 +156,9 @@ class User extends Component {
                             </div>
                         </form>
                     </div>
+                </div>
+                <div className="col-md-8">
+                    <BreakRules />
                 </div>
             </div>
         );
