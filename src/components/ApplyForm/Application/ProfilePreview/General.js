@@ -707,6 +707,7 @@ class General extends Component {
     }
 
     insertRelations = () => {
+        //this.state.property holds the hotels picked in the dropdown
         if (this.state.property.length <= 0) {
             this.props.handleOpenSnackbar('warning', 'You have to select the Property!');
             return;
@@ -714,6 +715,8 @@ class General extends Component {
 
         let reenable = [];
 
+        //With this, I loop through the selected hotels, check them against the linked hotels (active or not), if a hotel matches and it's relation is inactive, then I
+        //add it to the reenable array to reactivate it later. The insertData only holds the new relations to create.
         const insertData = this.state.property.filter(item => {
             const found = this.findRelatedHotel(item.value);
 
