@@ -1,27 +1,13 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
 import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY, GET_MARK } from './queries';
 import { ADD_MARCKED, UPDATE_MARKED } from './mutations';
-import ShiftsData from '../../data/shitfsWorkOrder.json';
-//import ShiftsData from '../../data/shitfs.json';
-import { parse } from 'path';
-import { bool } from 'prop-types';
-import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
-import TimeField from 'react-simple-timefield';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
-import Tooltip from '@material-ui/core/Tooltip';
-import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
 import DatePicker from "react-datepicker";
@@ -645,7 +631,7 @@ class TimeCardForm extends Component {
 
         return (
             <div>
-                <Dialog fullScreen={false} maxWidth='sm' open={this.props.openModal} onClose={this.props.handleCloseModal}>
+                <Dialog fullScreen={false} maxWidth='sm' open={this.props.openModal} >
                     <form action="" onSubmit={this.handleSubmit}>
                         <DialogTitle style={{ padding: '0px' }}>
                             <div className="modal-header">
