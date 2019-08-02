@@ -218,3 +218,17 @@ export const GET_APPLICATION_CODE_USER = gql`
         }
     }
 `;
+
+export const GET_HOTELS_BY_EMPLOYEE = gql`
+    query EmployeeByHotels($EmployeeId: Int){
+        EmployeeByHotels(EmployeeId: $EmployeeId){
+            id    
+            BusinessCompany{
+                Id
+                Name
+            }
+            isDefault
+            isActive
+        }
+    } 
+`;
