@@ -29,7 +29,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION, CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -687,7 +687,13 @@ class General extends Component {
                 }
             })
             .then(({ data: { EmployeeByHotels } }) => {
-                this.setState(() => ({ myHotels: EmployeeByHotels.map(item => ({...item.BusinessCompany, defaultProperty: item.isDefault, relationId: item.id, relationActive: item.isActive })) }), this.getHotels);
+                const hotelList = EmployeeByHotels.map(item => {
+                    return {...item.BusinessCompany, defaultProperty: item.isDefault, relationId: item.id, relationActive: item.isActive }
+                }).sort((a, b) => {
+                    return a.defaultProperty === b.defaultProperty ? 0 : (a.defaultProperty ? -1 : 1);
+                });
+
+                this.setState(() => ({ myHotels: hotelList }), this.getHotels);
             })
             .catch((error) => {
                 this.setState(() => ({ loadingMyHotels: false }));
@@ -781,6 +787,40 @@ class General extends Component {
 
         })
     };
+
+    toggleDefaultHotel = clickedHotel => {
+        if(!clickedHotel)
+            return;
+
+        const recordToUpdate = {
+            id: clickedHotel.relationId,
+            EmployeeId: this.state.employeeHotelEmployeeId,
+            isActive: true,
+            isDefault: !clickedHotel.defaultProperty,
+        }
+
+        let updateInfo = [recordToUpdate];
+        
+        if(!clickedHotel.defaultProperty){
+            const currentDefault = this.state.myHotels.find(item => item.defaultProperty === true && item.relationId !== clickedHotel.relationId);
+            updateInfo = currentDefault ? [...updateInfo, {id: currentDefault.relationId, EmployeeId: this.state.employeeHotelEmployeeId, isActive: true, isDefault: false}] : [...updateInfo];
+        }
+
+        this.props.client.mutate({
+            mutation: BULK_UPDATE_EMPLOYEE_HOTEL_RELATION,
+            variables: {
+                relationList: updateInfo
+            }
+        })
+        .then(_ => {
+            this.props.handleOpenSnackbar('success', 'Record updated!');
+            this.setState(() => ({ openConfirmDefaultHotel: false, relationToUpdate: null }), this.getMyHotels)
+        })
+        .catch(error => {
+            this.props.handleOpenSnackbar('error', 'Error updating record!');
+            this.setState(() => ({ openConfirmDefaultHotel: false, relationToUpdate: null }), this.getMyHotels)
+        })
+    }
 
     /**
      * Before render fetch user information
@@ -1273,6 +1313,30 @@ class General extends Component {
         });
     }
 
+    triggerConfirmDefaultHotel = (e, trigger) => {
+        const {attributes: {clickedHotel}} = trigger;
+
+        if(!clickedHotel.defaultProperty){
+            const currentDefault = this.state.myHotels.find(item => item.defaultProperty === true && item.relationId !== clickedHotel.relationId);
+            
+            if(currentDefault){
+                this.setState(_ => ({
+                    hotelToSetDefault: clickedHotel,
+                    openConfirmDefaultHotel: true,
+                    defaultHotelModalTitle: "Are you sure you want to change the employee Home Location?"
+                }))
+            }
+        }
+        else{
+            this.setState(_ => ({
+                hotelToSetDefault: clickedHotel,
+                openConfirmDefaultHotel: true,
+                defaultHotelModalTitle: "Are you sure you want to unassign the employee Home Location?"
+            }))
+        }
+
+    }
+
     setTitleDefaultConfirm = () => {
         let appIdealJob = this.state.appIdealJobToSetDefault;
         let idealJobs = this.state.idealJobs;
@@ -1560,9 +1624,21 @@ class General extends Component {
                     confirmAction={() => {
                         this.removeRelation();
                     }}
-                    title={dialogMessages[0].label}
+                    title={(this.state.relationToUpdate && this.state.relationToUpdate.defaultProperty) ? "You are about to remove an Employee Home Location, are you sure you want to proceed?" : "Are you sure you want to delete the record?"}
                     loading={this.props.removingLocationAbleToWork}
                 />
+
+                <ConfirmDialog
+                    open={this.state.openConfirmDefaultHotel}
+                    closeAction={() => {
+                        this.setState({ openConfirmDefaultHotel: false, locationAbletoWorkId: 0, applicationEmployeeId: 0, });
+                    }}
+                    confirmAction={() => {
+                        this.toggleDefaultHotel(this.state.hotelToSetDefault);
+                    }}
+                    confirmActionLabel={dialogMessages[4].label}
+                    title={this.state.defaultHotelModalTitle}
+                />      
 
                 {/* Confirmacion para establecer el title(position) por defecto */}
                 <ConfirmDialog
@@ -1753,14 +1829,16 @@ class General extends Component {
                                         {this.state.myHotels.map(hotel => {
                                             return hotel.relationActive ? (
                                                 <div className="col-sm-12 col-md-6 col-lg-3">
-                                                    <div className={`border p-2 text-center rounded m-1 col text-truncate ${hotel.isDefault ? 'bg-info text-white border-info' : 'bg-light border-secondary'} `}>
-                                                        {hotel.Name.trim()}
-                                                        <button type="button" className="btn btn-link float-right p-0" style={{color: "red"}} onClick={() => {
-                                                            this.setState(() => ({relationToUpdate: hotel, openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
-                                                        }} >
-                                                            <i className="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
+                                                    <ContextMenuTrigger id={HOTEL_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{clickedHotel: hotel}}>
+                                                        <div className={`border p-2 text-center rounded m-1 col text-truncate ${hotel.defaultProperty ? 'bg-info text-white border-info' : 'bg-light border-secondary'} `}>
+                                                            {hotel.Name.trim()}
+                                                            <button type="button" className="btn btn-link float-right p-0" style={{color: "red"}} onClick={() => {
+                                                                this.setState(() => ({relationToUpdate: hotel, openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
+                                                            }} >
+                                                                <i className="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>                                                        
+                                                    </ContextMenuTrigger>
                                                 </div>
                                             ) : ''                                            
                                         })}
@@ -1793,7 +1871,15 @@ class General extends Component {
                                             <MenuItem data={{ action: 'setTitleDefault' }} onClick={this.setTitleDefault}>
                                                 Set as default
                                             </MenuItem>
-                                        </ContextMenu>                                        
+                                        </ContextMenu>
+                                        <ContextMenu id={HOTEL_CONTEXT_MENU} 
+                                            onShow={t => {
+                                                this.setState(_ => ({ hotelDefaultMenuText: t.detail.data.attributes.clickedHotel.defaultProperty ? 'Unassign Home Location' : 'Set as Home Location' }))
+                                            }}>
+                                            <MenuItem data={{ action: 'toggleDefaultHotel' }} onClick={this.triggerConfirmDefaultHotel}>
+                                                {this.state.hotelDefaultMenuText}                                                
+                                            </MenuItem>
+                                        </ContextMenu>                                           
                                     </div>
                                 </div>
                             </div>
