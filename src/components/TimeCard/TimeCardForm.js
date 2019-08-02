@@ -149,6 +149,7 @@ class TimeCardForm extends Component {
     }
 
     handleSubmit = (event) => {
+        console.log({ ID: this.state.id })
         event.preventDefault();
         if (
             this.state.IdEntity == null ||
@@ -195,7 +196,6 @@ class TimeCardForm extends Component {
 
 
                 if (this.state.clockOutId) {
-
                     let markOut = {
                         id: this.state.clockOutId,
                         entityId: this.state.IdEntity,
@@ -212,7 +212,6 @@ class TimeCardForm extends Component {
 
 
                 marks.map(mark => {
-                    console.log({ mark })
                     this.updateMark(mark);
                 });
             }
