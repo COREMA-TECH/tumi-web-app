@@ -62,13 +62,13 @@ class PunchesConsolidatedDropDownBody extends Component {
                             return (
                                 <tr>
                                     <th>
-                                        <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({...item}) }>
+                                        <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({ ...item })}>
                                             <i className="fas fa-pen"></i>
                                         </button>
                                     </th>
                                     <td>{item.name}</td>
                                     <td>{item.clockIn} - {item.clockOut}</td>
-                                    <td>{item.duration}</td>
+                                    <td>{item.duration == 0 ? '-': item.duration}</td>
                                     <td>{item.job}</td>
                                     <td>{item.hotelCode}</td>
                                     <td>
@@ -110,7 +110,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                         })}
                     </tbody>
                 </table>
-            </div>            
+            </div>
         );
     }
 }
