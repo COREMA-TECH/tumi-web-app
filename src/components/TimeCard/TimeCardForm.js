@@ -90,12 +90,12 @@ class TimeCardForm extends Component {
                 clockOutId: nextProps.item.clockOutId,
                 IdEntity: nextProps.item.hotelId,
                 employeeId: nextProps.item.employeeId,
-                startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
-                endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
+                startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
+                endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
                 shift: nextProps.item.clockIn,
                 endShift: nextProps.item.clockOut,
                 comment: nextProps.item.noteIn,
-                duration: nextProps.item.clockOut && nextProps.item.clockIn ? moment(nextProps.item.clockOut,'HH:mm').diff(moment(nextProps.item.clockIn,'HH:mm'),'hours') : '',
+                duration: nextProps.item.clockOut && nextProps.item.clockIn ? moment(nextProps.item.clockOut, 'HH:mm').diff(moment(nextProps.item.clockIn, 'HH:mm'), 'hours') : '',
                 statusTimeOut: !nextProps.item.clockOut ? true : false
             });
         } else if (!nextProps.openModal) {
@@ -141,7 +141,7 @@ class TimeCardForm extends Component {
                 typeMarkedId: 30570,
                 markedDate: this.state.startDate
             }
-        }).then(({data}) => {
+        }).then(({ data }) => {
             this.setState(prevState => ({
                 mark: data
             }));
@@ -175,11 +175,12 @@ class TimeCardForm extends Component {
                 this.setState(prevState => {
                     return { marks: mark }
                 }, _ => { this.addIn(); });
-                
+
             } else {
-                let markIn = {};
+                let marks = [];
+
                 if (this.state.clockInId) {
-                    markIn = {
+                    let markIn = {
                         id: this.state.clockInId,
                         entityId: this.state.IdEntity,
                         markedDate: moment(this.state.startDate).format('YYYY-MM-DD'),
@@ -189,13 +190,13 @@ class TimeCardForm extends Component {
                         ShiftId: null,
                         notes: this.state.comment
                     };
+                    marks.push(markIn);
                 }
-                
-                let markOut = {};
+
 
                 if (this.state.clockOutId) {
 
-                    markOut = {
+                    let markOut = {
                         id: this.state.clockOutId,
                         entityId: this.state.IdEntity,
                         markedDate: moment(this.state.endDate).format('YYYY-MM-DD'),
@@ -205,12 +206,13 @@ class TimeCardForm extends Component {
                         ShiftId: null,
                         notes: this.state.comment
                     }
-
+                    marks.push(markOut);
                 }
 
-                let marks = [markIn, markOut];
+
 
                 marks.map(mark => {
+                    console.log({ mark })
                     this.updateMark(mark);
                 });
             }
@@ -220,25 +222,25 @@ class TimeCardForm extends Component {
     updateMark = (mark) => {
         if (!mark) return;
         this.props.client
-        .mutate({
-            mutation: UPDATE_MARKED,
-            variables: {
-                MarkedEmployees: mark
-            }
-        })
-        .then((data) => {
-            this.props.handleOpenSnackbar('success', 'Record Updated!');
-            this.props.toggleRefresh();
-            this.setState({ saving: false }, () => {
-                this.props.handleCloseModal();
-                //this.props.getReport();
+            .mutate({
+                mutation: UPDATE_MARKED,
+                variables: {
+                    MarkedEmployees: mark
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Record Updated!');
+                this.props.toggleRefresh();
+                this.setState({ saving: false }, () => {
+                    this.props.handleCloseModal();
+                    //this.props.getReport();
+                });
+                // window.location.reload();
+            })
+            .catch((error) => {
+                this.setState({ saving: true });
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
-            // window.location.reload();
-        })
-        .catch((error) => {
-            this.setState({ saving: true });
-            this.props.handleOpenSnackbar('error', 'Error: ' + error);
-        });
     }
 
     addIn = () => {
@@ -248,8 +250,8 @@ class TimeCardForm extends Component {
                 MarkedEmployees: this.state.marks
             }
         }).then((data) => {
-            if (!this.state.statusTimeOut) 
-                this.addOut() 
+            if (!this.state.statusTimeOut)
+                this.addOut()
             else {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.props.toggleRefresh();
@@ -257,10 +259,10 @@ class TimeCardForm extends Component {
             } 0
 
         })
-        .catch((error) => {
-            this.setState({ saving: true });
-            this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
-        });
+            .catch((error) => {
+                this.setState({ saving: true });
+                this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
+            });
     };
 
     addOut = () => {
