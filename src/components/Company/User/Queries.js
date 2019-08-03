@@ -49,11 +49,12 @@ export const GET_COMPANY_QUERY = gql`
 `;
 
 export const GET_USER = gql`
-  query user($id: Int)  {
-      user(Id: $id) {
+  query user($Code_User: String, $Id_Entity: Int)  {
+      user(Code_User: $Code_User, Id_Entity: $Id_Entity) {
           Id,
-          Full_Name,
+          Full_Name
           IdRegion
+          Code_User
       }
   }
 `;
