@@ -5,6 +5,7 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY, GET_PUNCHES_REPORT_CONSOLIDATED } from './queries';
 import withApollo from 'react-apollo/withApollo';
 import Dialog from "@material-ui/core/Dialog/Dialog";
+import { Query } from "react-apollo";
 
 const PROPERTY_DEFAULT = { value: '', label: 'Property(All)' };
 const DEPARTMENT_DEFAULT = { value: '', label: 'Department(All)' };
@@ -37,7 +38,6 @@ class PunchesReportConsolidated extends Component {
 
 
     componentWillMount() {
-        this.getPunchesReport();
         this.getDepartments();
         this.getProperties();
     }
@@ -47,29 +47,7 @@ class PunchesReportConsolidated extends Component {
     };
 
     handleClickCloseModal = () => {
-        this.setState({ openModal: false }, _ => {
-            this.getPunchesReport();
-        });
-    }
-
-    getPunchesReport = () => {
-        this.setState(() => ({ loadingReport: true }), () => {
-            this.props.client
-                .query({
-                    query: GET_PUNCHES_REPORT_CONSOLIDATED,
-                    variables: { ...this.getFilters() },
-                    fetchPolicy: 'no-cache'
-                })
-                .then(({ data }) => {
-                    this.setState(() => ({
-                        data: data.markedEmployeesConsolidated,
-                        loadingReport: false
-                    }));
-                })
-                .catch(error => {
-                    this.setState(() => ({ loadingReport: false }));
-                });
-        })
+        this.setState({ openModal: false });
     }
 
     getDepartments = () => {
@@ -111,11 +89,7 @@ class PunchesReportConsolidated extends Component {
     }
 
     changeFilter = (property) => {
-        this.setState(() => ({
-            property
-        }), () => {
-            this.getPunchesReport();
-        });
+        this.setState(() => ({ property }));
     }
 
     getProperties = () => {
@@ -187,7 +161,6 @@ class PunchesReportConsolidated extends Component {
             departments: prevState.property.value != property.value ? [] : prevState.departments
         }), () => {
             this.getDepartments();
-            this.getPunchesReport();
         });
     }
 
@@ -216,13 +189,19 @@ class PunchesReportConsolidated extends Component {
         );
 
         return <React.Fragment>
-            {loading && <LinearProgress />}
             {renderDialogPicture()}
             <div className="row">
                 <div className="col-md-12">
                     <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
-                        <DropDown data={this.state.data} handleEditModal={this.handleClickOpenModal}></DropDown>
+                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="5000">
+
+                            {({ loading, error, data }) => {
+                                return <React.Fragment>
+                                    <DropDown data={data.markedEmployeesConsolidated || []} handleEditModal={this.handleClickOpenModal}></DropDown>
+                                </React.Fragment>
+                            }}
+                        </Query>
                     </div>
                 </div>
             </div>
