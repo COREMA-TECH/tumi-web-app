@@ -100,7 +100,7 @@ export const UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
     }
 `;
 
-export const SET_IDEAL_JOB_DEFAULT = gql `
+export const SET_IDEAL_JOB_DEFAULT = gql`
     mutation setDefaultApplicantIdealJob($id: Int) {
         setDefaultApplicantIdealJob(id: $id) {
             id
@@ -111,5 +111,13 @@ export const SET_IDEAL_JOB_DEFAULT = gql `
 export const BULK_UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
     mutation bulkUpdateEmployeeByHotel($relationList: [inputUpdateEmployeeByHotel]){
         bulkUpdateEmployeeByHotel(relationList: $relationList)
+    }
+`;
+
+export const CREATE_EMPLOYEE_FOR_APPLICATION = gql`
+    mutation createEmployeeBasedOnApplicationOrUpdateEmployee($codeuser: Int, $nameUser: String, $id: Int, $hireDate: String, $startDate: String,$ApplicationId: Int){
+        createEmployeeBasedOnApplicationOrUpdateEmployee(id: $id, hireDate: $hireDate, startDate: $startDate, ApplicationId: $ApplicationId,codeuser: $codeuser, nameUser: $nameUser){
+            id
+        }
     }
 `;
