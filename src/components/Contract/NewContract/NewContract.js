@@ -22,6 +22,8 @@ import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectN
 import { Route } from "react-router-dom";
 import LocationForm from '../../ui-components/LocationForm';
 
+import {CREATE_CONTRACT} from './Mutations';
+
 const styles = (theme) => ({
     wrapper: {
         margin: theme.spacing.unit,
@@ -433,55 +435,55 @@ class NewContract extends Component {
                     this.props.client
                         .mutate({
                             // Pass the mutation structure
-                            mutation: this.ADD_CONTRACT,
+                            mutation: CREATE_CONTRACT,
                             variables: {
-                                input: {
-                                    Id: 1,
+                                contracts: {
+                                    //Id: 1,
                                     Id_Company: 1,
-                                    Contract_Name: `'${this.state.Contract_Name}'`,
-                                    Contrat_Owner: `'${this.state.Contrat_Owner}'`,
+                                    Contract_Name: this.state.Contract_Name,
+                                    Contrat_Owner: this.state.Contrat_Owner ? this.state.Contrat_Owner.trim() : '',
                                     IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
-                                    User_Signed_Title: `${this.state.User_Signed_Title ? this.state.User_Signed_Title : ''}`,
-                                    Signed_Date: `'${this.state.Signed_Date}'`,
-                                    Contract_Status: `'${this.state.Contract_Status}'`,
-                                    Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
+                                    User_Signed_Title: this.state.User_Signed_Title ? this.state.User_Signed_Title.trim() : '',
+                                    Signed_Date: this.state.Signed_Date,
+                                    Contract_Status: this.state.Contract_Status,
+                                    Contract_Start_Date: this.state.Contract_Start_Date,
                                     Contract_Term: parseInt(this.state.Contract_Term),
-                                    Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
+                                    Contract_Expiration_Date: this.state.contractExpiration,
                                     Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
-                                    Company_Signed: `'${this.state.CompanySignedName}'`,
-                                    Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
+                                    Company_Signed: this.state.CompanySignedName,
+                                    Company_Signed_Date: this.state.Company_Signed_Date,
                                     Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
-                                    Billing_Street: `'${this.state.Billing_Street}'`,
+                                    Billing_Street: this.state.Billing_Street,
                                     Billing_City: parseInt(this.state.Billing_City),
                                     Billing_State: parseInt(this.state.Billing_State),
-                                    Billing_Zip_Code: `'${this.state.Billing_Zip_Code}'`,
+                                    Billing_Zip_Code: this.state.Billing_Zip_Code,
                                     Billing_Country: 6,
-                                    Contract_Terms: "''",
-                                    Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
-                                    Exhibit_B: "''",
-                                    Exhibit_C: "''",
-                                    Exhibit_D: "''",
-                                    Exhibit_E: "''",
-                                    Exhibit_F: "''",
+                                    Contract_Terms: '',
+                                    //Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
+                                    Exhibit_B: '',
+                                    Exhibit_C: '',
+                                    Exhibit_D: '',
+                                    Exhibit_E: '',
+                                    Exhibit_F: '',
                                     IsActive: parseInt(this.state.IsActive),
                                     User_Created: 1,
                                     User_Updated: 1,
-                                    Date_Created: "'2018-08-14'",
-                                    Date_Updated: "'2018-08-14'",
-                                    Electronic_Address: `'${this.state.Electronic_Address}'`,
-                                    Primary_Email: `'${this.state.Primary_Email}'`,
-                                    legalName: `'${this.state.Legal_Name}'`
-
+                                    Date_Created: '2018-08-14',
+                                    Date_Updated: '2018-08-14',
+                                    //Electronic_Address: this.state.Electronic_Address ? this.state.Electronic_Address.trim() : '',
+                                    //Primary_Email: this.state.Primary_Email,
+                                    legalName: this.state.Legal_Name
                                 }
                             }
                         })
                         .then(({ data }) => {
+                            let contract = data.addContract[0];
                             this.props.updateCompanyId(this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity)
 
                             this.props.getContractName(this.state.Contract_Name);
-                            this.props.updateContractId(data.inscontracts.Id);
+                            this.props.updateContractId(contract ? contract.Id : 0);
 
                             this.props.handleOpenSnackbar('success', 'Contract Inserted!');
                             this.setState({
