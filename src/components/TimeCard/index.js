@@ -95,7 +95,6 @@ class TimeCard extends Component {
                             handleOpenSnackbar={this.props.handleOpenSnackbar}
                             toggleRefresh={this.toggleRefresh}
                             handleCloseModal={this.handleCloseModal}
-                        //dataRegions={this.state.data}
                         />
                     </div>
                 </div>
@@ -113,4 +112,3 @@ class TimeCard extends Component {
 }
 
 export default withGlobalContent(TimeCard);
-//export default withStyles(styles)(withApollo(Region));
