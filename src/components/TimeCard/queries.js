@@ -148,11 +148,11 @@ query data {
 `;
 
 export const GET_HOTEL_QUERY = gql`
-	query hotels($id: Int) {
-		getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'", Id_Parent: -1) {
-			Id
-			Name
-			Contract_Expiration_Date
+	query hotels($Id: Int!) {
+		companiesByUser(userId:$Id){
+		Id
+		Name
+		Contract_Expiration_Date
 		}
 	}
 `;

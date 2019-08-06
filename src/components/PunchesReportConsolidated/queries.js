@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
-    query markedEmployeesConsolidated($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date ){
-      markedEmployeesConsolidated(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate) {
+    query markedEmployeesConsolidated($idEntity: [Int],$Id_Deparment: [Int],$employee: String,$startDate: Date,$endDate: Date ){
+      markedEmployeesConsolidated(idEntity:$idEntity,Id_Deparment: $Id_Deparment,employee: $employee,startDate: $startDate,endDate: $endDate) {
           key
           date
           punches {
@@ -28,14 +28,14 @@ export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
 
 
 export const GET_REPORT_CSV_QUERY = gql`
-  query markedEmployeesConsolidatedForCSV($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date, $directDeposit: Boolean ){
-    markedEmployeesConsolidatedForCSV(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate, directDeposit:$directDeposit)
+  query markedEmployeesConsolidatedForCSV($idEntity: [Int],$Id_Deparment: [Int],$employee: String,$startDate: Date,$endDate: Date, $directDeposit: Boolean ){
+    markedEmployeesConsolidatedForCSV(idEntity:$idEntity,Id_Deparment: $Id_Deparment,employee: $employee,startDate: $startDate,endDate: $endDate, directDeposit:$directDeposit)
   }
 `;
 
 export const GET_PROPERTIES_QUERY = gql`
-  query hotels($Id: Int) {
-    getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'", Id_Parent : -1) {
+  query hotels($Id: Int!) {
+    companiesByUser(userId:$Id){
       Id
       Id_Parent
       Code
@@ -48,8 +48,8 @@ export const GET_PROPERTIES_QUERY = gql`
 `;
 
 export const GET_DEPARTMENTS_QUERY = gql`
-  query department($Id_Entity: Int){
-    catalogitem(Id_Catalog:8, Id_Entity:$Id_Entity){
+  query department($UserId: Int!){
+    departmentsByUser(UserId:$UserId){
       Id
       DisplayLabel
     }
