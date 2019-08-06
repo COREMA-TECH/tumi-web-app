@@ -29,7 +29,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION, CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION, CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT, CREATE_EMPLOYEE_FOR_APPLICATION } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -712,8 +712,36 @@ class General extends Component {
         return found ? found : false;
     }
 
+    insertNewEmployee = _ => {
+        const ApplicationId = this.props.applicationId;
+        let employeeId = 0;
+
+        this.props.client.mutate({
+            mutation: CREATE_EMPLOYEE_FOR_APPLICATION,
+            variables: {
+                id: 0,
+                hireDate: moment(Date.now()).format('MM/DD/YYYY'),
+                startDate: moment(Date.now()).format('MM/DD/YYYY'),
+                ApplicationId,
+                codeuser: localStorage.getItem('LoginId'),
+                nameUser: localStorage.getItem('FullName')
+            }
+        })
+        .then(({ data }) => {
+            employeeId = data.id
+        })
+        .catch(error => console.log(error));
+
+        return employeeId;
+    }
+
     insertRelations = () => {
         //this.state.property holds the hotels picked in the dropdown
+        let newEmployeeId = 0;
+        if(this.state.employeeHotelEmployeeId === 0){
+            newEmployeeId = this.insertNewEmployee();
+        }
+
         if (this.state.property.length <= 0) {
             this.props.handleOpenSnackbar('warning', 'You have to select the Property!');
             return;
@@ -732,14 +760,14 @@ class General extends Component {
                 return true; //If the hotel wasn't found in the EmployeeHotels list, then we grab it for insert.                        
         })
         .map(item => {
-            return { EmployeeId: this.state.employeeHotelEmployeeId, BusinessCompanyId: item.value, isDefault: false, isActive: true }
+            return { EmployeeId: newEmployeeId !== 0 ? newEmployeeId : this.state.employeeHotelEmployeeId, BusinessCompanyId: item.value, isDefault: false, isActive: true }
         });
 
         this.props.client.mutate({
             mutation: CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION,
             variables: {
                 employeeByHotels: insertData,
-                relationList: reenable.map(item => ({ id: item.relationId, EmployeeId: this.state.employeeHotelEmployeeId,  BusinessCompanyId: item.Id, isDefault: false, isActive: true }))
+                relationList: reenable.map(item => ({ id: item.relationId, EmployeeId: newEmployeeId !== 0 ? newEmployeeId : this.state.employeeHotelEmployeeId,  BusinessCompanyId: item.Id, isDefault: false, isActive: true }))
             }            
         })
         .then(({data}) => {

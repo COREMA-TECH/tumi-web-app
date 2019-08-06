@@ -80,7 +80,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                                                 }} />
                                                 <div className="avatar-description">
                                                     <h6 className="text-success ml-1 mt-3">{item.name}</h6>
-                                                    <button className="btn avatar--flag" onClick={(e) => {
+                                                    <button className={`btn avatar--flag ${!item.flagIn ? 'bg-secondary' : ''}`} onClick={(e) => {
                                                         // document.getElementById('')
                                                         e.target.classList.toggle('unflag');
                                                     }}><i className="fas fa-flag flag" /></button>
@@ -96,10 +96,10 @@ class PunchesConsolidatedDropDownBody extends Component {
                                                 }} />
                                                 <div className="avatar-description">
                                                     <h6 className="text-success ml-1 mt-3">{item.name}</h6>
-                                                    <button className="btn avatar--flag" onClick={(e) => {
+                                                    <button className={`btn avatar--flag ${!item.flagOut ? 'bg-secondary' : ''}`} onClick={(e) => {
                                                         // document.getElementById('')
                                                         e.target.classList.toggle('unflag');
-                                                    }}><i className="fas fa-flag flag" /></button>
+                                                    }}><i className={`fas fa-flag flag`} /></button>
                                                 </div>
                                                 <div className="arrow-up" />
                                             </div>

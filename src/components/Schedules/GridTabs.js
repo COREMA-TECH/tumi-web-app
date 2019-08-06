@@ -98,14 +98,14 @@ class GridTabs extends Component {
                         this.state.positions.map(__position => {
                             return (
                                 <div className={this.state.tabSelected === __position.id ? 'd-block' : 'd-none'}>
-                                    <Grid entityId={this.props.location} positionId={__position.id} departmentId={this.props.department} handleOpenSnackbar={this.props.handleOpenSnackbar} />
+                                    <Grid weekDayStart={this.props.weekDayStart} entityId={this.props.location} positionId={__position.id} departmentId={this.props.department} handleOpenSnackbar={this.props.handleOpenSnackbar} />
                                 </div>
                             )
                         })
                     }
                 </div>
                 <div className="GridTab-head">
-                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <div className="btn-group" role="group" aria-label="Basic example">
                         {
                             this.state.positions.map(__position => {
                                 let selected = this.state.tabSelected === __position.id ? 'GridTab-selected' : '';
@@ -114,7 +114,7 @@ class GridTabs extends Component {
                                 )
                             })
                         }
-                        <button type="button" class="btn btn-secondary" onClick={this.openGridModal}>
+                        <button type="button" className="btn btn-secondary" onClick={this.openGridModal}>
                             <i className="fa fa-plus"></i>
                         </button>
                     </div>
