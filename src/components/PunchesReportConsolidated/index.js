@@ -192,8 +192,10 @@ class PunchesReportConsolidated extends Component {
             {renderDialogPicture()}
             <div className="row">
                 <div className="col-md-12">
-                    <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
+                    <div className="card" style={{ "position": "relative"}}>
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
+                    </div>
+                    <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
                         <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="5000">
 
                             {({ loading, error, data }) => {
