@@ -20,6 +20,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import renderHTML from 'react-render-html';
+import { GET_CONTRACT } from './Queries';
 
 const styles = (theme) => ({
     container: {
@@ -230,23 +231,21 @@ class ExhibitContract extends Component {
         this.setState({ loadingData: true, loadingContract: true });
         this.props.client
             .query({
-                query: this.CREATE_CONTRACT_QUERY,
+                query: GET_CONTRACT,
                 variables: { Id: this.props.contractId },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.createcontracts != null) {
-                    this.sleep().then(() => {
-                        this.setState({
-                            openModal: true,
-                            loadingContract: false,
-                            PdfUrl:
-                                '<iframe src="' +
-                                this.context.baseUrl +
-                                '/public/Contract_' +
-                                this.props.contractname +
-                                '.pdf"  width="100%" height="100%" />'
-                        });
+                let url = data.data.contracts[0];
+                
+                if (url) {
+                    this.setState({
+                        openModal: true,
+                        loadingContract: false,
+                        PdfUrl:
+                            '<iframe src="' +
+                            url.Contract_Terms +
+                            '"  width="100%" height="100%" />'
                     });
                 } else {
                     this.props.handleOpenSnackbar(
@@ -266,6 +265,45 @@ class ExhibitContract extends Component {
                     loadingContract: false
                 });
             });
+
+        // this.props.client
+        //     .query({
+        //         query: this.CREATE_CONTRACT_QUERY,
+        //         variables: { Id: this.props.contractId },
+        //         fetchPolicy: 'no-cache'
+        //     })
+        //     .then((data) => {
+        //         if (data.data.createcontracts != null) {
+        //             this.sleep().then(() => {
+        //                 this.setState({
+        //                     openModal: true,
+        //                     loadingContract: false,
+        //                     PdfUrl:
+        //                         '<iframe src="' +
+        //                         this.context.baseUrl +
+        //                         '/public/Contract_' +
+        //                         this.props.contractname +
+        //                         '.pdf"  width="100%" height="100%" />'
+        //                 });
+        //             });
+        //         } else {
+        //             this.props.handleOpenSnackbar(
+        //                 'error',
+        //                 'Error: Loading agreement: createcontracts not exists in query data'
+        //             );
+        //             this.setState({
+        //                 loadingData: false,
+        //                 loadingContract: false
+        //             });
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
+        //         this.setState({
+        //             loadingData: false,
+        //             loadingContract: false
+        //         });
+        //     });
     };
 
     loadAgreement = () => {
@@ -277,7 +315,7 @@ class ExhibitContract extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.getcontracts != null) {
+                if (data.data.getcontracts != []) {
                     this.setState({
                         agreement: data.data.getcontracts[0].Contract_Terms
                         //signature: data.data.getcontracts[0].Client_Signature
