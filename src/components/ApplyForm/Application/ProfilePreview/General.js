@@ -720,8 +720,8 @@ class General extends Component {
             mutation: CREATE_EMPLOYEE_FOR_APPLICATION,
             variables: {
                 id: 0,
-                hireDate: moment(Date.now).format('MM/DD/YYYY'),
-                startDate: moment(Date.now).format('MM/DD/YYYY'),
+                hireDate: moment(Date.now()).format('MM/DD/YYYY'),
+                startDate: moment(Date.now()).format('MM/DD/YYYY'),
                 ApplicationId,
                 codeuser: localStorage.getItem('LoginId'),
                 nameUser: localStorage.getItem('FullName')
