@@ -479,14 +479,11 @@ class NewContract extends Component {
                             }
                         })
                         .then(({ data }) => {
-                            console.log('valor retornado', data); // TODO: (LF) Quitar console log
                             let contract = data.addContract;
-                            console.log('verificando que el id de contract', contract ? contract.Id : 0); // TODO: (LF) Quitar console log
                             this.props.updateCompanyId(this.state.Id_Entity === "0" ? this.state.IdManagement : this.state.Id_Entity)
 
                             this.props.getContractName(this.state.Contract_Name);
                             this.props.updateContractId(contract ? contract.Id : 0);
-                            console.log('-----', contract ? contract.Id : 0); // TODO: (LF) Quitar console log
                             this.props.handleOpenSnackbar('success', 'Contract Inserted!');
                             this.setState({
                                 loadingInsert: false

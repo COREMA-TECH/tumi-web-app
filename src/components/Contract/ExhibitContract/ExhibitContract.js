@@ -394,10 +394,6 @@ class ExhibitContract extends Component {
         this.loadAgreement();
     }
 
-    componentWillReceiveProps(nextProps) {
-        console.log('cargando nuevo props', nextProps, this.props); // TODO: (LF) Quitar console log
-    }
-
     componentDidMount() {
         document.getElementById('ifmcontentstoprint').style.display = 'none';
     }
