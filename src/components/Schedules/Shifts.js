@@ -255,7 +255,6 @@ class Shifts extends Component {
     };
 
     componentWillReceiveProps(nextProps) {
-        console.log("nextProps", { props: this.props.weekDayStart, nextProps: nextProps.weekDayStart });
         this.filterShifts(
             nextProps.cityId,
             nextProps.shiftId

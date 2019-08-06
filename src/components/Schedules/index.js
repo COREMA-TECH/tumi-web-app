@@ -166,6 +166,35 @@ class Schedules extends Component {
         });
     };
 
+    gridTabsView = () => {
+        return <GridTabs 
+            location={this.state.location} 
+            position={this.state.position} 
+            department={this.state.department}
+            weekDayStart={this.state.weekDayStart}
+        />;
+    }
+
+    calendarView = () => {
+        return <Shifts
+            editConfirmOpened={this.state.editConfirmOpened}
+            openEditConfirm={this.openEditConfirm}
+            refresh={this.state.refresh}
+            getSelectedValue={this.getSelectedValue}
+            cityId={this.state.cityId}
+            shiftId={this.state.shiftId}
+            entityId={this.state.location}
+            saveTemplateShift={this.saveTemplateShift}
+            previousWeekShifts={this.previousWeekShifts}
+            changeViewType={this.changeViewType}
+            location={this.state.location}
+            department={this.state.department}
+            position={this.state.position}
+            selectedEmployee={this.state.selectedEmployee}
+            weekDayStart={this.state.weekDayStart}
+        />;
+    }
+
     render() {
         return (
             <div className="MasterShift">
@@ -232,40 +261,20 @@ class Schedules extends Component {
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                {/* <div className="SmallSwitch">
+                                <div className="SmallSwitch">
                                     <span className="rightLable-Switch">Grid View</span>
-                                    <div class="onoffswitch">
-                                        <input type="checkbox" name="gridView" class="onoffswitch-checkbox" id="gridView" checked={this.state.gridView} onChange={this.viewChange} />
-                                        <label class="onoffswitch-label" for="gridView">
-                                            <span class="onoffswitch-inner"></span>
-                                            <span class="onoffswitch-switch"></span>
+                                    <div className="onoffswitch">
+                                        <input type="checkbox" name="gridView" className="onoffswitch-checkbox" id="gridView" checked={this.state.gridView} onChange={this.viewChange} />
+                                        <label className="onoffswitch-label" htmlFor="gridView">
+                                            <span className="onoffswitch-inner"></span>
+                                            <span className="onoffswitch-switch"></span>
                                         </label>
                                     </div>
                                     <span className="leftLabel-Switch">Calendar View</span>
-                                </div> */}
-                                {/* {
-                                    !this.state.gridView ? (
-                                        <GridTabs location={this.state.location} position={this.state.position} department={this.state.department}/>
-                                    ) : ('')
-                                } */}
-
-                                <Shifts
-                                    editConfirmOpened={this.state.editConfirmOpened}
-                                    openEditConfirm={this.openEditConfirm}
-                                    refresh={this.state.refresh}
-                                    getSelectedValue={this.getSelectedValue}
-                                    cityId={this.state.cityId}
-                                    shiftId={this.state.shiftId}
-                                    entityId={this.state.location}
-                                    saveTemplateShift={this.saveTemplateShift}
-                                    previousWeekShifts={this.previousWeekShifts}
-                                    changeViewType={this.changeViewType}
-                                    location={this.state.location}
-                                    department={this.state.department}
-                                    position={this.state.position}
-                                    selectedEmployee={this.state.selectedEmployee}
-                                    weekDayStart={this.state.weekDayStart}
-                                />
+                                </div>
+                                {
+                                    !this.state.gridView ? this.gridTabsView() : this.calendarView()
+                                }
 
                             </div>
                         </div>
