@@ -403,11 +403,12 @@ class TimeCardForm extends Component {
     getHotels = () => {
         this.props.client
             .query({
-                query: GET_HOTEL_QUERY
+                query: GET_HOTEL_QUERY,
+                variables: { Id: localStorage.getItem('LoginId') }
             })
             .then(({ data }) => {
                 this.setState({
-                    hotels: data.getbusinesscompanies
+                    hotels: data.companiesByUser
                 });
             })
             .catch();

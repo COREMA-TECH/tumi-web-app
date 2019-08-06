@@ -52,18 +52,10 @@ class PunchesReportConsolidated extends Component {
 
     getDepartments = () => {
         this.setState(() => ({ loadingDepartments: true }), () => {
-            var variables = {};
-            let idRol = localStorage.getItem('IdRoles');
-            let idEntity = localStorage.getItem("Id_Entity");
-
-            if (this.state.property.value)
-                variables = { Id_Entity: this.state.property.value };
-            if (idRol == 5) variables = { Id_Entity: idEntity };
-
             this.props.client
                 .query({
                     query: GET_DEPARTMENTS_QUERY,
-                    variables,
+                    variables: { UserId: localStorage.getItem('LoginId') },
                     fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
@@ -73,7 +65,7 @@ class PunchesReportConsolidated extends Component {
                     options.push({ value: '', label: 'Department(All)' });
 
                     //Create structure based on department data
-                    data.catalogitem.map(({ Id, DisplayLabel }) => {
+                    data.departmentsByUser.map(({ Id, DisplayLabel }) => {
                         options.push({ value: Id, label: DisplayLabel })
                     });
 
@@ -94,18 +86,11 @@ class PunchesReportConsolidated extends Component {
 
     getProperties = () => {
         this.setState(() => ({ loadingProperties: true }), () => {
-            let filter = {};
-            let idRol = localStorage.getItem('IdRoles');
-            let idEntity = localStorage.getItem("Id_Entity");
-            if (idRol == 5) filter = { ...filter, Id: idEntity };
-
             this.props.client
                 .query({
                     query: GET_PROPERTIES_QUERY,
                     fetchPolicy: 'no-cache',
-                    variables: {
-                        ...filter
-                    }
+                    variables: { Id: localStorage.getItem('LoginId') }
                 })
                 .then(({ data }) => {
                     let options = [];
@@ -114,7 +99,7 @@ class PunchesReportConsolidated extends Component {
                     options.push({ value: '', label: 'Property(All)' });
 
                     //Create structure based on property data
-                    data.getbusinesscompanies.map((property) => {
+                    data.companiesByUser.map((property) => {
                         options.push({ value: property.Id, label: property.Code + " | " + property.Name });
                     });
 
@@ -138,8 +123,12 @@ class PunchesReportConsolidated extends Component {
 
         if (property.value)
             filters = { ...filters, idEntity: property.value };
+        else
+            filters = { ...filters, idEntity: this.state.properties.filter(_ => _.value > 0).map(_ => _.value) };
         if (department.value)
-            filters = { ...filters, Id_Department: department.value };
+            filters = { ...filters, Id_Deparment: department.value };
+        else
+            filters = { ...filters, Id_Deparment: this.state.departments.filter(_ => _.value > 0).map(_ => _.value) };
         if (employee)
             filters = { ...filters, employee };
         if (startDate)
