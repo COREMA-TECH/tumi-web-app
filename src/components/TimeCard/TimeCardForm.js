@@ -62,7 +62,8 @@ class TimeCardForm extends Component {
         endDate: '',
         employees: [],
         positions: [],
-        PositionRateId: 0
+        PositionRateId: 0,
+        newMark: false
     };
 
     constructor(props) {
@@ -93,10 +94,11 @@ class TimeCardForm extends Component {
                 startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
                 endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
                 shift: nextProps.item.clockIn,
-                endShift: nextProps.item.clockOut,
+                endShift: nextProps.item.clockOut !== 'Now' ? nextProps.item.clockOut : null,
                 comment: nextProps.item.noteIn,
-                duration: nextProps.item.clockOut && nextProps.item.clockIn ? moment(nextProps.item.clockOut, 'HH:mm').diff(moment(nextProps.item.clockIn, 'HH:mm'), 'hours') : '',
-                statusTimeOut: !nextProps.item.clockOut ? true : false
+                duration: nextProps.item.clockOut !== 'Now' && nextProps.item.clockIn ? moment(nextProps.item.clockOut, 'HH:mm').diff(moment(nextProps.item.clockIn, 'HH:mm'), 'hours') : '',
+                statusTimeOut: nextProps.item.clockOut === 'Now' ? true : false,
+                newMark: nextProps.item.clockOut === 'Now' ? true : false
             });
         } else if (!nextProps.openModal) {
             this.setState({
@@ -149,7 +151,6 @@ class TimeCardForm extends Component {
     }
 
     handleSubmit = (event) => {
-        console.log({ ID: this.state.id })
         event.preventDefault();
         if (
             this.state.IdEntity == null ||
@@ -194,7 +195,6 @@ class TimeCardForm extends Component {
                     marks.push(markIn);
                 }
 
-
                 if (this.state.clockOutId) {
                     let markOut = {
                         id: this.state.clockOutId,
@@ -206,10 +206,26 @@ class TimeCardForm extends Component {
                         ShiftId: null,
                         notes: this.state.comment
                     }
+
                     marks.push(markOut);
                 }
 
+                if (this.state.newMark) {
+                    let markOut = {
+                        entityId: this.state.IdEntity,
+                        markedDate: moment(this.state.endDate).format('YYYY-MM-DD'),
+                        markedTime: this.state.endShift,
+                        imageMarked: "",
+                        EmployeeId: this.state.employeeId,
+                        ShiftId: null,
+                        notes: this.state.comment,
+                        typeMarkedId: this.state.PositionRateId === 0 ? 30571 : 30570,
+                    }
 
+                    this.setState(prevState => {
+                        return { marks: markOut }
+                    }, _ => { this.addIn(); });
+                }
 
                 marks.map(mark => {
                     this.updateMark(mark);
@@ -350,8 +366,6 @@ class TimeCardForm extends Component {
             [name]: value
         });
 
-
-
         if (name === 'IdEntity') {
             this.getPositions(value);
             this.getContacts(value);
@@ -403,11 +417,12 @@ class TimeCardForm extends Component {
     getHotels = () => {
         this.props.client
             .query({
-                query: GET_HOTEL_QUERY
+                query: GET_HOTEL_QUERY,
+                variables: { Id: localStorage.getItem('LoginId') }
             })
             .then(({ data }) => {
                 this.setState({
-                    hotels: data.getbusinesscompanies
+                    hotels: data.companiesByUser
                 });
             })
             .catch();
@@ -567,6 +582,8 @@ class TimeCardForm extends Component {
                 return _.Id === parseInt(value)
             })
             return { IdEntity: value, propertyStartWeek: hotel ? hotel.Start_Week : null }
+        }, _ => {
+            this.getPositions(parseInt(value));
         });
     }
 
