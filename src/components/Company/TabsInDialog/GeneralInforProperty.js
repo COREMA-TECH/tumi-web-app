@@ -115,7 +115,8 @@ class GeneralInfoProperty extends Component {
             isCorrectCity: true,
             changeCity: false,
             parentDescription: '',
-            operationManagerDescription: ''
+            operationManagerDescription: '',
+            propertyBasicInfo: {}
         };
     }
 
@@ -888,7 +889,8 @@ class GeneralInfoProperty extends Component {
                                     changeCity: false,
                                     linearProgress: false,
                                     startWeekName: days[item.Start_Week - 1].Name,
-                                    endWeekName: days[item.End_Week - 1].Name
+                                    endWeekName: days[item.End_Week - 1].Name,
+                                    propertyBasicInfo: {id: item.Id, name: item.Name.trim()}
                                 }
                             });
                         }
@@ -1619,16 +1621,15 @@ class GeneralInfoProperty extends Component {
     }
 
     getStepContent = () => {
-        console.log('mostrando el estado', this.state.activeStep); // TODO: (LF) QUitar console
         switch (this.state.activeStep) {
             case 0:
                 return this.getGeneralInformation();
             case 1:
-                return <ApplicationList />
+                return <ApplicationList propertyInfo={this.state.propertyBasicInfo} />
             case 2:
-                return <Schedules />
+                return <Schedules propertyInfo={this.state.propertyBasicInfo} />
             case 3:
-                return <PunchesReportConsolidated />
+                return <PunchesReportConsolidated propertyInfo={this.state.propertyBasicInfo} />
         }
     };
 
@@ -1636,8 +1637,7 @@ class GeneralInfoProperty extends Component {
         const { classes } = this.props;
         const { activeStep } = this.state;
 
-        return <form >
-            <div className="row">
+        return <div className="row">
                 <div className="col-md-3 col-xl-2">
                     <div className="card">
                         <div className="">
@@ -1663,9 +1663,6 @@ class GeneralInfoProperty extends Component {
                                     <Stepper activeStep={activeStep} orientation="vertical" className="">
                                         {STEPS.map((label, index) => {
 
-                                            if (this.state.applicationId == 0) {
-                                                this.state.activeStep = 0;
-                                            }
                                             return (
                                                 <div
                                                     key={label}
@@ -1675,7 +1672,7 @@ class GeneralInfoProperty extends Component {
                                                     }}
                                                     className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item'}
                                                 >
-                                                    <StepLabel className={[classes.stepper, 'stepper-label']}>
+                                                    <StepLabel className={[classes.stepper, 'stepper-label']} >
                                                         {label}
                                                     </StepLabel>
                                                 </div>
@@ -1692,7 +1689,7 @@ class GeneralInfoProperty extends Component {
                     {this.getStepContent()}
                 </div>
             </div>
-        </ form>
+        
 
     }
     static contextTypes = {
