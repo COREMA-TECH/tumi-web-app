@@ -133,13 +133,13 @@ class PunchesReportConsolidated extends Component {
             filters = { ...filters, Id_Deparment: department.value };
         else
             filters = { ...filters, Id_Deparment: this.state.departments.filter(_ => _.value > 0).map(_ => _.value) };
-        if (employee)
-            filters = { ...filters, employee };
         if (startDate)
             filters = { ...filters, startDate };
         if (endDate)
             filters = { ...filters, endDate };
         if (idRol == 5) filters = { ...filters, idEntity };
+
+        filters = { ...filters, employee: employee ? employee : '' };
 
         return filters;
     }
@@ -157,43 +157,52 @@ class PunchesReportConsolidated extends Component {
         });
     }
 
-    handleClickOpenModalPicture = (urlPicture) => {
-        this.setState({
-            openModalPicture: true,
-            urlPicture: urlPicture
-        });
-    };
 
-    handleCloseModalPicture = () => {
-        this.setState({ openModalPicture: false });
-    };
+    calculateTotalHrs = (data) => {
+        let dataList = data.markedEmployeesConsolidated || [];
+        let total = 0, currentId = 0;
+        let BreakException = {};
+        try {
+            dataList.forEach(_ => {
+                _.punches.forEach(_punch => {
+                    if (currentId == 0)
+                        currentId = _punch.employeeId;
+                    else if (currentId != _punch.employeeId) {
+                        total = 0;
+                        throw BreakException;
+                    }
+                    else
+                        total += _punch.duration;
+                })
+            })
+        }
+        catch (e) {
+            if (e != BreakException) throw e;
+        }
+        return total;
 
+    }
     render() {
-        const { loadingReport } = this.state;
-        const loading = loadingReport;
-
-
-        let renderDialogPicture = () => (
-            <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModalPicture}>
-                {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
-                <img src={this.state.urlPicture} className="avatar-lg" />
-                {/*</DialogTitle>*/}
-            </Dialog>
-        );
 
         return <React.Fragment>
-            {renderDialogPicture()}
             <div className="row">
                 <div className="col-md-12">
-                    <div className="card" style={{ "position": "relative"}}>
-                        <Filter {...this.state} showPropertyFilter={!this.props.propertyInfo} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
+                    <div className="card" style={{ "position": "relative" }}>
+                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>
                     <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
                         <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="5000">
 
                             {({ loading, error, data }) => {
+
+                                let total = this.calculateTotalHrs(data);
+
                                 return <React.Fragment>
-                                    <DropDown data={data ? data.markedEmployeesConsolidated : []} handleEditModal={this.handleClickOpenModal}></DropDown>
+                                    {total > 0 ? <div className="card-head pt-3 pb-3 text-right mr-3">
+                                        <span class="badge badge-primary">Total: ${total} HRS</span>
+                                    </div> : <React.Fragment />
+                                    }
+                                    <DropDown data={data.markedEmployeesConsolidated || []} handleEditModal={this.handleClickOpenModal}></DropDown>
                                 </React.Fragment>
                             }}
                         </Query>
