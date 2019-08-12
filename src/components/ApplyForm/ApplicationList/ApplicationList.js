@@ -58,7 +58,7 @@ class ApplicationList extends Component {
 				value: 3,
 				label: "All"
 			}],
-
+			propertyId: null // recibida por props
 		};
 	}
 
@@ -299,9 +299,17 @@ class ApplicationList extends Component {
 	}
 
 	componentWillMount() {
-		this.getProperties();
-		this.getDepartments();
-		this.getApplications();
+		//handlePropertyChange
+		if(this.props.propertyInfo){
+			let propertyInfo = this.props.propertyInfo;
+			this.handlePropertyChange({ value: propertyInfo.id, label: propertyInfo.name });
+		}
+		else{
+			this.getProperties();
+			this.getDepartments();
+			this.getApplications();
+		}
+
 	}
 
 	render() {
@@ -357,14 +365,17 @@ class ApplicationList extends Component {
 					</div>
 				</div>
 				<div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
-					<Select
-						name="property"
-						options={this.state.properties}
-						value={this.state.property}
-						onChange={this.handlePropertyChange}
-						components={makeAnimated()}
-						closeMenuOnSelect
-					/>
+					{
+						!this.props.propertyInfo &&
+						<Select
+							name="property"
+							options={this.state.properties}
+							value={this.state.property}
+							onChange={this.handlePropertyChange}
+							components={makeAnimated()}
+							closeMenuOnSelect
+						/>
+					}
 				</div>
 				<div className="col-md-3 col-xl-2 mb-2">
 					<Select
@@ -406,7 +417,7 @@ class ApplicationList extends Component {
 
 			return (
 				<div className="row pt-0">
-					{localStorage.getItem('isEmployee') == 'false' &&
+					{!this.props.propertyInfo && localStorage.getItem('isEmployee') === 'false' &&
 						<div className="col-md-12">
 							<button
 								className="btn btn-success float-right"

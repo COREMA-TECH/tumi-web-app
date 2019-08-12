@@ -99,6 +99,16 @@ class PreFilter extends Component {
                 .then(({ data }) => {
                     this.setState((prevState) => {
                         return { locations: data.getbusinesscompanies, loadingLoaction: false, loadingDepartments: false }
+                    }, () => {
+                        if(this.props.location){
+                            this.setState(() => {
+                                return { location: this.props.location }
+                            }, () => {
+                                this.getContacts();
+                                this.getDepartments();
+                                this.getStartWeek(this.props.location);
+                            });
+                        }
                     })
                 }).catch(error => {
                     this.setState({ loadingLoaction: false }, () => {
@@ -186,9 +196,9 @@ class PreFilter extends Component {
     }
 
     getStartWeek = (id) => {
-        let company = this.state.locations.find(_ => _.Id == id);
+        let company = this.state.locations.find(_ => _.Id === id);
         this.setState(() => ({
-            startWeek: company.Start_Week
+            startWeek: company ? company.Start_Week : 1
         }))
     }
 
@@ -239,7 +249,7 @@ class PreFilter extends Component {
                                     />*/}
 
 
-                                    <select name="location" value={this.state.location} disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
+                                    <select name="location" value={this.state.location} disabled={this.props.location || this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderLocationList()}
                                     </select>
