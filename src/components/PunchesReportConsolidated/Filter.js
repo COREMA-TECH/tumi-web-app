@@ -177,14 +177,17 @@ class PunchesReportConsolidatedFilter extends Component {
                     </div>
                 </div>
                 <div className="col-md-4 col-xl-2 mb-2">
-                    <Select
-                        name="property"
-                        options={this.props.properties}
-                        value={this.state.property}
-                        onChange={this.handlePropertyChange}
-                        components={makeAnimated()}
-                        closeMenuOnSelect
-                    />
+                    {
+                        this.props.showPropertyFilter &&
+                        <Select
+                            name="property"
+                            options={this.props.properties}
+                            value={this.state.property}
+                            onChange={this.handlePropertyChange}
+                            components={makeAnimated()}
+                            closeMenuOnSelect
+                        />
+                    }
                 </div>
                 <div className="col-md-4 col-xl-2 mb-2">
                     <Select

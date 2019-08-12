@@ -531,7 +531,7 @@ class NewContract extends Component {
                                     IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
-                                    User_Signed_Title: `${this.state.User_Signed_Title ? this.state.User_Signed_Title : ''}`,
+                                    User_Signed_Title: `'${this.state.User_Signed_Title ? this.state.User_Signed_Title : ''}'`,
                                     Signed_Date: `'${this.state.Signed_Date}'`,
                                     Contract_Status: `'${this.state.Contract_Status}'`,
                                     Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
@@ -1015,7 +1015,7 @@ class NewContract extends Component {
         let Contract_NameValid = this.state.Contract_NameValid;
         let Legal_NameValid = this.state.Legal_NameValid;
         let Contrat_OwnerValid = this.state.Contrat_OwnerValid;
-        let Id_Contract_TemplateValid = this.state.Id_Contract_TemplateValid;
+        let Id_Contract_TemplateValid = true; //this.state.Id_Contract_TemplateValid;
         let Id_EntityValid = this.state.Id_EntityValid;
         let Id_User_SignedValid = this.state.Id_User_SignedValid;
         let User_Signed_TitleValid = this.state.User_Signed_TitleValid;
@@ -1045,7 +1045,7 @@ class NewContract extends Component {
                 Contrat_OwnerValid = value.trim().length >= 5;
                 break;
             case 'Id_Contract_Template':
-                Id_Contract_TemplateValid = value !== null && value !== 0 && value !== '';
+                Id_Contract_TemplateValid = true; //value !== null && value !== 0 && value !== '';
                 break;
             case 'Id_Entity':
                 Id_EntityValid = value !== null && value !== 0 && value !== '';
@@ -1142,10 +1142,10 @@ class NewContract extends Component {
         let Contract_NameValid = this.state.Contract_Name.trim().length >= 5;
         let Legal_NameValid = this.state.Legal_Name.trim().length >= 5;
         let Contrat_OwnerValid = this.state.Contrat_Owner.trim().length >= 5;
-        let Id_Contract_TemplateValid =
-            this.state.Id_Contract_Template !== null &&
-            this.state.Id_Contract_Template !== 0 &&
-            this.state.Id_Contract_Template !== '';
+        let Id_Contract_TemplateValid = true;
+            // this.state.Id_Contract_Template !== null &&
+            // this.state.Id_Contract_Template !== 0 &&
+            // this.state.Id_Contract_Template !== '';
 
         let Id_EntityValid = this.state.Id_Entity !== null && this.state.Id_Entity !== 0 && this.state.Id_Entity !== '';
         let Id_User_SignedValid =
@@ -1447,7 +1447,7 @@ class NewContract extends Component {
                                                     error={!this.state.Contrat_OwnerValid}
                                                 />
                                             </div>
-                                            <div className="col-md-6 col-lg-6">
+                                            {/* <div className="col-md-6 col-lg-6">
                                                 <label>* Contract Template</label>
                                                 <Query query={this.GET_CONTRACT}>
                                                     {({ loading, error, data, refetch, networkStatus }) => {
@@ -1484,7 +1484,7 @@ class NewContract extends Component {
                                                         return <p>Nothing to display </p>;
                                                     }}
                                                 </Query>
-                                            </div>
+                                            </div> */}
                                             <div className="col-md-6">
                                                 <label>* Management Company</label>
                                                 <Query

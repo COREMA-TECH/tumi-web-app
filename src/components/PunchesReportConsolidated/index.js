@@ -40,6 +40,10 @@ class PunchesReportConsolidated extends Component {
     componentWillMount() {
         this.getDepartments();
         this.getProperties();
+        if(this.props.propertyInfo){
+            let {id, name} = this.props.propertyInfo;
+            this.changeFilter({value: id, label: name });
+        }
     }
 
     handleClickOpenModal = (item) => {

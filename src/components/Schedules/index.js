@@ -195,6 +195,14 @@ class Schedules extends Component {
         />;
     }
 
+    componentWillMount() {
+        if(this.props.propertyInfo){
+            this.setState(() => {
+                return {location: this.props.propertyInfo.id}
+            });
+        }
+    }
+
     render() {
         return (
             <div className="MasterShift">
