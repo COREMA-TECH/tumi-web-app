@@ -40,6 +40,10 @@ class PunchesReportConsolidated extends Component {
     componentWillMount() {
         this.getDepartments();
         this.getProperties();
+        if(this.props.propertyInfo){
+            let {id, name} = this.props.propertyInfo;
+            this.changeFilter({value: id, label: name });
+        }
     }
 
     handleClickOpenModal = (item) => {
@@ -182,14 +186,14 @@ class PunchesReportConsolidated extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <div className="card" style={{ "position": "relative"}}>
-                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
+                        <Filter {...this.state} showPropertyFilter={!this.props.propertyInfo} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>
                     <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
                         <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="5000">
 
                             {({ loading, error, data }) => {
                                 return <React.Fragment>
-                                    <DropDown data={data.markedEmployeesConsolidated || []} handleEditModal={this.handleClickOpenModal}></DropDown>
+                                    <DropDown data={data ? data.markedEmployeesConsolidated : []} handleEditModal={this.handleClickOpenModal}></DropDown>
                                 </React.Fragment>
                             }}
                         </Query>
