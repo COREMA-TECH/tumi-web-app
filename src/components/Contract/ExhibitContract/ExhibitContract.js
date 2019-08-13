@@ -242,10 +242,11 @@ class ExhibitContract extends Component {
                     this.setState({
                         openModal: true,
                         loadingContract: false,
-                        PdfUrl:
-                            '<iframe src="' +
-                            url.Contract_Terms +
-                            '"  width="100%" height="100%" />'
+                        PdfUrl:`
+                        <object data="${url.Contract_Terms}" type="application/pdf" height="100%" width="100%">
+                            <embed src="${url.Contract_Terms}" type="application/pdf"/>
+                        </object>
+                        `
                     });
                 } else {
                     this.props.handleOpenSnackbar(
@@ -265,45 +266,6 @@ class ExhibitContract extends Component {
                     loadingContract: false
                 });
             });
-
-        // this.props.client
-        //     .query({
-        //         query: this.CREATE_CONTRACT_QUERY,
-        //         variables: { Id: this.props.contractId },
-        //         fetchPolicy: 'no-cache'
-        //     })
-        //     .then((data) => {
-        //         if (data.data.createcontracts != null) {
-        //             this.sleep().then(() => {
-        //                 this.setState({
-        //                     openModal: true,
-        //                     loadingContract: false,
-        //                     PdfUrl:
-        //                         '<iframe src="' +
-        //                         this.context.baseUrl +
-        //                         '/public/Contract_' +
-        //                         this.props.contractname +
-        //                         '.pdf"  width="100%" height="100%" />'
-        //                 });
-        //             });
-        //         } else {
-        //             this.props.handleOpenSnackbar(
-        //                 'error',
-        //                 'Error: Loading agreement: createcontracts not exists in query data'
-        //             );
-        //             this.setState({
-        //                 loadingData: false,
-        //                 loadingContract: false
-        //             });
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
-        //         this.setState({
-        //             loadingData: false,
-        //             loadingContract: false
-        //         });
-        //     });
     };
 
     loadAgreement = () => {
@@ -451,7 +413,7 @@ class ExhibitContract extends Component {
                         </div>
                     </DialogTitle>
                     <DialogContent style={{ minWidth: 750, padding: '0px' }}>
-                        <div className="row">
+                        <div className="row m-0">
                             <div className="col-md-12">
                                 <button
                                     //	disabled={this.state.loading || !this.state.enableCancelButton}
