@@ -1,0 +1,14 @@
+.TotalShiftsChart {
+    width: 18vw;
+    margin-left: -4vw;
+
+    @include media-breakpoint-down(sm){
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+.z_index_100{
+    z-index: 100;
+}
+
