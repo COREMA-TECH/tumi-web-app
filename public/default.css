@@ -10164,6 +10164,17 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 .react-trello-board .djewwL {
   max-height: 60vh; }
 
+.TotalShiftsChart {
+  width: 18vw;
+  margin-left: -4vw; }
+  @media (max-width: 767.98px) {
+    .TotalShiftsChart {
+      width: 100%;
+      margin-left: 0; } }
+
+.z_index_100 {
+  z-index: 100; }
+
 .BankInfo .input-group {
   -webkit-box-align: center;
   -ms-flex-align: center;
