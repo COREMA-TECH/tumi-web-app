@@ -65,8 +65,6 @@ class Titles extends Component {
             .then(({ data }) => {
                 let posCatalog = [], newGroup = [];
                 let dataAPI = data.catalogitem;
-                console.log('Catalogos recibidos', dataAPI); // TODO: (LF) Quitar console log
-                console.log('hoteles --', myHotels); // TODO: (LF) Quitar console log
                 myHotels.forEach(h => {
                     newGroup = dataAPI.filter(da => da.Id_Entity === h.Id).map(item => {
                                     return { value: item.Id, label: item.Code.trim(), key: item.Id }
@@ -88,15 +86,12 @@ class Titles extends Component {
     }
 
     componentDidMount() {
-        console.log('El componente fue montado', this.props.myHotels); // TODO: (LF) Quitar console log
         this.getPositions(this.props.myHotels);
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.myHotels !== this.props.myHotels){
+        if(nextProps.myHotels !== this.props.myHotels)
             this.getPositions(nextProps.myHotels);
-            console.log('Recibiendo props nuevas', nextProps.myHotels); // TODO: (LF) Quitar console log
-        }
     }
 
     render() {
