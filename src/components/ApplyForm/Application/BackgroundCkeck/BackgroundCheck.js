@@ -972,7 +972,7 @@ class BackgroundCheck extends Component {
                                                     <p>&nbsp;</p>
                                                 </div>
                                                 <table style={{
-                                                    marginTop: '240px',
+                                                    marginTop: '15px',
                                                     backgroundColor: '#ddd',
                                                     borderCollapse: 'collapse', width: '97.0648%', height: '35px'
                                                 }} border={1}>
@@ -1269,7 +1269,6 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <p>&nbsp;</p>
                                                 <table style={{ borderCollapse: 'collapse', width: '97.0648%', height: '17px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '17px' }}>
@@ -1311,7 +1310,6 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <p>&nbsp;</p>
                                                 <p>&nbsp;</p>
                                             </div>
                                         </div>
