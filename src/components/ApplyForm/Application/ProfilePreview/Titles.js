@@ -57,8 +57,7 @@ class Titles extends Component {
             });
     }
 
-    getPositions = () => {
-        let myHotels = this.props.myHotels;
+    getPositions = (myHotels) => {
         this.props.client
             .query({
                 query: GET_POSITION
@@ -86,8 +85,13 @@ class Titles extends Component {
             });
     }
 
-    componentWillMount() {
-        this.getPositions();
+    componentDidMount() {
+        this.getPositions(this.props.myHotels);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.myHotels !== this.props.myHotels)
+            this.getPositions(nextProps.myHotels);
     }
 
     render() {
