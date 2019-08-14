@@ -226,7 +226,7 @@ class BackgroundCheck extends Component {
                             date: data.applications[0].backgroundCheck.date.substring(0, 10),
                             loadedBackgroundCheckById: true,
                             editing: true,
-                            accept: true,
+                            accept: data.applications[0].backgroundCheck.signature !== "" ? true : false,
                             isCreated: true
                         });
                     } else {
@@ -896,7 +896,7 @@ class BackgroundCheck extends Component {
                                                             ) : ('')
                                                         }
                                                         <button
-                                                            disabled={!this.state.accept}
+                                                            //disabled={!this.state.accept}
                                                             className="applicant-card__save-button"
                                                             type="submit">
                                                             {spanishActions[4].label}

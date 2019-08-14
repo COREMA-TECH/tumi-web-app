@@ -158,8 +158,9 @@ class EmployeesTable extends React.Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
+        console.log(nextProps.data.length, this.props.data.length)
 
-        if (this.props.data.toString() !== nextProps.data.toString() || this.props.loading !== nextProps.loading) {
+        if (JSON.stringify(this.props.data) != JSON.stringify(nextProps.data) || this.props.loading !== nextProps.loading) {
             return true;
         }
 
@@ -246,7 +247,7 @@ class EmployeesTable extends React.Component {
                                                             e.stopPropagation();
                                                             e.preventDefault();
 
-                                                            this.props.handleClickOpenUserModal(row.idEntity,row.electronicAddress, row.mobileNumber, row.id, row.firstName + " " + row.lastName, row.firstName, row.lastName);
+                                                            this.props.handleClickOpenUserModal(row.idEntity, row.electronicAddress, row.mobileNumber, row.id, row.firstName + " " + row.lastName, row.firstName, row.lastName);
                                                         }}
                                                     >
                                                         <i className="fas fa-plus"></i>

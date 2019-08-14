@@ -121,18 +121,47 @@ class Summary extends Component {
                         let gender = "--";
                         let hireDate = "--";
                         let hotel = "--";
+                        let typeOfId = applications.typeOfId;
                         if (applications.gender)
-                            gender = applications.gender ? 'FEMALE' : "MALE"
+                            gender = applications.gender === 1 ? 'MALE' : 'FEMALE';
                         if (applications.employee)
-                            hireDate = applications.employee.Employees.hireDate ? applications.employee.Employees.hireDate : '--';
+                            hireDate = applications.employee.Employees.hireDate ? moment(applications.employee.Employees.hireDate).format('DD/MM/YYYY') : '--';
                         if (applications.employee)
                             hotel = applications.employee.Employees.BusinessCompany ? applications.employee.Employees.BusinessCompany.Name: '--';
 
-                            return {
+                        
+                        switch(typeOfId) {
+                            case 1: 
+                                typeOfId = 'Birth certificate';
+                                break;
+                            case 2: 
+                                typeOfId = 'Social Security card';
+                                break;
+                            case 3: 
+                                typeOfId = 'State-issued drivers license';
+                                break;
+                            case 4: 
+                                typeOfId = 'State-issued ID';
+                                break;
+                            case 5: 
+                                typeOfId = 'Passport';
+                                break;
+                            case 6: 
+                                typeOfId = 'Department of Defense Identification Card';
+                                break;
+                            case 7: 
+                                typeOfId = 'Green Card';
+                                break;
+                            default: 
+                                typeOfId = '--';
+                                break;
+                        }
+
+                        return {
                             applicantName: applications.firstName +' '+ applications.lastName,
                             socialSecurityNumber:applications.socialSecurityNumber ?applications.socialSecurityNumber:'--',
                             cellphone:applications.cellPhone ? applications.cellPhone:'--',
-                            birthDay :applications.birthDay ? applications.birthDay.substring(0, 10): '--',
+                            birthDay :applications.birthDay ? moment(applications.birthDay.substring(0, 10)).format('DD/MM/YYYY') : '--',
                             streetAddress:applications.streetAddress ? applications.streetAddress: '--',
                             zipCode:applications.zipCode ? applications.zipCode.substring(0, 5): '--',
                             city: applications.city ? applications.cityInfo.Name : '',
@@ -147,7 +176,7 @@ class Summary extends Component {
                             hotel: hotel,
                             recruiter:applications.recruiter ? applications.recruiter.Full_Name : '--',
                             area:applications.area ? applications.area : '--',
-                            typeOfId:applications.typeOfId ? (applications.typeOfId==1?'Birth certificate':(applications.typeOfId==2?'Social Security card':'State-issued drivers license')): '--',                        
+                            typeOfId: typeOfId,                        
                             expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('DD/MM/YYYY'): '--',
                             marital: applications.marital ? "MARRIED" : "SINGLE",
                             numberId: applications.numberId ? applications.numberId : '--',
@@ -225,6 +254,7 @@ class Summary extends Component {
     }
 
     render() {
+        const address = this.state.streetAddress !== '--' && this.state.zipCode !== '--' && this.state.city !== '--' ? `${this.state.streetAddress}, ${this.state.city} ${this.state.state}, ${this.state.zipCode}` : '--';
         let appAccount = Array.isArray(this.state.accounts) && this.state.accounts.length ? this.state.accounts[0] : null; // Temporal para mostrar solo una cuenta
         let renderSignatureDialog = () => (
             <div>
@@ -341,7 +371,7 @@ class Summary extends Component {
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>GENDER:</strong></span>`+ this.state.gender +` </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>BIRTHDATE:</strong></span>`+ moment(this.state.birthDay).format('DD/MM/YYYY') +` </span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #000000;'><strong>BIRTHDATE:</strong></span>`+ this.state.birthDay +` </span></p>
                                     
                                     </td>
                                     
@@ -351,7 +381,7 @@ class Summary extends Component {
                                     
                                     </table>
                                     
-                                    <h4><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>ADDRESS:</strong></span> `+ this.state.streetAddress +`,`+ this.state.zipCode +`, ${this.state.city} ${this.state.state}</span></h4>
+                                    <h4><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>ADDRESS:</strong></span> ${address} </span></h4>
                                     
                                     <table style='border-collapse: collapse; width: 100%; background-color: #ecf0f1; border-color: #ffffff;' border='0'>
                                     

@@ -2197,7 +2197,7 @@ class VerticalLinearStepper extends Component {
             {this.state.languages.length > 0 ? (
                 <div className="skills-container skills-container--header">
                     <div className="row pt-0 pb-0">
-                        <div className="col-12 col-md-4 col-xl-3 External-col">
+                        <div className="col-12 col-md-4 col-xl-3">
                             <span className='skills-label'>{labels.languageName[displayLanguage]}</span>
                         </div>
                         <div className="col-md-4">
