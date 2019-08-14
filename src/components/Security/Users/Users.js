@@ -648,7 +648,7 @@ class Catalogs extends React.Component {
         .then(({data}) => {
             this.setState(_ => ({
                 userApplication: data.userApplication
-            }), console.log(data.userApplication));
+            }));
         })
     }
 
@@ -664,7 +664,7 @@ class Catalogs extends React.Component {
         .then(({data}) => {
             this.setState(_ => ({
                 userContact: data.userContact
-            }), console.log(data.userContact))
+            }))
         })
     }
 
@@ -932,6 +932,7 @@ class Catalogs extends React.Component {
     };
 
     updateUserApplication = (user) => {
+
         if(!this.state.userApplication || !user)
             return;
 

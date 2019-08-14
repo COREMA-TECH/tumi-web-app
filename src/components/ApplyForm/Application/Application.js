@@ -153,7 +153,7 @@ class Application extends Component {
 
     // Update user info on application save
     updateUserInfo = applicationId => {
-        const {applicationUser, firstName, lastName, cellPhone, emailAddress} = this.state;
+        const {applicationUser, firstName = "", lastName = "", cellPhone = "", emailAddress = ""} = this.state;        
 
         if(applicationId <= 0 || !applicationUser){
             return;
