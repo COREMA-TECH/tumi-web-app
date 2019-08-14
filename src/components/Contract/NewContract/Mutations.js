@@ -10,3 +10,11 @@ export const CREATE_CONTRACT = gql`
         }
     }
 `;
+
+export const UPDATE_CONTRACT = gql`
+    mutation updateContract($contract: inputUpdateContracts){
+        updateContract(contract: $contract){
+            Id
+        }
+    }
+`;
