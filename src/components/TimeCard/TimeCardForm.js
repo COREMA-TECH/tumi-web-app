@@ -120,13 +120,13 @@ class TimeCardForm extends Component {
 
         this.getHotels();
         this.getEmployees();
-        this.getPositions();
+        //this.getPositions();
     }
 
     componentWillMount() {
         this.getHotels();
         this.getEmployees();
-        this.getPositions();
+        //this.getPositions();
     }
 
     handleCloseModal = (event) => {
