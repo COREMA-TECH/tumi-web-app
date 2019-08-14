@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../Generic/Global';
 import { GET_ROLES_FORMS, GET_MENU } from '../MobileMenu/Queries';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
 class MobileMenu extends Component {
     constructor(props) {
@@ -13,7 +14,8 @@ class MobileMenu extends Component {
             dataRolForm: [],
             dataForm: [],
             ParentId: 0,
-            childrens: []
+            childrens: [],
+            loading: true
         };
     }
 
@@ -64,6 +66,10 @@ class MobileMenu extends Component {
     showSubMenu = (ParentId, Value, e) => {
         e.preventDefault();
 
+        this.setState(_ => {
+            return { loading : true }
+        });
+
         let currentTarget = e.currentTarget;
         let nextSibling = currentTarget.nextSibling;
 
@@ -77,6 +83,10 @@ class MobileMenu extends Component {
                 this.handleItemMenuAction(currentTarget, nextSibling);
             });
         }
+    }
+
+    loading = () => {
+        return this.state.loading ? <LinearProgress /> : false;
     }
 
     render() {
@@ -98,6 +108,7 @@ class MobileMenu extends Component {
                                 <span>{item.Name}</span>
                             </a>
                             <ul className="SubMenu">
+                                {this.loading()}
                                 {this.state.childrens.map((children, i) => {
                                     return children.ParentId === item.Id ?
                                         <li key={i} className="SubMenu-item">
