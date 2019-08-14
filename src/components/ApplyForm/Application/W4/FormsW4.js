@@ -58,7 +58,7 @@ class FormsW4 extends Component {
             openSignature: false,
             date: new Date().toISOString().substring(0, 10)
         }, () => {
-           //this.insertAntiHarrasment(this.state);
+           this.validateW4();
         });
     };
 
@@ -83,6 +83,8 @@ class FormsW4 extends Component {
                         isCreated: true,
                         html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 50%;"', '') : '',
                         pdfUrl: data.applicantW4[0].url
+                    }, _ => {
+                        
                     });
                 } else {
                     this.setState({
@@ -134,7 +136,6 @@ class FormsW4 extends Component {
     // };
 
     createDocumentsPDF = (random) => {
-
         this.setState(
             {
                 downloading: true
@@ -174,6 +175,7 @@ class FormsW4 extends Component {
     };
 
 
+
     componentWillMount() {
         //this.getHarrasmentInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
@@ -194,14 +196,7 @@ class FormsW4 extends Component {
         let socialSecurityExtention = document.getElementById('socialSecurityExtention');
 
 
-        if(this.state.signature.length === 0) {
-            this.props.handleOpenSnackbar(
-                'warning',
-                'You must sign the document!',
-                'bottom',
-                'right'
-            );
-        } else if (firstName.value.length > 0 &&
+        if (firstName.value.length > 0 &&
             lastName.value.length > 0 &&
             socialSecurityNumber.value.length > 0) {
 
@@ -218,7 +213,7 @@ class FormsW4 extends Component {
             postalCode.disabled = true;
             socialSecurityExtention.disabled = true;
 
-            let html = this.cloneForm();
+            const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 50%;>').replace('<img src=""', `<img src="${this.state.signature}"`) : this.cloneForm();
 
             this.props.client
                 .mutate({
@@ -231,7 +226,7 @@ class FormsW4 extends Component {
                 .then(({ data }) => {
                     this.props.handleOpenSnackbar(
                         'success',
-                        'Created successfully',
+                        this.state.html ? 'Updated Successfully' : 'Created Successfully',
                         'bottom',
                         'right'
                     );
@@ -323,24 +318,33 @@ class FormsW4 extends Component {
                                         ''
                                     ) : (
                                             this.state.isCreated ? (
-                                                <button className="applicant-card__edit-button" onClick={() => {
-                                                    // let random = uuidv4();
+                                                <Fragment>
+                                                    <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
+                                                       this.setState(_ => ({
+                                                           openSignature: true
+                                                       }))
+                                                    }}>
+                                                        Sign <i className="fas fa-pencil-alt" />
+                                                    </button>
+                                                    <button className="applicant-card__edit-button" onClick={() => {
+                                                        // let random = uuidv4();
 
-                                                    // this.createDocumentsPDF(random);
-                                                    // this.sleep().then(() => {
-                                                    this.downloadDocumentsHandler();
-                                                    // this.downloadDocumentsHandler(random);
-                                                    // }).catch(error => {
-                                                    //     this.setState({ downloading: false })
-                                                    // })
-                                                }}>{this.state.downloading && (
-                                                    <React.Fragment>Downloading <i
-                                                        class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                    {!this.state.downloading && (
-                                                        <React.Fragment>{actions[9].label} <i
-                                                            className="fas fa-download" /></React.Fragment>)}
+                                                        // this.createDocumentsPDF(random);
+                                                        // this.sleep().then(() => {
+                                                        this.downloadDocumentsHandler();
+                                                        // this.downloadDocumentsHandler(random);
+                                                        // }).catch(error => {
+                                                        //     this.setState({ downloading: false })
+                                                        // })
+                                                    }}>{this.state.downloading && (
+                                                        <React.Fragment>Downloading <i
+                                                            class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                        {!this.state.downloading && (
+                                                            <React.Fragment>{actions[9].label} <i
+                                                                className="fas fa-download" /></React.Fragment>)}
 
-                                                </button>
+                                                    </button>
+                                                </Fragment>
                                             ) : (
                                                     <button className="applicant-card__edit-button" onClick={() => {
                                                         this.validateW4();
@@ -352,9 +356,13 @@ class FormsW4 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }} dangerouslySetInnerHTML={{
-                                        __html: `${this.state.html}`
-                                    }} />                                    
+                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
+                                        <div className="row pdf-container" style={{maxWidth: '100%'}}>
+                                            <div className='signature-information' dangerouslySetInnerHTML={{
+                                                __html: `${this.state.html}`
+                                            }} />
+                                        </div>
+                                    </div>                                    
                                 ) : (
                                         <div style={{ width: '100%', margin: '0 auto' }}>
                                             <div className="row pdf-container" id="w4Html" style={{maxWidth: '100%'}}>
@@ -899,13 +907,13 @@ class FormsW4 extends Component {
                                                                             height: '30px',
                                                                             display: 'inline-block',
                                                                             backgroundColor: '#f9f9f9',
-                                                                            cursor: 'pointer'
+                                                                            // cursor: 'pointer'
                                                                         }} onClick={() => {
-                                                                            if(this.state.isCreated === false){
-                                                                                this.setState({
-                                                                                    openSignature: true,
-                                                                                })
-                                                                            }
+                                                                            // if(this.state.isCreated === false){
+                                                                            //     this.setState({
+                                                                            //         openSignature: true,
+                                                                            //     })
+                                                                            // }
                                                                         }}
                                                                                                                                                src={this.state.signature} alt=""/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fecha  ▶ {new Date().toDateString()}
                                                                         </td>
@@ -1577,13 +1585,13 @@ class FormsW4 extends Component {
                                                                             height: '30px',
                                                                             display: 'inline-block',
                                                                             backgroundColor: '#f9f9f9',
-                                                                            cursor: 'pointer'
+                                                                            // cursor: 'pointer'
                                                                         }} onClick={() => {
-                                                                            if(this.state.isCreated === false){
-                                                                                this.setState({
-                                                                                    openSignature: true,
-                                                                                })
-                                                                            }
+                                                                            // if(this.state.isCreated === false){
+                                                                            //     this.setState({
+                                                                            //         openSignature: true,
+                                                                            //     })
+                                                                            // }
                                                                         }}
                                                                                                                                   src={this.state.signature} alt=""/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date  ▶ {new Date().toDateString()}
                                                                         </td>
