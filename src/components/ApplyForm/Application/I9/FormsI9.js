@@ -190,14 +190,15 @@ class FormsI9 extends Component {
     validateI9 = () => {
 
         let documentPDF = document.getElementById('DocumentPDF');
-        let inputs = documentPDF.getElementsByTagName('input');
-
-        for (let i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
+        
+        if(documentPDF){
+            let inputs = documentPDF.getElementsByTagName('input');
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].disabled = true;
+            }
         }
 
         const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 50%;>').replace('<img id="employee-signature-box" src=""', `<img id="employee-signature-box" src="${this.state.signature}"`) : this.cloneForm();
-
         this.props.client
             .mutate({
                 mutation: ADD_I9,
@@ -305,7 +306,7 @@ class FormsI9 extends Component {
                                 this.state.html.length > 0 ? (
                                     <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
                                         <div className="row pdf-container" style={{maxWidth: '100%'}}>
-                                            <div className='signature-information' dangerouslySetInnerHTML={{
+                                            <div id="DocumentPDF" className='signature-information' dangerouslySetInnerHTML={{
                                                 __html: `${this.state.html}`
                                             }} />
                                         </div>
