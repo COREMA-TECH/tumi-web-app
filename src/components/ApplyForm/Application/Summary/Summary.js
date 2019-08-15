@@ -33,7 +33,8 @@ class Summary extends Component {
             state: '',
             numberId: '',
             employmentType: '',
-            accounts: []
+            accounts: [],
+            exemptions: 0
         }
     }
 
@@ -180,7 +181,8 @@ class Summary extends Component {
                             expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('DD/MM/YYYY'): '--',
                             marital: applications.marital ? "MARRIED" : "SINGLE",
                             numberId: applications.numberId ? applications.numberId : '--',
-                            employmentType: applications.employmentType ? applications.employmentType : '--'
+                            employmentType: applications.employmentType ? applications.employmentType : '--',
+                            exemptions: applications.exemptions
                         }
                     });
                 }
@@ -237,8 +239,6 @@ class Summary extends Component {
 
     componentWillMount() {
         this.getInformation();
-//        this.getDisclosureInformation(this.props.applicationId);
-  //      this.getApplicantInformation(this.props.applicationId);
     }
 
     sleep() {
@@ -418,7 +418,7 @@ class Summary extends Component {
                                     <br/>
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>STATUS (SINGLE/MARRIED):</strong></span>  `+ this.state.marital +` </span></p>
                                     
-                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>NO. OF DEPENDENT:</strong></span> 0</span></p>
+                                    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>NO. OF DEPENDENT:</strong></span> ${this.state.exemptions}</span></p>
                                     
                                     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>SOURCE (RECRUITER NAME):</strong></span> `+  this.state.recruiter +` </span></p>
                                     
