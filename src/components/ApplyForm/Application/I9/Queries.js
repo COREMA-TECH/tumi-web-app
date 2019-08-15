@@ -12,6 +12,7 @@ export const GET_APPLICANT_INFO = gql`
           applicantI9(ApplicationId: $ApplicationId){
                 id
                 html
+                url
           }
     }
 `;
