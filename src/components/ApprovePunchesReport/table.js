@@ -19,6 +19,14 @@ class ApprovePunchesReportTable extends React.Component {
         this.props.unapproveMarks(rowId, idsToUnapprove);
     }
 
+    handleCheckedChange = (rowId) => (e) => {
+        let value = e.target.value;
+        let data = [...this.props.data];
+
+        data.find(_ => _.id == rowId).selected = value;
+        this.props.updateData(data);
+    }
+
     render() {
         let { rowsId, approving, unapproving } = this.props;
 
@@ -33,7 +41,7 @@ class ApprovePunchesReportTable extends React.Component {
                             <div className="row">
                                 <div className="col-lg-1 col-sm-12 ApprovePunches-separation tumi-col-centered">
                                     <div className="ApprovePunches-employeeContainer">
-                                        <input type="checkbox" class="mr-2" />
+                                        <input type="checkbox" class="mr-2" checked={_.selected} onChange={this.handleCheckedChange(_.id)} />
                                         <p className="h5 font-weight-bold mb-0 text-uppercase">{_.fullName}</p>
                                     </div>
                                 </div>
@@ -79,7 +87,8 @@ ApprovePunchesReportTable.propTypes = {
     unapproving: PropTypes.bool.isRequired,
     approveMarks: PropTypes.func.isRequired,
     unapproveMarks: PropTypes.func.isRequired,
-    rowsId: PropTypes.array.isRequired
+    rowsId: PropTypes.array.isRequired,
+    updateData: PropTypes.func.isRequired
 };
 
 export default withApollo(ApprovePunchesReportTable);

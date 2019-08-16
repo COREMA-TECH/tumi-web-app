@@ -8,6 +8,7 @@ export const GET_REPORT_QUERY = gql`
       unapprovedWorkedTime
       approvedWorkedTime
       approvedDate
+      selected
       detailApproved {
         id      
       }

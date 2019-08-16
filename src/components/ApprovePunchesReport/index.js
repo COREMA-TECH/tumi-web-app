@@ -123,6 +123,10 @@ class ApprovePunchesReport extends Component {
         this.setState(() => ({ loadingReport: status }))
     }
 
+    updateData = (data) => {
+        this.setState(() => ({ data }));
+    }
+
     render() {
         const { loadingReport, approving, unapproving, rowsId, endDate } = this.state;
         const loading = loadingReport;
@@ -133,7 +137,8 @@ class ApprovePunchesReport extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus} />
-                    <Table data={this.state.data} approving={approving} unapproving={unapproving} approveMarks={this.approveMarks} unapproveMarks={this.unapproveMarks} rowsId={rowsId} endDate={endDate} />
+                    <Table data={this.state.data} approving={approving} unapproving={unapproving} approveMarks={this.approveMarks}
+                        unapproveMarks={this.unapproveMarks} rowsId={rowsId} endDate={endDate} updateData={this.updateData} />
                 </div>
             </div>
         </React.Fragment>
