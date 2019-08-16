@@ -179,7 +179,7 @@ class Summary extends Component {
                             area:applications.area ? applications.area : '--',
                             typeOfId: typeOfId,                        
                             expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('DD/MM/YYYY'): '--',
-                            marital: applications.marital ? "MARRIED" : "SINGLE",
+                            marital: applications.marital === 2 ? "MARRIED" : "SINGLE",
                             numberId: applications.numberId ? applications.numberId : '--',
                             employmentType: applications.employmentType ? applications.employmentType : '--',
                             exemptions: applications.exemptions
