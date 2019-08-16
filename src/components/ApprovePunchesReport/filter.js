@@ -9,6 +9,7 @@ import filterTypes from './filterTypeData';
 import statusList from './filterStatusData';
 import { GET_EMPLOYEES_QUERY } from './queries';
 import "react-datepicker/dist/react-datepicker.css";
+import PropTypes from 'prop-types';
 
 const DEFAULT_FILTER_TYPE = { value: "W", label: "By week" };
 const DEFAULT_DATA_RANGE_APP = { value: null, label: 'Report Date' };
@@ -28,13 +29,14 @@ class ApprovePunchesReportFilter extends Component {
         startDate: null,
         endDate: null,
         typeDateFiltered: DEFAULT_FILTER_TYPE, // opcion seleccinada para filtro de fecha en indice
-        dateRange: DEFAULT_DATA_RANGE_APP
+        dateRange: DEFAULT_DATA_RANGE_APP,
+        selectAll: false
     }
 
     constructor(props) {
         super(props);
         var { employee, status, startDate, endDate } = props;
-        this.state = { employee, status, startDate, endDate, ...this.DEFAULT_STATE };
+        this.state = { employee, status, startDate, endDate, approving: false, ...this.DEFAULT_STATE };
     }
 
     updateLoadingStatus = (status) => {
@@ -163,8 +165,39 @@ class ApprovePunchesReportFilter extends Component {
         this.getEmployees();
     }
 
+    makeSelection = (e) => {
+        let value = e.target.checked;
+        this.setState(() => ({ selectAll: value }));
+        this.props.makeSelection(value);
+    }
+
+    hasSelected = () => {
+        let algo = this.props.data.filter(_ => _.selected).length > 0;
+        return algo;
+    }
+
+    approveMarks = () => {
+        let { data } = this.props;
+        let rowsId = [];
+        let idsToApprove = [];
+
+        //Get selected rows
+        let selectedList = data.filter(_ => _.selected);
+        //Get rowsId and idsToApprove
+        selectedList.map(_ => {
+            rowsId.push(_.id);
+            idsToApprove = idsToApprove.concat(_.detailUnapproved.map(_ => _.id));
+        })
+        //Approve Marks (Approving= "A": Approving , "F": Approved, "E": Error)
+        this.props.approveMarks(rowsId, idsToApprove, (approvationStatus) => {
+            if (approvationStatus === "F")
+                this.setState(() => ({ selectAll: false }));
+            this.setState(() => ({ approving: approvationStatus === "A" }));
+        })
+    }
+
     render() {
-        let { typeDateFiltered, startDate, endDate, dateRange, employee, employees, status, endDateDisabled } = this.state;
+        let { typeDateFiltered, startDate, endDate, dateRange, employee, employees, status, endDateDisabled, selectAll, approving } = this.state;
         return <div className="card mb-1">
             <div className="card-header bg-light">
                 <div className="row">
@@ -254,9 +287,11 @@ class ApprovePunchesReportFilter extends Component {
                 </div>
                 <div className="row">
                     <div className="col-12">
-                        <input type="checkbox" id="selectAllUnapproved" />
-                        <label htmlFor="selectAllUnapproved" className="ml-2"> Select all unapproved</label>
-                        <button className="btn btn-primary btn-sm ml-4">Approve Selected</button>
+                        <input type="checkbox" checked={selectAll} id="selectAllUnapproved" onChange={this.makeSelection} />
+                        <label htmlFor="selectAllUnapproved" className="ml-2" onChange={this.makeSelection}> Select all unapproved</label>
+                        <button className={`btn ${this.hasSelected() ? 'btn-primary' : 'btn-secondary'} btn-sm ml-4`} disabled={!this.hasSelected()} onClick={this.approveMarks}>
+                            Approve Selected {approving ? < i class="fas fa-spinner fa-spin ml-1" /> : <React.Fragment />}
+                        </button>
                     </div>
                 </div>
             </div >
@@ -265,5 +300,9 @@ class ApprovePunchesReportFilter extends Component {
     }
 }
 
-//export default PunchesReportFilter;
+ApprovePunchesReportFilter.propTypes = {
+    makeSelection: PropTypes.func.isRequired,
+    approveMarks: PropTypes.func.isRequired
+}
+
 export default withApollo(withGlobalContent(ApprovePunchesReportFilter));
