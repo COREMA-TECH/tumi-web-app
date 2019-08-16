@@ -1,14 +1,96 @@
-.TotalShiftsChart {
-    width: 18vw;
-    margin-left: -4vw;
-
-    @include media-breakpoint-down(sm){
-        width: 100%;
-        margin-left: 0;
+.CandidatesGraph {
+    &-container {
+        height: 170px;
+        width: auto;
     }
 }
 
-.z_index_100{
-    z-index: 100;
+.Requisition {
+    &-container {
+        .table {
+            margin: 0 !important;
+            box-shadow: none !important;
+        }
+    }
+}
+
+.StatBoxOps {
+    background: $white;
+    //border: solid 2px map-get($gray-shades, gray-2);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    margin-bottom: 8px;
+    width: 100%;
+
+    &.headCount{
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
+
+        position: absolute;
+        left: 0;
+        margin-left: auto;
+        margin-right: auto;
+        right: 0;
+        top: calc(50% - 42px);
+
+        max-width: 185px;
+
+        .StatBoxOps{
+            box-shadow: 0;
+        }
+
+        .StatBoxOps-header{
+            border: none;
+        }
+
+        .StatBoxOps-amount{
+            text-align: center;
+        }
+    }
+
+    &-amount {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 700;
+        width: 100%;
+    }
+    &-body {
+        padding: 0.3rem;
+        text-align: center;
+    }
+    &-caption {
+        display: block;
+        font-size: 0.7rem;
+        width: 100%;
+    }
+    &-header {
+        border-bottom: solid 1px map-get($gray-shades, gray-2);
+        font-size: .8rem;
+        font-weight: 700;
+        padding: 5px 0;
+        text-align: center; 
+    }
+    &-increase {
+        color: $red;
+        display: block;
+        font-size: 0.7rem;
+        width: 100%;
+    }
+}
+
+.TotalShiftsChart {
+    width: 16vw;
+    margin-left: -3.5vw;
+    margin-top: -0.9rem;
+    max-height: 260px;
+
+    @include media-breakpoint-down(sm){
+        width: 100%;
+        margin: 0;
+    }
+}
+
+.z_index_10{
+    z-index: 10;
 }
 
