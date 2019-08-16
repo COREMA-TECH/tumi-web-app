@@ -1,21 +1,21 @@
 import gql from 'graphql-tag';
 
 export const GET_REPORT_QUERY = gql`
-  query punchesConsolidate($idEntity: Int,$Id_Department: Int,$employee: String,$startDate: Date,$endDate: Date ){
-    markedEmployeesApproved(idEntity:$idEntity,Id_Department: $Id_Department,employee: $employee,startDate: $startDate,endDate: $endDate){
-              employeeId
-              name
-              hourCategory
-              hoursWorked
-              payRate
-              date
-              clockIn
-              clockOut
-              lunchIn
-              lunchOut
-              hotelCode
-              positionCode
-        }
+ query approvePunches($idEmployee: Int, $status: String!, $startDate: Date!, $endDate: Date!,) {
+    approvePunchesReport(idEmployee: $idEmployee, status: $status, startDate: $startDate, endDate: $endDate) {
+      id
+      fullName
+      unapprovedWorkedTime
+      approvedWorkedTime
+      approvedDate
+      detailApproved {
+        id      
+      }
+      detailUnapproved
+      {
+        id
+      }
+    }
   }
 `;
 
@@ -35,7 +35,7 @@ export const GET_PROPERTIES_QUERY = gql`
 
 export const GET_DEPARTMENTS_QUERY = gql`
   query department($Id_Entity: Int){
-    catalogitem(Id_Catalog:8, Id_Entity:$Id_Entity){
+    cataogitem(Id_Catalog:8, Id_Entity:$Id_Entity){
       Id
       DisplayLabel
     }
@@ -67,3 +67,13 @@ export const GET_PROPERTY_BY_REGION = gql`
       }
   }
 `;
+
+export const GET_EMPLOYEES_QUERY = gql`
+{
+  employees(isActive:true) {
+      id
+      firstName
+      lastName
+    }
+} 
+`; 
