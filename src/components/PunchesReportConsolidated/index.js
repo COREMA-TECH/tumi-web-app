@@ -41,9 +41,9 @@ class PunchesReportConsolidated extends Component {
     componentWillMount() {
         this.getDepartments();
         this.getProperties();
-        if(this.props.propertyInfo){
-            let {id, name} = this.props.propertyInfo;
-            this.changeFilter({value: id, label: name });
+        if (this.props.propertyInfo) {
+            let { id, name } = this.props.propertyInfo;
+            this.changeFilter({ value: id, label: name });
         }
     }
 
@@ -192,7 +192,7 @@ class PunchesReportConsolidated extends Component {
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} allowEditModal={this.state.allowEditModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>
                     <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
-                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="5000">
+                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="30000">
 
                             {({ loading, error, data }) => {
 

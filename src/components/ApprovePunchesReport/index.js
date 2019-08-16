@@ -1,31 +1,20 @@
 import React, { Component } from 'react';
 import Table from './table';
 import Filter from './filter';
-
+import withGlobalContent from 'Generic/Global';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
-import { GET_REPORT_QUERY, GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY } from './queries';
+import moment from 'moment';
+import { GET_REPORT_QUERY } from './queries';
+import { APPROVE_MARKS, UNAPPROVE_MARKS } from './mutations';
 
-import PreFilter from './PreFilter';
-import Dialog from "@material-ui/core/Dialog/Dialog";
-
-const PROPERTY_DEFAULT = { value: '', label: 'Property(All)' };
-const DEPARTMENT_DEFAULT = { value: '', label: 'Department(All)' };
-
-class PunchesReport extends Component {
+class ApprovePunchesReport extends Component {
 
     DEFAULT_STATE = {
         data: [],
-        properties: [],
-        departments: [],
-        property: PROPERTY_DEFAULT,
-        department: DEPARTMENT_DEFAULT,
-        employee: '',
-        startDate: '',
-        endDate: '',
-        openModal: false,
-        openModalPicture: false,
-        urlPicture: ''
+        rowsId: [],
+        approving: false,
+        unapproving: false
     }
 
     constructor(props) {
@@ -34,69 +23,66 @@ class PunchesReport extends Component {
             ...this.DEFAULT_STATE
         }
     }
+
     componentWillMount() {
         this.getReport();
-        this.getDepartments();
-        this.getProperties();
     }
 
-    handleClickOpenModal = () => {
-        this.setState({ openModal: true });
-    };
-
-    getReport = () => { 
+    getReport = () => {
         this.setState(() => ({ loadingReport: true }), () => {
             this.props.client
                 .query({
                     query: GET_REPORT_QUERY,
                     fetchPolicy: 'no-cache',
-                    variables: { ...this.getFilters() }
+                    variables: this.getFilters()
                 })
                 .then(({ data }) => {
                     this.setState(() => ({
-                        data: data.markedEmployeesApproved,
+                        data: data.approvePunchesReport,
                         loadingReport: false
                     }));
                 })
                 .catch(error => {
-                    this.setState(() => ({ loadingReport: false }));
+                    this.setState(() => ({ loadingReport: false, data: [] }));
                 });
         })
     }
 
-    getDepartments = () => {
-        this.setState(() => ({ loadingDepartments: true }), () => {
-            var variables = {};
-
-            if (this.state.property.value)
-                variables = { Id_Entity: this.state.property.value };
-
-            this.props.client
-                .query({
-                    query: GET_DEPARTMENTS_QUERY,
-                    variables,
-                    fetchPolicy: 'no-cache'
-                })
-                .then(({ data }) => {
-                    let options = [];
-
-                    //Add first record
-                    options.push({ value: '', label: 'Department(All)' });
-
-                    //Create structure based on department data
-                    data.catalogitem.map(({ Id, DisplayLabel }) => {
-                        options.push({ value: Id, label: DisplayLabel })
-                    });
-
-                    this.setState(() => ({
-                        departments: options,
-                        loadingDepartments: false
-                    }));
-                })
-                .catch(error => {
-                    this.setState(() => ({ loadingDepartments: false }));
-                });
+    approveMarks = (rowsId, idsToApprove) => {
+        this.setState(() => ({ approving: true, rowsId: Array.isArray(rowsId) ? rowsId : [rowsId] }));
+        this.props.client.mutate({
+            mutation: APPROVE_MARKS,
+            variables: {
+                approvedDate: this.state.endDate,
+                idsToApprove
+            }
         })
+            .then(({ data: { approveMarks } }) => {
+                this.props.handleOpenSnackbar('success', 'Data successfully processed');
+                this.setState(() => ({ approving: false }), this.getReport);
+            })
+            .catch(_ => {
+                this.props.handleOpenSnackbar('error', 'Error approving record');
+                this.setState(() => ({ approving: false }));
+            })
+    }
+
+    unapproveMarks = (rowsId, idsToUnapprove) => {
+        this.setState(() => ({ unapproving: true, rowsId: Array.isArray(rowsId) ? rowsId : [rowsId] }));
+        this.props.client.mutate({
+            mutation: UNAPPROVE_MARKS,
+            variables: {
+                idsToUnapprove
+            }
+        })
+            .then(({ data: { unapproveMarks } }) => {
+                this.props.handleOpenSnackbar('success', 'Data successfully processed');
+                this.setState(() => ({ unapproving: false }), this.getReport);
+            })
+            .catch(_ => {
+                this.props.handleOpenSnackbar('error', 'Error unapproving record');
+                this.setState(() => ({ unapproving: false }));
+            })
     }
 
     changeFilter = (property) => {
@@ -107,124 +93,56 @@ class PunchesReport extends Component {
         });
     }
 
-    getProperties = () => {
-        this.setState(() => ({ loadingProperties: true }), () => {
-         let filter={};
-            let idRol = localStorage.getItem('IdRoles');
-            let idEntity = localStorage.getItem("Id_Entity");
-            
-            if (idRol == 5) filter = { Id: idEntity };
-
-            this.props.client
-                .query({
-                    query: GET_PROPERTIES_QUERY,
-                    fetchPolicy: 'no-cache',
-                    variables:{...filter}
-                })
-                .then(({ data }) => {
-                    let options = [];
-
-                    //Add first record
-                    options.push({ value: '', label: 'Property(All)' });
-
-                    //Create structure based on property data
-                    data.getbusinesscompanies.map((property) => {
-                        options.push({ value: property.Id, label: property.Code + " | " + property.Name });
-                    });
-
-                    //Set values to state
-                    this.setState(() => ({
-                        properties: options,
-                        loadingProperties: false
-                    }));
-
-                })
-                .catch(error => {
-                    this.setState(() => ({ loadingProperties: false }));
-                });
-        })
-    }
-
     getFilters = () => {
-        var filters = {}, { property, department, employee, startDate, endDate } = this.state;
-        let idRol = localStorage.getItem('IdRoles');
-        let idEntity = localStorage.getItem("Id_Entity");
+        var filters = {}, { employee, startDate, endDate, status } = this.state;
 
-        if (property.value)
-            filters = { ...filters, idEntity: property.value };
-        if (department.value)
-            filters = { ...filters, Id_Department: department.value };
         if (employee)
-            filters = { ...filters, employee };
+            filters = { ...filters, idEmployee: employee };
         if (startDate)
-            filters = { ...filters, startDate };
+            filters = { ...filters, startDate: moment(startDate).format("MM/DD/YYYY") };
         if (endDate)
-            filters = { ...filters, endDate };
-        if (idRol == 5) filters = { ...filters, idEntity };
+            filters = { ...filters, endDate: moment(endDate).format("MM/DD/YYYY") };
+        if (status)
+            filters = { ...filters, status };
 
         return filters;
     }
 
-    updateFilter = ({ property, department, employee, startDate, endDate }) => {
+    updateFilter = ({ employee, startDate, endDate, status }) => {
         this.setState((prevState) => ({
-            property,
-            department: prevState.property.value != property.value ? DEPARTMENT_DEFAULT : department,
             employee,
             startDate,
             endDate,
-            departments: prevState.property.value != property.value ? [] : prevState.departments
+            status
         }), () => {
-            this.getDepartments();
             this.getReport();
         });
     }
 
-    handleClickOpenModalPicture = (urlPicture) => {
-        this.setState({
-            openModalPicture: true,
-            urlPicture: urlPicture
-        });
-    };
+    updateLoadingStatus = (status) => {
+        this.setState(() => ({ loadingReport: status }))
+    }
 
-    handleCloseModalPicture = () => {
-        this.setState({ openModalPicture: false });
-    };
+    updateData = (data) => {
+        this.setState(() => ({ data }));
+    }
 
     render() {
-        const { loadingReport } = this.state;
+        const { loadingReport, approving, unapproving, rowsId, endDate } = this.state;
         const loading = loadingReport;
-
-
-        let renderDialogPicture = () => (
-            <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModalPicture}>
-                {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
-                <img src={this.state.urlPicture} className="avatar-lg" />
-                {/*</DialogTitle>*/}
-            </Dialog>
-        );
-
-
+        console.log({ endDate })
         return <React.Fragment>
             {loading && <LinearProgress />}
-            {
-                renderDialogPicture()
-            }
 
             <div className="row">
                 <div className="col-md-12">
-                    <div className="card">
-                        <Filter {...this.state} updateFilter={this.updateFilter} />
-                        <Table
-                            openModal={this.state.openModal}
-                            openModalPicture={this.handleClickOpenModalPicture}
-                            closeModalPicture={this.handleCloseModalPicture}
-                            handleCloseModal={this.handleCloseModal}
-                            data={this.state.data} />
-                    </div>
+                    <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus} />
+                    <Table data={this.state.data} approving={approving} unapproving={unapproving} approveMarks={this.approveMarks}
+                        unapproveMarks={this.unapproveMarks} rowsId={rowsId} endDate={endDate} updateData={this.updateData} />
                 </div>
             </div>
         </React.Fragment>
     }
 }
 
-export default withApollo(PunchesReport);
+export default withApollo(withGlobalContent(ApprovePunchesReport));
