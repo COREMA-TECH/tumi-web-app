@@ -23,6 +23,8 @@ export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
             imageMarkedOut
             flagIn
             flagOut
+            approvedDateIn
+            approvedDateOut
           }
       }
     }

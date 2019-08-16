@@ -63,7 +63,8 @@ class TimeCardForm extends Component {
         employees: [],
         positions: [],
         PositionRateId: 0,
-        newMark: false
+        newMark: false,
+        readOnly: false
     };
 
     constructor(props) {
@@ -98,7 +99,8 @@ class TimeCardForm extends Component {
                 comment: nextProps.item.noteIn,
                 duration: nextProps.item.clockOut !== 'Now' && nextProps.item.clockIn ? moment(nextProps.item.clockOut, 'HH:mm').diff(moment(nextProps.item.clockIn, 'HH:mm'), 'hours') : '',
                 statusTimeOut: nextProps.item.clockOut === 'Now' ? true : false,
-                newMark: nextProps.item.clockOut === 'Now' ? true : false
+                newMark: nextProps.item.clockOut === 'Now' ? true : false,
+                readOnly: nextProps.readOnly
             });
         } else if (!nextProps.openModal) {
             this.setState({
@@ -647,13 +649,15 @@ class TimeCardForm extends Component {
         const employeeList = this.getEmployeeFilterList();
         const positionList = this.getPositionFilterList();
 
+        const {readOnly} = this.state;
+
         return (
             <div>
                 <Dialog fullScreen={false} maxWidth='sm' open={this.props.openModal} >
                     <form action="" onSubmit={this.handleSubmit}>
                         <DialogTitle style={{ padding: '0px' }}>
                             <div className="modal-header">
-                                <h5 className="modal-title">Add Time +</h5>
+                                <h5 className="modal-title">{readOnly ? 'View Time' : 'Add Time +'}</h5>
                             </div>
                             <div className="container">
                                 <div className="row">
@@ -667,6 +671,7 @@ class TimeCardForm extends Component {
                                             isMulti={false}
                                             onBlur={this.handleValidate}
                                             className="WorkOrders-dropdown"
+                                            isDisabled={readOnly}
                                         />
                                     </div>
                                     <div className="col-md-6">
@@ -679,6 +684,7 @@ class TimeCardForm extends Component {
                                             isMulti={false}
                                             onBlur={this.handleValidate}
                                             className="WorkOrders-dropdown"
+                                            isDisabled={readOnly}
                                         />
                                     </div>
                                 </div>
@@ -695,6 +701,7 @@ class TimeCardForm extends Component {
                                                     onChange={this.handleChangeDate}
                                                     placeholderText="Date In"
                                                     id="datepickerIn"
+                                                    disabled={readOnly}
                                                 />
                                                 <div class="input-group-append">
                                                     <label class="input-group-text" id="addon-wrapping" for="datepickerIn">
@@ -710,7 +717,7 @@ class TimeCardForm extends Component {
                                                     onChange={this.handleChangeEndDate}
                                                     placeholderText="Date Out"
                                                     id="datepickerOut"
-                                                    disabled={this.state.statusTimeOut}
+                                                    disabled={readOnly || this.state.statusTimeOut}
                                                 />
                                                 <div class="input-group-append">
                                                     <label class="input-group-text" id="addon-wrapping" for="datepickerOut">
@@ -721,20 +728,20 @@ class TimeCardForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <span className="float-left">
-                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} checked={this.state.statusTimeOut} />
+                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} checked={this.state.statusTimeOut} disabled={readOnly} />
                                                 <label htmlFor="">&nbsp; Currently working</label>
                                             </span>
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">* Time In</label>
-                                            <Datetime dateFormat={false} value={this.state.shift ? moment(this.state.shift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                            <Datetime dateFormat={false} value={this.state.shift ? moment(this.state.shift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} inputProps={{disabled: readOnly }} />
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
-                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
+                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} inputProps={{disabled: readOnly }} />
                                         </div>
                                         <div className="col-md-4">
-                                            <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
+                                            <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} disabled={readOnly} />
                                         </div>
                                         <div className="col-md-12 mt-2">
                                             <Select
@@ -745,6 +752,7 @@ class TimeCardForm extends Component {
                                                 components={makeAnimated()}
                                                 isMulti={false}
                                                 className="WorkOrders-dropdown"
+                                                isDisabled={readOnly}
                                             />
                                         </div>
                                         <div className="col-md-12 mt-2">
@@ -757,6 +765,7 @@ class TimeCardForm extends Component {
                                                 rows="3"
                                                 value={this.state.comment}
                                                 placeholder="Notes"
+                                                disabled={readOnly}
                                             />
                                         </div>
                                         <div className="col-md-12 text-right">
@@ -768,7 +777,7 @@ class TimeCardForm extends Component {
                                                 Cancel<i className="fas fa-ban ml-2" />
                                             </button>
 
-                                            <button className="btn btn-success" type="submit">
+                                            <button className="btn btn-success" type="submit" disabled={readOnly}>
                                                 Save {!this.state.saving && <i className="fas fa-save ml2" />}
                                                 {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
                                             </button>
