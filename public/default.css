@@ -8279,6 +8279,11 @@ label:not(.custom-file-label):not(.form-check-label) {
 .btn {
   padding-left: 1.5rem;
   padding-right: 1.5rem; }
+  .btn-approve {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    text-align: center;
+    width: 92px; }
   .btn-empty {
     color: #FFF;
     padding-left: 0;
@@ -8795,8 +8800,7 @@ label:not(.custom-file-label):not(.form-check-label) {
   flex-direction: column;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
-  justify-content: center;
-  padding: 5px; }
+  justify-content: center; }
 
 .tumi-row-vert-center {
   -webkit-box-align: center;
@@ -9379,6 +9383,49 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     display: none; }
   .flag-select .no--focus {
     pointer-events: none; }
+
+.ApprovePunches-approvedLabel {
+  font-size: 12px; }
+
+.ApprovePunches-employeeContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
+.ApprovePunches-totalHours {
+  font-weight: bold; }
+  .ApprovePunches-totalHours:after, .ApprovePunches-totalHours:before {
+    font-size: 26px;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%); }
+  .ApprovePunches-totalHours:after {
+    content: attr(data-hours);
+    left: 255px;
+    text-align: right;
+    width: 100px; }
+  .ApprovePunches-totalHours:before {
+    content: ":";
+    left: 235px; }
+  .ApprovePunches-totalHours.approve:after {
+    color: #3ca2c8; }
+  .ApprovePunches-totalHours.reject:after {
+    color: var(--danger); }
+
+.ApprovePunches-separation:not(:last-child) {
+  border-right: 1px solid #dddddd !important; }
+
+@media (max-width: 991.98px) {
+  .ApprovePunches-separation {
+    padding: 10px; }
+    .ApprovePunches-separation:not(:last-child) {
+      border-bottom: 1px solid #dddddd !important;
+      border-right: none !important; } }
 
 .Tab-fa-icon:after {
   color: #7e7e7e;
@@ -13473,3 +13520,5 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
+
+/*# sourceMappingURL=default.css.map */

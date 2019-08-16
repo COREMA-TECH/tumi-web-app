@@ -59,6 +59,14 @@
 .btn {
     padding-left: 1.5rem;
 	padding-right: 1.5rem;
+	
+	&-approve {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		text-align: center;		
+		width: 92px;
+	}
+
 	&-empty {
 		color: $white;
 		padding-left: 0;

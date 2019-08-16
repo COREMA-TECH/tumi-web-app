@@ -1,0 +1,61 @@
+.ApprovePunches {
+    
+    &-approvedLabel{
+        font-size: 12px;
+    }
+
+    &-employeeContainer {
+        display: flex;
+        align-items: center;
+    }
+
+    &-totalHours {
+        font-weight: bold;
+
+        &:after,
+        &:before {
+            font-size: 26px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%); 
+        }
+
+        &:after {
+            content: attr(data-hours);
+            left: 255px;
+            text-align: right;
+            width: 100px;
+        }
+
+        &:before {
+            content: ":";
+            left: 235px;
+        }
+
+        &.approve {
+            &:after {
+                color: $brand-primary;
+            }
+        }
+
+        &.reject {
+            &:after {
+                color: $brand-danger;
+            }
+        }
+    }
+
+    &-separation:not(:last-child) {
+        border-right: 1px solid $border-standard !important;
+    }
+
+    @include media-breakpoint-down(md) { 
+        &-separation {
+            padding: 10px;
+            &:not(:last-child) {
+                border-bottom: 1px solid $border-standard !important;
+                border-right: none !important;
+            }
+        }  
+     }
+}
