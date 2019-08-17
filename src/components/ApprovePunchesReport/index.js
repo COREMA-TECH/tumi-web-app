@@ -67,8 +67,9 @@ class ApprovePunchesReport extends Component {
         })
     }
 
-    approveMarks = (rowsId, idsToApprove) => {
+    approveMarks = (rowsId, idsToApprove, callback = () => { }) => {
         this.setState(() => ({ approving: true, rowsId: Array.isArray(rowsId) ? rowsId : [rowsId] }));
+        callback("A");//Approving
         this.props.client.mutate({
             mutation: APPROVE_MARKS,
             variables: {
@@ -79,8 +80,10 @@ class ApprovePunchesReport extends Component {
             .then(({ data: { approveMarks } }) => {
                 this.props.handleOpenSnackbar('success', 'Data successfully processed');
                 this.setState(() => ({ approving: false }), this.getReport);
+                callback("F");//Approving
             })
             .catch(_ => {
+                callback("E");//Approving
                 this.props.handleOpenSnackbar('error', 'Error approving record');
                 this.setState(() => ({ approving: false }));
             })
@@ -178,16 +181,26 @@ class ApprovePunchesReport extends Component {
         this.setState({ openTimeModal: false, timeModalData: {}, editTimeModal: false });
     };
 
+    makeSelection = (status) => {
+        let data = [...this.state.data];
+        data.map(_ => {
+            if (_.detailUnapproved.length > 0)
+                _.selected = status;
+        });
+        this.setState(() => ({ data }));
+    }
+
     render() {
         const { loadingReport, approving, unapproving, rowsId, startDate, endDate } = this.state;
         const loading = loadingReport;
-        
         return <React.Fragment>
             {loading && <LinearProgress />}
 
             <div className="row">
                 <div className="col-md-12">
-                    <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus} />
+                    <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus} 
+                      
+                      ={this.makeSelection} approveMarks={this.approveMarks} />
                     <Table data={this.state.data} approving={approving} unapproving={unapproving} approveMarks={this.approveMarks}
                         unapproveMarks={this.unapproveMarks} rowsId={rowsId} endDate={endDate} updateData={this.updateData} handleOpenModalDetails={this.handleOpenModalDetails} />
                     

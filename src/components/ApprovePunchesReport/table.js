@@ -1,7 +1,6 @@
 import React from 'react';
 import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 
 const LABELTEXTSIZE = {fontSize: '1vw'};
 const TIMETEXTSIZE = {fontSize: '1.7vw'};
@@ -23,7 +22,7 @@ class ApprovePunchesReportTable extends React.Component {
     }
 
     handleCheckedChange = (rowId) => (e) => {
-        let value = e.target.value;
+        let value = e.target.checked;
         let data = [...this.props.data];
 
         data.find(_ => _.id == rowId).selected = value;
