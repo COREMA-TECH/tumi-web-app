@@ -78,3 +78,33 @@ export const GET_EMPLOYEES_QUERY = gql`
     }
 } 
 `; 
+
+export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
+    query markedEmployeesConsolidated($EmployeeId: Int,$startDate: Date,$endDate: Date ){
+      markedEmployeesConsolidated(EmployeeId: $EmployeeId,employee: "",startDate: $startDate,endDate: $endDate) {
+          key
+          date
+          punches {
+            clockInId
+            clockOutId
+            key
+            name
+            employeeId
+            clockIn
+            clockOut
+            duration
+            job
+            hotelCode
+            hotelId
+            noteIn
+            noteOut
+            imageMarkedIn
+            imageMarkedOut
+            flagIn
+            flagOut
+            approvedDateIn
+            approvedDateOut
+          }
+      }
+    }
+`;

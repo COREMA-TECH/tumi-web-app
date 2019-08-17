@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TimeCardForm from '../TimeCard/TimeCardForm'
+import TimeCardForm from '../TimeCard/TimeCardForm';
 import withGlobalContent from 'Generic/Global';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';

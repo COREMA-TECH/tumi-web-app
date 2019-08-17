@@ -3,6 +3,9 @@ import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
+const LABELTEXTSIZE = {fontSize: '1vw'};
+const TIMETEXTSIZE = {fontSize: '1.7vw'};
+
 class ApprovePunchesReportTable extends React.Component {
 
     constructor(props) {
@@ -25,6 +28,11 @@ class ApprovePunchesReportTable extends React.Component {
 
         data.find(_ => _.id == rowId).selected = value;
         this.props.updateData(data);
+    }
+
+    openViewDetails = (e, EmployeeId) => {
+        e.preventDefault();
+        this.props.handleOpenModalDetails(EmployeeId);
     }
 
     render() {
@@ -59,17 +67,48 @@ class ApprovePunchesReportTable extends React.Component {
                                     </div>
 
                                 </div>
-                                <div className="col-lg-3 col-sm-12 ApprovePunches-separation ApprovePunches-totalHours tumi-col-centered" data-hours={`${_.unapprovedWorkedTime + _.approvedWorkedTime}H`}>
-                                    <p className="h5 font-weight-bold">TOTAL</p>
-                                    <p className="h5 font-weight-bold ApprovePunches-titleHours">WORKED HOURS</p>
+                                <div className="col-lg-3 col-sm-12 d-flex justify-content-between">
+                                    <div className="my-auto">
+                                        <p className="h6 font-weight-bold">TOTAL</p>
+                                        <p className="h6 font-weight-bold ApprovePunches-titleHours">WORKED HOURS</p>
+                                        <a href="#" className="badge badge-success badge-sm" onClick={(e) => this.openViewDetails(e, _.id)}>View Details</a>
+                                    </div>
+                                    <div className="my-auto">
+                                        <p className="h3 font-weight-bold"> : </p>
+                                    </div>
+                                    <div className="my-auto align-content-center">
+                                        <p className="h3 font-weight-bold">
+                                            {`${_.unapprovedWorkedTime + _.approvedWorkedTime}H`}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="col-lg-3 col-sm-12 ApprovePunches-separation ApprovePunches-totalHours approve tumi-col-centered" data-hours={`${_.approvedWorkedTime}H`}>
-                                    <p className="h5 font-weight-bold">TOTAL</p>
-                                    <p className="h5 font-weight-bold ApprovePunches-titleHours">APPROVED HOURS</p>
+                                <div className="col-lg-3 col-sm-12 d-flex justify-content-between">
+                                    <div className="my-auto">
+                                    <p className="h6 font-weight-bold">TOTAL</p>
+                                    <p className="h6 font-weight-bold ApprovePunches-titleHours">APPROVED HOURS</p>
+                                    </div>
+                                    <div className="my-auto">
+                                        <p className="h3 font-weight-bold"> : </p>
+                                    </div>
+                                    <div className="my-auto align-content-center">
+                                        <p className="h3 font-weight-bold text-success">
+                                            {`${_.approvedWorkedTime}H`}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="col-lg-3 col-sm-12 ApprovePunches-separation ApprovePunches-totalHours reject tumi-col-centered" data-hours={`${_.unapprovedWorkedTime}H`}>
-                                    <p className="h5 font-weight-bold">TOTAL</p>
-                                    <p className="h5 font-weight-bold ApprovePunches-titleHours">UNAPPROVED HOURS</p>
+                                <div className="col-lg-3 col-sm-12 d-flex justify-content-between">
+                                    <div className="my-auto">
+                                        <p className="h6 font-weight-bold">TOTAL</p>
+                                        <p className="h6 font-weight-bold">UNAPPROVED HOURS</p>
+                                    </div>
+                                    <div className="my-auto">
+                                        <p className="h3 font-weight-bold"> : </p>
+                                    </div>
+                                    <div className="my-auto align-content-center">
+                                        <p className="h3 font-weight-bold text-danger">
+                                            {`${_.unapprovedWorkedTime}H`}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -5,8 +5,22 @@ import withGlobalContent from 'Generic/Global';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import moment from 'moment';
-import { GET_REPORT_QUERY } from './queries';
+import { GET_REPORT_QUERY, GET_PUNCHES_REPORT_CONSOLIDATED } from './queries';
 import { APPROVE_MARKS, UNAPPROVE_MARKS } from './mutations';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+
+import DropDown from '../PunchesReportConsolidated/DropDown';
+import TimeCardForm from '../TimeCard/TimeCardForm';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+
 
 class ApprovePunchesReport extends Component {
 
@@ -14,7 +28,12 @@ class ApprovePunchesReport extends Component {
         data: [],
         rowsId: [],
         approving: false,
-        unapproving: false
+        unapproving: false,
+        openModalDetails: false,
+        modalDetailsData: [],
+        openTimeModal: false, 
+        timeModalData: {},
+        editTimeModal: false
     }
 
     constructor(props) {
@@ -127,10 +146,42 @@ class ApprovePunchesReport extends Component {
         this.setState(() => ({ data }));
     }
 
+    handleOpenModalDetails = (EmployeeId) => {
+        let params = { EmployeeId };
+        let {startDate, endDate} = this.state;
+        
+        if(startDate) params = {...params, startDate: moment(startDate).format("MM/DD/YYYY")}
+        if(endDate) params = {...params, endDate: moment(endDate).format("MM/DD/YYYY")}
+        
+        this.props.client.query({
+                query: GET_PUNCHES_REPORT_CONSOLIDATED,
+                variables: { ...params }
+            }).then(({ data: {markedEmployeesConsolidated} }) => {
+                this.setState(() => {
+                    return {
+                        modalDetailsData: markedEmployeesConsolidated,
+                        openModalDetails: true
+                    }
+                });
+            });
+    }
+
+    handleCloseModalDetails = () => {
+        this.setState({ openModalDetails: false });
+    }
+
+    handleOpenTimeModal = (item, allowEditModal) => {
+        this.setState({ openTimeModal: true, timeModalData: item, editTimeModal: allowEditModal });
+    };
+
+    handleCloseTimeModal = () => {
+        this.setState({ openTimeModal: false, timeModalData: {}, editTimeModal: false });
+    };
+
     render() {
-        const { loadingReport, approving, unapproving, rowsId, endDate } = this.state;
+        const { loadingReport, approving, unapproving, rowsId, startDate, endDate } = this.state;
         const loading = loadingReport;
-        console.log({ endDate })
+        
         return <React.Fragment>
             {loading && <LinearProgress />}
 
@@ -138,7 +189,45 @@ class ApprovePunchesReport extends Component {
                 <div className="col-md-12">
                     <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus} />
                     <Table data={this.state.data} approving={approving} unapproving={unapproving} approveMarks={this.approveMarks}
-                        unapproveMarks={this.unapproveMarks} rowsId={rowsId} endDate={endDate} updateData={this.updateData} />
+                        unapproveMarks={this.unapproveMarks} rowsId={rowsId} endDate={endDate} updateData={this.updateData} handleOpenModalDetails={this.handleOpenModalDetails} />
+                    
+                    {/* Detalle de todas las marcadas de un empleado */}
+                    <Dialog 
+                        fullScreen={true} 
+                        open={this.state.openModalDetails} 
+                        //onClose={this.handleCloseModalDetails}
+					    scroll={'paper'}
+                    >
+                        <AppBar style={{ background: 'linear-gradient(to left, #3ca2c8, #254151)' }}>
+                            <Toolbar>
+                                <IconButton color="inherit" onClick={this.handleCloseModalDetails} aria-label="Close">
+                                    <CloseIcon />
+                                </IconButton>
+                                <Typography variant="title" color="inherit">
+                                    Punches Report
+                                </Typography>
+                            </Toolbar>
+                        </AppBar>
+                        <DialogContent style={{marginTop: '90px'}}>
+                            <h5 className="text-success">
+                                {`Punches Report ${startDate ? `From: ${moment(startDate).format("MM/DD/YYYY")}` : ''} ${endDate ? `To: ${moment(endDate).format("MM/DD/YYYY")}` : ''}`}
+                            </h5>
+                            <div className="card" style={{position: 'relative', overflow: 'hidden'}}>
+                                <DropDown data={this.state.modalDetailsData} handleEditModal={this.handleOpenTimeModal}></DropDown>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                    
+                    {/* Detalle de una marcada */}
+                    <TimeCardForm
+                        openModal={this.state.openTimeModal}
+                        handleOpenSnackbar={this.props.handleOpenSnackbar}
+                        onEditHandler={() => {}}
+                        toggleRefresh={() => {}}
+                        handleCloseModal={this.handleCloseTimeModal}
+                        item={this.state.timeModalData}
+                        readOnly={!this.state.editTimeModal}
+                    />
                 </div>
             </div>
         </React.Fragment>
