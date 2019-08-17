@@ -25,7 +25,8 @@ class PunchesReportConsolidated extends Component {
         openModalPicture: false,
         urlPicture: '',
         item: {},
-        editModal: false
+        editModal: false,
+        allowEditModal: false
     }
 
     constructor(props) {
@@ -46,12 +47,12 @@ class PunchesReportConsolidated extends Component {
         }
     }
 
-    handleClickOpenModal = (item) => {
-        this.setState({ openModal: true, item: item, editModal: true });
+    handleClickOpenModal = (item, allowEditModal) => {
+        this.setState({ openModal: true, item: item, editModal: true, allowEditModal });
     };
 
     handleClickCloseModal = () => {
-        this.setState({ openModal: false });
+        this.setState({ openModal: false, allowEditModal: false });
     }
 
     getDepartments = () => {
@@ -188,7 +189,7 @@ class PunchesReportConsolidated extends Component {
             <div className="row">
                 <div className="col-md-12">
                     <div className="card" style={{ "position": "relative" }}>
-                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
+                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} allowEditModal={this.state.allowEditModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>
                     <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
                         <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="30000">

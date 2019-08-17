@@ -273,6 +273,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         toggleRefresh={this.toggleRefresh}
                         handleCloseModal={this.handleCloseModal}
                         item={this.state.item}
+                        readOnly={!this.props.allowEditModal}
                     />
                 </div>
             </div>
