@@ -1,7 +1,6 @@
 import React from 'react';
 import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 
 class ApprovePunchesReportTable extends React.Component {
 
@@ -20,7 +19,7 @@ class ApprovePunchesReportTable extends React.Component {
     }
 
     handleCheckedChange = (rowId) => (e) => {
-        let value = e.target.value;
+        let value = e.target.checked;
         let data = [...this.props.data];
 
         data.find(_ => _.id == rowId).selected = value;
