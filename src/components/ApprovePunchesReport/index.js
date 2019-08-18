@@ -198,9 +198,7 @@ class ApprovePunchesReport extends Component {
 
             <div className="row">
                 <div className="col-md-12">
-                    <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus} 
-                      
-                      ={this.makeSelection} approveMarks={this.approveMarks} />
+                    <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus} makeSelection={this.makeSelection} approveMarks={this.approveMarks} />
                     <Table data={this.state.data} approving={approving} unapproving={unapproving} approveMarks={this.approveMarks}
                         unapproveMarks={this.unapproveMarks} rowsId={rowsId} endDate={endDate} updateData={this.updateData} handleOpenModalDetails={this.handleOpenModalDetails} />
                     
