@@ -116,7 +116,10 @@ class OperationsDashboard extends Component {
         };
         return <Fragment>
             <div className="w-100">
-                {`${sumValues} ${labels.TOTAL_APPLICANTS[LANG]}`}
+                <h5>
+                    <span className="text-warning">{sumValues}</span> &nbsp;
+                    <span className="text-success">{labels.TOTAL_APPLICANTS[LANG]}</span>
+                </h5>
             </div>
             <div className="row align-items-end">
                 {
@@ -149,6 +152,7 @@ class OperationsDashboard extends Component {
         .then(({data}) => {
             const woByRegion = data.worKOrdersByRegion.filter(item => item.workOrders_count > 0);
             let labels = []; 
+            let totalWorkOrders = 0;
 
             let datasets = {
                 label: "Work Orders Requested Per Region",
@@ -159,6 +163,7 @@ class OperationsDashboard extends Component {
 
             woByRegion.forEach((item, i) => {
                 labels.push(item.name.length > 0 ? item.name : 'Unnamed Region');
+                totalWorkOrders += item.workOrders_count;
                 datasets.data.push(item.workOrders_count);
                 datasets.backgroundColor.push(this.getColor(i));
             });
@@ -168,6 +173,7 @@ class OperationsDashboard extends Component {
             this.setState(_ => ({
                 requestPerRegion: {
                     labels,
+                    totalWorkOrders,
                     datasets: [datasets]
                 }
             }));
@@ -183,6 +189,7 @@ class OperationsDashboard extends Component {
         .then(({data}) => {
             const woByCategory = data.worKOrdersByCategory.filter(item => item.workOrders_count > 0);
             let labels = []; 
+            let totalWorkOrders = 0;
 
             let datasets = {
                 label: "Work Orders Requested Per Category",
@@ -193,6 +200,7 @@ class OperationsDashboard extends Component {
 
             woByCategory.forEach((item, i) => {
                 labels.push(item.name.length > 0 ? item.name : 'Unnamed Category');
+                totalWorkOrders += item.workOrders_count;
                 datasets.data.push(item.workOrders_count);
                 datasets.backgroundColor.push(this.getColor(i));                
             });            
@@ -202,6 +210,7 @@ class OperationsDashboard extends Component {
             this.setState(_ => ({
                 requestPerCategory: {
                     labels,
+                    totalWorkOrders,
                     datasets: [datasets]
                 }
             }));
@@ -219,7 +228,7 @@ class OperationsDashboard extends Component {
     }
 
     render() {
-        const { hotel, activeEmployees } = this.state;
+        const { hotel, activeEmployees, requestPerRegion, requestPerCategory } = this.state;
         return <Fragment>
             <div className="row pb-0">
                 <div className="col-md-12">
@@ -336,9 +345,11 @@ class OperationsDashboard extends Component {
                 <div className="col-md-2">
                     <div className="row p-0">
                         <div className="col-md-8 z_index_10">
-                            <div className="StatBoxOps headCount">
+                            <div className="StatBoxOps centerTotalShiftGraph">
                                 <div className="StatBoxOps-header">{labels.Total_Shifts[LANG]}</div>
                                 <div className="StatBoxOps-amount">100</div>
+                                <div className="StatBoxOps-increase">-2.4%</div>
+                                <div className="StatBoxOps-caption">vs previous month</div>
                             </div>
                             <div className="TotalShiftsChart">
                                 <Doughnut
@@ -355,7 +366,7 @@ class OperationsDashboard extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="col-md-4 d-sm-none d-md-flex align-content-stretch flex-wrap">
+                        <div className="col-md-4 d-none d-md-flex align-content-stretch flex-wrap">
                             <div className="StatBoxOps">
                                 <div className="StatBoxOps-header py-2"></div>
                                 <div className="StatBoxOps-body"></div>
@@ -415,6 +426,11 @@ class OperationsDashboard extends Component {
                             </div>
                         </div>
                     </div>
+                    
+                    <div className="w-100 d-flex justify-content-end">
+                        <span className="mr-1">{ `${labels.Results[LANG]} (${10})` }</span>
+                        <a href="#">{ `${labels.View_All[LANG]}` }</a>
+                    </div>
                 </div>
 
                 <div className="col-md-4 d-flex align-content-stretch">
@@ -445,11 +461,14 @@ class OperationsDashboard extends Component {
                 <div className="col-md-4">
                     <div className="card shadow">
                         <div className="card-header">
-                            {labels.WO_Requests_per_Region[LANG]}
+                            <span className="WO-header"><i className="fas fa-sitemap"></i> {labels.WO_Requests_per_Region[LANG]}</span>
                         </div>
                         <div className="card-body">
+                            <div className="StatBoxOps centerRequestGraph">
+                                <div className="StatBoxOps-amount">{requestPerRegion ? requestPerRegion.totalWorkOrders : 0}</div>
+                            </div>
                             <Doughnut
-                                data={this.state.requestPerRegion}
+                                data={requestPerRegion}
                                 width={163}
                                 height={163}
                                 options={{
@@ -465,11 +484,14 @@ class OperationsDashboard extends Component {
 
                     <div className="card shadow">
                         <div className="card-header">
-                            {labels.WO_Requests_per_Category[LANG]}
+                            <span className="WO-header"><i className="fas fa-layer-group"></i> {labels.WO_Requests_per_Category[LANG]}</span> 
                         </div>
                         <div className="card-body">
+                            <div className="StatBoxOps centerRequestGraph">
+                                <div className="StatBoxOps-amount">{requestPerCategory ? requestPerCategory.totalWorkOrders : 0}</div>
+                            </div>
                             <Doughnut
-                                data={this.state.requestPerCategory}
+                                data={requestPerCategory}
                                 width={163}
                                 height={163}
                                 options={{
