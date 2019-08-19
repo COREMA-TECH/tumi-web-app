@@ -31,7 +31,7 @@ class ApprovePunchesReport extends Component {
         unapproving: false,
         openModalDetails: false,
         modalDetailsData: [],
-        openTimeModal: false, 
+        openTimeModal: false,
         timeModalData: {},
         editTimeModal: false
     }
@@ -151,22 +151,22 @@ class ApprovePunchesReport extends Component {
 
     handleOpenModalDetails = (EmployeeId) => {
         let params = { EmployeeId };
-        let {startDate, endDate} = this.state;
-        
-        if(startDate) params = {...params, startDate: moment(startDate).format("MM/DD/YYYY")}
-        if(endDate) params = {...params, endDate: moment(endDate).format("MM/DD/YYYY")}
-        
+        let { startDate, endDate } = this.state;
+
+        if (startDate) params = { ...params, startDate: moment(startDate).format("MM/DD/YYYY") }
+        if (endDate) params = { ...params, endDate: moment(endDate).format("MM/DD/YYYY") }
+
         this.props.client.query({
-                query: GET_PUNCHES_REPORT_CONSOLIDATED,
-                variables: { ...params }
-            }).then(({ data: {markedEmployeesConsolidated} }) => {
-                this.setState(() => {
-                    return {
-                        modalDetailsData: markedEmployeesConsolidated,
-                        openModalDetails: true
-                    }
-                });
+            query: GET_PUNCHES_REPORT_CONSOLIDATED,
+            variables: { ...params }
+        }).then(({ data: { markedEmployeesConsolidated } }) => {
+            this.setState(() => {
+                return {
+                    modalDetailsData: markedEmployeesConsolidated,
+                    openModalDetails: true
+                }
             });
+        });
     }
 
     handleCloseModalDetails = () => {
@@ -198,18 +198,17 @@ class ApprovePunchesReport extends Component {
 
             <div className="row">
                 <div className="col-md-12">
-                    <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus} 
-                      
-                      ={this.makeSelection} approveMarks={this.approveMarks} />
+                    <Filter {...this.state} updateFilter={this.updateFilter} updateLoadingStatus={this.updateLoadingStatus}
+                        makeSelection={this.makeSelection} approveMarks={this.approveMarks} />
                     <Table data={this.state.data} approving={approving} unapproving={unapproving} approveMarks={this.approveMarks}
                         unapproveMarks={this.unapproveMarks} rowsId={rowsId} endDate={endDate} updateData={this.updateData} handleOpenModalDetails={this.handleOpenModalDetails} />
-                    
+
                     {/* Detalle de todas las marcadas de un empleado */}
-                    <Dialog 
-                        fullScreen={true} 
-                        open={this.state.openModalDetails} 
+                    <Dialog
+                        fullScreen={true}
+                        open={this.state.openModalDetails}
                         //onClose={this.handleCloseModalDetails}
-					    scroll={'paper'}
+                        scroll={'paper'}
                     >
                         <AppBar style={{ background: 'linear-gradient(to left, #3ca2c8, #254151)' }}>
                             <Toolbar>
@@ -221,22 +220,22 @@ class ApprovePunchesReport extends Component {
                                 </Typography>
                             </Toolbar>
                         </AppBar>
-                        <DialogContent style={{marginTop: '90px'}}>
+                        <DialogContent style={{ marginTop: '90px' }}>
                             <h5 className="text-success">
                                 {`Punches Report ${startDate ? `From: ${moment(startDate).format("MM/DD/YYYY")}` : ''} ${endDate ? `To: ${moment(endDate).format("MM/DD/YYYY")}` : ''}`}
                             </h5>
-                            <div className="card" style={{position: 'relative', overflow: 'hidden'}}>
+                            <div className="card" style={{ position: 'relative', overflow: 'hidden' }}>
                                 <DropDown data={this.state.modalDetailsData} handleEditModal={this.handleOpenTimeModal}></DropDown>
                             </div>
                         </DialogContent>
                     </Dialog>
-                    
+
                     {/* Detalle de una marcada */}
                     <TimeCardForm
                         openModal={this.state.openTimeModal}
                         handleOpenSnackbar={this.props.handleOpenSnackbar}
-                        onEditHandler={() => {}}
-                        toggleRefresh={() => {}}
+                        onEditHandler={() => { }}
+                        toggleRefresh={() => { }}
                         handleCloseModal={this.handleCloseTimeModal}
                         item={this.state.timeModalData}
                         readOnly={!this.state.editTimeModal}
