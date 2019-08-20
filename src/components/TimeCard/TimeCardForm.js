@@ -657,7 +657,16 @@ class TimeCardForm extends Component {
                     <form action="" onSubmit={this.handleSubmit}>
                         <DialogTitle style={{ padding: '0px' }}>
                             <div className="modal-header">
-                                <h5 className="modal-title">{readOnly ? 'View Time' : 'Add Time +'}</h5>
+                                {
+                                    readOnly 
+                                        ? <p className="modal-title alert alert-success d-flex flex-row">
+                                                <i class="fas fa-fw fa-exclamation-circle mr-3 align-self-center"></i>
+                                                <div>
+                                                    This timesheet has been approved and cannot be edited. A manager must unapprove the day or week this timesheet falls in before it can be edited.
+                                                </div>
+                                            </p>
+                                        : <h5 className="modal-title">Add Time +</h5>
+                                }
                             </div>
                             <div className="container">
                                 <div className="row">
