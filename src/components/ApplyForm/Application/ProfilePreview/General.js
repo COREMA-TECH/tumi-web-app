@@ -40,6 +40,7 @@ import Titles from './Titles';
 import moment from 'moment';
 import VerificationLetter from '../VerificationLetter';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import FeatureTag from '../../../ui-components/FeatureTag';
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -1877,9 +1878,11 @@ class General extends Component {
                             <div className="row">
                                 <div className="col-sm-12">
                                     <h5 className="float-left">Titles</h5>
-                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
-                                        <i class="far fa-plus-square"></i>
-                                    </button>
+                                    <FeatureTag code="06be7c13-cbc8-41da-a338-3e8cd93fa935">
+                                        <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
+                                            <i class="far fa-plus-square"></i>
+                                        </button>
+                                    </FeatureTag>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
@@ -1902,11 +1905,13 @@ class General extends Component {
                                                 })
                                                 : ''
                                         }
-                                        <ContextMenu id={TITLE_CONTEXT_MENU} onShow={t => console.log(t)}>
-                                            <MenuItem data={{ action: 'setTitleDefault' }} onClick={this.setTitleDefault}>
-                                                Set as default
-                                            </MenuItem>
-                                        </ContextMenu>
+                                        <FeatureTag code="5d49f1e4-89a7-4990-a90a-7617877ce573">
+                                            <ContextMenu id={TITLE_CONTEXT_MENU} onShow={t => console.log(t)}>
+                                                <MenuItem data={{ action: 'setTitleDefault' }} onClick={this.setTitleDefault}>
+                                                    Set as default
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </FeatureTag>
                                         <ContextMenu id={HOTEL_CONTEXT_MENU} 
                                             onShow={t => {
                                                 this.setState(_ => ({ hotelDefaultMenuText: t.detail.data.attributes.clickedHotel.defaultProperty ? 'Unassign Home Location' : 'Set as Home Location' }))
