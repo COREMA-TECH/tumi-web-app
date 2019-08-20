@@ -21,7 +21,7 @@
     margin-bottom: 8px;
     width: 100%;
 
-    &.headCount{
+    &.centerRequestGraph {
         background-color: transparent;
         box-shadow: none;
         border: none;
@@ -31,20 +31,45 @@
         margin-left: auto;
         margin-right: auto;
         right: 0;
-        top: calc(50% - 42px);
-
-        max-width: 185px;
+        top: 53%;
 
         .StatBoxOps{
             box-shadow: 0;
+            &-header{
+                border: none;
+            }
+            &-amount,
+            &-increase,
+            &-caption{
+                text-align: center;
+            }
         }
+    }
+    
+    &.centerTotalShiftGraph{
+        background-color: transparent;
+        box-shadow: none;
+        border: none;
 
-        .StatBoxOps-header{
-            border: none;
-        }
+        position: absolute;
+        left: 0;
+        margin-left: auto;
+        margin-right: auto;
+        right: 0;
+        top: calc(50% - 60px);
+        
+        //max-width: 185px;
 
-        .StatBoxOps-amount{
-            text-align: center;
+        .StatBoxOps{
+            box-shadow: 0;
+            &-header{
+                border: none;
+            }
+            &-amount,
+            &-increase,
+            &-caption{
+                text-align: center;
+            }
         }
     }
 
@@ -79,14 +104,33 @@
 }
 
 .TotalShiftsChart {
-    width: 16vw;
-    margin-left: -3.5vw;
+    margin-left: -50%;
+    width: 200%;
     margin-top: -0.9rem;
     max-height: 260px;
 
     @include media-breakpoint-down(sm){
         width: 100%;
         margin: 0;
+    }
+}
+
+.WO-header {
+    display: flex;
+    flex: row;
+    font-weight: bold;
+    align-items: center;
+    i{
+        display: flex;
+        flex: row;
+        align-items: center;
+        justify-content: center;
+        height: 28px;
+        width: 28px;
+        margin-right: 5px;
+        background-color: #5CBC8E;
+        border-radius: 50%;
+        color: #FFFFFF;
     }
 }
 
