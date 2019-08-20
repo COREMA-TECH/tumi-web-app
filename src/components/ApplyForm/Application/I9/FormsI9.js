@@ -52,7 +52,7 @@ class FormsI9 extends Component {
     cloneForm  = _ => {
         let contentPDF = document.getElementById('i9Html');
         let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 50%;">${contentPDFClone.innerHTML}</html>`;
+        return `<html style="zoom: 45%;">${contentPDFClone.innerHTML}</html>`;
     }
 
 
@@ -116,7 +116,7 @@ class FormsI9 extends Component {
                 if (data.applicantI9.length > 0) {
                     this.setState({
                         isCreated: true,
-                        html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 50%;"', '') : '',
+                        html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 45%;"', '') : '',
                         pdfUrl: data.applicantI9[0].url
 
                     });
@@ -198,7 +198,7 @@ class FormsI9 extends Component {
             }
         }
 
-        const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 50%;>').replace('<img id="employee-signature-box" src=""', `<img id="employee-signature-box" src="${this.state.signature}"`) : this.cloneForm();
+        const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 45%;>').replace('<img id="employee-signature-box" src=""', `<img id="employee-signature-box" src="${this.state.signature}"`) : this.cloneForm();
         this.props.client
             .mutate({
                 mutation: ADD_I9,
