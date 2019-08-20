@@ -16,6 +16,8 @@ const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')
 
 const lenguageform = localStorage.getItem("languageForm");
 
+const uuidv4 = require('uuid/v4');
+
 class ConductCode extends Component {
 	constructor(props) {
 		super(props);
@@ -136,7 +138,13 @@ class ConductCode extends Component {
 			});
 	};
 
-	createDocumentsPDF = () => {
+	cloneForm  = _ => {
+        let contentPDF = document.getElementById('DocumentPDF');
+        let contentPDFClone = contentPDF.cloneNode(true);
+        return `<html style="zoom: 60%;">${contentPDFClone.innerHTML}</html>`;
+    }
+
+	createDocumentsPDF = (random) => {
 		this.setState({
 			downloading: true
 		});
@@ -144,14 +152,16 @@ class ConductCode extends Component {
 			.query({
 				query: CREATE_DOCUMENTS_PDF_QUERY,
 				variables: {
-					contentHTML: document.getElementById('DocumentPDF').innerHTML,
-					Name: 'ConductCode-' + this.state.applicantName
+					contentHTML: this.cloneForm(), //document.getElementById('DocumentPDF').innerHTML, // TODO: (LF) Quitar codigo comentado
+					Name: 'ConductCode-' + random
 				},
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
 				if (data.data.createdocumentspdf != null) {
-					this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename;
+					console.log(data); // TODO: (LF) Quitar console log
+					this.state.urlPDF = data.data.createdocumentspdf;
+					//this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename;
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
@@ -167,7 +177,7 @@ class ConductCode extends Component {
 	};
 
 	downloadDocumentsHandler = () => {
-		var url = this.context.baseUrl + '/public/Documents/' + 'ConductCode-' + this.state.applicantName + '.pdf';
+		var url = this.context.baseUrl + this.state.urlPDF; //'/public/Documents/' + 'ConductCode-' + this.state.applicantName + '.pdf';
 		window.open(url, '_blank');
 		this.setState({ downloading: false });
 	};
@@ -235,7 +245,8 @@ class ConductCode extends Component {
 												{
 													this.state.id !== null ? (
 														<button className="applicant-card__edit-button" onClick={() => {
-															this.createDocumentsPDF();
+															let random = uuidv4();
+															this.createDocumentsPDF(random);
 															this.sleep().then(() => {
 																this.downloadDocumentsHandler();
 															}).catch(error => {
@@ -243,7 +254,6 @@ class ConductCode extends Component {
 															})
 														}}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
 															{!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
-
 														</button>
 													) : (
 															<button className="applicant-card__edit-button" onClick={() => {
@@ -288,14 +298,12 @@ class ConductCode extends Component {
                                                 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</p>
                                                 <li style="text-align: justify;"><span style="font-size: 10.5pt;">I am committed to the success of Tumi Staffing, Inc and providing a positive environment to all of my fellow employees!</span></li>
                                                 </ol>
-                                                <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</p>
-                                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img width="150" height="auto" src="` +
+                                                <p style="margin: 4.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img width="150" height="auto" src="` +
 												this.state.signature +
 												`" alt=""></u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` +
 												this.state.date.substring(0, 10) +
 												`</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-                                                <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</p>
-                                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Printed Name: <u>` + this.state.applicantName + `</u></p>
+                                                <p style="margin: 4.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Printed Name: <u>` + this.state.applicantName + `</u></p>
                                                 </div>`) :
 											renderHTML(`<div class="WordSection1">
                                 <p style="margin: 0.65pt 0in 0.0001pt 1pt; font-size: 11pt; font-family: 'Time New Roman', sans-serif; text-align: center;"
