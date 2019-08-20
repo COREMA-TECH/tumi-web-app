@@ -13,6 +13,9 @@ import PropTypes from 'prop-types';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const FILE_NAME = "nonDisclosure-";
+
+const uuidv4 = require('uuid/v4');
 
 class NonDisclosure extends Component {
     constructor(props) {
@@ -133,18 +136,21 @@ class NonDisclosure extends Component {
             })
     };
 
-    createDocumentsPDF = () => {
-        this.setState(
-            {
-                downloading: true
-            }
-        )
+    cloneForm = _ => {
+        let contentPDF = document.getElementById('DocumentPDF');
+        let contentPDFClone = contentPDF.cloneNode(true);
+        return `<html style="zoom: 60%;">${contentPDFClone.innerHTML}</html>`;
+    }
+
+    createDocumentsPDF = (fileName) => {
+        this.setState(() => ({ downloading: true }));
+
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
                 variables: {
-                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
-                    Name: "NonDisclosure-" + this.state.applicantName
+                    contentHTML: this.cloneForm(),
+                    Name: fileName
                 },
                 fetchPolicy: 'no-cache'
             })
@@ -156,20 +162,20 @@ class NonDisclosure extends Component {
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({ loadingData: false, downloading: false });
+                    this.setState(() => ({ loadingData: false, downloading: false }));
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({ loadingData: false, downloading: false });
+                this.setState(() => ({ loadingData: false, downloading: false }));
             });
     };
 
 
-    downloadDocumentsHandler = () => {
-        var url = this.context.baseUrl + '/public/Documents/' + "NonDisclosure-" + this.state.applicantName + '.pdf';
+    downloadDocumentsHandler = (fileName) => {
+        var url = `${this.context.baseUrl}/public/Documents/${fileName}.pdf`;
         window.open(url, '_blank');
-        this.setState({ downloading: false });
+        this.setState(() => ({ downloading: false }));
     };
 
     componentWillMount() {
@@ -187,6 +193,16 @@ class NonDisclosure extends Component {
                 applicationId: nextProps.applicationId
             });
         }
+    }
+
+    handleDownloadPDFClick = () => {
+        const fileName = `${FILE_NAME}${uuidv4()}-${this.state.applicantName}`;
+        this.createDocumentsPDF(fileName);
+        this.sleep().then(() => {
+            this.downloadDocumentsHandler(fileName);
+        }).catch(error => {
+            this.setState(() => ({ downloading: false }))
+        })
     }
 
     render() {
@@ -228,36 +244,22 @@ class NonDisclosure extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[4].label}</span>
                                 {
-                                    this.state.id === '' ? (
-                                        ''
-                                    ) : (
-                                            <div>
-                                                {
-                                                    this.state.id !== null ? (
-                                                        <button className="applicant-card__edit-button" onClick={() => {
-                                                            this.createDocumentsPDF();
-                                                            this.sleep().then(() => {
-                                                                this.downloadDocumentsHandler();
-                                                            }).catch(error => {
-                                                                this.setState({ downloading: false })
-                                                            })
-                                                        }}>{this.state.downloading && (
-                                                            <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                            {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
-                                                                className="fas fa-download" /></React.Fragment>)}
+                                    this.state.id ?
+                                        <button className="applicant-card__edit-button" onClick={this.handleDownloadPDFClick} disabled={this.state.downloading}>
+                                            {this.state.downloading ?
+                                                <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>
+                                                :
+                                                <React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>
+                                            }
 
-                                                        </button>
-                                                    ) : (
-                                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                                this.setState({
-                                                                    openSignature: true
-                                                                })
-                                                            }}>{actions[8].label} <i className="far fa-edit"></i>
-                                                            </button>
-                                                        )
-                                                }
-                                            </div>
-                                        )
+                                        </button>
+                                        :
+                                        <button className="applicant-card__edit-button" onClick={() => {
+                                            this.setState({
+                                                openSignature: true
+                                            })
+                                        }}>{actions[8].label} <i className="far fa-edit"></i>
+                                        </button>
                                 }
                             </div>
 
@@ -418,7 +420,7 @@ class NonDisclosure extends Component {
                 {
                     renderSignatureDialog()
                 }
-            </div>
+            </div >
         );
     }
 
