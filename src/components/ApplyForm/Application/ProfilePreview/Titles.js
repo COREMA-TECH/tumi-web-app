@@ -64,7 +64,10 @@ class Titles extends Component {
             })
             .then(({ data }) => {
                 let posCatalog = [], newGroup = [];
-                let dataAPI = data.catalogitem;
+                const {currentIdealJobsId} = this.props;
+                console.log('Mostrando todos los ideal jobs',currentIdealJobsId); // TODO: (LF) Quitar console log
+                let dataAPI = data.catalogitem.filter(c => !currentIdealJobsId.includes(c.Id));
+                console.log('Mostrando data Api',dataAPI); // TODO: (LF) Quitar console log
                 myHotels.forEach(h => {
                     newGroup = dataAPI.filter(da => da.Id_Entity === h.Id).map(item => {
                                     return { value: item.Id, label: item.Code.trim(), key: item.Id }

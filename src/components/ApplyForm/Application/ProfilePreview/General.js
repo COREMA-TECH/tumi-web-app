@@ -1640,9 +1640,10 @@ class General extends Component {
 
         let { firstname, middlename, lastname, employmentType, startDate, positionName } = this.state;
         let employeeName = `${firstname || ''} ${middlename || ''} ${lastname || ''}`;
+        let currentIdealJobsId = this.state.idealJobs.map(ij => ij.idPosition);
         return (
             <div className="Apply-container--application">
-                <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} myHotels={this.state.myHotels.filter(h => h.relationActive)} />
+                <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} myHotels={this.state.myHotels.filter(h => h.relationActive)} currentIdealJobsId={currentIdealJobsId} />
                 {/* Confirmacion para eliminar location */}
                 <ConfirmDialog
                     open={this.state.openConfirm}
@@ -1884,13 +1885,19 @@ class General extends Component {
                                     <div className="row">
                                         {
                                             this.state.idealJobs ?
-                                                this.state.idealJobs.map((idealJob, i) => {
+                                                this.state.idealJobs.sort(ij => ij.isDefault ? -1 : 1).map((idealJob, i) => {
                                                     return <div className="col-sm-12 col-md-6 col-lg-3" key={i}>
-                                                        <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{appIdealJob: idealJob}}>
-                                                            <div className={`${idealJob.isDefault ? 'bg-info text-white border-info' : 'bg-light border-secondary'} border p-2 text-center rounded m-1 col text-truncate`}>
-                                                                {idealJob.description}
-                                                            </div>
-                                                        </ContextMenuTrigger>
+                                                        {
+                                                            idealJob.isDefault
+                                                                ? <div className="bg-info text-white border border-info p-2 text-center rounded m-1 col text-truncate">
+                                                                    {idealJob.description}
+                                                                </div>
+                                                                : <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{appIdealJob: idealJob}}>
+                                                                    <div className="bg-light border border-secondary p-2 text-center rounded m-1 col text-truncate">
+                                                                        {idealJob.description}
+                                                                    </div>
+                                                                </ContextMenuTrigger>
+                                                        }
                                                     </div>
                                                 })
                                                 : ''
