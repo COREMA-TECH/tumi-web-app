@@ -216,11 +216,6 @@ class FormsW4 extends Component {
             const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 50%;>').replace('<img src=""', `<img src="${this.state.signature}"`) : this.cloneForm();
             const { firstName, lastName, socialSecurityNumber: ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, socialSecurityExtention: sse } = this.state;
             const jsonFields = JSON.stringify({ firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse });
-            
-            alert('About to save');
-            console.log(jsonFields);
-
-            return;
 
             this.props.client
                 .mutate({
