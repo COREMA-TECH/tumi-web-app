@@ -1,5 +1,4 @@
 export const NonDisclosureContent = (props) => {
-    console.log({ props })
     return `<div class="WordSection1">
     <p style="font-size: 11pt; "><span style="font-size: 18.0pt;">NON-DISCLOSURE AND
             NON-SOLICITATION AGREEMENT</span></p>
