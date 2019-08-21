@@ -457,7 +457,7 @@ class WorkerCompensation extends Component {
                             </div>
                             <div className="p-4">
                                 <div id="DocumentPDF" className="signature-information">
-                                    {renderHTML(`<p style="text-align: justify; font-family: 'Times New Roman';"><span style="font-family: Times New Roman;">Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&apos; Compensation Network</span></p>
+                                    {renderHTML(`<p style="text-align: center; font-family: 'Times New Roman';"><span style="font-family: Times New Roman;"><b>Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&apos; Compensation Network</b></span></p>
 <p style="text-align: justify; font-family: Times New Roman;"><strong><span style="font-family: 'Times New Roman';">&nbsp;</span></strong></p>
 <p style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I &nbsp;have &nbsp;received information that tells me how to get health care under my employer&apos;s workers&apos; compensation insurance.</p>
 <p style="text-align: justify; font-family: Times New Roman;"><span style="font-size: 11.5pt;">&nbsp;</span></p>
