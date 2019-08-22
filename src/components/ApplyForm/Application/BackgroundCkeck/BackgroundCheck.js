@@ -448,7 +448,7 @@ class BackgroundCheck extends Component {
     cloneForm  = _ => {
         let contentPDF = document.getElementById('DocumentPDF');
         let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 50%;">${contentPDFClone.innerHTML}</html>`;
+        return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
     }
 
     createDocumentsPDF = (random) => {
@@ -947,21 +947,21 @@ class BackgroundCheck extends Component {
                             }}>
                                 {
                                     this.state.isCreated ? (
-                                        <div className="row" id="DocumentPDF" style={{maxWidth: '100%' }}>
+                                        <div className="row" id="DocumentPDF" style={{maxWidth: '100%', margin: '0' }}>
                                             <div style={{ width: '100%', margin: '0 auto' }}>
-                                                <p><img style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto' }} src="https://i.imgur.com/bHDSsLu.png" alt width={600} height={140} /></p>
+                                                <p><img style={{ display: 'block', marginLeft: '-8.5%', marginTop : '-10px' }} src="https://i.imgur.com/bHDSsLu.png" alt width="116%" height={192} /></p>
                                                 <div title="Page 1">
-                                                    <table style={{ borderCollapse: 'collapse', width: '96.9636%', height: '59px' }} border={0}>
+                                                    <table style={{ borderCollapse: 'collapse', width: '100%', height: '59px' }} border={0}>
                                                         <tbody>
                                                             <tr style={{ height: '59px' }}>
-                                                                <td style={{ width: '100%', height: '59px', textAlign: 'left', paddingLeft: '40px' }}>
-                                                                    <p><span style={{ fontFamily: 'arial, helvetica, sans-serif', color: '#000000' }}>In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</span></p>
+                                                                <td style={{ width: '100%', height: '59px', textAlign: 'justify' }}>
+                                                                    <p><span style={{ color: '#000000' }}>In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</span></p>
                                                                     <div title="Page 1">
                                                                         <div>
                                                                             <div>
-                                                                                <p><span style={{ fontFamily: 'arial, helvetica, sans-serif', color: '#000000' }}>I further understand that for the purposes of this background inquiry, various sources will be contacted to provide information, including but not limited to various Federal, State, County, municipal, corporate, private and other agencies, which may maintain records concerning my past activities relating to my criminal conduct, civil court litigation, driving record, and credit performance, as well as various other experiences.</span></p>
-                                                                                <p><span style={{ fontFamily: 'arial, helvetica, sans-serif', color: '#000000' }}>I hereby authorize without reservation, any company, agency, party of other source contracted to furnish the above information as requested. I do hereby release, discharge and indemnify the prospective employer, it’s agents and associates to the full extent permitted by law from any claims, damages, losses, liabilities, cost and expenses arising from the retrieving and reporting of the requested information.</span></p>
-                                                                                <p><span style={{ fontFamily: 'arial, helvetica, sans-serif', color: '#000000' }}>I acknowledge that a photocopy of this authorization be accepted with the same authority as the original and this signed release expires one (1) year after the date of origination.</span></p>
+                                                                                <p><span style={{ color: '#000000' }}>I further understand that for the purposes of this background inquiry, various sources will be contacted to provide information, including but not limited to various Federal, State, County, municipal, corporate, private and other agencies, which may maintain records concerning my past activities relating to my criminal conduct, civil court litigation, driving record, and credit performance, as well as various other experiences.</span></p>
+                                                                                <p><span style={{ color: '#000000' }}>I hereby authorize without reservation, any company, agency, party of other source contracted to furnish the above information as requested. I do hereby release, discharge and indemnify the prospective employer, it’s agents and associates to the full extent permitted by law from any claims, damages, losses, liabilities, cost and expenses arising from the retrieving and reporting of the requested information.</span></p>
+                                                                                <p><span style={{ color: '#000000' }}>I acknowledge that a photocopy of this authorization be accepted with the same authority as the original and this signed release expires one (1) year after the date of origination.</span></p>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -974,7 +974,7 @@ class BackgroundCheck extends Component {
                                                 <table style={{
                                                     marginTop: '15px',
                                                     backgroundColor: '#ddd',
-                                                    borderCollapse: 'collapse', width: '97.0648%', height: '35px'
+                                                    borderCollapse: 'collapse', width: '100%', height: '35px'
                                                 }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '35px' }}>
@@ -982,7 +982,7 @@ class BackgroundCheck extends Component {
                                                                 <div title="Page 1">
                                                                     <div>
                                                                         <div>
-                                                                            <div style={{ textAlign: 'center' }}><span style={{ fontFamily: '"arial black", sans-serif', color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>APPLICANT INFORMATION</strong></span></div>
+                                                                            <div style={{ textAlign: 'center' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>APPLICANT INFORMATION</strong></span></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -990,14 +990,14 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0663%' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                     <tbody>
                                                         <tr>
                                                             <td style={{ width: '100%' }}><strong><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}>Please print clearly, use black ink, and use your full legal name.</span></strong></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0663%', height: '28px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '28px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '17px' }}>
                                                             <td style={{ width: '33.3333%', height: '28px' }}>
@@ -1015,7 +1015,7 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0648%', height: '17px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '17px' }}>
                                                             <td style={{ width: '33.3333%', height: '17px' }}>
@@ -1031,7 +1031,7 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0648%', height: '41px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '41px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '41px' }}>
                                                             <td style={{ width: '100%', height: '41px' }}>
@@ -1041,7 +1041,7 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0652%', height: '41px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '41px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '41px' }}>
                                                             <td style={{ width: '50.0173%', height: '41px' }}>
@@ -1059,15 +1059,15 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <br />
-                                                <table style={{ backgroundColor: '#ddd', borderCollapse: 'collapse', width: '97.0648%', height: '35px' }} border={1}>
+                                                
+                                                <table style={{ backgroundColor: '#ddd', borderCollapse: 'collapse', width: '100%', height: '35px', marginTop: '300px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '35px' }}>
                                                             <td style={{ width: '100%', height: '35px' }}>
                                                                 <div title="Page 1">
                                                                     <div>
                                                                         <div>
-                                                                            <div style={{ textAlign: 'center' }}><span style={{ fontFamily: '"arial black", sans-serif', color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>MOTOR VEHICLE RECORD</strong></span></div>
+                                                                            <div style={{ textAlign: 'center' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>MOTOR VEHICLE RECORD</strong></span></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1075,7 +1075,7 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0648%', height: '42px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '42px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '42px' }}>
                                                             <td style={{ width: '100%', height: '42px' }}>
@@ -1158,7 +1158,7 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0652%', height: '44px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '44px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '44px' }}>
                                                             <td style={{ width: '50.0173%', height: '44px' }}>
@@ -1182,7 +1182,7 @@ class BackgroundCheck extends Component {
                                                     </tbody>
                                                 </table>
                                                 <div title="Page 1">
-                                                    <table style={{ borderCollapse: 'collapse', width: '97.0648%', height: '45px' }} border={1}>
+                                                    <table style={{ borderCollapse: 'collapse', width: '100%', height: '45px' }} border={1}>
                                                         <tbody>
                                                             <tr style={{ height: '45px' }}>
                                                                 <td style={{
@@ -1262,14 +1262,14 @@ class BackgroundCheck extends Component {
                                                     </table>
                                                 </div>
                                                 <p>&nbsp;</p>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.2672%', height: '17px' }} border={0}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={0}>
                                                     <tbody>
                                                         <tr style={{ height: '17px' }}>
-                                                            <td style={{ width: '100%', height: '17px', textAlign: 'justify' }}><span style={{ fontFamily: 'arial, helvetica, sans-serif' }}><strong><span style={{ color: '#000000' }}>In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry.</span></strong></span></td>
+                                                            <td style={{ width: '100%', height: '17px', textAlign: 'justify' }}><span><strong><span style={{ color: '#000000' }}>In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry.</span></strong></span></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0648%', height: '17px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '17px' }}>
                                                             <td style={{ width: '50%', height: '17px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>SIGNATURE: </strong></span>
@@ -1286,7 +1286,7 @@ class BackgroundCheck extends Component {
                                                     </tbody>
                                                 </table>
                                                 <p>&nbsp;</p>
-                                                <table style={{ borderCollapse: 'collapse', width: '97.0648%', height: '17px' }} border={0}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={0}>
                                                     <tbody>
                                                         <tr style={{ height: '17px' }}>
                                                             <td style={{ width: '50%', height: '17px' }}>
@@ -1310,7 +1310,6 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <p>&nbsp;</p>
                                             </div>
                                         </div>
                                     ) : (

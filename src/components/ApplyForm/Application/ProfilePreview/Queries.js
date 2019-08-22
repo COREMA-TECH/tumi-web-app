@@ -43,6 +43,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             idealJobs {
                 id
                 description
+                idPosition
                 isDefault
             }
             user{

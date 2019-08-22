@@ -11,6 +11,7 @@ import withGlobalContent from "../../../Generic/Global";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import './index.css';
 import PropTypes from 'prop-types';
+const uuidv4 = require('uuid/v4');
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -51,7 +52,13 @@ class WorkerCompensation extends Component {
         });
     };
 
-    createDocumentsPDF = () => {
+    cloneForm  = _ => {
+        let contentPDF = document.getElementById('DocumentPDF');
+        let contentPDFClone = contentPDF.cloneNode(true);
+        return `<html style="zoom: 60%;">${contentPDFClone.innerHTML}</html>`;
+    }
+
+    createDocumentsPDF = (uuid) => {
         this.setState(
             {
                 downloading: true
@@ -61,8 +68,8 @@ class WorkerCompensation extends Component {
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
                 variables: {
-                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
-                    Name: "WorkerCompensation-" + this.state.applicantName
+                    contentHTML: this.cloneForm(),
+                    Name: "WorkerCompensation-" + uuid + "-" + this.state.applicantName
                 },
                 fetchPolicy: 'no-cache'
             })
@@ -84,8 +91,8 @@ class WorkerCompensation extends Component {
     };
 
 
-    downloadDocumentsHandler = () => {
-        var url = this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + this.state.applicantName + '.pdf';
+    downloadDocumentsHandler = (uuid) => {
+        var url = this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + uuid + "-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
         this.setState({ downloading: false });
 
@@ -408,7 +415,7 @@ class WorkerCompensation extends Component {
         );
 
         return (
-            <div className="Apply-container--application">
+            <div className="Apply-container--application" style={{width: "100%", maxWidth: "900px", margin: "0 auto"}}>
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">
@@ -422,9 +429,10 @@ class WorkerCompensation extends Component {
                                                 {
                                                     this.state.id !== null ? (
                                                         <button className="applicant-card__edit-button" onClick={() => {
-                                                            this.createDocumentsPDF();
+                                                            const uuid = uuidv4();
+                                                            this.createDocumentsPDF(uuid);
                                                             this.sleep().then(() => {
-                                                                this.downloadDocumentsHandler();
+                                                                this.downloadDocumentsHandler(uuid);
                                                             }).catch(error => {
                                                                 this.setState({ downloading: false })
                                                             })
@@ -447,60 +455,97 @@ class WorkerCompensation extends Component {
                                         )
                                 }
                             </div>
-                            <div className="row pdf-container">
+                            <div className="p-4">
                                 <div id="DocumentPDF" className="signature-information">
-                                    {renderHTML(`
-<p style="text-align: justify; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 18.0pt; font-family: Time New Roman;">Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&apos; Compensation Network</span></p>
-<p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><strong><span style="font-size: 12.0pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</span></strong></p>
-<p style="margin: 0in 54.3pt 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I &nbsp;have &nbsp;received information that tells me how to get health care under my employer&apos;s workers&apos; compensation insurance.</p>
-<p style="margin: 0.25pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="margin: 0.05pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">If I am hurt on the job and live in a service area described in this information, I understand that:</p>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
+                                    {renderHTML(`<p style="text-align: center; font-family: 'Times New Roman';"><span style="font-family: Times New Roman;"><b>Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&apos; Compensation Network</b></span></p>
+<p style="text-align: justify; font-family: Times New Roman;"><strong><span style="font-family: 'Times New Roman';">&nbsp;</span></strong></p>
+<p style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I &nbsp;have &nbsp;received information that tells me how to get health care under my employer&apos;s workers&apos; compensation insurance.</p>
+<p style="text-align: justify; font-family: Times New Roman;"><span style="font-size: 11.5pt;">&nbsp;</span></p>
+<p style="text-align: justify; font-family: Times New Roman;">If I am hurt on the job and live in a service area described in this information, I understand that:</p>
 <ol style="margin-top: 0in; margin-bottom: .0001pt;">
-<li style="margin: 0in 16.3pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I must choose a treating doctor from the list of doctors in the network. Or, I may ask my HMO primary care physician to agree to serve as my treating doctor. If I select my HMO primary care physician as my treating doctor, I will call Texas Mutual at (800) 859-5995 to notify them of my choice.</li>
-<li style="margin: 0.05pt 48.25pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I must go to my treating doctor for all health care for my injury. If I need a specialist, my treating doctor will refer me. If I need emergency care, I may go anywhere.</li>
-<li style="margin: 0.05pt 0in 0.0001pt 14.6667px; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">The insurance carrier will pay the treating doctor and other network providers.</li>
-<li style="margin: 0.8pt 42.75pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I might have to pay the bill if I get health care from someone other than a network doctor without network approval.</li>
-<li style="margin: 0.05pt 14.75pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">Knowingly making a false workers&apos; compensation claim may lead to a criminal investigation that could result in criminal penalties such as fines and imprisonment.</li>
+    <li style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I must choose a treating doctor from the list of doctors in the network. Or, I may ask my HMO primary care physician to agree to serve as my treating doctor. If I select my HMO primary care physician as my treating doctor, I will call Texas Mutual at (800) 859-5995 to notify them of my choice.</li>
+    <li style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I must go to my treating doctor for all health care for my injury. If I need a specialist, my treating doctor will refer me. If I need emergency care, I may go anywhere.</li>
+    <li style="text-align: justify; font-family: Times New Roman;">The insurance carrier will pay the treating doctor and other network providers.</li>
+    <li style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I might have to pay the bill if I get health care from someone other than a network doctor without network approval.</li>
+    <li style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">Knowingly making a false workers&apos; compensation claim may lead to a criminal investigation that could result in criminal penalties such as fines and imprisonment.</li>
 </ol>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;"><u><img src="` + this.state.signature + `" alt="" width="150" height="auto" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-<p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date.substring(0, 10) + `</u></span></p>
-<p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"> Date Signed</p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantName + `</u></p>
-<p style="margin: 0in 0in 0.0001pt 11pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Time New Roman, sans-serif;">Printed Name</p>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
-<p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I live at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantAddress + `</u></p>
-<p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Street Address</p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.1pt 0in 0.0001pt 1in; text-align: justify; text-indent: 11pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><u>` + this.state.applicantCity + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.applicantState + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.applicantZipCode + `</u></p>
-<p style="margin: 0in 0in 0.0001pt 83pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Time New Roman, sans-serif;">City&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zip Code</p>
-<p style="margin: 0.45pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">Name of Employer: <u>TUMI STAFFING INC.</u></p>
-<p style="margin: 2.95pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">&nbsp;</p>
-<p style="margin: 2.95pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">Name of Network: <em>Texas Star Network</em>&reg;</p>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
-<p style="margin: 0.05pt 0in 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;"><strong><span style="font-family: 'Time New Roman', sans-serif;">Network service areas are subject to change. Call (800) 381-8067 if you need a network treating </span></strong><strong><span style="font-family: 'Time New Roman', sans-serif;">provider.</span></strong></p>
-<p style="margin: 0.05pt 0in 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">&nbsp;</p>
-<table style="border-collapse: collapse; width: 100%;" border="1">
-<tbody>
-<tr>
-<td style="width: 100%;">
-<p style="margin: 1.1pt 0in 0.0001pt 5.4pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Please indicate whether this is the:</span></p>
-<ul style="margin-top: 1.0pt; margin-bottom: .0001pt;">
-<li style="margin: 1pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Initial Employee Notification</span></li>
-<li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Injury Notification: <u>` + this.state.injuryDate.substring(0, 10) + `</u></span></li>
-</ul>
-</td>
-</tr>
-</tbody>
+<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
+<table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0" cellspacing="5">
+    <tbody>
+        <tr>
+            <td style="width: 80%; border-bottom: 1px solid black; margin-right: 5px;"><img src="${this.state.signature || ''}" alt="" width="150" height="auto" /></td>
+            <td style="width: 20%; border-bottom: 1px solid black; margin-left: 5px;">${this.state.date.substring(0, 10) || ''}</td>
+        </tr>
+        <tr>
+            <td style="width: 80%; font-size: 10px; vertical-align: top;">Signature</td>
+            <td style="width: 20%; font-size: 10px; vertical-align: top;">Date</td>
+        </tr>
+    </tbody>
 </table>
-<p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">&nbsp;</p>
-<p style="margin: 2.7pt 0in 0.0001pt 14.6pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><strong><span style="font-size: 12.0pt; font-family: 'Time New Roman', sans-serif;">DO NOT RETURN THIS FORM TO TEXAS MUTUAL INSURANCE COMPANY UNLESS REQUESTED</span></strong></p>`)}
+<table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0" cellspacing="5">
+    <tbody>
+        <tr>
+            <td style="width: 80%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantName || ''}</td>
+            <td style="width: 20%;">&nbsp;</td>
+        </tr>
+        <tr>
+            <td style="width: 80%; font-size: 10px; vertical-align: top;">Printed Name</td>
+            <td style="width: 20%;">&nbsp;</td>
+        </tr>
+    </tbody>
+</table>
+<table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0">
+    <tbody>
+        <tr>
+            <td style="width: 20%; margin-left: 5px;">I live at:</td>
+            <td style="width: 80%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantAddress || ''}</td>
+        </tr>
+        <tr>
+            <td style="width: 20%; margin-left: 5px;">&nbsp;</td>
+            <td style="width: 80%; margin-right: 5px; font-size: 10px; vertical-align: top;">Street Address</td>
+        </tr>
+    </tbody>
+</table>
+<table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0">
+    <tbody>
+        <tr>
+            <td style="width: 20%; margin-left: 5px;">&nbsp;</td>
+            <td style="width: 20%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantCity || ''}</td>
+            <td style="width: 40%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantState || ''}</td>
+            <td style="width: 20%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantZipCode || ''}</td>
+        </tr>
+        <tr>
+            <td style="width: 20%; margin-left: 5px;">&nbsp;</td>
+            <td style="width: 20%; margin-right: 5px; font-size: 10px; vertical-align: top;">City</td>
+            <td style="width: 40%; margin-right: 5px; font-size: 10px; vertical-align: top;">State</td>
+            <td style="width: 20%; margin-right: 5px; font-size: 10px; vertical-align: top;">Zip Code</td>
+        </tr>
+    </tbody>
+</table>
+<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
+<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
+<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
+<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
+<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
+<p style="text-align: justify; font-family: Times New Roman;">Name of Employer: <u>TUMI STAFFING INC.</u></p>
+<p style="text-align: justify; font-family: Times New Roman;">Name of Network: <em>Texas Star Network</em>&reg;</p>
+<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
+<p style="text-align: justify; line-height: 1.5; font-family: Times New Roman;"><strong><span style="font-family: 'Times New Roman';">Network service areas are subject to change. Call (800) 381-8067 if you need a network treating </span></strong><strong><span style="font-family: 'Times New Roman';">provider.</span></strong></p>
+<table style="border-collapse: collapse; width: 100%;" border="1">
+    <tbody>
+        <tr>
+            <td style="width: 100%; padding: 8px;">
+                <p style="font-family: Times New Roman;"><span style="">Please indicate whether this is the:</span></p>
+                <ul style="margin-top: 1.0pt; margin-bottom: .0001pt; list-style: none;">
+                    <li style="margin: 1pt 0in 0.0001pt 31.2px; font-family: Times New Roman;"><span style="">&#9633;  Initial Employee Notification</span></li>
+                    <li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-family: Times New Roman;"><span style="">&#9633;  Injury Notification: <u>${this.state.injuryDate.substring(0, 10) || ''}</u></span></li>
+                </ul>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p style="text-align: justify; font-family: Times New Roman;">&nbsp;</p>
+<p style="text-align: justify; font-family: Times New Roman;"><strong><span style="font-family: 'Times New Roman';">DO NOT RETURN THIS FORM TO TEXAS MUTUAL INSURANCE COMPANY UNLESS REQUESTED</span></strong></p>`)}
                                 </div>
                             </div>
                         </div>

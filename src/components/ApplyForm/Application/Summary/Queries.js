@@ -24,6 +24,7 @@ query applications($id: Int){
         car
         area
         gender
+        exemptions
         expireDateId
         marital
         typeOfId

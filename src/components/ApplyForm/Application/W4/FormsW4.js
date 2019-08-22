@@ -58,7 +58,7 @@ class FormsW4 extends Component {
             openSignature: false,
             date: new Date().toISOString().substring(0, 10)
         }, () => {
-           //this.insertAntiHarrasment(this.state);
+           this.validateW4();
         });
     };
 
@@ -83,6 +83,8 @@ class FormsW4 extends Component {
                         isCreated: true,
                         html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 50%;"', '') : '',
                         pdfUrl: data.applicantW4[0].url
+                    }, _ => {
+                        
                     });
                 } else {
                     this.setState({
@@ -134,7 +136,6 @@ class FormsW4 extends Component {
     // };
 
     createDocumentsPDF = (random) => {
-
         this.setState(
             {
                 downloading: true
@@ -174,51 +175,47 @@ class FormsW4 extends Component {
     };
 
 
+
     componentWillMount() {
         //this.getHarrasmentInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
     }
 
     validateW4 = () => {
-        let firstName = document.getElementById('firstName');
-        let lastName = document.getElementById('lastName');
-        let socialSecurityNumber = document.getElementById('socialSecurityNumber');
-        let idNumber = document.getElementById('idNumber');
-        let firstEmployeeDate = document.getElementById('firstEmployeeDate');
-        let employeer = document.getElementById('employeer');
-        let excention = document.getElementById('excention');
-        let payCheck = document.getElementById('payCheck');
-        let excentionYear = document.getElementById('excention-year');
-        let address = document.getElementById('address');
-        let postalCode = document.getElementById('postalCode');
-        let socialSecurityExtention = document.getElementById('socialSecurityExtention');
+        let firstNameField = document.getElementById('firstName');
+        let lastNameField = document.getElementById('lastName');
+        let socialSecurityNumberField = document.getElementById('socialSecurityNumber');
+        let idNumberField = document.getElementById('idNumber');
+        let firstEmployeeDateField = document.getElementById('firstEmployeeDate');
+        let employeerField = document.getElementById('employeer');
+        let excentionField = document.getElementById('excention');
+        let payCheckField = document.getElementById('payCheck');
+        let excentionYearField = document.getElementById('excention-year');
+        let addressField = document.getElementById('address');
+        let postalCodeField = document.getElementById('postalCode');
+        let socialSecurityExtentionField = document.getElementById('socialSecurityExtention');
 
 
-        if(this.state.signature.length === 0) {
-            this.props.handleOpenSnackbar(
-                'warning',
-                'You must sign the document!',
-                'bottom',
-                'right'
-            );
-        } else if (firstName.value.length > 0 &&
-            lastName.value.length > 0 &&
-            socialSecurityNumber.value.length > 0) {
+        if (firstNameField.value.length > 0 &&
+            lastNameField.value.length > 0 &&
+            socialSecurityNumberField.value.length > 0) {
 
-            firstName.disabled = true;
-            lastName.disabled = true;
-            socialSecurityNumber.disabled = true;
-            idNumber.disabled = true;
-            firstEmployeeDate.disabled = true;
-            employeer.disabled = true;
-            excention.disabled = true;
-            payCheck.disabled = true;
-            excentionYear.disabled = true;
-            address.disabled = true;
-            postalCode.disabled = true;
-            socialSecurityExtention.disabled = true;
+            firstNameField.disabled = true;
+            lastNameField.disabled = true;
+            socialSecurityNumberField.disabled = true;
+            idNumberField.disabled = true;
+            firstEmployeeDateField.disabled = true;
+            employeerField.disabled = true;
+            excentionField.disabled = true;
+            payCheckField.disabled = true;
+            excentionYearField.disabled = true;
+            addressField.disabled = true;
+            postalCodeField.disabled = true;
+            socialSecurityExtentionField.disabled = true;
 
-            let html = this.cloneForm();
+            const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 50%;>').replace('<img src=""', `<img src="${this.state.signature}"`) : this.cloneForm();
+            const { firstName, lastName, socialSecurityNumber: ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, socialSecurityExtention: sse } = this.state;
+            const jsonFields = JSON.stringify({ firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse });
 
             this.props.client
                 .mutate({
@@ -231,7 +228,7 @@ class FormsW4 extends Component {
                 .then(({ data }) => {
                     this.props.handleOpenSnackbar(
                         'success',
-                        'Created successfully',
+                        this.state.html ? 'Updated Successfully' : 'Created Successfully',
                         'bottom',
                         'right'
                     );
@@ -323,24 +320,33 @@ class FormsW4 extends Component {
                                         ''
                                     ) : (
                                             this.state.isCreated ? (
-                                                <button className="applicant-card__edit-button" onClick={() => {
-                                                    // let random = uuidv4();
+                                                <Fragment>
+                                                    <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
+                                                       this.setState(_ => ({
+                                                           openSignature: true
+                                                       }))
+                                                    }}>
+                                                        Sign <i className="fas fa-pencil-alt" />
+                                                    </button>
+                                                    <button className="applicant-card__edit-button" onClick={() => {
+                                                        // let random = uuidv4();
 
-                                                    // this.createDocumentsPDF(random);
-                                                    // this.sleep().then(() => {
-                                                    this.downloadDocumentsHandler();
-                                                    // this.downloadDocumentsHandler(random);
-                                                    // }).catch(error => {
-                                                    //     this.setState({ downloading: false })
-                                                    // })
-                                                }}>{this.state.downloading && (
-                                                    <React.Fragment>Downloading <i
-                                                        class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                    {!this.state.downloading && (
-                                                        <React.Fragment>{actions[9].label} <i
-                                                            className="fas fa-download" /></React.Fragment>)}
+                                                        // this.createDocumentsPDF(random);
+                                                        // this.sleep().then(() => {
+                                                        this.downloadDocumentsHandler();
+                                                        // this.downloadDocumentsHandler(random);
+                                                        // }).catch(error => {
+                                                        //     this.setState({ downloading: false })
+                                                        // })
+                                                    }}>{this.state.downloading && (
+                                                        <React.Fragment>Downloading <i
+                                                            class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                        {!this.state.downloading && (
+                                                            <React.Fragment>{actions[9].label} <i
+                                                                className="fas fa-download" /></React.Fragment>)}
 
-                                                </button>
+                                                    </button>
+                                                </Fragment>
                                             ) : (
                                                     <button className="applicant-card__edit-button" onClick={() => {
                                                         this.validateW4();
@@ -352,9 +358,13 @@ class FormsW4 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }} dangerouslySetInnerHTML={{
-                                        __html: `${this.state.html}`
-                                    }} />                                    
+                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
+                                        <div className="row pdf-container" style={{maxWidth: '100%'}}>
+                                            <div className='signature-information' dangerouslySetInnerHTML={{
+                                                __html: `${this.state.html}`
+                                            }} />
+                                        </div>
+                                    </div>                                    
                                 ) : (
                                         <div style={{ width: '100%', margin: '0 auto' }}>
                                             <div className="row pdf-container" id="w4Html" style={{maxWidth: '100%'}}>
@@ -899,13 +909,13 @@ class FormsW4 extends Component {
                                                                             height: '30px',
                                                                             display: 'inline-block',
                                                                             backgroundColor: '#f9f9f9',
-                                                                            cursor: 'pointer'
+                                                                            // cursor: 'pointer'
                                                                         }} onClick={() => {
-                                                                            if(this.state.isCreated === false){
-                                                                                this.setState({
-                                                                                    openSignature: true,
-                                                                                })
-                                                                            }
+                                                                            // if(this.state.isCreated === false){
+                                                                            //     this.setState({
+                                                                            //         openSignature: true,
+                                                                            //     })
+                                                                            // }
                                                                         }}
                                                                                                                                                src={this.state.signature} alt=""/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fecha  ▶ {new Date().toDateString()}
                                                                         </td>
@@ -1579,13 +1589,13 @@ class FormsW4 extends Component {
                                                                             height: '30px',
                                                                             display: 'inline-block',
                                                                             backgroundColor: '#f9f9f9',
-                                                                            cursor: 'pointer'
+                                                                            // cursor: 'pointer'
                                                                         }} onClick={() => {
-                                                                            if(this.state.isCreated === false){
-                                                                                this.setState({
-                                                                                    openSignature: true,
-                                                                                })
-                                                                            }
+                                                                            // if(this.state.isCreated === false){
+                                                                            //     this.setState({
+                                                                            //         openSignature: true,
+                                                                            //     })
+                                                                            // }
                                                                         }}
                                                                                                                                   src={this.state.signature} alt=""/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date  ▶ {new Date().toDateString()}
                                                                         </td>
