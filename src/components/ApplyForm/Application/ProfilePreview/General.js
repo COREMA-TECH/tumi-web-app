@@ -40,6 +40,7 @@ import Titles from './Titles';
 import moment from 'moment';
 import VerificationLetter from '../VerificationLetter';
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import FeatureTag from '../../../ui-components/FeatureTag';
 
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -1639,9 +1640,10 @@ class General extends Component {
 
         let { firstname, middlename, lastname, employmentType, startDate, positionName } = this.state;
         let employeeName = `${firstname || ''} ${middlename || ''} ${lastname || ''}`;
+        let currentIdealJobsId = this.state.idealJobs.map(ij => ij.idPosition);
         return (
             <div className="Apply-container--application">
-                <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} myHotels={this.state.myHotels.filter(h => h.relationActive)} />
+                <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} myHotels={this.state.myHotels.filter(h => h.relationActive)} currentIdealJobsId={currentIdealJobsId} />
                 {/* Confirmacion para eliminar location */}
                 <ConfirmDialog
                     open={this.state.openConfirm}
@@ -1875,30 +1877,40 @@ class General extends Component {
                             <div className="row">
                                 <div className="col-sm-12">
                                     <h5 className="float-left">Titles</h5>
-                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
-                                        <i class="far fa-plus-square"></i>
-                                    </button>
+                                    <FeatureTag code="06be7c13-cbc8-41da-a338-3e8cd93fa935">
+                                        <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
+                                            <i class="far fa-plus-square"></i>
+                                        </button>
+                                    </FeatureTag>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
                                         {
                                             this.state.idealJobs ?
-                                                this.state.idealJobs.map((idealJob, i) => {
+                                                this.state.idealJobs.sort(ij => ij.isDefault ? -1 : 1).map((idealJob, i) => {
                                                     return <div className="col-sm-12 col-md-6 col-lg-3" key={i}>
-                                                        <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{appIdealJob: idealJob}}>
-                                                            <div className={`${idealJob.isDefault ? 'bg-info text-white border-info' : 'bg-light border-secondary'} border p-2 text-center rounded m-1 col text-truncate`}>
-                                                                {idealJob.description}
-                                                            </div>
-                                                        </ContextMenuTrigger>
+                                                        {
+                                                            idealJob.isDefault
+                                                                ? <div className="bg-info text-white border border-info p-2 text-center rounded m-1 col text-truncate">
+                                                                    {idealJob.description}
+                                                                </div>
+                                                                : <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{appIdealJob: idealJob}}>
+                                                                    <div className="bg-light border border-secondary p-2 text-center rounded m-1 col text-truncate">
+                                                                        {idealJob.description}
+                                                                    </div>
+                                                                </ContextMenuTrigger>
+                                                        }
                                                     </div>
                                                 })
                                                 : ''
                                         }
-                                        <ContextMenu id={TITLE_CONTEXT_MENU} onShow={t => console.log(t)}>
-                                            <MenuItem data={{ action: 'setTitleDefault' }} onClick={this.setTitleDefault}>
-                                                Set as default
-                                            </MenuItem>
-                                        </ContextMenu>
+                                        <FeatureTag code="5d49f1e4-89a7-4990-a90a-7617877ce573">
+                                            <ContextMenu id={TITLE_CONTEXT_MENU} onShow={t => console.log(t)}>
+                                                <MenuItem data={{ action: 'setTitleDefault' }} onClick={this.setTitleDefault}>
+                                                    Set as default
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </FeatureTag>
                                         <ContextMenu id={HOTEL_CONTEXT_MENU} 
                                             onShow={t => {
                                                 this.setState(_ => ({ hotelDefaultMenuText: t.detail.data.attributes.clickedHotel.defaultProperty ? 'Unassign Home Location' : 'Set as Home Location' }))
