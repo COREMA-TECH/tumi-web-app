@@ -797,6 +797,63 @@ class General extends Component {
             isDefault: false,
         }
 
+        else
+            this.getContacts(() => {
+                this.setState(() => ({ saving: true }));
+                let date = new Date().toISOString();
+                let ids = this.getHotelIds();
+                let contacts = [];
+
+                ids.map(id => {
+                    contacts.push({
+                        Id_Entity: id,
+                        ApplicationId: this.props.applicationId,
+                        First_Name: this.state.firstname,
+                        Middle_Name: this.state.middlename,
+                        Last_Name: this.state.lastname,
+                        Electronic_Address: this.state.email || '',
+                        Phone_Number: this.state.number,
+                        Contact_Type: 1,
+                        IsActive: 1,
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: date,
+                        Date_Updated: date
+                    })
+                })
+                this.props.client
+                    .mutate({
+                        mutation: INSERT_CONTACT,
+                        variables: {
+                            contacts
+                        }
+                    })
+                    .then((data) => {
+                        this.props.handleOpenSnackbar('success', 'Contact Inserted!');
+                        this.setState(() => ({
+                            openModal: false,
+                            openVerification: false,
+                            saving: false,
+                            property: [],
+                            type: null,
+                            departmentName: '',
+                            titleName: ''
+                        }));
+                        this.getMyHotels();
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error: Inserting Contact: ' + error
+                        );
+                        this.setState(() => ({
+                            saving: false
+                        }));
+                        return false;
+                    });
+            })
+
+
         this.props.client.mutate({
             mutation: UPDATE_EMPLOYEE_HOTEL_RELATION,
             variables: {

@@ -11,6 +11,7 @@ import withGlobalContent from "../../../Generic/Global";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import './index.css';
 import PropTypes from 'prop-types';
+const uuidv4 = require('uuid/v4');
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -51,6 +52,12 @@ class WorkerCompensation extends Component {
         });
     };
 
+    cloneForm  = _ => {
+        let contentPDF = document.getElementById('DocumentPDF');
+        let contentPDFClone = contentPDF.cloneNode(true);
+        return `<html style="zoom: 60%;">${contentPDFClone.innerHTML}</html>`;
+    }
+
     createDocumentsPDF = () => {
         this.setState(
             {
@@ -61,7 +68,7 @@ class WorkerCompensation extends Component {
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
                 variables: {
-                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
+                    contentHTML: this.cloneForm(),
                     Name: "WorkerCompensation-" + this.state.applicantName
                 },
                 fetchPolicy: 'no-cache'

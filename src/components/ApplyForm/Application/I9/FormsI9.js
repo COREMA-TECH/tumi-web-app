@@ -1,4 +1,6 @@
-import React, {Component} from 'react';
+
+
+import React, {Component, Fragment} from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -57,13 +59,14 @@ class FormsI9 extends Component {
     handleSignature = (value) => {
         let signType = this.state.signType;
 
-        if (signType == 0) {
+        if (signType == 0 || this.state.isEmployeeSignature) {
             this.setState({
                 signature: value,
                 openSignature: false,
+                isEmployeeSignature: false,
                 date: new Date().toISOString().substring(0, 10)
             }, () => {
-                //this.insertAntiHarrasment(this.state);
+                this.validateI9();
             });
         } else if (signType == 1) {
             this.setState({
@@ -187,14 +190,15 @@ class FormsI9 extends Component {
     validateI9 = () => {
 
         let documentPDF = document.getElementById('DocumentPDF');
-        let inputs = documentPDF.getElementsByTagName('input');
-
-        for (let i = 0; i < inputs.length; i++) {
-            inputs[i].disabled = true;
+        
+        if(documentPDF){
+            let inputs = documentPDF.getElementsByTagName('input');
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].disabled = true;
+            }
         }
 
-        let html = this.cloneForm();
-
+        const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 45%;>').replace('<img id="employee-signature-box" src=""', `<img id="employee-signature-box" src="${this.state.signature}"`) : this.cloneForm();
         this.props.client
             .mutate({
                 mutation: ADD_I9,
@@ -206,7 +210,7 @@ class FormsI9 extends Component {
             .then(({data}) => {
                 this.props.handleOpenSnackbar(
                     'success',
-                    'Created successfully',
+                    this.state.html ? 'Updated Successfully' : 'Created Successfully',
                     'bottom',
                     'right'
                 );
@@ -269,24 +273,27 @@ class FormsI9 extends Component {
                                         ''
                                     ) : (
                                         this.state.isCreated ? (
-                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                this.downloadDocumentsHandler();
-                                                // let random = uuidv4();
 
-                                                // this.createDocumentsPDF(random);
-                                                // this.sleep().then(() => {
-                                                //     this.downloadDocumentsHandler(random);
-                                                // }).catch(error => {
-                                                //     this.setState({downloading: false})
-                                                // })
-                                            }}>{this.state.downloading && (
-                                                <React.Fragment>Downloading <i
-                                                    class="fas fa-spinner fa-spin"/></React.Fragment>)}
-                                                {!this.state.downloading && (
-                                                    <React.Fragment>{actions[9].label} <i
-                                                        className="fas fa-download"/></React.Fragment>)}
+                                            <Fragment>
+                                                    <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
+                                                       this.setState(_ => ({
+                                                           openSignature: true,
+                                                           isEmployeeSignature: true
+                                                       }))
+                                                    }}>
+                                                        Sign <i className="fas fa-pencil-alt" />
+                                                    </button>
+                                                    <button className="applicant-card__edit-button" onClick={() => {
+                                                        this.downloadDocumentsHandler();                                                        
+                                                    }}>{this.state.downloading && (
+                                                        <React.Fragment>Downloading <i
+                                                            class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                        {!this.state.downloading && (
+                                                            <React.Fragment>{actions[9].label} <i
+                                                                className="fas fa-download" /></React.Fragment>)}
 
-                                            </button>
+                                                    </button>
+                                                </Fragment>
                                         ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
                                                 this.validateI9();
@@ -298,9 +305,15 @@ class FormsI9 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }} dangerouslySetInnerHTML={{
-                                        __html: `${this.state.html}`
-                                    }} /> 
+
+                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
+                                        <div className="row pdf-container" style={{maxWidth: '100%'}}>
+                                            <div id="DocumentPDF" className='signature-information' dangerouslySetInnerHTML={{
+                                                __html: `${this.state.html}`
+                                            }} />
+                                        </div>
+                                    </div>    
+
                                 ) : (
                                     <div style={{width: '100%', margin: '0 auto'}}>
                                         <div className="row pdf-container" id="i9Html" style={{maxWidth: '100%'}}>
@@ -862,24 +875,24 @@ class FormsI9 extends Component {
                                                                     {/*})*/}
                                                                     {/*}}*/}
                                                                     {/*style={{border: 0, width: '100%'}} type="text" id="signature"/>*/}
-                                                                    <img style={{
+                                                                    <img id="employee-signature-box" src={this.state.signature} style={{
                                                                         width: '100px',
                                                                         height: '30px',
                                                                         display: 'inline-block',
                                                                         backgroundColor: '#f9f9f9',
-                                                                        cursor: 'pointer'
+                                                                        // cursor: 'pointer'
                                                                     }} onClick={() => {
-                                                                        if (this.state.isCreated === false) {
-                                                                            this.setState({
-                                                                                signType: 0
-                                                                            }, () => {
-                                                                                this.setState({
-                                                                                    openSignature: true,
-                                                                                })
-                                                                            });
-                                                                        }
+                                                                        // if (this.state.isCreated === false) {
+                                                                        //     this.setState({
+                                                                        //         signType: 0
+                                                                        //     }, () => {
+                                                                        //         this.setState({
+                                                                        //             openSignature: true,
+                                                                        //         })
+                                                                        //     });
+                                                                        // }
                                                                     }}
-                                                                         src={this.state.signature} alt=""/>
+                                                                          alt=""/>
                                                             </span></td>
                                                                 <td style={{width: '50%'}}><span style={{
                                                                     color: '#000000',
@@ -1207,7 +1220,6 @@ class FormsI9 extends Component {
                                                                 </tr>
                                                             </tbody>
                                                         </table>
-
                                                         <table style={{
                                                             borderCollapse: 'collapse',
                                                             width: '100%',
@@ -2171,10 +2183,10 @@ class FormsI9 extends Component {
             </div>
         );
     }
-
     static contextTypes = {
         baseUrl: PropTypes.string
     };
 }
-
 export default withApollo(withGlobalContent(FormsI9));
+
+
