@@ -10,6 +10,14 @@
   {
     "id": 2,
     "label": "Hasta"
+  },
+  {
+    "id": 3,
+    "label": "¿Estás seguro de que quieres establecerlo como predeterminado?"
+  },
+  {
+    "id": 4,
+    "label": "Proceder"
   }
 ]
 

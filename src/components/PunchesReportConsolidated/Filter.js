@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TimeCardForm from '../TimeCard/TimeCardForm'
+import TimeCardForm from '../TimeCard/TimeCardForm';
 import withGlobalContent from 'Generic/Global';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
@@ -83,17 +83,23 @@ class PunchesReportConsolidatedFilter extends Component {
         })
     }
 
-    handleChangeDate = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
+    handleChangeStartDate = (value) => {
         this.setState(() => ({
-            [name]: value,
+            startDate: value,
             endDateDisabled: false
         }),
             () => {
-                if (this.props.updateFilter)
+                if (this.props.updateFilter && this.state.endDate)
+                    this.props.updateFilter(this.state)
+            });
+    }
+
+    handleChangeEndDate = (value) => {
+        this.setState(() => ({
+            endDate: value
+        }),
+            () => {
+                if (this.state.startDate)
                     this.props.updateFilter(this.state)
             });
     }
@@ -171,14 +177,17 @@ class PunchesReportConsolidatedFilter extends Component {
                     </div>
                 </div>
                 <div className="col-md-4 col-xl-2 mb-2">
-                    <Select
-                        name="property"
-                        options={this.props.properties}
-                        value={this.state.property}
-                        onChange={this.handlePropertyChange}
-                        components={makeAnimated()}
-                        closeMenuOnSelect
-                    />
+                    {
+                        this.props.showPropertyFilter &&
+                        <Select
+                            name="property"
+                            options={this.props.properties}
+                            value={this.state.property}
+                            onChange={this.handlePropertyChange}
+                            components={makeAnimated()}
+                            closeMenuOnSelect
+                        />
+                    }
                 </div>
                 <div className="col-md-4 col-xl-2 mb-2">
                     <Select
@@ -194,12 +203,12 @@ class PunchesReportConsolidatedFilter extends Component {
                     <div class="input-group flex-nowrap">
                         <DatePicker
                             selected={this.state.startDate}
-                            onChange={this.handleChangeDate}
+                            onChange={this.handleChangeStartDate}
                             placeholderText="Start date"
-                            id="datepicker"
+                            id="startDate"
                         />
                         <div class="input-group-append">
-                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                            <label class="input-group-text" id="addon-wrapping" for="startDate">
                                 <i class="far fa-calendar"></i>
                             </label>
                         </div>
@@ -209,12 +218,12 @@ class PunchesReportConsolidatedFilter extends Component {
                     <div class="input-group flex-nowrap">
                         <DatePicker
                             selected={this.state.endDate}
-                            onChange={this.handleChangeDate}
+                            onChange={this.handleChangeEndDate}
                             placeholderText="End date"
-                            id="datepicker"
+                            id="endDate"
                         />
                         <div class="input-group-append">
-                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                            <label class="input-group-text" id="addon-wrapping" for="endDate">
                                 <i class="far fa-calendar"></i>
                             </label>
                         </div>
@@ -264,6 +273,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         toggleRefresh={this.toggleRefresh}
                         handleCloseModal={this.handleCloseModal}
                         item={this.state.item}
+                        readOnly={!this.props.allowEditModal}
                     />
                 </div>
             </div>

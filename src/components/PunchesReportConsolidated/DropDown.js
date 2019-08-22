@@ -20,7 +20,7 @@ const styles = theme => ({
     heading: {
         fontSize: theme.typography.pxToRem(15),
         flexBasis: '33.33%',
-        flexShrink: 0,
+        flexShrink: 0
     },
     secondaryHeading: {
         fontSize: theme.typography.pxToRem(15),
@@ -41,7 +41,7 @@ class PunchesConsolidatedDropDown extends Component {
         let data = this.props.data || [];
         return <div className={classes.root}>
             {data.map(item => {
-                return <ExpansionPanel className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
+                return <ExpansionPanel className="panel-dropdown" style={{marginTop: 0}} onChange={this.handleChange(uuidv4())}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>{moment(item.date).format('MMMM Do YYYY')}</Typography>
 

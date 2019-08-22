@@ -30,8 +30,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
                 EmployeeId
                 Employees       
                 {         
-                    id         
-                    firstName                 
+                    id                     
                     idUsers         
                     idEntity    
                     hireDate   
@@ -44,6 +43,8 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             idealJobs {
                 id
                 description
+                idPosition
+                isDefault
             }
             user{
                 Code_User
@@ -204,6 +205,7 @@ export const GET_POSITION = gql`
             Id
             Code: Name
             Description
+            Id_Entity
             IsActive
         }
     }
@@ -216,4 +218,18 @@ export const GET_APPLICATION_CODE_USER = gql`
             Code_User
         }
     }
+`;
+
+export const GET_HOTELS_BY_EMPLOYEE = gql`
+    query EmployeeByHotels($EmployeeId: Int){
+        EmployeeByHotels(EmployeeId: $EmployeeId){
+            id    
+            BusinessCompany{
+                Id
+                Name
+            }
+            isDefault
+            isActive
+        }
+    } 
 `;

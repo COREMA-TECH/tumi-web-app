@@ -4,13 +4,9 @@ import { gql } from 'apollo-boost';
 import withApollo from 'react-apollo/withApollo';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import ApplicationTable from './ApplicationTable';
-import { Query } from 'react-apollo';
-import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import withGlobalContent from 'Generic/Global';
-import ErrorMessageComponent from 'ui-components/ErrorMessageComponent/ErrorMessageComponent';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
 import makeAnimated from 'react-select/lib/animated';
@@ -62,7 +58,7 @@ class ApplicationList extends Component {
 				value: 3,
 				label: "All"
 			}],
-
+			propertyId: null // recibida por props
 		};
 	}
 
@@ -98,31 +94,28 @@ class ApplicationList extends Component {
 				isLead
 				idWorkOrder
 				statusCompleted
-				employee {
-					Employees {
-					  idEntity
-						BusinessCompany {
-						Name
-					  }
-					}
-				  }
-				recruiter{
+				Employee{
+					idUsers
+				}
+				DefaultCompany{
+					Id
+					Name
+				}
+				Companies{
+					Id,
+					Code,
+					Name
+				}
+				Recruiter {
 					Full_Name
 				}
-				user{
-					Full_Name
+				Position{
+					Position      
 				}
-				position{
-					id
-					position {
-							Position
-						}
-					BusinessCompany {
-							Id
-							Code
-							Name
-						}
-				}
+				PositionCompany{
+     				Code
+    			}
+				workOrderId    
 			}
 		}
 	`;
@@ -265,20 +258,21 @@ class ApplicationList extends Component {
 			let department = this.state.department.value;
 			let variables = {
 				idEntity: property ? property : null,
-				idUsers: localStorage.getItem('isEmployee') == 'true' ? localStorage.getItem('LoginId') : null
 			};
+			if (localStorage.getItem('isEmployee') == 'true')
+				variables = { ...variables, idUsers: localStorage.getItem('LoginId') }
 
-			if(!!department)
+			if (!!department)
 				variables = { ...variables, Id_Deparment: department };
 
 			switch (this.state.statu.value) {
-				case 1: 
+				case 1:
 					variables = { ...variables, isActive: [true] };
 					break;
-				case 2: 
+				case 2:
 					variables = { ...variables, isActive: [false] };
 					break;
-				case 3: 
+				case 3:
 					variables = { ...variables, isActive: [true, false] };
 					break;
 				default:
@@ -305,15 +299,22 @@ class ApplicationList extends Component {
 	}
 
 	componentWillMount() {
-		this.getProperties();
-		this.getDepartments();
-		this.getApplications();
+		//handlePropertyChange
+		if(this.props.propertyInfo){
+			let propertyInfo = this.props.propertyInfo;
+			this.handlePropertyChange({ value: propertyInfo.id, label: propertyInfo.name });
+		}
+		else{
+			this.getProperties();
+			this.getDepartments();
+			this.getApplications();
+		}
+
 	}
 
 	render() {
 		var loading = this.state.loadingConfirm || this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
 		var variables = {};
-		let {applications} = this.state;
 
 		/**
 		 * Start - Define variables for application query
@@ -364,14 +365,17 @@ class ApplicationList extends Component {
 					</div>
 				</div>
 				<div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
-					<Select
-						name="property"
-						options={this.state.properties}
-						value={this.state.property}
-						onChange={this.handlePropertyChange}
-						components={makeAnimated()}
-						closeMenuOnSelect
-					/>
+					{
+						!this.props.propertyInfo &&
+						<Select
+							name="property"
+							options={this.state.properties}
+							value={this.state.property}
+							onChange={this.handlePropertyChange}
+							components={makeAnimated()}
+							closeMenuOnSelect
+						/>
+					}
 				</div>
 				<div className="col-md-3 col-xl-2 mb-2">
 					<Select
@@ -397,53 +401,44 @@ class ApplicationList extends Component {
 		);
 
 		let renderContent = () => {
-			if(this.state.loading && !this.state.opendialog) return <LinearProgress />
+			if (this.state.loading && !this.state.opendialog) return <LinearProgress />
 
-			let {applications} = this.state;
+			let { applications } = this.state;
 			// if (applications != null && applications.length > 0) {
-				let dataApplication =
-					this.state.filterText === ''
-						? applications
-						: applications.filter((_, i) => {
-							return (
-								(_.firstName + _.middleName + _.lastName)
-									.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
-							);
-						});
+			let dataApplication =
+				this.state.filterText === ''
+					? applications
+					: applications.filter((_, i) => {
+						return (
+							(_.firstName + _.middleName + _.lastName)
+								.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
+						);
+					});
 
-				return (
-					<div className="row pt-0">
-						{localStorage.getItem('isEmployee') == 'false' &&
-							<div className="col-md-12">
-								<button
-									className="btn btn-success float-right"
-									onClick={() => {
-										this.redirectToCreateApplication();
-									}}
-								>
-									Add Application
-										</button>
-							</div>}
+			return (
+				<div className="row pt-0">
+					{!this.props.propertyInfo && localStorage.getItem('isEmployee') === 'false' &&
 						<div className="col-md-12">
-							<div className="card">
-								<ApplicationTable
-									data={dataApplication}
-									onDeleteHandler={this.onDeleteHandler}
-								/>
-							</div>
+							<button
+								className="btn btn-success float-right"
+								onClick={() => {
+									this.redirectToCreateApplication();
+								}}
+							>
+								Add Application
+										</button>
+						</div>}
+					<div className="col-md-12">
+						<div className="card">
+							<ApplicationTable
+								data={dataApplication}
+								onDeleteHandler={this.onDeleteHandler}
+								getApplications={this.getApplications}
+							/>
 						</div>
 					</div>
-				);
-			// }else {
-			// 	return (
-			// 		<NothingToDisplay
-			// 			title="Oops!"
-			// 			message={'There are no applications'}
-			// 			type="Error-success"
-			// 			icon="wow"
-			// 		/>
-			// 	);
-			// }
+				</div>
+			);
 		}
 
 		return (
@@ -457,7 +452,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					{ renderContent() }
+					{renderContent()}
 				</div>
 			</div>
 		);

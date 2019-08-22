@@ -8279,6 +8279,11 @@ label:not(.custom-file-label):not(.form-check-label) {
 .btn {
   padding-left: 1.5rem;
   padding-right: 1.5rem; }
+  .btn-approve {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    text-align: center;
+    width: 92px; }
   .btn-empty {
     color: #FFF;
     padding-left: 0;
@@ -8795,8 +8800,7 @@ label:not(.custom-file-label):not(.form-check-label) {
   flex-direction: column;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
-  justify-content: center;
-  padding: 5px; }
+  justify-content: center; }
 
 .tumi-row-vert-center {
   -webkit-box-align: center;
@@ -9379,6 +9383,49 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     display: none; }
   .flag-select .no--focus {
     pointer-events: none; }
+
+.ApprovePunches-approvedLabel {
+  font-size: 12px; }
+
+.ApprovePunches-employeeContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
+.ApprovePunches-totalHours {
+  font-weight: bold; }
+  .ApprovePunches-totalHours:after, .ApprovePunches-totalHours:before {
+    font-size: 26px;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%); }
+  .ApprovePunches-totalHours:after {
+    content: attr(data-hours);
+    left: 255px;
+    text-align: right;
+    width: 100px; }
+  .ApprovePunches-totalHours:before {
+    content: ":";
+    left: 235px; }
+  .ApprovePunches-totalHours.approve:after {
+    color: #3ca2c8; }
+  .ApprovePunches-totalHours.reject:after {
+    color: var(--danger); }
+
+.ApprovePunches-separation:not(:last-child) {
+  border-right: 1px solid #dddddd !important; }
+
+@media (max-width: 991.98px) {
+  .ApprovePunches-separation {
+    padding: 10px; }
+    .ApprovePunches-separation:not(:last-child) {
+      border-bottom: 1px solid #dddddd !important;
+      border-right: none !important; } }
 
 .Tab-fa-icon:after {
   color: #7e7e7e;
@@ -10164,6 +10211,125 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 .react-trello-board .djewwL {
   max-height: 60vh; }
 
+.CandidatesGraph-container {
+  height: 170px;
+  width: auto; }
+
+.Requisition-container .table {
+  margin: 0 !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important; }
+
+.StatBoxOps {
+  background: #FFF;
+  -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  margin-bottom: 8px;
+  width: 100%; }
+  .StatBoxOps.centerRequestGraph {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    position: absolute;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    right: 0;
+    top: 53%; }
+    .StatBoxOps.centerRequestGraph .StatBoxOps {
+      -webkit-box-shadow: 0;
+      box-shadow: 0; }
+      .StatBoxOps.centerRequestGraph .StatBoxOps-header {
+        border: none; }
+      .StatBoxOps.centerRequestGraph .StatBoxOps-amount, .StatBoxOps.centerRequestGraph .StatBoxOps-increase, .StatBoxOps.centerRequestGraph .StatBoxOps-caption {
+        text-align: center; }
+  .StatBoxOps.centerTotalShiftGraph {
+    background-color: transparent;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: none;
+    position: absolute;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    right: 0;
+    top: calc(50% - 60px); }
+    .StatBoxOps.centerTotalShiftGraph .StatBoxOps {
+      -webkit-box-shadow: 0;
+      box-shadow: 0; }
+      .StatBoxOps.centerTotalShiftGraph .StatBoxOps-header {
+        border: none; }
+      .StatBoxOps.centerTotalShiftGraph .StatBoxOps-amount, .StatBoxOps.centerTotalShiftGraph .StatBoxOps-increase, .StatBoxOps.centerTotalShiftGraph .StatBoxOps-caption {
+        text-align: center; }
+  .StatBoxOps-amount {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 100%; }
+  .StatBoxOps-body {
+    padding: 0.3rem;
+    text-align: center; }
+  .StatBoxOps-caption {
+    display: block;
+    font-size: 0.7rem;
+    width: 100%; }
+  .StatBoxOps-header {
+    border-bottom: solid 1px #e6e6e6;
+    font-size: .8rem;
+    font-weight: 700;
+    padding: 5px 0;
+    text-align: center; }
+  .StatBoxOps-increase {
+    color: #f50057;
+    display: block;
+    font-size: 0.7rem;
+    width: 100%; }
+
+.TotalShiftsChart {
+  margin-left: -50%;
+  width: 200%;
+  margin-top: -0.9rem;
+  max-height: 260px; }
+  @media (max-width: 767.98px) {
+    .TotalShiftsChart {
+      width: 100%;
+      margin: 0; } }
+
+.WO-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: row;
+  -ms-flex: row;
+  flex: row;
+  font-weight: bold;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+  .WO-header i {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: row;
+    -ms-flex: row;
+    flex: row;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    height: 28px;
+    width: 28px;
+    margin-right: 5px;
+    background-color: #5CBC8E;
+    border-radius: 50%;
+    color: #FFFFFF; }
+
+.z_index_10 {
+  z-index: 10; }
+
 .BankInfo .input-group {
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -10353,6 +10519,82 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   border: none; }
   .visitsCard-footer button {
     padding: 0.25rem 0.50rem; }
+
+.react-contextmenu {
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  color: #373a3c;
+  font-size: 16px;
+  margin: 2px 0 0;
+  min-width: 160px;
+  outline: none;
+  opacity: 0;
+  padding: 5px 0;
+  pointer-events: none;
+  text-align: left;
+  -webkit-transition: opacity 250ms ease !important;
+  -o-transition: opacity 250ms ease !important;
+  transition: opacity 250ms ease !important; }
+
+.react-contextmenu.react-contextmenu--visible {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 9999; }
+
+.react-contextmenu-item {
+  background: 0 0;
+  border: 0;
+  color: #373a3c;
+  cursor: pointer;
+  font-weight: 400;
+  line-height: 1.5;
+  padding: 3px 20px;
+  text-align: inherit;
+  white-space: nowrap; }
+
+.react-contextmenu-item.react-contextmenu-item--active {
+  color: #fff;
+  background-color: #20a0ff;
+  border-color: #20a0ff;
+  text-decoration: none; }
+
+.react-contextmenu-item.react-contextmenu-item--selected {
+  color: #fff;
+  background-color: #20a0ff;
+  border-color: #20a0ff;
+  text-decoration: none; }
+
+.react-contextmenu-item.react-contextmenu-item--disabled {
+  background-color: transparent;
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #878a8c; }
+  .react-contextmenu-item.react-contextmenu-item--disabled:hover {
+    background-color: transparent;
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #878a8c; }
+
+.react-contextmenu-item--divider {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: inherit;
+  margin-bottom: 3px;
+  padding: 2px 0; }
+  .react-contextmenu-item--divider:hover {
+    background-color: transparent;
+    border-color: rgba(0, 0, 0, 0.15); }
+
+.react-contextmenu-item.react-contextmenu-submenu {
+  padding: 0; }
+  .react-contextmenu-item.react-contextmenu-submenu > .react-contextmenu-item:after {
+    content: "▶";
+    display: inline-block;
+    position: absolute;
+    right: 7px; }
+
+.example-multiple-targets::after {
+  content: attr(data-count);
+  display: block; }
 
 .Header-mobileMenu {
   color: #FFF;
@@ -13326,5 +13568,3 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
-
-/*# sourceMappingURL=default.css.map */
