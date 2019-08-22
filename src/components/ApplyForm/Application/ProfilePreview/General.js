@@ -714,32 +714,30 @@ class General extends Component {
 
     insertNewEmployee = _ => {
         const ApplicationId = this.props.applicationId;
-        let employeeId = 0;
-
-        this.props.client.mutate({
-            mutation: CREATE_EMPLOYEE_FOR_APPLICATION,
-            variables: {
-                id: 0,
-                hireDate: moment(Date.now()).format('MM/DD/YYYY'),
-                startDate: moment(Date.now()).format('MM/DD/YYYY'),
-                ApplicationId,
-                codeuser: localStorage.getItem('LoginId'),
-                nameUser: localStorage.getItem('FullName')
-            }
-        })
-        .then(({ data }) => {
-            employeeId = data.id
-        })
-        .catch(error => console.log(error));
-
-        return employeeId;
+        
+        return new Promise(resolve => {
+            this.props.client.mutate({
+                mutation: CREATE_EMPLOYEE_FOR_APPLICATION,
+                variables: {
+                    hireDate: moment(Date.now()).format('MM/DD/YYYY'),
+                    startDate: moment(Date.now()).format('MM/DD/YYYY'),
+                    ApplicationId,
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
+                }
+            })
+            .then(({ data }) => {
+                resolve(data.createEmployeeBasedOnApplicationOrUpdateEmployee.id);
+            })
+            .catch(error => console.log(error));
+        });
     }
 
-    insertRelations = () => {
+    insertRelations = async () => {
         //this.state.property holds the hotels picked in the dropdown
         let newEmployeeId = 0;
         if(this.state.employeeHotelEmployeeId === 0){
-            newEmployeeId = this.insertNewEmployee();
+            newEmployeeId = await this.insertNewEmployee();
         }
 
         if (this.state.property.length <= 0) {
@@ -781,7 +779,8 @@ class General extends Component {
                 departmentName: '',
                 titleName: ''
             }), _ => {
-                this.getMyHotels();
+                // this.getMyHotels();
+                this.getProfileInformation(this.props.applicationId);
             });
         })
     };
