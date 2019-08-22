@@ -57,21 +57,25 @@ class Titles extends Component {
             });
     }
 
-    getPositions = () => {
+    getPositions = (myHotels) => {
         this.props.client
             .query({
                 query: GET_POSITION
             })
             .then(({ data }) => {
-                let dataAPI = data.catalogitem;
-                dataAPI.map(item => {
-                    this.setState(prevState => ({
-                        positionCatalogTag: [...prevState.positionCatalogTag, {
-                            value: item.Id, label: item.Code.trim(), key: item.Id
-                        }]
-                    }))
+                let posCatalog = [], newGroup = [];
+                const {currentIdealJobsId} = this.props;
+                let dataAPI = data.catalogitem.filter(c => !currentIdealJobsId.includes(c.Id));
+                myHotels.forEach(h => {
+                    newGroup = dataAPI.filter(da => da.Id_Entity === h.Id).map(item => {
+                                    return { value: item.Id, label: item.Code.trim(), key: item.Id }
+                                })
+                    posCatalog = [...posCatalog, {label: h.Name, options: newGroup}];
                 });
 
+                this.setState(() => {
+                    return {positionCatalogTag: posCatalog}
+                });
             }).catch(error => {
                     this.props.handleOpenSnackbar(
                         'error',
@@ -82,8 +86,13 @@ class Titles extends Component {
             });
     }
 
-    componentWillMount() {
-        this.getPositions();
+    componentDidMount() {
+        this.getPositions(this.props.myHotels);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.myHotels !== this.props.myHotels)
+            this.getPositions(nextProps.myHotels);
     }
 
     render() {

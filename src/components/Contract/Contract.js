@@ -92,9 +92,9 @@ class Contract extends React.Component {
 		this.setState({ value });
 	};
 
-	updateContractId = (id) => {
+	updateContractId = (contractId) => {
 		this.setState({
-			contractId: id,
+			contractId,
 			value: 1
 		});
 	};
@@ -175,7 +175,7 @@ class Contract extends React.Component {
 		if (this.state.loading) {
 			return <LinearProgress />;
 		}
-
+		
 		return (
 			<div>
 				<MuiThemeProvider theme={theme}>

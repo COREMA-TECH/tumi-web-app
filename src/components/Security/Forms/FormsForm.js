@@ -5,7 +5,6 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormsTable from './FormsTable';
-import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
@@ -18,8 +17,12 @@ import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 import withGlobalContent from 'Generic/Global';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+import Select from 'react-select';
+import makeAnimated from "react-select/lib/animated";
+import Switch from '@material-ui/core/Switch';
+
+import { GET_FORMS_QUERY } from './queries';
+import { INSERT_FORMS_QUERY, UPDATE_FORMS_QUERY } from './mutations';
 
 const styles = (theme) => ({
 	container: {
@@ -47,6 +50,10 @@ const styles = (theme) => ({
 
 	resize: {
 		//width: '200px'
+	},
+	resizeCombo: {
+		width: '200px',
+		top: '15px'
 	},
 	divStyle: {
 		width: '80%',
@@ -87,44 +94,7 @@ const styles = (theme) => ({
 });
 
 class FormsForm extends React.Component {
-	GET_FORMS_QUERY = gql`
-		query getforms {
-			getforms(IsActive: 1) {
-				Id
-				Code
-				Name
-				Value
-				Value01
-				Value02
-				Value03
-				Value04
-				IsActive
-			}
-		}
-	`;
-	INSERT_FORMS_QUERY = gql`
-		mutation insforms($input: iForms!) {
-			insforms(input: $input) {
-				Id
-			}
-		}
-	`;
 
-	UPDATE_FORMS_QUERY = gql`
-		mutation updforms($input: iForms!) {
-			updforms(input: $input) {
-				Id
-			}
-		}
-	`;
-
-	DELETE_FORMS_QUERY = gql`
-		mutation delforms($Id: Int!) {
-			delforms(Id: $Id, IsActive: 0) {
-				Id
-			}
-		}
-	`;
 
 	TITLE_ADD = 'Add Forms';
 	TITLE_EDIT = 'Update Forms';
@@ -133,14 +103,20 @@ class FormsForm extends React.Component {
 		id: '',
 		idToDelete: null,
 		idToEdit: null,
-		Code: '',
-		Name: '',
+		code: '',
+		name: '',
+		value: '',
+		sort: '',
+		show: true,
+		ParentId: null,
+		parentName: '',
 
-		codeValid: false,
-		nameValid: false,
+		codeValid: true,
+		nameValid: true,
 
 		codeHasValue: false,
 		nameHasValue: false,
+		valueHasValue: false,
 
 		formValid: false,
 		opendialog: false,
@@ -157,6 +133,7 @@ class FormsForm extends React.Component {
 		this.state = {
 			data: [],
 			forms: [],
+			parents: [],
 
 			//idCompany: this.props.idCompany,
 			...this.DEFAULT_STATE
@@ -164,8 +141,8 @@ class FormsForm extends React.Component {
 		this.onEditHandler = this.onEditHandler.bind(this);
 	}
 	focusTextInput() {
-		document.getElementById('code').focus();
-		document.getElementById('code').select();
+		// document.getElementById('code').focus();
+		// document.getElementById('code').select();
 	}
 	componentDidMount() {
 		this.resetState();
@@ -175,14 +152,7 @@ class FormsForm extends React.Component {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
 	resetState = () => {
-		this.setState(
-			{
-				...this.DEFAULT_STATE
-			},
-			() => {
-				this.focusTextInput();
-			}
-		);
+		this.setState(() => ({ ...this.DEFAULT_STATE }), this.focusTextInput);
 	};
 	handleClose = (event, reason) => {
 		if (reason === 'clickaway') {
@@ -195,6 +165,9 @@ class FormsForm extends React.Component {
 		const name = e.target.name;
 		const value = e.target.value;
 		//this.setState({ [name]: value });
+		if (name === "sort" && value.length > 4) {
+			return true;
+		}
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	onBlurHandler(e) {
@@ -266,14 +239,17 @@ class FormsForm extends React.Component {
 		this.setState({ opendialog: false });
 	};
 	handleConfirmAlertDialog = () => {
-		this.deleteForms();
+		this.deleteForm(this.state.idToDelete);
 	};
-	onEditHandler = ({ Id, Code, Name }) => {
+	onEditHandler = ({ Id, Code, Name, Value, sort, ParentId, show }) => {
 		this.setState(
 			{
 				idToEdit: Id,
 				code: Code.trim(),
 				name: Name.trim(),
+				value: Value,
+				sort,
+				show,
 				formValid: true,
 				codeValid: true,
 				nameValid: true,
@@ -282,7 +258,9 @@ class FormsForm extends React.Component {
 				codeHasValue: true,
 				nameHasValue: true,
 
-				buttonTitle: this.TITLE_EDIT
+				buttonTitle: this.TITLE_EDIT,
+				ParentId,
+				parentName: this.state.parents.find(_ => _.value == ParentId).label
 			},
 			() => {
 				this.focusTextInput();
@@ -295,72 +273,35 @@ class FormsForm extends React.Component {
 	};
 	componentWillMount() {
 		this.loadForms();
-		//this.loadCompanies();
 	}
 
 	loadForms = () => {
 		this.props.client
 			.query({
-				query: this.GET_FORMS_QUERY,
+				query: GET_FORMS_QUERY,
 				variables: {},
 				fetchPolicy: 'no-cache'
 			})
-			.then((data) => {
-				if (data.data.getforms != null) {
-					this.setState(
-						{
-							data: data.data.getforms
-						},
-						() => {
-							this.resetState();
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar('error', 'Error: Loading forms: getforms not exists in query data');
-				}
+			.then(({ data: { forms } }) => {
+				if (forms != null)
+					this.setState(() => {
+						let parents = [];
+						parents = forms.map(_ => ({ value: _.Id, label: _.Name }));
+						return { data: forms, parents: [{ value: 0, label: 'Parent' }, ...parents] }
+					}, this.resetState);
+				else this.props.handleOpenSnackbar('error', 'Error: Loading forms: getforms not exists in query data');
 			})
 			.catch((error) => {
 				this.props.handleOpenSnackbar('error', 'Error: Loading forms: ' + error);
 			});
 	};
 
-	/*	loadCompanies = () => {
-			this.props.client
-				.query({
-					query: this.GET_COMPANY_QUERY,
-					variables: {},
-					fetchPolicy: 'no-cache'
-				})
-				.then((data) => {
-					if (data.data.getcompanies != null) {
-						this.setState(
-							{
-								company: data.data.getcompanies
-							},
-							() => {
-								this.resetState();
-							}
-						);
-					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading Companies: getCompany not exists in query data'
-						);
-					}
-				})
-				.catch((error) => {
-					
-					this.props.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
-				});
-		};*/
-
 	getObjectToInsertAndUpdate = () => {
-		let id = 0;
-		let query = this.INSERT_FORMS_QUERY;
+		let query = INSERT_FORMS_QUERY;
 		const isEdition = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
 
 		if (isEdition) {
-			query = this.UPDATE_FORMS_QUERY;
+			query = UPDATE_FORMS_QUERY;
 		}
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
@@ -374,31 +315,33 @@ class FormsForm extends React.Component {
 				loading: true
 			},
 			() => {
+				let date = new Date();
+				let input = {
+					Code: this.state.code,
+					Name: this.state.name,
+					Value: this.state.value,
+					sort: this.state.sort || 0,
+					ParentId: this.state.ParentId || 0,
+					show: this.state.show,
+					IsActive: 1,
+					User_Updated: localStorage.getItem('LoginId'),
+					Date_Updated: date
+				};
+
+				if (!id)//New Record
+					input = { ...input, User_Created: localStorage.getItem('LoginId'), Date_Created: date };
+				else//Update Record
+					input = { ...input, Id: id };
 				this.props.client
 					.mutate({
 						mutation: query,
 						variables: {
-							input: {
-								Id: id,
-								Code: `'${this.state.code}'`,
-								Name: `'${this.state.name}'`,
-								Value: `'${this.state.value}'`,
-								Value01: null,
-								Value02: null,
-								Value03: null,
-								Value04: null,
-								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14 16:10:25+00'",
-								Date_Updated: "'2018-08-14 16:10:25+00'"
-							}
+							input
 						}
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', isEdition ? 'Forms Updated!' : 'Forms Inserted!');
 						this.loadForms();
-						this.resetState();
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar(
@@ -413,7 +356,7 @@ class FormsForm extends React.Component {
 			}
 		);
 	};
-	deleteForms = (id) => {
+	deleteForm = (id) => {
 		this.setState(
 			{
 				loadingConfirm: true
@@ -421,15 +364,17 @@ class FormsForm extends React.Component {
 			() => {
 				this.props.client
 					.mutate({
-						mutation: this.DELETE_FORMS_QUERY,
+						mutation: UPDATE_FORMS_QUERY,
 						variables: {
-							Id: this.state.idToDelete
+							input: {
+								Id: id,
+								IsActive: 0
+							}
 						}
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Form Deleted!');
 						this.loadForms();
-						this.resetState();
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Form: ' + error);
@@ -467,6 +412,21 @@ class FormsForm extends React.Component {
 		this.resetState();
 	};
 
+	updateParent = ({ value: id, label }) => {
+		this.setState(() => ({ ParentId: id, parentName: label }));
+	};
+
+	getSelectedParent = () => {
+		if (this.state.ParentId !== null)
+			return { value: this.state.ParentId, label: this.state.parentName }
+		return null;
+	}
+
+	handleShowChange = name => event => {
+		let element = event.target;
+		this.setState(() => ({ [name]: element.checked }));
+	};
+
 	render() {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
@@ -475,7 +435,6 @@ class FormsForm extends React.Component {
 			[classes.buttonSuccess]: success
 		});
 
-		console.log(this.state.openSnackbar);
 		return (
 			<div className={classes.container}>
 				<AlertDialogSlide
@@ -486,7 +445,7 @@ class FormsForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className={classes.divStyle}>
-					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
 						<InputLabel htmlFor="code">Code</InputLabel>
 						<Input
 							id="code"
@@ -504,7 +463,7 @@ class FormsForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
 						<InputLabel htmlFor="name">Name</InputLabel>
 						<Input
 							id="name"
@@ -522,7 +481,7 @@ class FormsForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
 						<InputLabel htmlFor="value">Value</InputLabel>
 						<Input
 							id="value"
@@ -534,10 +493,50 @@ class FormsForm extends React.Component {
 								}
 							}}
 							className={classes.resize}
-							error={!this.state.valueValid}
 							value={this.state.value}
 							onBlur={(event) => this.onBlurHandler(event)}
 							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<InputLabel htmlFor="sort">Sort</InputLabel>
+						<Input
+							type="number"
+							id="sort"
+							name="sort"
+							value={this.state.sort}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+							className={classes.resize}
+							inputProps={{
+								max: 999,
+								classes: {
+									input: classes.valueControl
+								}
+							}}
+						/>
+					</FormControl>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<InputLabel htmlFor="sort">Show In Menu</InputLabel>
+						<Select
+							options={this.state.parents}
+							value={this.getSelectedParent()}
+							onChange={this.updateParent}
+							closeMenuOnSelect={true}
+							components={makeAnimated()}
+							isMulti={false}
+							className={classes.resizeCombo}
+							placeholder="Parent"
+
+						/>
+					</FormControl>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<Switch
+							name="show"
+							checked={this.state.show}
+							onChange={this.handleShowChange('show')}
+							color="primary"
+							inputProps={{ 'aria-label': 'primary checkbox' }}
 						/>
 					</FormControl>
 					<div className={classes.root}>
@@ -545,12 +544,12 @@ class FormsForm extends React.Component {
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
 								}
 							>
 								<div>
@@ -565,12 +564,12 @@ class FormsForm extends React.Component {
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											<SaveIcon />
-										) : (
-											<AddIcon />
-										)}
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+													<SaveIcon />
+												) : (
+													<AddIcon />
+												)}
 									</Button>
 								</div>
 							</Tooltip>

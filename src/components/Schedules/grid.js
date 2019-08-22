@@ -5,6 +5,8 @@ import moment from 'moment';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import { CREATE_WORKORDER } from './Mutations';
+import { conformToMask } from 'react-text-mask';
+import RapidForm from './RapidForm';
 
 const uuidv4 = require('uuid/v4');
 const WILDCARD = '||';
@@ -51,8 +53,10 @@ class Grid extends Component {
     DEFAULT_STATE = {
         employees: [],
         daysOfWeek: [],
-        weekStart: 0,
-        weekEnd: 0
+        weekStart: 1,
+        weekEnd: 0,
+        formOpen: false,
+        currentRow: {}
     }
 
     componentWillMount() {
@@ -72,9 +76,10 @@ class Grid extends Component {
             currentDate = moment.utc(newCurrentDate);
         }
 
-        let weekStart = currentDate.clone().startOf('week');
-        let weekEnd = currentDate.clone().endOf('week');
+        let weekStart = currentDate.clone().day(this.props.weekDayStart);
 
+        let weekEnd = weekStart.clone().add('days',6);
+        
         let days = [];
         for (let i = 0; i <= 6; i++) {
             let date = moment.utc(weekStart).add(i, 'days');
@@ -89,7 +94,7 @@ class Grid extends Component {
             return {
                 daysOfWeek: days,
                 hours: hours,
-                weekStart: weekStart,
+                weekStart: weekStart.subtract(6,'days'),
                 weekEnd: weekEnd
             }
         });
@@ -114,7 +119,7 @@ class Grid extends Component {
             dataAPI.map(item => {
                 this.setState(prevState => ({
                     employees: [...prevState.employees, {
-                        value: item.id, label: item.firstName + item.lastName, key: item.id
+                        value: item.id, label: item.firstName + ' ' + item.lastName, key: item.id
                     }]
                 }))
             });
@@ -131,14 +136,18 @@ class Grid extends Component {
         this.setState((prevState) => {
             let rows = prevState.rows;
             let data = [];
+            let currentRow = {};
             rows.map(_ => {
-                if (_.id == rowId)
+                if (_.id == rowId) {
                     _.employeeId = employeesTags
+                    currentRow = _;
+                }
                 data.push(_);
-            })
+            });
+            
             if (Object.keys(employeesTags).length > 0 && rowId == this.state.lastRowId)
                 data.push(this.createNewRow())
-            return { rows: data }
+            return { rows: data, formOpen: true, currentRow }
 
         })
 
@@ -261,27 +270,59 @@ class Grid extends Component {
                     _[dayName] = element.value
                 data.push(_);
             })
-
             return { rows: data }
+        })
+    }
+
+    handleCloseForm = () => {
+        this.setState(_ => {
+            return { formOpen: false }
+        }, _ => {
+            this.handleReset();
+        });
+    }
+
+    handleReset = () => {
+        this.setState(_ => {
+            return { currentRow: {} }
+        });
+    }
+
+    setRow = (row) => {
+        this.setState((prevState) => {
+            let rows = prevState.rows;
+            let data = [];
+            rows.map(_ => {
+                if (_.id == row.id)
+                    Object.keys(row).map((key, index) => {
+                        _[key] = row[key]
+                    });
+                data.push(_);
+            });
+            return { rows: data }
+        }, _ => {
+            this.handleCloseForm();
+            this.handleReset();
         })
     }
 
     render() {
         return (
             <React.Fragment>
+                <RapidForm setRow={this.setRow} propertyStartWeek={this.props.weekDayStart} open={this.state.formOpen} handleCloseForm={this.handleCloseForm} currentRow={this.state.currentRow}/>
                 <table className="table table-bordered">
                     <thead>
                         <tr>
                             <th className="font-weight-bold align-middle">
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-light btn-sm" onClick={_ => this.getCurrentWeek(this.state.weekStart)}>
-                                        <i class="fas fa-chevron-left"></i>
+                                <div className="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" className="btn btn-light btn-sm" onClick={_ => this.getCurrentWeek(this.state.weekStart)}>
+                                        <i className="fas fa-chevron-left"></i>
                                         &nbsp;
                                         Prev Week
                                     </button>
-                                    <button type="button" class="btn btn-light btn-sm" onClick={_ => this.getCurrentWeek(this.state.weekEnd)}>
+                                    <button type="button" className="btn btn-light btn-sm" onClick={_ => this.getCurrentWeek(this.state.weekEnd)}>
                                         Next Week &nbsp;
-                                        <i class="fas fa-chevron-right"></i>
+                                        <i className="fas fa-chevron-right"></i>
                                     </button>
                                 </div>
                             </th>
@@ -299,11 +340,11 @@ class Grid extends Component {
                         {
                             this.state.rows.map(_ => {
                                 return (
-                                    <tr>
-                                        <td >
+                                    <tr className={`${this.state.currentRow.id === _.id ? 'table-active' : '' }`}>
+                                        <td>
                                             <div className="d-inline-block w-25">
                                                 {_.id != this.state.firstRow ? <button className="btn" onClick={this.onClickDeleteHandler(_.id)}>
-                                                    <i class="fas fa-times"></i>
+                                                    <i className="fas fa-times"></i>
                                                 </button> : ''}
                                             </div>
                                             <div className="d-inline-block w-75">
@@ -341,7 +382,7 @@ class Grid extends Component {
                         }
                         <tr>
                             <td colspan="8" align="right">
-                                <button className="btn btn-success" onClick={this.saveWorkOrder}>Save {this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}</button>
+                                <button className="btn btn-success" onClick={this.saveWorkOrder}>Save {this.state.saving && <i className="fas fa-spinner fa-spin ml-1" />}</button>
                             </td>
                         </tr>
                     </tbody>

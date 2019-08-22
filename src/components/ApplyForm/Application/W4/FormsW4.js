@@ -1356,7 +1356,7 @@ class FormsW4 extends Component {
                                                                                 />
                                                                             </div>
                                                                         </td>
-                                                                        <td style={{ lineHeight: "1",
+                                                                        <td style={{ lineHeight: "2",
                                                                             fontSize: '11px',
                                                                             width: '50%',
                                                                             borderTop: '0px #ffffff',
@@ -1371,6 +1371,7 @@ class FormsW4 extends Component {
                                                                                 type="radio"
                                                                                 name="estadoCivil"
                                                                                 value={this.state.estadoCivil}
+                                                                                style={{paddingTop: "5px"}}
                                                                                 defaultChecked={this.state.estadoCivil}
                                                                                 onChange={(e) => {
                                                                                     this.setState({
@@ -1379,12 +1380,13 @@ class FormsW4 extends Component {
                                                                                         estadoCivil2: false,
                                                                                     })
                                                                                 }}
-                                                                            /> Single
+                                                                            />  <span style={{paddingRight: "5px", paddingLeft: "5px", paddingTop: "5px", textIndent: "5px"}}>Single</span>
                                                                                 <input
                                                                                     type="radio"
                                                                                     name="estadoCivil"
                                                                                     value={this.state.estadoCivil1}
                                                                                     defaultChecked={this.state.estadoCivil1}
+                                                                                    style={{paddingTop: "5px"}}
                                                                                     onChange={(e) => {
                                                                                         this.setState({
                                                                                             estadoCivil1: e.target.checked,
@@ -1392,9 +1394,9 @@ class FormsW4 extends Component {
                                                                                             estadoCivil2: false,
                                                                                         })
                                                                                     }}
-                                                                                /> Married
-                                                                                <input type="checkbox" /> Married, but withhold at higher Single rate  
-                                                                                <span style={{fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
+                                                                                /> <span style={{paddingRight: "5px", paddingLeft: "5px", paddingTop: "5px", textIndent: "5px"}}>Married</span>
+                                                                                <input style={{paddingTop: "5px",textIndent: "8px"}} type="checkbox" /> Married, but withhold at higher Single rate  
+                                                                                <span style={{paddingTop: "5px",fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
                                                                             </div>
                                                                         </td>
                                                                     </tr>

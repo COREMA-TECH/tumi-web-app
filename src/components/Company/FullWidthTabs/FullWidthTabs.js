@@ -162,23 +162,23 @@ class CustomizedTabs extends React.Component {
 	}
 
 	handleClose = () => {
-		this.setState({showConfirm: true, open: false });
+		this.setState({ showConfirm: true, open: false });
 	};
 
 	handleOpenConfirmDialog = () => {
-		this.setState({ showConfirmCompany: false, showConfirm: true, showConfirmCompanyOrProperty:false});
+		this.setState({ showConfirmCompany: false, showConfirm: true, showConfirmCompanyOrProperty: false });
 	}
-	
+
 	handleOpenConfirmDialogCompany = () => {
-		this.setState({ showConfirmCompany: true, showConfirm: false, showConfirmCompanyOrProperty:false });
+		this.setState({ showConfirmCompany: true, showConfirm: false, showConfirmCompanyOrProperty: false });
 	}
 
 	handleOpenConfirmDialogCompanyOrProperty = () => {
-		this.setState({ showConfirmCompany: false, showConfirm: false, showConfirmCompanyOrProperty:true });
+		this.setState({ showConfirmCompany: false, showConfirm: false, showConfirmCompanyOrProperty: true });
 	}
 
 	handleCloseConfirmDialog = () => {
-	this.setState({ showConfirm: false });
+		this.setState({ showConfirm: false });
 	}
 
 	printDialogConfirm = () => {
@@ -187,53 +187,53 @@ class CustomizedTabs extends React.Component {
 				<h2 className="text-center">What would you like to do?</h2>
 			</DialogContent>
 			<DialogActions>
-				<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompany() }>
-					Create New Contract 
+				<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompany()}>
+					Create New Contract
 				</button>
 				<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCloseConfirmDialog()}>
-					View and Renew Contracts 
+					View and Renew Contracts
 				</button>
-				
+
 			</DialogActions>
 		</Dialog>
-}
+	}
 
-printDialogConfirmCompany = () => {
-	   
-			return <Dialog maxWidth="xl" open={this.state.showConfirmCompany} >
-				<DialogContent>
-					<h2 className="text-center">Is this contract for a new or existing company?</h2>
-				</DialogContent>
-				<DialogActions>
-					<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompanyOrProperty() }>
-						New Company
+	printDialogConfirmCompany = () => {
+
+		return <Dialog maxWidth="xl" open={this.state.showConfirmCompany} >
+			<DialogContent>
+				<h2 className="text-center">Is this contract for a new or existing company?</h2>
+			</DialogContent>
+			<DialogActions>
+				<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompanyOrProperty()}>
+					New Company
 					</button>
-					<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.redirectToCreateContract()}>
-						Existing Company
+				<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.redirectToCreateContract()}>
+					Existing Company
 					</button>
-					
-				</DialogActions>
-			</Dialog>
+
+			</DialogActions>
+		</Dialog>
 	}
 
 	printDialogConfirmCompanyOrProperty = () => {
-		   
-				return <Dialog maxWidth="xl" open={this.state.showConfirmCompanyOrProperty} >
-					<DialogContent>
-						<h2 className="text-center">Is this contract for Property or a Management Company?</h2>
-					</DialogContent>
-					<DialogActions>
-					<button className="btn btn-success  btn-not-rounded mb-2" type="button" onClick={(e) => this.handleClickOpen(e)}>
-							Property
+
+		return <Dialog maxWidth="xl" open={this.state.showConfirmCompanyOrProperty} >
+			<DialogContent>
+				<h2 className="text-center">Is this contract for Property or a Management Company?</h2>
+			</DialogContent>
+			<DialogActions>
+				<button className="btn btn-success  btn-not-rounded mb-2" type="button" onClick={(e) => this.handleClickOpen(e)}>
+					Property
 						</button>
-						<button className="btn btn-info  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateCompany() }>
-							Management Company
+				<button className="btn btn-info  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateCompany()}>
+					Management Company
 						</button>
-						
-						
-					</DialogActions>
-				</Dialog>
-		}
+
+
+			</DialogActions>
+		</Dialog>
+	}
 
 
 
@@ -282,20 +282,6 @@ printDialogConfirmCompany = () => {
 					/>
 				);
 
-				{/*case 3:
-				return (
-					<TitleCompanyForm
-						idCompany={this.state.idCompany}
-						idManagement={this.state.idManagement}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						item={this.state.item}
-						next={this.nextHandleChange}
-						back={this.backHandleChange}
-						valueTab={this.state.value}
-						showStepper={this.state.showStepper}
-						toggleStepper={this.toggleStepper}
-					/>
-				); */}
 			case 3:
 				return (
 					<PositionsCompanyForm
@@ -313,27 +299,28 @@ printDialogConfirmCompany = () => {
 						showPayRate={true}
 					/>
 				);
-				{/*	case 4:
+			case 4:
 				return (
 					<Preferences
 						idCompany={this.state.idCompany}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 					/>
-				);*/}
-			case 4:
+				);
+			case 5:
 				return (
 					<TablesContracts
 						data={this.state.dataContract}
 						printDialogConfirm={this.printDialogConfirm}
 						printDialogConfirmCompany={this.printDialogConfirmCompany}
 						printDialogConfirmCompanyOrProperty={this.printDialogConfirmCompanyOrProperty}
-					
+
 						acciones={1}
 						delete={(id) => {
 							this.deleteContractById(id);
 						}}
 					/>
 				);
+
 		}
 	};
 
@@ -366,31 +353,26 @@ printDialogConfirmCompany = () => {
 							label="Department Contact"
 							disabled={!this.state.activateTabs}
 						/>
-						{/*<Tab
-							disableRipple
-							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Title"
-							disabled={!this.state.activateTabs}
-						/>*/}
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
 							label="Positions and Rates"
 							disabled={!this.state.activateTabs}
 						/>
-						{ localStorage.getItem('ShowMarkup') == 'true' ?
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Contracts"
+							label="Preferences"
 							disabled={!this.state.activateTabs}
-						/> :'' }
-						{/*<Tab*/}
-						{/*disableRipple*/}
-						{/*classes={{ root: "Tab-item", selected: "Tab-selected" }}*/}
-						{/*label="Preferences"*/}
-						{/*disabled={!this.state.activateTabs}*/}
-						{/*/>*/}
+						/>
+						{localStorage.getItem('ShowMarkup') == 'true' ?
+							<Tab
+								disableRipple
+								classes={{ root: "Tab-item", selected: "Tab-selected" }}
+								label="Contracts"
+								disabled={!this.state.activateTabs}
+							/> : ''}
+
 					</Tabs>
 					{this.showSelectedTab(value)}
 				</MuiThemeProvider>
@@ -404,4 +386,3 @@ CustomizedTabs.propTypes = {
 };
 
 export default withStyles(styles)(withApollo(withGlobalContent(CustomizedTabs)));
-//export default withGlobalContent(CustomizedTabs);

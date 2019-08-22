@@ -1,27 +1,13 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
 import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY, GET_MARK } from './queries';
 import { ADD_MARCKED, UPDATE_MARKED } from './mutations';
-import ShiftsData from '../../data/shitfsWorkOrder.json';
-//import ShiftsData from '../../data/shitfs.json';
-import { parse } from 'path';
-import { bool } from 'prop-types';
-import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
-import TimeField from 'react-simple-timefield';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
-import Tooltip from '@material-ui/core/Tooltip';
-import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
 import DatePicker from "react-datepicker";
@@ -76,7 +62,9 @@ class TimeCardForm extends Component {
         endDate: '',
         employees: [],
         positions: [],
-        PositionRateId: 0
+        PositionRateId: 0,
+        newMark: false,
+        readOnly: false
     };
 
     constructor(props) {
@@ -104,13 +92,15 @@ class TimeCardForm extends Component {
                 clockOutId: nextProps.item.clockOutId,
                 IdEntity: nextProps.item.hotelId,
                 employeeId: nextProps.item.employeeId,
-                startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
-                endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) :  nextProps.item.key,
+                startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
+                endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
                 shift: nextProps.item.clockIn,
-                endShift: nextProps.item.clockOut,
+                endShift: nextProps.item.clockOut !== 'Now' ? nextProps.item.clockOut : null,
                 comment: nextProps.item.noteIn,
-                duration: nextProps.item.clockOut && nextProps.item.clockIn ? moment(nextProps.item.clockOut,'HH:mm').diff(moment(nextProps.item.clockIn,'HH:mm'),'hours') : '',
-                statusTimeOut: !nextProps.item.clockOut ? true : false
+                duration: nextProps.item.clockOut !== 'Now' && nextProps.item.clockIn ? moment(nextProps.item.clockOut, 'HH:mm').diff(moment(nextProps.item.clockIn, 'HH:mm'), 'hours') : '',
+                statusTimeOut: nextProps.item.clockOut === 'Now' ? true : false,
+                newMark: nextProps.item.clockOut === 'Now' ? true : false,
+                readOnly: nextProps.readOnly
             });
         } else if (!nextProps.openModal) {
             this.setState({
@@ -132,13 +122,13 @@ class TimeCardForm extends Component {
 
         this.getHotels();
         this.getEmployees();
-        this.getPositions();
+        //this.getPositions();
     }
 
     componentWillMount() {
         this.getHotels();
         this.getEmployees();
-        this.getPositions();
+        //this.getPositions();
     }
 
     handleCloseModal = (event) => {
@@ -155,7 +145,7 @@ class TimeCardForm extends Component {
                 typeMarkedId: 30570,
                 markedDate: this.state.startDate
             }
-        }).then(({data}) => {
+        }).then(({ data }) => {
             this.setState(prevState => ({
                 mark: data
             }));
@@ -189,11 +179,12 @@ class TimeCardForm extends Component {
                 this.setState(prevState => {
                     return { marks: mark }
                 }, _ => { this.addIn(); });
-                
+
             } else {
-                let markIn = {};
+                let marks = [];
+
                 if (this.state.clockInId) {
-                    markIn = {
+                    let markIn = {
                         id: this.state.clockInId,
                         entityId: this.state.IdEntity,
                         markedDate: moment(this.state.startDate).format('YYYY-MM-DD'),
@@ -203,13 +194,11 @@ class TimeCardForm extends Component {
                         ShiftId: null,
                         notes: this.state.comment
                     };
+                    marks.push(markIn);
                 }
-                
-                let markOut = {};
 
                 if (this.state.clockOutId) {
-
-                    markOut = {
+                    let markOut = {
                         id: this.state.clockOutId,
                         entityId: this.state.IdEntity,
                         markedDate: moment(this.state.endDate).format('YYYY-MM-DD'),
@@ -220,9 +209,25 @@ class TimeCardForm extends Component {
                         notes: this.state.comment
                     }
 
+                    marks.push(markOut);
                 }
 
-                let marks = [markIn, markOut];
+                if (this.state.newMark) {
+                    let markOut = {
+                        entityId: this.state.IdEntity,
+                        markedDate: moment(this.state.endDate).format('YYYY-MM-DD'),
+                        markedTime: this.state.endShift,
+                        imageMarked: "",
+                        EmployeeId: this.state.employeeId,
+                        ShiftId: null,
+                        notes: this.state.comment,
+                        typeMarkedId: this.state.PositionRateId === 0 ? 30571 : 30570,
+                    }
+
+                    this.setState(prevState => {
+                        return { marks: markOut }
+                    }, _ => { this.addIn(); });
+                }
 
                 marks.map(mark => {
                     this.updateMark(mark);
@@ -234,25 +239,25 @@ class TimeCardForm extends Component {
     updateMark = (mark) => {
         if (!mark) return;
         this.props.client
-        .mutate({
-            mutation: UPDATE_MARKED,
-            variables: {
-                MarkedEmployees: mark
-            }
-        })
-        .then((data) => {
-            this.props.handleOpenSnackbar('success', 'Record Updated!');
-            this.props.toggleRefresh();
-            this.setState({ saving: false }, () => {
-                this.props.handleCloseModal();
-                //this.props.getReport();
+            .mutate({
+                mutation: UPDATE_MARKED,
+                variables: {
+                    MarkedEmployees: mark
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Record Updated!');
+                this.props.toggleRefresh();
+                this.setState({ saving: false }, () => {
+                    this.props.handleCloseModal();
+                    //this.props.getReport();
+                });
+                // window.location.reload();
+            })
+            .catch((error) => {
+                this.setState({ saving: true });
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
-            // window.location.reload();
-        })
-        .catch((error) => {
-            this.setState({ saving: true });
-            this.props.handleOpenSnackbar('error', 'Error: ' + error);
-        });
     }
 
     addIn = () => {
@@ -262,8 +267,8 @@ class TimeCardForm extends Component {
                 MarkedEmployees: this.state.marks
             }
         }).then((data) => {
-            if (!this.state.statusTimeOut) 
-                this.addOut() 
+            if (!this.state.statusTimeOut)
+                this.addOut()
             else {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.props.toggleRefresh();
@@ -271,10 +276,10 @@ class TimeCardForm extends Component {
             } 0
 
         })
-        .catch((error) => {
-            this.setState({ saving: true });
-            this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
-        });
+            .catch((error) => {
+                this.setState({ saving: true });
+                this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
+            });
     };
 
     addOut = () => {
@@ -363,8 +368,6 @@ class TimeCardForm extends Component {
             [name]: value
         });
 
-
-
         if (name === 'IdEntity') {
             this.getPositions(value);
             this.getContacts(value);
@@ -416,11 +419,12 @@ class TimeCardForm extends Component {
     getHotels = () => {
         this.props.client
             .query({
-                query: GET_HOTEL_QUERY
+                query: GET_HOTEL_QUERY,
+                variables: { Id: localStorage.getItem('LoginId') }
             })
             .then(({ data }) => {
                 this.setState({
-                    hotels: data.getbusinesscompanies
+                    hotels: data.companiesByUser
                 });
             })
             .catch();
@@ -580,6 +584,8 @@ class TimeCardForm extends Component {
                 return _.Id === parseInt(value)
             })
             return { IdEntity: value, propertyStartWeek: hotel ? hotel.Start_Week : null }
+        }, _ => {
+            this.getPositions(parseInt(value));
         });
     }
 
@@ -643,13 +649,24 @@ class TimeCardForm extends Component {
         const employeeList = this.getEmployeeFilterList();
         const positionList = this.getPositionFilterList();
 
+        const {readOnly} = this.state;
+
         return (
             <div>
-                <Dialog fullScreen={false} maxWidth='sm' open={this.props.openModal} onClose={this.props.handleCloseModal}>
+                <Dialog fullScreen={false} maxWidth='sm' open={this.props.openModal} >
                     <form action="" onSubmit={this.handleSubmit}>
                         <DialogTitle style={{ padding: '0px' }}>
                             <div className="modal-header">
-                                <h5 className="modal-title">Add Time +</h5>
+                                {
+                                    readOnly 
+                                        ? <p className="modal-title alert alert-success d-flex flex-row">
+                                                <i class="fas fa-fw fa-exclamation-circle mr-3 align-self-center"></i>
+                                                <div>
+                                                    This timesheet has been approved and cannot be edited. A manager must unapprove the day or week this timesheet falls in before it can be edited.
+                                                </div>
+                                            </p>
+                                        : <h5 className="modal-title">Add Time +</h5>
+                                }
                             </div>
                             <div className="container">
                                 <div className="row">
@@ -663,6 +680,7 @@ class TimeCardForm extends Component {
                                             isMulti={false}
                                             onBlur={this.handleValidate}
                                             className="WorkOrders-dropdown"
+                                            isDisabled={readOnly}
                                         />
                                     </div>
                                     <div className="col-md-6">
@@ -675,6 +693,7 @@ class TimeCardForm extends Component {
                                             isMulti={false}
                                             onBlur={this.handleValidate}
                                             className="WorkOrders-dropdown"
+                                            isDisabled={readOnly}
                                         />
                                     </div>
                                 </div>
@@ -691,6 +710,7 @@ class TimeCardForm extends Component {
                                                     onChange={this.handleChangeDate}
                                                     placeholderText="Date In"
                                                     id="datepickerIn"
+                                                    disabled={readOnly}
                                                 />
                                                 <div class="input-group-append">
                                                     <label class="input-group-text" id="addon-wrapping" for="datepickerIn">
@@ -706,7 +726,7 @@ class TimeCardForm extends Component {
                                                     onChange={this.handleChangeEndDate}
                                                     placeholderText="Date Out"
                                                     id="datepickerOut"
-                                                    disabled={this.state.statusTimeOut}
+                                                    disabled={readOnly || this.state.statusTimeOut}
                                                 />
                                                 <div class="input-group-append">
                                                     <label class="input-group-text" id="addon-wrapping" for="datepickerOut">
@@ -717,20 +737,20 @@ class TimeCardForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <span className="float-left">
-                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} checked={this.state.statusTimeOut} />
+                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} checked={this.state.statusTimeOut} disabled={readOnly} />
                                                 <label htmlFor="">&nbsp; Currently working</label>
                                             </span>
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">* Time In</label>
-                                            <Datetime dateFormat={false} value={this.state.shift ? moment(this.state.shift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                            <Datetime dateFormat={false} value={this.state.shift ? moment(this.state.shift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} inputProps={{disabled: readOnly }} />
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
-                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} />
+                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} inputProps={{disabled: readOnly }} />
                                         </div>
                                         <div className="col-md-4">
-                                            <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
+                                            <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} disabled={readOnly} />
                                         </div>
                                         <div className="col-md-12 mt-2">
                                             <Select
@@ -741,6 +761,7 @@ class TimeCardForm extends Component {
                                                 components={makeAnimated()}
                                                 isMulti={false}
                                                 className="WorkOrders-dropdown"
+                                                isDisabled={readOnly}
                                             />
                                         </div>
                                         <div className="col-md-12 mt-2">
@@ -753,6 +774,7 @@ class TimeCardForm extends Component {
                                                 rows="3"
                                                 value={this.state.comment}
                                                 placeholder="Notes"
+                                                disabled={readOnly}
                                             />
                                         </div>
                                         <div className="col-md-12 text-right">
@@ -764,7 +786,7 @@ class TimeCardForm extends Component {
                                                 Cancel<i className="fas fa-ban ml-2" />
                                             </button>
 
-                                            <button className="btn btn-success" type="submit">
+                                            <button className="btn btn-success" type="submit" disabled={readOnly}>
                                                 Save {!this.state.saving && <i className="fas fa-save ml2" />}
                                                 {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
                                             </button>

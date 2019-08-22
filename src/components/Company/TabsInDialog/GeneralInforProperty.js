@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { gql } from 'apollo-boost';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
@@ -17,11 +17,33 @@ import { INSERT_USER_QUERY } from '../User/Mutations';
 import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
 import moment from 'moment';
+import Stepper from '@material-ui/core/Stepper';
+import StepLabel from '@material-ui/core/StepLabel';
+import { withStyles } from '@material-ui/core/styles';
+
+// import steps
+import ApplicationList from '../../ApplyForm/ApplicationList/ApplicationList';
+import Schedules from '../../Schedules';
+import PunchesReportConsolidated from '../../PunchesReportConsolidated';
+
+const STEPS = [
+    'General',
+    'Employees',
+    'Schedules',
+    'Punches'
+];
+
+const styles = theme => ({
+    stepper: {
+        color: '#41afd7'
+    }
+});
 
 class GeneralInfoProperty extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            activeStep: 0,
             inputEnabled: true,
             open: false,
             scroll: 'paper',
@@ -93,7 +115,8 @@ class GeneralInfoProperty extends Component {
             isCorrectCity: true,
             changeCity: false,
             parentDescription: '',
-            operationManagerDescription: ''
+            operationManagerDescription: '',
+            propertyBasicInfo: {}
         };
     }
 
@@ -866,7 +889,8 @@ class GeneralInfoProperty extends Component {
                                     changeCity: false,
                                     linearProgress: false,
                                     startWeekName: days[item.Start_Week - 1].Name,
-                                    endWeekName: days[item.End_Week - 1].Name
+                                    endWeekName: days[item.End_Week - 1].Name,
+                                    propertyBasicInfo: {id: item.Id, name: item.Name.trim()}
                                 }
                             });
                         }
@@ -1209,7 +1233,7 @@ class GeneralInfoProperty extends Component {
         })
     }
 
-    render() {
+    getGeneralInformation = () => {
         this.changeStylesInCompletedInputs();
 
         if (this.state.linearProgress || this.state.linearProgress || this.state.linearProgressOpM || this.state.loadingData) {
@@ -1221,64 +1245,404 @@ class GeneralInfoProperty extends Component {
             return { value: item.Id, label: item.Name }
         });
 
-        return <form >
-            <div className="row">
-                <ConfirmDialog
-                    open={this.state.openConfirm}
-                    closeAction={() => {
-                        this.setState({ openConfirm: false });
-                    }}
-                    confirmAction={() => {
-                        this.deleteCompany(this.props.idProperty);
-                    }}
-                    title="Do you really want to delete this property?"
-                    loading={this.state.removing}
-                />
-                <div className="col-md-12">
-                    <div className="form-actions float-right tumi-buttonWrapper">
-                        {this.props.idProperty != null ? (
-                            <button
-                                disabled={false}
-                                className="btn btn-danger tumi-button"
-                                onClick={() => {
-                                    this.setState({ openConfirm: true })
-                                }}
-                                type="button"
-                            >
-                                Delete Property<i class="fas fa-ban ml-1" />
+        return (
+            <Fragment>
+                <div className="row">
+                    <ConfirmDialog
+                        open={this.state.openConfirm}
+                        closeAction={() => {
+                            this.setState({ openConfirm: false });
+                        }}
+                        confirmAction={() => {
+                            this.deleteCompany(this.props.idProperty);
+                        }}
+                        title="Do you really want to delete this property?"
+                        loading={this.state.removing}
+                    />
+                    <div className="col-md-12">
+                        <div className="form-actions float-right tumi-buttonWrapper">
+                            {this.props.idProperty != null ? (
+                                <button
+                                    disabled={false}
+                                    className="btn btn-danger tumi-button"
+                                    onClick={() => {
+                                        this.setState({ openConfirm: true })
+                                    }}
+                                    type="button"
+                                >
+                                    Delete Property<i class="fas fa-ban ml-1" />
+                                </button>
+                            ) : (
+                                    ''
+                                )}
+
+
+
+                            {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success tumi-button" name="save" id="save" onClick={this.handleFormSubmit('save')} disabled={loading}>
+                                Save<i className="fas fa-save ml-2" />
                             </button>
-                        ) : (
-                                ''
-                            )}
+                            }
 
+                            {(this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next" disabled={loading}>
+                                Next <i className="fas fa-chevron-right"></i>
+                            </button>}
 
-
-                        {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success tumi-button" name="save" id="save" onClick={this.handleFormSubmit('save')} disabled={loading}>
-                            Save<i className="fas fa-save ml-2" />
-                        </button>
-                        }
-
-                        {(this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next" disabled={loading}>
-                            Next <i className="fas fa-chevron-right"></i>
-                        </button>}
-
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="row">
-                <div className="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            General Information
-                            <span className="float-right text-success font-weight-bold text-center">
-                            {this.state.parentDescription}
-                            <br />
-                            {this.state.operationManagerDescription? `Operation Manager: ${this.state.operationManagerDescription}`:'' }
-                            </span>
+
+                <div className="row">
+                    <div className="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                General Information
+                                <span className="float-right text-success font-weight-bold text-center">
+                                {this.state.parentDescription}
+                                <br />
+                                {this.state.operationManagerDescription? `Operation Manager: ${this.state.operationManagerDescription}`:'' }
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div className="row">
+                                    <div className="col-md-12 col-lg-12">
+                                        <div className="row">
+                                            {localStorage.getItem('ShowMarkup') == 'true' ?
+                                                <div className="col-md-6 col-lg-1">
+                                                    <label>* Markup</label>
+                                                    <InputValid
+                                                        change={(text) => {
+                                                            this.setState({
+                                                                rate: text
+                                                            });
+                                                        }}
+                                                        value={this.state.rate}
+                                                        type="number"
+                                                        maxLength="10"
+                                                        required
+                                                        placeholder='0'
+                                                    />
+                                                </div>
+                                                : ''}
+                                            <div className="col-md-6 col-lg-4">
+                                                <label>* Hotel Name</label>
+                                                <InputValid
+                                                    change={(text) => {
+                                                        this.setState({
+                                                            name: text
+                                                        });
+                                                    }}
+                                                    value={this.state.name}
+                                                    type="text"
+                                                    maxLength="35"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-3">
+                                                <label>* Address</label>
+                                                <InputValid
+                                                    change={(text) => {
+                                                        this.setState({
+                                                            address: text
+                                                        });
+                                                    }}
+                                                    value={this.state.address}
+                                                    type="text"
+                                                    maxLength="50"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-3">
+                                                <label>Address 2</label>
+                                                <input
+                                                    className={'form-control'}
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            optionalAddress: e.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.optionalAddress}
+                                                    type="text"
+                                                    maxLength="50"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-1">
+                                                <label>Suite</label>
+                                                <input
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            suite: e.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.suite}
+                                                    type="text"
+                                                    maxLength="10"
+                                                    className={'form-control'}
+                                                />
+                                            </div>
+        
+                                            <LocationForm
+                                                onChangeCity={this.onChangeCity}
+                                                onChangeState={this.onChangeState}
+                                                onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
+                                                city={this.state.city}
+                                                state={this.state.state}
+                                                zipCode={this.state.zipCode}
+                                                changeCity={this.state.changeCity}
+                                                cityClass={`form-control ${this.state.validCity === '' && ' _invalid'}`}
+                                                stateClass={`form-control ${this.state.validState === '' && ' _invalid'}`}
+                                                zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
+                                                cityColClass="col-md-6 col-lg-3"
+                                                stateColClass="col-md-6 col-lg-2"
+                                                zipCodeColClass="col-md-6 col-lg-1"
+                                                requiredCity={true}
+                                                requiredState={true}
+                                                requiredZipCode={true}
+                                                updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}
+                                            />
+        
+        
+                                            <div className="col-md-12 col-lg-2">
+                                                <label> Region</label>
+                                                <AutosuggestInput
+                                                    id="Region"
+                                                    name="Region"
+                                                    data={this.state.regions}
+                                                    //error={this.state.validRegion === '' ? false : true}
+                                                    value={this.state.RegionName}
+                                                    onChange={this.updateRegionName}
+                                                    onSelect={this.updateRegionName}
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-2">
+                                                <label>* Phone Number</label>
+                                                <InputMask
+                                                    id="prop-number"
+                                                    name="number"
+                                                    mask="+(999) 999-9999"
+                                                    maskChar=" "
+                                                    value={this.state.phoneNumber}
+                                                    className={
+                                                        this.state.phoneNumberValid ? (
+                                                            'form-control'
+                                                        ) : (
+                                                                'form-control _invalid'
+                                                            )
+                                                    }
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            phoneNumber: e.target.value,
+                                                            phoneNumberValid: true
+                                                        });
+                                                    }}
+                                                    placeholder="+(___) ___-____"
+                                                    required
+                                                    minLength="15"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-2">
+                                                <label>Fax</label>
+                                                <InputMask
+                                                    id="prop-fax"
+                                                    name="number"
+                                                    mask="+(999) 999-9999"
+                                                    maskChar=" "
+                                                    value={this.state.fax}
+                                                    className={
+                                                        this.state.faxValid ? (
+                                                            'form-control'
+                                                        ) : (
+                                                                'form-control _invalid'
+                                                            )
+                                                    }
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            fax: e.target.value,
+                                                            faxValid: true
+                                                        });
+                                                    }}
+                                                    placeholder="+(___) ___-____"
+                                                    minLength="15"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card">
+                            <div class="card-header">Legal Docs</div>
+                            <div class="card-body">
+                                <div className="row">
+                                    <div className="col-md-6 col-lg-4">
+                                        <label>* Hotel Code</label>
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    Code: text
+                                                });
+                                            }}
+                                            value={this.state.Code}
+                                            type="text"
+                                            maxLength="10"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-4">
+                                        <label>Cost Center</label>
+                                        <input
+                                            type="text"
+                                            value={this.state.Code01}
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    Code01: e.target.value
+                                                });
+                                            }}
+                                            maxLength="10"
+                                            className={'form-control'}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-4">
+                                        <label>Contract Start Date</label>
+                                        <input
+                                            type="date"
+                                            value={this.state.startDate}
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    startDate: e.target.value
+                                                });
+                                            }}
+        
+                                            className={'form-control'}
+                                        />
+        
+                                    </div>
+                                    <div className="col-md-6 col-lg-4">
+                                        <label>Number of Rooms</label>
+                                        <input
+                                            type="number"
+        
+                                            placeholder='0'
+                                            value={this.state.room}
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    room: e.target.value
+                                                });
+                                            }}
+        
+                                            className={'form-control'}
+                                        />
+        
+                                    </div>
+                                    <div className="col-md-6 col-lg-4 tumi-forcedTop">
+                                        <label>* Week Start</label>
+                                        <Select
+                                            options={selectDays}
+                                            value={{ value: this.state.startWeek, label: this.state.startWeekName || '' }}
+                                            onChange={this.updateStartWeek}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-4 tumi-forcedTop">
+                                        <label>To</label>
+                                        <Select
+                                            options={selectDays}
+                                            value={{ value: this.state.endWeek, label: this.state.endWeekName || '' }}
+                                            onChange={this.updateEndWeek}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6">
+                                        <label>Contract</label>
+                                        <FileUpload
+                                            updateURL={(url, fileName) => {
+                                                this.setState({
+                                                    contractURL: url,
+                                                    contractFile: fileName
+                                                });
+                                            }}
+                                            url={this.state.contractURL}
+                                            fileName={this.state.contractFile}
+                                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6">
+                                        <label>Insurance</label>
+                                        <FileUpload
+                                            updateURL={(url, fileName) => {
+                                                this.setState({
+                                                    insuranceURL: url,
+                                                    insuranceFile: fileName
+                                                });
+                                            }}
+                                            url={this.state.insuranceURL}
+                                            fileName={this.state.insuranceFile}
+                                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6">
+                                        {this.renderEditControl('otherName', 'otherNameEdit')}
+                                        <FileUpload
+                                            updateURL={(url, fileName) => {
+                                                this.setState({
+                                                    otherURL: url,
+                                                    otherFile: fileName
+                                                });
+                                            }}
+                                            url={this.state.otherURL}
+                                            fileName={this.state.otherFile}
+                                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6">
+                                        {this.renderEditControl('other01Name', 'other01NameEdit')}
+                                        <FileUpload
+                                            updateURL={(url, fileName) => {
+                                                this.setState({
+                                                    other01URL: url,
+                                                    other01File: fileName
+                                                });
+                                            }}
+                                            url={this.state.other01URL}
+                                            fileName={this.state.other01File}
+                                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Fragment>
+        );
+    }
+
+    getStepContent = () => {
+        switch (this.state.activeStep) {
+            case 0:
+                return this.getGeneralInformation();
+            case 1:
+                return <ApplicationList propertyInfo={this.state.propertyBasicInfo} />
+            case 2:
+                return <Schedules propertyInfo={this.state.propertyBasicInfo} />
+            case 3:
+                return <PunchesReportConsolidated propertyInfo={this.state.propertyBasicInfo} />
+        }
+    };
+
+    render() {
+        const { classes } = this.props;
+        const { activeStep } = this.state;
+
+        return <div className="row">
+                <div className="col-md-3 col-xl-2">
+                    <div className="card">
+                        <div className="">
                             <div className="row">
-                                <div className="col-md-12 col-lg-12">
+                                <div className="col-md-12">
                                     <div className="GeneralInformation-wrapper">
                                         <ImageUpload
                                             id="avatarFilePI"
@@ -1293,319 +1657,39 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                 </div>
-                                <div className="col-md-12 col-lg-12">
-                                    <div className="row">
-                                        {localStorage.getItem('ShowMarkup') == 'true' ?
-                                            <div className="col-md-6 col-lg-1">
-                                                <label>* Markup</label>
-                                                <InputValid
-                                                    change={(text) => {
-                                                        this.setState({
-                                                            rate: text
-                                                        });
+
+                                <div className="col-md-12">
+                                    
+                                    <Stepper activeStep={activeStep} orientation="vertical" className="">
+                                        {STEPS.map((label, index) => {
+
+                                            return (
+                                                <div
+                                                    key={label}
+                                                    onClick={() => {
+                                                        if(this.props.idProperty !== null)
+                                                            this.setState({ activeStep: index })
                                                     }}
-                                                    value={this.state.rate}
-                                                    type="number"
-                                                    maxLength="10"
-                                                    required
-                                                    placeholder='0'
-                                                />
-                                            </div>
-                                            : ''}
-                                        <div className="col-md-6 col-lg-4">
-                                            <label>* Hotel Name</label>
-                                            <InputValid
-                                                change={(text) => {
-                                                    this.setState({
-                                                        name: text
-                                                    });
-                                                }}
-                                                value={this.state.name}
-                                                type="text"
-                                                maxLength="35"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-3">
-                                            <label>* Address</label>
-                                            <InputValid
-                                                change={(text) => {
-                                                    this.setState({
-                                                        address: text
-                                                    });
-                                                }}
-                                                value={this.state.address}
-                                                type="text"
-                                                maxLength="50"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-3">
-                                            <label>Address 2</label>
-                                            <input
-                                                className={'form-control'}
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        optionalAddress: e.target.value
-                                                    });
-                                                }}
-                                                value={this.state.optionalAddress}
-                                                type="text"
-                                                maxLength="50"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-1">
-                                            <label>Suite</label>
-                                            <input
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        suite: e.target.value
-                                                    });
-                                                }}
-                                                value={this.state.suite}
-                                                type="text"
-                                                maxLength="10"
-                                                className={'form-control'}
-                                            />
-                                        </div>
-
-                                        <LocationForm
-                                            onChangeCity={this.onChangeCity}
-                                            onChangeState={this.onChangeState}
-                                            onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
-                                            city={this.state.city}
-                                            state={this.state.state}
-                                            zipCode={this.state.zipCode}
-                                            changeCity={this.state.changeCity}
-                                            cityClass={`form-control ${this.state.validCity === '' && ' _invalid'}`}
-                                            stateClass={`form-control ${this.state.validState === '' && ' _invalid'}`}
-                                            zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
-                                            cityColClass="col-md-6 col-lg-3"
-                                            stateColClass="col-md-6 col-lg-2"
-                                            zipCodeColClass="col-md-6 col-lg-1"
-                                            requiredCity={true}
-                                            requiredState={true}
-                                            requiredZipCode={true}
-                                            updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}
-                                        />
-
-
-                                        <div className="col-md-12 col-lg-2">
-                                            <label> Region</label>
-                                            <AutosuggestInput
-                                                id="Region"
-                                                name="Region"
-                                                data={this.state.regions}
-                                                //error={this.state.validRegion === '' ? false : true}
-                                                value={this.state.RegionName}
-                                                onChange={this.updateRegionName}
-                                                onSelect={this.updateRegionName}
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-2">
-                                            <label>* Phone Number</label>
-                                            <InputMask
-                                                id="prop-number"
-                                                name="number"
-                                                mask="+(999) 999-9999"
-                                                maskChar=" "
-                                                value={this.state.phoneNumber}
-                                                className={
-                                                    this.state.phoneNumberValid ? (
-                                                        'form-control'
-                                                    ) : (
-                                                            'form-control _invalid'
-                                                        )
-                                                }
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        phoneNumber: e.target.value,
-                                                        phoneNumberValid: true
-                                                    });
-                                                }}
-                                                placeholder="+(___) ___-____"
-                                                required
-                                                minLength="15"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-2">
-                                            <label>Fax</label>
-                                            <InputMask
-                                                id="prop-fax"
-                                                name="number"
-                                                mask="+(999) 999-9999"
-                                                maskChar=" "
-                                                value={this.state.fax}
-                                                className={
-                                                    this.state.faxValid ? (
-                                                        'form-control'
-                                                    ) : (
-                                                            'form-control _invalid'
-                                                        )
-                                                }
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        fax: e.target.value,
-                                                        faxValid: true
-                                                    });
-                                                }}
-                                                placeholder="+(___) ___-____"
-                                                minLength="15"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">Legal Docs</div>
-                        <div class="card-body">
-                            <div className="row">
-                                <div className="col-md-6 col-lg-4">
-                                    <label>* Hotel Code</label>
-                                    <InputValid
-                                        change={(text) => {
-                                            this.setState({
-                                                Code: text
-                                            });
-                                        }}
-                                        value={this.state.Code}
-                                        type="text"
-                                        maxLength="10"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>Cost Center</label>
-                                    <input
-                                        type="text"
-                                        value={this.state.Code01}
-                                        onChange={(e) => {
-                                            this.setState({
-                                                Code01: e.target.value
-                                            });
-                                        }}
-                                        maxLength="10"
-                                        className={'form-control'}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>Contract Start Date</label>
-                                    <input
-                                        type="date"
-                                        value={this.state.startDate}
-                                        onChange={(e) => {
-                                            this.setState({
-                                                startDate: e.target.value
-                                            });
-                                        }}
-
-                                        className={'form-control'}
-                                    />
-
-                                </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>Number of Rooms</label>
-                                    <input
-                                        type="number"
-
-                                        placeholder='0'
-                                        value={this.state.room}
-                                        onChange={(e) => {
-                                            this.setState({
-                                                room: e.target.value
-                                            });
-                                        }}
-
-                                        className={'form-control'}
-                                    />
-
-                                </div>
-                                <div className="col-md-6 col-lg-4 tumi-forcedTop">
-                                    <label>* Week Start</label>
-                                    <Select
-                                        options={selectDays}
-                                        value={{ value: this.state.startWeek, label: this.state.startWeekName || '' }}
-                                        onChange={this.updateStartWeek}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-4 tumi-forcedTop">
-                                    <label>To</label>
-                                    <Select
-                                        options={selectDays}
-                                        value={{ value: this.state.endWeek, label: this.state.endWeekName || '' }}
-                                        onChange={this.updateEndWeek}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    <label>Contract</label>
-                                    <FileUpload
-                                        updateURL={(url, fileName) => {
-                                            this.setState({
-                                                contractURL: url,
-                                                contractFile: fileName
-                                            });
-                                        }}
-                                        url={this.state.contractURL}
-                                        fileName={this.state.contractFile}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    <label>Insurance</label>
-                                    <FileUpload
-                                        updateURL={(url, fileName) => {
-                                            this.setState({
-                                                insuranceURL: url,
-                                                insuranceFile: fileName
-                                            });
-                                        }}
-                                        url={this.state.insuranceURL}
-                                        fileName={this.state.insuranceFile}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    {this.renderEditControl('otherName', 'otherNameEdit')}
-                                    <FileUpload
-                                        updateURL={(url, fileName) => {
-                                            this.setState({
-                                                otherURL: url,
-                                                otherFile: fileName
-                                            });
-                                        }}
-                                        url={this.state.otherURL}
-                                        fileName={this.state.otherFile}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    {this.renderEditControl('other01Name', 'other01NameEdit')}
-                                    <FileUpload
-                                        updateURL={(url, fileName) => {
-                                            this.setState({
-                                                other01URL: url,
-                                                other01File: fileName
-                                            });
-                                        }}
-                                        url={this.state.other01URL}
-                                        fileName={this.state.other01File}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    />
+                                                    className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item'}
+                                                >
+                                                    <StepLabel className={[classes.stepper, 'stepper-label']} >
+                                                        {label}
+                                                    </StepLabel>
+                                                </div>
+                                            );
+                                        })}
+                                    </Stepper>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                <div className="col-md-9 col-xl-10">
+                    {this.getStepContent()}
+                </div>
             </div>
-        </ form>
+        
 
     }
     static contextTypes = {
@@ -1615,4 +1699,4 @@ class GeneralInfoProperty extends Component {
 
 GeneralInfoProperty.propTypes = {};
 
-export default withApollo(GeneralInfoProperty);
+export default withStyles(styles)(withApollo(GeneralInfoProperty));

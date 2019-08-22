@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
+import withApollo from 'react-apollo/withApollo';
+import {UPDATE_MARKED_EMPLOYEE} from './Mutations';
+import Tooltip from '@material-ui/core/Tooltip';
 
 class PunchesConsolidatedDropDownBody extends Component {
     state = {
@@ -23,6 +26,21 @@ class PunchesConsolidatedDropDownBody extends Component {
     handleCloseModalPicture = () => {
         this.setState({ openModalPicture: false });
     };
+
+    handleFlagClick = (currentTarget, markedEmpId, flagValue) => {
+        currentTarget.classList.toggle('bg-secondary');
+        this.props.client
+            .mutate({
+                mutation: UPDATE_MARKED_EMPLOYEE,
+                variables: {
+                    markedemployees:{ id: markedEmpId, flag: !flagValue}
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .catch(error => {
+                currentTarget.classList.toggle('bg-secondary');
+            });
+    }
 
     render() {
         let { data } = this.props;
@@ -53,6 +71,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                         {data.map((item) => {
                             let fileSrcIn = "/images/placeholder.png";
                             let fileSrcOut = "/images/placeholder.png";
+                            let allowEditItem = !item.approvedDateIn && !item.approvedDateOut;
                             if (item.imageMarkedIn) {
                                 fileSrcIn = item.imageMarkedIn;
                             }
@@ -60,15 +79,17 @@ class PunchesConsolidatedDropDownBody extends Component {
                                 fileSrcOut = item.imageMarkedOut;
                             }
                             return (
-                                <tr>
+                                <tr className={!allowEditItem ? 'table-info' : ''} >
                                     <th>
-                                        <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({...item}) }>
-                                            <i className="fas fa-pen"></i>
-                                        </button>
+                                        <Tooltip title={allowEditItem ? 'Edit Time' : 'View Time'} >
+                                            <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({ ...item }, allowEditItem)}>
+                                                <i className={`fas fa-${allowEditItem ? 'pen' : 'eye'}`} ></i>
+                                            </button>
+                                        </Tooltip>
                                     </th>
                                     <td>{item.name}</td>
                                     <td>{item.clockIn} - {item.clockOut}</td>
-                                    <td>{item.duration}</td>
+                                    <td>{item.duration == 0 ? '-': item.duration}</td>
                                     <td>{item.job}</td>
                                     <td>{item.hotelCode}</td>
                                     <td>
@@ -80,9 +101,8 @@ class PunchesConsolidatedDropDownBody extends Component {
                                                 }} />
                                                 <div className="avatar-description">
                                                     <h6 className="text-success ml-1 mt-3">{item.name}</h6>
-                                                    <button className="btn avatar--flag" onClick={(e) => {
-                                                        // document.getElementById('')
-                                                        e.target.classList.toggle('unflag');
+                                                    <button className={`btn avatar--flag ${!item.flagIn ? 'bg-secondary' : ''}`} onClick={(e) => {
+                                                        this.handleFlagClick(e.currentTarget, item.clockInId, item.flagIn);
                                                     }}><i className="fas fa-flag flag" /></button>
                                                 </div>
                                                 <div className="arrow-up" />
@@ -96,10 +116,9 @@ class PunchesConsolidatedDropDownBody extends Component {
                                                 }} />
                                                 <div className="avatar-description">
                                                     <h6 className="text-success ml-1 mt-3">{item.name}</h6>
-                                                    <button className="btn avatar--flag" onClick={(e) => {
-                                                        // document.getElementById('')
-                                                        e.target.classList.toggle('unflag');
-                                                    }}><i className="fas fa-flag flag" /></button>
+                                                    <button className={`btn avatar--flag ${!item.flagOut ? 'bg-secondary' : ''}`} onClick={(e) => {
+                                                        this.handleFlagClick(e.currentTarget, item.clockOutId, item.flagOut);
+                                                    }}><i className={`fas fa-flag flag`} /></button>
                                                 </div>
                                                 <div className="arrow-up" />
                                             </div>
@@ -110,10 +129,10 @@ class PunchesConsolidatedDropDownBody extends Component {
                         })}
                     </tbody>
                 </table>
-            </div>            
+            </div>
         );
     }
 }
 
-export default PunchesConsolidatedDropDownBody;
+export default withApollo(PunchesConsolidatedDropDownBody);
 

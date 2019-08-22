@@ -54,7 +54,7 @@ class SchedulesAccept extends Component {
             status = 3
             color = "#cccccc";
             msg = 'We regret that you can not accept our offer :( <br/>';
-            msg += '<span class="font-weight-bold">Tell us the reason</span>';
+            msg += '<span className="font-weight-bold">Tell us the reason</span>';
         }
 
         if (status != 0) {

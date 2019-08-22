@@ -52,7 +52,7 @@ class FormsI9 extends Component {
     cloneForm  = _ => {
         let contentPDF = document.getElementById('i9Html');
         let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 45%;">${contentPDFClone.innerHTML}</html>`;
+        return `<html style="zoom: 50%;">${contentPDFClone.innerHTML}</html>`;
     }
 
 
@@ -116,7 +116,7 @@ class FormsI9 extends Component {
                 if (data.applicantI9.length > 0) {
                     this.setState({
                         isCreated: true,
-                        html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 45%;"', '') : '',
+                        html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 50%;"', '') : '',
                         pdfUrl: data.applicantI9[0].url
 
                     });
@@ -273,6 +273,7 @@ class FormsI9 extends Component {
                                         ''
                                     ) : (
                                         this.state.isCreated ? (
+
                                             <Fragment>
                                                     <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
                                                        this.setState(_ => ({
@@ -304,6 +305,7 @@ class FormsI9 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
+
                                     <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
                                         <div className="row pdf-container" style={{maxWidth: '100%'}}>
                                             <div id="DocumentPDF" className='signature-information' dangerouslySetInnerHTML={{
@@ -311,6 +313,7 @@ class FormsI9 extends Component {
                                             }} />
                                         </div>
                                     </div>    
+
                                 ) : (
                                     <div style={{width: '100%', margin: '0 auto'}}>
                                         <div className="row pdf-container" id="i9Html" style={{maxWidth: '100%'}}>

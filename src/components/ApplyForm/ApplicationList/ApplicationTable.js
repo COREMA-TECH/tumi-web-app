@@ -14,18 +14,14 @@ import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableBody from '@material-ui/core/TableBody/TableBody';
 import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
-import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
-
-import { GET_COMPLETED_STATUS } from "./Queries";
-
 import Tooltip from '@material-ui/core/Tooltip';
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import Dialog from "@material-ui/core/Dialog/Dialog";
-
 import ProfilePreview from "../Application/ProfilePreview/ProfilePreview"; //"./ProfilePreview/ProfilePreview";
+import UserFormModal from '../../ui-components/UserForm/UserApplicationForm';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -156,6 +152,8 @@ class ApplicationTable extends React.Component {
         completed: false,
         openModal: false,
         ApplicationId: 0,
+        openUserModal: false,
+        application: null
     };
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -177,12 +175,27 @@ class ApplicationTable extends React.Component {
             this.state.page !== nextState.page ||
             this.state.rowsPerPage !== nextState.rowsPerPage ||
             this.state.openModal !== nextState.openModal ||
+            this.state.openUserModal !== nextState.openUserModal ||
             this.state.ApplicationId !== nextState.ApplicationId
             //this.state.orderBy !== nextState.orderBy
         ) {
             return true;
         }
         return false;
+    };
+
+    /**
+    * To hide modal and then restart modal state values
+    */
+    handleCloseModal = () => {
+        this.setState(() => ({ openUserModal: false, application: null }), this.props.getApplications);
+    };
+
+    /**
+         * To open modal updating the state
+         */
+    handleClickOpenModal = (row) => {
+        this.setState(() => ({ openUserModal: true, application: row }));
     };
 
     render() {
@@ -193,12 +206,13 @@ class ApplicationTable extends React.Component {
         if (this.state.loadingRemoving) {
             return <LinearProgress />;
         }
-
+        console.log({ items });
         return (
 
             <Route
                 render={({ history }) => (
                     <div className="card-body p-3 tumi-forcedResponsiveTable">
+                        <UserFormModal handleCloseModal={this.handleCloseModal} openModal={this.state.openUserModal} application={this.state.application} />
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
@@ -215,6 +229,7 @@ class ApplicationTable extends React.Component {
                             </TableHead>
                             <TableBody>
                                 {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                    let hasUser = row.employee ? (row.employee.Employees ? (row.employee.Employees.idUsers ? true : false) : false) : false;
                                     return (
                                         <TableRow
                                             hover
@@ -254,24 +269,30 @@ class ApplicationTable extends React.Component {
                                                         <i class="fas fa-info"></i>
                                                     </button>
                                                 </Tooltip>
+                                                {
+                                                    !hasUser ?
+                                                        <Tooltip title="User">
+                                                            <button
+                                                                className="btn btn-outline-info float-left ml-1"
+                                                                disabled={this.props.loading}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    this.handleClickOpenModal({ ...row });
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-plus"></i>
+                                                            </button>
+                                                        </Tooltip> :
+                                                        <React.Fragment />
+                                                }
                                             </CustomTableCell>
                                             <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.emailAddress}</CustomTableCell>
-                                            <CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
-                                            <CustomTableCell>
-                                                {row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
-                                            </CustomTableCell>
-                                            <CustomTableCell>
-                                            {
-                                                (() =>  {
-                                                            if(row.employee)
-                                                                if(row.employee.Employees.BusinessCompany)
-                                                                    return row.employee.Employees.BusinessCompany.Name ? row.employee.Employees.BusinessCompany.Name : '';
-                                                      })()
-                                            }
-                                                </CustomTableCell>
-                                            <CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.workOrderId ? `000000${row.workOrderId}`.slice(-6) : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.Position ? `${row.Position.Position.trim()} ${row.PositionCompany ? `(${row.PositionCompany.Code.trim()})` : ''}` : 'Open Position'}</CustomTableCell>
+                                            <CustomTableCell>{row.DefaultCompany ? row.DefaultCompany.Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.User ? row.user.Full_Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.Recruiter ? row.Recruiter.Full_Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
                                         </TableRow>
                                     );

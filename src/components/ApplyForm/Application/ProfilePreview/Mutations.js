@@ -82,3 +82,42 @@ export const ADD_IDEAL_JOB = gql`
         }
     }
 `;
+
+export const CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
+    mutation addEmployeeByHotel($employeeByHotels: [inputInsertEmployeeByHotel], $relationList: [inputUpdateEmployeeByHotel]) {
+        addEmployeeByHotel(employeeByHotels: $employeeByHotels) {
+            id
+        }
+        bulkUpdateEmployeeByHotel(relationList: $relationList)
+    }
+`;
+
+export const UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
+    mutation updateEmployeeByHotel($employeeByHotel: inputUpdateEmployeeByHotel) {
+        updateEmployeeByHotel(employeeByHotel: $employeeByHotel) {
+            id
+        }
+    }
+`;
+
+export const SET_IDEAL_JOB_DEFAULT = gql`
+    mutation setDefaultApplicantIdealJob($id: Int) {
+        setDefaultApplicantIdealJob(id: $id) {
+            id
+        }
+    }
+`;
+
+export const BULK_UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
+    mutation bulkUpdateEmployeeByHotel($relationList: [inputUpdateEmployeeByHotel]){
+        bulkUpdateEmployeeByHotel(relationList: $relationList)
+    }
+`;
+
+export const CREATE_EMPLOYEE_FOR_APPLICATION = gql`
+    mutation createEmployeeBasedOnApplicationOrUpdateEmployee($codeuser: Int, $nameUser: String, $id: Int, $hireDate: String, $startDate: String,$ApplicationId: Int){
+        createEmployeeBasedOnApplicationOrUpdateEmployee(id: $id, hireDate: $hireDate, startDate: $startDate, ApplicationId: $ApplicationId,codeuser: $codeuser, nameUser: $nameUser){
+            id
+        }
+    }
+`;

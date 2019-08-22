@@ -1384,6 +1384,7 @@ class ContactcontactForm extends React.Component {
 									onDeleteHandler={this.onDeleteHandler}
 									idEntity={this.state.idCompany}
 									updateData={this.updateData}
+									handleOpenSnackbar={this.props.handleOpenSnackbar}
 								/>
 							</div>
 						</div>

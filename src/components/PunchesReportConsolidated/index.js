@@ -4,9 +4,8 @@ import Filter from './Filter';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY, GET_PUNCHES_REPORT_CONSOLIDATED } from './queries';
 import withApollo from 'react-apollo/withApollo';
-
-import PreFilter from './PreFilter';
 import Dialog from "@material-ui/core/Dialog/Dialog";
+import { Query } from "react-apollo";
 
 const PROPERTY_DEFAULT = { value: '', label: 'Property(All)' };
 const DEPARTMENT_DEFAULT = { value: '', label: 'Department(All)' };
@@ -26,7 +25,8 @@ class PunchesReportConsolidated extends Component {
         openModalPicture: false,
         urlPicture: '',
         item: {},
-        editModal: false
+        editModal: false,
+        allowEditModal: false
     }
 
     constructor(props) {
@@ -39,55 +39,28 @@ class PunchesReportConsolidated extends Component {
 
 
     componentWillMount() {
-        this.getPunchesReport();
         this.getDepartments();
         this.getProperties();
+        if (this.props.propertyInfo) {
+            let { id, name } = this.props.propertyInfo;
+            this.changeFilter({ value: id, label: name });
+        }
     }
 
-    handleClickOpenModal = (item) => {
-        this.setState({ openModal: true, item: item, editModal: true });
+    handleClickOpenModal = (item, allowEditModal) => {
+        this.setState({ openModal: true, item: item, editModal: true, allowEditModal });
     };
 
     handleClickCloseModal = () => {
-        this.setState({ openModal: false }, _ => {
-            this.getPunchesReport();
-        });
-    }
-
-    getPunchesReport = () => {
-        this.setState(() => ({ loadingReport: true }), () => {
-            this.props.client
-                .query({
-                    query: GET_PUNCHES_REPORT_CONSOLIDATED,
-                    variables: { ...this.getFilters() },
-                    fetchPolicy: 'no-cache'
-                })
-                .then(({ data }) => {
-                    this.setState(() => ({
-                        data: data.markedEmployeesConsolidated,
-                        loadingReport: false
-                    }));
-                })
-                .catch(error => {
-                    this.setState(() => ({ loadingReport: false }));
-                });
-        })
+        this.setState({ openModal: false, allowEditModal: false });
     }
 
     getDepartments = () => {
         this.setState(() => ({ loadingDepartments: true }), () => {
-            var variables = {};
-            let idRol = localStorage.getItem('IdRoles');
-            let idEntity = localStorage.getItem("Id_Entity");
-
-            if (this.state.property.value)
-                variables = { Id_Entity: this.state.property.value };
-            if (idRol == 5) variables = { Id_Entity: idEntity };
-            
             this.props.client
                 .query({
                     query: GET_DEPARTMENTS_QUERY,
-                    variables,
+                    variables: { UserId: localStorage.getItem('LoginId') },
                     fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
@@ -97,7 +70,7 @@ class PunchesReportConsolidated extends Component {
                     options.push({ value: '', label: 'Department(All)' });
 
                     //Create structure based on department data
-                    data.catalogitem.map(({ Id, DisplayLabel }) => {
+                    data.departmentsByUser.map(({ Id, DisplayLabel }) => {
                         options.push({ value: Id, label: DisplayLabel })
                     });
 
@@ -113,27 +86,16 @@ class PunchesReportConsolidated extends Component {
     }
 
     changeFilter = (property) => {
-        this.setState(() => ({
-            property
-        }), () => {
-            this.getPunchesReport();
-        });
+        this.setState(() => ({ property }));
     }
 
     getProperties = () => {
         this.setState(() => ({ loadingProperties: true }), () => {
-            let filter = {};
-            let idRol = localStorage.getItem('IdRoles');
-            let idEntity = localStorage.getItem("Id_Entity");
-            if (idRol == 5) filter = { ...filter, Id: idEntity };
-
             this.props.client
                 .query({
                     query: GET_PROPERTIES_QUERY,
                     fetchPolicy: 'no-cache',
-                    variables:{
-                        ...filter
-                    }
+                    variables: { Id: localStorage.getItem('LoginId') }
                 })
                 .then(({ data }) => {
                     let options = [];
@@ -142,7 +104,7 @@ class PunchesReportConsolidated extends Component {
                     options.push({ value: '', label: 'Property(All)' });
 
                     //Create structure based on property data
-                    data.getbusinesscompanies.map((property) => {
+                    data.companiesByUser.map((property) => {
                         options.push({ value: property.Id, label: property.Code + " | " + property.Name });
                     });
 
@@ -166,15 +128,19 @@ class PunchesReportConsolidated extends Component {
 
         if (property.value)
             filters = { ...filters, idEntity: property.value };
+        else
+            filters = { ...filters, idEntity: this.state.properties.filter(_ => _.value > 0).map(_ => _.value) };
         if (department.value)
-            filters = { ...filters, Id_Department: department.value };
-        if (employee)
-            filters = { ...filters, employee };
+            filters = { ...filters, Id_Deparment: department.value };
+        else
+            filters = { ...filters, Id_Deparment: this.state.departments.filter(_ => _.value > 0).map(_ => _.value) };
         if (startDate)
             filters = { ...filters, startDate };
         if (endDate)
             filters = { ...filters, endDate };
-        if (idRol == 5)   filters = { ...filters, idEntity };
+        if (idRol == 5) filters = { ...filters, idEntity };
+
+        filters = { ...filters, employee: employee ? employee : '' };
 
         return filters;
     }
@@ -189,44 +155,58 @@ class PunchesReportConsolidated extends Component {
             departments: prevState.property.value != property.value ? [] : prevState.departments
         }), () => {
             this.getDepartments();
-            this.getPunchesReport();
         });
     }
 
-    handleClickOpenModalPicture = (urlPicture) => {
-        this.setState({
-            openModalPicture: true,
-            urlPicture: urlPicture
-        });
-    };
 
-    handleCloseModalPicture = () => {
-        this.setState({ openModalPicture: false });
-    };
+    calculateTotalHrs = (data) => {
+        let dataList = data.markedEmployeesConsolidated || [];
+        let total = 0, currentId = 0;
+        let BreakException = {};
+        try {
+            dataList.forEach(_ => {
+                _.punches.forEach(_punch => {
+                    if (currentId == 0)
+                        currentId = _punch.employeeId;
+                    else if (currentId != _punch.employeeId) {
+                        total = 0;
+                        throw BreakException;
+                    }
+                    else
+                        total += _punch.duration;
+                })
+            })
+        }
+        catch (e) {
+            if (e != BreakException) throw e;
+        }
+        return total;
 
+    }
     render() {
-        const { loadingReport } = this.state;
-        const loading = loadingReport;
-
-
-        let renderDialogPicture = () => (
-            <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModalPicture}>
-                {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
-                <img src={this.state.urlPicture} className="avatar-lg" />
-                {/*</DialogTitle>*/}
-            </Dialog>
-        );
 
         return <React.Fragment>
-            {loading && <LinearProgress />}
-            {renderDialogPicture()}
-
-            <PreFilter changeFilter={this.changeFilter} />
             <div className="row">
                 <div className="col-md-12">
+                    <div className="card" style={{ "position": "relative" }}>
+                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} allowEditModal={this.state.allowEditModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
+                    </div>
                     <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
-                        <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal}/>
-                        <DropDown data={this.state.data} handleEditModal={this.handleClickOpenModal}></DropDown>
+                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="30000">
+
+                            {({ loading, error, data }) => {
+
+                                let total = this.calculateTotalHrs(data);
+
+                                return <React.Fragment>
+                                    {total > 0 ? <div className="card-head pt-3 pb-3 text-right mr-3">
+                                        <span class="badge badge-primary">Total: ${total} HRS</span>
+                                    </div> : <React.Fragment />
+                                    }
+                                    <DropDown data={data.markedEmployeesConsolidated || []} handleEditModal={this.handleClickOpenModal}></DropDown>
+                                </React.Fragment>
+                            }}
+                        </Query>
                     </div>
                 </div>
             </div>
