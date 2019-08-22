@@ -182,38 +182,40 @@ class FormsW4 extends Component {
     }
 
     validateW4 = () => {
-        let firstName = document.getElementById('firstName');
-        let lastName = document.getElementById('lastName');
-        let socialSecurityNumber = document.getElementById('socialSecurityNumber');
-        let idNumber = document.getElementById('idNumber');
-        let firstEmployeeDate = document.getElementById('firstEmployeeDate');
-        let employeer = document.getElementById('employeer');
-        let excention = document.getElementById('excention');
-        let payCheck = document.getElementById('payCheck');
-        let excentionYear = document.getElementById('excention-year');
-        let address = document.getElementById('address');
-        let postalCode = document.getElementById('postalCode');
-        let socialSecurityExtention = document.getElementById('socialSecurityExtention');
+        let firstNameField = document.getElementById('firstName');
+        let lastNameField = document.getElementById('lastName');
+        let socialSecurityNumberField = document.getElementById('socialSecurityNumber');
+        let idNumberField = document.getElementById('idNumber');
+        let firstEmployeeDateField = document.getElementById('firstEmployeeDate');
+        let employeerField = document.getElementById('employeer');
+        let excentionField = document.getElementById('excention');
+        let payCheckField = document.getElementById('payCheck');
+        let excentionYearField = document.getElementById('excention-year');
+        let addressField = document.getElementById('address');
+        let postalCodeField = document.getElementById('postalCode');
+        let socialSecurityExtentionField = document.getElementById('socialSecurityExtention');
 
 
-        if (firstName.value.length > 0 &&
-            lastName.value.length > 0 &&
-            socialSecurityNumber.value.length > 0) {
+        if (firstNameField.value.length > 0 &&
+            lastNameField.value.length > 0 &&
+            socialSecurityNumberField.value.length > 0) {
 
-            firstName.disabled = true;
-            lastName.disabled = true;
-            socialSecurityNumber.disabled = true;
-            idNumber.disabled = true;
-            firstEmployeeDate.disabled = true;
-            employeer.disabled = true;
-            excention.disabled = true;
-            payCheck.disabled = true;
-            excentionYear.disabled = true;
-            address.disabled = true;
-            postalCode.disabled = true;
-            socialSecurityExtention.disabled = true;
+            firstNameField.disabled = true;
+            lastNameField.disabled = true;
+            socialSecurityNumberField.disabled = true;
+            idNumberField.disabled = true;
+            firstEmployeeDateField.disabled = true;
+            employeerField.disabled = true;
+            excentionField.disabled = true;
+            payCheckField.disabled = true;
+            excentionYearField.disabled = true;
+            addressField.disabled = true;
+            postalCodeField.disabled = true;
+            socialSecurityExtentionField.disabled = true;
 
             const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 50%;>').replace('<img src=""', `<img src="${this.state.signature}"`) : this.cloneForm();
+            const { firstName, lastName, socialSecurityNumber: ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, socialSecurityExtention: sse } = this.state;
+            const jsonFields = JSON.stringify({ firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse });
 
             this.props.client
                 .mutate({
