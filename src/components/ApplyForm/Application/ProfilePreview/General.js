@@ -715,30 +715,32 @@ class General extends Component {
 
     insertNewEmployee = _ => {
         const ApplicationId = this.props.applicationId;
-        
-        return new Promise(resolve => {
-            this.props.client.mutate({
-                mutation: CREATE_EMPLOYEE_FOR_APPLICATION,
-                variables: {
-                    hireDate: moment(Date.now()).format('MM/DD/YYYY'),
-                    startDate: moment(Date.now()).format('MM/DD/YYYY'),
-                    ApplicationId,
-                    codeuser: localStorage.getItem('LoginId'),
-                    nameUser: localStorage.getItem('FullName')
-                }
-            })
-            .then(({ data }) => {
-                resolve(data.createEmployeeBasedOnApplicationOrUpdateEmployee.id);
-            })
-            .catch(error => console.log(error));
-        });
+        let employeeId = 0;
+
+        this.props.client.mutate({
+            mutation: CREATE_EMPLOYEE_FOR_APPLICATION,
+            variables: {
+                id: 0,
+                hireDate: moment(Date.now()).format('MM/DD/YYYY'),
+                startDate: moment(Date.now()).format('MM/DD/YYYY'),
+                ApplicationId,
+                codeuser: localStorage.getItem('LoginId'),
+                nameUser: localStorage.getItem('FullName')
+            }
+        })
+        .then(({ data }) => {
+            employeeId = data.id
+        })
+        .catch(error => console.log(error));
+
+        return employeeId;
     }
 
-    insertRelations = async () => {
+    insertRelations = () => {
         //this.state.property holds the hotels picked in the dropdown
         let newEmployeeId = 0;
         if(this.state.employeeHotelEmployeeId === 0){
-            newEmployeeId = await this.insertNewEmployee();
+            newEmployeeId = this.insertNewEmployee();
         }
 
         if (this.state.property.length <= 0) {
@@ -780,8 +782,7 @@ class General extends Component {
                 departmentName: '',
                 titleName: ''
             }), _ => {
-                // this.getMyHotels();
-                this.getProfileInformation(this.props.applicationId);
+                this.getMyHotels();
             });
         })
     };
@@ -796,63 +797,6 @@ class General extends Component {
             isActive: false,
             isDefault: false,
         }
-
-        else
-            this.getContacts(() => {
-                this.setState(() => ({ saving: true }));
-                let date = new Date().toISOString();
-                let ids = this.getHotelIds();
-                let contacts = [];
-
-                ids.map(id => {
-                    contacts.push({
-                        Id_Entity: id,
-                        ApplicationId: this.props.applicationId,
-                        First_Name: this.state.firstname,
-                        Middle_Name: this.state.middlename,
-                        Last_Name: this.state.lastname,
-                        Electronic_Address: this.state.email || '',
-                        Phone_Number: this.state.number,
-                        Contact_Type: 1,
-                        IsActive: 1,
-                        User_Created: 1,
-                        User_Updated: 1,
-                        Date_Created: date,
-                        Date_Updated: date
-                    })
-                })
-                this.props.client
-                    .mutate({
-                        mutation: INSERT_CONTACT,
-                        variables: {
-                            contacts
-                        }
-                    })
-                    .then((data) => {
-                        this.props.handleOpenSnackbar('success', 'Contact Inserted!');
-                        this.setState(() => ({
-                            openModal: false,
-                            openVerification: false,
-                            saving: false,
-                            property: [],
-                            type: null,
-                            departmentName: '',
-                            titleName: ''
-                        }));
-                        this.getMyHotels();
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error: Inserting Contact: ' + error
-                        );
-                        this.setState(() => ({
-                            saving: false
-                        }));
-                        return false;
-                    });
-            })
-
 
         this.props.client.mutate({
             mutation: UPDATE_EMPLOYEE_HOTEL_RELATION,
