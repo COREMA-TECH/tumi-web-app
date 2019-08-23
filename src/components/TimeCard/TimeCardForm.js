@@ -201,7 +201,7 @@ class TimeCardForm extends Component {
                     let markOut = {
                         id: this.state.clockOutId,
                         entityId: this.state.IdEntity,
-                        markedDate: moment(this.state.endDate).format('YYYY-MM-DD'),
+                        markedDate: this.state.endDate === '' ? '1970-01-01' : moment(this.state.endDate).format('YYYY-MM-DD'),
                         markedTime: this.state.endShift,
                         imageMarked: "",
                         EmployeeId: this.state.employeeId,
@@ -229,7 +229,7 @@ class TimeCardForm extends Component {
                     }, _ => { this.addIn(); });
                 }
 
-                marks.map(mark => {
+                marks.map(mark => {                    
                     this.updateMark(mark);
                 });
             }
@@ -238,11 +238,14 @@ class TimeCardForm extends Component {
 
     updateMark = (mark) => {
         if (!mark) return;
+
+        let editMark = {...mark};        
+
         this.props.client
             .mutate({
                 mutation: UPDATE_MARKED,
                 variables: {
-                    MarkedEmployees: mark
+                    MarkedEmployees: editMark
                 }
             })
             .then((data) => {
@@ -519,8 +522,8 @@ class TimeCardForm extends Component {
         }
     }
 
-    DisabledTimeOut = () => {
-        if (document.getElementById("disabledTimeOut").checked) {
+    DisabledTimeOut = ({target: {checked}}) => {
+        if (checked) {
             this.setState({
                 statusTimeOut: true,
                 endDate: "",
