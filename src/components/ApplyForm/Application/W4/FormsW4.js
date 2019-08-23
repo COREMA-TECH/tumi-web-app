@@ -178,8 +178,7 @@ class FormsW4 extends Component {
 
 
     componentWillMount() {
-        this.getApplicantInformation(this.props.applicationId);
-        alert(this.props.applicationId);
+        this.getApplicantInformation(this.props.applicationId);        
     }
 
     validateW4 = () => {
@@ -225,7 +224,8 @@ class FormsW4 extends Component {
                     mutation: ADD_W4,
                     variables: {
                         html,
-                        ApplicantId: this.props.applicationId
+                        ApplicantId: this.props.applicationId,
+                        // json: jsonFields
                     }
                 })
                 .then(({ data }) => {
