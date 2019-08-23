@@ -178,7 +178,6 @@ class FormsW4 extends Component {
 
 
     componentWillMount() {
-        //this.getHarrasmentInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
         alert(this.props.applicationId);
     }
