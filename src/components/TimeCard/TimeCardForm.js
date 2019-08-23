@@ -93,9 +93,9 @@ class TimeCardForm extends Component {
                 IdEntity: nextProps.item.hotelId,
                 employeeId: nextProps.item.employeeId,
                 startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
-                endDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
+                endDate: !nextProps.item.clockOutId ? '' : (nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key),
                 shift: nextProps.item.clockIn,
-                endShift: nextProps.item.clockOut !== 'Now' ? nextProps.item.clockOut : null,
+                endShift: !nextProps.item.clockOutId ? '' : (nextProps.item.clockOut !== 'Now' ? nextProps.item.clockOut : null),
                 comment: nextProps.item.noteIn,
                 duration: nextProps.item.clockOut !== 'Now' && nextProps.item.clockIn ? moment(nextProps.item.clockOut, 'HH:mm').diff(moment(nextProps.item.clockIn, 'HH:mm'), 'hours') : '',
                 statusTimeOut: nextProps.item.clockOut === 'Now' ? true : false,
@@ -201,10 +201,10 @@ class TimeCardForm extends Component {
                     let markOut = {
                         id: this.state.clockOutId,
                         entityId: this.state.IdEntity,
-                        markedDate: this.state.endDate === '' ? '1970-01-01' : moment(this.state.endDate).format('YYYY-MM-DD'),
+                        markedDate: this.state.endDate === '' ? moment(Date.now()).format('YYYY-MM-DD') : moment(this.state.endDate).format('YYYY-MM-DD'),
                         markedTime: this.state.endShift,
                         imageMarked: "",
-                        EmployeeId: this.state.employeeId,
+                        EmployeeId: this.state.endDate === '' ? 0 : this.state.employeeId,
                         ShiftId: null,
                         notes: this.state.comment
                     }
@@ -228,7 +228,7 @@ class TimeCardForm extends Component {
                         return { marks: markOut }
                     }, _ => { this.addIn(); });
                 }
-
+                
                 marks.map(mark => {                    
                     this.updateMark(mark);
                 });
@@ -378,7 +378,6 @@ class TimeCardForm extends Component {
     };
 
     getPositions = (id, PositionId = null) => {
-        alert(`Entity ID: ${id}`);
         this.props.client
             .query({
                 query: GET_POSITION_BY_QUERY,

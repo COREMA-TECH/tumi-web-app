@@ -51,8 +51,8 @@ class PunchesConsolidatedDropDownBody extends Component {
                 <img src={this.state.urlPicture} className="avatar-lg" />
                 {/*</DialogTitle>*/}
             </Dialog>
-        );
-
+        );            
+        
         return (
             <div className="DropdownBody">
                 <table className="table DropdownBody-table">
@@ -72,12 +72,14 @@ class PunchesConsolidatedDropDownBody extends Component {
                             let fileSrcIn = "/images/placeholder.png";
                             let fileSrcOut = "/images/placeholder.png";
                             let allowEditItem = !item.approvedDateIn && !item.approvedDateOut;
+
                             if (item.imageMarkedIn) {
                                 fileSrcIn = item.imageMarkedIn;
                             }
                             if (item.imageMarkedOut) {
                                 fileSrcOut = item.imageMarkedOut;
                             }
+
                             return (
                                 <tr className={!allowEditItem ? 'table-info' : ''} >
                                     <th>
@@ -88,7 +90,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                                         </Tooltip>
                                     </th>
                                     <td>{item.name}</td>
-                                    <td>{item.clockIn} - {item.clockOut}</td>
+                                    <td>{item.clockIn} - {!item.clockOutId ? '' : item.clockOut}</td>
                                     <td>{item.duration == 0 ? '-': item.duration}</td>
                                     <td>{item.job}</td>
                                     <td>{item.hotelCode}</td>
