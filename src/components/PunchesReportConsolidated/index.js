@@ -191,7 +191,7 @@ class PunchesReportConsolidated extends Component {
                     <div className="card" style={{ "position": "relative" }}>
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} allowEditModal={this.state.allowEditModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>
-                    <div className="card" style={{ "position": "relative", "overflow": "hidden" }}>
+                    <div className="card" style={{ "position": "relative" }}>
                         <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="30000">
 
                             {({ loading, error, data }) => {

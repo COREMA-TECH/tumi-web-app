@@ -48,7 +48,7 @@
 
 .avatar-container {
     padding: 2px 12px;
-    position: relative; 
+    position: relative;
     
     
     @include media-breakpoint-up(sm){
@@ -121,3 +121,14 @@
 .avatar-container:hover .avatar-container-pic {
     display: block;
 }
+
+.panel-dropdown-body {
+    position: relative;
+}
+
+div[class*="MuiExpansionPanel-expanded"] {
+    .panel-dropdown-body {
+        position: inherit;
+    }
+}
+
