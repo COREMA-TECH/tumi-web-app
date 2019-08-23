@@ -378,15 +378,17 @@ class TimeCardForm extends Component {
     };
 
     getPositions = (id, PositionId = null) => {
+        alert(`Entity ID: ${id}`);
         this.props.client
             .query({
                 query: GET_POSITION_BY_QUERY,
                 variables: { id: id }
             })
             .then(({ data }) => {
-
                 this.setState({
                     positions: data.getposition
+                }, _ => {
+                    console.log(this.state.positions);
                 });
             })
             .catch();
@@ -577,7 +579,7 @@ class TimeCardForm extends Component {
             return { value: item.Id, label: item.Position }
         });
 
-        const options = [{ value: 0, label: "Lunch Break" }, ...positionList];
+        const options = [{ value: 0, label: "Select a Position" }, ...positionList];
         return options;
     }
 
