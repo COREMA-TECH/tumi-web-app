@@ -86,21 +86,26 @@ class TimeCardForm extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {
+            const { clockInId, clockOutId, hotelId, employeeId, key, clockIn, clockOut, noteIn } = nextProps.item;
+
+
             this.setState({
-                id: nextProps.item.clockInId,
-                clockInId: nextProps.item.clockInId,
-                clockOutId: nextProps.item.clockOutId,
-                IdEntity: nextProps.item.hotelId,
-                employeeId: nextProps.item.employeeId,
-                startDate: nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key,
-                endDate: !nextProps.item.clockOutId ? '' : (nextProps.item.key ? nextProps.item.key.substring(nextProps.item.key.length - 8, nextProps.item.key.length) : nextProps.item.key),
-                shift: nextProps.item.clockIn,
-                endShift: !nextProps.item.clockOutId ? '' : (nextProps.item.clockOut !== 'Now' ? nextProps.item.clockOut : null),
-                comment: nextProps.item.noteIn,
-                duration: nextProps.item.clockOut !== 'Now' && nextProps.item.clockIn ? moment(nextProps.item.clockOut, 'HH:mm').diff(moment(nextProps.item.clockIn, 'HH:mm'), 'hours') : '',
-                statusTimeOut: nextProps.item.clockOut === 'Now' ? true : false,
-                newMark: nextProps.item.clockOut === 'Now' ? true : false,
-                readOnly: nextProps.readOnly
+                id: clockInId,
+                clockInId: clockInId,
+                clockOutId: clockOutId,
+                IdEntity: hotelId,
+                employeeId: employeeId,
+                startDate: key ? key.substring(key.length - 8, key.length) : key,
+                endDate: !clockOutId ? '' : (key ? key.substring(key.length - 8, key.length) : key),
+                shift: clockIn,
+                endShift: !clockOutId ? '' : (clockOut !== 'Now' || clockOut !== "24:00") ? clockOut : null,
+                comment: noteIn,
+                duration: (clockOut !== 'Now' || clockOut !== "24:00") && clockIn ? moment(clockOut, 'HH:mm').diff(moment(clockIn, 'HH:mm'), 'hours') : '',
+                statusTimeOut: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
+                newMark: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
+                readOnly: nextProps.readOnly,
+            }, _ => {
+                this.DisabledTimeOut({target: {checked: true}});
             });
         } else if (!nextProps.openModal) {
             this.setState({
@@ -212,7 +217,7 @@ class TimeCardForm extends Component {
                     marks.push(markOut);
                 }
 
-                if (this.state.newMark) {
+                if (this.state.newMark && this.state.endDate) {
                     let markOut = {
                         entityId: this.state.IdEntity,
                         markedDate: moment(this.state.endDate).format('YYYY-MM-DD'),
@@ -228,7 +233,8 @@ class TimeCardForm extends Component {
                         return { marks: markOut }
                     }, _ => { this.addIn(); });
                 }
-                
+
+                // return;
                 marks.map(mark => {                    
                     this.updateMark(mark);
                 });
@@ -645,10 +651,6 @@ class TimeCardForm extends Component {
     }
 
     render() {
-
-        const { classes } = this.props;
-        const isAdmin = localStorage.getItem('IsAdmin') == "true"
-
         const propertyList = this.getPropertyFilterList();
         const employeeList = this.getEmployeeFilterList();
         const positionList = this.getPositionFilterList();
