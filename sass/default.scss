@@ -38,6 +38,7 @@
 @import "vendor/flag-selector.scss";
 
 //Components
+@import "components/approvePunches/approve-punches";
 @import "components/tabs/tabs";
 @import "components/records-cards/records-cards";
 @import "components/modals/modal";
@@ -54,10 +55,12 @@
 @import "components/cards/cards";
 @import "components/workOrders/workOrders.scss";
 @import "components/dashboards/dashboards";
+@import "components/dashboards/opsdashboard";
 @import "components/location/location";
 @import "components/directDeposit/index.scss";
 @import "components/schedules/schedules";
 @import "components/visits/visits";
+@import "components/react-contextMenu/react-contextMenu";
 
 // Layout
 @import "layout/header";

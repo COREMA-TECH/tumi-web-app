@@ -583,7 +583,7 @@ class ApplicationList extends Component {
 					</div>
 				</div>
 
-				<div className="col-md-4 col-xl-12 mb-2">
+				<div className="col-md-12 col-xl-12 mb-2">
 					{/* <button
 						className="btn btn-success float-right ml-2"
 						onClick={this.showNoShowReportFilter}

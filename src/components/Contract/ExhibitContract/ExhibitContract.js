@@ -20,6 +20,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import renderHTML from 'react-render-html';
+import { GET_CONTRACT } from './Queries';
 
 const styles = (theme) => ({
     container: {
@@ -230,23 +231,22 @@ class ExhibitContract extends Component {
         this.setState({ loadingData: true, loadingContract: true });
         this.props.client
             .query({
-                query: this.CREATE_CONTRACT_QUERY,
+                query: GET_CONTRACT,
                 variables: { Id: this.props.contractId },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.createcontracts != null) {
-                    this.sleep().then(() => {
-                        this.setState({
-                            openModal: true,
-                            loadingContract: false,
-                            PdfUrl:
-                                '<iframe src="' +
-                                this.context.baseUrl +
-                                '/public/Contract_' +
-                                this.props.contractname +
-                                '.pdf"  width="100%" height="100%" />'
-                        });
+                let url = data.data.contracts[0];
+                
+                if (url) {
+                    this.setState({
+                        openModal: true,
+                        loadingContract: false,
+                        PdfUrl:`
+                        <object data="${url.Contract_Terms}" type="application/pdf" height="100%" width="100%">
+                            <embed src="${url.Contract_Terms}" type="application/pdf"/>
+                        </object>
+                        `
                     });
                 } else {
                     this.props.handleOpenSnackbar(
@@ -277,7 +277,7 @@ class ExhibitContract extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.getcontracts != null) {
+                if (data.data.getcontracts != []) {
                     this.setState({
                         agreement: data.data.getcontracts[0].Contract_Terms
                         //signature: data.data.getcontracts[0].Client_Signature
@@ -413,7 +413,7 @@ class ExhibitContract extends Component {
                         </div>
                     </DialogTitle>
                     <DialogContent style={{ minWidth: 750, padding: '0px' }}>
-                        <div className="row">
+                        <div className="row m-0">
                             <div className="col-md-12">
                                 <button
                                     //	disabled={this.state.loading || !this.state.enableCancelButton}

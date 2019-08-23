@@ -4,8 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import RolesTable from './RolesFormsTable';
-import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
@@ -23,6 +21,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import withGlobalContent from 'Generic/Global';
 import RolesDropdown from "../DropdownForm/RolesDropdown";
+
+import { GET_COMPANY_QUERY, GET_ROLES_QUERY } from './queries';
+import { UPDATE_ROLES_QUERY, INSERT_ROLES_QUERY, DELETE_ROLES_QUERY } from './mutations';
+
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -89,48 +91,7 @@ const styles = (theme) => ({
 });
 
 class RolesForm extends React.Component {
-	GET_COMPANY_QUERY = gql`
-		query getcompanies {
-			getcompanies(IsActive: 1) {
-				Id
-				Name
-			}
-		}
-	`;
 
-	GET_ROLES_QUERY = gql`
-		query getroles {
-			getroles(IsActive: 1) {
-				Id
-				Id_Company
-				Description
-				IsActive
-			}
-		}
-	`;
-	INSERT_ROLES_QUERY = gql`
-		mutation insroles($input: iRoles!) {
-			insroles(input: $input) {
-				Id
-			}
-		}
-	`;
-
-	UPDATE_ROLES_QUERY = gql`
-		mutation updroles($input: iRoles!) {
-			updroles(input: $input) {
-				Id
-			}
-		}
-	`;
-
-	DELETE_ROLES_QUERY = gql`
-		mutation delroles($Id: Int!) {
-			delroles(Id: $Id, IsActive: 0) {
-				Id
-			}
-		}
-	`;
 
 	TITLE_ADD = 'Add Roles';
 	TITLE_EDIT = 'Update Roles';
@@ -307,7 +268,7 @@ class RolesForm extends React.Component {
 	loadRoles = () => {
 		this.props.client
 			.query({
-				query: this.GET_ROLES_QUERY,
+				query: GET_ROLES_QUERY,
 				variables: {},
 				fetchPolicy: 'no-cache'
 			})
@@ -333,7 +294,7 @@ class RolesForm extends React.Component {
 	loadCompanies = () => {
 		this.props.client
 			.query({
-				query: this.GET_COMPANY_QUERY,
+				query: GET_COMPANY_QUERY,
 				variables: {},
 				fetchPolicy: 'no-cache'
 			})
@@ -361,11 +322,11 @@ class RolesForm extends React.Component {
 
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
-		let query = this.INSERT_ROLES_QUERY;
+		let query = INSERT_ROLES_QUERY;
 		const isEdition = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
 
 		if (isEdition) {
-			query = this.UPDATE_ROLES_QUERY;
+			query = UPDATE_ROLES_QUERY;
 		}
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
@@ -421,7 +382,7 @@ class RolesForm extends React.Component {
 			() => {
 				this.props.client
 					.mutate({
-						mutation: this.DELETE_ROLES_QUERY,
+						mutation: DELETE_ROLES_QUERY,
 						variables: {
 							Id: this.state.idToDelete
 						}
@@ -485,7 +446,7 @@ class RolesForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className={classes.divStyle}>
-					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
 						<TextField
 							id="id_company"
 							select
@@ -508,7 +469,7 @@ class RolesForm extends React.Component {
 							))}
 						</TextField>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
 						<InputLabel htmlFor="description">Description</InputLabel>
 						<Input
 							id="description"
@@ -532,12 +493,12 @@ class RolesForm extends React.Component {
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
 								}
 							>
 								<div>
@@ -552,12 +513,12 @@ class RolesForm extends React.Component {
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											<SaveIcon />
-										) : (
-											<AddIcon />
-										)}
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+													<SaveIcon />
+												) : (
+													<AddIcon />
+												)}
 									</Button>
 								</div>
 							</Tooltip>
@@ -585,15 +546,15 @@ class RolesForm extends React.Component {
 				</div>
 				<div className={classes.divStyle}>
 					<RolesDropdown
-                        data={this.state.data}
+						data={this.state.data}
 					/>
 
 					{/*<RolesTable*/}
-						{/*data={this.state.data}*/}
-						{/*company={this.state.company}*/}
-						{/*loading={this.state.loading}*/}
-						{/*onEditHandler={this.onEditHandler}*/}
-						{/*onDeleteHandler={this.onDeleteHandler}*/}
+					{/*data={this.state.data}*/}
+					{/*company={this.state.company}*/}
+					{/*loading={this.state.loading}*/}
+					{/*onEditHandler={this.onEditHandler}*/}
+					{/*onDeleteHandler={this.onDeleteHandler}*/}
 					{/*/>*/}
 				</div>
 			</div>

@@ -3,6 +3,8 @@ import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_VALIDATE_APPLICATION_UNIQUENESS } from '../Queries';
+import { GET_APPLICATION_USER } from './Queries';
+import { UPDATE_USER_INFO } from './Mutations';
 import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION, ADD_INDEPENDENT_CONTRACT } from '../Mutations';
 import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
@@ -131,7 +133,8 @@ class Application extends Component {
             //Open/Close schedule restrictions modal
             openRestrictionsModal: false,
             applicationIdForIndependent: 0,
-            hasIndependentContract: false
+            hasIndependentContract: false,
+            applicationUser: null
         };
     }
 
@@ -147,6 +150,33 @@ class Application extends Component {
     handleRestrictionModalClose = () => {
         this.setState({ openRestrictionsModal: false });
     };
+
+    // Update user info on application save
+    updateUserInfo = applicationId => {
+        const {applicationUser, firstName = "", lastName = "", cellPhone = "", emailAddress = ""} = this.state;        
+
+        if(applicationId <= 0 || !applicationUser){
+            return;
+        }
+
+        this.props.client.mutate({
+            mutation: UPDATE_USER_INFO,
+            variables:{
+                user: {
+                    Id: applicationUser.Id,
+                    firstName: firstName.trim(),
+                    lastName: lastName.trim(),
+                    Phone_Number: cellPhone.trim(),
+                    Electronic_Address: emailAddress.trim(),  
+                    Full_Name: `${firstName.trim()} ${lastName.trim()}`          
+                }
+            }
+        })
+        .then(_ => {
+            this.props.handleOpenSnackbar('success', 'User info updated', 'bottom', 'right');
+        })
+        .catch(error => console.log(error));
+    }
 
     /*<
      * To update a application by id
@@ -209,6 +239,7 @@ class Application extends Component {
                             applicationId = data.addApplication.id;
                         } else
                             applicationId = data.updateApplication.id;
+
                         this.setState({
                             editing: false,
                             insertDialogLoading: false,
@@ -224,6 +255,7 @@ class Application extends Component {
                             });
                             this.addApplicantJobs(object);
                             saveIndependentContract(applicationId)
+                            this.updateUserInfo(id);
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
@@ -266,6 +298,20 @@ class Application extends Component {
             })
     };
 
+    // Find user matching this application
+    fetchApplicationUser = applicationId => {
+        this.props.client.query({
+            query: GET_APPLICATION_USER,
+            variables: {
+                Id: applicationId
+            }
+        })
+        .then(({data}) => {
+            this.setState(_ => ({
+                applicationUser: data.applicationUser
+            }))
+        })
+    }
 
     /**
      * To get applications by id
@@ -480,9 +526,9 @@ class Application extends Component {
     };
 
     componentWillMount() {
-        //this.getApplicationById(this.props.applicationId);
         if (this.props.applicationId > 0) {
             this.getApplicationById(this.props.applicationId);
+            this.fetchApplicationUser(this.props.applicationId);
 
         } else {
             this.getPositions();
@@ -613,7 +659,6 @@ class Application extends Component {
         e.stopPropagation();
 
         this.submitForm()
-
     }
 
     updateSearchingZipCodeProgress = (searchigZipcode) => {

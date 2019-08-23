@@ -41,6 +41,8 @@ query applications($id: Int){
             routingNumber
             accountNumber
         }
+        optionHearTumi
+        nameReferences
         recruiter
         { Full_Name }
     }

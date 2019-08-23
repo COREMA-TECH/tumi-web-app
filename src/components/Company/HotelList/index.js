@@ -212,8 +212,8 @@ class HotelList extends Component {
                         loadingConfirm={this.state.loadingRemoving}
                         content="Do you really want to continue whit this operation?"
                     />
-                    {this.state.hotels.map((hotel) => (
-                        <li key={hotel.id} className="col-md-4 col-xl-2">
+                    {this.state.hotels.map((hotel, i) => (
+                        <li key={i} className="col-md-4 col-xl-2">
                             <div className="HotelCard-wrapper">
                                 <div className="HotelCard-controls">
                                     <button className="btn btn-link" onClick={(e) => { this.handleAlertOpen(hotel.Id) }}>

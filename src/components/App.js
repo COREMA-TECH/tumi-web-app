@@ -13,12 +13,17 @@ import ReactDOM from 'react-dom';
 import { connection } from './connection.js';
 import ReactGA from 'react-ga';
 
+import { connect } from "react-redux";
+import { setPermissions } from '../redux/actions'
+
+import { GET_PERMISSION } from './queries';
+
 export const initGA = () => {
 	ReactGA.initialize('UA-141051584-1');
 }
 
 export const logPageView = () => {
-	ReactGA.set({page: window.location.pathname})
+	ReactGA.set({ page: window.location.pathname })
 	ReactGA.pageview(window.location.pathname);
 }
 
@@ -128,7 +133,15 @@ class App extends Component {
 
 	componentWillMount() {
 		window.removeEventListener('scroll', this.handleScroll);
-
+		client.query(
+			{
+				query: GET_PERMISSION,
+				variables: {
+					RoleId: localStorage.getItem("IdRoles")
+				}
+			}).then(({ data: { features } }) => {
+				this.props.setPermission(features);
+			})
 		//localStorage.setItem('languageForm', 'en');
 	}
 
@@ -177,13 +190,26 @@ class App extends Component {
 		},
 		getDistance,
 		credentialsS3:
-			{
-				accessKeyId: 'AKIAZTTPXWUZ6OPRW2P6',
-				secretAccessKey: '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',
-				region: 'us-east-1'
+		{
+			accessKeyId: 'AKIAZTTPXWUZ6OPRW2P6',
+			secretAccessKey: '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',
+			region: 'us-east-1'
 		},
-		bucketS3:'orion1-files'
+		bucketS3: 'orion1-files'
 	});
 }
 
-export default App;
+const mapStateToProps = (state) => {
+	return {
+		permissions: state.permissionsReducer.permissions
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		setPermission: (data) => { dispatch(setPermissions(data)) }
+	}
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

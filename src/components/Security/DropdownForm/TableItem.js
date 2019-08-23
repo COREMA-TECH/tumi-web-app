@@ -135,6 +135,7 @@ class TableItem extends Component {
                 <td>{this.props.code}</td>
                 <td>{this.props.name}</td>
                 <td>{this.props.url}</td>
+                <td>{this.props.parent}</td>
             </tr>
         );
     }

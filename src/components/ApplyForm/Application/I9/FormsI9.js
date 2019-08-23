@@ -52,7 +52,7 @@ class FormsI9 extends Component {
     cloneForm  = _ => {
         let contentPDF = document.getElementById('i9Html');
         let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 45%;">${contentPDFClone.innerHTML}</html>`;
+        return `<html style="zoom: 50%;">${contentPDFClone.innerHTML}</html>`;
     }
 
 
@@ -116,7 +116,7 @@ class FormsI9 extends Component {
                 if (data.applicantI9.length > 0) {
                     this.setState({
                         isCreated: true,
-                        html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 45%;"', '') : '',
+                        html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 50%;"', '') : '',
                         pdfUrl: data.applicantI9[0].url
 
                     });
@@ -273,6 +273,7 @@ class FormsI9 extends Component {
                                         ''
                                     ) : (
                                         this.state.isCreated ? (
+
                                             <Fragment>
                                                     <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
                                                        this.setState(_ => ({
@@ -304,6 +305,7 @@ class FormsI9 extends Component {
                             </div>
                             {
                                 this.state.html.length > 0 ? (
+
                                     <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
                                         <div className="row pdf-container" style={{maxWidth: '100%'}}>
                                             <div id="DocumentPDF" className='signature-information' dangerouslySetInnerHTML={{
@@ -311,6 +313,7 @@ class FormsI9 extends Component {
                                             }} />
                                         </div>
                                     </div>    
+
                                 ) : (
                                     <div style={{width: '100%', margin: '0 auto'}}>
                                         <div className="row pdf-container" id="i9Html" style={{maxWidth: '100%'}}>
@@ -613,6 +616,7 @@ class FormsI9 extends Component {
                                                                     name="status"
                                                                     value={this.state.oneCheck}
                                                                     defaultChecked={this.state.oneCheck}
+                                                                    style={{ display: "none" }}
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             oneCheck: e.target.checked,
@@ -620,7 +624,15 @@ class FormsI9 extends Component {
                                                                             oneCheck2: false,
                                                                             oneCheck3: false,
                                                                         })
-                                                                    }} type="radio" id="citizen"/> 1. A citizen of the United States</span>
+                                                                    }} type="radio" id="citizen"/>
+
+                                                                    <label style={{fontSize: "18px", paddingLeft: "5px"}} htmlFor="citizen"
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: `${this.state.oneCheck ? '&#10003;' : '&#9633;'}`
+                                                                        }}
+                                                                    />
+                                                                    1. A citizen of the United States                                                                    
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -631,6 +643,7 @@ class FormsI9 extends Component {
                                                                 }}> <input value={this.state.oneCheck1}
                                                                            defaultChecked={this.state.oneCheck1}
                                                                            name="status"
+                                                                           style={{display: "none"}}
                                                                            onChange={(e) => {
                                                                                this.setState({
                                                                                    oneCheck1: e.target.checked,
@@ -638,8 +651,15 @@ class FormsI9 extends Component {
                                                                                    oneCheck2: false,
                                                                                    oneCheck3: false,
                                                                                })
-                                                                           }} type="radio" id="non-citizen"/> 2. A noncitizen national of the United States (See
-                    instructions)</span></td>
+                                                                           }} type="radio" id="non-citizen"/>
+
+                                                                    <label style={{fontSize: "18px", paddingLeft: "5px"}} htmlFor="non-citizen"
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: `${this.state.oneCheck1 ? '&#10003;' : '&#9633;'}`
+                                                                        }}
+                                                                    />
+                                                                    2. A noncitizen national of the United States (See instructions)</span>
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td style={{width: '100%'}}><span style={{
@@ -649,6 +669,7 @@ class FormsI9 extends Component {
                                                                 }}> <input value={this.state.oneCheck2}
                                                                            defaultChecked={this.state.oneCheck2}
                                                                            name="status"
+                                                                           style={{display: "none"}}
                                                                            onChange={(e) => {
                                                                                this.setState({
                                                                                    oneCheck2: e.target.checked,
@@ -657,8 +678,17 @@ class FormsI9 extends Component {
                                                                                    oneCheck3: false,
                                                                                })
                                                                            }} type="radio"
-                                                                           id="lowful-permanent-resident"/> 3. A lawful permanent resident (Alien Registration Number/USCIS
-                    Number):&nbsp; &nbsp; <input
+                                                                           id="lowful-permanent-resident"
+                                                                    />
+                                                                    <label style={{fontSize: "18px", paddingLeft: "5px"}} htmlFor="lowful-permanent-resident"
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: `${this.state.oneCheck2 ? '&#10003;' : '&#9633;'}`
+                                                                        }}
+                                                                    />
+                                                                    3. A lawful permanent resident (Alien Registration Number/USCIS Number):&nbsp; &nbsp;
+
+
+                                                                    <input
                                                                         name="status"
                                                                         // defaultChecked={this.state.oneCheck3Explain}
                                                                         value={this.state.oneCheck3Explain}
@@ -672,7 +702,11 @@ class FormsI9 extends Component {
                                                                             border: 0,
                                                                             borderBottom: '1px solid #000'
                                                                         }}
-                                                                        type="text"/></span></td>
+                                                                        type="text"
+                                                                    />
+                                                                    
+                                                                    </span>
+                                                                </td>
                                                             </tr>
                                                             </tbody>
                                                         </table>
@@ -695,17 +729,27 @@ class FormsI9 extends Component {
                                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                                         fontSize: '8pt'
                                                                     }}>
-                      <input value={this.state.oneCheck3}
-                             name="status"
-                             onChange={(e) => {
-                                 this.setState({
-                                     oneCheck3: e.target.checked,
-                                     oneCheck: false,
-                                     oneCheck1: false,
-                                     oneCheck2: false,
-                                 })
-                             }} type="radio" id="alien"/> 4. An alien authorized to work until (expiration date, if
-                      applicable, mm/dd/yyyy): <input
+                                                                    <input value={this.state.oneCheck3}
+                                                                            name="status"
+                                                                            style={{display: "none"}}
+                                                                            onChange={(e) => {
+                                                                                this.setState({
+                                                                                    oneCheck3: e.target.checked,
+                                                                                    oneCheck: false,
+                                                                                    oneCheck1: false,
+                                                                                    oneCheck2: false,
+                                                                                })
+                                                                            }} type="radio" id="alien"
+                                                                    /> 
+
+                                                                    <label style={{fontSize: "18px", paddingLeft: "5px"}} htmlFor="alien"
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: `${this.state.oneCheck3 ? '&#10003;' : '&#9633;'}`
+                                                                        }}
+                                                                    />
+
+                                                                    4. An alien authorized to work until (expiration date, if
+                                                                    applicable, mm/dd/yyyy) : <input
                                                                         value={this.state.alienExplain}
                                                                         onChange={(e) => {
                                                                             this.setState({
@@ -938,22 +982,39 @@ class FormsI9 extends Component {
                                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                                         fontSize: '8pt'
                                                                     }}>
-                      <input
-                          value={this.state.preparer0}
-                          onChange={(e) => {
-                              this.setState({
-                                  preparer0: e.target.value
-                              })
-                          }}
-                          type="checkbox" id="preparer-0"/>I did not use a preparer or translator. <input
-                                                                        value={this.state.preparer1}
+                                                                    <input
+                                                                        checked={this.state.preparer0}
+                                                                        style={{display: "none"}}
                                                                         onChange={(e) => {
                                                                             this.setState({
-                                                                                preparer1: e.target.value
+                                                                                preparer0: e.target.checked,                                                                                
                                                                             })
                                                                         }}
-                                                                        type="checkbox" id="preparer-1"/>I A preparer(s) and/or translator(s) assisted the employee in
-                      completing Section 1.</span></p>
+                                                                        type="checkbox" id="preparer-0"
+                                                                    />
+                                                                    <label style={{fontSize: "18px", paddingLeft: "5px"}} htmlFor="preparer-0"
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: `${this.state.preparer0 ? '&#10003;' : '&#9633;'}`
+                                                                        }}
+                                                                    />
+                                                                    I did not use a preparer or translator.
+
+                                                                    <input
+                                                                        checked={this.state.preparer1}
+                                                                        style={{display: "none"}}
+                                                                        onChange={(e) => {
+                                                                            this.setState({
+                                                                                preparer1: e.target.checked,                                                                              
+                                                                            })
+                                                                        }}
+                                                                        type="checkbox" id="preparer-1"
+                                                                    />
+                                                                    <label style={{fontSize: "18px", paddingLeft: "5px"}} htmlFor="preparer-1"
+                                                                        dangerouslySetInnerHTML={{
+                                                                            __html: `${this.state.preparer1 ? '&#10003;' : '&#9633;'}`
+                                                                        }}
+                                                                    />
+                                                                    I A preparer(s) and/or translator(s) assisted the employee in completing Section 1.</span></p>
                                                                     <p><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
