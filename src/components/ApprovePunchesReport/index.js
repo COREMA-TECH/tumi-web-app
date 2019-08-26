@@ -220,11 +220,11 @@ class ApprovePunchesReport extends Component {
                                 </Typography>
                             </Toolbar>
                         </AppBar>
-                        <DialogContent style={{ marginTop: '90px' }}>
-                            <h5 className="text-success">
+                        <DialogContent style={{ marginTop: '90px', overflow: 'visible' }}>
+                            <h5 className="text-success mt-4">
                                 {`Punches Report ${startDate ? `From: ${moment(startDate).format("MM/DD/YYYY")}` : ''} ${endDate ? `To: ${moment(endDate).format("MM/DD/YYYY")}` : ''}`}
                             </h5>
-                            <div className="card" style={{ position: 'relative', overflow: 'hidden' }}>
+                            <div className="card" style={{ position: 'relative' }}>
                                 <DropDown data={this.state.modalDetailsData} handleEditModal={this.handleOpenTimeModal}></DropDown>
                             </div>
                         </DialogContent>
