@@ -87,7 +87,6 @@ class FormsW4 extends Component {
                         pdfUrl: data.applicantW4[0].url,
                         formData: JSON.parse(data.applicantW4[0].fieldsData)
                     }, _ => {
-                        console.log(this.state.formData)
                         this.loadDataFromJson(this.state.formData)
                     });
                 } else {
@@ -218,9 +217,6 @@ class FormsW4 extends Component {
 
             const { firstName, lastName, socialSecurityNumber: ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, socialSecurityExtention: sse, signature, estadoCivil, estadoCivil1, estadoCivil2 } = this.state;
             const jsonFields = JSON.stringify({ firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse, signature, estadoCivil, estadoCivil1, estadoCivil2 });
-
-            console.log("about to save");
-            console.log(jsonFields);
 
             this.props.client
                 .mutate({
