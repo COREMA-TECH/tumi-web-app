@@ -364,7 +364,6 @@ class FormsW4 extends Component {
                                                     {
                                                         localStorage.getItem('languageForm') == 'es' ? (
                                                             <div>
-                                                                <h1>This is loaded from the JSON</h1>
                                                                 <table style={{
                                                                     fontFamily: 'Times New Roman',
                                                                     fontSize: '11px',
