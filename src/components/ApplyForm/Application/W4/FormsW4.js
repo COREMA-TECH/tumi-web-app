@@ -47,7 +47,8 @@ class FormsW4 extends Component {
             estadoCivil: false,
             estadoCivil1: false,
             estadoCivil2: false,
-            pdfUrl: ''
+            pdfUrl: '',
+            formData: ''
         }
     }
 
@@ -83,9 +84,10 @@ class FormsW4 extends Component {
                     this.setState({
                         isCreated: true,
                         html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 65%;"', '') : '',
-                        pdfUrl: data.applicantW4[0].url
+                        pdfUrl: data.applicantW4[0].url,
+                        formData: JSON.parse(data.applicantW4[0].fieldsData)
                     }, _ => {
-                        
+                        this.loadDataFromJson(this.state.formData)
                     });
                 } else {
                     this.setState({
@@ -97,6 +99,27 @@ class FormsW4 extends Component {
 
             })
     };
+
+    loadDataFromJson = fieldsData => {
+        const { firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse, signature, estadoCivil, estadoCivil1, estadoCivil2 } = fieldsData;        
+
+        this.setState(_ => ({
+            firstName, 
+            lastName, 
+            socialSecurityNumber: ssn, 
+            idNumber, 
+            firstEmployeeDate, 
+            employeer, 
+            excention, 
+            payCheck, 
+            excentionYear, 
+            address, 
+            postalCode, 
+            socialSecurityExtention: sse, 
+            signature, 
+            estadoCivil, estadoCivil1, estadoCivil2
+        }));
+    }
 
     // insertW4 = (item) => {
     //     let harassmentObject = Object.assign({}, item);
@@ -169,7 +192,7 @@ class FormsW4 extends Component {
     };
 
 
-    downloadDocumentsHandler = (random) => {
+    downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + this.state.pdfUrl.replace(".", "");
         window.open(url, '_blank');
         this.setState({ downloading: false });
@@ -178,55 +201,30 @@ class FormsW4 extends Component {
 
 
     componentWillMount() {
-        //this.getHarrasmentInformation(this.props.applicationId);
-        this.getApplicantInformation(this.props.applicationId);
-        alert(this.props.applicationId);
+        this.getApplicantInformation(this.props.applicationId);        
     }
 
     validateW4 = () => {
         let firstNameField = document.getElementById('firstName');
         let lastNameField = document.getElementById('lastName');
         let socialSecurityNumberField = document.getElementById('socialSecurityNumber');
-        let idNumberField = document.getElementById('idNumber');
-        let firstEmployeeDateField = document.getElementById('firstEmployeeDate');
-        let employeerField = document.getElementById('employeer');
-        let excentionField = document.getElementById('excention');
-        let payCheckField = document.getElementById('payCheck');
-        let excentionYearField = document.getElementById('excention-year');
-        let addressField = document.getElementById('address');
-        let postalCodeField = document.getElementById('postalCode');
-        let socialSecurityExtentionField = document.getElementById('socialSecurityExtention');
-
 
         if (firstNameField.value.length > 0 &&
             lastNameField.value.length > 0 &&
             socialSecurityNumberField.value.length > 0) {
 
-            firstNameField.disabled = true;
-            lastNameField.disabled = true;
-            socialSecurityNumberField.disabled = true;
-            idNumberField.disabled = true;
-            firstEmployeeDateField.disabled = true;
-            employeerField.disabled = true;
-            excentionField.disabled = true;
-            payCheckField.disabled = true;
-            excentionYearField.disabled = true;
-            addressField.disabled = true;
-            postalCodeField.disabled = true;
-            socialSecurityExtentionField.disabled = true;
+            const html = this.cloneForm();
 
-
-            const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 65%;>').replace('<img src=""', `<img src="${this.state.signature}"`) : this.cloneForm();
-
-            const { firstName, lastName, socialSecurityNumber: ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, socialSecurityExtention: sse } = this.state;
-            const jsonFields = JSON.stringify({ firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse });
+            const { firstName, lastName, socialSecurityNumber: ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, socialSecurityExtention: sse, signature, estadoCivil, estadoCivil1, estadoCivil2 } = this.state;
+            const jsonFields = JSON.stringify({ firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse, signature, estadoCivil, estadoCivil1, estadoCivil2 });
 
             this.props.client
                 .mutate({
                     mutation: ADD_W4,
                     variables: {
                         html,
-                        ApplicantId: this.props.applicationId
+                        ApplicantId: this.props.applicationId,
+                        json: jsonFields
                     }
                 })
                 .then(({ data }) => {
@@ -320,9 +318,7 @@ class FormsW4 extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[10].label}</span>
                                 {
-                                    this.state.isCreated === null ? (
-                                        ''
-                                    ) : (
+                                        (
                                             this.state.isCreated ? (
                                                 <Fragment>
                                                     <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
@@ -361,21 +357,10 @@ class FormsW4 extends Component {
                                 }
                             </div>
                             {
-                                this.state.html.length > 0 ? (
-                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
-                                        <div className="row pdf-container" style={{maxWidth: '100%'}}>
-                                            <div className='signature-information' dangerouslySetInnerHTML={{
-                                                __html: `${this.state.html}`
-                                            }} />
-                                        </div>
-                                    </div>                                    
-                                ) : (
+                                    (
                                         <div style={{ width: '100%', margin: '0 auto' }}>
                                             <div className="row pdf-container" id="w4Html" style={{maxWidth: '100%'}}>
-                                                <div id="DocumentPDF" className="signature-information">
-                                                    {
-                                                        console.log("El lenguaje seleccionado es: ", localStorage.getItem('languageForm'))
-                                                    }
+                                                <div id="DocumentPDF" className="signature-information">                                                   
                                                     {
                                                         localStorage.getItem('languageForm') == 'es' ? (
                                                             <div>
@@ -570,13 +555,12 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             1 Su primer nombre e inicial del segundo
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0 }}
                                                                                 id="firstName"
                                                                                 value={this.state.firstName}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ firstName: e.target.value })
                                                                                 }}
                                                                             />
@@ -590,13 +574,12 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             Apellido
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0 }}
                                                                                 id="lastName"
                                                                                 value={this.state.lastName}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ lastName: e.target.value })
                                                                                 }}
                                                                             />
@@ -609,12 +592,11 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             <span style={{fontWeight: '900'}}>2 Su número de Seguro Social</span>
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text" style={{ width: '100%', border: 0 }}
                                                                                 id="socialSecurityNumber"
                                                                                 value={this.state.socialSecurityNumber}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ socialSecurityNumber: e.target.value })
                                                                                 }}
                                                                             />
@@ -633,7 +615,7 @@ class FormsW4 extends Component {
                                                                             <div data-font-name="g_d8_f3" data-angle={0}
                                                                                  data-canvas-width="218.47000000000006">Dirección (número de casa y calle o ruta rural)
                                                                                 <input
-                                                                                    disabled={this.state.isCreated}
+                                                                                    //disabled={this.state.isCreated}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0 }}
                                                                                     id="address"
@@ -715,7 +697,7 @@ class FormsW4 extends Component {
                                                                                  data-canvas-width="218.47000000000006">Ciudad o pueblo,
                                                                                 estado y código postal (ZIP)
                                                                                 <input
-                                                                                    disabled={this.state.isCreated}
+                                                                                    //disabled={this.state.isCreated}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0 }}
                                                                                     id="postalCode"
@@ -748,13 +730,12 @@ class FormsW4 extends Component {
                                                                                     reemplazo. ▶ 
                                                                                 </span>
                                                                                 <input
-                                                                                    disabled={this.state.isCreated}
+                                                                                    //disabled={this.state.isCreated}
                                                                                     type="checkbox"
                                                                                     id="socialSecurityExtention"
                                                                                     value={this.state.socialSecurityExtention}
                                                                                     defaultChecked={this.state.socialSecurityExtention}
                                                                                     onClick={(e) => {
-                                                                                        console.log(e.target.checked);
                                                                                         this.setState({ socialSecurityExtention: e.target.checked })
                                                                                     }}
                                                                                 />
@@ -848,13 +829,12 @@ class FormsW4 extends Component {
                                                                                         borderBottom: 'solid 1px #000'
                                                                                     }}>
                                                                                         <input
-                                                                                            disabled={this.state.isCreated}
+                                                                                            //disabled={this.state.isCreated}
                                                                                             type="text"
                                                                                             style={{ border: 0, height: '16.5px' }}
                                                                                             id="excention"
                                                                                             value={this.state.excention}
                                                                                             onChange={(e) => {
-                                                                                                console.log(e.target.value);
                                                                                                 this.setState({ excention: e.target.value })
                                                                                             }}
                                                                                         />
@@ -867,13 +847,12 @@ class FormsW4 extends Component {
                                                                                         borderBottom: 'solid 1px #000'
                                                                                     }}>
                                                                                         <input
-                                                                                            disabled={this.state.isCreated}
+                                                                                            //disabled={this.state.isCreated}
                                                                                             type="text"
                                                                                             style={{ border: 0, height: '16.5px' }}
                                                                                             id="payCheck"
                                                                                             value={this.state.payCheck}
                                                                                             onChange={(e) => {
-                                                                                                console.log(e.target.value);
                                                                                                 this.setState({ payCheck: e.target.value })
                                                                                             }}
                                                                                         />
@@ -891,7 +870,7 @@ class FormsW4 extends Component {
                                                                                 <tr>
                                                                                     <td style={{ lineHeight: "1.5", verticalAlign: 'top' }}>
                                                                                         <input
-                                                                                            disabled={this.state.isCreated}
+                                                                                            //disabled={this.state.isCreated}
                                                                                             type="text"
                                                                                             style={{ border: 0, height: '16.5px' }}
                                                                                             id="excention-year"
@@ -950,7 +929,7 @@ class FormsW4 extends Component {
                                                                 {/*Dirección (número de casa y*/}
                                                                 {/*calle o ruta rural)*/}
                                                                 {/*<input*/}
-                                                                {/*disabled={this.state.isCreated}*/}
+                                                                {/*//disabled={this.state.isCreated}*/}
                                                                 {/*type="text"*/}
                                                                 {/*style={{ width: '100%', border: 0 }}*/}
                                                                 {/*id="address"*/}
@@ -995,12 +974,11 @@ class FormsW4 extends Component {
                                                                             (Directorio
                                                                             estatal de personas recién empleadas).
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text" style={{ width: '100%', border: 0 }}
                                                                                 id="employeer"
                                                                                 value={this.state.employeer}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ employeer: e.target.value })
                                                                                 }}
                                                                             />
@@ -1013,13 +991,12 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             9 Primera fecha de empleo
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0, height: '65px' }}
                                                                                 id="firstEmployeeDate"
                                                                                 value={this.state.firstEmployeeDate}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ firstEmployeeDate: e.target.value })
                                                                                 }}
                                                                             />
@@ -1032,13 +1009,12 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             10 Número de identificación del empleador(EIN)
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0, height: '65px' }}
                                                                                 id="idNumber"
                                                                                 value={this.state.idNumber}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ idNumber: e.target.value })
                                                                                 }}
                                                                             />
@@ -1295,7 +1271,7 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             1 Your first name and middle initial
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0 }}
                                                                                 id="firstName"
@@ -1314,13 +1290,12 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             Last name
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0 }}
                                                                                 id="lastName"
                                                                                 value={this.state.lastName}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ lastName: e.target.value })
                                                                                 }}
                                                                             />
@@ -1333,12 +1308,11 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             <span style={{fontWeight: '900'}}>2 Your social security Number</span>
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text" style={{ width: '100%', border: 0 }}
                                                                                 id="socialSecurityNumber"
                                                                                 value={this.state.socialSecurityNumber}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ socialSecurityNumber: e.target.value })
                                                                                 }}
                                                                             />
@@ -1357,7 +1331,7 @@ class FormsW4 extends Component {
                                                                             <div data-font-name="g_d8_f3" data-angle={0}
                                                                                  data-canvas-width="218.47000000000006">Home address (number and street or rural route)
                                                                                 <input
-                                                                                    disabled={this.state.isCreated}
+                                                                                    //disabled={this.state.isCreated}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0 }}
                                                                                     id="address"
@@ -1390,7 +1364,7 @@ class FormsW4 extends Component {
                                                                                 defaultChecked={this.state.estadoCivil}
                                                                                 onChange={(e) => {
                                                                                     this.setState({
-                                                                                        estadoCivil: e.target.checked,
+                                                                                        estadoCivil: true,
                                                                                         estadoCivil1: false,
                                                                                         estadoCivil2: false,
                                                                                     })
@@ -1403,9 +1377,7 @@ class FormsW4 extends Component {
                                                                                         __html: `${this.state.estadoCivil ? '&#10003;' : '&#9633;'}`
                                                                                     }}
                                                                                 />
-                                                                                Single&nbsp;&nbsp;
-
-                                                                            />  <span style={{paddingRight: "5px", paddingLeft: "5px", paddingTop: "5px", textIndent: "5px"}}>Single</span>
+                                                                                Single&nbsp;&nbsp;                                                                              
 
                                                                                 <input
                                                                                     type="radio"
@@ -1416,7 +1388,7 @@ class FormsW4 extends Component {
                                                                                     style={{paddingTop: "5px"}}
                                                                                     onChange={(e) => {
                                                                                         this.setState({
-                                                                                            estadoCivil1: e.target.checked,
+                                                                                            estadoCivil1: true,
                                                                                             estadoCivil: false,
                                                                                             estadoCivil2: false,
                                                                                         })
@@ -1433,7 +1405,7 @@ class FormsW4 extends Component {
                                                                                 <input type="checkbox" 
                                                                                     onChange={(e) => {
                                                                                         this.setState({
-                                                                                            estadoCivil2: e.target.checked,
+                                                                                            estadoCivil2: true,
                                                                                             estadoCivil: false,
                                                                                             estadoCivil1: false,
                                                                                         })
@@ -1450,9 +1422,9 @@ class FormsW4 extends Component {
                                                                                 Married, but withhold at higher Single rate&nbsp;&nbsp;
                                                                                 <span style={{fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
 
-                                                                                /> <span style={{paddingRight: "5px", paddingLeft: "5px", paddingTop: "5px", textIndent: "5px"}}>Married</span>
+                                                                                {/* <span style={{paddingRight: "5px", paddingLeft: "5px", paddingTop: "5px", textIndent: "5px"}}>Married</span>
                                                                                 <input style={{paddingTop: "5px",textIndent: "8px"}} type="checkbox" /> Married, but withhold at higher Single rate  
-                                                                                <span style={{paddingTop: "5px",fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
+                                                                                <span style={{paddingTop: "5px",fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.” */}
 
                                                                             </div>
                                                                         </td>
@@ -1471,7 +1443,7 @@ class FormsW4 extends Component {
                                                                             <div data-font-name="g_d8_f3" data-angle={0}
                                                                                  data-canvas-width="218.47000000000006">City or town, state, and ZIP code
                                                                                 <input
-                                                                                    disabled={this.state.isCreated}
+                                                                                    //disabled={this.state.isCreated}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0 }}
                                                                                     id="postalCode"
@@ -1496,13 +1468,12 @@ class FormsW4 extends Component {
                                                                             <div data-font-name="g_d8_f2" data-angle={0}
                                                                                  data-canvas-width="408.9536499999999"><strong>4  If your last name differs from that shown on your social security card, check here. You must call 800-772-1213 for a replacement card. ▶
                                                                                 <input
-                                                                                    disabled={this.state.isCreated}
+                                                                                    //disabled={this.state.isCreated}
                                                                                     type="checkbox"
                                                                                     id="socialSecurityExtention"
                                                                                     value={this.state.socialSecurityExtention}
                                                                                     checked={this.state.socialSecurityExtention}
                                                                                     onClick={(e) => {
-                                                                                        console.log(e.target.checked);
                                                                                         this.setState({ socialSecurityExtention: e.target.checked })
                                                                                     }}
                                                                                     style={{display: "none"}}
@@ -1586,7 +1557,7 @@ class FormsW4 extends Component {
                                                                                         borderBottom: 'solid 1px #000'
                                                                                     }}>
                                                                                         <input
-                                                                                            disabled={this.state.isCreated}
+                                                                                            //disabled={this.state.isCreated}
                                                                                             type="text"
                                                                                             style={{ border: 0, height: '16.5px' }}
                                                                                             id="excention"
@@ -1604,7 +1575,7 @@ class FormsW4 extends Component {
                                                                                         borderBottom: 'solid 1px #000'
                                                                                     }}>
                                                                                         <input
-                                                                                            disabled={this.state.isCreated}
+                                                                                            //disabled={this.state.isCreated}
                                                                                             type="text"
                                                                                             style={{ border: 0, height: '16.5px' }}
                                                                                             id="payCheck"
@@ -1627,7 +1598,7 @@ class FormsW4 extends Component {
                                                                                 <tr>
                                                                                     <td style={{ lineHeight: "1.5", verticalAlign: 'top' }}>
                                                                                         <input
-                                                                                            disabled={this.state.isCreated}
+                                                                                            //disabled={this.state.isCreated}
                                                                                             type="text"
                                                                                             style={{ border: 0, height: '16.5px' }}
                                                                                             id="excention-year"
@@ -1677,12 +1648,11 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             8 Employer’s name and address (Employer: Complete boxes 8 and 10 if sending to IRS and complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text" style={{ width: '100%', border: 0 }}
                                                                                 id="employeer"
                                                                                 value={this.state.employeer}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ employeer: e.target.value })
                                                                                 }}
                                                                             />
@@ -1695,13 +1665,12 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             9 First date of employment
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0, height: '65px' }}
                                                                                 id="firstEmployeeDate"
                                                                                 value={this.state.firstEmployeeDate}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ firstEmployeeDate: e.target.value })
                                                                                 }}
                                                                             />
@@ -1714,13 +1683,12 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             Employer identification number (EIN)
                                                                             <input
-                                                                                disabled={this.state.isCreated}
+                                                                                //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0, height: '65px' }}
                                                                                 id="idNumber"
                                                                                 value={this.state.idNumber}
                                                                                 onChange={(e) => {
-                                                                                    console.log(e.target.value);
                                                                                     this.setState({ idNumber: e.target.value })
                                                                                 }}
                                                                             />

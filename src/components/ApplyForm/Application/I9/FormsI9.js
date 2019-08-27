@@ -11,8 +11,6 @@ import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
-const uuidv4 = require('uuid/v4');
-
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -46,6 +44,7 @@ class FormsI9 extends Component {
             oneCheck2: false,
             oneCheck3: false,
             pdfUrl: '',
+            formData: ''
         }
     }
 
@@ -54,7 +53,6 @@ class FormsI9 extends Component {
         let contentPDFClone = contentPDF.cloneNode(true);
         return `<html style="zoom: 50%;">${contentPDFClone.innerHTML}</html>`;
     }
-
 
     handleSignature = (value) => {
         let signType = this.state.signType;
@@ -117,8 +115,12 @@ class FormsI9 extends Component {
                     this.setState({
                         isCreated: true,
                         html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 50%;"', '') : '',
-                        pdfUrl: data.applicantI9[0].url
-
+                        pdfUrl: data.applicantI9[0].url,
+                        formData: JSON.parse(data.applicantI9[0].fieldsData)
+                    }, _ => {
+                        if(this.state.formData) {
+                            this.loadDataFromJson(this.state.formData);
+                        }
                     });
                 } else {
                     this.setState({
@@ -161,6 +163,20 @@ class FormsI9 extends Component {
             });
     };
 
+    loadDataFromJson = fieldsData => {
+        const { lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state, zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
+            alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance, signature, todayDate, preparer0, preparer1, signature1, todayDate2, lastName2, firstName2, address2, city2, state2, zipCode2,
+            docTitle, Issuing, docNumber, expireDate2, docTitle2, Issuing2, docNumb3, expDate3, docT15, IssuingT15, docT16, docT17, docT18, docT19, docT20, docT21, docT22, docL1, docL2, docL3, signature2, docL5,
+            docL6, docL7, docL8, docL9, docP1, docP2, docP3, signature4, todayDateDay1, empAuth15 } = fieldsData;     
+
+        this.setState(_ => ({
+            lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state, zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
+            alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance, signature, todayDate, preparer0, preparer1, signature1, todayDate2, lastName2, firstName2, address2, city2, state2, zipCode2,
+            docTitle, Issuing, docNumber, expireDate2, docTitle2, Issuing2, docNumb3, expDate3, docT15, IssuingT15, docT16, docT17, docT18, docT19, docT20, docT21, docT22, docL1, docL2, docL3, signature2, docL5,
+            docL6, docL7, docL8, docL9, docP1, docP2, docP3, signature4, todayDateDay1, empAuth15
+        }));    
+    }
+
 
     downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + this.state.pdfUrl.replace(".", "");
@@ -188,23 +204,25 @@ class FormsI9 extends Component {
 
 
     validateI9 = () => {
+        const html = this.cloneForm();
 
-        let documentPDF = document.getElementById('DocumentPDF');
-        
-        if(documentPDF){
-            let inputs = documentPDF.getElementsByTagName('input');
-            for (let i = 0; i < inputs.length; i++) {
-                inputs[i].disabled = true;
-            }
-        }
+        const { lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state, zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
+            alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance, signature, todayDate, preparer0, preparer1, signature1, todayDate2, lastName2, firstName2, address2, city2, state2, zipCode2,
+            docTitle, Issuing, docNumber, expireDate2, docTitle2, Issuing2, docNumb3, expDate3, docT15, IssuingT15, docT16, docT17, docT18, docT19, docT20, docT21, docT22, docL1, docL2, docL3, signature2, docL5,
+            docL6, docL7, docL8, docL9, docP1, docP2, docP3, signature4, todayDateDay1, empAuth15 } = this.state;        
 
-        const html = this.state.html ? this.state.html.replace('<html >', '<html style="zoom: 45%;>').replace('<img id="employee-signature-box" src=""', `<img id="employee-signature-box" src="${this.state.signature}"`) : this.cloneForm();
+        const jsonFields = JSON.stringify({ lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state, zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
+            alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance, signature, todayDate, preparer0, preparer1, signature1, todayDate2, lastName2, firstName2, address2, city2, state2, zipCode2,
+            docTitle, Issuing, docNumber, expireDate2, docTitle2, Issuing2, docNumb3, expDate3, docT15, IssuingT15, docT16, docT17, docT18, docT19, docT20, docT21, docT22, docL1, docL2, docL3, signature2, docL5,
+            docL6, docL7, docL8, docL9, docP1, docP2, docP3, signature4, todayDateDay1, empAuth15 });
+
         this.props.client
             .mutate({
                 mutation: ADD_I9,
                 variables: {
                     html,
                     ApplicantId: this.props.applicationId,
+                    json: jsonFields
                 }
             })
             .then(({data}) => {
@@ -269,9 +287,7 @@ class FormsI9 extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[8].label}</span>
                                 {
-                                    this.state.isCreated === null ? (
-                                        ''
-                                    ) : (
+                                    (
                                         this.state.isCreated ? (
 
                                             <Fragment>
@@ -304,17 +320,7 @@ class FormsI9 extends Component {
                                 }
                             </div>
                             {
-                                this.state.html.length > 0 ? (
-
-                                    <div id="pdf-ready" style={{ width: '100%', margin: '0 auto' }}>
-                                        <div className="row pdf-container" style={{maxWidth: '100%'}}>
-                                            <div id="DocumentPDF" className='signature-information' dangerouslySetInnerHTML={{
-                                                __html: `${this.state.html}`
-                                            }} />
-                                        </div>
-                                    </div>    
-
-                                ) : (
+                                (
                                     <div style={{width: '100%', margin: '0 auto'}}>
                                         <div className="row pdf-container" id="i9Html" style={{maxWidth: '100%'}}>
                                             <div id="DocumentPDF" className="signature-information">
@@ -1050,7 +1056,7 @@ class FormsI9 extends Component {
                                                                         backgroundColor: '#f9f9f9',
                                                                         cursor: 'pointer'
                                                                     }} onClick={() => {
-                                                                        if (this.state.isCreated === false) {
+                                                                        
                                                                             this.setState({
                                                                                 signType: 1
                                                                             }, () => {
@@ -1058,7 +1064,7 @@ class FormsI9 extends Component {
                                                                                     openSignature: true,
                                                                                 })
                                                                             });
-                                                                        }
+                                                                        
                                                                     }}
                                                    src={this.state.signature1} alt=""/></span></td>
                                                                 <td style={{width: '34.7021%'}}><span style={{
@@ -1825,7 +1831,7 @@ class FormsI9 extends Component {
                                                                         backgroundColor: '#f9f9f9',
                                                                         cursor: 'pointer'
                                                                     }} onClick={() => {
-                                                                        if (this.state.isCreated === false) {
+                                                                        
                                                                             this.setState({
                                                                                 signType: 2
                                                                             }, () => {
@@ -1833,7 +1839,7 @@ class FormsI9 extends Component {
                                                                                     openSignature: true,
                                                                                 })
                                                                             });
-                                                                        }
+                                                                        
                                                                     }}
                                                                   src={this.state.signature2} alt=""/></span></td>
                                                                 <td style={{width: '19.431%'}}><span style={{
@@ -2181,7 +2187,7 @@ class FormsI9 extends Component {
                                                                         backgroundColor: '#f9f9f9',
                                                                         cursor: 'pointer'
                                                                     }} onClick={() => {
-                                                                        if (this.state.isCreated === false) {
+                                                                        
                                                                             this.setState({
                                                                                 signType: 4
                                                                             }, () => {
@@ -2189,7 +2195,7 @@ class FormsI9 extends Component {
                                                                                     openSignature: true,
                                                                                 })
                                                                             });
-                                                                        }
+                                                                        
                                                                     }}
                                                                   src={this.state.signature4} alt=""/></span></td>
                                                                 <td style={{width: '27.0634%'}}><span style={{

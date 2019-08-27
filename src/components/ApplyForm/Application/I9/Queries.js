@@ -13,6 +13,7 @@ export const GET_APPLICANT_INFO = gql`
                 id
                 html
                 url
+                fieldsData
           }
     }
 `;
