@@ -144,7 +144,12 @@ class ConductCode extends Component {
 			.mutate({
 				mutation: UPDATE_CONDUCT_CODE,
 				variables: {
-					conductCode: {id: this.state.id, pdfUrl: this.state.urlPDF}
+					conductCode: {
+						id: this.state.id,
+						pdfUrl: this.state.urlPDF,
+						content: this.state.content,
+						ApplicationId: this.state.ApplicationId
+					}
 				}
 			})
 			.catch((error) => {
@@ -199,6 +204,7 @@ class ConductCode extends Component {
 
 	downloadDocumentsHandler = () => {
 		var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF;
+		console.log('mostrando base url', this.context.baseUrl); // TODO: (LF) Quitar console log
 		window.open(url, '_blank');
 		this.setState({ downloading: false });
 	};
