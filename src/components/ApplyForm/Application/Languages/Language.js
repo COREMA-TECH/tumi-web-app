@@ -201,6 +201,7 @@ class Language extends Component {
 										.getElementById('conversationLanguage')
 										.classList.remove('invalid-apply-form');
 									document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
+									this.insertLanguagesApplication();
 								}
 							);
 						}}
@@ -366,40 +367,7 @@ class Language extends Component {
 								) : (
 										renderlanguagesSection()
 									)}
-							</div>
-							{this.state.editing ? (
-								<div className="applicant-card__footer">
-									<button
-										className="applicant-card__cancel-button"
-										onClick={() => {
-											this.setState(
-												(prevState) => ({
-													languages: this.state.languages.filter((_, i) => {
-														return _.id !== undefined;
-													})
-												}),
-												() => {
-													this.setState({
-														editing: false
-													});
-												}
-											);
-										}}
-									>
-										{spanishActions[2].label}
-									</button>
-									<button
-										onClick={() => {
-											this.insertLanguagesApplication();
-										}}
-										className="applicant-card__save-button"
-									>
-										{spanishActions[4].label}
-									</button>
-								</div>
-							) : (
-									''
-								)}
+							</div>							
 						</div>
 					</div>
 				</div>
