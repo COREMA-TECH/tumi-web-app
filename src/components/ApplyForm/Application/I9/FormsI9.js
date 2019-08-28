@@ -35,7 +35,6 @@ class FormsI9 extends Component {
             companyPhoneNumber: '',
             ApplicationId: this.props.applicationId,
 
-
             isCreated: null,
             html: '',
 
