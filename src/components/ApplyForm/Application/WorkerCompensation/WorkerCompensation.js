@@ -5,7 +5,7 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import renderHTML from 'react-render-html';
 import { CREATE_DOCUMENTS_PDF_QUERY, GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO } from "./Queries";
 import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
-import { ADD_WORKER_COMPENSATION } from "./Mutations";
+import { ADD_WORKER_COMPENSATION, UPDATE_WORKER_COMPENSATION } from "./Mutations";
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "../../../Generic/Global";
 import SignatureForm from "../../SignatureForm/SignatureForm";
@@ -40,7 +40,8 @@ class WorkerCompensation extends Component {
             initialNotification: false,
             injuryNotification: false,
             injuryDate: '',
-            completed: false
+            completed: false,
+            urlPDF: null
         }
     }
 
@@ -73,9 +74,15 @@ class WorkerCompensation extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then((data) => {
-                if (data.data.createdocumentspdf != null) {
-                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+            .then(({data}) => {
+                if (data.createdocumentspdf !== null) {
+                    this.setState({
+                        urlPDF: data.createdocumentspdf,
+                        loadingData: false
+                    }, () => {
+                        this.UpdatePdfUrlWorkerCompensation();
+                        this.downloadDocumentsHandler();
+                    });
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',
@@ -91,11 +98,19 @@ class WorkerCompensation extends Component {
     };
 
 
-    downloadDocumentsHandler = (uuid) => {
-        var url = this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + uuid + "-" + this.state.applicantName + '.pdf';
-        window.open(url, '_blank');
-        this.setState({ downloading: false });
+    downloadDocumentsHandler = () => {
+        var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + uuid + "-" + this.state.applicantName + '.pdf';
+        if(url)
+            window.open(url, '_blank');
+        else
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error to open Worker Compensation document.',
+                'bottom',
+                'right'
+            );
 
+        this.setState({ downloading: false });
     };
 
     insertWorkerCompensation = (item) => {
@@ -131,6 +146,30 @@ class WorkerCompensation extends Component {
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error to sign Worker Compensation document. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
+    UpdatePdfUrlWorkerCompensation = () => {
+        this.props.client
+            .mutate({
+                mutation: UPDATE_WORKER_COMPENSATION,
+                variables: {
+                    workerCompensation: {
+                        id: this.state.id,
+						pdfUrl: this.state.urlPDF,
+						content: this.state.content || '',
+						ApplicationId: this.state.ApplicationId
+                    }
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to updating url Worker Compensation document.',
                     'bottom',
                     'right'
                 );
@@ -186,7 +225,8 @@ class WorkerCompensation extends Component {
                         applicantZipCode: data.applications[0].workerCompensation.applicantZipCode,
                         initialNotification: data.applications[0].workerCompensation.initialNotification,
                         injuryNotification: data.applications[0].workerCompensation.injuryNotification,
-                        injuryDate: data.applications[0].workerCompensation.injuryDate === null ? "" : data.applications[0].workerCompensation.injuryDate.substring(0, 10)
+                        injuryDate: data.applications[0].workerCompensation.injuryDate === null ? "" : data.applications[0].workerCompensation.injuryDate.substring(0, 10),
+                        urlPDF: data.applications[0].workerCompensation.pdfUrl,
                     });
                 } else {
                     this.setState({
@@ -250,6 +290,16 @@ class WorkerCompensation extends Component {
                 );
             })
     };
+
+    handlePdfDownload = () => {
+        if(this.state.urlPDF){
+            this.downloadDocumentsHandler();
+        }
+        else {
+            const uuid = uuidv4();
+            this.createDocumentsPDF(uuid);
+        }
+    }
 
     componentWillMount() {
         this.getWorkerCompensationInformation(this.props.applicationId);
@@ -428,15 +478,8 @@ class WorkerCompensation extends Component {
                                             <div>
                                                 {
                                                     this.state.id !== null ? (
-                                                        <button className="applicant-card__edit-button" onClick={() => {
-                                                            const uuid = uuidv4();
-                                                            this.createDocumentsPDF(uuid);
-                                                            this.sleep().then(() => {
-                                                                this.downloadDocumentsHandler(uuid);
-                                                            }).catch(error => {
-                                                                this.setState({ downloading: false })
-                                                            })
-                                                        }}>{this.state.downloading && (
+                                                        <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+                                                            {this.state.downloading && (
                                                             <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
                                                             {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
                                                                 className="fas fa-download" /></React.Fragment>)}

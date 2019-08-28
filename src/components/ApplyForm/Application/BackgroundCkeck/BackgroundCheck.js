@@ -68,7 +68,8 @@ class BackgroundCheck extends Component {
             statesCompletes: [],
 
 
-            loadingApplicantData: false
+            loadingApplicantData: false,
+            urlPDF: null
         }
     }
 
@@ -239,6 +240,7 @@ class BackgroundCheck extends Component {
                             signature: data.applications[0].backgroundCheck.signature,
                             date: data.applications[0].backgroundCheck.date.substring(0, 10),
                             loadedBackgroundCheckById: true,
+                            urlPDF: data.applications[0].backgroundCheck.pdfUrl,
                             editing: true,
                             accept: true,
                             isCreated: true
@@ -367,6 +369,31 @@ class BackgroundCheck extends Component {
         });
     };
 
+    updatePdfUrlBackgroundCheck = () => {
+        console.log('mostrando url PDF', this.state.urlPDF); // TODO: (LF) Quitar console log
+        this.props.client
+            .mutate({
+                mutation: UPDATE_BACKGROUND_CHECK,
+                variables: {
+                    backgroundCheck: {
+                        id: this.state.id,
+						pdfUrl: this.state.urlPDF,
+						content: this.state.content || '',
+						ApplicationId: this.props.applicationId
+                    }
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to updating url background check',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
     handleSignature = (value) => {
         this.setState({
             signature: value,
@@ -467,13 +494,25 @@ class BackgroundCheck extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then((data) => {
-                if (data.data.createdocumentspdf === null) {
+            .then(({data}) => {
+                if (data.createdocumentspdf !== null) {
+                    this.setState({ 
+                        urlPDF: data.createdocumentspdf,
+                        loadingData: false
+                    }, () => {
+                        this.updatePdfUrlBackgroundCheck();
+                        this.downloadDocumentsHandler();
+                    });
+                }
+                else {
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({ loadingData: false, downloading: false });
+                    this.setState({
+                        loadingData: false,
+                        downloading: false 
+                    });
                 }
             })
             .catch((error) => {
@@ -483,8 +522,8 @@ class BackgroundCheck extends Component {
     };
 
 
-    downloadDocumentsHandler = (random) => {
-        var url = this.context.baseUrl + '/public/Documents/' + "background-check-" + random + '.pdf';
+    downloadDocumentsHandler = () => {
+        var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "background-check-" + random + '.pdf';
         window.open(url, '_blank');
         this.setState({ downloading: false });
     };
@@ -493,6 +532,20 @@ class BackgroundCheck extends Component {
         return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
+    handlePdfDownload = () => {
+        if(this.state.urlPDF){
+            this.downloadDocumentsHandler();
+        }
+        else {
+            let random = uuidv4();
+            this.createDocumentsPDF(random);
+            // this.sleep().then(() => {
+            //     this.downloadDocumentsHandler();
+            // }).catch(error => {
+            //     this.setState({ downloading: false })
+            // })
+        }
+    }
 
 
     render() {
@@ -557,16 +610,8 @@ class BackgroundCheck extends Component {
                                 <div>
                                     {
                                         this.state.isCreated && !this.state.loadingApplicantData ? (
-                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                let random = uuidv4();
-
-                                                this.createDocumentsPDF(random);
-                                                this.sleep().then(() => {
-                                                    this.downloadDocumentsHandler(random);
-                                                }).catch(error => {
-                                                    this.setState({ downloading: false })
-                                                })
-                                            }}>{this.state.downloading && (
+                                            <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+                                            {this.state.downloading && (
                                                 <React.Fragment>Downloading <i
                                                     className="fas fa-spinner fa-spin" /></React.Fragment>)}
                                                 {!this.state.downloading && (

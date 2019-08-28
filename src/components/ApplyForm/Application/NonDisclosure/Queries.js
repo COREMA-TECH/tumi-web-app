@@ -10,6 +10,7 @@ export const GET_DISCLOSURE_INFO = gql`
                 content
                 date
                 applicantName
+                pdfUrl
             }
         }
     }

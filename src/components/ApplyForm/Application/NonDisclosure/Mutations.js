@@ -10,3 +10,11 @@ export const ADD_NON_DISCLOSURE = gql`
         }
     }
 `;
+
+export const UPDATE_NON_DISCLOSURE = gql`
+    mutation updateDisclosure($disclosure: inputUpdateApplicantDisclosure) {
+        updateDisclosure(disclosure: $disclosure) {
+            id
+        }
+    }
+`;

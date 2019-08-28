@@ -187,7 +187,10 @@ class ConductCode extends Component {
 					//this.state.urlPDF = data.data.createdocumentspdf;
 					this.setState({
 						urlPDF: data.createdocumentspdf
-					}, () => this.updateConductCode());
+					}, () => {
+						this.updateConductCode(); 
+						this.downloadDocumentsHandler();
+					});
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
@@ -204,7 +207,6 @@ class ConductCode extends Component {
 
 	downloadDocumentsHandler = () => {
 		var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF;
-		console.log('mostrando base url', this.context.baseUrl); // TODO: (LF) Quitar console log
 		window.open(url, '_blank');
 		this.setState({ downloading: false });
 	};
@@ -225,11 +227,11 @@ class ConductCode extends Component {
 		else {
 			let random = uuidv4();
 			this.createDocumentsPDF(random);
-			this.sleep().then(() => {
-				this.downloadDocumentsHandler();
-			}).catch(error => {
-				this.setState({ downloading: false })
-			});
+			// this.sleep().then(() => {
+			// 	this.downloadDocumentsHandler();
+			// }).catch(error => {
+			// 	this.setState({ downloading: false })
+			// });
 		}
 	}
 

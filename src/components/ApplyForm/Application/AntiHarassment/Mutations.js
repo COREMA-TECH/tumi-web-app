@@ -10,3 +10,11 @@ export const ADD_ANTI_HARASSMENT = gql`
         }
     }
 `;
+
+export const UPDATE_ANTI_HARASSMENT = gql`
+    mutation updateHarassmentPolicy($harassmentPolicy: inputUpdateApplicantHarassmentPolicy) {
+        updateHarassmentPolicy(harassmentPolicy: $harassmentPolicy) {
+            id
+        }
+    }
+`;
