@@ -27,12 +27,6 @@ import ApplicationList from '../../ApplyForm/ApplicationList/ApplicationList';
 import Schedules from '../../Schedules';
 import PunchesReportConsolidated from '../../PunchesReportConsolidated';
 
-const STEPS = [
-    'General',
-    'Employees',
-    'Schedules',
-    'Punches'
-];
 
 const styles = theme => ({
     stepper: {
@@ -116,8 +110,7 @@ class GeneralInfoProperty extends Component {
             isCorrectCity: true,
             changeCity: false,
             parentDescription: '',
-            operationManagerDescription: '',
-            propertyBasicInfo: {}
+            operationManagerDescription: ''
         };
     }
 
@@ -890,8 +883,7 @@ class GeneralInfoProperty extends Component {
                                     changeCity: false,
                                     linearProgress: false,
                                     startWeekName: days[item.Start_Week - 1].Name,
-                                    endWeekName: days[item.End_Week - 1].Name,
-                                    propertyBasicInfo: {id: item.Id, name: item.Name.trim()}
+                                    endWeekName: days[item.End_Week - 1].Name
                                 }
                             });
                         }
@@ -917,7 +909,7 @@ class GeneralInfoProperty extends Component {
                 if (data.data.getbusinesscompanies != null) {
 
                     var found = data.data.getbusinesscompanies.find(company => {
-                        return company.Id != this.props.idProperty && company.Code.trim().toUpperCase() == this.state.Code.trim().toUpperCase()
+                        return company.Id !== this.props.idProperty && company.Code.trim().toUpperCase() === this.state.Code.trim().toUpperCase()
                     });
 
                     if (found) {
@@ -1636,8 +1628,9 @@ class GeneralInfoProperty extends Component {
     }
 
     getStepContent = () => {
-        const { classes, handleOpenSnackbar } = this.props;
-        const { avatar, activeStep } = this.state;
+        const { classes, handleOpenSnackbar, idProperty } = this.props;
+        const { avatar, activeStep, name } = this.state;
+        const propertyBasicInfo = {id: idProperty, name };
         const leftStepper = <LeftStepper 
                                 avatar={avatar} 
                                 classes={classes} 
@@ -1651,11 +1644,11 @@ class GeneralInfoProperty extends Component {
             case 0:
                 return this.getGeneralInformation(leftStepper);
             case 1:
-                return <ApplicationList propertyInfo={this.state.propertyBasicInfo} leftStepperComponent={leftStepper} />
+                return <ApplicationList propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
             case 2:
-                return <Schedules propertyInfo={this.state.propertyBasicInfo} leftStepperComponent={leftStepper} />
+                return <Schedules propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
             case 3:
-                return <PunchesReportConsolidated propertyInfo={this.state.propertyBasicInfo} leftStepperComponent={leftStepper} />
+                return <PunchesReportConsolidated propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
         }
     };
 

@@ -195,6 +195,14 @@ class Schedules extends Component {
         />;
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.propertyInfo) {
+            this.setState(() => {
+                return {location: nextProps.propertyInfo.id}
+            });
+        }
+    }
+
     componentWillMount() {
         if(this.props.propertyInfo){
             this.setState(() => {

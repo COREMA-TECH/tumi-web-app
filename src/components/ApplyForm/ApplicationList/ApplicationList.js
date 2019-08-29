@@ -298,6 +298,13 @@ class ApplicationList extends Component {
 
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.propertyInfo){
+			let propertyInfo = this.props.propertyInfo;
+			this.handlePropertyChange({ value: propertyInfo.id, label: propertyInfo.name });
+		}
+	}
+
 	componentWillMount() {
 		//handlePropertyChange
 		if(this.props.propertyInfo){

@@ -37,6 +37,12 @@ class PunchesReportConsolidated extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.propertyInfo) {
+            let { id, name } = nextProps.propertyInfo;
+            this.changeFilter({ value: id, label: name });
+        }
+    }
 
     componentWillMount() {
         this.getDepartments();
