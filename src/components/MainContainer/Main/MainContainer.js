@@ -52,6 +52,9 @@ class MainContainer extends Component {
 		if (str.toLowerCase() === "/home/application/Form".toLowerCase())
 			title = "Application form"
 
+		if (str.toLowerCase() === "/home/punches/report/consolidated".toLowerCase())
+			title = "Punches Report"
+
 		return title;
 	};
 
