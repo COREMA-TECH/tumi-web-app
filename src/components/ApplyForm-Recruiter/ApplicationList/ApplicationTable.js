@@ -236,7 +236,7 @@ class ApplicationTable extends React.Component {
 											</CustomTableCell>
 											<CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
-											<CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
+											<CustomTableCell>{row.user && row.sendInterview ? row.user.Full_Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>
 

@@ -220,16 +220,16 @@ class HotelList extends Component {
                                         <i className="fas fa-trash"></i>
                                     </button>
                                 </div>
-                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
+                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent)} className={hotel.Id_Parent === 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
                                     <div className="HotelCard-img">
                                         <figure>
                                             <img src={`${hotel.ImageURL}`} alt="" />
                                         </figure>
                                     </div>
                                     <div className="HotelCard-info">
-                                        <span className="HotelCard-title">
-                                            {`${hotel.Name}`}                                           
-                                        </span>
+                                        <div className="HotelCard-title">
+                                            {`${hotel.Name.trim()}`}
+                                        </div>
                                     </div>
                                 </a>
                             </div>

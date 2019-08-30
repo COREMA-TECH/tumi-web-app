@@ -216,7 +216,7 @@ class hotels extends Component {
                                                 <i className="fas fa-trash"></i>
                                             </button> */}
                                         </div>
-                                        <a href="" className="HotelCard-item bg-gd-danger"
+                                        <a href="" className="HotelCard-item border-dark"
                                             onClick={(e) => { e.preventDefault(); this.assignHotel(hotel) }}
                                         >
                                             <div className="HotelCard-img">

@@ -1,36 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-
 import PositionsTable from './PositionsTable';
-
-import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Tooltip from '@material-ui/core/Tooltip';
-
 import InputForm from 'ui-components/InputForm/InputForm';
-import SelectForm from 'ui-components/SelectForm/SelectForm';
-
 import ShiftsData from '../../../data/shitfs.json';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-
 import DialogTitle from '@material-ui/core/DialogTitle';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
-import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import withGlobalContent from 'Generic/Global';
-import Query from 'react-apollo/Query';
-import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import './index.css';
 import { Route } from 'react-router-dom';
 import makeAnimated from 'react-select/lib/animated';
 import Select from 'react-select';
+import { GET_DEPARTMENTS_QUERY, GET_POSTIONS_QUERY, GET_RATE_QUERY, GET_POSITIONS_QUERY, GET_UNIQUEPOSITION_QUERY } from './queries';
+import { INSERT_POSITION_QUERY, UPDATE_POSITION_QUERY, DELETE_POSITION_QUERY, INSERT_DEPARTMENTS_QUERY } from './mutations';
 
 const styles = (theme) => ({
 	container: {
@@ -100,82 +89,6 @@ const styles = (theme) => ({
 });
 
 class PositionsCompanyForm extends React.Component {
-	GET_POSTIONS_QUERY = gql`
-		query getposition($Id_Entity: Int) {
-			getposition(IsActive: 1, Id_Entity: $Id_Entity) {
-				Id
-				Id_Department
-				Position
-                Id_positionApplying
-				Bill_Rate
-				Pay_Rate
-				Shift
-				IsActive,
-				Comment,
-				catalogItem_id				
-			}
-		}
-	`;
-
-	GET_POSITIONS_QUERY = gql`
-query getposition ($Id_Entity:Int){
-        getcatalogitem(Id_Catalog: 6, IsActive: 1,Id_Entity:$Id_Entity) {
-            Id
-            IsActive
-			Description		
-        }
-    }
-`;
-	GET_RATE_QUERY = gql`
-		query getbusinesscompanies($Id: Int) {
-			getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: null) {
-				Rate
-			}
-		}
-	`;
-
-	GET_DEPARTMENTS_QUERY = gql`
-	query getcatalogitem ($Id_Entity:Int)
-		{
-			getcatalogitem(IsActive: 1, Id_Catalog: 8,Id_Entity:$Id_Entity) {
-				Id
-				Code: Name
-				Name: Description
-				IsActive
-			}
-		}
-	`;
-	INSERT_POSITION_QUERY = gql`
-		mutation insposition($input: iParamPR!) {
-			insposition(input: $input) {
-				Id
-			}
-		}
-	`;
-
-	UPDATE_POSITION_QUERY = gql`
-		mutation updposition($input: iParamPR!) {
-			updposition(input: $input) {
-				Id
-			}
-		}
-	`;
-
-	DELETE_POSITION_QUERY = gql`
-		mutation delposition($Id: Int!) {
-			delposition(Id: $Id, IsActive: 0) {
-				Id
-			}
-		}
-	`;
-
-	INSERT_DEPARTMENTS_QUERY = gql`
-		mutation inscatalogitem($input: iParamCI!) {
-			inscatalogitem(input: $input) {
-				Id
-			}
-		}
-	`;
 
 	TITLE_ADD = 'Add Position';
 	TITLE_EDIT = 'Update Position';
@@ -237,7 +150,9 @@ query getposition ($Id_Entity:Int){
 
 			...this.DEFAULT_STATE
 		};
+
 		this.onEditHandler = this.onEditHandler.bind(this);
+		this.addPositionHandler = this.addPositionHandler.bind(this);
 
 		this.Login = {
 			LoginId: localStorage.getItem('LoginId'),
@@ -373,7 +288,7 @@ query getposition ($Id_Entity:Int){
 		);
 	};
 
-	updateDepartmentName = ({value}) => {
+	updateDepartmentName = ({ value }) => {
 		this.setState(
 			{
 				departmentName: value
@@ -576,7 +491,7 @@ query getposition ($Id_Entity:Int){
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
-					query: this.GET_DEPARTMENTS_QUERY,
+					query: GET_DEPARTMENTS_QUERY,
 					variables: { Id_Entity: this.props.idCompany },
 					fetchPolicy: 'no-cache'
 				})
@@ -614,22 +529,22 @@ query getposition ($Id_Entity:Int){
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
-					query: this.GET_POSITIONS_QUERY,					
+					query: GET_POSITIONS_QUERY,
 					fetchPolicy: 'no-cache'
 				})
-				.then(({data}) => {
+				.then(({ data }) => {
 					let dataAPI = data.getcatalogitem;
 					let positionCatalogTag = [];
 
 					dataAPI.map(item => {
 						positionCatalogTag.push({
-							value: item.Id, label: item.Description ? item.Description.trim() : '',  key: item.Id
+							value: item.Id, label: item.Description ? item.Description.trim() : '', key: item.Id
 						})
 					});
 
 					this.setState(prevState => ({
 						positionCatalog: positionCatalogTag,
-						loadingData: false, 
+						loadingData: false,
 					}));
 				})
 				.catch((error) => {
@@ -640,14 +555,14 @@ query getposition ($Id_Entity:Int){
 						errorMessage: 'Error: Loading positions and rates: ' + error
 					});
 				});
-		});	
+		});
 	}
 
 	loadPositions = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
-					query: this.GET_POSTIONS_QUERY,
+					query: GET_POSTIONS_QUERY,
 					variables: { Id_Entity: this.props.idCompany },
 					fetchPolicy: 'no-cache'
 				})
@@ -660,11 +575,11 @@ query getposition ($Id_Entity:Int){
 							},
 							() => {
 								this.getRate(this.resetState);
-								this.loadPositionRates();							
+								this.loadPositionRates();
 								func();
 							}
 						);
-						
+
 					} else {
 						this.setState({
 							loadingData: false,
@@ -687,11 +602,11 @@ query getposition ($Id_Entity:Int){
 
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
-		let query = this.INSERT_POSITION_QUERY;
+		let query = INSERT_POSITION_QUERY;
 		const isEdition = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
 
 		if (isEdition) {
-			query = this.UPDATE_POSITION_QUERY;
+			query = UPDATE_POSITION_QUERY;
 		}
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
@@ -763,7 +678,7 @@ query getposition ($Id_Entity:Int){
 			} else {
 				await this.props.client
 					.mutate({
-						mutation: this.INSERT_DEPARTMENTS_QUERY,
+						mutation: INSERT_DEPARTMENTS_QUERY,
 						variables: {
 							input: {
 								Id: 0,
@@ -811,7 +726,7 @@ query getposition ($Id_Entity:Int){
 			() => {
 				this.props.client
 					.mutate({
-						mutation: this.DELETE_POSITION_QUERY,
+						mutation: DELETE_POSITION_QUERY,
 						variables: {
 							Id: this.state.idToDelete
 						}
@@ -846,8 +761,10 @@ query getposition ($Id_Entity:Int){
 				saving: true
 			},
 			() => {
-				this.validateAllFields(() => {
-					if (this.state.formValid) this.insertDepartment();
+				this.validateAllFields(async () => {
+					if (this.state.formValid) {
+						this.validateUniquePosition(this.insertDepartment);
+					}
 					else {
 						this.props.handleOpenSnackbar(
 							'warning',
@@ -864,7 +781,7 @@ query getposition ($Id_Entity:Int){
 	getRate = (func = () => { }) => {
 		this.props.client
 			.query({
-				query: this.GET_RATE_QUERY,
+				query: GET_RATE_QUERY,
 				variables: { Id: this.props.idCompany },
 				fetchPolicy: 'no-cache'
 			})
@@ -885,6 +802,30 @@ query getposition ($Id_Entity:Int){
 				this.props.handleOpenSnackbar('error', 'Error: Loading Company Rate: ' + error);
 			});
 	};
+
+	validateUniquePosition = (callbackFunction = () => { }) => {
+		this.props.client
+			.query({
+				query: GET_UNIQUEPOSITION_QUERY,
+				variables: {
+					Id_Entity: this.props.idCompany,
+					Position: this.state.position.trim(),
+					IdToExclude: this.state.idToEdit || 0
+				},
+				fetchPolicy: 'no-cache'
+			})
+			.then(({ data: { uniquePosition } }) => {
+				if (uniquePosition) {
+					this.props.handleOpenSnackbar("warning", "This Position already exists");
+					this.setState(() => ({ saving: false }));
+				}
+				else callbackFunction();
+			}).catch(error => {
+				this.props.handleOpenSnackbar("error", "Error validating information");
+				this.setState(() => ({ saving: false }));
+			})
+	};
+
 	cancelDepartmentHandler = () => {
 		this.setState({ firstLoad: true }, () => {
 			this.resetState(() => {
@@ -898,8 +839,8 @@ query getposition ($Id_Entity:Int){
 	};
 
 	handleChangePositionTag = (positionsTags) => {
-        this.setState({ positionsTags, position: positionsTags.label, catalogItem_id: positionsTags.key, positionValid: true });
-    };
+		this.setState({ positionsTags, position: positionsTags.label, catalogItem_id: positionsTags.key, positionValid: true });
+	};
 
 	handleClickOpenModal = () => {
 		this.setState({ openModal: true });
@@ -951,49 +892,49 @@ query getposition ($Id_Entity:Int){
 					<div className="col-md-12">
 						{this.props.showStepper ? (
 							<div className="advanced-tab-options">
-								{localStorage.getItem('ShowMarkup') =='true' ?( 
-								<div>
-								{this.state.data.length > 0 ? (
-									<Route
-										render={({ history }) => (
-											<button
-												className="btn btn-info float-right add-contract-btn"
-												onClick={() => {
-													// When the user click Next button, open second tab
-													let hrefValue = '/home/company/edit';
+								{localStorage.getItem('ShowMarkup') == 'true' ? (
+									<div>
+										{this.state.data.length > 0 ? (
+											<Route
+												render={({ history }) => (
+													<button
+														className="btn btn-info float-right add-contract-btn"
+														onClick={() => {
+															// When the user click Next button, open second tab
+															let hrefValue = '/home/company/edit';
 
-													if (this.props.href !== null) {
-														hrefValue = this.props.href;
-													}
+															if (this.props.href !== null) {
+																hrefValue = this.props.href;
+															}
 
-													history.push({
-														pathname: '/home/contract/add',
-														state: {
-															contract: 0,
-															Id_Entity: this.props.idCompany,
-															Id_Parent: this.props.idManagement,
-															idContract: this.props.idContract,
-															href: hrefValue
-														}
-													});
+															history.push({
+																pathname: '/home/contract/add',
+																state: {
+																	contract: 0,
+																	Id_Entity: this.props.idCompany,
+																	Id_Parent: this.props.idManagement,
+																	idContract: this.props.idContract,
+																	href: hrefValue
+																}
+															});
 
-												}}
-											>
-												{this.props.valueTab < 3 ? (
-													'Next'
-												) : (
-														<React.Fragment>
-															Add Contract <i class="fas fa-file-contract ml-1" />
-														</React.Fragment>
-													)}
-											</button>
-										)}
-									/>
-								) : (
-										''
-									)}
+														}}
+													>
+														{this.props.valueTab < 3 ? (
+															'Next'
+														) : (
+																<React.Fragment>
+																	Add Contract <i class="fas fa-file-contract ml-1" />
+																</React.Fragment>
+															)}
+													</button>
+												)}
+											/>
+										) : (
+												''
+											)}
 									</div>
-									): ('')}
+								) : ('')}
 							</div>
 						) : (
 								''
@@ -1025,7 +966,7 @@ query getposition ($Id_Entity:Int){
 								<label>* Department</label>
 								<Select
 									options={selectDepartments}
-									value={{value: this.state.departmentName, label: this.state.departmentName}}
+									value={{ value: this.state.departmentName, label: this.state.departmentName }}
 									onChange={this.updateDepartmentName}
 									closeMenuOnSelect={true}
 									components={makeAnimated()}
@@ -1034,13 +975,13 @@ query getposition ($Id_Entity:Int){
 							</div>
 
 							<div className="col-md-12 col-lg-6">
-								<label>* Title</label>								
+								<label>* Title</label>
 								<Select
 									options={this.state.positionCatalog}
-									value={{value: this.state.catalogItem_id, label: this.state.position}}
+									value={{ value: this.state.catalogItem_id, label: this.state.position }}
 									onChange={this.handleChangePositionTag}
-									closeMenuOnSelect={false}
-									components={makeAnimated()}									
+									closeMenuOnSelect={true}
+									components={makeAnimated()}
 								/>
 							</div>
 							{this.props.showPayRate && (
@@ -1060,23 +1001,23 @@ query getposition ($Id_Entity:Int){
 									/>
 								</div>
 							)}
-							{localStorage.getItem('ShowMarkup')== 'true'  ?	
-							<div className="col-md-12 col-lg-6">
-								<label>* Bill Rate</label>
-								<InputForm
-									id="billrate"
-									name="billrate"
-									maxLength="10"
-									error={!this.state.billrateValid}
-									value={this.state.billrate}
-									type="number"
-									step="0.01"
-									placeholder={"$"}
-									allowZero={true}
-									change={(text) => this.onNumberChangeHandler(text, 'billrate')}
-								/>
-							</div>
-							:''}
+							{localStorage.getItem('ShowMarkup') == 'true' ?
+								<div className="col-md-12 col-lg-6">
+									<label>* Bill Rate</label>
+									<InputForm
+										id="billrate"
+										name="billrate"
+										maxLength="10"
+										error={!this.state.billrateValid}
+										value={this.state.billrate}
+										type="number"
+										step="0.01"
+										placeholder={"$"}
+										allowZero={true}
+										change={(text) => this.onNumberChangeHandler(text, 'billrate')}
+									/>
+								</div>
+								: ''}
 							<div className="col-md-12 col-lg-12">
 								<label htmlFor="">Special Comments</label>
 								<textarea
@@ -1113,7 +1054,7 @@ query getposition ($Id_Entity:Int){
 								>
 									Cancel <i class="fas fa-ban" />
 								</button>
-							</div>							
+							</div>
 						</div>
 					</DialogActions>
 				</Dialog>
@@ -1129,7 +1070,7 @@ query getposition ($Id_Entity:Int){
 									onEditHandler={this.onEditHandler}
 									onDeleteHandler={this.onDeleteHandler}
 									showPayRate={this.props.showPayRate}
-								/>							
+								/>
 							</div>
 						</div>
 					</div>

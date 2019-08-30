@@ -8189,6 +8189,9 @@ input[type="date"]::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield; }
 
+input[id^='react-select']:disabled {
+  display: none; }
+
 optgroup {
   font-weight: 700; }
 
@@ -9312,6 +9315,9 @@ tbody[class^="MuiTableBody-"] tr {
 tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   padding: 5px 5px 5px 5px !important; }
 
+.skills-container--header span {
+  color: #FFF; }
+
 .flag-select {
   position: relative;
   display: inline-block;
@@ -9886,6 +9892,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  height: 80px;
   margin-top: 1rem;
   padding: 0.5rem; }
   .HotelCard-item.bg-gd-danger {
@@ -9935,9 +9942,30 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     transform: translate(-50%, -50%);
     width: auto; }
 
+.HotelCard-info {
+  height: inherit;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
 .HotelCard-title {
   color: #7e7e7e;
-  font-weight: 700; }
+  display: block;
+  display: -webkit-box;
+  font-weight: 700;
+  max-height: 42px;
+  max-width: 100%;
+  margin: auto 0;
+  font-size: 14px;
+  line-height: 1;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis; }
 
 .HotelCard-wrapper {
   position: relative; }
@@ -10602,6 +10630,9 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   content: attr(data-count);
   display: block; }
 
+.PunchesReport-RowInfo {
+  background-color: #F0F8F2; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -10743,6 +10774,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     text-decoration: none;
     width: 100%; }
     .MenuMobile-link span {
+      color: #FFF;
       font-weight: 400; }
     .MenuMobile-link:hover {
       color: #FFF;
@@ -13574,3 +13606,8 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
+
+span[class^='MySnackbarContent-message-'] {
+  color: #FFF; }
+
+/*# sourceMappingURL=default.css.map */

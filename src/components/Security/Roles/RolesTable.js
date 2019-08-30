@@ -149,9 +149,16 @@ class RolesTable extends React.Component {
 		this.setState({ rowsPerPage: event.target.value });
 	};
 
+	getFormName = (dataForms, default_form_id) => {
+		let form = dataForms.find(form => {return form.Id === default_form_id})
+
+		return form ? form.Name : '';
+	}
+
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;
+		let dataForms = this.props.dataForms;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
@@ -164,6 +171,7 @@ class RolesTable extends React.Component {
 							<CustomTableCell padding="none" />
 							<CustomTableCell>Company</CustomTableCell>
 							<CustomTableCell>Description</CustomTableCell>
+							<CustomTableCell>Home Page</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -177,7 +185,7 @@ class RolesTable extends React.Component {
 												<IconButton
 													disabled={this.props.loading}
 													onClick={() => {
-														return this.props.onEditHandler({ ...row });
+														return this.props.onEditHandler({ ...row, formName: this.getFormName(dataForms, row.default_form_id) });
 													}}
 												>
 													<EditIcon color="primary" />
@@ -219,6 +227,9 @@ class RolesTable extends React.Component {
 									</CustomTableCell>
 
 									<CustomTableCell>{row.Description}</CustomTableCell>
+									<CustomTableCell>
+										{this.getFormName(dataForms, row.default_form_id)}
+									</CustomTableCell>
 								</TableRow>
 							);
 						})}
