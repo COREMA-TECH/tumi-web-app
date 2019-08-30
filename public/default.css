@@ -8189,6 +8189,9 @@ input[type="date"]::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield; }
 
+input[id^='react-select']:disabled {
+  display: none; }
+
 optgroup {
   font-weight: 700; }
 
@@ -10626,6 +10629,9 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
 .example-multiple-targets::after {
   content: attr(data-count);
   display: block; }
+
+.PunchesReport-RowInfo {
+  background-color: #F0F8F2; }
 
 .Header-mobileMenu {
   color: #FFF;
