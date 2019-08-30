@@ -947,14 +947,14 @@ class GeneralInformation extends Component {
 	};
 
 	findDay = id => {
-        const dayFound = days.find(item => {
-            return item.Id === id
-        });
+		const dayFound = days.find(item => {
+			return item.Id === id
+		});
 
-        return dayFound;
+		return dayFound;
 	}
-	
-	updateStartWeek = ({value: id}) => {
+
+	updateStartWeek = ({ value: id }) => {
 		//Calculate End Week
 		var idEndWeek = id - 1;
 		if (idEndWeek <= 0) idEndWeek = 7;
@@ -973,7 +973,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	updateEndWeek = ({value: id}) => {
+	updateEndWeek = ({ value: id }) => {
 		//Calculate Start Week
 		var idStartWeek = id + 1;
 		if (idStartWeek >= 8) idStartWeek = 1;
@@ -1404,21 +1404,21 @@ class GeneralInformation extends Component {
 										/>
 									</div>
 									{localStorage.getItem('ShowMarkup') == 'true' ?
-									<div className="col-md-6 col-lg-3">
-										<label className="">* Markup</label>
-										<InputForm
-											type="number"
-											step="0.01"
-											value={this.state.rate}
-											change={(text) => {
-												this.updateInput(text, 'rate');
-											}}
-											error={!this.state.rateValid}
-											maxLength="10"
-											disabled={!this.props.showStepper}
-										/>
-									</div>
-									:''}
+										<div className="col-md-6 col-lg-3">
+											<label className="">* Markup</label>
+											<InputForm
+												type="number"
+												step="0.01"
+												value={this.state.rate}
+												change={(text) => {
+													this.updateInput(text, 'rate');
+												}}
+												error={!this.state.rateValid}
+												maxLength="10"
+												disabled={!this.props.showStepper}
+											/>
+										</div>
+										: ''}
 									<div className="col-md-6 col-lg-3">
 										<label className="">* Company Code</label>
 										<InputForm
@@ -1577,15 +1577,15 @@ class GeneralInformation extends Component {
 											value={this.state.startWeek}
 											disabled={!this.props.showStepper}
 											showNone={false}
-										/> */}										
+										/> */}
 										<Select
 											options={selectDays}
-											value={{value: this.state.startWeek, label: this.state.startWeekName || ''}}
+											value={{ value: this.state.startWeek, label: this.state.startWeekName || '' }}
 											onChange={this.updateStartWeek}
 											closeMenuOnSelect={true}
 											components={makeAnimated()}
-											isMulti={false}	
-											disabled={!this.props.showStepper}										
+											isMulti={false}
+											disabled={!this.props.showStepper}
 										/>
 									</div>
 									<div className="col-md-6 tumi-forcedTop">
@@ -1601,12 +1601,12 @@ class GeneralInformation extends Component {
 										/> */}
 										<Select
 											options={selectDays}
-											value={{value: this.state.endWeek, label: this.state.endWeekName || ''}}
+											value={{ value: this.state.endWeek, label: this.state.endWeekName || '' }}
 											onChange={this.updateEndWeek}
 											closeMenuOnSelect={true}
 											components={makeAnimated()}
-											isMulti={false}	
-											disabled={!this.props.showStepper}										
+											isMulti={false}
+											disabled={!this.props.showStepper}
 										/>
 									</div>
 									<div className="col-md-12">
@@ -1705,7 +1705,7 @@ class GeneralInformation extends Component {
 									</TableBody>
 								</Table>
 								<div className="row">
-									<div className="col-md-12 mb-1">
+									<div className="col-xs-12 col-sm-6 col-md-6 col-lg-12  col-xl-6 mb-1">
 										<button className={this.props.idCompany == 0 ? (
 											'add-property__disabled btn btn-success btn-block mt-1'
 										) : (
@@ -1716,7 +1716,7 @@ class GeneralInformation extends Component {
 											Link Orphan Property <i class="fas fa-plus" />
 										</button>
 									</div>
-									<div className="col-md-12">
+									<div className="col-xs-12 col-sm-6 col-md-6 col-lg-12 col-xl-6 ">
 										<button
 											className={
 												this.props.idCompany == 0 ? (
