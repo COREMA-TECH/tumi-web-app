@@ -189,20 +189,18 @@ class Language extends Component {
 								writing: parseInt(document.getElementById('writingLanguage').value),
 								conversation: parseInt(document.getElementById('conversationLanguage').value)
 							};
-							this.setState(
-								(prevState) => ({
-									open: false,
-									languages: [...prevState.languages, item]
-								}),
-								() => {
-									document.getElementById('form-language').reset();
-									document.getElementById('writingLanguage').classList.remove('invalid-apply-form');
-									document
-										.getElementById('conversationLanguage')
-										.classList.remove('invalid-apply-form');
-									document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
-								}
-							);
+							this.setState((prevState) => ({
+								open: false,
+								languages: [...prevState.languages, item]
+							}), () => {
+								document.getElementById('form-language').reset();
+								document.getElementById('writingLanguage').classList.remove('invalid-apply-form');
+								document
+									.getElementById('conversationLanguage')
+									.classList.remove('invalid-apply-form');
+								document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
+								this.insertLanguagesApplication();
+							});
 						}}
 					>
 						<div className="col-md-4">
@@ -249,9 +247,9 @@ class Language extends Component {
 						</div>
 						<div className="col-md-2">
 							<br />
-							<Button type="submit" form="form-language" className="save-skill-button">
+							<button type="submit" form="form-language" className="save-skill-button applicant-card__save-button">
 								{spanishActions[0].label}
-							</Button>
+							</button>
 						</div>
 					</form>
 				) : (
@@ -388,14 +386,14 @@ class Language extends Component {
 									>
 										{spanishActions[2].label}
 									</button>
-									<button
+									{/* <button
 										onClick={() => {
 											this.insertLanguagesApplication();
 										}}
 										className="applicant-card__save-button"
 									>
 										{spanishActions[4].label}
-									</button>
+									</button> */}
 								</div>
 							) : (
 									''

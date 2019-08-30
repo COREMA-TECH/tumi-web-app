@@ -193,6 +193,7 @@ class Language extends Component {
 										.getElementById('conversationLanguage')
 										.classList.remove('invalid-apply-form');
 									document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
+									this.insertLanguagesApplication();
 								}
 							);
 						}}
@@ -379,14 +380,6 @@ class Language extends Component {
 										}}
 									>
 										{spanishActions[2].label}
-									</button>
-									<button
-										onClick={() => {
-											this.insertLanguagesApplication();
-										}}
-										className="applicant-card__save-button"
-									>
-										{spanishActions[4].label}
 									</button>
 								</div>
 							) : (

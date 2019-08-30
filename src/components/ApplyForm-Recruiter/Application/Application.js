@@ -224,7 +224,7 @@ class Application extends Component {
                                     comment: this.state.comment,
                                     generalComment: this.state.generalComment,
                                     isLead: true,
-                                    idRecruiter: null,
+                                    idRecruiter: localStorage.getItem('LoginId'),
                                     UserId: localStorage.getItem('LoginId'),
                                     sendInterview: this.state.sendInterview
                                 },
@@ -316,6 +316,7 @@ class Application extends Component {
                                     generalComment: this.state.generalComment,
                                     isLead: true,
                                     idRecruiter: parseInt(this.state.idRecruiter),
+                                    UserId: localStorage.getItem('LoginId'),
                                     sendInterview: this.state.sendInterview
                                 } ,
                                 codeuser: localStorage.getItem('LoginId'),

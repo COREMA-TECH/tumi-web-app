@@ -9312,6 +9312,9 @@ tbody[class^="MuiTableBody-"] tr {
 tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   padding: 5px 5px 5px 5px !important; }
 
+.skills-container--header span {
+  color: #FFF; }
+
 .flag-select {
   position: relative;
   display: inline-block;
@@ -10743,6 +10746,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     text-decoration: none;
     width: 100%; }
     .MenuMobile-link span {
+      color: #FFF;
       font-weight: 400; }
     .MenuMobile-link:hover {
       color: #FFF;
@@ -13574,3 +13578,6 @@ label.input-group-text {
   padding-bottom: 6px;
   padding-top: 12px;
   border-bottom: 1px solid #dddddd; }
+
+span[class^='MySnackbarContent-message-'] {
+  color: #FFF; }
