@@ -220,7 +220,7 @@ class Application extends Component {
                                 comment: this.state.comment,
                                 idealJob: this.state.idealJob,
                                 isLead: id == 0 ? false : this.state.isLead,
-                                dateCreation: moment().local().format("MM/DD/YYYY"),
+                                dateCreation: id == 0 ? moment().local().format("MM/DD/YYYY") : this.state.dateCreation,
                                 immediately: this.state.immediately,
                                 optionHearTumi: this.state.optionHearTumi,
                                 nameReferences: this.state.nameReferences
