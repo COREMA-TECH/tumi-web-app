@@ -214,7 +214,7 @@ class HotelList extends Component {
                     />
                     {this.state.hotels.map((hotel, i) => (
                         <li key={i} className="col-md-4 col-xl-2">
-                            <span className="HotelCard-wrapper">
+                            <div className="HotelCard-wrapper">
                                 <div className="HotelCard-controls">
                                     <button className="btn btn-link" onClick={(e) => { this.handleAlertOpen(hotel.Id) }}>
                                         <i className="fas fa-trash"></i>
@@ -232,7 +232,7 @@ class HotelList extends Component {
                                         </div>
                                     </div>
                                 </a>
-                            </span>
+                            </div>
                         </li>
                     ))}
                 </ul>
