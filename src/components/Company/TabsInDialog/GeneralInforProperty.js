@@ -22,16 +22,11 @@ import StepLabel from '@material-ui/core/StepLabel';
 import { withStyles } from '@material-ui/core/styles';
 
 // import steps
+import LeftStepper from './LeftStepper';
 import ApplicationList from '../../ApplyForm/ApplicationList/ApplicationList';
 import Schedules from '../../Schedules';
 import PunchesReportConsolidated from '../../PunchesReportConsolidated';
 
-const STEPS = [
-    'General',
-    'Employees',
-    'Schedules',
-    'Punches'
-];
 
 const styles = theme => ({
     stepper: {
@@ -115,8 +110,7 @@ class GeneralInfoProperty extends Component {
             isCorrectCity: true,
             changeCity: false,
             parentDescription: '',
-            operationManagerDescription: '',
-            propertyBasicInfo: {}
+            operationManagerDescription: ''
         };
     }
 
@@ -889,8 +883,7 @@ class GeneralInfoProperty extends Component {
                                     changeCity: false,
                                     linearProgress: false,
                                     startWeekName: days[item.Start_Week - 1].Name,
-                                    endWeekName: days[item.End_Week - 1].Name,
-                                    propertyBasicInfo: {id: item.Id, name: item.Name.trim()}
+                                    endWeekName: days[item.End_Week - 1].Name
                                 }
                             });
                         }
@@ -916,7 +909,7 @@ class GeneralInfoProperty extends Component {
                 if (data.data.getbusinesscompanies != null) {
 
                     var found = data.data.getbusinesscompanies.find(company => {
-                        return company.Id != this.props.idProperty && company.Code.trim().toUpperCase() == this.state.Code.trim().toUpperCase()
+                        return company.Id !== this.props.idProperty && company.Code.trim().toUpperCase() === this.state.Code.trim().toUpperCase()
                     });
 
                     if (found) {
@@ -1233,7 +1226,17 @@ class GeneralInfoProperty extends Component {
         })
     }
 
-    getGeneralInformation = () => {
+    handleUpdateAvatar = (url) => {
+        this.setState({
+            avatar: url
+        });
+    }
+
+    handleChangeStepper = (index) => {
+        if(this.props.idProperty !== null) this.setState({ activeStep: index })
+    }
+
+    getGeneralInformation = (leftStepper) => {
         this.changeStylesInCompletedInputs();
 
         if (this.state.linearProgress || this.state.linearProgress || this.state.linearProgressOpM || this.state.loadingData) {
@@ -1292,7 +1295,11 @@ class GeneralInfoProperty extends Component {
                 </div>
 
                 <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-3 col-xl-2">
+                        {leftStepper}
+                    </div>
+
+                    <div className="col-md-9 col-xl-10">
                         <div class="card">
                             <div class="card-header">
                                 General Information
@@ -1621,76 +1628,35 @@ class GeneralInfoProperty extends Component {
     }
 
     getStepContent = () => {
+        const { classes, handleOpenSnackbar, idProperty } = this.props;
+        const { avatar, activeStep, name } = this.state;
+        const propertyBasicInfo = {id: idProperty, name };
+        const leftStepper = <LeftStepper 
+                                avatar={avatar} 
+                                classes={classes} 
+                                activeStep={activeStep} 
+                                handleUpdateAvatar={this.handleUpdateAvatar}
+                                handleChangeStepper={this.handleChangeStepper}
+                                handleOpenSnackbar={handleOpenSnackbar} 
+                                />
+
         switch (this.state.activeStep) {
             case 0:
-                return this.getGeneralInformation();
+                return this.getGeneralInformation(leftStepper);
             case 1:
-                return <ApplicationList propertyInfo={this.state.propertyBasicInfo} />
+                return <ApplicationList propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
             case 2:
-                return <Schedules propertyInfo={this.state.propertyBasicInfo} />
+                return <Schedules propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
             case 3:
-                return <PunchesReportConsolidated propertyInfo={this.state.propertyBasicInfo} />
+                return <PunchesReportConsolidated propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
         }
     };
 
     render() {
-        const { classes } = this.props;
-        const { activeStep } = this.state;
-
-        return <div className="row">
-                <div className="col-md-3 col-xl-2">
-                    <div className="card">
-                        <div className="">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <div className="GeneralInformation-wrapper">
-                                        <ImageUpload
-                                            id="avatarFilePI"
-                                            updateAvatar={(url) => {
-                                                this.setState({
-                                                    avatar: url
-                                                });
-                                            }}
-                                            fileURL={this.state.avatar}
-                                            disabled={false}
-                                            handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="col-md-12">
-                                    
-                                    <Stepper activeStep={activeStep} orientation="vertical" className="">
-                                        {STEPS.map((label, index) => {
-
-                                            return (
-                                                <div
-                                                    key={label}
-                                                    onClick={() => {
-                                                        if(this.props.idProperty !== null)
-                                                            this.setState({ activeStep: index })
-                                                    }}
-                                                    className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item'}
-                                                >
-                                                    <StepLabel className={[classes.stepper, 'stepper-label']} >
-                                                        {label}
-                                                    </StepLabel>
-                                                </div>
-                                            );
-                                        })}
-                                    </Stepper>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div className="col-md-9 col-xl-10">
-                    {this.getStepContent()}
-                </div>
-            </div>
+        return (
+            this.getStepContent()
+        );
         
-
     }
     static contextTypes = {
         avatarURL: PropTypes.string

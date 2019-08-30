@@ -138,7 +138,7 @@ class PunchesReportConsolidatedFilter extends Component {
                     variables: { ...this.props.getFilters(), directDeposit: this.state.directDeposit }
                 })
                 .then(({ data }) => {
-                    // TODO: show a loading icon in download button
+                    // show a loading icon in download button
                     let url = this.context.baseUrl + data.markedEmployeesConsolidatedForCSV;
                     window.open(url, '_blank');
 

@@ -6,6 +6,7 @@
         border: solid 3px lighten($brand-primary,20%);
         color: $text-color;
         display: flex;
+        height: 80px;
         margin-top: 1rem;
         padding: 0.5rem;
         &.bg-gd-danger {
@@ -53,9 +54,25 @@
             width: auto;
         }
     }
+    &-info {
+        height: inherit;
+        display: flex;
+        align-items: center;
+    }
     &-title {
         color: $text-color;
+        display: block;
+        display: -webkit-box;
         font-weight: 700;
+        max-height: 42px;
+        max-width: 100%;
+        margin: auto 0;
+        font-size: 14px;
+        line-height: 1;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     &-wrapper {
         position: relative;

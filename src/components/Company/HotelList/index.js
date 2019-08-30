@@ -227,9 +227,9 @@ class HotelList extends Component {
                                         </figure>
                                     </div>
                                     <div className="HotelCard-info">
-                                        <span className="HotelCard-title">
-                                            {`${hotel.Name}`}                                           
-                                        </span>
+                                        <div className="HotelCard-title">
+                                            {`${hotel.Name.trim()}`}
+                                        </div>
                                     </div>
                                 </a>
                             </div>
