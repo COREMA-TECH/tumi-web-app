@@ -87,6 +87,7 @@ export const CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
     mutation addEmployeeByHotel($employeeByHotels: [inputInsertEmployeeByHotel], $relationList: [inputUpdateEmployeeByHotel]) {
         addEmployeeByHotel(employeeByHotels: $employeeByHotels) {
             id
+            EmployeeId
         }
         bulkUpdateEmployeeByHotel(relationList: $relationList)
     }
