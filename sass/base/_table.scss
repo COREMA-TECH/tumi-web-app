@@ -86,3 +86,9 @@ tbody[class^="MuiTableBody-"] {
         padding: 5px 5px 5px 5px !important;
     }
 }
+
+.skills-container--header {
+    span {
+        color: $white;
+    }
+}
