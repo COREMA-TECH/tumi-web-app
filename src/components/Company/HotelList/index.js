@@ -226,11 +226,11 @@ class HotelList extends Component {
                                             <img src={`${hotel.ImageURL}`} alt="" />
                                         </figure>
                                     </div>
-                                    <span className="HotelCard-info">
-                                        <span className="HotelCard-title">
-                                            {`${hotel.Name}`}                                           
-                                        </span>
-                                    </span>
+                                    <div className="HotelCard-info">
+                                        <div className="HotelCard-title">
+                                            {`${hotel.Name.trim()}`}
+                                        </div>
+                                    </div>
                                 </a>
                             </span>
                         </li>
