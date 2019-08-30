@@ -214,25 +214,25 @@ class HotelList extends Component {
                     />
                     {this.state.hotels.map((hotel, i) => (
                         <li key={i} className="col-md-4 col-xl-2">
-                            <div className="HotelCard-wrapper">
+                            <span className="HotelCard-wrapper">
                                 <div className="HotelCard-controls">
                                     <button className="btn btn-link" onClick={(e) => { this.handleAlertOpen(hotel.Id) }}>
                                         <i className="fas fa-trash"></i>
                                     </button>
                                 </div>
-                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
+                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent === 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
                                     <div className="HotelCard-img">
                                         <figure>
                                             <img src={`${hotel.ImageURL}`} alt="" />
                                         </figure>
                                     </div>
-                                    <div className="HotelCard-info">
+                                    <span className="HotelCard-info">
                                         <span className="HotelCard-title">
                                             {`${hotel.Name}`}                                           
                                         </span>
-                                    </div>
+                                    </span>
                                 </a>
-                            </div>
+                            </span>
                         </li>
                     ))}
                 </ul>
