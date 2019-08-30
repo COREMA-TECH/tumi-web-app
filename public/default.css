@@ -8189,6 +8189,9 @@ input[type="date"]::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield; }
 
+input[id^='react-select']:disabled {
+  display: none; }
+
 optgroup {
   font-weight: 700; }
 

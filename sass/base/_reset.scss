@@ -16,6 +16,10 @@ input[type="date"]::-webkit-inner-spin-button{
 input[type=number] {
     -moz-appearance:textfield;
 }
+// quita el cuadrito que aparece a la izquierda en react-select cuando esta desabilitado
+input[id^='react-select']:disabled {
+    display: none;
+}
 
 optgroup {
 	font-weight: 700;
