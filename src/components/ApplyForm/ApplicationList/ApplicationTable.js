@@ -229,7 +229,7 @@ class ApplicationTable extends React.Component {
                             </TableHead>
                             <TableBody>
                                 {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    let hasUser = row.employee ? (row.employee.Employees ? (row.employee.Employees.idUsers ? true : false) : false) : false;
+                                    let hasUser = row.Employee ? true : false;
                                     return (
                                         <TableRow
                                             hover
