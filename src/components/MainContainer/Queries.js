@@ -15,9 +15,19 @@ query rolesforms {
  * Query to get forms
  */
 export const GET_FORMS_QUERY = gql`
-    {
-        getforms(Id: null, IsActive: 1){
+    query getforms($Id: Int){
+        getforms(Id: $Id, IsActive: 1){
             Value
+        }
+    }
+`;
+
+export const GET_ROLES = gql`
+    query roles($id: Int) {
+        roles(Id: $id) {
+            Id
+            Description
+            default_form_id
         }
     }
 `;
