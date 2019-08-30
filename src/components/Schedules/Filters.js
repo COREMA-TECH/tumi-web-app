@@ -273,7 +273,7 @@ class Filters extends Component {
 
     render() {
         return (
-            <div className="MasterShiftHeader">
+            <div className="MasterShiftHeader m-0">
                 <div className="row">
                     <div className="col-md-12">
                         Location: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.locationName}</a>,

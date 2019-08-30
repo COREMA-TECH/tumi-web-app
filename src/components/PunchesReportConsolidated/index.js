@@ -37,6 +37,12 @@ class PunchesReportConsolidated extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.propertyInfo) {
+            let { id, name } = nextProps.propertyInfo;
+            this.changeFilter({ value: id, label: name });
+        }
+    }
 
     componentWillMount() {
         this.getDepartments();
@@ -187,7 +193,11 @@ class PunchesReportConsolidated extends Component {
 
         return <React.Fragment>
             <div className="row">
-                <div className="col-md-12">
+                <div className={this.props.leftStepperComponent ? 'col-md-3 col-xl-2' : 'd-none'}>
+					{this.props.leftStepperComponent}
+				</div>
+
+                <div className={this.props.leftStepperComponent ? 'col-md-9 col-xl-10' : 'col-md-12'}>
                     <div className="card" style={{ "position": "relative" }}>
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} allowEditModal={this.state.allowEditModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>

@@ -195,6 +195,14 @@ class Schedules extends Component {
         />;
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.propertyInfo) {
+            this.setState(() => {
+                return {location: nextProps.propertyInfo.id}
+            });
+        }
+    }
+
     componentWillMount() {
         if(this.props.propertyInfo){
             this.setState(() => {
@@ -205,90 +213,99 @@ class Schedules extends Component {
 
     render() {
         return (
-            <div className="MasterShift">
-                <PreFilter
-                    openPreFilter={this.state.openPreFilter}
-                    handleApplyFilters={this.handleApplyFilters}
-                    openPreFilter={this.state.openPreFilter}
-                    handleGetTextofFilters={this.handleGetTextofFilters}
-                    templateShifts={this.templateShifts}
-                    handleClosePreFilter={this.handleClosePreFilter}
-                    isEditFilter={this.state.isEditFilter}
-                    location={this.state.location}
-                    position={this.state.position}
-                    department={this.state.department}
-                />
-                <Filters
-                    handleClosePreFilter={this.handleClosePreFilter}
-                    handleOpenForm={this.handleOpenForm}
-                    handleReset={this.handleReset}
-                    handleChange={this.handleChange}
-                    cityId={this.state.cityId}
-                    shiftId={this.state.shiftId}
-                    locationName={this.state.locationName}
-                    requestedName={this.state.requestedName}
-                    departmentName={this.state.departmentName}
-                    positionName={this.state.positionName}
-                    templateShifts={this.state.templateShifts}
-                    templateStartDate={this.state.templateStartDate}
-                    templateEndDate={this.state.templateEndDate}
-                    requested={this.state.requested}
-                    viewType={this.state.viewType}
-                    location={this.state.location}
-                    department={this.state.department}
-                    position={this.state.position}
-                    toggleRefresh={this.toggleRefresh}
-                    employees={this.state.employees}
-                    onSelectedEmployeeChange={this.onSelectedEmployeeChange}
-                    handleOpenWorkOrderForm={this.handleOpenWorkOrderForm}
-                />
-                <FilterForm
-                    updateEmployeeList={this.updateEmployeeList}
-                    isSerie={this.state.isSerie}
-                    location={this.state.location}
-                    department={this.state.department}
-                    position={this.state.position}
-                    requestedBy={this.state.requested}
-                    handleCloseForm={this.handleCloseForm}
-                    closedForm={this.state.closedForm}
-                    id={this.state.selectedShiftId}
-                    toggleRefresh={this.toggleRefresh}
-                    hotelManager={this.props.hotelManager}
-                    locationName={this.state.locationName}
-                    positionName={this.state.positionName}
-                />
-                <WorkOrdersForm
-                    item={this.state.item}
-                    handleOpenSnackbar={this.props.handleOpenSnackbar}
-                    openModal={this.state.openWorkOrderForm}
-                    handleCloseModal={this.handleCloseModal}
-                    handleCloseModal={this.handleOpenWorkOrderForm}
-                    toggleRefresh={this.toggleRefresh}
-                />
-                <div className="row">
-                    <div className="col-md-12">
-                        <div className="MasterShift-schedules">
-                            <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <div className="SmallSwitch">
-                                    <span className="rightLable-Switch">Grid View</span>
-                                    <div className="onoffswitch">
-                                        <input type="checkbox" name="gridView" className="onoffswitch-checkbox" id="gridView" checked={this.state.gridView} onChange={this.viewChange} />
-                                        <label className="onoffswitch-label" htmlFor="gridView">
-                                            <span className="onoffswitch-inner"></span>
-                                            <span className="onoffswitch-switch"></span>
-                                        </label>
-                                    </div>
-                                    <span className="leftLabel-Switch">Calendar View</span>
-                                </div>
-                                {
-                                    !this.state.gridView ? this.gridTabsView() : this.calendarView()
-                                }
+            <div className="row">
+				<div className={this.props.leftStepperComponent ? 'col-md-3 col-xl-2' : 'd-none'}>
+					{this.props.leftStepperComponent}
+				</div>
 
+				<div className={this.props.leftStepperComponent ? 'col-md-9 col-xl-10 pt-3' : 'col-md-12'}>
+                    <div className="MasterShift">
+                        <PreFilter
+                            openPreFilter={this.state.openPreFilter}
+                            handleApplyFilters={this.handleApplyFilters}
+                            openPreFilter={this.state.openPreFilter}
+                            handleGetTextofFilters={this.handleGetTextofFilters}
+                            templateShifts={this.templateShifts}
+                            handleClosePreFilter={this.handleClosePreFilter}
+                            isEditFilter={this.state.isEditFilter}
+                            location={this.state.location}
+                            position={this.state.position}
+                            department={this.state.department}
+                        />
+                        <Filters
+                            handleClosePreFilter={this.handleClosePreFilter}
+                            handleOpenForm={this.handleOpenForm}
+                            handleReset={this.handleReset}
+                            handleChange={this.handleChange}
+                            cityId={this.state.cityId}
+                            shiftId={this.state.shiftId}
+                            locationName={this.state.locationName}
+                            requestedName={this.state.requestedName}
+                            departmentName={this.state.departmentName}
+                            positionName={this.state.positionName}
+                            templateShifts={this.state.templateShifts}
+                            templateStartDate={this.state.templateStartDate}
+                            templateEndDate={this.state.templateEndDate}
+                            requested={this.state.requested}
+                            viewType={this.state.viewType}
+                            location={this.state.location}
+                            department={this.state.department}
+                            position={this.state.position}
+                            toggleRefresh={this.toggleRefresh}
+                            employees={this.state.employees}
+                            onSelectedEmployeeChange={this.onSelectedEmployeeChange}
+                            handleOpenWorkOrderForm={this.handleOpenWorkOrderForm}
+                        />
+                        <FilterForm
+                            updateEmployeeList={this.updateEmployeeList}
+                            isSerie={this.state.isSerie}
+                            location={this.state.location}
+                            department={this.state.department}
+                            position={this.state.position}
+                            requestedBy={this.state.requested}
+                            handleCloseForm={this.handleCloseForm}
+                            closedForm={this.state.closedForm}
+                            id={this.state.selectedShiftId}
+                            toggleRefresh={this.toggleRefresh}
+                            hotelManager={this.props.hotelManager}
+                            locationName={this.state.locationName}
+                            positionName={this.state.positionName}
+                        />
+                        <WorkOrdersForm
+                            item={this.state.item}
+                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                            openModal={this.state.openWorkOrderForm}
+                            handleCloseModal={this.handleCloseModal}
+                            handleCloseModal={this.handleOpenWorkOrderForm}
+                            toggleRefresh={this.toggleRefresh}
+                        />
+                        <div className="row">
+                            <div className="col-md-12">
+                                <div className="MasterShift-schedules">
+                                    <div className="MasterShift-schedulesBody" id="divToPrint">
+                                        <div className="SmallSwitch">
+                                            <span className="rightLable-Switch">Grid View</span>
+                                            <div className="onoffswitch">
+                                                <input type="checkbox" name="gridView" className="onoffswitch-checkbox" id="gridView" checked={this.state.gridView} onChange={this.viewChange} />
+                                                <label className="onoffswitch-label" htmlFor="gridView">
+                                                    <span className="onoffswitch-inner"></span>
+                                                    <span className="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                            <span className="leftLabel-Switch">Calendar View</span>
+                                        </div>
+                                        {
+                                            !this.state.gridView ? this.gridTabsView() : this.calendarView()
+                                        }
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+				</div>
+			</div>
+            
         );
     }
 }
