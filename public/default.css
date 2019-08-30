@@ -9886,6 +9886,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  height: 80px;
   margin-top: 1rem;
   padding: 0.5rem; }
   .HotelCard-item.bg-gd-danger {
@@ -9935,9 +9936,30 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     transform: translate(-50%, -50%);
     width: auto; }
 
+.HotelCard-info {
+  height: inherit;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center; }
+
 .HotelCard-title {
   color: #7e7e7e;
-  font-weight: 700; }
+  display: block;
+  display: -webkit-box;
+  font-weight: 700;
+  max-height: 42px;
+  max-width: 100%;
+  margin: auto 0;
+  font-size: 14px;
+  line-height: 1;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis; }
 
 .HotelCard-wrapper {
   position: relative; }
