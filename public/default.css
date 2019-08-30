@@ -10627,6 +10627,9 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   content: attr(data-count);
   display: block; }
 
+.PunchesReport-RowInfo {
+  background-color: #F0F8F2; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -13603,3 +13606,5 @@ label.input-group-text {
 
 span[class^='MySnackbarContent-message-'] {
   color: #FFF; }
+
+/*# sourceMappingURL=default.css.map */

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import withApollo from 'react-apollo/withApollo';
-import {UPDATE_MARKED_EMPLOYEE} from './Mutations';
+import { UPDATE_MARKED_EMPLOYEE } from './Mutations';
 import Tooltip from '@material-ui/core/Tooltip';
 
 class PunchesConsolidatedDropDownBody extends Component {
@@ -33,7 +33,7 @@ class PunchesConsolidatedDropDownBody extends Component {
             .mutate({
                 mutation: UPDATE_MARKED_EMPLOYEE,
                 variables: {
-                    markedemployees:{ id: markedEmpId, flag: !flagValue}
+                    markedemployees: { id: markedEmpId, flag: !flagValue }
                 },
                 fetchPolicy: 'no-cache'
             })
@@ -79,7 +79,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                                 fileSrcOut = item.imageMarkedOut;
                             }
                             return (
-                                <tr className={!allowEditItem ? 'table-info' : ''} >
+                                <tr className={!allowEditItem ? 'PunchesReport-RowInfo' : ''} >
                                     <th>
                                         <Tooltip title={allowEditItem ? 'Edit Time' : 'View Time'} >
                                             <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({ ...item }, allowEditItem)}>
@@ -89,7 +89,7 @@ class PunchesConsolidatedDropDownBody extends Component {
                                     </th>
                                     <td>{item.name}</td>
                                     <td>{item.clockIn} - {item.clockOut}</td>
-                                    <td>{item.duration == 0 ? '-': item.duration}</td>
+                                    <td>{item.duration == 0 ? '-' : item.duration}</td>
                                     <td>{item.job}</td>
                                     <td>{item.hotelCode}</td>
                                     <td>
