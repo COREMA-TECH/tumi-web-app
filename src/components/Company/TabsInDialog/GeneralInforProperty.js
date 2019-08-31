@@ -110,7 +110,8 @@ class GeneralInfoProperty extends Component {
             isCorrectCity: true,
             changeCity: false,
             parentDescription: '',
-            operationManagerDescription: ''
+            operationManagerDescription: '',
+            deleteSuccess: false
         };
     }
 
@@ -496,10 +497,8 @@ class GeneralInfoProperty extends Component {
 
     deleteCompany = (updatedId) => {
         //Create the mutation using apollo global client
-
         this.setState(
             {
-
                 removing: true
             },
             () => {
@@ -519,7 +518,8 @@ class GeneralInfoProperty extends Component {
 
                         this.setState({
                             removing: false,
-                            openConfirm: false
+                            openConfirm: false,
+                            deleteSuccess: true
                         })
                     })
                     .catch((err) => {
@@ -1250,6 +1250,7 @@ class GeneralInfoProperty extends Component {
 
         return (
             <Fragment>
+                
                 <div className="row">
                     <ConfirmDialog
                         open={this.state.openConfirm}
@@ -1264,7 +1265,7 @@ class GeneralInfoProperty extends Component {
                     />
                     <div className="col-md-12">
                         <div className="form-actions float-right tumi-buttonWrapper">
-                            {this.props.idProperty != null ? (
+                            {this.props.idProperty ? (
                                 <button
                                     disabled={false}
                                     className="btn btn-danger tumi-button"
@@ -1278,8 +1279,6 @@ class GeneralInfoProperty extends Component {
                             ) : (
                                     ''
                                 )}
-
-
 
                             {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success tumi-button" name="save" id="save" onClick={this.handleFormSubmit('save')} disabled={loading}>
                                 Save<i className="fas fa-save ml-2" />
