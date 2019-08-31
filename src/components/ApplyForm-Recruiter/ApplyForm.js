@@ -155,7 +155,7 @@ class ApplyForm extends Component {
 								scheduleExplain: this.state.scheduleExplain,
 								convicted: this.state.convicted,
 								convictedExplain: this.state.convictedExplain,
-								comment: this.state.comment
+								comment: this.state.comment,
 							}
 						}
 					})

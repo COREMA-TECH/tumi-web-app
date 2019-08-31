@@ -94,6 +94,10 @@ class ApplicationList extends Component {
 				isLead
 				idWorkOrder
 				statusCompleted
+				sendInterview
+				User {
+					Full_Name
+				}
 				Employee{
 					idUsers
 				}

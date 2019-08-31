@@ -590,7 +590,7 @@ class Application extends Component {
             }
         })
 
-        if (values.length == 0)
+        if (values.length === 0)
             this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
         else {
             this.setState(() => ({

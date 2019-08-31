@@ -239,7 +239,7 @@ class NonDisclosure extends Component {
         );
 
         return (
-            <div className="Apply-container--application">
+            <div className="Apply-container--application" style={{width: '100%', maxWidth: '900px', margin: '0 auto'}}>
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">
