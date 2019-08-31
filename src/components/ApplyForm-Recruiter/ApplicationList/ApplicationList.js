@@ -91,6 +91,7 @@ class ApplicationList extends Component {
 				isLead
 				idWorkOrder
 				date
+				sendInterview
 				recruiter{
 					Id
 					Full_Name

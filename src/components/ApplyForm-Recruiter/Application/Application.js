@@ -224,7 +224,7 @@ class Application extends Component {
                                     comment: this.state.comment,
                                     generalComment: this.state.generalComment,
                                     isLead: true,
-                                    idRecruiter: null,
+                                    idRecruiter: localStorage.getItem('LoginId'),
                                     UserId: localStorage.getItem('LoginId'),
                                     sendInterview: this.state.sendInterview
                                 },
@@ -278,6 +278,7 @@ class Application extends Component {
         ) {
             this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
         } else {
+            console.log(this.state.sendInterview,'hola')
             this.setState(
                 {
                     insertDialogLoading: true
@@ -317,7 +318,7 @@ class Application extends Component {
                                     isLead: true,
                                     idRecruiter: parseInt(this.state.idRecruiter),
                                     sendInterview: this.state.sendInterview
-                                } ,
+                                },
                                 codeuser: localStorage.getItem('LoginId'),
                                 nameUser: localStorage.getItem('FullName')
                             }

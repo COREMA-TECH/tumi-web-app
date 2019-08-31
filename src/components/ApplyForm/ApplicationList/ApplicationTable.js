@@ -292,7 +292,7 @@ class ApplicationTable extends React.Component {
                                             <CustomTableCell>{row.Position ? `${row.Position.Position.trim()} ${row.PositionCompany ? `(${row.PositionCompany.Code.trim()})` : ''}` : 'Open Position'}</CustomTableCell>
                                             <CustomTableCell>{row.DefaultCompany ? row.DefaultCompany.Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.Recruiter ? row.Recruiter.Full_Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.User && row.sendInterview ? row.user.Full_Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.User && row.sendInterview ? row.User.Full_Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
                                         </TableRow>
                                     );
