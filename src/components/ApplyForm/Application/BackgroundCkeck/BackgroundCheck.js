@@ -370,7 +370,6 @@ class BackgroundCheck extends Component {
     };
 
     updatePdfUrlBackgroundCheck = () => {
-        console.log('mostrando url PDF', this.state.urlPDF); // TODO: (LF) Quitar console log
         this.props.client
             .mutate({
                 mutation: UPDATE_BACKGROUND_CHECK,

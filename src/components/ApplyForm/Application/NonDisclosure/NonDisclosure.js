@@ -4,7 +4,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
-import { ADD_NON_DISCLOSURE } from "./Mutations";
+import { ADD_NON_DISCLOSURE, UPDATE_NON_DISCLOSURE } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import renderHTML from 'react-render-html';
 import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
@@ -31,7 +31,8 @@ class NonDisclosure extends Component {
             applicantName: '',
             ApplicationId: this.props.applicationId,
             openSignature: false,
-            completed: false
+            completed: false,
+            urlPDF: null
         }
     }
 
@@ -51,6 +52,7 @@ class NonDisclosure extends Component {
         delete disclosureObject.openSignature;
         delete disclosureObject.id;
         delete disclosureObject.accept;
+        delete disclosureObject.urlPDF; // al guardar no es necesario
 
         this.props.client
             .mutate({
@@ -77,6 +79,30 @@ class NonDisclosure extends Component {
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error to sign Non-Disclosure document. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
+    updatePdfUrlNonDisclosure = () => {
+        this.props.client
+            .mutate({
+                mutation: UPDATE_NON_DISCLOSURE,
+                variables: {
+                    disclosure: {
+                        id: this.state.id,
+						pdfUrl: this.state.urlPDF,
+						content: this.state.content || '',
+						ApplicationId: this.state.ApplicationId
+                    }
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to updating url Non-Disclosure',
                     'bottom',
                     'right'
                 );
@@ -120,6 +146,7 @@ class NonDisclosure extends Component {
                         content: data.applications[0].disclosure.content,
                         applicantName: data.applications[0].disclosure.applicantName,
                         date: data.applications[0].disclosure.date.substring(0, 10),
+                        urlPDF: data.applications[0].disclosure.pdfUrl,
                     });
                 } else {
                     this.setState({
@@ -156,9 +183,15 @@ class NonDisclosure extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then((data) => {
-                if (data.data.createdocumentspdf != null) {
-                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+            .then(({data}) => {
+                if (data.createdocumentspdf !== null) {
+                    this.state.urlPDF = data.createdocumentspdf
+                    this.setState({
+                        urlPDF: data.createdocumentspdf
+                    }, () => {
+                        this.updatePdfUrlNonDisclosure();
+                        this.downloadDocumentsHandler();
+                    });
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',
@@ -174,8 +207,8 @@ class NonDisclosure extends Component {
     };
 
 
-    downloadDocumentsHandler = (fileName) => {
-        var url = `${this.context.baseUrl}/public/Documents/${fileName}.pdf`;
+    downloadDocumentsHandler = () => {
+        var url = this.state.urlPDF; //`${this.context.baseUrl}/public/Documents/${fileName}.pdf`;
         window.open(url, '_blank');
         this.setState(() => ({ downloading: false }));
     };
@@ -197,14 +230,14 @@ class NonDisclosure extends Component {
         }
     }
 
-    handleDownloadPDFClick = () => {
-        const fileName = `${FILE_NAME}${uuidv4()}-${this.state.applicantName}`;
-        this.createDocumentsPDF(fileName);
-        this.sleep().then(() => {
-            this.downloadDocumentsHandler(fileName);
-        }).catch(error => {
-            this.setState(() => ({ downloading: false }))
-        })
+    handlePdfDownload = () => {
+        if(this.state.urlPDF){
+            this.downloadDocumentsHandler();
+        }
+        else {
+            const fileName = `${FILE_NAME}${uuidv4()}-${this.state.applicantName}`;
+            this.createDocumentsPDF(fileName);
+        }
     }
 
     render() {
@@ -247,7 +280,7 @@ class NonDisclosure extends Component {
                                 <span className="applicant-card__title">{applyTabs[4].label}</span>
                                 {
                                     this.state.id ?
-                                        <button className="applicant-card__edit-button" onClick={this.handleDownloadPDFClick} disabled={this.state.downloading}>
+                                        <button className="applicant-card__edit-button" onClick={this.handlePdfDownload} disabled={this.state.downloading}>
                                             {this.state.downloading ?
                                                 <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>
                                                 :
