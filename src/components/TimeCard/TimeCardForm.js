@@ -86,6 +86,7 @@ class TimeCardForm extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {
+            console.log({ item: nextProps.item })
             const { clockInId, clockOutId, hotelId, employeeId, key, clockIn, clockOut, noteIn } = nextProps.item;
 
 
@@ -105,7 +106,8 @@ class TimeCardForm extends Component {
                 newMark: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
                 readOnly: nextProps.readOnly,
             }, _ => {
-                this.DisabledTimeOut({target: {checked: true}});
+                //  this.DisabledTimeOut({ target: { checked: this.state.statusTimeOut } });
+                this.calculateHours();
             });
         } else if (!nextProps.openModal) {
             this.setState({
@@ -235,7 +237,7 @@ class TimeCardForm extends Component {
                 }
 
                 // return;
-                marks.map(mark => {                    
+                marks.map(mark => {
                     this.updateMark(mark);
                 });
             }
@@ -245,7 +247,7 @@ class TimeCardForm extends Component {
     updateMark = (mark) => {
         if (!mark) return;
 
-        let editMark = {...mark};        
+        let editMark = { ...mark };
 
         this.props.client
             .mutate({
@@ -529,7 +531,7 @@ class TimeCardForm extends Component {
         }
     }
 
-    DisabledTimeOut = ({target: {checked}}) => {
+    DisabledTimeOut = ({ target: { checked } }) => {
         if (checked) {
             this.setState({
                 statusTimeOut: true,
@@ -655,7 +657,7 @@ class TimeCardForm extends Component {
         const employeeList = this.getEmployeeFilterList();
         const positionList = this.getPositionFilterList();
 
-        const {readOnly} = this.state;
+        const { readOnly } = this.state;
 
         return (
             <div>
@@ -664,13 +666,13 @@ class TimeCardForm extends Component {
                         <DialogTitle style={{ padding: '0px' }}>
                             <div className="modal-header">
                                 {
-                                    readOnly 
+                                    readOnly
                                         ? <p className="modal-title alert alert-success d-flex flex-row">
-                                                <i class="fas fa-fw fa-exclamation-circle mr-3 align-self-center"></i>
-                                                <div>
-                                                    This timesheet has been approved and cannot be edited. A manager must unapprove the day or week this timesheet falls in before it can be edited.
+                                            <i class="fas fa-fw fa-exclamation-circle mr-3 align-self-center"></i>
+                                            <div>
+                                                This timesheet has been approved and cannot be edited. A manager must unapprove the day or week this timesheet falls in before it can be edited.
                                                 </div>
-                                            </p>
+                                        </p>
                                         : <h5 className="modal-title">Add Time +</h5>
                                 }
                             </div>
@@ -749,11 +751,11 @@ class TimeCardForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">* Time In</label>
-                                            <Datetime dateFormat={false} value={this.state.shift ? moment(this.state.shift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} inputProps={{disabled: readOnly }} />
+                                            <Datetime dateFormat={false} value={this.state.shift ? moment(this.state.shift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} inputProps={{ disabled: readOnly }} />
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
-                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} inputProps={{disabled: readOnly }} />
+                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} inputProps={{ disabled: readOnly }} />
                                         </div>
                                         <div className="col-md-4">
                                             <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} disabled={readOnly} />
