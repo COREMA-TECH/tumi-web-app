@@ -299,6 +299,12 @@ class FormsI9 extends Component {
                                                     }}>
                                                         Sign <i className="fas fa-pencil-alt" />
                                                     </button>
+
+                                                    <button style={{marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
+                                                        this.validateI9();
+                                                        }}>{actions[4].label} <i className="far fa-save"/>
+                                                    </button>
+
                                                     <button className="applicant-card__edit-button" onClick={() => {
                                                         this.downloadDocumentsHandler();                                                        
                                                     }}>{this.state.downloading && (

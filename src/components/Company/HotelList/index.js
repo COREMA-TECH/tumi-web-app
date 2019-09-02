@@ -78,7 +78,7 @@ class HotelList extends Component {
     };
 
     handleConfirmAlertDialog = () => {
-        this.deleteCompany();
+        this.getHotels(-1);
     };
 
     UNSAFE_componentWillMount() {
@@ -114,11 +114,15 @@ class HotelList extends Component {
     };
 
     handleCloseAlertDialog = () => {
-        this.setState({ openAlert: false, deleteId: null });
+        this.setState({ openAlert: false, deleteId: null }, _ => {
+            this.getHotels();
+        });
     };
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({ open: false }, _ => {
+            this.getHotels(-1);
+        });
     };
 
     handleClickOpenEdit = (boolValue, id, rate, idCompany) => (event) => {

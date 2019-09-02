@@ -1351,7 +1351,13 @@ class General extends Component {
                 this.setState(_ => ({
                     hotelToSetDefault: clickedHotel,
                     openConfirmDefaultHotel: true,
-                    defaultHotelModalTitle: "Are you sure you want to change the employee Home Location?"
+                    defaultHotelModalTitle: "Are you sure you want to change the employee's Home Location?"
+                }))
+            } else{
+                this.setState(_ => ({
+                    hotelToSetDefault: clickedHotel,
+                    openConfirmDefaultHotel: true,
+                    defaultHotelModalTitle: "Are you sure you want to set this item as the employee's Home Location?"
                 }))
             }
         }
@@ -1359,7 +1365,7 @@ class General extends Component {
             this.setState(_ => ({
                 hotelToSetDefault: clickedHotel,
                 openConfirmDefaultHotel: true,
-                defaultHotelModalTitle: "Are you sure you want to unassign the employee Home Location?"
+                defaultHotelModalTitle: "Are you sure you want to unassign the employee's Home Location?"
             }))
         }
 

@@ -328,16 +328,14 @@ class FormsW4 extends Component {
                                                     }}>
                                                         Sign <i className="fas fa-pencil-alt" />
                                                     </button>
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        // let random = uuidv4();
 
-                                                        // this.createDocumentsPDF(random);
-                                                        // this.sleep().then(() => {
-                                                        this.downloadDocumentsHandler();
-                                                        // this.downloadDocumentsHandler(random);
-                                                        // }).catch(error => {
-                                                        //     this.setState({ downloading: false })
-                                                        // })
+                                                    <button style={{marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
+                                                            this.validateW4();
+                                                        }}>{actions[4].label} <i className="far fa-save" />
+                                                    </button>
+
+                                                    <button className="applicant-card__edit-button" onClick={() => {
+                                                        this.downloadDocumentsHandler();                                                        
                                                     }}>{this.state.downloading && (
                                                         <React.Fragment>Downloading <i
                                                             class="fas fa-spinner fa-spin" /></React.Fragment>)}
@@ -345,7 +343,7 @@ class FormsW4 extends Component {
                                                             <React.Fragment>{actions[9].label} <i
                                                                 className="fas fa-download" /></React.Fragment>)}
 
-                                                    </button>
+                                                    </button>                                                    
                                                 </Fragment>
                                             ) : (
                                                     <button className="applicant-card__edit-button" onClick={() => {
