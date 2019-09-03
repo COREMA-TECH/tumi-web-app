@@ -342,10 +342,10 @@ class BoardManager extends Component {
 
             if (this.state.LaneOrigen != "lane1" && this.state.LaneOrigen != "Notify") {
                 this.clearArray();
+
                 needEnglish = state.needEnglish;
                 needExperience = state.needExperience;
                 Position = state.Position;
-
 
                 this.getLatLongHotel(1, state.Zipcode.substring(0, 5));//, () => {
 
@@ -359,7 +359,7 @@ class BoardManager extends Component {
         }
     }
 
-    KeepArray() {
+    KeepArray = () => {
         this.setState(
             {
                 lane: [
@@ -860,7 +860,6 @@ class BoardManager extends Component {
         const { classes } = this.props;
 
         let isLoading = this.state.loading;
-
         return (
             <div>
 
