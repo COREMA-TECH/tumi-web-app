@@ -145,7 +145,7 @@ class BackgroundCheck extends Component {
                     statesCompletes: dataInfo
                 })
             })
-            .catch( error => {
+            .catch(error => {
                 this.setState({
                     loadingApplicantData: false
                 });
@@ -445,7 +445,7 @@ class BackgroundCheck extends Component {
         }
     }
 
-    cloneForm  = _ => {
+    cloneForm = _ => {
         let contentPDF = document.getElementById('DocumentPDF');
         let contentPDFClone = contentPDF.cloneNode(true);
         return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
@@ -548,7 +548,7 @@ class BackgroundCheck extends Component {
         );
 
         return (
-            <div className="Apply-container--application" style={{width: '900px', margin: '0 auto'}}>
+            <div className="Apply-container--application" style={{ width: '900px', margin: '0 auto' }}>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="applicant-card">
@@ -598,7 +598,7 @@ class BackgroundCheck extends Component {
 
                             </div>
 
-                            <div className="row" id="" style={{margin: '0 auto', maxWidth: '100%'}}>
+                            <div className="row" id="" style={{ margin: '0 auto', maxWidth: '100%' }}>
                                 <div className="col-md-12">
                                     {renderHTML(`
                                             <p dir="ltr">In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</p>
@@ -947,9 +947,9 @@ class BackgroundCheck extends Component {
                             }}>
                                 {
                                     this.state.isCreated ? (
-                                        <div className="row" id="DocumentPDF" style={{maxWidth: '100%', margin: '0' }}>
+                                        <div className="row" id="DocumentPDF" style={{ maxWidth: '100%', margin: '0' }}>
                                             <div style={{ width: '100%', margin: '0 auto' }}>
-                                                <p><img style={{ display: 'block', marginLeft: '-8.5%', marginTop : '-10px' }} src="https://i.imgur.com/bHDSsLu.png" alt width="116%" height={192} /></p>
+                                                <p><img style={{ display: 'block', marginLeft: '-8.5%', marginTop: '-10px' }} src="https://i.imgur.com/bHDSsLu.png" alt width="116%" height={192} /></p>
                                                 <div title="Page 1">
                                                     <table style={{ borderCollapse: 'collapse', width: '100%', height: '59px' }} border={0}>
                                                         <tbody>
@@ -1059,7 +1059,7 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                
+
                                                 <table style={{ backgroundColor: '#ddd', borderCollapse: 'collapse', width: '100%', height: '35px', marginTop: '300px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '35px' }}>
@@ -1087,7 +1087,7 @@ class BackgroundCheck extends Component {
                                                                         <span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>WILL A MOTOR VEHICLE REPORT BE REQUIRED?: </strong>
                                                                         </span>
                                                                     </span>
-                                                                    
+
                                                                     {
                                                                         this.state.vehicleReportRequired ? (
                                                                             <span style={{
@@ -1269,19 +1269,20 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '20px' }} border={1}>
                                                     <tbody>
-                                                        <tr style={{ height: '17px' }}>
+                                                        <tr style={{ height: '20px', verticalAlign: "middle" }}>
                                                             <td style={{ width: '50%', height: '17px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>SIGNATURE: </strong></span>
                                                                 <img style={{
                                                                     width: '100px',
-                                                                    height: '30px',
+                                                                    height: '20px',
                                                                     display: 'inline-block',
                                                                     backgroundColor: '#f9f9f9',
+                                                                    zoom: "2.5",
                                                                     margin: 'auto'
                                                                 }} src={this.state.signature} alt="" />
                                                             </td>
-                                                            <td style={{ width: '47.1631%', height: '17px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE: </strong></span><span>{new Date().toISOString().substring(0, 10)}</span></td>
+                                                            <td style={{ width: '47.1631%', height: '20px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE: </strong></span><span>{new Date().toISOString().substring(0, 10)}</span></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
