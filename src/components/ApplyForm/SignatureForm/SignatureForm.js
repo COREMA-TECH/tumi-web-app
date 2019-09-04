@@ -126,7 +126,7 @@ class Signature extends React.Component {
         }, _ => {
             window.location.reload()
         })
-        
+
     }
 
     insertTextIntoCanvas = () => {
@@ -508,7 +508,7 @@ class Signature extends React.Component {
                                 id="signatureContainer"
                                 type="text"
                                 spellCheck="false"
-                                maxLength="15"
+                                maxLength="25"
                                 className={this.getClassTextInput()}
                                 placeholder={'Write Signature'}
                                 value={this.state.inputText}
@@ -556,7 +556,7 @@ class Signature extends React.Component {
                         </Button>
                     </DialogActions>
                 </Dialog>
-                <Dialog                    
+                <Dialog
                     maxWidth={"sm"}
                     open={this.state.openFinishModal}
                     onClose={this.handleCloseFinishModal}
