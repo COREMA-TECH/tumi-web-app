@@ -8,6 +8,8 @@ import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INF
 import { ADD_ANTI_HARASSMENT } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import Button from "@material-ui/core/es/Button/Button";
 import PropTypes from 'prop-types';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -75,7 +77,7 @@ class AntiHarassment extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                
+
                 if (data.applications[0].harassmentPolicy !== null) {
                     this.setState({
                         id: data.applications[0].harassmentPolicy.id,
@@ -200,6 +202,7 @@ class AntiHarassment extends Component {
             <div>
                 <Dialog
                     open={this.state.openSignature}
+                    fullWidth
                     onClose={() => {
                         this.setState({
                             openSignature: false,
@@ -212,9 +215,21 @@ class AntiHarassment extends Component {
                         })
                     }}
                     aria-labelledby="form-dialog-title">
-                    <DialogTitle>
-                        <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-                    </DialogTitle>
+                    <Toolbar>
+                        <h1 className="primary apply-form-container__label">Please Sign</h1>
+                        <Button color="default" onClick={() => {
+                            this.setState(() => ({ openSignature: false }),
+                                () => {
+                                    if (this.state.signature === '') {
+                                        this.setState({
+                                            accept: false
+                                        })
+                                    }
+                                });
+                        }}>
+                            Close
+                                </Button>
+                    </Toolbar>
                     <DialogContent>
                         <SignatureForm
                             applicationId={this.state.applicationId}
@@ -227,7 +242,7 @@ class AntiHarassment extends Component {
         );
 
         return (
-            <div className="Apply-container--application" style={{'width':'900px', 'margin':'0 auto'}}>
+            <div className="Apply-container--application" style={{ 'width': '900px', 'margin': '0 auto' }}>
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">

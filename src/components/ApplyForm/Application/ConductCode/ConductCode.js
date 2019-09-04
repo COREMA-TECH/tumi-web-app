@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 import SignatureForm from '../../SignatureForm/SignatureForm';
 import withApollo from 'react-apollo/withApollo';
@@ -8,6 +7,8 @@ import renderHTML from 'react-render-html';
 import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO, CREATE_DOCUMENTS_PDF_QUERY } from './Queries';
 import { ADD_CONDUCT_CODE } from './Mutations';
 import withGlobalContent from '../../../Generic/Global';
+import Button from "@material-ui/core/es/Button/Button";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import PropTypes from 'prop-types';
 
 
@@ -138,11 +139,11 @@ class ConductCode extends Component {
 			});
 	};
 
-	cloneForm  = _ => {
-        let contentPDF = document.getElementById('DocumentPDF');
-        let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
-    }
+	cloneForm = _ => {
+		let contentPDF = document.getElementById('DocumentPDF');
+		let contentPDFClone = contentPDF.cloneNode(true);
+		return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
+	}
 
 	createDocumentsPDF = (random) => {
 		this.setState({
@@ -190,12 +191,12 @@ class ConductCode extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-        if (nextProps.applicationId != this.props.applicationId) {
-            this.setState({
-                applicationId: nextProps.applicationId
-            });
-        }
-    }
+		if (nextProps.applicationId != this.props.applicationId) {
+			this.setState({
+				applicationId: nextProps.applicationId
+			});
+		}
+	}
 
 	render() {
 		let renderSignatureDialog = () => (
@@ -215,9 +216,21 @@ class ConductCode extends Component {
 						})
 					}}
 					aria-labelledby="form-dialog-title">
-					<DialogTitle>
-						<h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-					</DialogTitle>
+					<Toolbar>
+						<h1 className="primary apply-form-container__label">Please Sign</h1>
+						<Button color="default" onClick={() => {
+							this.setState(() => ({ openSignature: false }),
+								() => {
+									if (this.state.signature === '') {
+										this.setState({
+											accept: false
+										})
+									}
+								});
+						}}>
+							Close
+                                </Button>
+					</Toolbar>
 					<DialogContent>
 						<SignatureForm applicationId={this.state.applicationId}
 							signatureValue={this.handleSignature}
@@ -229,7 +242,7 @@ class ConductCode extends Component {
 		);
 
 		return (
-			<div className="Apply-container--application" style={{width: '900px', margin: '0 auto'}}>
+			<div className="Apply-container--application" style={{ width: '900px', margin: '0 auto' }}>
 				<div className="row">
 					<div className="col-12">
 						<div className="applicant-card">
@@ -266,7 +279,7 @@ class ConductCode extends Component {
 										)
 								}
 							</div>
-							<div className="row pdf-container" style={{margin: '0 auto', maxWidth: '95%', fontSize: '1.1rem'}}>
+							<div className="row pdf-container" style={{ margin: '0 auto', maxWidth: '95%', fontSize: '1.1rem' }}>
 								<div id="DocumentPDF" className="signature-information">
 									{
 										lenguageform == 'en' ?
