@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import PropTypes from 'prop-types';
+import Button from "@material-ui/core/es/Button/Button";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 
 class IndependentContractContent extends Component {
 
@@ -30,25 +31,28 @@ class IndependentContractContent extends Component {
         this.setState(() => ({ openSignature: true }));
     }
 
+    onCloseDialog = () => {
+        this.setState({
+            openSignature: false,
+        }, () => {
+            if (this.state.signature === '') {
+                this.setState({
+                    accept: false
+                })
+            }
+        })
+    }
     renderSignatureDialog = () => (
         <div>
             <Dialog
                 open={this.state.openSignature}
-                onClose={() => {
-                    this.setState({
-                        openSignature: false,
-                    }, () => {
-                        if (this.state.signature === '') {
-                            this.setState({
-                                accept: false
-                            })
-                        }
-                    })
-                }}
+                fullWidth
+                onClose={this.onCloseDialog}
                 aria-labelledby="form-dialog-title">
-                <DialogTitle>
-                    <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-                </DialogTitle>
+                <Toolbar>
+                    <h1 className="primary apply-form-container__label">Please Sign</h1>
+                    <Button color="default" onClick={this.onCloseDialog}>Close</Button>
+                </Toolbar>
                 <DialogContent>
                     <SignatureForm signatureValue={this.handleSignature} showSaveIcon={null} />
                 </DialogContent>
