@@ -9450,6 +9450,13 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 .Tab-fa-circle:after {
   content: "\F111";
   font-weight: 900; }
+  .Stepper-wrapper .Tab-fa-circle:after {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center; }
 
 .RecordsCards-btn {
   background-color: #d2d2d2;
@@ -13609,5 +13616,3 @@ label.input-group-text {
 
 span[class^='MySnackbarContent-message-'] {
   color: #FFF; }
-
-/*# sourceMappingURL=default.css.map */

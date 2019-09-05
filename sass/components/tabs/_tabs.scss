@@ -24,6 +24,10 @@
             &:after {
                 content: "\F111";
                 font-weight: 900;
+                .Stepper-wrapper & {
+                    display: flex;
+                    align-items: center;
+                }
             }
         }
     }

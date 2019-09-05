@@ -13,7 +13,7 @@
   },
   {
     "id": 3,
-    "label": "Background Check"
+    "label": "Documents"
   },
   {
     "id": 4,
@@ -50,5 +50,9 @@
   {
     "id": 12,
     "label": "Independen Contract"
+  },
+  {
+    "id": 13,
+    "label": "Background Check"
   }
 ]

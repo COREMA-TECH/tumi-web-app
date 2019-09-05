@@ -14,11 +14,12 @@ import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 import ProfilePreview from "./ProfilePreview/ProfilePreview";
 import FormsI9 from './I9/FormsI9';
 import FormsW4 from "./W4/FormsW4";
-import { GET_APPLICATION_STATUS } from './Queries';
+import { GET_APPLICATION_STATUS, GET_COMPLETED_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
 import IndependentContract from "./IndependentContract";
 import ApplicationInternal from './ApplicationInternal';
 import Summary from './Summary/Summary';
+import Documents from './Documents';
 
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -95,7 +96,7 @@ class CustomizedTabs extends React.Component {
             return;
         this.props.client
             .query({
-                query: GET_APPLICATION_STATUS,
+                query: GET_COMPLETED_STATUS,
                 fetchPolicy: 'no-cache',
                 variables: {
                     id: this.state.applicationId
@@ -103,7 +104,7 @@ class CustomizedTabs extends React.Component {
             })
             .then(({ data }) => {
                 this.setState({
-                    applicationStatus: data.applicationCompletedData
+                    applicationStatus: data.applicationCompleted
                 });
             })
             .catch();
@@ -152,7 +153,7 @@ class CustomizedTabs extends React.Component {
             case 3:
                 return <ProfilePreview applicationId={this.state.applicationId} />;
             case 4:
-                return <BackgroundCheck applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                return <Documents applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
             case 5:
                 return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
             case 6:
@@ -218,51 +219,8 @@ class CustomizedTabs extends React.Component {
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantBackgroundCheck ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus ? 'incomplete' : 'completed'}` }}
                             label={applyTabs[3].label}
-                            disabled={this.state.disableTabs}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantDisclosure ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[4].label}
-                            disabled={this.state.disableTabs}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantConductCode ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[5].label}
-                            disabled={this.state.disableTabs}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantHarassmentPolicy ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[6].label}
-                            disabled={this.state.disableTabs}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantWorkerCompensation ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[7].label}
-                            disabled={this.state.disableTabs}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantI9 ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[8].label}
-                            disabled={this.state.disableTabs}
-                        />
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus.ApplicantW4 ? 'incomplete' : 'completed'}` }}
-                            label={applyTabs[10].label}
-                            disabled={this.state.disableTabs}
-                        />
-
-                        <Tab
-                            disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
-                            label={applyTabs[9].label}
                             disabled={this.state.disableTabs}
                         />
                         {this.state.independentContract ? <Tab
