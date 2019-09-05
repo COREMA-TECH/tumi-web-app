@@ -245,7 +245,7 @@ class FormsI9 extends Component {
                     'right'
                 );
                 this.getApplicantInformation(this.props.applicationId)
-                this.props.changeTabState("ApplicantI9");
+                this.props.changeTabState();
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message

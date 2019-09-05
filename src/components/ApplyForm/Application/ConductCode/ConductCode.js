@@ -113,6 +113,7 @@ class ConductCode extends Component {
 		delete conductObject.openSignature;
 		delete conductObject.id;
 		delete conductObject.accept;
+		delete conductObject.urlPDF; // no es necesario en el crear
 
 		this.props.client
 			.mutate({
@@ -127,13 +128,37 @@ class ConductCode extends Component {
 				this.setState({
 					id: data.addConductCode[0].id
 				});
-				this.props.changeTabState("ApplicantConductCode");
+				this.props.changeTabState();
 			})
 			.catch((error) => {
 				// If there's an error show a snackbar with a error message
 				this.props.handleOpenSnackbar(
 					'error',
 					'Error to sign Conduct Code document. Please, try again!',
+					'bottom',
+					'right'
+				);
+			});
+	};
+
+	updateConductCode = () => {
+		this.props.client
+			.mutate({
+				mutation: UPDATE_CONDUCT_CODE,
+				variables: {
+					conductCode: {
+						id: this.state.id,
+						pdfUrl: this.state.urlPDF,
+						content: this.state.content,
+						ApplicationId: this.state.ApplicationId
+					}
+				}
+			})
+			.catch((error) => {
+				// If there's an error show a snackbar with a error message
+				this.props.handleOpenSnackbar(
+					'error',
+					'Error updating url Conduct Code document.',
 					'bottom',
 					'right'
 				);

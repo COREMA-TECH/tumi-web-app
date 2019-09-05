@@ -246,7 +246,7 @@ class FormsW4 extends Component {
                         'right'
                     );
                     this.getApplicantInformation(this.props.applicationId)
-                    this.props.changeTabState("ApplicantW4");
+                    this.props.changeTabState();
                 })
                 .catch(error => {
                     // If there's an error show a snackbar with a error message

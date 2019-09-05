@@ -10,8 +10,9 @@ import WorkerCompensation from "../WorkerCompensation/WorkerCompensation";
 import ApplicantDocument from "../ApplicantDocuments/ApplicantDocument";
 import FormI9 from '../I9/FormsI9';
 import FormW4 from "../W4/FormsW4";
-import { GET_APPLICATION_STATUS } from './Queries';
+import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
+import withGlobalContent from '../../../Generic/Global';
 
 const steps = {
     0: "Background Check",
@@ -42,7 +43,8 @@ class Documents extends Component {
             steps: steps,
             activeStep: 0,
             applicationStatus: {},
-            applicationId: this.props.applicationId
+            applicationId: this.props.applicationId,
+            downloading: false
         };
     }
 
@@ -59,28 +61,28 @@ class Documents extends Component {
 
         switch(step) {
             case 0:
-                stepScreen = <BackgroundCheck applicationId={applicationId} />
+                stepScreen = <BackgroundCheck applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 1:
-                stepScreen = <NonDisclosure applicationId={applicationId} />
+                stepScreen = <NonDisclosure applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 2: 
-                stepScreen = <ConductCode applicationId={applicationId} />
+                stepScreen = <ConductCode applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 3: 
-                stepScreen = <AntiHarassment applicationId={applicationId} />
+                stepScreen = <AntiHarassment applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 4:
-                stepScreen = <WorkerCompensation applicationId={applicationId} />
+                stepScreen = <WorkerCompensation applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 5: 
-                stepScreen = <FormI9 applicationId={applicationId} />;
+                stepScreen = <FormI9 applicationId={applicationId} changeTabState={this.changeTabState} />;
                 break;
             case 6:
-                stepScreen = <FormW4 applicationId={applicationId} />
+                stepScreen = <FormW4 applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 7: 
-                stepScreen = <ApplicantDocument applicationId={applicationId} />
+                stepScreen = <ApplicantDocument applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
         }
 
@@ -144,8 +146,49 @@ class Documents extends Component {
         return isCompleted;
     }
 
+    changeTabState = () => {
+        this.getApplicantStatus();
+    }
+
+    handleMergeDocumentClick = () => {
+        let {downloading} = this.state;
+        if(!downloading){
+            this.setState({
+                downloading: true
+            }, () => {
+                this.props.client.query({
+                    query: GET_MERGED_DOCUMENT,
+                    fetchPolicy: 'no-cache',
+                    variables: {
+                        applicationId: this.state.applicationId
+                    }
+                }).then(({ data }) => {
+                    if(data.pdfMergeQuery)
+                        window.open(data.pdfMergeQuery, '_blank');
+                    else
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to merge documents!',
+                            'bottom',
+                            'center'
+                        );
+                    this.setState({downloading: false});
+                }).catch(error => {
+                    console.log(error);
+                    this.setState({downloading: false});
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to merge documents!',
+                        'bottom',
+                        'center'
+                    );
+                });
+            })
+        }
+    }
+
     render() {
-        const { activeStep, steps } = this.state;
+        const { activeStep, steps, downloading } = this.state;
         const { classes } = this.props;
         return (
             <React.Fragment>
@@ -153,9 +196,9 @@ class Documents extends Component {
                     <div className="col-md-2">
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header header-profile-menu">
-                                <button className="applicant-card__edit-button">
+                                <button className="applicant-card__edit-button" onClick={this.handleMergeDocumentClick}>
                                     Download Merged Document &nbsp;
-                                    <i className="fas fa-download" />
+                                    {downloading ? <i class="fas fa-spinner fa-spin" /> : <i className="fas fa-download" />}
                                 </button>
                             </div>
                             <Stepper activeStep={activeStep} orientation="vertical" className="stepper-menu">
@@ -187,4 +230,4 @@ class Documents extends Component {
 
 }
 
-export default withApollo(withStyles(styles)(Documents));
+export default withApollo(withGlobalContent(withStyles(styles)(Documents)));

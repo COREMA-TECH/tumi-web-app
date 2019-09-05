@@ -76,7 +76,7 @@ class Summary extends Component {
 
                 this.getDisclosureInformation(this.props.applicationId);
 
-                this.props.changeTabState("ApplicantDisclosure");
+                //this.props.changeTabState();
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message

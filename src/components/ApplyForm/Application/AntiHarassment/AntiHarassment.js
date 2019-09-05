@@ -109,6 +109,7 @@ class AntiHarassment extends Component {
         delete harassmentObject.openSignature;
         delete harassmentObject.id;
         delete harassmentObject.accept;
+        delete harassmentObject.urlPDF; // no es necesario en el crear
 
         this.props.client
             .mutate({
@@ -128,7 +129,7 @@ class AntiHarassment extends Component {
                 this.setState({
                     id: data.addHarassmentPolicy[0].id
                 })
-                this.props.changeTabState("ApplicantHarassmentPolicy");
+                this.props.changeTabState();
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message
