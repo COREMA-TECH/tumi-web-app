@@ -47,7 +47,7 @@ class FormsW4 extends Component {
             estadoCivil: false,
             estadoCivil1: false,
             estadoCivil2: false,
-            pdfUrl: '',
+            urlPDF: '',
             formData: ''
         }
     }
@@ -84,7 +84,7 @@ class FormsW4 extends Component {
                     this.setState({
                         isCreated: true,
                         html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 65%;"', '') : '',
-                        pdfUrl: data.applicantW4[0].url,
+                        urlPDF: data.applicantW4[0].url,
                         formData: JSON.parse(data.applicantW4[0].fieldsData)
                     }, _ => {
                         this.loadDataFromJson(this.state.formData)
@@ -96,7 +96,7 @@ class FormsW4 extends Component {
                 }
             })
             .catch(error => {
-
+                console.log(error);
             })
     };
 
@@ -193,8 +193,16 @@ class FormsW4 extends Component {
 
 
     downloadDocumentsHandler = () => {
-        var url = this.context.baseUrl + this.state.pdfUrl.replace(".", "");
-        window.open(url, '_blank');
+        var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF.replace(".", "");
+        if(url)
+            window.open(url, '_blank');
+        else
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error to open W4 document.',
+                'bottom',
+                'right'
+            );
         this.setState({ downloading: false });
     };
 
@@ -328,15 +336,8 @@ class FormsW4 extends Component {
                                                     }}>
                                                         Sign <i className="fas fa-pencil-alt" />
                                                     </button>
-
-                                                    <button style={{marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
-                                                            this.validateW4();
-                                                        }}>{actions[4].label} <i className="far fa-save" />
-                                                    </button>
-
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        this.downloadDocumentsHandler();                                                        
-                                                    }}>{this.state.downloading && (
+                                                    <button className="applicant-card__edit-button" onClick={this.downloadDocumentsHandler}>
+                                                        {this.state.downloading && (
                                                         <React.Fragment>Downloading <i
                                                             class="fas fa-spinner fa-spin" /></React.Fragment>)}
                                                         {!this.state.downloading && (

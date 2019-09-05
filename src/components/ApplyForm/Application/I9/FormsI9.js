@@ -35,7 +35,6 @@ class FormsI9 extends Component {
             companyPhoneNumber: '',
             ApplicationId: this.props.applicationId,
 
-
             isCreated: null,
             html: '',
 
@@ -43,7 +42,7 @@ class FormsI9 extends Component {
             oneCheck1: false,
             oneCheck2: false,
             oneCheck3: false,
-            pdfUrl: '',
+            urlPDF: '',
             formData: ''
         }
     }
@@ -115,7 +114,7 @@ class FormsI9 extends Component {
                     this.setState({
                         isCreated: true,
                         html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 50%;"', '') : '',
-                        pdfUrl: data.applicantI9[0].url,
+                        urlPDF: data.applicantI9[0].url,
                         formData: JSON.parse(data.applicantI9[0].fieldsData)
                     }, _ => {
                         if(this.state.formData) {
@@ -179,14 +178,21 @@ class FormsI9 extends Component {
 
 
     downloadDocumentsHandler = () => {
-        var url = this.context.baseUrl + this.state.pdfUrl.replace(".", "");
-        window.open(url, '_blank');
+        var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF.replace(".", "");
+        if(url)
+            window.open(url, '_blank');
+        else
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error to open I9 document.',
+                'bottom',
+                'right'
+            );
         this.setState({downloading: false});
     };
 
 
     componentWillMount() {
-        // this.getHarrasmentInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
     }
 
@@ -300,14 +306,8 @@ class FormsI9 extends Component {
                                                         Sign <i className="fas fa-pencil-alt" />
                                                     </button>
 
-                                                    <button style={{marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
-                                                        this.validateI9();
-                                                        }}>{actions[4].label} <i className="far fa-save"/>
-                                                    </button>
-
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        this.downloadDocumentsHandler();                                                        
-                                                    }}>{this.state.downloading && (
+                                                    <button className="applicant-card__edit-button" onClick={this.downloadDocumentsHandler}>
+                                                        {this.state.downloading && (
                                                         <React.Fragment>Downloading <i
                                                             class="fas fa-spinner fa-spin" /></React.Fragment>)}
                                                         {!this.state.downloading && (

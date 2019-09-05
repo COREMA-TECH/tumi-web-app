@@ -10,3 +10,11 @@ export const ADD_CONDUCT_CODE = gql`
         }
     }
 `;
+
+export const UPDATE_CONDUCT_CODE = gql`
+    mutation updateConductCode($conductCode:  inputUpdateApplicantConductCode) {
+        updateConductCode(conductCode: $conductCode) {
+            id
+        }
+    }
+`;
