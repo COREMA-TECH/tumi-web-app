@@ -30,6 +30,7 @@ export const GET_CONDUCT_CODE_INFO = gql`
                 content
                 date
                 applicantName
+                pdfUrl
             }
         }
     }

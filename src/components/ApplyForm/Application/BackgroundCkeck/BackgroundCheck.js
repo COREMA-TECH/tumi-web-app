@@ -68,7 +68,8 @@ class BackgroundCheck extends Component {
             statesCompletes: [],
 
 
-            loadingApplicantData: false
+            loadingApplicantData: false,
+            urlPDF: null
         }
     }
 
@@ -145,7 +146,7 @@ class BackgroundCheck extends Component {
                     statesCompletes: dataInfo
                 })
             })
-            .catch( error => {
+            .catch(error => {
                 this.setState({
                     loadingApplicantData: false
                 });
@@ -239,6 +240,7 @@ class BackgroundCheck extends Component {
                             signature: data.applications[0].backgroundCheck.signature,
                             date: data.applications[0].backgroundCheck.date.substring(0, 10),
                             loadedBackgroundCheckById: true,
+                            urlPDF: data.applications[0].backgroundCheck.pdfUrl,
                             editing: true,
                             accept: true,
                             isCreated: true
@@ -367,6 +369,30 @@ class BackgroundCheck extends Component {
         });
     };
 
+    updatePdfUrlBackgroundCheck = () => {
+        this.props.client
+            .mutate({
+                mutation: UPDATE_BACKGROUND_CHECK,
+                variables: {
+                    backgroundCheck: {
+                        id: this.state.id,
+						pdfUrl: this.state.urlPDF,
+						content: this.state.content || '',
+						ApplicationId: this.props.applicationId
+                    }
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to updating url background check',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
     handleSignature = (value) => {
         this.setState({
             signature: value,
@@ -445,7 +471,7 @@ class BackgroundCheck extends Component {
         }
     }
 
-    cloneForm  = _ => {
+    cloneForm = _ => {
         let contentPDF = document.getElementById('DocumentPDF');
         let contentPDFClone = contentPDF.cloneNode(true);
         return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
@@ -467,13 +493,25 @@ class BackgroundCheck extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then((data) => {
-                if (data.data.createdocumentspdf === null) {
+            .then(({data}) => {
+                if (data.createdocumentspdf !== null) {
+                    this.setState({ 
+                        urlPDF: data.createdocumentspdf,
+                        loadingData: false
+                    }, () => {
+                        this.updatePdfUrlBackgroundCheck();
+                        this.downloadDocumentsHandler();
+                    });
+                }
+                else {
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({ loadingData: false, downloading: false });
+                    this.setState({
+                        loadingData: false,
+                        downloading: false 
+                    });
                 }
             })
             .catch((error) => {
@@ -483,8 +521,8 @@ class BackgroundCheck extends Component {
     };
 
 
-    downloadDocumentsHandler = (random) => {
-        var url = this.context.baseUrl + '/public/Documents/' + "background-check-" + random + '.pdf';
+    downloadDocumentsHandler = () => {
+        var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "background-check-" + random + '.pdf';
         window.open(url, '_blank');
         this.setState({ downloading: false });
     };
@@ -493,6 +531,20 @@ class BackgroundCheck extends Component {
         return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
+    handlePdfDownload = () => {
+        if(this.state.urlPDF){
+            this.downloadDocumentsHandler();
+        }
+        else {
+            let random = uuidv4();
+            this.createDocumentsPDF(random);
+            // this.sleep().then(() => {
+            //     this.downloadDocumentsHandler();
+            // }).catch(error => {
+            //     this.setState({ downloading: false })
+            // })
+        }
+    }
 
 
     render() {
@@ -548,7 +600,7 @@ class BackgroundCheck extends Component {
         );
 
         return (
-            <div className="Apply-container--application" style={{width: '900px', margin: '0 auto'}}>
+            <div className="Apply-container--application" style={{ width: '900px', margin: '0 auto' }}>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="applicant-card">
@@ -557,16 +609,8 @@ class BackgroundCheck extends Component {
                                 <div>
                                     {
                                         this.state.isCreated && !this.state.loadingApplicantData ? (
-                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                let random = uuidv4();
-
-                                                this.createDocumentsPDF(random);
-                                                this.sleep().then(() => {
-                                                    this.downloadDocumentsHandler(random);
-                                                }).catch(error => {
-                                                    this.setState({ downloading: false })
-                                                })
-                                            }}>{this.state.downloading && (
+                                            <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+                                            {this.state.downloading && (
                                                 <React.Fragment>Downloading <i
                                                     className="fas fa-spinner fa-spin" /></React.Fragment>)}
                                                 {!this.state.downloading && (
@@ -598,7 +642,7 @@ class BackgroundCheck extends Component {
 
                             </div>
 
-                            <div className="row" id="" style={{margin: '0 auto', maxWidth: '100%'}}>
+                            <div className="row" id="" style={{ margin: '0 auto', maxWidth: '100%' }}>
                                 <div className="col-md-12">
                                     {renderHTML(`
                                             <p dir="ltr">In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</p>
@@ -947,9 +991,9 @@ class BackgroundCheck extends Component {
                             }}>
                                 {
                                     this.state.isCreated ? (
-                                        <div className="row" id="DocumentPDF" style={{maxWidth: '100%', margin: '0' }}>
+                                        <div className="row" id="DocumentPDF" style={{ maxWidth: '100%', margin: '0' }}>
                                             <div style={{ width: '100%', margin: '0 auto' }}>
-                                                <p><img style={{ display: 'block', marginLeft: '-8.5%', marginTop : '-10px' }} src="https://i.imgur.com/bHDSsLu.png" alt width="116%" height={192} /></p>
+                                                <p><img style={{ display: 'block', marginLeft: '-8.5%', marginTop: '-10px' }} src="https://i.imgur.com/bHDSsLu.png" alt width="116%" height={192} /></p>
                                                 <div title="Page 1">
                                                     <table style={{ borderCollapse: 'collapse', width: '100%', height: '59px' }} border={0}>
                                                         <tbody>
@@ -1059,7 +1103,7 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                
+
                                                 <table style={{ backgroundColor: '#ddd', borderCollapse: 'collapse', width: '100%', height: '35px', marginTop: '300px' }} border={1}>
                                                     <tbody>
                                                         <tr style={{ height: '35px' }}>
@@ -1087,7 +1131,7 @@ class BackgroundCheck extends Component {
                                                                         <span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>WILL A MOTOR VEHICLE REPORT BE REQUIRED?: </strong>
                                                                         </span>
                                                                     </span>
-                                                                    
+
                                                                     {
                                                                         this.state.vehicleReportRequired ? (
                                                                             <span style={{
@@ -1269,19 +1313,20 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={1}>
+                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '20px' }} border={1}>
                                                     <tbody>
-                                                        <tr style={{ height: '17px' }}>
+                                                        <tr style={{ height: '20px', verticalAlign: "middle" }}>
                                                             <td style={{ width: '50%', height: '17px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>SIGNATURE: </strong></span>
                                                                 <img style={{
                                                                     width: '100px',
-                                                                    height: '30px',
+                                                                    height: '20px',
                                                                     display: 'inline-block',
                                                                     backgroundColor: '#f9f9f9',
+                                                                    zoom: "2.5",
                                                                     margin: 'auto'
                                                                 }} src={this.state.signature} alt="" />
                                                             </td>
-                                                            <td style={{ width: '47.1631%', height: '17px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE: </strong></span><span>{new Date().toISOString().substring(0, 10)}</span></td>
+                                                            <td style={{ width: '47.1631%', height: '20px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE: </strong></span><span>{new Date().toISOString().substring(0, 10)}</span></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

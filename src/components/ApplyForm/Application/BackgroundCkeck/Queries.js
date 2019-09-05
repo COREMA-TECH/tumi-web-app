@@ -39,6 +39,7 @@ export const GET_APPLICATION_CHECK_ID = gql`
                 content
                 date
                 applicantName
+                pdfUrl
             }
         }
     }

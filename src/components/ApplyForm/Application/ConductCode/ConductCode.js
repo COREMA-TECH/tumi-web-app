@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 import SignatureForm from '../../SignatureForm/SignatureForm';
 import withApollo from 'react-apollo/withApollo';
 import renderHTML from 'react-render-html';
 import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO, CREATE_DOCUMENTS_PDF_QUERY } from './Queries';
-import { ADD_CONDUCT_CODE } from './Mutations';
+import { ADD_CONDUCT_CODE, UPDATE_CONDUCT_CODE } from './Mutations';
 import withGlobalContent from '../../../Generic/Global';
+import Button from "@material-ui/core/es/Button/Button";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import PropTypes from 'prop-types';
 
 
@@ -87,7 +88,8 @@ class ConductCode extends Component {
 						signature: data.applications[0].conductCode.signature,
 						content: data.applications[0].conductCode.content,
 						applicantName: data.applications[0].conductCode.applicantName,
-						date: data.applications[0].conductCode.date
+						date: data.applications[0].conductCode.date,
+						urlPDF: data.applications[0].conductCode.pdfUrl
 					});
 				} else {
 					this.setState({
@@ -138,11 +140,14 @@ class ConductCode extends Component {
 			});
 	};
 
-	cloneForm  = _ => {
-        let contentPDF = document.getElementById('DocumentPDF');
-        let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
-    }
+
+	cloneForm = _ => {
+		let contentPDF = document.getElementById('DocumentPDF');
+		let contentPDFClone = contentPDF.cloneNode(true);
+		contentPDFClone.querySelector("#imgCanvasSign").style.zoom = "1.8";
+
+		return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
+	}
 
 	createDocumentsPDF = (random) => {
 		this.setState({
@@ -157,9 +162,15 @@ class ConductCode extends Component {
 				},
 				fetchPolicy: 'no-cache'
 			})
-			.then((data) => {
-				if (data.data.createdocumentspdf != null) {
-					this.state.urlPDF = data.data.createdocumentspdf;
+			.then(({data}) => {
+				if (data.createdocumentspdf != null) {
+					//this.state.urlPDF = data.data.createdocumentspdf;
+					this.setState({
+						urlPDF: data.createdocumentspdf
+					}, () => {
+						this.updateConductCode(); 
+						this.downloadDocumentsHandler();
+					});
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
@@ -175,7 +186,7 @@ class ConductCode extends Component {
 	};
 
 	downloadDocumentsHandler = () => {
-		var url = this.context.baseUrl + this.state.urlPDF; //'/public/Documents/' + 'ConductCode-' + this.state.applicantName + '.pdf';
+		var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF;
 		window.open(url, '_blank');
 		this.setState({ downloading: false });
 	};
@@ -189,13 +200,28 @@ class ConductCode extends Component {
 		return new Promise((resolve) => setTimeout(resolve, 8000));
 	}
 
+	handlePdfDownload = () => {
+		if(this.state.urlPDF){
+			this.downloadDocumentsHandler();
+		}
+		else {
+			let random = uuidv4();
+			this.createDocumentsPDF(random);
+			// this.sleep().then(() => {
+			// 	this.downloadDocumentsHandler();
+			// }).catch(error => {
+			// 	this.setState({ downloading: false })
+			// });
+		}
+	}
+
 	componentWillReceiveProps(nextProps) {
-        if (nextProps.applicationId != this.props.applicationId) {
-            this.setState({
-                applicationId: nextProps.applicationId
-            });
-        }
-    }
+		if (nextProps.applicationId != this.props.applicationId) {
+			this.setState({
+				applicationId: nextProps.applicationId
+			});
+		}
+	}
 
 	render() {
 		let renderSignatureDialog = () => (
@@ -215,9 +241,21 @@ class ConductCode extends Component {
 						})
 					}}
 					aria-labelledby="form-dialog-title">
-					<DialogTitle>
-						<h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-					</DialogTitle>
+					<Toolbar>
+						<h1 className="primary apply-form-container__label">Please Sign</h1>
+						<Button color="default" onClick={() => {
+							this.setState(() => ({ openSignature: false }),
+								() => {
+									if (this.state.signature === '') {
+										this.setState({
+											accept: false
+										})
+									}
+								});
+						}}>
+							Close
+                                </Button>
+					</Toolbar>
 					<DialogContent>
 						<SignatureForm applicationId={this.state.applicationId}
 							signatureValue={this.handleSignature}
@@ -229,7 +267,7 @@ class ConductCode extends Component {
 		);
 
 		return (
-			<div className="Apply-container--application" style={{width: '900px', margin: '0 auto'}}>
+			<div className="Apply-container--application" style={{ width: '900px', margin: '0 auto' }}>
 				<div className="row">
 					<div className="col-12">
 						<div className="applicant-card">
@@ -242,15 +280,8 @@ class ConductCode extends Component {
 											<div>
 												{
 													this.state.id !== null ? (
-														<button className="applicant-card__edit-button" onClick={() => {
-															let random = uuidv4();
-															this.createDocumentsPDF(random);
-															this.sleep().then(() => {
-																this.downloadDocumentsHandler();
-															}).catch(error => {
-																this.setState({ downloading: false })
-															})
-														}}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+														<button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+															{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
 															{!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
 														</button>
 													) : (
@@ -266,7 +297,7 @@ class ConductCode extends Component {
 										)
 								}
 							</div>
-							<div className="row pdf-container" style={{margin: '0 auto', maxWidth: '95%', fontSize: '1.1rem'}}>
+							<div className="row pdf-container" style={{ margin: '0 auto', maxWidth: '95%', fontSize: '1.1rem' }}>
 								<div id="DocumentPDF" className="signature-information">
 									{
 										lenguageform == 'en' ?
@@ -296,7 +327,7 @@ class ConductCode extends Component {
                                                 <p style="margin: 0in 0in 0.0001pt;  ">&nbsp;</p>
                                                 <li style="text-align: justify;"><span style="">I am committed to the success of Tumi Staffing, Inc and providing a positive environment to all of my fellow employees!</span></li>
                                                 </ol>
-                                                <p style="margin: 4.4pt 0in 0.0001pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img width="150" height="auto" src="` +
+                                                <p style="margin: 4.4pt 0in 0.0001pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img id ="imgCanvasSign" width="150" height="auto" src="` +
 												this.state.signature +
 												`" alt=""></u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` +
 												this.state.date.substring(0, 10) +
@@ -346,7 +377,7 @@ class ConductCode extends Component {
                                 </ol>
                                 <p style="margin: 0in 0in 0.0001pt;  ">&nbsp;</p>
                                 <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    Signed: <u><img src="` + this.state.signature + `" alt="" width="150" height="auto" /></u>
+                                    Signed: <u><img  id ="imgCanvasSign" src="` + this.state.signature + `" alt="" width="150" height="auto" /></u>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` +
 												this.state.date.substring(0, 10) + `</u>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>

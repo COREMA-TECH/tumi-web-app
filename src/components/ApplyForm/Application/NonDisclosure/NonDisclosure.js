@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
@@ -11,7 +10,8 @@ import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
 import { CREATE_DOCUMENTS_PDF_QUERY, GET_DISCLOSURE_INFO } from "./Queries";
 import PropTypes from 'prop-types';
 import { NonDisclosureContent } from './Content';
-import ReactDOMServer from 'react-dom/server';
+import Button from "@material-ui/core/es/Button/Button";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -225,9 +225,21 @@ class NonDisclosure extends Component {
                         })
                     }}
                     aria-labelledby="form-dialog-title">
-                    <DialogTitle>
-                        <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-                    </DialogTitle>
+                    <Toolbar>
+                        <h1 className="primary apply-form-container__label">Please Sign</h1>
+                        <Button color="default" onClick={() => {
+                            this.setState(() => ({ openSignature: false }),
+                                () => {
+                                    if (this.state.signature === '') {
+                                        this.setState({
+                                            accept: false
+                                        })
+                                    }
+                                });
+                        }}>
+                            Close
+                                </Button>
+                    </Toolbar>
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
                             showSaveIcon={null}
@@ -239,7 +251,7 @@ class NonDisclosure extends Component {
         );
 
         return (
-            <div className="Apply-container--application" style={{width: '100%', maxWidth: '900px', margin: '0 auto'}}>
+            <div className="Apply-container--application" style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">
@@ -284,5 +296,6 @@ class NonDisclosure extends Component {
         baseUrl: PropTypes.string
     };
 }
+
 
 export default withApollo(withGlobalContent(NonDisclosure));

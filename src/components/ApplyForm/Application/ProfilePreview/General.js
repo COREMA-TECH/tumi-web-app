@@ -713,11 +713,11 @@ class General extends Component {
         return found ? found : false;
     }
 
-    insertNewEmployee = _ => {
+    insertNewEmployee = async _ => {
         const ApplicationId = this.props.applicationId;
         let employeeId = 0;
 
-        this.props.client.mutate({
+        await this.props.client.mutate({
             mutation: CREATE_EMPLOYEE_FOR_APPLICATION,
             variables: {
                 id: 0,
@@ -729,18 +729,18 @@ class General extends Component {
             }
         })
         .then(({ data }) => {
-            employeeId = data.id
+            employeeId = data.createEmployeeBasedOnApplicationOrUpdateEmployee.id
         })
         .catch(error => console.log(error));
 
         return employeeId;
     }
 
-    insertRelations = () => {
+    insertRelations = async () => {
         //this.state.property holds the hotels picked in the dropdown
         let newEmployeeId = 0;
-        if(this.state.employeeHotelEmployeeId === 0){
-            newEmployeeId = this.insertNewEmployee();
+        if(!this.state.employeeHotelEmployeeId){
+            newEmployeeId = await this.insertNewEmployee();
         }
 
         if (this.state.property.length <= 0) {
@@ -773,17 +773,16 @@ class General extends Component {
         })
         .then(({data}) => {
             this.props.handleOpenSnackbar('success', 'Hotels Linked!');
-            this.setState(() => ({
+            this.setState({
                 openModal: false,
                 openVerification: false,
                 saving: false,
                 property: [],
                 type: null,
                 departmentName: '',
-                titleName: ''
-            }), _ => {
-                this.getMyHotels();
-            });
+                titleName: '',
+                employeeHotelEmployeeId: data.addEmployeeByHotel ? data.addEmployeeByHotel[0].EmployeeId : 0
+            }, () => this.getMyHotels());
         })
     };
 
@@ -1352,7 +1351,13 @@ class General extends Component {
                 this.setState(_ => ({
                     hotelToSetDefault: clickedHotel,
                     openConfirmDefaultHotel: true,
-                    defaultHotelModalTitle: "Are you sure you want to change the employee Home Location?"
+                    defaultHotelModalTitle: "Are you sure you want to change the employee's Home Location?"
+                }))
+            } else{
+                this.setState(_ => ({
+                    hotelToSetDefault: clickedHotel,
+                    openConfirmDefaultHotel: true,
+                    defaultHotelModalTitle: "Are you sure you want to set this item as the employee's Home Location?"
                 }))
             }
         }
@@ -1360,7 +1365,7 @@ class General extends Component {
             this.setState(_ => ({
                 hotelToSetDefault: clickedHotel,
                 openConfirmDefaultHotel: true,
-                defaultHotelModalTitle: "Are you sure you want to unassign the employee Home Location?"
+                defaultHotelModalTitle: "Are you sure you want to unassign the employee's Home Location?"
             }))
         }
 

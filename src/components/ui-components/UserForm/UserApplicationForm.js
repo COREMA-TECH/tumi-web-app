@@ -19,7 +19,7 @@ class UserApplicationForm extends Component {
         emailValid: true,
         numberValid: true,
         idRolValid: true,
-        idRol: 5,//Hotel Manager
+        idRol: 105, //Field Employee
         loadingRoles: false,
         idLanguage: "",
         firstNameValid: true,

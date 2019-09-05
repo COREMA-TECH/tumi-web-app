@@ -1,10 +1,10 @@
 import renderHTML from 'react-render-html';
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class AntiHarassmentPdf extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -217,7 +217,7 @@ class AntiHarassmentPdf extends Component {
 <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
 <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
 
-<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;<u><img src="` + this.state.signature + `" alt="" width="150" height="auto" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;<u><img src="` + this.state.signature + `" alt="" width="150" height="auto" style="zoom:1.4"  /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
 <p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 <p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date.substring(0, 10) + `</u></span></p>

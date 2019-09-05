@@ -5,9 +5,11 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import renderHTML from 'react-render-html';
 import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO } from "./Queries";
-import { ADD_ANTI_HARASSMENT } from "./Mutations";
+import { ADD_ANTI_HARASSMENT, UPDATE_ANTI_HARASSMENT } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import Button from "@material-ui/core/es/Button/Button";
 import PropTypes from 'prop-types';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
@@ -28,8 +30,8 @@ class AntiHarassment extends Component {
             applicantName: '',
             companyPhoneNumber: '',
             ApplicationId: this.props.applicationId,
-            completed: false
-
+            completed: false,
+            urlPDF: null
         }
     }
 
@@ -75,7 +77,7 @@ class AntiHarassment extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                
+
                 if (data.applications[0].harassmentPolicy !== null) {
                     this.setState({
                         id: data.applications[0].harassmentPolicy.id,
@@ -83,6 +85,7 @@ class AntiHarassment extends Component {
                         content: data.applications[0].harassmentPolicy.content,
                         applicantName: data.applications[0].harassmentPolicy.applicantName,
                         date: data.applications[0].harassmentPolicy.date,
+                        urlPDF: data.applications[0].harassmentPolicy.pdfUrl
                     });
                 } else {
                     this.setState({
@@ -138,6 +141,30 @@ class AntiHarassment extends Component {
             });
     };
 
+    UpdatePdfUrlAntiHarrasment = () => {
+        this.props.client
+            .mutate({
+                mutation: UPDATE_ANTI_HARASSMENT,
+                variables: {
+                    harassmentPolicy: {
+                        id: this.state.id,
+						pdfUrl: this.state.urlPDF,
+						content: this.state.content || '',
+						ApplicationId: this.state.ApplicationId
+                    }
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to updating url Anti Harrasment document.',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
     createDocumentsPDF = (idv4) => {
         this.setState(
             {
@@ -153,9 +180,15 @@ class AntiHarassment extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then((data) => {
-                if (data.data.createdocumentspdf != null) {
-
+            .then(({data}) => {
+                if (data.createdocumentspdf !== null) {
+                    this.setState({
+                        urlPDF: data.createdocumentspdf,
+                        loadingData: false
+                    }, () => {
+                        this.UpdatePdfUrlAntiHarrasment();
+                        this.downloadDocumentsHandler();
+                    });
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',
@@ -171,8 +204,8 @@ class AntiHarassment extends Component {
     };
 
 
-    downloadDocumentsHandler = (idv4) => {
-        var url = this.context.baseUrl + '/public/Documents/' + "Anti-Harrasment-" + idv4 + "-" + this.state.applicantName + '.pdf';
+    downloadDocumentsHandler = () => {
+        var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "Anti-Harrasment-" + idv4 + "-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
         this.setState({ downloading: false });
     };
@@ -185,6 +218,16 @@ class AntiHarassment extends Component {
 
     sleep() {
         return new Promise((resolve) => setTimeout(resolve, 8000));
+    }
+
+    handlePdfDownload = () => {
+        if(this.state.urlPDF){
+            this.downloadDocumentsHandler();
+        }
+        else {
+            let idv4 = uuidv4();
+            this.createDocumentsPDF(idv4);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -200,6 +243,7 @@ class AntiHarassment extends Component {
             <div>
                 <Dialog
                     open={this.state.openSignature}
+                    fullWidth
                     onClose={() => {
                         this.setState({
                             openSignature: false,
@@ -212,9 +256,21 @@ class AntiHarassment extends Component {
                         })
                     }}
                     aria-labelledby="form-dialog-title">
-                    <DialogTitle>
-                        <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-                    </DialogTitle>
+                    <Toolbar>
+                        <h1 className="primary apply-form-container__label">Please Sign</h1>
+                        <Button color="default" onClick={() => {
+                            this.setState(() => ({ openSignature: false }),
+                                () => {
+                                    if (this.state.signature === '') {
+                                        this.setState({
+                                            accept: false
+                                        })
+                                    }
+                                });
+                        }}>
+                            Close
+                                </Button>
+                    </Toolbar>
                     <DialogContent>
                         <SignatureForm
                             applicationId={this.state.applicationId}
@@ -227,7 +283,7 @@ class AntiHarassment extends Component {
         );
 
         return (
-            <div className="Apply-container--application" style={{'width':'900px', 'margin':'0 auto'}}>
+            <div className="Apply-container--application" style={{ 'width': '900px', 'margin': '0 auto' }}>
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">
@@ -235,15 +291,8 @@ class AntiHarassment extends Component {
                                 <span className="applicant-card__title">{applyTabs[6].label}</span>
                                 {
                                     this.state.id !== null ? (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            let idv4 = uuidv4();
-                                            this.createDocumentsPDF(idv4);
-                                            this.sleep().then(() => {
-                                                this.downloadDocumentsHandler(idv4);
-                                            }).catch(error => {
-                                                this.setState({ downloading: false })
-                                            })
-                                        }}>{this.state.downloading && (
+                                        <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+                                            {this.state.downloading && (
                                             <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
                                             {!this.state.downloading && (
                                                 <React.Fragment>{actions[9].label} <i
@@ -452,7 +501,7 @@ class AntiHarassment extends Component {
 <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify;  "><span style="font-size: 11.0pt; ">&nbsp;</span></p>
 <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify;  "><span style="font-size: 11.0pt; ">&nbsp;</span></p>
 
-<p style="margin: 0.15pt 0in 0.0001pt;   text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;<u><img src="` + this.state.signature + `" alt="" width="150" height="auto" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+<p style="margin: 0.15pt 0in 0.0001pt;   text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;<u><img src="` + this.state.signature + `" alt="" width="150" height="auto" style="zoom: 1.7" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
 <p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt;   text-align: justify;">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 <p style="margin: 0in 0in 0.0001pt;   text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="margin: 0.15pt 0in 0.0001pt;   text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date.substring(0, 10) + `</u></span></p>
