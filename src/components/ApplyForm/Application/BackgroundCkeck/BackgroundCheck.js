@@ -299,7 +299,7 @@ class BackgroundCheck extends Component {
                         'right'
                     );
 
-                    this.props.changeTabState("ApplicantBackgroundCheck");
+                    this.props.changeTabState();
                 })
                 .catch(error => {
                     // If there's an error show a snackbar with a error message
@@ -357,7 +357,7 @@ class BackgroundCheck extends Component {
                     // If there's an error show a snackbar with a error message
                     this.props.handleOpenSnackbar(
                         'error',
-                        'Error to insert background check information. Please, try again!',
+                        'Error to update background check information. Please, try again!',
                         'bottom',
                         'right'
                     );

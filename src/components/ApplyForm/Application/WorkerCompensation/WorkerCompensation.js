@@ -118,6 +118,8 @@ class WorkerCompensation extends Component {
         delete workerCompensationObject.openSignature;
         delete workerCompensationObject.id;
         delete workerCompensationObject.accept;
+        delete workerCompensationObject.urlPDF; // no es necesario en el crear
+
         if (workerCompensationObject.injuryDate === '') {
             workerCompensationObject.injuryDate = null;
         }
@@ -139,7 +141,7 @@ class WorkerCompensation extends Component {
                 );
 
                 this.getWorkerCompensationInformation(this.props.applicationId);
-                this.props.changeTabState("ApplicantWorkerCompensation");
+                this.props.changeTabState();
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message
@@ -192,9 +194,7 @@ class WorkerCompensation extends Component {
                         applicantCity: data.applications[0].city,
                         applicantState: data.applications[0].state,
                         applicantZipCode: data.applications[0].zipCode,
-                    });
-
-                    this.getStateAndCity(parseInt(this.state.applicantState), parseInt(this.state.applicantCity));
+                    }, () => this.getStateAndCity(parseInt(this.state.applicantState), parseInt(this.state.applicantCity)));
                 }
             })
             .catch(error => {
@@ -255,31 +255,35 @@ class WorkerCompensation extends Component {
                 }
             })
             .then(({ data }) => {
-                this.setState({
-                    applicantState: data.getcatalogitem[0].Name.trim()
-                }, () => {
-                    this.props.client
-                        .query({
-                            query: GET_CITY_NAME,
-                            variables: {
-                                id: cityId,
-                                parent: stateId
-                            }
-                        })
-                        .then(({ data }) => {
-                            this.setState({
-                                applicantCity: data.getcatalogitem[0].Name
-                            });
-                        })
-                        .catch(error => {
-                            this.props.handleOpenSnackbar(
-                                'error',
-                                'Error to get City Name. Please, try again!',
-                                'bottom',
-                                'right'
-                            );
-                        })
-                })
+                if(data.getcatalogitem[0]){
+                    this.setState({
+                        applicantState: data.getcatalogitem[0].Name.trim()
+                    }, () => {
+                        this.props.client
+                            .query({
+                                query: GET_CITY_NAME,
+                                variables: {
+                                    id: cityId,
+                                    parent: stateId
+                                }
+                            })
+                            .then(({ data }) => {
+                                if(data.getcatalogitem[0]){
+                                    this.setState({
+                                        applicantCity: data.getcatalogitem[0].Name
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                this.props.handleOpenSnackbar(
+                                    'error',
+                                    'Error to get City Name. Please, try again!',
+                                    'bottom',
+                                    'right'
+                                );
+                            })
+                    })
+                }
             })
             .catch(error => {
                 this.props.handleOpenSnackbar(
