@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ADD_APLICANT_PREVIOUS_EMPLOYMENT, REMOVE_APPLICANT_PREVIOUS_EMPLOYMENT } from '../../Mutations';
+import { ADD_APLICANT_PREVIOUS_EMPLOYMENT, REMOVE_APPLICANT_PREVIOUS_EMPLOYMENT, UPDATE_APLICANT_PREVIOUS_EMPLOYMENT } from '../../Mutations';
 import withApollo from 'react-apollo/withApollo';
 import { GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID } from '../../Queries';
 import CircularProgressLoading from '../../../material-ui/CircularProgressLoading';
@@ -81,6 +81,45 @@ class PreviousEmployment extends Component {
 			});
 	};
 
+
+	updatePreviousEmploymentApplication = (item) => {
+		//Remove uuid property in the item
+		delete item.uuid;
+		if (isNaN(item.payRate)) {
+			item.payRate = 0;
+		}
+
+		this.props.client
+			.mutate({
+				mutation: UPDATE_APLICANT_PREVIOUS_EMPLOYMENT,
+				variables: {
+					application: item
+				}
+			})
+			.then(() => {
+				this.setState({
+					editing: false,
+					id: 0
+				});
+
+				document.getElementById('form-previous-employment').reset();
+				this.handleClose();
+
+				this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
+
+				this.getPreviousEmploymentList(this.state.applicationId);
+			})
+			.catch((error) => {
+				// Replace this alert with a Snackbar message error
+				this.props.handleOpenSnackbar(
+					'error',
+					'Error: error to save previous employment. Please, try again!',
+					'bottom',
+					'right'
+				);
+			});
+	};
+
 	// To get a list of previous employments saved from API
 	getPreviousEmploymentList = (id) => {
 		this.setState(
@@ -136,6 +175,49 @@ class PreviousEmployment extends Component {
 			});
 	};
 
+	handleOpenNewModal = () => {
+		this.setState({
+			open: true,
+			editing: true,
+			id: 0,
+			previousEmploymentPhone: '',
+			startPreviousEmployment: null,
+			endPreviousEmployment: null,
+			companyNameEmployment: '',
+			companyAddressEmployment: '',
+			companySupervisor: '',
+			companyJobTitle: '',
+			companyPayRate: null,
+			companyReasonForLeaving: ''
+		});
+	}
+
+	handleOpenEditModal = ({ companyName, address, jobTitle, phone, supervisor, payRate, startDate, endDate, id, reasonForLeaving }) => {
+		this.setState({
+			open: true,
+			editing: true,
+			id,
+			previousEmploymentPhone: phone,
+			startPreviousEmployment: startDate ? startDate.substring(0, 10) : null,
+			endPreviousEmployment: endDate ? endDate.substring(0, 10) : null,
+			companyNameEmployment: companyName,
+			companyAddressEmployment: address,
+			companySupervisor: supervisor,
+			companyJobTitle: jobTitle,
+			companyPayRate: payRate,
+			companyReasonForLeaving: reasonForLeaving
+		}, () => {
+
+		});
+	}
+
+	onChangeValue = (event) => {
+		var element = event.target;
+		this.setState(() => ({
+			[element.name]: element.value
+		}));
+	}
+
 	componentWillMount() {
 		this.setState(
 			{
@@ -159,21 +241,38 @@ class PreviousEmployment extends Component {
 						e.stopPropagation();
 
 						try {
-							let item = {
-								uuid: uuidv4(),
-								companyName: document.getElementById('companyNameEmployment').value,
-								phone: document.getElementById('companyPhoneEmployment').value,
-								address: document.getElementById('companyAddressEmployment').value,
-								supervisor: document.getElementById('companySupervisor').value,
-								jobTitle: document.getElementById('companyJobTitle').value,
-								payRate: parseFloat(document.getElementById('companyPayRate').value),
-								startDate: document.getElementById('companyStartDate').value,
-								endDate: document.getElementById('companyEndDate').value,
-								reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
-								ApplicationId: this.state.applicationId
-							};
 
-							this.insertPreviousEmploymentApplication(item);
+							let { companyNameEmployment, previousEmploymentPhone, companyAddressEmployment, companySupervisor, companyJobTitle, companyPayRate, startPreviousEmployment, endPreviousEmployment, companyReasonForLeaving, applicationId } = this.state;
+							let formData = {
+								companyName: companyNameEmployment,
+								phone: previousEmploymentPhone,
+								address: companyAddressEmployment,
+								supervisor: companySupervisor,
+								jobTitle: companyJobTitle,
+								payRate: companyPayRate,
+								startDate: startPreviousEmployment,
+								endDate: endPreviousEmployment,
+								reasonForLeaving: companyReasonForLeaving,
+							}
+							let values = [];
+							Object.values(formData).map(value => {
+								if (value)
+									values.push(value);
+							})
+							if (values.length == 0)
+								this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
+							else {
+								let item = {
+									uuid: uuidv4(),
+									...formData,
+									ApplicationId: applicationId
+								};
+
+								if (this.state.id != 0)
+									this.updatePreviousEmploymentApplication({ ...item, id: this.state.id });
+								else
+									this.insertPreviousEmploymentApplication(item);
+							}
 						} catch (e) { }
 					}}
 					className="apply-form"
@@ -183,17 +282,18 @@ class PreviousEmployment extends Component {
 						{this.state.editing ? (
 							<div className="form-section-1 row">
 								<div className="col-md-6">
-									<span className="primary">* {previousEmploymentLabels[0].label}</span>
+									<span className="primary">{previousEmploymentLabels[0].label}</span>
 									<input
 										id="companyNameEmployment"
 										form="form-previous-employment"
 										name="companyNameEmployment"
 										type="text"
 										className="form-control"
-										required
 										min="0"
 										maxLength="50"
 										minLength="3"
+										value={this.state.companyNameEmployment}
+										onChange={this.onChangeValue}
 									/>
 								</div>
 								<div className="col-md-6">
@@ -211,7 +311,7 @@ class PreviousEmployment extends Component {
 												previousEmploymentPhone: event.target.value
 											});
 										}}
-                                        placeholder="+(___) ___-____"
+										placeholder="+(___) ___-____"
 										minLength="15"
 									/>
 								</div>
@@ -220,12 +320,14 @@ class PreviousEmployment extends Component {
 									<input
 										id="companyAddressEmployment"
 										form="form-previous-employment"
-										name="addressEmployment"
+										name="companyAddressEmployment"
 										type="text"
 										className="form-control"
 										min="0"
 										maxLength="50"
 										minLength="3"
+										value={this.state.companyAddressEmployment}
+										onChange={this.onChangeValue}
 									/>
 								</div>
 								<div className="col-md-6">
@@ -233,26 +335,29 @@ class PreviousEmployment extends Component {
 									<input
 										id="companySupervisor"
 										form="form-previous-employment"
-										name="supervisorEmployment"
+										name="companySupervisor"
 										type="text"
 										className="form-control"
 										min="0"
 										maxLength="50"
 										minLength="3"
+										value={this.state.companySupervisor}
+										onChange={this.onChangeValue}
 									/>
 								</div>
 								<div className="col-md-6">
-									<span className="primary">* {previousEmploymentLabels[4].label}</span>
+									<span className="primary">{previousEmploymentLabels[4].label}</span>
 									<input
 										id="companyJobTitle"
 										form="form-previous-employment"
-										name="jobTitleEmployment"
+										name="companyJobTitle"
 										type="text"
 										className="form-control"
-										required
 										min="0"
 										maxLength="50"
 										minLength="3"
+										value={this.state.companyJobTitle}
+										onChange={this.onChangeValue}
 									/>
 								</div>
 								<div className="col-md-6">
@@ -260,16 +365,19 @@ class PreviousEmployment extends Component {
 									<input
 										id="companyPayRate"
 										form="form-previous-employment"
-										name="payRateEmployment"
+										name="companyPayRate"
 										type="number"
+										step="0.01"
 										className="form-control"
 										min="0"
 										maxLength="50"
 										minLength="3"
+										value={this.state.companyPayRate}
+										onChange={this.onChangeValue}
 									/>
 								</div>
 								<div className="col-md-6">
-									<span className="primary">* {previousEmploymentLabels[6].label}</span>
+									<span className="primary">{previousEmploymentLabels[6].label}</span>
 									<input
 										id="companyStartDate"
 										onChange={(event) => {
@@ -281,14 +389,12 @@ class PreviousEmployment extends Component {
 										name="startPreviousEmployment"
 										type="date"
 										className="form-control"
-										required
 										max={this.state.endPreviousEmployment}
-										maxLength="50"
-										minLength="3"
+										value={this.state.startPreviousEmployment}
 									/>
 								</div>
 								<div className="col-md-6">
-									<span className="primary">* {previousEmploymentLabels[7].label} </span>
+									<span className="primary">{previousEmploymentLabels[7].label} </span>
 									<input
 										id="companyEndDate"
 										onChange={(event) => {
@@ -300,10 +406,8 @@ class PreviousEmployment extends Component {
 										name="endPreviousEmployment"
 										type="date"
 										className="form-control"
-										required
 										min={this.state.startPreviousEmployment}
-										maxLength="50"
-										minLength="3"
+										value={this.state.endPreviousEmployment}
 									/>
 								</div>
 								<div className="col-12">
@@ -311,8 +415,10 @@ class PreviousEmployment extends Component {
 									<textarea
 										id="companyReasonForLeaving"
 										form="form-previous-employment"
-										name="reasonForLeavingEmployment"
+										name="companyReasonForLeaving"
 										className="form-control textarea-apply-form"
+										value={this.state.companyReasonForLeaving}
+										onChange={this.onChangeValue}
 									/>
 								</div>
 							</div>
@@ -330,7 +436,7 @@ class PreviousEmployment extends Component {
 								type="submit"
 								form="form-previous-employment"
 							>
-								{spanishActions[0].label}
+								{this.state.id == 0 ? spanishActions[0].label : spanishActions[4].label}
 							</button>
 						</div>
 					</DialogActions>
@@ -353,6 +459,7 @@ class PreviousEmployment extends Component {
 								payRate={employmentItem.payRate}
 								startDate={employmentItem.startDate}
 								endDate={employmentItem.endDate}
+								handleOpenModal={() => this.handleOpenEditModal(employmentItem)}
 								remove={() => {
 									this.setState(
 										(prevState) => ({
@@ -388,10 +495,7 @@ class PreviousEmployment extends Component {
 										<button
 											className="applicant-card__edit-button"
 											onClick={() => {
-												this.setState({
-													open: true,
-													editing: true
-												});
+												this.handleOpenNewModal();
 											}}
 										>
 											{spanishActions[0].label} <i className="fas fa-plus" />

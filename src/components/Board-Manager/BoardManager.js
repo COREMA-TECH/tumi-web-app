@@ -11,7 +11,8 @@ import {
     GET_COORDENADAS,
     GET_HOTEL_QUERY,
     GET_MATCH,
-    GET_STATES_QUERY
+    GET_STATES_QUERY,
+    GET_RESPONSE_QUERY
 } from "./Queries";
 //import Board from 'react-trello'
 import { Board } from 'react-trello'
@@ -21,6 +22,9 @@ import CardTemplate from './CardTemplate';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withRouter } from "react-router-dom";
 import { red } from '@material-ui/core/es/colors';
+
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
 
 const CustomCard = props => {
     return (
@@ -122,8 +126,13 @@ class BoardManager extends Component {
             userId: localStorage.getItem('LoginId'),
             ReasonId: 30471,
             LaneOrigen: '',
-            LaneDestino: ''
-
+            LaneDestino: '',
+            statusOptions: [
+                { value: null, label: "Status (All)" },
+                { value: 1, label: "Open" },
+                { value: 2, label: "Completed" },
+                { value: 0, label: "Cancelled" },
+            ]
         }
     }
 
@@ -132,13 +141,15 @@ class BoardManager extends Component {
     };
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
+        let data;
 
         this.setState({
             LaneOrigen: sourceLaneId,
             LaneDestino: targetLaneId
         });
 
-        if (sourceLaneId == "lane1") {
+        if (sourceLaneId == "lane1" || sourceLaneId == "Notify") {
+
             this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
             this.KeepArray();
             this.onCardClick(this.state.ShiftId, null, 'lane1');
@@ -147,6 +158,7 @@ class BoardManager extends Component {
                 LaneOrigen: '',
                 LaneDestino: ''
             });
+
         }
         else {
 
@@ -173,63 +185,15 @@ class BoardManager extends Component {
                         this.addApplicationPhase(cardId, IdLane);
 
                         if (targetLaneId != "Matches") {
-                            this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                            this.updateApplicationInformation(cardId, false, 'Candidate has been notified');
                         }
-
                         if (targetLaneId == "Matches") {// && sourceLaneId == "Applied"
                             this.setState({
                                 ApplicationId: cardId,
                                 openReason: true
                             }, () => {
                             });
-
-                            this.setState(
-                                {
-                                    lane: [
-                                        {
-                                            id: 'lane1',
-                                            title: 'Work Orders',
-                                            label: ' ',
-                                            cards: this.state.workOrders,
-                                            laneStyle: { borderRadius: 50, marginBottom: 15 },
-                                            droppable: false,
-                                            draggable: false
-                                        },
-                                        {
-                                            id: 'Matches',
-                                            title: 'Matches',
-                                            label: ' ',
-                                            cards: this.state.matches,
-                                            droppable: true,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Interview',
-                                            title: 'Sent for Interview',
-                                            label: ' ',
-                                            cards: this.state.interview,
-                                            droppable: false,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Notify',
-                                            title: 'Notify',
-                                            label: ' ',
-                                            cards: this.state.notify,
-                                            droppable: true,
-                                            draggable: true
-                                        },
-                                        {
-                                            id: 'Accepted',
-                                            title: 'Accepted',
-                                            label: ' ',
-                                            cards: this.state.accepted,
-                                            droppable: true,
-                                            draggable: true
-                                        }
-                                    ],
-                                    loading: false
-                                });
+                            this.KeepArray();
                         }
                     }
                 }
@@ -256,7 +220,7 @@ class BoardManager extends Component {
                 editing: false
             });
 
-            this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
+            // this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
         }).catch((error) => {
             this.props.handleOpenSnackbar(
                 'error',
@@ -267,7 +231,7 @@ class BoardManager extends Component {
         });
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         this.setState(
             {
                 loading: true
@@ -329,7 +293,7 @@ class BoardManager extends Component {
             .catch();
     };
 
-    updateHotel = (id) => {
+    updateHotel = ({value: id}) => {
         if (id != 0) {
             this.setState(
                 {
@@ -338,7 +302,7 @@ class BoardManager extends Component {
                 },
                 () => {
                     this.loadStates();
-                    this.loadCities();
+                    // this.loadCities();
                     this.getWorkOrders();
                 }
             );
@@ -354,7 +318,7 @@ class BoardManager extends Component {
                 () => {
                     this.getWorkOrders();
                     this.loadStates();
-                    this.loadCities();
+                    // this.loadCities(); 
                 }
             );
 
@@ -411,11 +375,12 @@ class BoardManager extends Component {
     };
 
     onCardClick = (cardId, metadata, laneId) => {
+
         let needEnglish, needExperience, Position, state;
 
         state = this.state.workOrders.find((item) => { return item.id == cardId })
 
-        if (laneId.trim() == "lane1" && cardId > 0 && state.Status != 0) {
+        if ((laneId.trim() == "lane1") && cardId > 0 && state.Status != 0) {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
 
@@ -424,39 +389,27 @@ class BoardManager extends Component {
             });
             cardSelected[0].classList.add("CardBoard-selected");
 
-            if (this.state.LaneOrigen != "lane1") {
+            this.setState(
+                {
+                    Intopening: state.WorkOrderId,
+                    ShiftId: cardId
+                })
+
+            if (this.state.LaneOrigen != "lane1" && this.state.LaneOrigen != "Notify") {
                 this.clearArray();
-                this.setState(
-                    {
-                        Intopening: this.state.workOrders.find((item) => {
-                            return item.id == cardId
-                        }).WorkOrderId,
-                        ShiftId: cardId
-                    })
+                needEnglish = state.needEnglish;
+                needExperience = state.needExperience;
+                Position = state.Position;
 
 
-                needEnglish = this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).needEnglish;
-                needExperience = this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).needExperience;
-                Position = this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).Position;
-
-
-                this.getLatLongHotel(1, this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).Zipcode);
+                this.getLatLongHotel(1, state.Zipcode.substring(0, 5));//, () => {
 
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => {
-                        return item.id == cardId
-                    }).Position);
+                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, state.Position, state.WorkOrderId, cardId);
                 } else {
-                    this.getMatches(needEnglish, needExperience, 30, laneId, Position);
+                    this.getMatches(needEnglish, needExperience, 30, laneId, Position, state.WorkOrderId, cardId);
                 }
+                //});
             }
         }
     }
@@ -513,7 +466,6 @@ class BoardManager extends Component {
     clearArray() {
         this.setState(
             {
-                // workOrder: this.state.workOrders,
                 lane: [
                     {
                         id: 'lane1',
@@ -562,13 +514,12 @@ class BoardManager extends Component {
             });
     }
 
-
-    getMatches = async (language, experience, location, laneId, PositionId) => {
+    getMatches = async (language, experience, location, laneId, PositionId, _WOID, _SHID) => {
         let getmatches = [];
         let getnotify = [];
         let getaccepted = [];
         let getinterview = [];
-        let distances;
+        let distances = 0;
         let varphase;
 
         if (laneId == "lane1") {
@@ -583,158 +534,101 @@ class BoardManager extends Component {
                             language: language,
                             experience: experience,
                             Position: PositionId,
-                            WorkOrderId: this.state.Intopening,
-                            ShiftId: this.state.ShiftId
+                            WorkOrderId: _WOID,
+                            ShiftId: _SHID
                         },
                         fetchPolicy: 'no-cache'
                     }).then(({ data }) => {
-                        data.applicationsByMatches.forEach((wo) => {
+                        let dataAPI = data.applicationsByMatches;
 
-                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
-                                return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId
+                        dataAPI.map(item => {
+                            const Phases = item.Phases.sort().slice(-1).find((items) => {
+                                return items.WorkOrderId == _WOID && items.ApplicationId == item.id && items.ShiftId == _SHID
                             });
 
-                            if (wo.zipCode != null) {
-                                this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-                                    const { getDistance } = this.context;
-                                    const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+                            if (item.Coordenadas) {
+                                const { getDistance } = this.context;
+                                const distance = getDistance(this.state.latitud1, this.state.longitud1, item.Coordenadas.Lat, item.Coordenadas.Long, 'M')
 
-                                    if (distance >= location) {
-                                        distances = 0;
+
+                                if (distance <= location) {
+
+                                    if (typeof Phases == undefined || Phases == null) {
+                                        varphase = 30469;
                                     } else {
-                                        distances = 1;
+                                        varphase = Phases.StageId
                                     }
 
-                                    if (distances >= 1) {
-
-                                        if (typeof Phases == undefined || Phases == null) {
-                                            varphase = 30469;
-                                        } else {
-                                            varphase = Phases.StageId
-                                        }
-
-                                        switch (varphase) {
-                                            case 30469:
-                                                if (wo.isLead === false) {
-                                                    getmatches.push({
-                                                        id: wo.id,
-                                                        name: wo.firstName + ' ' + wo.lastName,
-                                                        subTitle: wo.cellPhone,
-                                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                        escalationTextLeftLead: wo.generalComment,
-                                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                                    });
-                                                }
-                                                break;
-                                            case 30461:
-                                                getinterview.push({
-                                                    id: wo.id,
-                                                    name: wo.firstName + ' ' + wo.lastName,
-                                                    subTitle: wo.cellPhone,
-                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                    escalationTextLeftLead: wo.generalComment,
-                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 },
-                                                    statusCompleted: wo.statusCompleted
-                                                });
-                                                break;
-                                            case 30464:
-
-                                                getnotify.push({
-                                                    id: wo.id,
-                                                    name: wo.firstName + ' ' + wo.lastName,
-                                                    subTitle: wo.cellPhone,
-                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                    escalationTextLeftLead: wo.generalComment,
-                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                    switch (varphase) {
+                                        case 30469:
+                                            if (item.isLead === false) {
+                                                getmatches.push({
+                                                    id: item.id,
+                                                    name: item.firstName + ' ' + item.lastName,
+                                                    subTitle: item.cellPhone,
+                                                    body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                                    escalationTextLeftLead: item.generalComment,
+                                                    escalationTextRightLead: item.car == true ? " Yes" : " No",
                                                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                                                 });
-                                                break;
-                                            case 30463, 30465:
-                                                getaccepted.push({
-                                                    id: wo.id,
-                                                    name: wo.firstName + ' ' + wo.lastName,
-                                                    subTitle: wo.cellPhone,
-                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                    escalationTextLeftLead: wo.generalComment,
-                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                                });
-                                                break;
-                                        }
+                                            }
+                                            break;
+                                        case 30461:
+                                            getinterview.push({
+                                                id: item.id,
+                                                name: item.firstName + ' ' + item.lastName,
+                                                subTitle: item.cellPhone,
+                                                body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: item.generalComment,
+                                                escalationTextRightLead: item.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 },
+                                                statusCompleted: item.statusCompleted
+                                            });
+                                            break;
+                                        case 30464:
+
+                                            getnotify.push({
+                                                id: item.id,
+                                                name: item.firstName + ' ' + item.lastName,
+                                                subTitle: item.cellPhone,
+                                                body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: item.generalComment,
+                                                escalationTextRightLead: item.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 },
+                                                response: 1
+                                            });
+
+                                            break;
+                                        case 30463, 30465:
+                                            getaccepted.push({
+                                                id: item.id,
+                                                name: item.firstName + ' ' + item.lastName,
+                                                subTitle: item.cellPhone,
+                                                body: item.cityInfo.DisplayLabel.trim() + ', ' + item.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: item.generalComment,
+                                                escalationTextRightLead: item.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break;
                                     }
 
-                                    this.setState({
-                                        matches: getmatches,
-                                        notify: getnotify,
-                                        interview: getinterview,
-                                        accepted: getaccepted
-                                    });
+                                }
 
-                                    this.setState(
-                                        {
-                                            lane: [
-                                                {
-                                                    id: 'lane1',
-                                                    title: 'Work Orders',
-                                                    label: ' ',
-                                                    cards: this.state.workOrders,
-                                                    laneStyle: { borderRadius: 50, marginBottom: 15 },
-                                                    droppable: false,
-                                                    draggable: false
-                                                },
-                                                {
-                                                    id: 'Matches',
-                                                    title: 'Matches',
-                                                    label: ' ',
-                                                    cards: this.state.matches,
-                                                    droppable: true,
-                                                    draggable: true
-                                                },
-                                                {
-                                                    id: 'Interview',
-                                                    title: 'Interview',
-                                                    label: ' ',
-                                                    cards: this.state.interview,
-                                                    droppable: false,
-                                                    draggable: true
-                                                },
-                                                {
-                                                    id: 'Notify',
-                                                    title: 'Notify',
-                                                    label: ' ',
-                                                    cards: this.state.notify,
-                                                    droppable: true,
-                                                    draggable: true
-                                                },
-                                                {
-                                                    id: 'Accepted',
-                                                    title: 'Accepted',
-                                                    label: ' ',
-                                                    cards: this.state.accepted,
-                                                    droppable: true,
-                                                    draggable: true
-                                                }
-                                            ],
-                                            loading: false
-
-                                        });
-                                });
                             }
+
                         });
 
-                        if (data.applicationsByMatches.length === 0) {
-                            this.props.handleOpenSnackbar(
-                                'warning',
-                                'No matches were found',
-                                'bottom',
-                                'right'
-                            );
-                        }
+
                         this.setState({
+                            matches: getmatches,
+                            notify: getnotify,
+                            interview: getinterview,
+                            accepted: getaccepted,
                             loading: false
-                        })
+                        });
+
+                        this.KeepArray();
+
                     }).catch(error => {
                         this.setState({
                             loading: false,
@@ -785,18 +679,6 @@ class BoardManager extends Component {
                 latitud1: data.zipcode[0].Lat,
                 longitud1: data.zipcode[0].Long
             });
-        }).catch(error => {
-        })
-    };
-
-    getLatLong = async (op, zipcode, fnc = () => {
-    }) => {
-        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
-            this.setState({
-                latitud2: data.zipcode[0].Lat,
-                longitud2: data.zipcode[0].Long
-            }, fnc);
-
         }).catch(error => {
         })
     };
@@ -879,10 +761,9 @@ class BoardManager extends Component {
                     count = 1;
                 }
 
-                //if (begin) count = 1;
                 datas = {
                     id: ShiftBoard.id,
-                    name: 'Title: ' + ShiftBoard.title,
+                    name: 'Title: ' + ShiftBoard.positionName,
                     dueOn: 'Q: ' + ShiftBoard.count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
@@ -894,7 +775,8 @@ class BoardManager extends Component {
                     Zipcode: ShiftBoard.zipCode,
                     WorkOrderId: ShiftBoard.workOrderId,
                     isOpening: ShiftBoard.isOpening,
-                    Status: ShiftBoard.status
+                    Status: ShiftBoard.status,
+                    Users: ShiftBoard.Users
                 };
                 getworkOrders.push(datas);
                 _id = ShiftBoard.workOrderId;
@@ -903,82 +785,18 @@ class BoardManager extends Component {
             this.setState({
                 workOrders: getworkOrders,
             });
+
         }).catch(error => {
             console.log(error)
         })
 
-        this.setState({
+        this.KeepArray();
 
-            // workOrders: getworkOrders,
-            lane: [
-                {
-                    id: 'lane1',
-                    title: 'Work Orders',
-                    label: ' ',
-                    cards: getworkOrders,
-                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 },
-                    droppable: false,
-                    cardDraggable: false
-                },
-                {
-                    id: 'Matches',
-                    title: 'Matches',
-                    label: ' ',
-                    cards: [],
-                    droppable: true,
-                    cardDraggable: true,
-                },
-                {
-                    id: 'Interview',
-                    title: 'Interview',
-                    label: ' ',
-                    cards: [],
-                    droppable: false,
-                    draggable: true
-                },
-                {
-                    id: 'Notify',
-                    title: 'Notify',
-                    label: ' ',
-                    cards: [],
-                    droppable: true,
-                    draggable: true
-                },
-                {
-                    id: 'Accepted',
-                    title: 'Accepted',
-                    label: ' ',
-                    cards: [],
-                    droppable: true,
-                    draggable: true
-                }
-            ],
-            loading: false
-        });
     };
 
     handleCloseModal = (event) => {
         this.setState({ openModal: false });
     };
-
-    abrirVentana() {
-        document.getElementById("capaFondo1").style.visibility = "visible";
-        /*   document.getElementById("capaFondo2").style.visibility = "visible";
-         document.getElementById("capaFondo3").style.visibility = "hidden";
- 
-         document.getElementById("capaVentana").style.visibility = "visible";*/
-        // alert("abrirVentana")
-
-    }
-
-    cerrarVentana() {
-        document.getElementById("capaFondo1").style.visibility = "hidden";
-        /* document.getElementById("capaFondo2").style.visibility="hidden";
-         document.getElementById("capaFondo3").style.visibility="hidden";
-         document.getElementById("capaVentana").style.visibility="hidden";
-         document.formulario.bAceptar.blur();*/
-        // alert("cerrarVentana")
-    }
 
     goToEmployeePackage = (id) => {
         // window.location.href = '/employment-application';
@@ -990,28 +808,109 @@ class BoardManager extends Component {
         });
     };
 
-    addClickListenerToInterviewsElements = () => {
-        let interview = document.querySelector('[title="Interview"]');
-        let interviews = interview.querySelectorAll('header > div:first-child');
-        let elements = Array.from(interviews);
+    //#region Dropdowns
+    getHotelOptions = _ => {
+        const defValue = {value: 0, label: "Select a Hotel"};
 
-        this.state.interview.map(item => {
-            console.log(item.id);
+        const options = this.state.hotels.map(hotel => {
+            return {value: hotel.Id, label: hotel.Name};
         });
 
-        for (let i = 0; i < elements.length; i++) {
-            elements[i].classList.add('interview-title');
-            elements[i].addEventListener("click", () => {
-                this.goToEmployeePackage(this.state.interview[i].id);
-            });
+        return [defValue, ...options];
+    }
+
+    findSelectedHotel = hotelId => {
+        const defValue = {value: 0, label: "Select a Hotel"};
+
+        const found = this.state.hotels.find(hotel => {
+            return hotel.Id === hotelId;
+        });
+
+        return found ? { value: found.Id, label: found.Name } : defValue;
+    }
+
+    getStateOptions = _ => {
+        const defValue = {value: 0, label: "Select a State"};
+
+        const options = this.state.states.map(state => {
+            return {value: state.Id, label: state.Name};
+        });
+
+        return [defValue, ...options];
+    }
+
+    findSelectedState = stateId => {
+        const defValue = {value: 0, label: "Select a State"};
+
+        const found = this.state.states.find(state => {
+            return state.Id === stateId;
+        });
+
+        return found ? { value: found.Id, label: found.Name } : defValue;
+    }
+
+    handleStateFilterChange = ({value}) => {
+        this.setState({
+            state: value,
+            city: 0,
+            cities: []
+        }, () => {
+            this.loadCities();
+            this.getWorkOrders();
+        })
+    }
+
+    getCityOptions = _ => {
+        const defValue = {value: 0, label: "Select a City"};
+
+        const options = this.state.cities.map(city => {
+            return {value: city.Id, label: city.Name};
+        });
+
+        return [defValue, ...options];
+    }
+
+    findSelectedCity = cityId => {
+        const defValue = {value: 0, label: "Select a City"};
+
+        const found = this.state.cities.find(city => {
+            return city.Id === cityId;
+        });
+
+        return found ? { value: found.Id, label: found.Name } : defValue;
+    }
+
+    handleCityFilterChange = ({value}) => {
+        this.setState({
+            city: value
+        }, () => {
+            this.getWorkOrders();
+        })
+    }
+
+   findSelectedStatus = statusId => {
+        const defValue = {value: null, label: "Status (All)"};
+
+        if(!statusId)
+            return defValue;
+
+        const found = this.state.statusOptions.find(status => {
+            return status.value === statusId;
+        });
+
+        return found ? found : defValue;
+    }
+
+    handleStatusFilterChange = ({value}) => {
+        if (value == "null") {
+            this.updateStatus(null);
+        } else {
+            this.updateStatus(value);
         }
-    };
+    }
+    //#endregion
 
     render() {
-        // Call listener always in render
-        if (this.state.interview.length > 0) {
-            //this.addClickListenerToInterviewsElements();
-        }
 
         const { classes } = this.props;
 
@@ -1029,97 +928,51 @@ class BoardManager extends Component {
                                 <div class="card">
                                     <div class="card-header info">
                                         <div className="row">
-                                            <div className="col-md-8">
+                                            <div className="col-md-12">
                                                 <div className="row">
-                                                    <div className="col-md-2">
-                                                        <select
-                                                            required
-                                                            name="IdEntity"
-                                                            className="form-control"
-                                                            id=""
-                                                            onChange={(event) => {
-                                                                this.updateHotel(event.target.value);
-                                                            }}
-                                                            value={this.state.hotel}
-                                                            //disabled={!isAdmin}
-                                                            onBlur={this.handleValidate}
-                                                        >
-                                                            <option value={0}>Select a Hotel</option>
-                                                            {this.state.hotels.map((hotel) => (
-
-                                                                <option value={hotel.Id}>{hotel.Name}</option>
-
-                                                            ))}
-                                                        </select>
+                                                    <div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
+                                                        <Select
+                                                            options={this.getHotelOptions()}
+                                                            value={this.findSelectedHotel(this.state.hotel)}
+                                                            onChange={this.updateHotel}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
+                                                        />
                                                     </div>
-                                                    <div className="col-md-2">
-                                                        <select
-                                                            name="state"
-                                                            className={'form-control'}
-                                                            onChange={(event) => {
-                                                                this.setState({
-                                                                    state: event.target.value,
-                                                                    city: 0,
-                                                                    cities: []
-                                                                }, () => {
-                                                                    this.loadCities();
-                                                                    this.getWorkOrders();
-                                                                })
-                                                            }}
-                                                            value={this.state.state}
-                                                        >
-                                                            <option value="">Select a state</option>
-                                                            {this.state.states.map((item) => (
-                                                                <option value={item.Id}>{item.Name}</option>
-                                                            ))}
-                                                        </select>
+                                                    <div className="col-md-3 col-xl-2 mb-2">                                                       
+                                                        <Select
+                                                            options={this.getStateOptions()}
+                                                            value={this.findSelectedState(this.state.state)}
+                                                            onChange={this.handleStateFilterChange}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
+                                                        />
                                                     </div>
-                                                    <div className="col-md-2">
-                                                        <select
-                                                            name="city"
-                                                            className={'form-control'}
-                                                            disabled={this.state.loadingCities}
-                                                            onChange={(event) => {
-                                                                this.setState({
-                                                                    city: event.target.value
-                                                                }, () => {
-                                                                    this.getWorkOrders();
-                                                                })
-                                                            }}
-                                                            //error={!this.state.cityValid}
-                                                            value={this.state.city}
-                                                        >
-                                                            <option value="">Select a city</option>
-                                                            {this.state.cities.map((item) => (
-                                                                <option value={item.Id}>{item.Name}</option>
-                                                            ))}
-                                                        </select>
+                                                    <div className="col-md-3 col-xl-2 mb-2">
+                                                        <Select
+                                                            options={this.getCityOptions()}
+                                                            value={this.findSelectedCity(this.state.city)}
+                                                            onChange={this.handleCityFilterChange}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
+                                                        />
                                                     </div>
-                                                    <div className="col-md-2">
-                                                        <select
-                                                            name="city"
-                                                            className={'form-control'}
-                                                            // disabled={this.state.loadingCities}
-                                                            onChange={(event) => {
-                                                                if (event.target.value == "null") {
-                                                                    this.updateStatus(null);
-                                                                } else {
-                                                                    this.updateStatus(event.target.value);
-                                                                }
-                                                            }}
-                                                            //error={!this.state.cityValid}
-                                                            value={this.state.status}
-                                                            showNone={false}
-                                                        >
-                                                            <option value={1}>Open</option>
-                                                            <option value={null}>Status (All)</option>
-                                                            <option value={2}>Completed</option>
-                                                            <option value={0}>Cancelled</option>
-                                                        </select>
+                                                    <div className="col-md-3 col-xl-2 mb-2">
+                                                        <Select
+                                                            options={this.state.statusOptions}
+                                                            value={this.findSelectedStatus(this.state.status)}
+                                                            onChange={this.handleStatusFilterChange}
+                                                            closeMenuOnSelect={true}
+                                                            components={makeAnimated()}
+                                                            isMulti={false}
+                                                        />
                                                     </div>
-                                                    <div className="col-md-4">
+                                                    <div className="col-md-12 Filter-buttons">
                                                         <a
-                                                            className="link-board" onClick={(e) => {
+                                                            className="link-board Filter-button" onClick={(e) => {
                                                                 e.preventDefault();
                                                                 e.stopPropagation();
 
@@ -1128,7 +981,7 @@ class BoardManager extends Component {
                                                             Advanced <i className="fas fa-filter link-icon-filter"></i>
                                                         </a>
                                                         <a
-                                                            className="link-board" onClick={(e) => {
+                                                            className="link-board Filter-button" onClick={(e) => {
                                                                 this.setState({
                                                                     hotel: 0,
                                                                     state: 0,
@@ -1142,22 +995,9 @@ class BoardManager extends Component {
                                                         </a>
 
                                                     </div>
-                                                    {/*<div className="col-md-1">*/}
-                                                    {/*<button className="btn btn-danger" onClick={() => {*/}
-                                                    {/*this.setState({*/}
-                                                    {/*hotel: 0,*/}
-                                                    {/*state: 0,*/}
-                                                    {/*city: 0,*/}
-                                                    {/*status: null*/}
-                                                    {/*}, () => {*/}
-                                                    {/*this.getWorkOrders();*/}
-                                                    {/*})*/}
-                                                    {/*}}>Clear*/}
-                                                    {/*</button>*/}
-                                                    {/*</div>*/}
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-md-2"></div>
+                                            {/* <div className="col-12 col-md-2"></div> */}
                                         </div>
                                     </div>
                                 </div>
@@ -1175,7 +1015,7 @@ class BoardManager extends Component {
                             eventBusHandle={this.setEventBus}
                             handleDragStart={this.handleDragStart}
                             handleDragEnd={this.handleDragEnd}
-                            onCardClick={this.state.loading ? console.log("Esta bloquedo") : this.onCardClick}
+                            onCardClick={this.state.loading ? null : this.onCardClick}
                             style={{
                                 backgroundColor: '#f5f7f9'
                             }}
@@ -1184,6 +1024,7 @@ class BoardManager extends Component {
                                 history={this.props.history}
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
                                 getWorkOrders={this.getWorkOrders}
+                                getnotify={() => { }}
                             />
                         </Board>
                     </div>

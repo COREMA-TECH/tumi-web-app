@@ -12,6 +12,9 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             cellPhone
             isLead
             Urlphoto
+            directDeposit
+            isActive
+            employmentType
             position{
                 id
                 position {
@@ -24,14 +27,28 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             }
             employee {       
                 id       
+                EmployeeId
                 Employees       
                 {         
-                    id         
-                    firstName                 
+                    id                     
                     idUsers         
-                    idEntity       
+                    idEntity    
+                    hireDate   
+                    startDate
+                    BusinessCompany{
+                        Name
+                    } 
                 }     
             }   
+            idealJobs {
+                id
+                description
+                idPosition
+                isDefault
+            }
+            user{
+                Code_User
+              }
         }
     }
 `;
@@ -47,6 +64,22 @@ query getcatalogitem ($Id_Entity:Int){
     }
 `;
 
+export const GET_APPLICATION_EMPLOYEES_QUERY = gql`
+query ApplicationEmployees($ApplicationId: Int)
+{
+  applicationEmployees(ApplicationId: $ApplicationId){
+Employees
+    {
+      Id_Deparment
+      Deparment
+      {
+        DisplayLabel
+      }
+      
+    }
+  }
+}
+`;
 
 export const GET_CONTACTS_QUERY = gql`
     query getcontacts($IdEntity: Int) {
@@ -89,6 +122,7 @@ export const GET_HOTELS_QUERY = gql`
     {
         getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'", Id_Parent: -1) {
             Id
+            Code
             Name
         }
     }
@@ -138,3 +172,64 @@ export const GET_EMAILS_USER = gql`
     }
 `;
 
+export const GET_CONTACTS_BY_APP_HOTEL_QUERY = gql`
+    query contacts($ApplicationId: Int, $Id_Entity: [Int]){
+    contacts(ApplicationId:$ApplicationId,Id_Entity:$Id_Entity, IsActive:1){
+        Id
+        Id_Entity
+    }
+    }
+`;
+
+export const GET_HOTELS_BY_APPLICATION_QUERY = gql`
+    query companiesByApplications($id: Int){
+            companiesByApplications(id:$id){
+            Id
+            Code
+            Name
+        }
+    }
+`;
+
+export const GET_ACTIVE_EMPLOYEES_BY_MARKS = gql`
+    query($employeeId: Int){
+        activeEmployeesByMarks(EmployeeId: $employeeId){
+            id
+        }
+    }
+`;
+
+export const GET_POSITION = gql`
+  query getPositions($Id_Entity: Int){
+        catalogitem(IsActive: 1, Id_Catalog: 6,  Id_Entity:  $Id_Entity) {
+            Id
+            Code: Name
+            Description
+            Id_Entity
+            IsActive
+        }
+    }
+`;
+
+export const GET_APPLICATION_CODE_USER = gql`
+    query applicationCodeUser($id: Int!) {
+        applicationCodeUser(id: $id) {
+            id
+            Code_User
+        }
+    }
+`;
+
+export const GET_HOTELS_BY_EMPLOYEE = gql`
+    query EmployeeByHotels($EmployeeId: Int){
+        EmployeeByHotels(EmployeeId: $EmployeeId){
+            id    
+            BusinessCompany{
+                Id
+                Name
+            }
+            isDefault
+            isActive
+        }
+    } 
+`;

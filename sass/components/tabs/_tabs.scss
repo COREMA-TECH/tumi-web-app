@@ -1,0 +1,34 @@
+.Tab {
+    &-fa {
+        &-icon {
+            &:after {
+                color: $text-color;
+                font-family: "Font Awesome 5 Free";
+                font-size: .3rem;
+                margin-left: 1rem;
+                line-height: 1.5;
+                height: 30px;
+            }
+            &.completed  {
+                &::after {
+                    color: $info;
+                }
+            }
+            &.incomplete {
+                &::after {
+                    color: $danger;
+                }
+            }
+        }
+        &-circle {
+            &:after {
+                content: "\F111";
+                font-weight: 900;
+                .Stepper-wrapper & {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+        }
+    }
+}

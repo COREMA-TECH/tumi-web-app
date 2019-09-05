@@ -1,0 +1,50 @@
+.WorkOrders{    
+    &-filters{
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    &-filter{
+        flex-basis: 100%;
+        margin-bottom: 0.5rem;
+
+        &.clear-btn{
+            flex-basis: 40%;            
+        }
+    }
+
+    @include media-breakpoint-up(md){
+        &-filters{
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+    
+        &-filter{
+            flex-basis: 20%;
+    
+            &.clear-btn{
+                flex-basis: 15%;
+                padding-left: 0.7rem;
+                padding-right: 0.7rem;
+            }
+        }
+    }
+
+    @include media-breakpoint-up(xl){
+        &-filter{
+            &.clear-btn{
+                flex-basis: 15%;
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+    }
+
+    &-dropdown{
+        font-size: 0.9rem !important;
+    }
+}

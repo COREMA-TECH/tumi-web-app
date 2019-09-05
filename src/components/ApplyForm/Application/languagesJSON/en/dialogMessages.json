@@ -10,5 +10,13 @@
   {
     "id": 2,
     "label": "To"
+  },
+  {
+    "id": 3,
+    "label": "Are you sure you want to set as default?"
+  },
+  {
+    "id": 4,
+    "label": "Proceed"
   }
 ]

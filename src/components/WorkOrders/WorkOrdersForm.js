@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
+import { GET_DEPARTMENTS_QUERY, GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_EMPLOYEE } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
@@ -24,6 +24,16 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
+import RowForm from './RowForm';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { copyFileSync } from 'fs';
+
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
+
+
+const uuidv4 = require('uuid/v4');
 
 
 const styles = (theme) => ({
@@ -47,8 +57,10 @@ const styles = (theme) => ({
         '&:hover': {
             cursor: 'pointer'
         }
+    },
+    overflowVisible:{
+        overflow: 'visible'
     }
-
 });
 
 const CustomTableCell = withStyles((theme) => ({
@@ -68,6 +80,7 @@ class WorkOrdersForm extends Component {
         hotel: 0,
         IdEntity: null,
         date: new Date().toISOString().substring(0, 10),
+        form: [],
         quantity: 0,
         status: 1,
         shift: '',
@@ -99,23 +112,38 @@ class WorkOrdersForm extends Component {
         Friday: 'FR,',
         Saturday: 'SA,',
         Sunday: 'SU,',
-        dayWeek: '',
+        dayWeeks: '',
         DateContract: '',
         departmentId: 0,
         dayWeeks: '',
         openModal: false,
+        departments: [],
+        isEditing: false,
+        dataToEdit: {
+            quantity: 0,
+            shift: moment('08:00', "HH:mm").format("HH:mm"),
+            endShift: moment('16:00', "HH:mm").format("HH:mm"),
+            dayWeeks: '',
+            comment: '',
+            needExperience: false,
+            needEnglish: false,
+            PositionRateId: 0,
+            departmentId: 0,
+            duration: '8',
+        }
 
     };
 
     constructor(props) {
         super(props);
         this.state = {
-
+            rowsInput: [1],
             hotels: [],
             positions: [],
             recruiters: [],
             contacts: [],
             Shift: [],
+            propertyStartWeek: 1,
 
             ...this.DEFAULT_STATE
         };
@@ -127,39 +155,43 @@ class WorkOrdersForm extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.item && nextProps.openModal) {
 
-            console.log("nextProps.item ", nextProps.item)
-            this.setState(
-                {
-                    id: nextProps.item.id,
-                    contactId: nextProps.item.contactId,
-                    IdEntity: nextProps.item.IdEntity,
-                    date: nextProps.item.date,
-                    quantity: nextProps.item.quantity,
-                    status: nextProps.item.status,
-                    shift: nextProps.item.shift,
-                    endShift: nextProps.item.endShift,
-                    startDate: nextProps.item.startDate,
-                    endDate: nextProps.item.endDate,
-                    sameContractDate: nextProps.item.endDate,
-                    needExperience: nextProps.item.needExperience,
-                    needEnglish: nextProps.item.needEnglish,
-                    comment: nextProps.item.comment,
-                    userId: localStorage.getItem('LoginId'),
-                    openModal: nextProps.openModal,
-                    EspecialComment: nextProps.item.EspecialComment,
-                    PositionName: nextProps.item.positionName,
-                    dayWeeks: nextProps.item.dayWeek
-                },
+            let dataToEdit = {
+                quantity: nextProps.item.quantity,
+                shift: nextProps.item.shift,
+                endShift: nextProps.item.endShift,
+                dayWeeks: nextProps.item.dayWeeks,
+                comment: nextProps.item.comment,
+                needExperience: nextProps.item.needExperience,
+                needEnglish: nextProps.item.needEnglish,
+                PositionRateId: nextProps.item.PositionRateId,
+                departmentId: nextProps.item.departmentId
+            }
+            this.setState({
+                id: nextProps.item.id,
+                workOrderId: nextProps.item.workOrderId,
+                dataToEdit,
+                ...dataToEdit,
+                sameContractDate: nextProps.item.endDate,
+                endDate: nextProps.item.endDate,
+                contactId: nextProps.item.contactId,
+                IdEntity: nextProps.item.IdEntity,
+                date: nextProps.item.date,
+                status: nextProps.item.status,
+                startDate: nextProps.item.startDate,
+                userId: localStorage.getItem('LoginId'),
+                openModal: nextProps.openModal,
+                EspecialComment: nextProps.item.EspecialComment,
+                PositionName: nextProps.item.positionName,
+                isEditing: true
+            },
                 () => {
                     this.getEmployees();
-                    this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
-                    this.getContacts(nextProps.item.IdEntity);
+                    this.getPositions(nextProps.item.departmentId);
                     this.getRecruiter();
-                    this.calculateHours();
-
+                    this.getDepartment(nextProps.item.IdEntity);
+                    this.newWorkOrder();
                     this.ReceiveStatus = true;
-                }
-            );
+                });
         } else if (!nextProps.openModal) {
             this.setState({
                 IdEntity: 0,
@@ -185,7 +217,7 @@ class WorkOrdersForm extends Component {
                 Friday: 'FR,',
                 Saturday: 'SA,',
                 Sunday: 'SU,',
-                dayWeek: '',
+                dayWeeks: '',
                 duration: '8',
                 openModal: false,
 
@@ -195,6 +227,7 @@ class WorkOrdersForm extends Component {
         this.setState({
             openModal: nextProps.openModal
         });
+        return true;
     }
 
     getWorkOrders = () => {
@@ -213,10 +246,17 @@ class WorkOrdersForm extends Component {
 
 
     componentWillMount() {
+        let filter = {};
+        let idRol = localStorage.getItem('IdRoles');
+        let idEntity = localStorage.getItem("Id_Entity");
+        if (idRol == 5) filter = { ...filter, id: idEntity };
 
         this.props.client
             .query({
-                query: GET_HOTEL_QUERY
+                query: GET_HOTEL_QUERY,
+                variables: {
+                    ...filter
+                }
             })
             .then(({ data }) => {
                 this.setState({
@@ -233,33 +273,27 @@ class WorkOrdersForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if (
-            this.state.IdEntity == 0 ||
-            this.state.PositionRateId == 0 ||
-            this.state.PositionRateId == null ||
-            this.state.quantity == '' ||
-            this.state.quantity == 0 ||
-            this.state.date == '' ||
-            this.state.startDate == '' ||
-            this.state.endDate == '' ||
-            this.state.contactId == 0 ||
-            this.state.contactId == null ||
-            this.state.dayWeeks == ''
-        ) {
+        this.setState({ saving: true });
+        var evens = [];
 
-            this.props.handleOpenSnackbar('error', 'Error all fields are required');
-        } else {
-            this.setState({ saving: true });
-            if (this.state.id == null) this.add();
-            else {
-                //alert(this.state.employees.detailEmployee)
-                if (this.state.employees.length > 0) {
-                    //  this.setState({ openConfirm: true, idToDelete: row.id });
-                    this.props.handleOpenSnackbar('error', 'This work order has assigned employees, to update them you must eliminate them');
-                    this.setState({ saving: false });
-                } else {
-                    this.update();
-                }
+        if (typeof this.state.id === 'string' && !this.state.workOrderId) {
+            evens = this.state.form.map((item) => {
+                delete item.id
+                return item;
+            });
+
+            this.setState({
+                form: evens
+            }, () => this.add());
+        }
+        else {
+            //alert(this.state.employees.detailEmployee)
+            if (this.state.employees.length > 0) {
+                //  this.setState({ openConfirm: true, idToDelete: row.id });
+                this.props.handleOpenSnackbar('error', 'This work order has assigned employees, to update them you must eliminate them');
+                this.setState({ saving: false });
+            } else {
+                this.update();
             }
         }
     };
@@ -269,54 +303,23 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CREATE_WORKORDER,
                 variables: {
-                    Electronic_Address: this.state.Electronic_Address,
-                    startshift: this.state.shift,
-                    endshift: this.state.endShift,
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
-                    quantity: this.state.quantity,
-                    workOrder: {
-                        IdEntity: this.state.IdEntity,
-                        date: this.state.date,
-                        quantity: this.state.quantity,
-                        status: 1,
-                        shift: this.state.shift,
-                        endShift: this.state.endShift,
-                        startDate: this.state.startDate,
-                        endDate: this.state.endDate,
-                        needExperience: this.state.needExperience,
-                        needEnglish: this.state.needEnglish,
-                        comment: this.state.comment,
-                        EspecialComment: this.state.EspecialComment,
-                        PositionRateId: this.state.PositionRateId,
-                        contactId: this.state.contactId,
-                        userId: this.state.userId,
-                        dayWeek: this.state.dayWeeks
-                        //  dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
-                    },
-                    shift: {
-                        entityId: this.state.IdEntity,
-                        title: this.state.PositionName,
-                        color: '#96989A',
-                        status: 1,
-                        idPosition: this.state.PositionRateId,
-                        startDate: this.state.startDate,
-                        endDate: this.state.endDate,
-                        //dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
-                        dayWeek: this.state.dayWeeks,
-                        departmentId: this.state.departmentId
-
-                    }
+                    workOrder: this.state.form,
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
                 }
             })
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
-                this.setState({ openModal: false, saving: false });
+                this.setState({ openModal: false, saving: false },
+                    () => {
+                        this.props.toggleRefresh();
+                        this.props.handleCloseModal();
+                    });
                 //this.getWorkOrders();
                 //                this.props.handleCloseModal
                 //this.props.toggleRefresh();
-                window.location.reload();
+                // window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true });
@@ -335,7 +338,7 @@ class WorkOrdersForm extends Component {
                     endDate: this.state.endDate,
                     quantity: this.state.quantity,
                     workOrder: {
-                        id: this.state.id,
+                        id: this.state.workOrderId,
                         IdEntity: this.state.IdEntity,
                         date: this.state.date,
                         quantity: this.state.quantity,
@@ -351,7 +354,8 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
                         contactId: this.state.contactId,
-                        dayWeek: this.state.dayWeeks
+                        dayWeek: this.state.dayWeeks,
+                        departmentId: this.state.departmentId
                     },
                     shift: {
                         entityId: this.state.IdEntity,
@@ -363,13 +367,15 @@ class WorkOrdersForm extends Component {
                         endDate: this.state.endDate,
                         dayWeek: this.state.dayWeeks,
                         departmentId: this.state.departmentId
-                    }
+                    },
+                    codeuser: localStorage.getItem('LoginId'),
+                    nameUser: localStorage.getItem('FullName')
                 }
             })
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.setState({ openModal: false, saving: false, converting: false });
-                //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
+                this.setState({ ...this.DEFAULT_STATE })
                 window.location.reload();
             })
             .catch((error) => {
@@ -379,20 +385,17 @@ class WorkOrdersForm extends Component {
 
     };
 
-    getContacts = (id) => {
+
+    getDepartment = (id) => {
         this.props.client
             .query({
-                query: GET_CONTACT_BY_QUERY,
-                variables: { id: id }
+                query: GET_DEPARTMENTS_QUERY,
+                variables: { Id_Entity: id }
             })
             .then(({ data }) => {
-                var request = data.getcontacts.find((item) => { return item.Id == this.state.contactId })
                 this.setState({
-                    contacts: data.getcontacts,
-                    Electronic_Address: request != null ? request.Electronic_Address : '',
-                    departmentId: request != null ? request.Id_Deparment : 0
+                    departments: data.getcatalogitem
                 });
-
             })
             .catch();
     };
@@ -427,7 +430,7 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CONVERT_TO_OPENING,
                 variables: {
-                    id: this.state.id,
+                    id: this.state.workOrderId,
                     userId: this.state.userId,
                 }
             })
@@ -453,11 +456,11 @@ class WorkOrdersForm extends Component {
             [name]: value
         });
 
-        if (name === 'contactId') {
-            request = this.state.contacts.find((item) => { return item.Id == value })
+        if (name == "endDate") {
+            let startDate;
+            startDate = moment(value).subtract(7, 'days').format();
             this.setState({
-                Electronic_Address: request != null ? request.Electronic_Address : '',
-                departmentId: request != null ? request.Id_Deparment : 0
+                startDate: startDate
             });
         }
 
@@ -470,25 +473,31 @@ class WorkOrdersForm extends Component {
         }
 
         if (name === 'IdEntity') {
+            this.getDepartment(value);
+        }
+
+        if (name === 'departmentId') {
             this.getPositions(value);
-            this.getContacts(value);
         }
     };
 
-    getPositions = (id, PositionId = null) => {
+    getPositions = (Id_Department) => {
         this.props.client
             .query({
                 query: GET_POSITION_BY_QUERY,
-                variables: { id: id }
+                fetchPolicy: 'no-cache',
+                variables: {
+                    Id_Department
+                }
             })
             .then(({ data }) => {
-
                 this.setState({
-                    positions: data.getposition,
-                    PositionRateId: PositionId
+                    positions: data.getposition
                 });
             })
-            .catch();
+            .catch(error => {
+                console.log(error);
+            });
     };
 
     getRecruiter = () => {
@@ -511,7 +520,7 @@ class WorkOrdersForm extends Component {
         this.props.client
             .query({
                 query: GET_SHIFTS,
-                variables: { WorkOrderId: this.state.id }
+                variables: { WorkOrderId: this.state.workOrderId }
             })
             .then(({ data }) => {
                 let employeesList = [];
@@ -580,13 +589,6 @@ class WorkOrdersForm extends Component {
         }
     };
 
-    handleTimeChange = (name) => (text) => {
-        this.setState({
-            [name]: moment(text, "HH:mm:ss").format("HH:mm")
-        }, () => {
-            this.calculateHours()
-        })
-    }
 
     handleValidate = (event) => {
         let selfHtml = event.currentTarget;
@@ -595,48 +597,6 @@ class WorkOrdersForm extends Component {
         else
             selfHtml.classList.remove("is-invalid");
 
-    }
-
-    handleCalculatedByDuration = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const startHour = this.state.shift;
-
-        var endHour = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(parseFloat(value), 'hours').format('HH:mm');
-        var _moment = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(8, 'hours').format('HH:mm');
-        var _endHour = (value == 0) ? _moment : endHour;
-
-        this.setState({
-            endShift: _endHour,
-            duration: value
-        });
-    }
-
-    calculateHours = () => {
-        let startHour = this.state.shift;
-        let endHour = this.state.endShift;
-
-        var duration = moment.duration(moment.utc(moment(endHour, "HH:mm:ss").diff(moment(startHour, "HH:mm:ss"))).format("HH:mm")).asHours();
-        duration = parseFloat(duration).toFixed(2);
-
-        this.setState({
-            duration: duration
-        });
-    }
-
-    getWeekDayStyle = (dayName) => {
-        return `btn btn-secondary ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
-    }
-
-    selectWeekDay = (dayName) => {
-        if (this.state.dayWeeks.includes(dayName))
-            this.setState((prevState) => {
-                return { dayWeeks: prevState.dayWeeks.replace(dayName, '') }
-            })
-        else
-            this.setState((prevState) => {
-                return { dayWeeks: prevState.dayWeeks.concat(dayName) }
-            })
     }
 
     TakeDateContract = () => {
@@ -657,233 +617,204 @@ class WorkOrdersForm extends Component {
         }
     }
 
+    handleChangePostData = (postData) => {
+        //This is to set edited values into state, because Work Order Update Structure 
+        //is created based on state props directly
+        this.setState(() => ({
+            ...postData
+        }))
+        var dataFiltered = this.state.form.filter((item) => {
+            return item.id != postData.id
+        });
+        this.setState((prevState) => ({
+            form: dataFiltered.concat(postData)
+        }));
+
+    }
+
+    newWorkOrder = () => {
+        var form = {
+            id: uuidv4(),
+            quantity: 0,
+            PositionRateId: 0,
+            shift: '',
+            duration: 0,
+            endShift: '',
+            comment: '',
+            dayWeeks: ''
+        }
+        this.setState((prevState) =>
+            ({ form: prevState.form.concat(form) })
+        );
+    }
+
+    handleCloseModal = (event) => {
+        this.setState({
+            ...this.DEFAULT_STATE
+        });
+        this.props.handleCloseModal(event);
+    }
+
+    handleChangeDate = (date) => {
+        let startDate = moment(date).subtract(7, "days").format();
+
+        this.setState({
+            startDate: startDate,
+            endDate: date
+        });
+    }
+
+    handlePropertySelectChange = ({ value }) => {
+        this.setState((prevState, props) => {
+            let hotel = this.state.hotels.find(_ => {
+                return _.Id === parseInt(value)
+            })
+            return { IdEntity: value, propertyStartWeek: hotel ? hotel.Start_Week : null }
+        }, _ => this.getDepartment(value));
+    }
+
+    handleDepartmentSelectChange = ({ value }) => {
+        this.setState((prevState, props) => {
+            return { departmentId: value }
+        }, _ => this.getPositions(value));
+    }
+
+    getDepartmentFilterList = _ => {
+        const departmentList = this.state.departments.map((department) => {
+            return { value: department.Id, label: department.Description.trim() }
+        });
+
+        const options = [{ value: 0, label: 'Select a Department' }, ...departmentList];
+        return options;
+    }
+
+    getPropertyFilterList = _ => {
+        const propertyList = this.state.hotels.map(item => {
+            return { value: item.Id, label: item.Name }
+        });
+
+        const options = [{ value: 0, label: "Select a Property" }, ...propertyList];
+        return options;
+    }
+
+    findSelectedProperty = propertyId => {
+        const defValue = { value: 0, label: "Select a Property" };
+
+        if (propertyId === 'null' || propertyId === 0)
+            return defValue;
+
+        const found = this.state.hotels.find(item => {
+            return item.Id === propertyId;
+        });
+
+        return found ? { value: found.Id, label: found.Name.trim() } : defValue;
+    }
+
+    findSelectedDepartment = depId => {
+        const defValue = { value: 0, label: "Select a Department" };
+
+        if (depId === 'null' || depId === 0)
+            return defValue;
+
+        const found = this.state.departments.find(item => {
+            return item.Id === depId;
+        });
+
+        if (!found)
+            return defValue;
+
+        return { value: found.Id, label: found.Description.trim() };
+    }
+
     render() {
 
+        const propertyList = this.getPropertyFilterList();
+        const departmentList = this.getDepartmentFilterList();
+
         const { classes } = this.props;
-        const isAdmin = localStorage.getItem('IsAdmin') == "true"
+        const isAdmin = localStorage.getItem('IsAdmin') == "true";
 
         return (
             <div>
-                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
+                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal} classes={{paperScrollPaper: classes.overflowVisible }} >
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 className="modal-title">Work Order</h5>
                         </div>
-                    </DialogTitle>
-                    <DialogContent>
-                        <form action="" onSubmit={this.handleSubmit}>
-                            <div className="row pl-0 pr-0">
-                                <div className="col-md-7 col-7">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Property</label>
-                                            <select
-                                                required
-                                                name="IdEntity"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdEntity}
-                                                disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Property</option>
-                                                {this.state.hotels.map((hotel) => (
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Requested by</label>
-                                            <select
-                                                required
-                                                name="contactId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.contactId}
-                                                disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Contact</option>
-                                                {this.state.contacts.map((contact) => (
-                                                    <option value={contact.Id}>{contact.First_Name + contact.Last_Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Position</label>
-                                            <select
-                                                required
-                                                name="PositionRateId"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.PositionRateId}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value="0">Select a Position</option>
-                                                {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position} </option>
-
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Requested on Date</label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="date"
-                                                disabled={true}
-                                                onChange={this.handleChange}
-                                                value={this.state.date.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Shift Start</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
-                                            {/* <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} /> */}
-                                            <label htmlFor="">Shift End</label>
-                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
-                                            {/* <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} /> */}
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Duration</label>
-                                            <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
-                                        </div>
-                                        <div className="col-md-6">
-
-                                            <label htmlFor="">* From Date</label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="startDate"
-                                                onChange={this.handleChange}
-                                                value={this.state.startDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Quantity</label>
-                                            <input
-                                                required
-                                                type="number"
-                                                maxLength="10"
-                                                min={0}
-                                                className="form-control"
-                                                name="quantity"
-                                                placeholder="0"
-                                                onChange={this.handleChange}
-                                                value={this.state.quantity == 0 ? '' : this.state.quantity}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* To Date </label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="endDate"
-                                                disabled={this.state.sameContractDate}
-                                                onChange={this.handleChange}
-                                                value={this.state.endDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                            <input type="checkbox" id="materialUnchecked" onClick={(e) => { this.TakeDateContract(); }} />
-                                            <label htmlFor="">  <font color="grey">&nbsp; Same as contract end date?</font> </label>
-                                        </div>
-                                        <div className="col-md-6">
-                                        </div>
-
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Workdays</label>
-                                            <div className="btn-group" role="group" aria-label="Basic example">
-                                                <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
-                                                <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-6 col-xl-3">
+                                    <Select
+                                        options={propertyList}
+                                        value={this.findSelectedProperty(this.state.IdEntity)}
+                                        onChange={this.handlePropertySelectChange}
+                                        closeMenuOnSelect={true}
+                                        components={makeAnimated()}
+                                        isMulti={false}
+                                        isDisabled={!isAdmin}
+                                        onBlur={this.handleValidate}
+                                        className="WorkOrders-dropdown"
+                                    />
                                 </div>
-                                <div className="col-md-5 col-5">
-                                    <div className="row">
-                                        <div className="col-md-5">
-                                            <label>Needs Experience?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    name="needExperience"
-                                                    onClick={this.toggleState}
-                                                    onChange={this.handleChange}
-                                                    className="onoffswitch-checkbox"
-                                                    id="myonoffswitch"
-                                                    checked={this.state.needExperience}
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="myonoffswitch">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-7">
-                                            <label>Needs to Speak English?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    name="needEnglish"
-                                                    onClick={this.toggleState}
-                                                    onChange={this.handleChange}
-                                                    className="onoffswitch-checkbox"
-                                                    id="myonoffswitchSpeak"
-                                                    checked={this.state.needEnglish}
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="myonoffswitchSpeak">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Comments</label>
-                                            <textarea
-                                                onChange={this.handleChange}
-                                                name="comment"
-                                                className="form-control"
-                                                id=""
-                                                cols="30"
-                                                rows="3"
-                                                value={this.state.comment}
-                                            />
-                                        </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="">Special Comments</label>
-                                            <textarea
-                                                onChange={this.handleChange}
-                                                name="EspecialComment"
-                                                className="form-control"
-                                                id=""
-                                                cols="30"
-                                                rows="3 "
-                                                disabled={true}
-                                                value={this.state.EspecialComment}
-                                            />
+                                <div className="col-md-4 col-xl-2">
+                                    <div class="input-group flex-nowrap">
+                                        <DatePicker
+                                            selected={this.state.endDate}
+                                            onChange={this.handleChangeDate}
+                                            placeholderText="Week Ending"
+                                            id="datepicker"
+                                        />
+                                        <div class="input-group-append">
+                                            <label class="input-group-text" id="addon-wrapping" for="datepicker">
+                                                <i class="far fa-calendar"></i>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </DialogTitle>
+                    <DialogContent className="minWidth-empty-modal" style={{ backgroundColor: "#f5f5f5" }}>
+                        <form action="" onSubmit={this.handleSubmit}>
+                            <div className="card">
+                                <div className="card-header bg-light">
+                                    <div className="row">
+                                        <div className="col-md-12 col-lg-4 mb-2">
+                                            <Select
+                                                options={departmentList}
+                                                value={this.findSelectedDepartment(this.state.departmentId)}
+                                                onChange={this.handleDepartmentSelectChange}
+                                                closeMenuOnSelect={true}
+                                                components={makeAnimated()}
+                                                isMulti={false}
+                                                isDisabled={!isAdmin}
+                                                onBlur={this.handleValidate}
+                                            />
 
+                                        </div>
+                                        <div className="col-md-12 col-lg-3">
+                                            {!this.state.isEditing &&
+                                                <button type="button" className="btn btn-link" onClick={this.newWorkOrder}>New +</button>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {this.state.form.map((item, index) => {
+                                return (
+                                    <RowForm
+                                        startDate={this.state.startDate}
+                                        propertyStartWeek={this.state.propertyStartWeek}
+                                        endDate={this.state.endDate}
+                                        departmentId={this.state.departmentId}
+                                        IdEntity={this.state.IdEntity}
+                                        form={item}
+                                        positions={this.state.positions}
+                                        handleChangePostData={this.handleChangePostData}
+                                        dataToEdit={this.state.dataToEdit}
+                                    />
+                                )
+                            })}
 
                             <div className='row'>
                                 {this.state.id && (
@@ -904,23 +835,16 @@ class WorkOrdersForm extends Component {
 
                                                                 this.state.employees.map((item) => {
 
-                                                                    // if (item.detailEmployee) {
                                                                     return (
                                                                         <TableRow
                                                                             hover
                                                                             className={classes.row}
                                                                             key={item.id}
-                                                                        //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
                                                                         >
                                                                             <CustomTableCell>
                                                                                 <Tooltip title="Delete">
                                                                                     <button
                                                                                         className="btn btn-danger float-left"
-                                                                                        /* onClick={(e) => {
-                                                                                             e.preventDefault();
-                                                                                             this.deleteEmployee(item.detailEmployee.ShiftDetailId)
-                                                                                         }}*/
-
                                                                                         onClick={(e) => {
                                                                                             e.preventDefault();
                                                                                             this.setState({ openConfirm: true, idToDelete: item.EmployeeId });
@@ -933,7 +857,6 @@ class WorkOrdersForm extends Component {
                                                                             <CustomTableCell>{item.Employees}</CustomTableCell>
                                                                         </TableRow>
                                                                     )
-                                                                    //}
                                                                 })
 
                                                             }
@@ -945,7 +868,6 @@ class WorkOrdersForm extends Component {
                                                             this.setState({ openConfirm: false });
                                                         }}
                                                         confirmAction={() => {
-                                                            //  this.handleDelete(this.state.idToDelete);
                                                             this.deleteEmployee(this.state.idToDelete)
                                                         }}
                                                         title={'are you sure you want to delete this record?'}
@@ -960,20 +882,18 @@ class WorkOrdersForm extends Component {
                                 )}
 
 
-                                <div className="col-md-12">
+                                <div className="col-12 pull-right">
                                     <button
                                         type="button"
-                                        className="btn btn-danger ml-1 float-right"
-                                        onClick={this.props.handleCloseModal}
+                                        className="btn btn-danger tumi-button float-right"
+                                        onClick={this.handleCloseModal}
                                     >
                                         Cancel<i className="fas fa-ban ml-2" />
                                     </button>
-
-                                    <button className="btn btn-success ml-1 float-right" type="submit">
+                                    <button className="btn btn-success tumi-button float-right" type="submit">
                                         Save {!this.state.saving && <i className="fas fa-save ml2" />}
                                         {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
                                     </button>
-
                                 </div>
                             </div>
 

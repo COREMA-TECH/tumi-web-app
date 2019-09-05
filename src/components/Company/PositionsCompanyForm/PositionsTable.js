@@ -124,10 +124,7 @@ const styles = (theme) => ({
 	tableWrapper: {
 		overflowX: 'auto'
 	},
-	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		},
+	row: {		
 		'&:hover': {
 			cursor: 'pointer'
 		}
@@ -247,18 +244,19 @@ class PositionsTable extends React.Component {
 			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
 		}
 		return (
-			<Paper className={classes.root}>
+			<React.Fragment>
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell className={"Table-head"} style={{width: '30px' }}>
+							<CustomTableCell width='30px' className={"Table-head"} style={{width: '30px' }}>
 								Actions
 							</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '50px' }}>Department</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Title</CustomTableCell>
-
-							<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Bill Rate</CustomTableCell>
-
+							{localStorage.getItem('ShowMarkup') == 'true' ?	
+								<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Bill Rate</CustomTableCell>
+							:''}
+							
 							{this.props.showPayRate && (
 								<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Pay Rate</CustomTableCell>
 							)}
@@ -325,10 +323,11 @@ class PositionsTable extends React.Component {
 										</Select>
 									</CustomTableCell>
 									<CustomTableCell  style={{width: '80px' }}>{row.Position}</CustomTableCell>
+									{localStorage.getItem('ShowMarkup') =='true' ?	
 									<CustomTableCell  style={{width: '80px' }}>
 										$ {row.Bill_Rate}
 									</CustomTableCell>
-
+									:''}
 									{this.props.showPayRate && (
 										<CustomTableCell  style={{width: '80px' }}>
 											$ {row.Pay_Rate}
@@ -362,7 +361,7 @@ class PositionsTable extends React.Component {
 						<TableRow>
 							{items.length > 0 && (
 								<TablePagination
-									colSpan={3}
+									colSpan={1}
 									count={items.length}
 									rowsPerPage={rowsPerPage}
 									page={page}
@@ -374,7 +373,7 @@ class PositionsTable extends React.Component {
 						</TableRow>
 					</TableFooter>
 				</Table>
-			</Paper>
+			</React.Fragment>
 		);
 	}
 }

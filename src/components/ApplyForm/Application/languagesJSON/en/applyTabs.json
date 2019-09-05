@@ -5,38 +5,54 @@
   },
   {
     "id": 1,
-    "label": "Background Check"
+    "label": "Internal Use"
   },
   {
     "id": 2,
-    "label": "Non-Disclosure"
-  },
-  {
-    "id": 3,
-    "label": "Conduct Code"
-  },
-  {
-    "id": 4,
-    "label": "Anti-Harassment"
-  },
-  {
-    "id": 5,
-    "label": "Worker's Compensation"
-  },
-  {
-    "id": 6,
-    "label": "I9"
-  },
-  {
-    "id": 7,
-    "label": "Documents"
-  },
-  {
-    "id": 8,
     "label": "Profile"
   },
   {
+    "id": 3,
+    "label": "Documents"
+  },
+  {
+    "id": 4,
+    "label": "Non-Disclosure"
+  },
+  {
+    "id": 5,
+    "label": "Code of Conduct"
+  },
+  {
+    "id": 6,
+    "label": "Anti-Harassment"
+  },
+  {
+    "id": 7,
+    "label": "Worker's Compensation"
+  },
+  {
+    "id": 8,
+    "label": "I9"
+  },
+  {
     "id": 9,
+    "label": "Documents"
+  },
+  {
+    "id": 10,
     "label": "W4"
+  },
+  {
+    "id": 11,
+    "label": "Summary"
+  },
+  {
+    "id": 12,
+    "label": "Independen Contract"
+  },
+  {
+    "id": 13,
+    "label": "Background Check"
   }
 ]

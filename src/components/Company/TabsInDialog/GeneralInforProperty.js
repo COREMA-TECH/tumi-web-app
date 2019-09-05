@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { gql } from 'apollo-boost';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
@@ -13,11 +13,32 @@ import './valid.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import LocationForm from '../../ui-components/LocationForm';
+import { INSERT_USER_QUERY } from '../User/Mutations';
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
+import moment from 'moment';
+import Stepper from '@material-ui/core/Stepper';
+import StepLabel from '@material-ui/core/StepLabel';
+import { withStyles } from '@material-ui/core/styles';
+
+// import steps
+import LeftStepper from './LeftStepper';
+import ApplicationList from '../../ApplyForm/ApplicationList/ApplicationList';
+import Schedules from '../../Schedules';
+import PunchesReportConsolidated from '../../PunchesReportConsolidated';
+
+
+const styles = theme => ({
+    stepper: {
+        color: '#41afd7'
+    }
+});
 
 class GeneralInfoProperty extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            activeStep: 0,
             inputEnabled: true,
             open: false,
             scroll: 'paper',
@@ -88,7 +109,8 @@ class GeneralInfoProperty extends Component {
             nextButton: false,
             isCorrectCity: true,
             changeCity: false,
-            parentDescription: ''
+            parentDescription: '',
+            operationManagerDescription: ''
         };
     }
 
@@ -131,6 +153,16 @@ class GeneralInfoProperty extends Component {
                 Id
                 Name
                 IsActive
+            }
+        }
+    `;
+
+    getOperationManagerByRegion = gql`
+       query configregions($regionId: Int){
+            configregions(regionId: $regionId){
+                OperationManager{
+                    Full_Name
+                }
             }
         }
     `;
@@ -193,6 +225,17 @@ class GeneralInfoProperty extends Component {
         query getCompanyParent($id: Int!,) {
             getbusinesscompanies(Id: $id, Contract_Status: "'C'") {
                 Id
+                Name
+                Region
+            }
+        }
+    `;
+    GET_PROPERTIES_QUERY = gql`
+        query getproperties {
+            getbusinesscompanies(Id: 0, IsActive: 1, Contract_Status: "'C'", Id_Parent: -1) {
+                Id
+                Id_Parent	
+                Code
                 Name
             }
         }
@@ -306,7 +349,6 @@ class GeneralInfoProperty extends Component {
                     })
                     .then((data) => {
                         NewIdRegion = data.data.inscatalogitem.Id;
-
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
@@ -381,6 +423,46 @@ class GeneralInfoProperty extends Component {
                         })
                         .then(({ data }) => {
                             this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(data.insbusinesscompanies.Id_Parent));
+
+                            this.props.client
+                                .mutate({
+                                    mutation: INSERT_USER_QUERY,
+                                    variables: {
+                                        input: {
+                                            Id_Entity: data.insbusinesscompanies.Id,
+                                            Id_Contact: null,
+                                            Id_Roles: 1,
+                                            Full_Name: "''",
+                                            Electronic_Address: `'${this.state.email}'`,
+                                            AllowDelete: 1,
+                                            AllowEdit: 1,
+                                            AllowExport: 1,
+                                            AllowInsert: 1,
+                                            Id_Language: 194,
+                                            Code_User: `'${this.state.Code}'`,
+                                            Date_Created: `'${new Date().toISOString()}'`,
+                                            Date_Updated: `'${new Date().toISOString()}'`,
+                                            IdRegion: null,
+                                            IsActive: 1,
+                                            IsAdmin: 1,
+                                            Phone_Number: `'${this.state.phoneNumber}'`,
+                                            User_Created: 1,
+                                            User_Updated: 1,
+                                            IsRecruiter: 0,
+                                            IdRegion: null,
+                                            IdSchedulesManager: null,
+                                            IdSchedulesEmployees: null,
+                                            isEmployee: false,
+                                            manageApp: true
+                                        }
+                                    }
+                                })
+                                .then((data) => {
+
+                                })
+                                .catch((error) => {
+
+                                });
 
                             this.setState({
                                 linearProgress: false
@@ -682,12 +764,16 @@ class GeneralInfoProperty extends Component {
                 }
 
                 if (validated) {
-                    //Show loading component
-                    if (this.props.idProperty === null) {
-                        this.insertCompany(this.props.idManagement);
-                    } else {
-                        this.updateCompany(this.props.idManagement, this.props.idProperty, buttonName);
-                    }
+                    //Load companies is used to validate if the code of the company exists in the database 
+                    this.loadProperties(() => {
+                        //Show loading component
+                        if (this.props.idProperty === null) {
+                            this.insertCompany(this.props.idManagement);
+                        } else {
+                            this.updateCompany(this.props.idManagement, this.props.idProperty, buttonName);
+                        }
+                    });
+
                 } else {
                     // Show snackbar warning
                     this.props.handleOpenSnackbar(
@@ -711,15 +797,28 @@ class GeneralInfoProperty extends Component {
         }
     };
 
+    getRegionInformation=(regionId)=>{
+        this.setState(() => ({ linearProgressOpM: true }), () => {
+            this.props.client.query({ query: this.getOperationManagerByRegion, variables: { regionId: regionId || -1 }, fetchPolicy: 'no-cache' })
+                .then(({ data: { configregions } }) => {
+                    let region = configregions[0];
+                    if (region)
+                        if (region.OperationManager) this.setState(() => ({ operationManagerDescription: region.OperationManager.Full_Name }));
+                    this.setState(() => ({ linearProgressOpM: false }));
+                })
+                .catch(() => {
+                    this.setState(() => ({ linearProgressOpM: false }));
+                })
+        })
+    }
 	/**
 	 * Get data from property
 	 */
     getPropertyData = (idProperty, idParent) => {
-
-        this.setState(
-            {
+        this.setState(() =>
+            ({
                 linearProgress: true
-            },
+            }),
             () => {
                 this.props.client
                     .query({
@@ -736,6 +835,8 @@ class GeneralInfoProperty extends Component {
                             var Region = this.state.regions.find(function (obj) {
                                 return obj.Id === item.Region;
                             });
+                            this.getParentCompanyInfo();
+                            this.getRegionInformation(item.Region);
                             this.setState(() => {
                                 return {
                                     RegionName: Region ? Region.Name.trim() : '',
@@ -780,21 +881,53 @@ class GeneralInfoProperty extends Component {
                                     room: item.Rooms,
                                     avatar: item.ImageURL,
                                     changeCity: false,
-                                    linearProgress: false
+                                    linearProgress: false,
+                                    startWeekName: days[item.Start_Week - 1].Name,
+                                    endWeekName: days[item.End_Week - 1].Name
                                 }
                             });
                         }
                     })
-                    .catch();
+                    .catch(() => {
+                        this.setState(() => ({
+                            linearProgress: false
+                        }))
+                    });
             }
         );
     };
 
+
+    loadProperties = (execMutation = () => { }) => {
+
+        this.props.client
+            .query({
+                query: this.GET_PROPERTIES_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.getbusinesscompanies != null) {
+
+                    var found = data.data.getbusinesscompanies.find(company => {
+                        return company.Id !== this.props.idProperty && company.Code.trim().toUpperCase() === this.state.Code.trim().toUpperCase()
+                    });
+
+                    if (found) {
+                        this.setState(() => ({ loadingUpdate: false }));
+                        this.props.handleOpenSnackbar('warning', 'This Code already exists in the data bases!');
+                    }
+                    else execMutation();
+
+                }
+            })
+            .catch((error) => {
+                this.setState(() => ({ loadingUpdate: false }));
+                this.props.handleOpenSnackbar('error', 'Error loading Companies Data!');
+            });
+    };
+
     getParentCompanyInfo = () => {
-        this.setState(
-            {
-                linearProgress: true
-            },
+        this.setState(() => ({ linearProgressParent: true }),
             () => {
                 this.props.client
                     .query({
@@ -805,32 +938,25 @@ class GeneralInfoProperty extends Component {
                         fetchPolicy: 'no-cache'
                     })
                     .then(({ data }) => {
+                        let company = null;
                         if (data.getbusinesscompanies !== null) {
-                            this.setState({
-                                parentDescription: 'A ' + data.getbusinesscompanies[0].Name + ' Management Company'
-                            }, () => {
-                                console.log("Parent Description: ", this.state.parentDescription)
-                            });
-
-                            this.setState({
-                                linearProgress: false
-                            });
+                            company = data.getbusinesscompanies[0];
+                            if (company)
+                                this.setState(() => ({
+                                    parentDescription: 'A ' + company.Name + ' Management Company'
+                                }));
                         } else {
                             this.setState({
-                                parentDescription: ''
+                                parentDescription: '',
+                                linearProgressParent: false
                             });
                         }
-
-                        this.setState({
-                            linearProgress: false,
-                        });
-
 
                     })
                     .catch(error => {
                         this.setState({
-                            linearProgress: false,
-                            parentDescription: ''
+                            parentDescription: '',
+                            linearProgressParent: false
                         });
                     });
             }
@@ -838,8 +964,6 @@ class GeneralInfoProperty extends Component {
     }
 
     componentWillMount() {
-        this.getParentCompanyInfo();
-
         this.setState({ avatar: this.context.avatarURL });
         this.loadRegion(() => { });
         if (this.props.idProperty !== null) {
@@ -1037,424 +1161,502 @@ class GeneralInfoProperty extends Component {
         })
     }
 
-    render() {
+    findDay = id => {
+        const dayFound = days.find(item => {
+            return item.Id === id
+        });
+
+        return dayFound;
+    }
+
+    updateStartWeek = ({ value }) => {
+        //Calculate End Week
+        const idStartWeek = value;
+        let idEndWeek = value - 1;
+
+        if (idEndWeek <= 0)
+            idEndWeek = 7;
+
+        if (value === 0) {
+            this.setState({
+                startWeek: idStartWeek,
+                validStartWeek: 'valid',
+                validEndWeek: 'valid',
+                endWeek: idEndWeek
+            });
+        } else {
+            this.setState({
+                startWeek: idStartWeek,
+                validStartWeek: '',
+                validEndWeek: '',
+                endWeek: idEndWeek
+            });
+        }
+
+        this.setState({
+            startWeekName: this.findDay(idStartWeek).Name,
+            endWeekName: this.findDay(idEndWeek).Name,
+        });
+    }
+
+    updateEndWeek = ({ value }) => {
+        //Calculate Start Week
+        var idStartWeek = value + 1;
+        if (idStartWeek >= 8) idStartWeek = 1;
+
+        if (value === 0) {
+            this.setState({
+                endWeek: value,
+                validEndWeek: 'valid',
+                validStartWeek: 'valid',
+                startWeek: idStartWeek
+            });
+        } else {
+            this.setState({
+                endWeek: value,
+                validEndWeek: '',
+                validStartWeek: '',
+                startWeek: idStartWeek
+            });
+        }
+
+        this.setState({
+            startWeekName: this.findDay(idStartWeek).Name,
+            endWeekName: this.findDay(value).Name,
+        })
+    }
+
+    handleUpdateAvatar = (url) => {
+        this.setState({
+            avatar: url
+        });
+    }
+
+    handleChangeStepper = (index) => {
+        if(this.props.idProperty !== null) this.setState({ activeStep: index })
+    }
+
+    getGeneralInformation = (leftStepper) => {
         this.changeStylesInCompletedInputs();
 
-        if (this.state.linearProgress) {
+        if (this.state.linearProgress || this.state.linearProgress || this.state.linearProgressOpM || this.state.loadingData) {
             return <LinearProgress />;
         }
-        return <form >
-            <div className="row">
-                <ConfirmDialog
-                    open={this.state.openConfirm}
-                    closeAction={() => {
-                        this.setState({ openConfirm: false });
-                    }}
-                    confirmAction={() => {
-                        this.deleteCompany(this.props.idProperty);
-                    }}
-                    title="Do you really want to delete this property?"
-                    loading={this.state.removing}
-                />
-                <div className="col-md-12">
-                    <div className="form-actions float-right">
-                        {this.props.idProperty != null ? (
-                            <button
-                                disabled={false}
-                                className="btn btn-danger"
-                                onClick={() => {
-                                    this.setState({ openConfirm: true })
-                                }}
-                                type="button"
-                            >
-                                Delete Property<i class="fas fa-ban ml-1" />
+        var loading = this.state.linearProgress || this.state.searchigZipcode;
+
+        const selectDays = days.map(item => {
+            return { value: item.Id, label: item.Name }
+        });
+
+        return (
+            <Fragment>
+                <div className="row">
+                    <ConfirmDialog
+                        open={this.state.openConfirm}
+                        closeAction={() => {
+                            this.setState({ openConfirm: false });
+                        }}
+                        confirmAction={() => {
+                            this.deleteCompany(this.props.idProperty);
+                        }}
+                        title="Do you really want to delete this property?"
+                        loading={this.state.removing}
+                    />
+                    <div className="col-md-12">
+                        <div className="form-actions float-right tumi-buttonWrapper">
+                            {this.props.idProperty != null ? (
+                                <button
+                                    disabled={false}
+                                    className="btn btn-danger tumi-button"
+                                    onClick={() => {
+                                        this.setState({ openConfirm: true })
+                                    }}
+                                    type="button"
+                                >
+                                    Delete Property<i class="fas fa-ban ml-1" />
+                                </button>
+                            ) : (
+                                    ''
+                                )}
+
+
+
+                            {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success tumi-button" name="save" id="save" onClick={this.handleFormSubmit('save')} disabled={loading}>
+                                Save<i className="fas fa-save ml-2" />
                             </button>
-                        ) : (
-                                ''
-                            )}
+                            }
 
+                            {(this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next" disabled={loading}>
+                                Next <i className="fas fa-chevron-right"></i>
+                            </button>}
 
-
-                        {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success" name="save" id="save" onClick={this.handleFormSubmit('save')}>
-                            Save<i className="fas fa-save ml-2" />
-                        </button>
-                        }
-
-                        {(this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next">
-                            Next <i className="fas fa-chevron-right"></i>
-                        </button>}
-
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="row">
-                <div className="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            General Information
-                                        <span className="float-right text-success font-weight-bold">{this.state.parentDescription}</span>
+
+                <div className="row">
+                    <div className="col-md-3 col-xl-2">
+                        {leftStepper}
+                    </div>
+
+                    <div className="col-md-9 col-xl-10">
+                        <div class="card">
+                            <div class="card-header">
+                                General Information
+                                <span className="float-right text-success font-weight-bold text-center">
+                                {this.state.parentDescription}
+                                <br />
+                                {this.state.operationManagerDescription? `Operation Manager: ${this.state.operationManagerDescription}`:'' }
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div className="row">
+                                    <div className="col-md-12 col-lg-12">
+                                        <div className="row">
+                                            {localStorage.getItem('ShowMarkup') == 'true' ?
+                                                <div className="col-md-6 col-lg-1">
+                                                    <label>* Markup</label>
+                                                    <InputValid
+                                                        change={(text) => {
+                                                            this.setState({
+                                                                rate: text
+                                                            });
+                                                        }}
+                                                        value={this.state.rate}
+                                                        type="number"
+                                                        maxLength="10"
+                                                        required
+                                                        placeholder='0'
+                                                    />
+                                                </div>
+                                                : ''}
+                                            <div className="col-md-6 col-lg-4">
+                                                <label>* Hotel Name</label>
+                                                <InputValid
+                                                    change={(text) => {
+                                                        this.setState({
+                                                            name: text
+                                                        });
+                                                    }}
+                                                    value={this.state.name}
+                                                    type="text"
+                                                    maxLength="35"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-3">
+                                                <label>* Address</label>
+                                                <InputValid
+                                                    change={(text) => {
+                                                        this.setState({
+                                                            address: text
+                                                        });
+                                                    }}
+                                                    value={this.state.address}
+                                                    type="text"
+                                                    maxLength="50"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-3">
+                                                <label>Address 2</label>
+                                                <input
+                                                    className={'form-control'}
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            optionalAddress: e.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.optionalAddress}
+                                                    type="text"
+                                                    maxLength="50"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-1">
+                                                <label>Suite</label>
+                                                <input
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            suite: e.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.suite}
+                                                    type="text"
+                                                    maxLength="10"
+                                                    className={'form-control'}
+                                                />
+                                            </div>
+        
+                                            <LocationForm
+                                                onChangeCity={this.onChangeCity}
+                                                onChangeState={this.onChangeState}
+                                                onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
+                                                city={this.state.city}
+                                                state={this.state.state}
+                                                zipCode={this.state.zipCode}
+                                                changeCity={this.state.changeCity}
+                                                cityClass={`form-control ${this.state.validCity === '' && ' _invalid'}`}
+                                                stateClass={`form-control ${this.state.validState === '' && ' _invalid'}`}
+                                                zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
+                                                cityColClass="col-md-6 col-lg-3"
+                                                stateColClass="col-md-6 col-lg-2"
+                                                zipCodeColClass="col-md-6 col-lg-1"
+                                                requiredCity={true}
+                                                requiredState={true}
+                                                requiredZipCode={true}
+                                                updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}
+                                            />
+        
+        
+                                            <div className="col-md-12 col-lg-2">
+                                                <label> Region</label>
+                                                <AutosuggestInput
+                                                    id="Region"
+                                                    name="Region"
+                                                    data={this.state.regions}
+                                                    //error={this.state.validRegion === '' ? false : true}
+                                                    value={this.state.RegionName}
+                                                    onChange={this.updateRegionName}
+                                                    onSelect={this.updateRegionName}
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-2">
+                                                <label>* Phone Number</label>
+                                                <InputMask
+                                                    id="prop-number"
+                                                    name="number"
+                                                    mask="+(999) 999-9999"
+                                                    maskChar=" "
+                                                    value={this.state.phoneNumber}
+                                                    className={
+                                                        this.state.phoneNumberValid ? (
+                                                            'form-control'
+                                                        ) : (
+                                                                'form-control _invalid'
+                                                            )
+                                                    }
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            phoneNumber: e.target.value,
+                                                            phoneNumberValid: true
+                                                        });
+                                                    }}
+                                                    placeholder="+(___) ___-____"
+                                                    required
+                                                    minLength="15"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-2">
+                                                <label>Fax</label>
+                                                <InputMask
+                                                    id="prop-fax"
+                                                    name="number"
+                                                    mask="+(999) 999-9999"
+                                                    maskChar=" "
+                                                    value={this.state.fax}
+                                                    className={
+                                                        this.state.faxValid ? (
+                                                            'form-control'
+                                                        ) : (
+                                                                'form-control _invalid'
+                                                            )
+                                                    }
+                                                    onChange={(e) => {
+                                                        this.setState({
+                                                            fax: e.target.value,
+                                                            faxValid: true
+                                                        });
+                                                    }}
+                                                    placeholder="+(___) ___-____"
+                                                    minLength="15"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div className="row">
-                                <div className="col-md-12 col-lg-1">
-                                    <div className="GeneralInformation-wrapper">
-                                        <ImageUpload
-                                            id="avatarFilePI"
-                                            updateAvatar={(url) => {
+                        <div class="card">
+                            <div class="card-header">Legal Docs</div>
+                            <div class="card-body">
+                                <div className="row">
+                                    <div className="col-md-6 col-lg-4">
+                                        <label>* Hotel Code</label>
+                                        <InputValid
+                                            change={(text) => {
                                                 this.setState({
-                                                    avatar: url
+                                                    Code: text
                                                 });
                                             }}
-                                            fileURL={this.state.avatar}
-                                            disabled={false}
+                                            value={this.state.Code}
+                                            type="text"
+                                            maxLength="10"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-4">
+                                        <label>Cost Center</label>
+                                        <input
+                                            type="text"
+                                            value={this.state.Code01}
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    Code01: e.target.value
+                                                });
+                                            }}
+                                            maxLength="10"
+                                            className={'form-control'}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-4">
+                                        <label>Contract Start Date</label>
+                                        <input
+                                            type="date"
+                                            value={this.state.startDate}
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    startDate: e.target.value
+                                                });
+                                            }}
+        
+                                            className={'form-control'}
+                                        />
+        
+                                    </div>
+                                    <div className="col-md-6 col-lg-4">
+                                        <label>Number of Rooms</label>
+                                        <input
+                                            type="number"
+        
+                                            placeholder='0'
+                                            value={this.state.room}
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    room: e.target.value
+                                                });
+                                            }}
+        
+                                            className={'form-control'}
+                                        />
+        
+                                    </div>
+                                    <div className="col-md-6 col-lg-4 tumi-forcedTop">
+                                        <label>* Week Start</label>
+                                        <Select
+                                            options={selectDays}
+                                            value={{ value: this.state.startWeek, label: this.state.startWeekName || '' }}
+                                            onChange={this.updateStartWeek}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-4 tumi-forcedTop">
+                                        <label>To</label>
+                                        <Select
+                                            options={selectDays}
+                                            value={{ value: this.state.endWeek, label: this.state.endWeekName || '' }}
+                                            onChange={this.updateEndWeek}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6">
+                                        <label>Contract</label>
+                                        <FileUpload
+                                            updateURL={(url, fileName) => {
+                                                this.setState({
+                                                    contractURL: url,
+                                                    contractFile: fileName
+                                                });
+                                            }}
+                                            url={this.state.contractURL}
+                                            fileName={this.state.contractFile}
+                                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6">
+                                        <label>Insurance</label>
+                                        <FileUpload
+                                            updateURL={(url, fileName) => {
+                                                this.setState({
+                                                    insuranceURL: url,
+                                                    insuranceFile: fileName
+                                                });
+                                            }}
+                                            url={this.state.insuranceURL}
+                                            fileName={this.state.insuranceFile}
+                                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6">
+                                        {this.renderEditControl('otherName', 'otherNameEdit')}
+                                        <FileUpload
+                                            updateURL={(url, fileName) => {
+                                                this.setState({
+                                                    otherURL: url,
+                                                    otherFile: fileName
+                                                });
+                                            }}
+                                            url={this.state.otherURL}
+                                            fileName={this.state.otherFile}
+                                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                        />
+                                    </div>
+                                    <div className="col-md-6 col-lg-6">
+                                        {this.renderEditControl('other01Name', 'other01NameEdit')}
+                                        <FileUpload
+                                            updateURL={(url, fileName) => {
+                                                this.setState({
+                                                    other01URL: url,
+                                                    other01File: fileName
+                                                });
+                                            }}
+                                            url={this.state.other01URL}
+                                            fileName={this.state.other01File}
                                             handleOpenSnackbar={this.props.handleOpenSnackbar}
                                         />
                                     </div>
                                 </div>
-                                <div className="col-md-12 col-lg-11">
-                                    <div className="row">
-
-                                        <div className="col-md-6 col-lg-1">
-                                            <label>* Markup</label>
-                                            <InputValid
-                                                change={(text) => {
-                                                    this.setState({
-                                                        rate: text
-                                                    });
-                                                }}
-                                                value={this.state.rate}
-                                                type="number"
-                                                maxLength="10"
-                                                required
-                                                placeholder='0'
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-2">
-                                            <label>* Hotel Name</label>
-                                            <InputValid
-                                                change={(text) => {
-                                                    this.setState({
-                                                        name: text
-                                                    });
-                                                }}
-                                                value={this.state.name}
-                                                type="text"
-                                                maxLength="35"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-4">
-                                            <label>* Address</label>
-                                            <InputValid
-                                                change={(text) => {
-                                                    this.setState({
-                                                        address: text
-                                                    });
-                                                }}
-                                                value={this.state.address}
-                                                type="text"
-                                                maxLength="50"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-3">
-                                            <label>Address 2</label>
-                                            <input
-                                                className={'form-control'}
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        optionalAddress: e.target.value
-                                                    });
-                                                }}
-                                                value={this.state.optionalAddress}
-                                                type="text"
-                                                maxLength="50"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-2">
-                                            <label>Suite</label>
-                                            <input
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        suite: e.target.value
-                                                    });
-                                                }}
-                                                value={this.state.suite}
-                                                type="text"
-                                                maxLength="10"
-                                                className={'form-control'}
-                                            />
-                                        </div>
-
-                                        <LocationForm
-                                            onChangeCity={this.onChangeCity}
-                                            onChangeState={this.onChangeState}
-                                            onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
-                                            city={this.state.city}
-                                            state={this.state.state}
-                                            zipCode={this.state.zipCode}
-                                            changeCity={this.state.changeCity}
-                                            cityClass={`form-control ${this.state.validCity === '' && ' _invalid'}`}
-                                            stateClass={`form-control ${this.state.validState === '' && ' _invalid'}`}
-                                            zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
-                                            cityColClass="col-md-6 col-lg-3"
-                                            stateColClass="col-md-6 col-lg-2"
-                                            zipCodeColClass="col-md-6 col-lg-2"
-                                            requiredCity={true}
-                                            requiredState={true}
-                                            requiredZipCode={true}
-                                            updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}
-                                        />
-
-
-                                        <div className="col-md-12 col-lg-3">
-                                            <label> Region</label>
-                                            <AutosuggestInput
-                                                id="Region"
-                                                name="Region"
-                                                data={this.state.regions}
-                                                //error={this.state.validRegion === '' ? false : true}
-                                                value={this.state.RegionName}
-                                                onChange={this.updateRegionName}
-                                                onSelect={this.updateRegionName}
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-2">
-                                            <label>* Phone Number</label>
-                                            <InputMask
-                                                id="prop-number"
-                                                name="number"
-                                                mask="+(999) 999-9999"
-                                                maskChar=" "
-                                                value={this.state.phoneNumber}
-                                                className={
-                                                    this.state.phoneNumberValid ? (
-                                                        'form-control'
-                                                    ) : (
-                                                            'form-control _invalid'
-                                                        )
-                                                }
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        phoneNumber: e.target.value,
-                                                        phoneNumberValid: true
-                                                    });
-                                                }}
-                                                placeholder="+(___) ___-____"
-                                                required
-                                                minLength="15"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 col-lg-2">
-                                            <label>Fax</label>
-                                            <InputMask
-                                                id="prop-fax"
-                                                name="number"
-                                                mask="+(999) 999-9999"
-                                                maskChar=" "
-                                                value={this.state.fax}
-                                                className={
-                                                    this.state.faxValid ? (
-                                                        'form-control'
-                                                    ) : (
-                                                            'form-control _invalid'
-                                                        )
-                                                }
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        fax: e.target.value,
-                                                        faxValid: true
-                                                    });
-                                                }}
-                                                placeholder="+(___) ___-____"
-                                                minLength="15"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">Legal Docs</div>
-                        <div class="card-body">
-                            <div className="row">
-                                <div className="col-md-6 col-lg-4">
-                                    <label>* Hotel Code</label>
-                                    <InputValid
-                                        change={(text) => {
-                                            this.setState({
-                                                Code: text
-                                            });
-                                        }}
-                                        value={this.state.Code}
-                                        type="text"
-                                        maxLength="10"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>Cost Center</label>
-                                    <input
-                                        type="text"
-                                        value={this.state.Code01}
-                                        onChange={(e) => {
-                                            this.setState({
-                                                Code01: e.target.value
-                                            });
-                                        }}
-                                        maxLength="10"
-                                        className={'form-control'}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>* Contract Start Date</label>
-                                    <InputValid
-                                        change={(text) => {
-                                            this.setState({
-                                                startDate: text
-                                            });
-                                        }}
-                                        value={this.state.startDate}
-                                        type="date"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>* Number of Rooms</label>
-                                    <InputValid
-                                        change={(text) => {
-                                            this.setState({
-                                                room: text
-                                            });
-                                        }}
-                                        value={this.state.room}
-                                        type="number"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>* Week Start</label>
-                                    <SelectForm
-                                        data={days}
-                                        update={(value) => {
-                                            //Calculate End Week
-                                            var idEndWeek = value - 1;
-                                            if (idEndWeek <= 0) idEndWeek = 7;
-
-                                            if (value === 0) {
-                                                this.setState({
-                                                    startWeek: value,
-                                                    validStartWeek: 'valid',
-                                                    validEndWeek: 'valid',
-                                                    endWeek: idEndWeek
-                                                });
-                                            } else {
-                                                this.setState({
-                                                    startWeek: value,
-                                                    validStartWeek: '',
-                                                    validEndWeek: '',
-                                                    endWeek: idEndWeek
-                                                });
-                                            }
-                                        }}
-                                        value={this.state.startWeek}
-                                        error={this.state.validStartWeek === '' ? false : true}
-                                        showNone={false}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-4">
-                                    <label>To</label>
-                                    <SelectForm
-                                        data={days}
-                                        update={(value) => {
-                                            //Calculate Start Week
-                                            var idStartWeek = value + 1;
-                                            if (idStartWeek >= 8) idStartWeek = 1;
-                                            if (value === 0) {
-                                                this.setState({
-                                                    endWeek: value,
-                                                    validEndWeek: 'valid',
-                                                    validStartWeek: 'valid',
-                                                    startWeek: idStartWeek
-                                                });
-                                            } else {
-                                                this.setState({
-                                                    endWeek: value,
-                                                    validEndWeek: '',
-                                                    validStartWeek: '',
-                                                    startWeek: idStartWeek
-                                                });
-                                            }
-                                        }}
-                                        value={this.state.endWeek}
-                                        error={this.state.validEndWeek === '' ? false : true}
-                                        showNone={false}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    <label>Contract</label>
-                                    <FileUpload
-                                        updateURL={(url, fileName) => {
-                                            this.setState({
-                                                contractURL: url,
-                                                contractFile: fileName
-                                            });
-                                        }}
-                                        url={this.state.contractURL}
-                                        fileName={this.state.contractFile}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    <label>Insurance</label>
-                                    <FileUpload
-                                        updateURL={(url, fileName) => {
-                                            this.setState({
-                                                insuranceURL: url,
-                                                insuranceFile: fileName
-                                            });
-                                        }}
-                                        url={this.state.insuranceURL}
-                                        fileName={this.state.insuranceFile}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    {this.renderEditControl('otherName', 'otherNameEdit')}
-                                    <FileUpload
-                                        updateURL={(url, fileName) => {
-                                            this.setState({
-                                                otherURL: url,
-                                                otherFile: fileName
-                                            });
-                                        }}
-                                        url={this.state.otherURL}
-                                        fileName={this.state.otherFile}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    />
-                                </div>
-                                <div className="col-md-6 col-lg-6">
-                                    {this.renderEditControl('other01Name', 'other01NameEdit')}
-                                    <FileUpload
-                                        updateURL={(url, fileName) => {
-                                            this.setState({
-                                                other01URL: url,
-                                                other01File: fileName
-                                            });
-                                        }}
-                                        url={this.state.other01URL}
-                                        fileName={this.state.other01File}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    />
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </ form>
+            </Fragment>
+        );
+    }
 
+    getStepContent = () => {
+        const { classes, handleOpenSnackbar, idProperty } = this.props;
+        const { avatar, activeStep, name } = this.state;
+        const propertyBasicInfo = {id: idProperty, name };
+        const leftStepper = <LeftStepper 
+                                avatar={avatar} 
+                                classes={classes} 
+                                activeStep={activeStep} 
+                                handleUpdateAvatar={this.handleUpdateAvatar}
+                                handleChangeStepper={this.handleChangeStepper}
+                                handleOpenSnackbar={handleOpenSnackbar} 
+                                />
+
+        switch (this.state.activeStep) {
+            case 0:
+                return this.getGeneralInformation(leftStepper);
+            case 1:
+                return <ApplicationList propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
+            case 2:
+                return <Schedules propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
+            case 3:
+                return <PunchesReportConsolidated propertyInfo={propertyBasicInfo} leftStepperComponent={leftStepper} />
+        }
+    };
+
+    render() {
+        return (
+            this.getStepContent()
+        );
+        
     }
     static contextTypes = {
         avatarURL: PropTypes.string
@@ -1463,4 +1665,4 @@ class GeneralInfoProperty extends Component {
 
 GeneralInfoProperty.propTypes = {};
 
-export default withApollo(GeneralInfoProperty);
+export default withStyles(styles)(withApollo(GeneralInfoProperty));

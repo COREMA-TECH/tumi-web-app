@@ -13,7 +13,7 @@
   },
   {
     "id": 3,
-    "label": "Date"
+    "label": "Today Date"
   },
   {
     "id": 4,
@@ -61,7 +61,7 @@
   },
   {
     "id": 15,
-    "label": "Expire Date ID"
+    "label": "ID Expiration Date"
   },
   {
     "id": 16,
@@ -98,5 +98,65 @@
   {
     "id": 24,
     "label": "Second Last Name"
+  },
+  {
+    "id": 25,
+    "label": "Creation Date"
+  },
+  {
+    "id": 26,
+    "label": "Can you start Immediately?"
+  },
+  {
+    "id": 27,
+    "label": "How did you hear about Tumi Staffing"
+  },
+  {
+    "id": 28,
+    "label": "Name References"
+  },
+  {
+    "id": 29,
+    "label": "EEOC Ethnic Code"
+  },
+  {
+    "id": 30,
+    "label": "Exemptions"
+  },
+  {
+    "id": 31,
+    "label": "Area"
+  },
+  {
+    "id": 32,
+    "label": "Hire Type"
+  },
+  {
+    "id": 33,
+    "label": "Gender"
+  },
+  {
+    "id": 34,
+    "label": "Marital Status"
+  },
+  {
+    "id": 35,
+    "label": "Hire Date"
+  },
+  {
+    "id": 36,
+    "label": "Start Date"
+  },
+  {
+    "id": 37,
+    "label": "Employment Type"
+  },
+  {
+    "id": 38,
+    "label": "Comments"
+  },
+  {
+    "id": 39,
+    "label": "ID Number"
   }
 ]

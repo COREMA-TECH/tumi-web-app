@@ -6,7 +6,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import withGlobalContent from 'Generic/Global';
 import { withApollo } from 'react-apollo';
-import { GET_INITIAL_DATA, GET_CONTACT_BY_QUERY, GET_DEPARTMENTS } from './Queries';
+import { GET_INITIAL_DATA, GET_CONTACT_BY_QUERY, GET_DEPARTMENTS, GET_POSITION } from './Queries';
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 
 class PreFilter extends Component {
 
@@ -16,9 +17,14 @@ class PreFilter extends Component {
             saving: false,
             locations: [],
             departments: [],
+            positions: [],
             contacts: [],
             disabled: true,
-            location: 0
+            location: 0,
+            department: 0,
+            position: 0,
+            loadingPositions: true,
+            loadingDepartments: true,
         }
     }
 
@@ -49,17 +55,61 @@ class PreFilter extends Component {
         })
     }
 
+    getPositions = () => {
+        this.setState({ loadingPositions: true }, () => {
+            this.props.client
+                .query({
+                    query: GET_POSITION,
+                    variables: {
+                        Id_Department: this.state.department
+                    }
+                })
+                .then(({ data }) => {
+                    this.setState((prevState) => {
+                        return { positions: data.getposition, loadingPositions: false }
+                    })
+
+                }).catch(error => {
+                    this.setState({ loadingPositions: false }, () => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error loading Department list',
+                            'bottom',
+                            'right'
+                        );
+                    });
+                })
+        })
+    }
+
     getLocations = () => {
+        let filter = {};
+        let idRol = localStorage.getItem('IdRoles');
+        let idEntity = localStorage.getItem("Id_Entity");
+        if (idRol == 5) filter = { ...filter, Id: idEntity };
+
         this.setState({ loadingLoaction: true }, () => {
             this.props.client
                 .query({
                     query: GET_INITIAL_DATA,
+                    variables: {
+                        ...filter
+                    }
                 })
                 .then(({ data }) => {
                     this.setState((prevState) => {
-                        return { locations: data.getbusinesscompanies, loadingLoaction: false }
+                        return { locations: data.getbusinesscompanies, loadingLoaction: false, loadingDepartments: false }
+                    }, () => {
+                        if(this.props.location){
+                            this.setState(() => {
+                                return { location: this.props.location }
+                            }, () => {
+                                this.getContacts();
+                                this.getDepartments();
+                                this.getStartWeek(this.props.location);
+                            });
+                        }
                     })
-
                 }).catch(error => {
                     this.setState({ loadingLoaction: false }, () => {
                         this.props.handleOpenSnackbar(
@@ -117,6 +167,11 @@ class PreFilter extends Component {
             return <option key={item.Id} value={item.Id}>{item.Code + ' ' + item.Description}</option>;
         });
     }
+    renderPositionList = () => {
+        return this.state.positions.map((item) => {
+            return <option key={item.Id} value={item.Id}>{item.Position}</option>;
+        });
+    }
 
     handleSelectValueChange = (event) => {
         var index = event.nativeEvent.target.selectedIndex;
@@ -132,8 +187,19 @@ class PreFilter extends Component {
             if (element.name == 'location') {
                 this.getContacts();
                 this.getDepartments();
+                this.getStartWeek(element.value);
+            }
+            if (element.name == 'department') {
+                this.getPositions();
             }
         })
+    }
+
+    getStartWeek = (id) => {
+        let company = this.state.locations.find(_ => _.Id === id);
+        this.setState(() => ({
+            startWeek: company ? company.Start_Week : 1
+        }))
     }
 
     componentWillMount() {
@@ -142,12 +208,24 @@ class PreFilter extends Component {
 
     handleApplyFilters = (event) => {
         event.preventDefault();
-        this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department);
-        this.props.handleGetTextofFilters(this.state.locationName, this.state.requestedName, this.state.departmentName);
+        this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department, this.state.position, this.state.startWeek);
+        this.props.handleGetTextofFilters(this.state.locationName, this.state.requestedName, this.state.departmentName, this.state.positionName);
         this.setState({
             disabled: !this.state.disabled
         });
     }
+
+
+    updateLocationName = (value) => {
+        this.setState(
+            {
+                locationName: value
+            },
+            () => {
+                this.validateField('locationName', value);
+            }
+        );
+    };
 
     render() {
         const disabled = this.state.disabled;
@@ -159,35 +237,57 @@ class PreFilter extends Component {
                             <div className="row">
                                 <div className="col-md-12">
                                     <label htmlFor="">Property</label>
-                                    <select name="location" id="" disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
+                                    {/*  <AutosuggestInput
+                                        id="location"
+                                        name="location"
+                                        data={this.state.locations}
+                                        // required
+                                        //error={!this.state.titleNameValid}
+                                        value={this.props.location}
+                                        onChange={this.updateLocationName}
+                                        onSelect={this.updateLocationName}
+                                    />*/}
+
+
+                                    <select name="location" value={this.state.location} disabled={this.props.location || this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderLocationList()}
                                     </select>
+
                                 </div>
                                 <div className="col-md-12">
                                     <label htmlFor="">Department</label>
-                                    <select name="department" id="" disabled={disabled || this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
+                                    <select name="department" value={this.state.department} disabled={this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderDeparmentList()}
                                     </select>
                                 </div>
+                                <div className="col-md-12">
+                                    <label htmlFor="">Position</label>
+                                    <select name="position" value={this.state.position} disabled={this.state.loadingPositions} required className="form-control" onChange={this.handleSelectValueChange}>
+                                        <option value="">Select a Option</option>
+                                        {this.renderPositionList()}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <DialogActions>
+                                    <div className="tumi-buttonWrapper">
+                                        <button className="btn btn-success btn-not-rounded tumi-button" type="submit">
+                                            Filter
+                                                {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
+                                        </button>
+
+                                        <button className="btn btn-danger btn-not-rounded tumi-button" type="button" onClick={this.props.handleClosePreFilter}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </DialogActions>
                             </div>
                         </div>
                     </DialogContent>
-                    <DialogActions>
-                        <div className="row">
-                            <div className="col-md-12">
-                                <button className="btn btn-success btn-not-rounded" type="submit">
-                                    Filter
-                                        {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
-                                </button>
-
-                                <button className="btn btn-defautl btn-not-rounded ml-1" type="button" onClick={this.props.handleClosePreFilter}>
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </DialogActions>
                 </form>
             </Dialog>
         );

@@ -1,0 +1,32 @@
+.panel-dropdown {
+    background-color: map-get($gray-shades, soft-gray) !important;
+    box-shadow: none !important;
+    &-body {
+        padding: 0 !important;
+        padding-right: 10px !important;
+        background-color: $white; 
+        .table {
+            box-shadow: none !important;
+        }
+    }
+}
+
+.Dropdown{
+    &Body{
+        & &-table{
+            display: block !important;
+			overflow-x: auto !important;
+			width: 100%;
+        }
+    }
+
+    @include media-breakpoint-up(sm){
+        &Body{
+            & &-table{
+                display: table !important;
+                overflow-x: inherit;
+                width: inhe;
+            }
+        }
+    }
+}

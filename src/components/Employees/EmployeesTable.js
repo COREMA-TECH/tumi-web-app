@@ -18,6 +18,7 @@ import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
+import moment from 'moment';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -119,9 +120,6 @@ const styles = (theme) => ({
         overflowX: 'auto'
     },
     row: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.background.default
-        },
         '&:hover': {
             cursor: 'pointer'
         }
@@ -160,8 +158,9 @@ class EmployeesTable extends React.Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
+        console.log(nextProps.data.length, this.props.data.length)
 
-        if (this.props.data.toString() !== nextProps.data.toString() || this.props.loading !== nextProps.loading) {
+        if (JSON.stringify(this.props.data) != JSON.stringify(nextProps.data) || this.props.loading !== nextProps.loading) {
             return true;
         }
 
@@ -188,18 +187,18 @@ class EmployeesTable extends React.Component {
 
         return (
 
-            <Paper className={classes.root}>
+            <React.Fragment>
                 <Table className={classes.table}>
                     <TableHead>
                         <TableRow>
-                            <CustomTableCell className={"Table-head"} style={{width: '110px' }}>Actions</CustomTableCell>
-                            <CustomTableCell style={{width: '60px' }} className={"Table-head"}>First Name</CustomTableCell>
-                            <CustomTableCell className={"Table-head"} style={{width: '60px' }}>Last Name</CustomTableCell>
-                            <CustomTableCell style={{width: '90px' }} className={"Table-head"}>Email</CustomTableCell>
-                            <CustomTableCell className={"Table-head"} style={{width: '100px' }}>Phone Number</CustomTableCell>
-                            <CustomTableCell className={"Table-head"} style={{width: '60px' }}>Department</CustomTableCell>
-                            <CustomTableCell className={"Table-head"} style={{width: '60px' }}>Position</CustomTableCell>
-                            <CustomTableCell className={"Table-head"} style={{width: '150px' }}></CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{ width: '110px' }}>Actions</CustomTableCell>
+                            <CustomTableCell style={{ width: '60px' }} className={"Table-head"}>Full Name</CustomTableCell>
+                            <CustomTableCell style={{ width: '90px' }} className={"Table-head"}>Email</CustomTableCell>
+                            <CustomTableCell className={"Table-head"}>Start Date</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{ width: '100px' }}>Phone Number</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{ width: '60px' }}>Department</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{ width: '60px' }}>Position</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{ width: '150px' }}></CustomTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -213,7 +212,7 @@ class EmployeesTable extends React.Component {
                                         this.props.update(row.id, row)
                                     }}
                                 >
-                                    <CustomTableCell style={{width: '110px' }}>
+                                    <CustomTableCell style={{ width: '110px' }}>
                                         <Tooltip title="Edit">
                                             <button
                                                 className="btn btn-success float-left ml-1"
@@ -248,7 +247,7 @@ class EmployeesTable extends React.Component {
                                                             e.stopPropagation();
                                                             e.preventDefault();
 
-                                                            this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id, row.firstName + " " + row.lastName);
+                                                            this.props.handleClickOpenUserModal(row.idEntity, row.electronicAddress, row.mobileNumber, row.id, row.firstName + " " + row.lastName, row.firstName, row.lastName);
                                                         }}
                                                     >
                                                         <i className="fas fa-plus"></i>
@@ -257,11 +256,11 @@ class EmployeesTable extends React.Component {
                                             ) : ''
                                         }
                                     </CustomTableCell>
-                                    <CustomTableCell style={{width: '60px' }}>{row.firstName}</CustomTableCell>
-                                    <CustomTableCell style={{width: '60px' }}>{row.lastName}</CustomTableCell>
-                                    <CustomTableCell style={{width: '90px' }} >{row.electronicAddress}</CustomTableCell>
-                                    <CustomTableCell style={{width: '100px' }}>{row.mobileNumber}</CustomTableCell>
-                                    <CustomTableCell style={{width: '60px' }}>
+                                    <CustomTableCell style={{ width: '100px' }}>{row.firstName + ' ' + row.lastName}</CustomTableCell>
+                                    <CustomTableCell style={{ width: '90px' }} >{row.electronicAddress}</CustomTableCell>
+                                    <CustomTableCell style={{ width: '90px' }} >{row.hireDate ? moment.utc(row.hireDate).format('l') : ''}</CustomTableCell>
+                                    <CustomTableCell style={{ width: '100px' }}>{row.mobileNumber}</CustomTableCell>
+                                    <CustomTableCell style={{ width: '60px' }}>
                                         {
                                             this.props.departments.map(item => {
                                                 if (item.Id === row.Id_Deparment) {
@@ -270,7 +269,7 @@ class EmployeesTable extends React.Component {
                                             })
                                         }
                                     </CustomTableCell>
-                                    <CustomTableCell style={{width: '60px' }}>
+                                    <CustomTableCell style={{ width: '60px' }}>
                                         {
                                             this.props.titles.map(item => {
                                                 if (item.Id === row.Contact_Title) {
@@ -279,7 +278,7 @@ class EmployeesTable extends React.Component {
                                             })
                                         }
                                     </CustomTableCell>
-                                    <CustomTableCell style={{width: '150px' }}></CustomTableCell>
+                                    <CustomTableCell style={{ width: '150px' }}></CustomTableCell>
                                 </TableRow>
                             );
                         })}
@@ -301,7 +300,7 @@ class EmployeesTable extends React.Component {
                         </TableRow>
                     </TableFooter>
                 </Table>
-            </Paper>
+            </React.Fragment>
 
         );
     }

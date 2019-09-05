@@ -155,7 +155,7 @@ class ApplyForm extends Component {
 								scheduleExplain: this.state.scheduleExplain,
 								convicted: this.state.convicted,
 								convictedExplain: this.state.convictedExplain,
-								comment: this.state.comment
+								comment: this.state.comment,
 							}
 						}
 					})
@@ -538,7 +538,7 @@ class ApplyForm extends Component {
 													homePhone: event.target.value
 												});
 											}}
-                                            placeholder="+(___) ___-____"
+											placeholder="+(___) ___-____"
 											minLength="15"
 										/>
 										<i className="optional" />
@@ -559,7 +559,7 @@ class ApplyForm extends Component {
 														cellPhone: event.target.value
 													});
 												}}
-                                                placeholder="+(___) ___-____"
+												placeholder="+(___) ___-____"
 												required
 												minLength="15"
 											/>
@@ -708,7 +708,6 @@ class ApplyForm extends Component {
 												className="form-control"
 												required
 												min="0"
-												pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
 												maxLength="50"
 												minLength="8"
 											/>
@@ -721,12 +720,9 @@ class ApplyForm extends Component {
 										<span className="primary"> Position Applying for</span>
 										<Query query={GET_POSITIONS_QUERY}>
 											{({ loading, error, data, refetch, networkStatus }) => {
-												console.log("data del position 0 ", data);
 												if (loading) return <LinearProgress />;
 												if (error) return <p>Error </p>;
-												console.log("data del position1 ", data.getposition);
 												if (data.getposition != null && data.getposition.length > 0) {
-													console.log("data del position2 ", data.getposition);
 													return (
 														<select
 															name="city"

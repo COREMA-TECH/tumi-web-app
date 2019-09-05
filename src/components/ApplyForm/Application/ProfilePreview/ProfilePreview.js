@@ -17,7 +17,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { GET_APPLICATION_PROFILE_INFO } from "./Queries";
+import { GET_APPLICATION_PROFILE_INFO, GET_ACTIVE_EMPLOYEES_BY_MARKS } from "./Queries";
 import { UDPATE_PROFILE_PICTURE } from './Mutations';
 
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -25,6 +25,7 @@ import { ProfilePicture } from 'ui-components/ProfilePicture/'
 import GenericContent from 'Generic/Global'
 import Schedules from '../../../Schedules';
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
+
 
 
 const uuidv4 = require('uuid/v4');
@@ -82,7 +83,7 @@ class VerticalLinearStepper extends Component {
             value: 0,
             username: '',
             Urlphoto: '',
-            employee: []
+            employee: null
         }
     }
 
@@ -127,14 +128,23 @@ class VerticalLinearStepper extends Component {
                 }
             })
             .then(({ data }) => {
+                let application = data.applications[0];
                 this.setState({
-                    username: data.applications[0].firstName + ' ' + data.applications[0].lastName,
-                    Urlphoto: data.applications[0].Urlphoto,
-                    employee: data.applications[0].employee
+                    username: application.firstName + ' ' + application.lastName,
+                    Urlphoto: application.Urlphoto,
+                    employee: application.employee
                 }, () => {
+
+                    if (this.state.employee)
+                        this.checkUserActiveByMarks();
+                    else
+                        this.setState({
+                            activeEmployee: null
+                        });
+
                     this.setState({
                         loading: false
-                    })
+                    });
                 });
             })
             .catch(error => {
@@ -168,8 +178,31 @@ class VerticalLinearStepper extends Component {
             })
     };
 
+    checkUserActiveByMarks = () => {
+        this.props.client.query({
+            query: GET_ACTIVE_EMPLOYEES_BY_MARKS,
+            variables: {
+                id: this.state.employee.Employees.id
+            }
+        }).then(({ data }) => {
+            this.setState({
+                activeEmployee: data.activeEmployeesByMarks[0]
+            }, () => {
+                this.setState({
+                    loading: false
+                })
+            });
+        }).catch(error => {
+            this.setState({
+                loading: false,
+                error: true
+            })
+        })
+    }
+
     componentWillMount() {
         // Get id of the application and pass to the components
+
         try {
             this.setState({
                 applicationId: this.props.applicationId
@@ -187,25 +220,40 @@ class VerticalLinearStepper extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
     render() {
         const { classes } = this.props;
         const { value } = this.state;
         const steps = getSteps();
         const { activeStep } = this.state;
 
+        let idEntity = null, Id_Department = null, EmployeeId = -1;
+
+
+
+        if (this.state.employee)
+            idEntity = this.state.employee.Employees.idEntity, Id_Department = this.state.employee.Employees.Id_Department, EmployeeId = this.state.employee.Employees.id;
+
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <General applicationId={this.props.applicationId} />;
+                    return <General applicationId={this.props.applicationId} activeUser={this.state.activeEmployee ? true : false} hasEmployee={this.state.employee || null} />;
                 case 1:
                     return <div className="card mt-0">
                         <Shifts
                             saveTemplateShift={() => { }}
                             openEditConfirm={() => { }}
                             handleOpenSnackbar={this.props.handleOpenSnackbar}
-                            location={this.state.employee.Employees.idEntity}
-                            deparment={this.state.employee.Employees.Id_Department}
-                            selectedEmployee={this.state.employee.Employees.id}
+                            location={idEntity}
+                            deparment={Id_Department}
+                            selectedEmployee={EmployeeId}
                         />
                     </div>
             }

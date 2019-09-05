@@ -165,12 +165,13 @@ class DashboardRecruiter extends React.Component {
 			<div className="row WorkOrder">
 				<div className="col-md-12">
 					<WorkOrdersTable
-						status={4}
+						status={0}
 						filter={this.state.filterValue}
 						onEditHandler={this.onEditHandler}
 						onLifeHandler={this.onLifeHandler}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						rowsPerPage={5}
+						tableTitle={"Openings"}
 					/>
 
 				</div>
@@ -178,8 +179,8 @@ class DashboardRecruiter extends React.Component {
 				<div className="col-md-12 col-lg-4">
 					<div className="card">
 						<div className="card-header info">Quick Access</div>
-						<div className="row">
-							<div className="col-md-2 col-lg-2">
+						<div className="row pl-4 pr-4">
+							<div className="col-md-2 col-lg-3 col-xl-2">
 								<a href="/home/board/recruiter" className="text-center d-block">
 									<img src="/icons/actions/notepad-3.svg" alt="" className="w-50" />
 									<span className="d-block">Go to board</span>
@@ -203,9 +204,9 @@ class DashboardRecruiter extends React.Component {
 						<div className="card-header info">FULFILLMENT STATS</div>
 						<div className="card-body">
 							<ul className="list-group list-group-flush">
-								{this.state.timeElapsed.slice(0, 5).map((timeElapsed) => {
+								{this.state.timeElapsed.slice(0, 5).map((timeElapsed, i) => {
 									return (
-										<li className="list-group-item d-flex justify-content-between align-items-center">
+										<li key={i} className="list-group-item RecruiterDash-ffmItem">
 											<span className="font-weight-bold">{timeElapsed.WorkOrderId}</span>	{timeElapsed.Full_Name}
 											<span class="badge badge-primary"> {timeElapsed.TimeElapsed}</span>
 										</li>

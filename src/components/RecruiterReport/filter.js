@@ -5,7 +5,7 @@ class RecruiterReportFilter extends Component {
     constructor(props) {
         super(props);
         var { recruiter, date, frequency } = props;
-        this.state = { recruiter, date, frequency }
+        this.state = { recruiter, date, frequency };
     }
 
     renderRecruiters = () => {

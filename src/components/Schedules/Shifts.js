@@ -10,8 +10,14 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { GET_SHIFT_BY_DATE } from './Queries';
+import moment from 'moment';
 
-import Select from 'react-select';
+moment.locale('en', {
+    week: {
+        dow: 1,
+        doy: 1,
+    },
+});
 
 let today = new Date();
 let dd = today.getDate();
@@ -27,6 +33,8 @@ if (mm < 10) {
 }
 
 today = yyyy + '-' + mm + '-' + dd;
+
+
 let schedulerData = new SchedulerData(
     today,
     ViewTypes.Week,
@@ -57,6 +65,11 @@ let schedulerData = new SchedulerData(
     }
 );
 
+
+
+schedulerData.localeMoment(moment);
+
+
 let allEvents;
 let allResources;
 
@@ -65,7 +78,6 @@ class Shifts extends Component {
     constructor(props) {
         super(props);
 
-        schedulerData.localeMoment.locale("en");
 
         this.state = {
             viewModel: schedulerData,
@@ -147,7 +159,7 @@ class Shifts extends Component {
                                             shiftDetailItem.end.substring(0, 10) +
                                             " " +
                                             shiftDetailItem.endTime,
-                                        title: shiftItem.title,
+                                        title: shiftItem.position.Position,
                                         resourceId:
                                             shiftDetailItem.detailEmployee !== null
                                                 ? shiftDetailItem.detailEmployee.EmployeeId
@@ -248,10 +260,28 @@ class Shifts extends Component {
             nextProps.shiftId
         );
 
+        if (nextProps.weekDayStart != this.props.weekDayStart) {
+            moment.locale('en', {
+                week: {
+                    dow: nextProps.weekDayStart,
+                    doy: nextProps.weekDayStart,
+                },
+            });
+            this.setState((prevState) => {
+                let scheduler = prevState.viewModel;
+                scheduler.localeMoment(moment);
+                scheduler.setViewType(ViewTypes.Day);
+                scheduler.setViewType(ViewTypes.Week);
+                return { viewModel: scheduler }
+            })
+
+            console.log("shifts:::", { weekDayStart: this.props.weekDayStart });
+        }
         if (nextProps.location != this.props.location ||
             nextProps.department != this.props.department ||
             nextProps.selectedEmployee.value != this.props.selectedEmployee.value ||
             nextProps.refresh != this.props.refresh) {
+
             this.setState(
                 {
                     loading: true
@@ -261,6 +291,7 @@ class Shifts extends Component {
                 }
             );
         }
+
     }
 
     filterShifts(city, shift) {
@@ -282,7 +313,7 @@ class Shifts extends Component {
                                 shiftDetailItem.end.substring(0, 10) +
                                 " " +
                                 shiftDetailItem.endTime,
-                            title: shiftItem.title,
+                            title: shiftItem.position.Position,
                             resourceId:
                                 shiftDetailItem.detailEmployee !== null
                                     ? shiftDetailItem.detailEmployee.EmployeeId

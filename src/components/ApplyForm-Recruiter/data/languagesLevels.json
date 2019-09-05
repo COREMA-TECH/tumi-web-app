@@ -1,22 +1,14 @@
 [
   {
     "Id": 1,
-    "Name": "Elementary Proficiency"
+    "Name": "Basic"
   },
   {
     "Id": 2,
-    "Name": "Limited Working Proficiency"
+    "Name": "Mid"
   },
   {
     "Id": 3,
-    "Name": "Professional Working Proficiency"
-  },
-  {
-    "Id": 4,
-    "Name": "Full Professional Proficiency"
-  },
-  {
-    "Id": 5,
-    "Name": "Native or Bilingual Proficiency"
+    "Name": "Advanced"
   }
 ]

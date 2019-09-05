@@ -973,7 +973,6 @@ class VerticalLinearStepper extends Component {
                                 className="form-control"
                                 required
                                 min="0"
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                 maxLength="50"
                                 minLength="8"
                             />
@@ -1402,7 +1401,6 @@ class VerticalLinearStepper extends Component {
                         degree: parseInt(document.getElementById('degree').value),
                         ApplicationId: 1 // Static application id
                     };
-                    console.log(item);
                     this.setState(
                         (prevState) => ({
                             open: false,
@@ -2150,7 +2148,6 @@ class VerticalLinearStepper extends Component {
                                     onClick={() => {
                                         this.setState((prevState) => ({
                                             languages: this.state.languages.filter((_, i) => {
-                                                console.log(this.state.languages);
                                                 return _.uuid !== languageItem.uuid;
                                             })
                                         }));
@@ -2317,7 +2314,6 @@ class VerticalLinearStepper extends Component {
                                             onClick={() => {
                                                 this.setState((prevState) => ({
                                                     skills: this.state.skills.filter((_, i) => {
-                                                        console.log(this.state.skills);
                                                         return _.uuid !== skillItem.uuid;
                                                     })
                                                 }));

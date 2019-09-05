@@ -69,11 +69,15 @@ h6 {
 }
 
 p {
-	font-family: Poppins-Regular;
 	font-size: 14px;
-	line-height: 1.7;
+	line-height: 1.5;
 	color: #666666;
 	margin: 0px;
+}
+
+span {
+	color: #666666;
+	font-weight: 300px;
 }
 
 ul,

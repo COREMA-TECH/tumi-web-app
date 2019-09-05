@@ -1,0 +1,62 @@
+.RowForm{
+    &-days{
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        padding-bottom: 1rem; 
+    }
+
+    &-days.in-modal{
+        .RowForm-day{
+            max-width: 79px;
+        }
+    }
+
+    &-day{
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+
+        max-width: 91px;
+        width: 100%;
+    }
+}
+
+@include media-breakpoint-up(sm){
+    .RowForm{
+        &-days.in-modal{           
+            flex-direction: row;           
+            flex-wrap: wrap;
+            padding-bottom: 0;            
+        }
+    }
+}
+
+@include media-breakpoint-up(md){
+    .RowForm{
+        &-days{           
+            flex-direction: row;           
+            flex-wrap: wrap;
+            padding-bottom: 0; 
+        }
+
+        &-day{
+            max-width: 89px;
+        }
+    }
+}
+
+@include media-breakpoint-up(lg){
+    .RowForm{
+        &-days{           
+            flex-wrap: nowrap;
+        }
+
+        &-days.in-modal{           
+            flex-wrap: wrap;
+        }
+    }
+}

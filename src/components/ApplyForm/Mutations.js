@@ -4,8 +4,8 @@ import gql from 'graphql-tag';
  * Mutation to create application with general information
  */
 export const CREATE_APPLICATION = gql`
-	mutation addApplication($application: inputInsertApplication) {
-		addApplication(application: $application) {
+	mutation addApplication($application: inputInsertApplication,  $codeuser: Int, $nameUser: String) {
+		addApplication(application: $application,  codeuser: $codeuser, nameUser: $nameUser) {
 			id
 		}
 	}
@@ -15,8 +15,8 @@ export const CREATE_APPLICATION = gql`
  * Mutation to update a application
  */
 export const UPDATE_APPLICATION = gql`
-	mutation updateApplication($application: inputUpdateApplication) {
-		updateApplication(application: $application) {
+	mutation updateApplication($application: inputUpdateApplication, $codeuser: Int, $nameUser: String) {
+		updateApplication(application: $application, codeuser: $codeuser, nameUser: $nameUser) {
 			id
 		}
 	}
@@ -38,12 +38,28 @@ export const ADD_APLICANT_EDUCATION = gql`
 	}
 `;
 
+export const UPDATE_APLICANT_EDUCATION = gql`
+	mutation updateApplicantEducation($application: inputUpdateApplicantEducation) {
+		updateApplicantEducation(applicantEducation: $application) {
+			id
+		}
+	}
+`;
+
 export const ADD_APLICANT_PREVIOUS_EMPLOYMENT = gql`
 	mutation addApplicantPreviousEmployment($application: [inputInsertApplicantPreviousEmployment]) {
 		addApplicantPreviousEmployment(applicantPreviousEmployment: $application) {
 			id
 		}
 	}
+`;
+
+export const UPDATE_APLICANT_PREVIOUS_EMPLOYMENT = gql`
+    mutation updateApplicantPreviousEmployment($application: inputUpdateApplicantPreviousEmployment) {
+        updateApplicantPreviousEmployment(applicantPreviousEmployment: $application) {
+            id
+        }
+    }
 `;
 
 export const ADD_MILITARY_SERVICES = gql`
@@ -147,3 +163,25 @@ export const RECREATE_IDEAL_JOB_LIST = gql`
 
 
 
+/**
+ * Mutation to insert independent contract information
+ */
+export const ADD_INDEPENDENT_CONTRACT = gql`
+    mutation addApplicantIndependentContract($html: String, $ApplicantId: Int) {
+          addApplicantIndependentContract(html: $html, ApplicationId: $ApplicantId) {
+               id 
+          }
+    }
+`;
+
+/*This is for internal application */
+export const UPDATE_INTERNAL_APPLICATION = gql`
+	mutation updateApplication($application: inputUpdateApplication, $codeuser: Int, $nameUser: String, $id: Int, $hireDate: String, $startDate: String,$ApplicationId: Int) {
+		updateApplication(application: $application, codeuser: $codeuser, nameUser: $nameUser) {
+			id
+		}
+		createEmployeeBasedOnApplicationOrUpdateEmployee(id: $id, hireDate: $hireDate, startDate: $startDate, ApplicationId: $ApplicationId,codeuser: $codeuser, nameUser: $nameUser){
+			id
+		}
+	}
+`;

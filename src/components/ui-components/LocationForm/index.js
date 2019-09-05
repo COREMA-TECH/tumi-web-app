@@ -244,10 +244,10 @@ class LocationForm extends Component {
         const loading = this.state.loadingCities || this.state.loadingStates || this.state.findingZipCode;
         return <React.Fragment>
             <div className={this.props.cityColClass || "col-md-6 col-lg-4"}>
-                <label className={`mr-1 ${this.props.cssTitle || ''}`}>{this.props.cityTitle || "* City"}</label>
-                <span className="float-right">
+                <label className={`Location-label city mr-1 ${this.props.cssTitle || ''}`}>{this.props.cityTitle || "* City"}</label>
+                <span className="float-right tumi-checkbox-wrapper Location-changeCityByZip" title="Change selected city by zip code?">
                     <input type="checkbox" name="changeCity" onChange={this.onValueChange} disabled={this.props.disabledCheck || loading} checked={this.state.changeCity} />
-                    <label className={`${this.props.cssTitle || ''}`} htmlFor="">Change selected city by zip code?</label>
+                    <label className={`Location-label changeCity ${this.props.cssTitle || ''}`} htmlFor="">Change selected city by zip code?</label>
                 </span>
                 <div className="select-animated">
                     <select name="city" className={this.props.cityClass || 'form-control'} onChange={this.onValueChange} value={this.state.city}
@@ -262,7 +262,7 @@ class LocationForm extends Component {
             </div>
             <div className={this.props.stateColClass || "col-md-6 col-lg-4"}>
                 <div className="select-animated">
-                    <label className={`${this.props.cssTitle || ''}`}>{this.props.stateTitle || "* State"}</label>
+                    <label className={`Location-label state ${this.props.cssTitle || ''}`}>{this.props.stateTitle || "* State"}</label>
                     <select name="state" className={this.props.stateClass || 'form-control'} onChange={this.onValueChange} value={this.state.state}
                         disabled required={this.props.requiredState} >
                         <option value="">Select a state</option>
@@ -274,7 +274,7 @@ class LocationForm extends Component {
                 </div>
             </div>
             <div className={this.props.zipCodeColClass || "col-md-6 col-lg-4"}>
-                <label className={`${this.props.cssTitle || ''}`}>{this.props.zipCodeTitle || "* Zip Code"}</label>
+                <label className={`Location-label zipcode ${this.props.cssTitle || ''}`}>{this.props.zipCodeTitle || "* Zip Code"}</label>
                 <InputMask
                     id="zipCode"
                     name="zipCode"

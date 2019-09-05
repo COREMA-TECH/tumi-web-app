@@ -148,17 +148,15 @@ class HotelList extends Component {
                 if (
                     _.Name.indexOf(value) > -1 ||
                     _.Name.toLocaleLowerCase().indexOf(value.toLowerCase()) > -1 ||
-                    _.Name.toLocaleUpperCase().indexOf(value.toUpperCase()) > -1
+                    _.Name.toLocaleUpperCase().indexOf(value.toUpperCase()) > -1 ||
+                    _.Code.indexOf(value) > -1 ||
+                    _.Code.toLocaleLowerCase().indexOf(value.toLowerCase()) > -1 ||
+                    _.Code.toLocaleUpperCase().indexOf(value.toUpperCase()) > -1 
+                    
                 ) {
                     return true;
                 }
             });
-
-            // this.state.hotels.forEach(hotel => {
-            //     if (hotel.Name.includes(value.toLowerCase()) || hotel.Name.includes(value.toUpperCase())) {
-            //         hotelFind.push(hotel);
-            //     }
-            // });
 
             this.setState({
                 hotels: dataEmployees
@@ -185,7 +183,7 @@ class HotelList extends Component {
         return (
             <div className="container-fluid">
                 <ul className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-4 col-xl-2">
                         <div class="input-group">
                             <input onChange={this.handleChange} type="text" name="searchbox" className="form-control" placeholder="Search" />
                             <div class="input-group-append">
@@ -195,9 +193,9 @@ class HotelList extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-8 col-xl-10">
                         <div className="float-right">
-                            <button className="btn btn-success" onClick={this.handleClickOpen}>
+                            <button className="btn btn-success mt-2 mb-1" onClick={this.handleClickOpen}>
                                 Add New Property
                             </button>
                         </div>
@@ -214,28 +212,24 @@ class HotelList extends Component {
                         loadingConfirm={this.state.loadingRemoving}
                         content="Do you really want to continue whit this operation?"
                     />
-                    {this.state.hotels.map((hotel) => (
-                        <li className="col-md-2">
+                    {this.state.hotels.map((hotel, i) => (
+                        <li key={i} className="col-md-4 col-xl-2">
                             <div className="HotelCard-wrapper">
                                 <div className="HotelCard-controls">
                                     <button className="btn btn-link" onClick={(e) => { this.handleAlertOpen(hotel.Id) }}>
                                         <i className="fas fa-trash"></i>
                                     </button>
                                 </div>
-                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
+                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent)} className={hotel.Id_Parent === 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
                                     <div className="HotelCard-img">
                                         <figure>
                                             <img src={`${hotel.ImageURL}`} alt="" />
                                         </figure>
                                     </div>
                                     <div className="HotelCard-info">
-                                        <span className="HotelCard-title">
-                                            <TextTruncate
-                                                line={3}
-                                                truncateText="…"
-                                                text={hotel.Name}
-                                            />
-                                        </span>
+                                        <div className="HotelCard-title">
+                                            {`${hotel.Name.trim()}`}
+                                        </div>
                                     </div>
                                 </a>
                             </div>

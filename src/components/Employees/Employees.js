@@ -7,14 +7,12 @@ import green from "@material-ui/core/colors/green";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
-import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, INSERT_USER_QUERY } from "./Mutations";
+import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, INSERT_USER_QUERY, INSERT_CONTACT } from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
+import Select from 'react-select';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
-import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
-import { Query } from "react-apollo";
-import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
-import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL } from "./Queries";
+import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, LIST_EMPLOYEES, SEND_EMAIL, GET_APPLICATION_EMPLOYEES, GET_POSIT_BY_HOTEL_DEPART_QUERY, GET_VALIDATE_EMPLOYEE_UNIQUENESS } from "./Queries";
 import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
@@ -27,6 +25,13 @@ import {
     GET_ROLES_QUERY,
 } from "../ApplyForm/Application/ProfilePreview/Queries";
 import { GET_LANGUAGES_QUERY } from "../ApplyForm-Recruiter/Queries";
+import DatePicker from "react-datepicker";
+import moment from 'moment';
+const uuidv4 = require('uuid/v4');
+
+const DEFAULT_HOTEL_OPT = { value: null, label: 'Select a hotel' };
+const DEFAULT_DEPARTMENT_OPT = { value: null, label: 'Select a department' };
+const DEFAULT_TITLE_OPT = { value: null, label: 'Select a position' };
 
 const styles = theme => ({
     container: {
@@ -74,6 +79,12 @@ const styles = theme => ({
         left: "50%",
         marginTop: -12,
         marginLeft: -12
+    },
+    paper: {
+        padding: theme.spacing.unit * 2,
+        // textAlign: 'center',
+        color: theme.palette.text.secondary,
+        overflowY: 'visible'
     }
 });
 
@@ -88,15 +99,15 @@ class Employees extends Component {
             employeesRegisters: [],
             allDepartments: [],
             allTitles: [],
-            rowsInput: [1],
+            rowsInput: [uuidv4()],
             inputs: 1,
             filterText: "",
 
             firstNameEdit: "",
             lastNameEdit: "",
-            emailEdit: "",
+            hireDateEdit: "",
             numberEdit: "",
-
+            idEntity: 0,
 
             emailToCreateUser: "",
             phoneNumberToCreateUser: "",
@@ -104,7 +115,15 @@ class Employees extends Component {
             progressNewEmployee: false,
             finishLoading: false,
             progressEditEmployee: false,
-
+            employees: [],
+            hotels: [],
+            departments: [],
+            titles: [],
+            hotelEdit: DEFAULT_HOTEL_OPT,
+            departmentEdit: DEFAULT_DEPARTMENT_OPT,
+            contactTitleEdit: DEFAULT_TITLE_OPT,
+            roles: [],
+            languages: [],
             ...this.DEFAULT_STATE
         };
     }
@@ -162,7 +181,8 @@ class Employees extends Component {
         loading: false,
         loadingConfirm: false,
         openModal: false,
-        showCircularLoading: false
+        showCircularLoading: false,
+        isUnique: undefined
     };
 
     /**
@@ -182,8 +202,9 @@ class Employees extends Component {
             },
             () => {
                 this.setState({
-                    rowsInput: [1]
+                    rowsInput: [uuidv4()]
                 });
+                this.getEmployees();
             }
         );
     };
@@ -203,11 +224,12 @@ class Employees extends Component {
             openModalEdit: false,
             firstNameEdit: "",
             lastNameEdit: "",
-            emailEdit: "",
+            hireDateEdit: "",
             numberEdit: "",
-            departmentEdit: "",
-            contactTitleEdit: "",
-            idEntityEdit: ""
+            departmentEdit: DEFAULT_DEPARTMENT_OPT,
+            contactTitleEdit: DEFAULT_TITLE_OPT,
+            idEntityEdit: "",
+            isUnique: undefined
         });
     };
 
@@ -220,12 +242,14 @@ class Employees extends Component {
         e.preventDefault();
         e.stopPropagation();
 
+        this.setState(() => ({ progressNewEmployee: true }));
         // Build the employee object
-        const datos = this.state.rowsInput.map((item, index) => {
-            return {
+        const datos = [], hasError = false, dataToValidate = [];
+        this.state.rowsInput.map(index => {
+            let record = {
                 firstName: this.state[`firstName${index}`],
                 lastName: this.state[`lastName${index}`],
-                electronicAddress: this.state[`email${index}`],
+                hireDate: this.state[`hireDate${index}`],
                 mobileNumber: this.state[`phoneNumber${index}`],
                 Id_Deparment: parseInt(this.state[`department${index}`]),
                 Contact_Title: parseInt(this.state[`contactTitle${index}`]),
@@ -235,13 +259,42 @@ class Employees extends Component {
                 userUpdated: 1,
                 idEntity: parseInt(this.state[`idEntity${index}`]),
             };
+
+            datos.push(record);
+
+            let { firstName, lastName, mobileNumber } = record;
+            dataToValidate.push({ firstName, lastName, mobileNumber, id: 0, index });
+
         });
-
         // Remove undefined last element
-        datos.pop();
+        dataToValidate.pop();
 
-        // Insert employees with array of employees
-        this.insertEmployees(datos);
+        //Validate Employees Uniqueness
+        this.props.client.query({
+            query: GET_VALIDATE_EMPLOYEE_UNIQUENESS,
+            fetchPolicy: 'no-cache',
+            variables: {
+                employees: dataToValidate
+            }
+        })
+            .then(({ data: { validateEmployeeUniqueness } }) => {
+                if (validateEmployeeUniqueness.filter(_ => { return _.isUnique === false }).length > 0) {
+                    this.props.handleOpenSnackbar("warning", "Some Employees already exist into the system, please delete them to continue saving info");
+                    this.setState(() => ({ progressNewEmployee: false }));
+                    validateEmployeeUniqueness.map(_ => {
+                        this.setState(() => ({
+                            [`isUnique${_.index}`]: _.isUnique
+                        }))
+                    })
+                }
+                else {
+                    // Remove undefined last element
+                    datos.pop();
+
+                    // Insert employees with array of employees
+                    this.insertEmployees(datos);
+                }
+            });
     };
 
     handleSubmitEmployeeEdit = e => {
@@ -257,52 +310,85 @@ class Employees extends Component {
             finishLoading: false,
             progressNewEmployee: true
         }, () => {
-            this.props.client
-                .mutate({
-                    mutation: UPDATE_EMPLOYEE,
-                    variables: {
-                        employees: {
-                            id: this.state.idToEdit,
-                            firstName: form.elements[0].value,
-                            lastName: form.elements[1].value,
-                            electronicAddress: form.elements[2].value,
-                            mobileNumber: form.elements[3].value,
-                            Id_Deparment: parseInt(this.state.departmentEdit),
-                            Contact_Title: parseInt(this.state.contactTitleEdit),
-                            idEntity: parseInt(this.state.hotelEdit),
-                            idRole: 1,
-                            isActive: true,
-                            userCreated: 1,
-                            userUpdated: 1
-                        }
+            //Validate Employees Uniqueness
+            this.props.client.query({
+                query: GET_VALIDATE_EMPLOYEE_UNIQUENESS,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    employees: {
+                        id: this.state.idToEdit,
+                        firstName: form.elements[0].value,
+                        lastName: form.elements[1].value,
+                        mobileNumber: form.elements[3].value,
+                        index: 0
                     }
-                })
-                .then(() => {
-                    this.props.handleOpenSnackbar("success", "Employee Updated!");
-                    this.handleCloseModalEdit();
+                }
+            })
+                .then(({ data: { validateEmployeeUniqueness } }) => {
+                    if (validateEmployeeUniqueness.filter(_ => { return _.isUnique === false }).length > 0) {
+                        this.props.handleOpenSnackbar("warning", "Some Employees already exist into the system, please delete them to continue saving info");
+                        this.setState(() => ({
+                            progressNewEmployee: false,
+                            finishLoading: true,
+                            progressEditEmployee: false,
+                            isUnique: validateEmployeeUniqueness[0].isUnique
+                        }))
+                    }
+                    else {
+                        this.props.client
+                            .mutate({
+                                mutation: UPDATE_EMPLOYEE,
+                                variables: {
+                                    employees: {
+                                        id: this.state.idToEdit,
+                                        firstName: form.elements[0].value,
+                                        lastName: form.elements[1].value,
+                                        hireDate: form.elements[2].value,
+                                        mobileNumber: form.elements[3].value,
+                                        Id_Deparment: parseInt(this.state.departmentEdit.value),
+                                        Contact_Title: parseInt(this.state.contactTitleEdit.value),
+                                        idEntity: parseInt(this.state.hotelEdit.value),
+                                        idRole: 1,
+                                        isActive: true,
+                                        userCreated: 1,
+                                        userUpdated: 1
+                                    },
+                                    codeuser: localStorage.getItem('LoginId'),
+                                    nameUser: localStorage.getItem('FullName')
+                                }
+                            })
+                            .then(() => {
+                                this.props.handleOpenSnackbar("success", "Employee Updated!");
+                                this.handleCloseModalEdit();
 
-                    this.setState({
-                        filterText: ""
-                    }, () => {
-                        this.setState({
-                            progressNewEmployee: false,
-                            finishLoading: true,
-                            progressEditEmployee: false,
-                        });
-                    });
-                })
-                .catch(error => {
-                    this.props.handleOpenSnackbar("error", "Error updating Employee!");
-                    this.setState({
-                        filterText: ""
-                    }, () => {
-                        this.setState({
-                            progressNewEmployee: false,
-                            finishLoading: true,
-                            progressEditEmployee: false,
-                        });
-                    });
+                                this.setState({
+                                    filterText: ""
+                                }, () => {
+                                    this.setState({
+                                        progressNewEmployee: false,
+                                        finishLoading: true,
+                                        progressEditEmployee: false,
+                                        isUnique: undefined
+                                    }, this.getEmployees);
+                                });
+
+                            })
+                            .catch(error => {
+                                this.props.handleOpenSnackbar("error", "Error updating Employee!");
+                                this.setState({
+                                    filterText: ""
+                                }, () => {
+                                    this.setState({
+                                        progressNewEmployee: false,
+                                        finishLoading: true,
+                                        progressEditEmployee: false,
+                                    });
+                                });
+                            });
+                    }
                 });
+
+
         });
 
     };
@@ -317,7 +403,9 @@ class Employees extends Component {
                     .mutate({
                         mutation: ADD_EMPLOYEES,
                         variables: {
-                            Employees: employeesArrays
+                            Employees: employeesArrays,
+                            codeuser: localStorage.getItem('LoginId'),
+                            nameUser: localStorage.getItem('FullName')
                         }
                     })
                     .then(({ data }) => {
@@ -328,7 +416,8 @@ class Employees extends Component {
                         this.setState({
                             progressNewEmployee: false,
                             finishLoading: true
-                        });
+                        }, this.getEmployees);
+
                     })
                     .catch(error => {
                         // Hide dialog
@@ -353,7 +442,7 @@ class Employees extends Component {
                     opendialog: true,
                     loadingRemoving: false,
                     loadingContracts: false
-                });
+                }, this.getEmployees);
             }
         );
     };
@@ -368,7 +457,9 @@ class Employees extends Component {
                     .mutate({
                         mutation: DELETE_EMPLOYEE,
                         variables: {
-                            id: this.state.idToDelete
+                            id: this.state.idToDelete,
+                            codeuser: localStorage.getItem('LoginId'),
+                            nameUser: localStorage.getItem('FullName')
                         }
                     })
                     .then(data => {
@@ -407,7 +498,7 @@ class Employees extends Component {
      */
     addNewRow = () => {
         this.setState(prevState => ({
-            rowsInput: [...prevState.rowsInput, 1]
+            rowsInput: [...prevState.rowsInput, uuidv4()]
         }));
     };
 
@@ -440,13 +531,21 @@ class Employees extends Component {
     /**
      * To open the user modal
      */
-    handleClickOpenUserModal = (email, phoneNumber, idEmployee, fullName) => {
+    handleClickOpenUserModal = (idEntity, email, phoneNumber, idEmployee, fullName, firstName, lastName) => {
         this.setState({ openUserModal: true });
+        let random = Math.floor(Math.random() * 10000);
+        if (random.toString().length <= 3) {
+            random = `${random}${Math.floor(Math.random() * 10)}`;
+        }
         this.setState({
+            idEntity: idEntity || 1,
             email: email,
             number: phoneNumber,
             employeeId: idEmployee,
-            fullName: fullName
+            fullName: fullName,
+            username: firstName.slice(0, 1) + lastName + random,
+            firstNameEdit: firstName,
+            lastNameEdit: lastName
         });
     };
 
@@ -458,6 +557,7 @@ class Employees extends Component {
             openUserModal: false,
         }, () => {
             this.resetUserModalState();
+            this.getEmployees();
         });
     };
 
@@ -485,48 +585,58 @@ class Employees extends Component {
      * Fetch hotels
      */
     getHotels = () => {
-        this.props.client
-            .query({
-                query: GET_HOTELS_QUERY
-            })
-            .then(({ data }) => {
-                this.setState({
-                    hotels: data.getbusinesscompanies
-                }, () => {
-                    this.fetchContacts()
+        this.setState(() => {
+            return { hotels: [] }
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_HOTELS_QUERY
+                })
+                .then(({ data }) => {
+                    this.setState({
+                        hotels: data.getbusinesscompanies.map(h => {
+                            return { value: h.Id, label: h.Name ? h.Name.trim() : '' }
+                        })
+                    }, () => {
+                        this.fetchContacts()
+                    });
+                })
+                .catch(error => {
+                    console.log('Error to get hotels: ', error);
                 });
-            })
-            .catch(error => {
-
-            });
+        });
     };
 
     /**
      * To get a list od departments
      */
     fetchDepartments = (id) => {
-        this.props.client
-            .query({
-                query: GET_DEPARTMENTS_QUERY,
-                variables: { Id_Entity: id },
-                fetchPolicy: 'no-cache'
-            })
-            .then((data) => {
-                if (data.data.getcatalogitem != null) {
-                    this.setState({
-                        departments: data.data.getcatalogitem,
-                    }, () => {
-                        this.fetchTitles(id)
+        this.setState(() => {
+            return {
+                departments: [],
+            }
+        }, () => {
+            if (!!id) {
+                this.props.client
+                    .query({
+                        query: GET_DEPARTMENTS_QUERY,
+                        variables: { Id_Entity: id },
+                        fetchPolicy: 'no-cache'
+                    })
+                    .then((data) => {
+                        if (data.data.getcatalogitem != null) {
+                            this.setState({
+                                departments: data.data.getcatalogitem.map(d => {
+                                    return { value: d.Id, label: d.Name ? d.Name.trim() : '' }
+                                })
+                            }, () => this.fetchTitles(this.state.departmentEdit && this.state.departmentEdit.value));
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('Error fetchDepartment: ', error);
                     });
-                }
-            })
-            .catch((error) => {
-                // TODO: show a SnackBar with error message
-
-                this.setState({
-                    loading: false
-                })
-            });
+            }
+        });
     };
 
     fetchAllDepartments = () => {
@@ -679,20 +789,46 @@ class Employees extends Component {
      * To fetch a list of titles
      */
     fetchTitles = (id) => {
+        this.setState(() => {
+            return {
+                titles: []
+            }
+        }, () => {
+            if (!!id && !!this.state.hotelEdit.value) {
+                this.props.client
+                    .query({
+                        query: GET_POSIT_BY_HOTEL_DEPART_QUERY,
+                        variables: {
+                            Id_Entity: this.state.hotelEdit.value,
+                            Id_Department: id
+                        },
+                        fetchPolicy: 'no-cache'
+                    })
+                    .then((data) => {
+                        if (data.data.getposition != null) {
+                            this.setState({
+                                titles: data.data.getposition.map(t => {
+                                    return { value: t.Id, label: t.Position ? t.Position.trim() : '' }
+                                })
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('Error fetchTitles: ', error);
+                    });
+            }
+        })
+
+    };
+
+    getApplicationId = () => {
         this.props.client
             .query({
-                query: GET_ALL_POSITIONS_QUERY,
-                variables: { Id_Entity: id },
-                fetchPolicy: 'no-cache'
+                query: GET_APPLICATION_EMPLOYEES,
+                variables: { EmployeeId: this.state.employeeId }
             })
             .then((data) => {
-                if (data.data.getposition != null) {
-                    this.setState({
-                        titles: data.data.getposition,
-                    }, () => {
-                        this.getHotels()
-                    });
-                }
+                this.insertContacts(data.data.applicationEmployees[0].ApplicationId);
             })
             .catch((error) => {
                 // TODO: show a SnackBar with error message
@@ -701,7 +837,6 @@ class Employees extends Component {
                 })
             });
     };
-
 
     handleCheckedChange = (name) => (event) => {
         if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
@@ -736,18 +871,7 @@ class Employees extends Component {
 
 
     addUserHandler = () => {
-        this.validateAllFields(() => {
-            if (this.state.formValid) this.insertUser();
-            else {
-                this.props.handleOpenSnackbar(
-                    'warning',
-                    'Error: Saving Information: You must fill all the required fields'
-                );
-                this.setState({
-                    loading: false
-                });
-            }
-        });
+        this.insertUser();
     };
 
 
@@ -784,7 +908,10 @@ class Employees extends Component {
                                 User_Updated: 1,
                                 Date_Created: new Date().toISOString(),
                                 Date_Updated: new Date().toISOString(),
-                                isEmployee: true
+                                isEmployee: true,
+                                firstName: this.state.firstNameEdit,
+                                lastName: this.state.lastNameEdit,
+                                Full_Name: this.state.firstNameEdit + " " + this.state.lastNameEdit
                             },
                             idEmployee: this.state.employeeId
                         }
@@ -793,6 +920,8 @@ class Employees extends Component {
                         var user = data.addUser;
 
                         this.sendMail(user.Code_User, user.Electronic_Address);
+
+                        this.getApplicationId();
 
                         this.props.handleOpenSnackbar('success', 'User Inserted!');
 
@@ -820,6 +949,43 @@ class Employees extends Component {
             }
         );
     };
+
+    insertContacts = (IdApplication) => {
+        // let form = document.getElementById("employee-edit-form");
+
+        this.props.client
+            .mutate({
+                mutation: INSERT_CONTACT,
+                variables: {
+                    contacts: {
+                        Id_Entity: this.state.idEntity,
+                        ApplicationId: IdApplication,
+                        First_Name: this.state.firstNameEdit,
+                        Last_Name: this.state.lastNameEdit,
+                        Middle_Name: '',
+                        Electronic_Address: this.state.email,
+                        Phone_Number: this.state.number,
+                        Contact_Type: 1,
+                        IsActive: 1,
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: "2019-05-09T19:42:38.355Z",
+                        Date_Updated: "2019-05-09T19:42:38.355Z"
+                    }
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Contact Inserted!');
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error: Inserting Contact: ' + error
+                );
+
+                return false;
+            });
+    }
 
     sendMail = (username, email) => {
         this.props.client
@@ -999,8 +1165,88 @@ class Employees extends Component {
         this.setState({
             loading: true
         }, () => {
-            this.fetchAllDepartments()
+            this.fetchAllDepartments();
+            this.getEmployees();
+            this.getHotels();
         })
+    }
+
+    handleChangeDate = (date) => {
+        let _date = moment.utc(date).format();
+        this.setState(prevState => {
+            return { hireDateEdit: _date }
+        })
+    }
+
+    getEmployees = () => {
+        this.props.client.query({
+            query: LIST_EMPLOYEES,
+            fetchPolicy: 'no-cache',
+        }).then(({ data }) => {
+            this.setState(prevState => {
+                return { employees: data.employees }
+            })
+        }).catch((error) => {
+            this.setState(() => {
+                return { loading: false }
+            })
+        });
+    }
+
+    handleSearch = (e) => {
+        let keyword = e.target.value;
+
+        if (keyword === "") this.getEmployees();
+
+        let result = this.state.employees.filter((item) => {
+            if (keyword === "") {
+                return true;
+            }
+
+            if (
+                item.firstName.indexOf(keyword) > -1 ||
+                item.firstName.toLocaleLowerCase().indexOf(keyword.toLowerCase()) > -1 ||
+                item.lastName.indexOf(keyword) > -1 ||
+                item.lastName.toLocaleLowerCase().indexOf(keyword.toLowerCase()) > -1
+
+            ) {
+                return true;
+            }
+        });
+
+        this.setState(prevState => {
+            return { employees: result, filterText: keyword }
+        })
+    }
+
+    onDeleteRowHandler = (index) => (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.setState((prevState) => ({
+            rowsInput: prevState.rowsInput.filter(id => { return id !== index })
+        }))
+    }
+
+    handleOnChangeHotel = (opt) => {
+        this.setState({
+            hotelEdit: opt,
+            departmentEdit: DEFAULT_DEPARTMENT_OPT,
+            contactTitleEdit: DEFAULT_TITLE_OPT
+        }, () => this.fetchDepartments(opt.value));
+    }
+
+    handleOnChangeDepartment = (opt) => {
+        this.setState({
+            departmentEdit: opt,
+            contactTitleEdit: DEFAULT_TITLE_OPT
+        }, () => this.fetchTitles(opt.value));
+    }
+
+    handleOnChangeTitle = (opt) => {
+        this.setState({
+            contactTitleEdit: opt
+        });
     }
 
     render() {
@@ -1012,7 +1258,7 @@ class Employees extends Component {
 
         let renderHeaderContent = () => (
             <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-4 col-xl-2">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">
@@ -1020,11 +1266,12 @@ class Employees extends Component {
                             </span>
                         </div>
                         <input
-                            onChange={text => {
-                                this.setState({
-                                    filterText: text.target.value
-                                });
-                            }}
+                            // onChange={text => {
+                            //     this.setState({
+                            //         filterText: text.target.value
+                            //     });
+                            // }}
+                            onChange={this.handleSearch}
                             value={this.state.filterText}
                             type="text"
                             placeholder="Search employees"
@@ -1032,7 +1279,7 @@ class Employees extends Component {
                         />
                     </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-8 col-xl-10">
                     <button
                         className="btn btn-success float-right"
                         onClick={this.handleClickOpenModal}
@@ -1073,6 +1320,14 @@ class Employees extends Component {
                     <div className="row">
                         <div className="col-lg-12">
                             <div className="row">
+                                <div className="col-md-6 col-lg-6">
+                                    <label htmlFor="">First Name</label>
+                                    <input disabled type="text" className="form-control" value={this.state.firstNameEdit} />
+                                </div>
+                                <div className="col-md-6 col-lg-6">
+                                    <label htmlFor="">Last Name</label>
+                                    <input disabled type="text" className="form-control" value={this.state.lastNameEdit} />
+                                </div>
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Username</label>
                                     <InputForm
@@ -1082,6 +1337,7 @@ class Employees extends Component {
                                         value={this.state.username}
                                         error={!this.state.usernameValid}
                                         change={(value) => this.onChangeHandler(value, 'username')}
+                                        disabled={true}
                                     />
                                 </div>
                                 <div className="col-md-12 col-lg-6">
@@ -1151,13 +1407,12 @@ class Employees extends Component {
                                     >
                                         <option value="">Select language</option>
                                         {this.state.languages.map((item) => (
-                                            <option key={item.Id} value={item.Id}>
+                                            <option key={item.Id} value={item.Id} disabled={item.Id == 199 ? "disabled" : ""}>
                                                 {item.Name}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
-
                             </div>
 
                         </div>
@@ -1197,24 +1452,33 @@ class Employees extends Component {
                 onClose={this.handleCloseModal}
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="xl"
+                disableBackdropClick={true}
+                classes={{ paper: classes.paper }}
             >
                 <form id="employee-form" onSubmit={this.handleSubmit}>
                     <DialogTitle style={{ padding: "0px" }}>
                         <div className="modal-header">
                             <h5 class="modal-title">New Employees</h5>
+                            <button type="button" className="float-right btn btn-link" onClick={this.handleCloseModal}>
+                                <i className="fa fa-times"></i>
+                            </button>
                         </div>
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent style={{ overflowY: 'initial' }}>
                         <div className="container EmployeeModal-container">
-                            {this.state.rowsInput.map((item, index) => {
+                            {this.state.rowsInput.map(index => {
                                 return (
                                     <EmployeeInputRow
                                         newRow={this.addNewRow}
                                         index={index}
+                                        lastIndex={this.state.rowsInput[this.state.rowsInput.length - 1]}
                                         onchange={this.handleChange}
                                         departments={this.state.departments}
                                         titles={this.state.titles}
                                         hotels={this.state.hotels}
+                                        {...this.state}
+                                        onDeleteRowHandler={this.onDeleteRowHandler(index)}
+                                        phoneRequired={this.state.rowsInput[this.state.rowsInput.length - 1] == index ? false : true}
                                     />
                                 );
                             })}
@@ -1243,8 +1507,9 @@ class Employees extends Component {
                                             openModal: false
                                         }, () => {
                                             this.setState({
-                                                rowsInput: [1]
+                                                rowsInput: [uuidv4()]
                                             });
+                                            this.getEmployees();
                                         });
                                     }}
                                 >
@@ -1256,8 +1521,10 @@ class Employees extends Component {
                 </form>
             </Dialog>
         );
+        var loading = this.state.progressEditEmployee || this.state.progressNewEmployee;
 
         return (
+
             <div>
                 <AlertDialogSlide
                     handleClose={this.handleCloseAlertDialog}
@@ -1271,6 +1538,7 @@ class Employees extends Component {
                     open={this.state.openModalEdit}
                     onClose={this.handleCloseModalEdit}
                     maxWidth="xl"
+                    classes={{ paper: classes.paper }}
                 >
                     <form
                         id="employee-edit-form"
@@ -1281,11 +1549,14 @@ class Employees extends Component {
                                 <h5 class="modal-title">Edit Employee</h5>
                             </div>
                         </DialogTitle>
-                        <DialogContent>
+                        <DialogContent style={{ overflowY: 'initial' }}>
                             <div className="container EmployeeModal-container">
 
                                 <div className="row Employees-row">
                                     <div className="col">
+                                        {this.state.isUnique === false ?
+                                            <i className="fas fa-exclamation-triangle text-danger" style={{ position: 'absolute', left: '-25px', top: '59%' }}></i> :
+                                            <React.Fragment></React.Fragment>}
                                         <label htmlFor="" >* First Name</label>
                                         <input
                                             type="text"
@@ -1320,23 +1591,28 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="" >Email Address</label>
-                                        <input
-                                            type="email"
+                                        <label htmlFor="">Start Date</label>
+                                        {/* <input
+                                            type="text"
                                             name="email"
                                             className="form-control"
                                             onChange={e => {
                                                 this.setState({
-                                                    emailEdit: e.target.value
+                                                    hireDateEdit: e.target.value
                                                 });
                                             }}
-                                            value={this.state.emailEdit}
+                                            value={this.state.hireDateEdit}
                                             minLength="3"
                                             maxLength={100}
+                                        /> */}
+                                        <DatePicker
+                                            selected={this.state.hireDateEdit}
+                                            onChange={this.handleChangeDate}
+                                            id="hireDateEdit"
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="" >Phone Number</label>
+                                        <label htmlFor="" >* Phone Number</label>
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
@@ -1347,88 +1623,39 @@ class Employees extends Component {
                                                     numberEdit: e.target.value
                                                 });
                                             }}
+                                            required
                                             value={this.state.numberEdit}
                                             placeholder="+(___) ___-____"
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""                                            >Hotelsss</label>
-                                        <select
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    hotelEdit: e.target.value
-                                                });
-                                                this.setState({
-                                                    departmentEdit: "",
-                                                    contactTitleEdit: "",
-                                                });
-
-                                                if (e.target.value == "null") {
-                                                    this.fetchDepartments();
-                                                } else {
-                                                    this.fetchDepartments(e.target.value);
-                                                }
-                                            }}
+                                        <label htmlFor="">Hotel</label>
+                                        <Select
+                                            options={this.state.hotels}
                                             value={this.state.hotelEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-                                                this.state.hotels.map(item => {
-                                                    return (
-                                                        <option value={item.Id}>{item.Name.trim()}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
+                                            onChange={this.handleOnChangeHotel}
+                                            closeMenuOnSelect={true}
+                                        />
+
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""                                            >Department</label>
-                                        <select
-                                            name="departmentEmployee"
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    departmentEdit: e.target.value
-                                                })
-
-                                            }}
+                                        <label htmlFor="">Department</label>
+                                        <Select
+                                            options={this.state.departments}
                                             value={this.state.departmentEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-
-                                                this.state.departments.map(item => {
-                                                    return (
-                                                        <option value={item.Id}>{item.Name.trim()}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
+                                            onChange={this.handleOnChangeDepartment}
+                                            closeMenuOnSelect={true}
+                                        />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""                                            >Position</label>
-                                        <select
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    contactTitleEdit: e.target.value
-                                                })
-                                            }}
+                                        <label htmlFor="">Position</label>
+                                        <Select
+                                            options={this.state.titles}
                                             value={this.state.contactTitleEdit}
-                                        >
-                                            <option value="">Select option</option>
-                                            {
-                                                this.state.titles.map(item => {
-                                                    if (this.state.hotelEdit == item.Id_Entity) {
-                                                        return (
-                                                            <option value={item.Id}>{item.Position.trim()}</option>
-                                                        )
-                                                    }
-                                                })
-                                            }
-                                        </select>
+                                            onChange={this.handleOnChangeTitle}
+                                            closeMenuOnSelect={true}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -1440,6 +1667,7 @@ class Employees extends Component {
                                         type="submit"
                                         variant="fab"
                                         className="btn btn-success"
+                                        disabled={loading}
                                     >
                                         Save {!this.state.progressEditEmployee && <i class="fas fa-save" />}
                                         {this.state.progressEditEmployee && <i class="fas fa-spinner fa-spin" />}
@@ -1462,98 +1690,50 @@ class Employees extends Component {
                 </Dialog>
                 {renderNewEmployeeDialog()}
                 {renderUserDialog()}
-                <Query query={LIST_EMPLOYEES}>
-                    {({ loading, error, data, refetch, networkStatus }) => {
-                        if (this.state.finishLoading) {
-                            refetch();
-                            this.setState(prevState => ({
-                                finishLoading: false
-                            }));
-                        }
 
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card">
+                            <div className="card-body tumi-forcedResponsiveTable">
+                                <EmployeesTable
+                                    data={this.state.employees}
+                                    delete={id => {
+                                        this.deleteEmployeeById(id);
+                                    }}
+                                    update={(id, row) => {
+                                        this.updateEmployeeById(id);
+                                        this.setState(() => {
+                                            let departmentEdit = this.state.departments.filter(d => d.value === row.Id_Deparment).shift();
+                                            let contactTitleEdit = this.state.titles.filter(t => t.value === row.Contact_Title).shift();
+                                            let hotelEdit = this.state.hotels.filter(h => h.value === row.idEntity).shift();
+                                            return {
+                                                firstNameEdit: row.firstName,
+                                                lastNameEdit: row.lastName,
+                                                hireDateEdit: row.hireDate ? moment.utc(row.hireDate).format() : '',
+                                                numberEdit: row.mobileNumber,
+                                                departmentEdit: departmentEdit ? departmentEdit : DEFAULT_DEPARTMENT_OPT,
+                                                contactTitleEdit: contactTitleEdit ? contactTitleEdit : DEFAULT_TITLE_OPT,
+                                                hotelEdit: hotelEdit ? hotelEdit : DEFAULT_HOTEL_OPT
+                                            }
+                                        }, () => {
+                                            if (this.state.hotelEdit.value == null) {
+                                                this.fetchDepartments();
+                                            } else {
+                                                this.fetchDepartments(parseInt(this.state.hotelEdit.value))
+                                            }
+                                        });
 
-                        if (this.state.filterText === "") {
-                            if (loading) return <LinearProgress />;
-                        }
-
-                        if (error)
-                            return (
-                                <ErrorMessageComponent
-                                    title="Oops!"
-                                    message={"Error loading contracts"}
-                                    type="Error-danger"
-                                    icon="danger"
+                                    }}
+                                    handleClickOpenUserModal={this.handleClickOpenUserModal}
+                                    departments={this.state.allDepartments}
+                                    titles={this.state.allTitles}
                                 />
-                            );
-                        if (data.employees != null && data.employees.length > 0) {
-                            // this.setState({ data: data.employees });
-                            let dataEmployees = data.employees.filter((_, i) => {
-                                if (this.state.filterText === "") {
-                                    return true;
-                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                                if (
-                                    _.firstName.indexOf(this.state.filterText) > -1 ||
-                                    _.firstName
-                                        .toLocaleLowerCase()
-                                        .indexOf(this.state.filterText) > -1 ||
-                                    _.firstName
-                                        .toLocaleUpperCase()
-                                        .indexOf(this.state.filterText) > -1
-                                ) {
-                                    return true;
-                                }
-                            });
 
-                            return (
-                                <div className="">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <div className="">
-                                                <EmployeesTable
-                                                    data={dataEmployees}
-                                                    delete={id => {
-                                                        this.deleteEmployeeById(id);
-                                                    }}
-                                                    update={(id, row) => {
-                                                        this.updateEmployeeById(id);
-                                                        this.setState({
-                                                            firstNameEdit: row.firstName,
-                                                            lastNameEdit: row.lastName,
-                                                            emailEdit: row.electronicAddress,
-                                                            numberEdit: row.mobileNumber,
-                                                            departmentEdit: row.Id_Deparment,
-                                                            contactTitleEdit: row.Contact_Title,
-                                                            hotelEdit: row.idEntity
-                                                        }, () => {
-                                                            if (this.state.hotelEdit == null) {
-                                                                this.fetchDepartments()
-                                                            } else {
-                                                                this.fetchDepartments(parseInt(this.state.hotelEdit))
-                                                            }
-                                                        });
-
-                                                    }}
-                                                    handleClickOpenUserModal={this.handleClickOpenUserModal}
-                                                    departments={this.state.allDepartments}
-                                                    titles={this.state.allTitles}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        }
-                        return (
-                            <NothingToDisplay
-                                title="Oops!"
-                                message={"There are no employees"}
-                                type="Error-success"
-                                icon="wow"
-                            />
-                        );
-                    }}
-                </Query>
             </div>
         );
     }

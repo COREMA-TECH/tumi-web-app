@@ -11,6 +11,21 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import ReactDOM from 'react-dom';
 import { connection } from './connection.js';
+import ReactGA from 'react-ga';
+
+import { connect } from "react-redux";
+import { setPermissions } from '../redux/actions'
+
+import { GET_PERMISSION } from './queries';
+
+export const initGA = () => {
+	ReactGA.initialize('UA-141051584-1');
+}
+
+export const logPageView = () => {
+	ReactGA.set({ page: window.location.pathname })
+	ReactGA.pageview(window.location.pathname);
+}
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'en');
@@ -105,7 +120,6 @@ class App extends Component {
 	handleScroll = (event) => {
 		const node = ReactDOM.findDOMNode(this);
 		let scroll = node.querySelector('.buttonsGroup');
-		//console.log(window.scrollY);
 		if (!scroll) return false;
 		if (scroll.scrollHeight <= window.scrollY) scroll.classList.add('buttonsGroup-fixed');
 		else scroll.classList.remove('buttonsGroup-fixed');
@@ -113,12 +127,22 @@ class App extends Component {
 
 	componentDidMount = () => {
 		window.addEventListener('scroll', this.handleScroll);
+		initGA();
+		logPageView();
 	};
 
 	componentWillMount() {
 		window.removeEventListener('scroll', this.handleScroll);
-
-		localStorage.setItem('languageForm', 'en');
+		client.query(
+			{
+				query: GET_PERMISSION,
+				variables: {
+					RoleId: localStorage.getItem("IdRoles")
+				}
+			}).then(({ data: { features } }) => {
+				this.props.setPermission(features);
+			})
+		//localStorage.setItem('languageForm', 'en');
 	}
 
 	render() {
@@ -145,7 +169,9 @@ class App extends Component {
 		extPdf: PropTypes.array,
 		acceptAttachFile: PropTypes.string,
 		UID: PropTypes.func,
-		getDistance: PropTypes.func
+		getDistance: PropTypes.func,
+		credentialsS3: PropTypes.object,
+		bucketS3: PropTypes.string
 	};
 
 	getChildContext = () => ({
@@ -162,8 +188,28 @@ class App extends Component {
 		UID: () => {
 			return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
 		},
-		getDistance
+		getDistance,
+		credentialsS3:
+		{
+			accessKeyId: 'AKIAZTTPXWUZ6OPRW2P6',
+			secretAccessKey: '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',
+			region: 'us-east-1'
+		},
+		bucketS3: 'orion1-files'
 	});
 }
 
-export default App;
+const mapStateToProps = (state) => {
+	return {
+		permissions: state.permissionsReducer.permissions
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		setPermission: (data) => { dispatch(setPermissions(data)) }
+	}
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

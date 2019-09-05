@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import withApollo from 'react-apollo/withApollo';
 import studyTypes from '../../data/studyTypes';
 import { GET_APPLICATION_EDUCATION_BY_ID } from '../../Queries';
-import { ADD_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION } from '../../Mutations';
+import { ADD_APLICANT_EDUCATION, UPDATE_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION } from '../../Mutations';
 import CircularProgressLoading from '../../../material-ui/CircularProgressLoading';
 import withGlobalContent from '../../../Generic/Global';
 import EducationCard from '../../../ui-components/EducationCard/EducationCard';
@@ -121,6 +121,8 @@ class Education extends Component {
 				this.props.handleOpenSnackbar('success', 'Successfully created', 'bottom', 'right');
 
 				this.getEducationList(this.state.applicationId);
+
+				this.clearControls();
 			})
 			.catch((error) => {
 				// Replace this alert with a Snackbar message error
@@ -132,6 +134,98 @@ class Education extends Component {
 				);
 			});
 	};
+
+	// To insert education
+	updateEducationApplication = (item) => {
+		delete item.uuid;
+
+		this.props.client
+			.mutate({
+				mutation: UPDATE_APLICANT_EDUCATION,
+				variables: {
+					application: item
+				}
+			})
+			.then(() => {
+				this.handleClose();
+
+				this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
+
+				this.getEducationList(this.state.applicationId);
+
+				this.clearControls();
+			})
+			.catch((error) => {
+				// Replace this alert with a Snackbar message error
+				this.props.handleOpenSnackbar(
+					'error',
+					'Error: error to save education. Please try again!',
+					'bottom',
+					'right'
+				);
+			});
+	};
+
+	clearControls = () => {
+		document.getElementById('education-form').reset();
+		document.getElementById('studyType').classList.remove('invalid-apply-form');
+		document.getElementById('institutionName').classList.remove('invalid-apply-form');
+		document.getElementById('addressInstitution').classList.remove('invalid-apply-form');
+		document.getElementById('startPeriod').classList.remove('invalid-apply-form');
+		document.getElementById('endPeriod').classList.remove('invalid-apply-form');
+		document.getElementById('graduated').classList.remove('invalid-apply-form');
+		document.getElementById('degree').classList.remove('invalid-apply-form');
+
+		this.setState(() => ({
+			studyType: '',
+			institutionName: '',
+			addressInstitution: '',
+			startPeriod: null,
+			endPeriod: null,
+			graduated: false,
+			degree: '',
+		}));
+	}
+
+	onChangeValue = (event) => {
+		const target = event.target;
+		const value = target.type === 'checkbox' ? target.checked : target.value;
+		const name = target.name;
+
+		this.setState({
+			[name]: value
+		});
+	}
+
+	handleOpenNewModal = () => {
+		this.setState({
+			open: true,
+			editing: true,
+			id: 0,
+			studyType: '',
+			institutionName: '',
+			addressInstitution: '',
+			startPeriod: null,
+			endPeriod: null,
+			graduated: false,
+			degree: '',
+		});
+	}
+
+	handleOpenEditModal = ({ id, schoolType, educationName, educationAddress, startDate, endDate, graduated, degree }) => {
+		this.setState({
+			open: true,
+			editing: true,
+			id,
+			studyType: schoolType,
+			institutionName: educationName,
+			addressInstitution: educationAddress,
+			startPeriod: startDate ? startDate.substring(0, 10) : null,
+			endPeriod: endDate ? endDate.substring(0, 10) : null,
+			graduated,
+			degree
+		});
+	}
 
 	componentWillMount() {
 		this.setState(
@@ -145,7 +239,6 @@ class Education extends Component {
 	}
 
 	render() {
-		console.table(this.state.schools);
 
 		// To render the Skills Dialog
 		let renderEducationDialog = () => (
@@ -157,33 +250,37 @@ class Education extends Component {
 						e.preventDefault();
 						e.stopPropagation();
 
-						let item = {
-							uuid: uuidv4(),
-							schoolType: document.getElementById('studyType').value,
-							educationName: document.getElementById('institutionName').value,
-							educationAddress: document.getElementById('addressInstitution').value,
-							startDate: document.getElementById('startPeriod').value,
-							endDate: document.getElementById('endPeriod').value,
-							graduated: document.getElementById('graduated').checked,
-							degree: parseInt(document.getElementById('degree').value),
-							ApplicationId: this.state.applicationId
+						let { studyType, institutionName, addressInstitution, startPeriod, endPeriod, graduated, degree } = this.state;
+						let formData = {
+							schoolType: studyType,
+							educationName: institutionName,
+							educationAddress: addressInstitution,
+							startDate: startPeriod,
+							endDate: endPeriod,
+							graduated: graduated,
+							degree: degree ? degree : null
 						};
+						let values = [];
+						Object.values(formData).map(value => {
+							if (value)
+								values.push(value);
+						})
+						if (values.length == 0)
+							this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
+						else {
+							let item = {
+								uuid: uuidv4(),
+								...formData,
+								ApplicationId: this.state.applicationId
+							};
+							if (this.state.id == 0)
+								this.insertEducationApplication(item);
+							else
+								this.updateEducationApplication({ ...item, id: this.state.id });
+						}
 
-						this.insertEducationApplication(item);
 
-						document.getElementById('education-form').reset();
-						document.getElementById('studyType').classList.remove('invalid-apply-form');
-						document.getElementById('institutionName').classList.remove('invalid-apply-form');
-						document.getElementById('addressInstitution').classList.remove('invalid-apply-form');
-						document.getElementById('startPeriod').classList.remove('invalid-apply-form');
-						document.getElementById('endPeriod').classList.remove('invalid-apply-form');
-						document.getElementById('graduated').classList.remove('invalid-apply-form');
-						document.getElementById('graduated').checked = false;
-						document.getElementById('degree').classList.remove('invalid-apply-form');
 
-						this.setState({
-							graduated: false
-						});
 					}}
 					className="apply-form"
 				>
@@ -192,22 +289,23 @@ class Education extends Component {
 						<div className="col-md-12 form-section-1">
 							<div className="row">
 								<div className="col-md-6">
-									<label className="primary">* {educationFormLanguage[0].label}</label>
+									<label className="primary"> {educationFormLanguage[0].label}</label>
 									<input
 										id="studyType"
 										form="education-form"
 										name="studyType"
 										type="text"
 										className="form-control"
-										required
 										min="0"
 										pattern=".*[^ ].*"
 										maxLength="50"
 										minLength="2"
+										onChange={this.onChangeValue}
+										value={this.state.studyType}
 									/>
 								</div>
 								<div className="col-md-6">
-									<label className="primary">* {educationFormLanguage[1].label}</label>
+									<label className="primary"> {educationFormLanguage[1].label}</label>
 									<input
 										form="education-form"
 										name="institutionName"
@@ -215,14 +313,15 @@ class Education extends Component {
 										type="text"
 										pattern=".*[^ ].*"
 										className="form-control"
-										required
 										min="0"
 										maxLength="50"
 										minLength="3"
+										onChange={this.onChangeValue}
+										value={this.state.institutionName}
 									/>
 								</div>
 								<div className="col-md-12">
-									<label className="primary">* {educationFormLanguage[2].label}</label>
+									<label className="primary"> {educationFormLanguage[2].label}</label>
 									<input
 										form="education-form"
 										name="addressInstitution"
@@ -230,124 +329,84 @@ class Education extends Component {
 										type="text"
 										pattern=".*[^ ].*"
 										className="form-control"
-										required
 										min="0"
 										maxLength="50"
 										minLength="3"
+										onChange={this.onChangeValue}
+										value={this.state.addressInstitution}
 									/>
 								</div>
 							</div>
 							<div className="row">
 								<div className="col-md-6">
-									<span className="primary">* {educationFormLanguage[3].label}</span>
+									<span className="primary"> {educationFormLanguage[3].label}</span>
 									<input
 										form="education-form"
 										name="startPeriod"
 										id="startPeriod"
-										onChange={(event) => {
-											this.setState({
-												startPeriod: event.target.value
-											});
-										}}
 										type="date"
 										pattern=".*[^ ].*"
 										className="form-control"
-										required
 										max={this.state.endPeriod}
 										min="0"
 										maxLength="50"
 										minLength="3"
+										onChange={this.onChangeValue}
+										value={this.state.startPeriod}
 									/>
 								</div>
 								<div className="col-md-6">
-									<span className="primary">* {educationFormLanguage[4].label}</span>
+									<span className="primary"> {educationFormLanguage[4].label}</span>
 									<input
 										form="education-form"
-										onChange={(event) => {
-											this.setState({
-												endPeriod: event.target.value
-											});
-										}}
 										name="endPeriod"
 										id="endPeriod"
 										type="date"
 										pattern=".*[^ ].*"
 										className="form-control"
-										required
 										min={this.state.startPeriod}
 										maxLength="50"
 										minLength="3"
+										onChange={this.onChangeValue}
+										value={this.state.endPeriod}
 									/>
 								</div>
 								<div className="col-md-6">
 									<label className="primary">{educationFormLanguage[5].label}</label> <br />
 
-                                    <div className="onoffswitch">
-                                        <input
-                                            className="onoffswitch-checkbox"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    graduated: document.getElementById('graduated').checked
-                                                });
-                                            }}
-                                            form="education-form"
-                                            type="checkbox"
-                                            value="graduated"
-                                            name="graduated"
-                                            pattern=".*[^ ].*"
-                                            id="graduated"
-                                        />
-                                        <label className="onoffswitch-label" htmlFor="graduated">
-                                            <span className="onoffswitch-inner" />
-                                            <span className="onoffswitch-switch" />
-                                        </label>
-                                    </div>
-
-									{/*<label className="switch">*/}
-										{/*<input*/}
-											{/*onChange={(e) => {*/}
-												{/*this.setState({*/}
-													{/*graduated: document.getElementById('graduated').checked*/}
-												{/*});*/}
-											{/*}}*/}
-											{/*form="education-form"*/}
-											{/*type="checkbox"*/}
-											{/*value="graduated"*/}
-											{/*name="graduated"*/}
-											{/*pattern=".*[^ ].*"*/}
-											{/*id="graduated"*/}
-										{/*/>*/}
-										{/*<p className="slider round" />*/}
-									{/*</label>*/}
+									<div className="onoffswitch">
+										<input
+											className="onoffswitch-checkbox"
+											form="education-form"
+											type="checkbox"
+											value="graduated"
+											name="graduated"
+											pattern=".*[^ ].*"
+											id="graduated"
+											onChange={this.onChangeValue}
+											checked={this.state.graduated}
+										/>
+										<label className="onoffswitch-label" htmlFor="graduated">
+											<span className="onoffswitch-inner" />
+											<span className="onoffswitch-switch" />
+										</label>
+									</div>
 								</div>
 								<div className="col-md-6">
 									<label className="primary">{educationFormLanguage[6].label}</label>
-									{this.state.graduated ? (
-										<div className="input-container--validated">
-											<select
-												form="education-form"
-												name="degree"
-												id="degree"
-												className="form-control"
-											>
-												<option value="">{spanishActions[5].label}</option>
-												{studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-											</select>
-										</div>
-									) : (
-										<div className="input-container--validated">
-											<select
-												form="education-form"
-												name="degree"
-												id="degree"
-												disabled
-												className="form-control"
-											>
-												<option value="">{spanishActions[5].label}</option>
-												{studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-											</select>
-										</div>
-									)}
+									<div className="input-container--validated">
+										<select
+											form="education-form"
+											name="degree"
+											id="degree"
+											disabled={!this.state.graduated}
+											className="form-control"
+											onChange={this.onChangeValue}
+											value={this.state.degree}>
+											<option value="">{spanishActions[5].label}</option>
+											{studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+										</select>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -358,7 +417,7 @@ class Education extends Component {
 								{spanishActions[2].label}
 							</button>
 							<button className="applicant-card__save-button" type="submit" form="education-form">
-								{spanishActions[0].label}
+								{this.state.id == 0 ? spanishActions[0].label : spanishActions[4].label}
 							</button>
 						</div>
 					</DialogActions>
@@ -378,6 +437,7 @@ class Education extends Component {
 							startDate={schoolItem.startDate}
 							endDate={schoolItem.endDate}
 							graduated={schoolItem.graduated}
+							handleOpenModal={() => this.handleOpenEditModal(schoolItem)}
 							degree={studyTypes.map((item) => {
 								if (item.Id == schoolItem.degree) {
 									return item.Name + '';
@@ -414,18 +474,15 @@ class Education extends Component {
 									{this.state.editing ? (
 										''
 									) : (
-										<button
-											className="applicant-card__edit-button"
-											onClick={() => {
-												this.setState({
-													editing: true,
-													open: true
-												});
-											}}
-										>
-											{spanishActions[0].label} <i className="fas fa-plus" />
-										</button>
-									)}
+											<button
+												className="applicant-card__edit-button"
+												onClick={() => {
+													this.handleOpenNewModal();
+												}}
+											>
+												{spanishActions[0].label} <i className="fas fa-plus" />
+											</button>
+										)}
 								</div>
 								<div>
 									{this.state.loading ? (
@@ -433,8 +490,8 @@ class Education extends Component {
 											<CircularProgressLoading />
 										</div>
 									) : (
-										renderEducationSection()
-									)}
+											renderEducationSection()
+										)}
 								</div>
 							</div>
 						</div>

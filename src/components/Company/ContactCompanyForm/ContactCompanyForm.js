@@ -96,8 +96,8 @@ const styles = (theme) => ({
 
 class ContactcontactForm extends React.Component {
 	GET_CONTACTS_QUERY = gql`
-		query getcontacts($IdEntity: Int) {
-			getcontacts(IsActive: 1, Id_Entity: $IdEntity) {
+		query getcontacts($IdEntity: [Int]) {
+			contacts(IsActive: 1, Id_Entity: $IdEntity) {
 				id: Id
 				idSearch: Id
 				firstname: First_Name
@@ -108,7 +108,10 @@ class ContactcontactForm extends React.Component {
 				title: Contact_Title
 				idSupervisor: Id_Supervisor
 				idDepartment: Id_Deparment
-				type: Contact_Type
+				type: Contact_Type,
+				users{
+         			Id
+       			}
 			}
 		}
 	`;
@@ -634,10 +637,10 @@ class ContactcontactForm extends React.Component {
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
-					if (data.data.getcontacts != null) {
+					if (data.data.contacts != null) {
 						this.setState(
 							{
-								data: data.data.getcontacts,
+								data: data.data.contacts,
 								loadingData: false
 							},
 							func
@@ -647,7 +650,7 @@ class ContactcontactForm extends React.Component {
 							loadingData: false,
 							firstLoad: false,
 							indexView: 2,
-							errorMessage: 'Error: Loading contacts: getcontacts not exists in query data'
+							errorMessage: 'Error: Loading contacts: contacts not exists in query data'
 						});
 					}
 				})
@@ -1115,6 +1118,26 @@ class ContactcontactForm extends React.Component {
 		);
 	};
 
+	updateData=()=>{
+		this.setState({ opendialog: false, firstLoad: true, showCircularLoading: true }, () => {
+			this.loadContacts(() => {
+				this.loadTitles(() => {
+					this.loadDepartments(() => {
+						this.loadSupervisors(0, () => {
+							this.loadAllSupervisors(() => {
+								this.setState({
+									indexView: 1,
+									firstLoad: false,
+									loadingConfirm: false
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+	}
+
 	render() {
 		const { loading } = this.state;
 		const { classes } = this.props;
@@ -1280,7 +1303,7 @@ class ContactcontactForm extends React.Component {
 											onChange={(e) => {
 												this.onNumberChangeHandler(e.target.value);
 											}}
-                                            placeholder="+(___) ___-____"
+											placeholder="+(___) ___-____"
 										/>
 									</div>
 									<div className="col-md-12 col-lg-4">
@@ -1348,16 +1371,23 @@ class ContactcontactForm extends React.Component {
 				</Dialog>
 				<div className="row">
 					<div className="col-md-12">
-						<ContactsTable
-							data={this.state.data}
-							titles={this.state.titles}
-							types={this.state.contactTypes}
-							loading={this.state.showCircularLoading && isLoading}
-							supervisors={this.state.allSupervisors}
-							departments={this.state.departments}
-							onEditHandler={this.onEditHandler}
-							onDeleteHandler={this.onDeleteHandler}
-						/>
+						<div className="card">
+							<div className="card-body p-3 tumi-forcedResponsiveTable">
+								<ContactsTable
+									data={this.state.data}
+									titles={this.state.titles}
+									types={this.state.contactTypes}
+									loading={this.state.showCircularLoading && isLoading}
+									supervisors={this.state.allSupervisors}
+									departments={this.state.departments}
+									onEditHandler={this.onEditHandler}
+									onDeleteHandler={this.onDeleteHandler}
+									idEntity={this.state.idCompany}
+									updateData={this.updateData}
+									handleOpenSnackbar={this.props.handleOpenSnackbar}
+								/>
+							</div>
+						</div>
 					</div>
 				</div>
 

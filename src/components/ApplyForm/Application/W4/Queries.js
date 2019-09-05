@@ -9,6 +9,8 @@ export const GET_APPLICANT_INFO = gql`
           applicantW4(ApplicationId: $ApplicationId){
                 id
                 html
+                url
+                fieldsData
           }
     }
 `;

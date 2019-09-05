@@ -92,15 +92,21 @@ class Contract extends React.Component {
 		this.setState({ value });
 	};
 
-	updateContractId = (id) => {
+	updateContractId = (contractId) => {
 		this.setState({
-			contractId: id,
+			contractId,
 			value: 1
 		});
 	};
 
+
+	updateId_ToRenewedContract = (id) => {
+		this.setState({
+			contractId: id
+		});
+	};
+
 	updateCompanyId = (id) => {
-		console.log("updateCompanyId ", id)
 		this.setState({
 			companyId: id
 		});
@@ -169,7 +175,7 @@ class Contract extends React.Component {
 		if (this.state.loading) {
 			return <LinearProgress />;
 		}
-
+		
 		return (
 			<div>
 				<MuiThemeProvider theme={theme}>
@@ -197,6 +203,7 @@ class Contract extends React.Component {
 							Id_Entity={this.state.Id_Entity}
 							Id_Parent={this.state.Id_Parent}
 							updateContractId={this.updateContractId}
+							updateId_ToRenewedContract={this.updateId_ToRenewedContract}
 							updateCompanyId={this.updateCompanyId}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
 							getContractName={this.getContractName}

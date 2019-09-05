@@ -18,6 +18,10 @@ import ShiftsData from '../../data/shitfsWorkOrder.json';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import DatePicker from "react-datepicker";
+import makeAnimated from "react-select/lib/animated";
+import Select from 'react-select';
+import "react-datepicker/dist/react-datepicker.css";
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -38,6 +42,15 @@ class WorkOrdersTable extends Component {
         id: '',
         endDateDisabled: true
     }
+
+    statusFilterList = [
+        { value: 1, label: 'Open' },
+        { value: null, label: 'Status (All)' },
+        { value: 2, label: 'Completed' },
+        { value: 0, label: 'Cancelled' },
+        { value: 4, label: 'Openings' },
+    ]
+
     constructor(props) {
         super(props);
         this.state = {
@@ -99,69 +112,55 @@ class WorkOrdersTable extends Component {
         var shiftEntity = [];
 
         if (this.state.startDate != "" && this.state.endDate != "") {
-            workOrder = {
-                startDate: this.state.startDate,
-                endDate: this.state.endDate,
+            variables = {
+                ...variables,
+                workOrder: {
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                }
             }
         }
-        if (this.state.status == 0) {
-            shift = {
-                status: [0],
-                ...shift
-
-            }
-        }
-        else if (this.state.status == 1) {
-            shift = {
-                status: [1, 2]
-                , ...shift
-            }
-        }
-        else if (this.state.status == 2) {
-            shift = {
-                status: [3]
-                , ...shift
-            }
-        }
-        else if (this.state.status == 4) {
-            shift = {
-                status: [2]
-                , ...shift
-            }
-        }
-        else {
-            shift = {
-                status: [1, 2, 0]
-                , ...shift
+        if (this.state.status != null && this.state.status != "Status (All)") {
+            variables = {
+                ...variables,
+                shift: {
+                    status: this.state.status,
+                    ...shift
+                }
             }
         }
 
         if (this.state.id)
-            workOrder = {
-                id: this.state.id,
-                ...workOrder
+            variables = {
+                ...variables,
+                workOrder: {
+                    id: this.state.id
+                },
+                shiftEntity: {
+                    Code: this.state.id
+                }
             }
 
-        if (this.state.state != 0) {
-            shiftEntity = {
-                State: this.state.state
+        if (this.state.state)
+            variables = {
+                ...variables,
+
+                shiftEntity: {
+                    State: this.state.state
+                }
             }
-        }
 
-        if (this.state.id) {
-            shiftEntity = {
-                ...shiftEntity,
-                Code: this.state.id
+
+        let idRol = localStorage.getItem('IdRoles');
+        let idEntity = localStorage.getItem("Id_Entity");
+        if (idRol == 5)
+            variables = {
+                ...variables,
+                workOrder: {
+                    IdEntity: idEntity
+                }
             }
-        }
 
-
-        variables = {
-            shift,
-            shiftEntity,
-            workOrder
-        }
-        //}
         return variables;
     }
 
@@ -415,26 +414,19 @@ class WorkOrdersTable extends Component {
             .catch();
     };
 
-
-
-    handleChangeDate = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
+    handleStartDate = (startDate) => {
         this.setState(() => ({
-            [name]: value,
+            startDate,
             endDateDisabled: false
-        }));
+        }), () => {
+            if (this.state.endDate)
+                this.getWorkOrders()
+        });
     }
 
-    handleEndDate = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
+    handleEndDate = (endDate) => {
         this.setState(() => ({
-            [name]: value
+            endDate
         }), () => {
             this.getWorkOrders()
         });
@@ -450,14 +442,11 @@ class WorkOrdersTable extends Component {
     }
 
     handleFilterValue = (id) => {
-        this.setState(() =>
-            ({
-                status: id
-            }),
-            () => {
-                this.getWorkOrders();
-            }
-        );
+        this.setState({
+            status: id
+        }, () => {
+            this.getWorkOrders();
+        });
 
     }
 
@@ -472,64 +461,73 @@ class WorkOrdersTable extends Component {
         });
     }
 
+    handleStateChange = (e) => {
+        this.setState({
+            state: parseInt(e.target.value)
+        }, () => { this.getWorkOrders() })
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.refresh != this.props.refresh)
+            this.getWorkOrders();
+        return true;
+    }
+
+    getStatusFilterValue = _id => {
+        const found = this.getStatusFilterValue.find(item => {
+            return item.value === _id;
+        });
+    }
+
+    updateStatusFilter = ({ value }) => {
+        if (value == "null") {
+            this.handleFilterValue(null);
+        } else {
+            this.handleFilterValue(value);
+        }
+    }
+
+    handleStateFilterChange = ({ value }) => {
+        this.setState({
+            state: parseInt(value)
+        }, () => { this.getWorkOrders() })
+    }
+
+    getStateFilterOptions = _ => {
+        let options = this.state.states.map(state => {
+            return { value: state.Id, label: state.Name }
+        });
+
+        options = [{ value: 0, label: 'State' }, ...options];
+
+        return options;
+    }
+
+    findSelectedState = stateId => {
+        const defValue = { value: 0, label: "Select option" };
+
+        if (stateId === 'null' || stateId === 0)
+            return defValue;
+
+        const found = this.state.states.find(item => {
+            return item.Id === stateId;
+        });
+
+        return found ? { value: found.Id, label: found.Name.trim() } : defValue;
+    }
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
         let isLoading = this.state.loading;
+
+        const stateFilterOptions = this.getStateFilterOptions();
 
         return (
             <div className="card">
                 {isLoading && <LinearProgress />}
                 <div className="card-header bg-light">
                     <div className="row">
-                        <div className="col-md-2">
-                            <select name="state" id="" value={this.state.state} className="form-control" onChange={(e) => {
-                                this.setState({
-                                    state: parseInt(e.target.value)
-                                }, () => { this.getWorkOrders() })
-                            }}>
-                                <option value="0">State</option>
-                                {this.state.states.map(state => {
-                                    return <option value={state.Id} key={state.Id}>{state.Name}</option>
-                                })}
-                            </select>
-                        </div>
-                        <div className="col-md-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">From</span>
-                                </div>
-                                <input type="date" className="form-control" placeholder="2018-10-30" value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">To</span>
-                                </div>
-                                <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled ? true : false} placeholder="2018-10-30" onChange={this.handleEndDate} />
-                            </div>
-                        </div>
-                        <div className="col-md-2">
-                            <button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>
-                                <i class="fas fa-filter"></i> Clear
-                            </button>
-                        </div>
-                        <div className="col-md-2">
-                            <select name="filterValue" id="" disabled={this.state.propsStatus} className="form-control" onChange={(event) => {
-                                if (event.target.value == "null") {
-                                    this.handleFilterValue(null);
-                                } else {
-                                    this.handleFilterValue(event.target.value);
-                                }
-                                // this.handleFilterValue
-                            }}
-                                value={this.state.status}>
-                                <option value={1}>Open</option>
-                                <option value={null}>Status (All)</option>
-                                <option value={2}>Completed</option>
-                                <option value={0}>Cancelled</option>
-                                <option value={4}>Openings</option>
-
-                            </select>
-                        </div>
-                        <div className="col-md-2">
+                        <div className="col-md-3 col-xl-2 mb-2">
                             <div class="input-group">
                                 <input type="text" name="id" value={this.state.id} className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
                                 <div class="input-group-prepend">
@@ -539,20 +537,95 @@ class WorkOrdersTable extends Component {
                                 </div>
                             </div>
                         </div>
+                        <div className="col-md-9 col-xl-8 offset-xl-2 mb-2">
+                            <div className="WorkOrders-filters">
+                                <div className="input-group flex-nowrap WorkOrders-filter">
+                                    {/* <select 
+                                        name="state" id="" 
+                                        value={this.state.state} 
+                                        className="form-control WorkOrders-filter" 
+                                        onChange={(e) => {
+                                        this.setState({
+                                            state: parseInt(e.target.value)
+                                        }, () => { this.getWorkOrders() })
+                                    }}>
+                                        <option value="0">State</option>
+                                        {this.state.states.map(state => {
+                                            return <option value={state.Id} key={state.Id}>{state.Name}</option>
+                                        })}
+                                    </select> */}
+
+                                    <Select
+                                        options={stateFilterOptions}
+                                        value={this.findSelectedState(this.state.state)}
+                                        onChange={this.handleStateFilterChange}
+                                        closeMenuOnSelect={true}
+                                        components={makeAnimated()}
+                                        isMulti={false}
+                                        className='tumi-fullWidth'
+                                    />
+                                </div>
+
+                                <div class="input-group flex-nowrap WorkOrders-filter">
+                                    <DatePicker
+                                        selected={this.state.startDate}
+                                        onChange={this.handleStartDate}
+                                        placeholderText="Start date"
+                                        id="datepicker-start"
+                                    />
+                                    <div class="input-group-append">
+                                        <label class="input-group-text" id="addon-wrapping" for="datepicker-start">
+                                            <i class="far fa-calendar"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="input-group flex-nowrap WorkOrders-filter">
+                                    <DatePicker
+                                        selected={this.state.endDate}
+                                        onChange={this.handleEndDate}
+                                        placeholderText="End date"
+                                        id="datepicker-end"
+                                    />
+                                    <div class="input-group-append">
+                                        <label class="input-group-text" id="addon-wrapping" for="datepicker-end">
+                                            <i class="far fa-calendar"></i>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="input-group flex-nowrap WorkOrders-filter">
+                                    <Select
+                                        options={this.statusFilterList}
+                                        value={this.getStatusFilterValue}
+                                        onChange={this.updateStatusFilter}
+                                        closeMenuOnSelect={true}
+                                        components={makeAnimated()}
+                                        isMulti={false}
+                                        isDisabled={this.state.propsStatus}
+                                        className='tumi-fullWidth'
+                                    />
+                                </div>
+
+                                <button class="btn btn-outline-secondary btn-not-rounded WorkOrders-filter clear-btn" type="button" onClick={this.clearInputDates}>
+                                    <i class="fas fa-filter"></i> Clear
+                                </button>
+                            </div>
+                        </div>
                     </div>
-
+                    <h5 className="Table-title">{this.props.tableTitle || "Work Orders"}</h5>
                 </div>
-                <div className="card-body">
 
-                    <Paper style={{ overflowX: 'auto' }}>
+                <div className="card-body tumi-forcedResponsiveTable">
+
+                    <React.Fragment>
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell className={"Table-head text-center"} style={{ width: '150px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"} style={{ width: '60px' }}>Actions</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '80px' }}>No.</CustomTableCell>
                                     <CustomTableCell className={"Table-head"} style={{ width: '220px' }}>Property</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
-                                    <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Needs Experience?</CustomTableCell>
                                     <CustomTableCell className={"Table-head text-center"}>Needs to Speak English?</CustomTableCell>
@@ -563,7 +636,7 @@ class WorkOrdersTable extends Component {
                                     let backgroundColor = row.status === 0 ? '#ddd' : '#fff';
                                     if (this.state.filterValue === 0) {
                                         return (
-                                            <TableRow style={{ background: backgroundColor }}>
+                                            <TableRow>
                                                 <CustomTableCell className={'text-center'} style={{ width: '80px' }}>
                                                     <Tooltip title="Life Cycle">
                                                         <button
@@ -609,10 +682,9 @@ class WorkOrdersTable extends Component {
                                                             )
                                                     }
                                                 </CustomTableCell>
-                                                <CustomTableCell style={{ width: '80px' }}>{row.workOrderId}</CustomTableCell>
+                                                <CustomTableCell style={{ width: '80px' }}>{`${row.workOrderId}-${row.count}`}</CustomTableCell>
                                                 <CustomTableCell style={{ width: '220px' }}>{row.CompanyName != null ? row.CompanyName : ''}</CustomTableCell>
                                                 <CustomTableCell >{row.positionName != null ? row.positionName : ''}</CustomTableCell>
-                                                <CustomTableCell className={'text-center'}>{row.count + '/' + row.quantity}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
@@ -622,19 +694,19 @@ class WorkOrdersTable extends Component {
                                 })}
                             </TableBody>
                             <TableFooter>
-                                <TableRow>
-                                    {items.length > 0 && (
-                                        <TablePagination
-                                            colSpan={3}
-                                            count={items.length}
-                                            rowsPerPage={rowsPerPage}
-                                            page={page}
-                                            onChangePage={this.handleChangePage}
-                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                            ActionsComponent={TablePaginationActionsWrapped}
-                                        />
-                                    )}
-                                </TableRow>
+
+                                {items.length > 0 && (
+                                    <TablePagination
+                                        colSpan={1}
+                                        count={items.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        onChangePage={this.handleChangePage}
+                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActionsWrapped}
+                                    />
+                                )}
+
                             </TableFooter>
                         </Table>
                         <ConfirmDialog
@@ -648,7 +720,7 @@ class WorkOrdersTable extends Component {
                             title={'are you sure you want to cancel this record?'}
                             loading={this.state.removing}
                         />
-                    </Paper>
+                    </React.Fragment>
                 </div>
             </div >
         );

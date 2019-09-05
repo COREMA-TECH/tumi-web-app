@@ -34,7 +34,7 @@ idealJobs
 	description
 	idPosition 
 }
-applicationPhases   {
+Phases   {
 	id
 	StageId
 	ApplicationId
@@ -58,6 +58,12 @@ employments
 {
 id
 }
+Coordenadas
+    {
+      zipCode
+      Lat
+      Long
+    }
 }
 }
 `;
@@ -75,7 +81,12 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 		needEnglish,
 		zipCode,
 		Id_positionApplying,
-		positionName
+		positionName,
+		OpeningRecruiter {
+      id
+      recruiterId
+      openingId
+    }
 	}
 	getusers(Id: null,IsActive: 1) {
 		Id

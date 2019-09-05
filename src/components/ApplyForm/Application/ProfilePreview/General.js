@@ -6,10 +6,15 @@ import {
     GET_APPLICATION_PROFILE_INFO,
     GET_CONTACTS_IN_USER_DIALOG,
     GET_DEPARTMENTS_QUERY,
+    GET_APPLICATION_EMPLOYEES_QUERY,
     GET_EMAILS_USER,
     GET_HOTELS_QUERY,
     GET_ROLES_QUERY,
-    GET_TYPES_QUERY
+    GET_TYPES_QUERY,
+    GET_CONTACTS_BY_APP_HOTEL_QUERY,
+    GET_HOTELS_BY_APPLICATION_QUERY,
+    GET_APPLICATION_CODE_USER,
+    GET_HOTELS_BY_EMPLOYEE
 } from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import InputMask from "react-input-mask";
@@ -24,12 +29,23 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, INSERT_DEPARTMENT, UPDATE_APPLICANT } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION, CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT, CREATE_EMPLOYEE_FOR_APPLICATION } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
+import PunchesReportDetail from '../../../PunchesReportDetail';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
+import Titles from './Titles';
+import moment from 'moment';
+import VerificationLetter from '../VerificationLetter';
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import FeatureTag from '../../../ui-components/FeatureTag';
 
+const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
+
+const TITLE_CONTEXT_MENU = 'titleContextMenu';
+const HOTEL_CONTEXT_MENU = 'hotelContextMenu';
 
 const styles = (theme) => ({
     container: {
@@ -98,7 +114,9 @@ const styles = (theme) => ({
         left: '50%',
         marginTop: -12,
         marginLeft: -12
-    }
+    },
+    paper: { overflowY: 'unset' },
+    container: { overflowY: 'unset' }
 });
 
 class General extends Component {
@@ -123,15 +141,16 @@ class General extends Component {
             number: '',
             type: null,
             idSupervisor: null,
+            directDeposit: 1,
             IsActive: 1,
             User_Created: 1,
             User_Updated: 1,
             Date_Created: "'2018-08-14 16:10:25+00'",
             Date_Updated: "'2018-08-14 16:10:25+00'",
-            hotelId: null,
             isLead: false,
-
+            property: [],
             contactTypes: ContactTypesData,
+            hireDate: '',
 
             // Functional states
             titles: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
@@ -145,6 +164,7 @@ class General extends Component {
             loadingSupervisor: false,
             loadingAllSupervisors: false,
             loadingTitles: false,
+            loading: false,
             firstLoad: true,
             indexView: 0, //Loading
             errorMessage: '',
@@ -173,7 +193,18 @@ class General extends Component {
             departmentNameValid: false,
             titleNameValid: false,
 
-            properties: []
+            properties: [],
+
+            DeparmentTitle: '',
+            myHotels: [],
+            locationAbletoWorkId: 0,
+            applicationEmployeeId: null,
+            openVerification: false,
+            date: new Date().toISOString().substring(0, 10),
+            codeUser: '',
+            employeeHotelId: 0,
+            employeeHotelName: '',
+            relationToUpdate: null
         }
     }
 
@@ -198,7 +229,8 @@ class General extends Component {
         IsRecruiter: false,
         IdRegionValid: true,
         RegionName: '',
-        IsActive: 1,
+        IsActive: this.props.activeUser,
+        directDeposit: 1,
         IdRegion: 0,
 
         departmentName: '',
@@ -229,7 +261,14 @@ class General extends Component {
         loading: false,
         loadingConfirm: false,
         openModal: false,
-        showCircularLoading: false
+        showCircularLoading: false,
+        titleModal: false,
+        employmentType: null,
+        startDate: null,
+        positionName: null,
+
+        openConfirmDefaultTitle: false,
+        appIdealJobToSetDefault: null
     };
 
     /**
@@ -263,6 +302,10 @@ class General extends Component {
         this.setState({ openModal: true });
     };
 
+    handleClickOpenVerification = () => {
+        this.setState({ openVerification: true });
+    };
+
     handleClickConvertToEmployee = () => {
         this.setState(
             {
@@ -288,8 +331,9 @@ class General extends Component {
                             mobileNumber: this.state.number,
                             idRole: 1,
                             isActive: true,
+                            directDeposit: this.state.directDeposit,
                             userCreated: 1,
-                            userUpdated: 1,
+                            userUpdated: 1
                         });
 
                         this.insertEmployees(datos)
@@ -331,6 +375,8 @@ class General extends Component {
 
             })
     };
+
+    
     /**
      * To hide modal and then restart modal state values
      */
@@ -339,12 +385,16 @@ class General extends Component {
             openModal: false
         }, () => {
             this.setState({
-                hotelId: null,
+                property: [],
                 type: null,
                 departmentName: '',
                 titleName: ''
             })
         });
+    };
+
+    handleCloseModalVerificacion = () => {
+        this.setState({ openVerification: false })
     };
 
     /**
@@ -370,11 +420,91 @@ class General extends Component {
      */
     resetUserModalState = () => {
         this.setState({
-            username: '',
             idRol: null,
             idLanguage: null,
             usernameValid: true
         })
+    };
+
+    getCodeUser = (id) => {
+        this.props.client.query({
+            query: GET_APPLICATION_CODE_USER,
+            fetchPolicy: 'no-cache',
+            variables: {
+                id: id
+            }
+        }).then(({ data }) => {
+            let user = data.applicationCodeUser[0];
+            this.setState((prevState, prevProps) => {
+                return { Code_User: user.Code_User || '--' }
+            });
+        }).catch(error => {
+            this.setState({
+                loading: false,
+                error: true
+            })
+        });
+    }
+
+    /**
+     * To get the profile information for applicant
+     * @param id
+     */
+    getProfileInformation = (id) => {
+
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .query({
+                        query: GET_APPLICATION_PROFILE_INFO,
+                        fetchPolicy: 'no-cache',
+                        variables: {
+                            id: id
+                        }
+                    })
+                    .then(({ data }) => {
+                        this.setState({
+                            data: data.applications[0]
+                        }, () => {
+                            this.setState({
+                                email: this.state.data ? this.state.data.emailAddress : '',
+                                number: this.state.data.cellPhone,
+                                firstname: this.state.data.firstName,
+                                middlename: this.state.data.middleName,
+                                lastname: this.state.data.lastName,
+                                isLead: this.state.data.isLead,
+                                loading: false,
+                                directDeposit: this.state.data.directDeposit,
+                                isActive: this.state.data.isActive,
+                                username: this.state.data.firstName.slice(0, 1) + this.state.data.lastName + Math.floor(Math.random() * 10000),
+                                EmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 999999,
+                                hireDate: (this.state.data.employee && this.state.data.employee.Employees.hireDate) ? `${moment(this.state.data.employee.Employees.hireDate).format("MM/DD/YYYY")}` : '--',
+                                idealJobs: this.state.data.idealJobs,
+                                applicantName: this.state.data.firstName + ' ' + this.state.data.lastName,
+                                codeUser: this.state.data.user ? this.state.data.user.Code_User : '--',
+                                employeeHotelId: this.state.data.employee ? this.state.data.employee.Employees.idEntity : 0,
+                                employeeHotelEmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 0,
+                                employeeHotelName: this.state.data.employee ? (this.state.data.employee.Employees.BusinessCompany ? this.state.data.employee.Employees.BusinessCompany.Name : '') : '',
+                                employmentType: this.state.data.employmentType ? this.state.data.employmentType.replace('FT', 'FULL TIME').replace('PT', 'PART TIME') : 'N/D',
+                                startDate: this.state.data.employee ? (this.state.data.employee.Employees ? this.state.data.employee.Employees.startDate : 'N/D') : 'N/D',
+                                positionName: this.state.data.position ? (this.state.data.position.position ? this.state.data.position.position.Position : 'N/D') : 'N/D'
+
+                            }, _ => {
+                                this.getCodeUser(id);
+                                this.getMyHotels();
+                            })
+                        });
+                    })
+                    .catch(error => {
+                        this.setState({
+                            loading: false,
+                            error: true
+                        })
+                    })
+            });
     };
 
 
@@ -382,45 +512,29 @@ class General extends Component {
      * To get the profile information for applicant
      * @param id
      */
-    getProfileInformation = (id) => {
+
+    getApplicationEmployees = (id) => {
         this.props.client
             .query({
-                query: GET_APPLICATION_PROFILE_INFO,
+                query: GET_APPLICATION_EMPLOYEES_QUERY,
+                fetchPolicy: 'no-cache',
                 variables: {
-                    id: id
+                    ApplicationId: id
                 }
             })
             .then(({ data }) => {
                 this.setState({
-                    data: data.applications[0]
-                }, () => {
-                    this.fetchDepartments();
-                    this.setState({
-                        email: this.state.data.emailAddress,
-                        number: this.state.data.cellPhone,
-                        firstname: this.state.data.firstName,
-                        middlename: this.state.data.middleName,
-                        lastname: this.state.data.lastName,
-                        isLead: this.state.data.isLead
-                    })
-                });
-            })
-            .catch(error => {
-                this.setState({
-                    loading: false,
-                    error: true
+                    DeparmentTitle: (data.applicationEmployees[0] && data.applicationEmployees[0].Employees && data.applicationEmployees[0].Employees.Deparment) ? data.applicationEmployees[0].Employees.Deparment.DisplayLabel : ''
                 })
             })
+            .catch(error => { console.log(error) })
     };
 
-
-    /**
-     * Fetch hotels
-     */
     getHotels = () => {
         this.props.client
             .query({
-                query: GET_HOTELS_QUERY
+                query: GET_HOTELS_QUERY,
+                fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
                 this.setState({
@@ -428,11 +542,13 @@ class General extends Component {
                 }, () => {
                     let options = [];
                     this.state.hotels.map(item => {
-                        this.setState(prevState => ({
-                            properties: [...prevState.properties,
-                            { value: item.Id, label: item.Name }
-                            ]
-                        }));
+                        let hotel = this.state.myHotels.find(_ => { return _.Id == item.Id });
+                        if ((!hotel || !hotel.relationActive) && item.Id != this.state.employeeHotelId) {
+                            options.push({ value: item.Id, label: `${item.Code} - ${item.Name}` });
+                            this.setState(prevState => ({
+                                properties: options
+                            }));
+                        }
                     });
 
                     this.fetchContacts()
@@ -443,32 +559,6 @@ class General extends Component {
             });
     };
 
-    /**
-     * To get a list od departments
-     */
-    fetchDepartments = () => {
-        this.props.client
-            .query({
-                query: GET_DEPARTMENTS_QUERY,
-                fetchPolicy: 'no-cache'
-            })
-            .then((data) => {
-                if (data.data.getcatalogitem != null) {
-                    this.setState({
-                        departments: data.data.getcatalogitem,
-                    }, () => {
-                        this.fetchTitles()
-                    });
-                }
-            })
-            .catch((error) => {
-                // TODO: show a SnackBar with error message
-
-                this.setState({
-                    loading: false
-                })
-            });
-    };
 
     /**
      * To fetch a list of contacts
@@ -481,7 +571,6 @@ class General extends Component {
             })
             .then((data) => {
                 if (data.data.getsupervisor != null && data.data.getcatalogitem) {
-                    console.log("data.data.getcatalogitem ", data.data.getcatalogitem);
                     this.setState({
                         contacts: data.data.getsupervisor,
                         regions: data.data.getcatalogitem,
@@ -550,234 +639,231 @@ class General extends Component {
             });
     };
 
+    getHotelIds = () => {
+        let ids = [];
+        this.state.property.map(prop => {
+            ids.push(prop.value)
+        });
+        return ids;
+    }
+
     /**
-     * To fetch a list of titles
+     * Count Contacts by Property and Application
      */
-    fetchTitles = () => {
+    getContacts = (execMutation = () => { }) => {
+        this.setState(() => ({ saving: true }));
         this.props.client
             .query({
-                query: GET_TYPES_QUERY,
-                fetchPolicy: 'no-cache'
-            })
-            .then((data) => {
-                if (data.data.getcatalogitem != null) {
-                    this.setState({
-                        titles: data.data.getcatalogitem,
-                    }, () => {
-                        this.getHotels()
-                    });
+                query: GET_CONTACTS_BY_APP_HOTEL_QUERY,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    ApplicationId: this.props.applicationId,
+                    Id_Entity: this.getHotelIds()
                 }
+            })
+            .then(({ data: { contacts } }) => {
+                if (contacts.length > 0) {
+                    this.props.handleOpenSnackbar('warning', 'Contact already exists in some Hotel!');
+                    this.setState(() => ({ saving: false }));
+                }
+                else execMutation();
             })
             .catch((error) => {
-                // TODO: show a SnackBar with error message
-                this.setState({
-                    loading: false
-                })
+                this.setState(() => ({ saving: false }));
+                this.props.handleOpenSnackbar('error', 'Error processing request!');
             });
-    };
-
+    }
 
     /**
-     * To insert departments
-     */
-    insertDepartment = () => {
-        if (
-            this.state.hotelId === null
-            || this.state.type === null
-            || this.state.departmentName.length < 3
-            || this.state.titleName.length < 3
-        ) {
-            this.props.handleOpenSnackbar('warning', 'Complete all the fields');
-
-            if (this.state.hotelId === null) {
-                this.setState({
-                    hotelValid: true
-                })
-            }
-
-            if (this.state.type === null) {
-                this.setState({
-                    typeValid: true
-                })
-            }
-
-            if (this.state.departmentName.length < 3) {
-                this.setState({
-                    departmentNameValid: true
-                })
-            }
-
-            if (this.state.titleName.length < 3) {
-                this.setState({
-                    titleNameValid: true
-                })
-            }
-        } else {
-            var IdDeparment = 0,
-                IdTitle = 0;
-
-            var department = this.state.departments.find((obj) => {
-                return obj.Name.trim().toLowerCase() === this.state.departmentName.trim().toLowerCase();
-            });
-
-            var title = this.state.titles.find((obj) => {
-                return obj.Name.trim().toLowerCase() === this.state.titleName.trim().toLowerCase();
-            });
-
-            let insdepartmentAsync = async () => {
-                if (department) {
-                    IdDeparment = department.Id;
-                } else {
-                    //const InsertDepartmentNew =
-                    await this.props.client
-                        .mutate({
-                            mutation: INSERT_DEPARTMENT,
-                            variables: {
-                                input: {
-                                    Id: 0,
-                                    Id_Catalog: 8,
-                                    Id_Parent: 0,
-                                    Name: `'${this.state.departmentName}'`,
-                                    DisplayLabel: `'${this.state.departmentName}'`,
-                                    Description: `'${this.state.departmentName}'`,
-                                    Value: null,
-                                    Value01: null,
-                                    Value02: null,
-                                    Value03: null,
-                                    Value04: null,
-                                    IsActive: 1,
-                                    User_Created: 1,
-                                    User_Updated: 1,
-                                    Date_Created: "'2018-09-20 08:10:25+00'",
-                                    Date_Updated: "'2018-09-20 08:10:25+00'"
-                                }
-                            }
-                        })
-                        .then((data) => {
-                            IdDeparment = data.data.inscatalogitem.Id;
-                        })
-                        .catch((error) => {
-                            this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-                            this.setState({
-                                saving: false
-                            });
-                            return false;
-                        });
+ * Get Hotels associated to application
+ */
+    getMyHotels = () => {       
+        this.setState(() => ({ loadingMyHotels: true }));
+        this.props.client
+            .query({
+                query: GET_HOTELS_BY_EMPLOYEE,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    EmployeeId: this.state.employeeHotelEmployeeId
                 }
+            })
+            .then(({ data: { EmployeeByHotels } }) => {
+                const hotelList = EmployeeByHotels.map(item => {
+                    return {...item.BusinessCompany, defaultProperty: item.isDefault, relationId: item.id, relationActive: item.isActive }
+                }).sort((a, b) => {
+                    return a.defaultProperty === b.defaultProperty ? 0 : (a.defaultProperty ? -1 : 1);
+                });
 
-                if (title) {
-                    IdTitle = title.Id;
-                } else {
-                    //const InsertDepartmentNew =
-                    await this.props.client
-                        .mutate({
-                            mutation: INSERT_DEPARTMENT,
-                            variables: {
-                                input: {
-                                    Id: 0,
-                                    Id_Catalog: 6,
-                                    Id_Parent: 0,
-                                    Name: `'${this.state.titleName}'`,
-                                    DisplayLabel: `'${this.state.titleName}'`,
-                                    Description: `'${this.state.titleName}'`,
-                                    Value: null,
-                                    Value01: null,
-                                    Value02: null,
-                                    Value03: null,
-                                    Value04: null,
-                                    IsActive: 1,
-                                    User_Created: 1,
-                                    User_Updated: 1,
-                                    Date_Created: "'2018-09-20 08:10:25+00'",
-                                    Date_Updated: "'2018-09-20 08:10:25+00'"
-                                }
-                            }
-                        })
-                        .then((data) => {
-                            IdTitle = data.data.inscatalogitem.Id;
-                        })
-                        .catch((error) => {
-                            this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
-                            this.setState({
-                                saving: false
-                            });
-                            return false;
-                        });
-                }
+                this.setState(() => ({ myHotels: hotelList }), this.getHotels);
+            })
+            .catch((error) => {
+                this.setState(() => ({ loadingMyHotels: false }));
+                this.props.handleOpenSnackbar('error', 'Error loading my hotels!');
+            });
+    }    
 
-                this.insertContacts(IdDeparment, IdTitle);
-            };
+    /**
+   * To insert contact objects 
+   */
+    findRelatedHotel = hotelId => {        
+        const found = this.state.myHotels.find(item => {
+            return item.Id === hotelId;
+        });
 
-            insdepartmentAsync();
+        return found ? found : false;
+    }
+
+    insertNewEmployee = _ => {
+        const ApplicationId = this.props.applicationId;
+        let employeeId = 0;
+
+        this.props.client.mutate({
+            mutation: CREATE_EMPLOYEE_FOR_APPLICATION,
+            variables: {
+                id: 0,
+                hireDate: moment(Date.now()).format('MM/DD/YYYY'),
+                startDate: moment(Date.now()).format('MM/DD/YYYY'),
+                ApplicationId,
+                codeuser: localStorage.getItem('LoginId'),
+                nameUser: localStorage.getItem('FullName')
+            }
+        })
+        .then(({ data }) => {
+            employeeId = data.id
+        })
+        .catch(error => console.log(error));
+
+        return employeeId;
+    }
+
+    insertRelations = () => {
+        //this.state.property holds the hotels picked in the dropdown
+        let newEmployeeId = 0;
+        if(this.state.employeeHotelEmployeeId === 0){
+            newEmployeeId = this.insertNewEmployee();
         }
 
-    };
+        if (this.state.property.length <= 0) {
+            this.props.handleOpenSnackbar('warning', 'You have to select the Property!');
+            return;
+        }        
 
-    /**
-     * To insert contact objects
-     * @param idDepartment int value
-     * @param idTitle int value
-     */
-    insertContacts = (idDepartment, idTitle) => {
-        this.props.client
-            .mutate({
-                mutation: INSERT_CONTACT,
-                variables: {
-                    input: {
-                        Id: null,
-                        Id_Entity: this.state.hotelId,
-                        First_Name: `'${this.state.firstname}'`,
-                        Middle_Name: `'${this.state.middlename}'`,
-                        Last_Name: `'${this.state.lastname}'`,
-                        Electronic_Address: `'${this.state.email}'`,
-                        Phone_Number: `'${this.state.number}'`,
-                        //Contact_Title: this.state.title,
-                        Contact_Title: idTitle,
-                        Contact_Type: this.state.type,
-                        Id_Deparment: idDepartment,
-                        Id_Supervisor: this.state.idSupervisor,
-                        IsActive: 1,
-                        User_Created: 1,
-                        User_Updated: 1,
-                        Date_Created: "'2018-08-14 16:10:25+00'",
-                        Date_Updated: "'2018-08-14 16:10:25+00'"
-                    }
-                }
-            })
-            .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Contact Inserted!');
-                this.setState({
-                    openModal: false
-                });
+        let reenable = [];
 
-                this.setState({
-                    hotelId: null,
-                    type: null,
-                    departmentName: '',
-                    titleName: ''
-                })
-            })
-            .catch((error) => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error: Inserting Contact: ' + error
-                );
-                this.setState({
-                    saving: false
-                });
-                return false;
+        //With this, I loop through the selected hotels, check them against the linked hotels (active or not), if a hotel matches and it's relation is inactive, then I
+        //add it to the reenable array to reactivate it later. The insertData only holds the new relations to create.
+        const insertData = this.state.property.filter(item => {
+            const found = this.findRelatedHotel(item.value);
+
+            if(found && !found.relationActive)
+                reenable.push(found);
+            else    
+                return true; //If the hotel wasn't found in the EmployeeHotels list, then we grab it for insert.                        
+        })
+        .map(item => {
+            return { EmployeeId: newEmployeeId !== 0 ? newEmployeeId : this.state.employeeHotelEmployeeId, BusinessCompanyId: item.value, isDefault: false, isActive: true }
+        });
+
+        this.props.client.mutate({
+            mutation: CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION,
+            variables: {
+                employeeByHotels: insertData,
+                relationList: reenable.map(item => ({ id: item.relationId, EmployeeId: newEmployeeId !== 0 ? newEmployeeId : this.state.employeeHotelEmployeeId,  BusinessCompanyId: item.Id, isDefault: false, isActive: true }))
+            }            
+        })
+        .then(({data}) => {
+            this.props.handleOpenSnackbar('success', 'Hotels Linked!');
+            this.setState(() => ({
+                openModal: false,
+                openVerification: false,
+                saving: false,
+                property: [],
+                type: null,
+                departmentName: '',
+                titleName: ''
+            }), _ => {
+                this.getMyHotels();
             });
+        })
     };
+
+    removeRelation = () => {
+        if(!this.state.relationToUpdate)
+            return;
+
+        const insertData = {
+            id: this.state.relationToUpdate.relationId,
+            EmployeeId: this.state.employeeHotelEmployeeId,
+            isActive: false,
+            isDefault: false,
+        }
+
+        this.props.client.mutate({
+            mutation: UPDATE_EMPLOYEE_HOTEL_RELATION,
+            variables: {
+                employeeByHotel: insertData
+            }
+        })
+        .then(({ data }) => {
+            this.props.handleOpenSnackbar('success', 'Record deleted!');
+            this.setState(() => ({ removingLocationAbleToWork: false, openConfirm: false, employeeHotelId: 0, employeeHotelName: '' }), this.getMyHotels)
+
+        })
+        .catch(error => {
+
+            this.props.handleOpenSnackbar('error', 'Error deleting relation!');
+            this.setState(() => ({ removingLocationAbleToWork: false }))
+
+        })
+    };
+
+    toggleDefaultHotel = clickedHotel => {
+        if(!clickedHotel)
+            return;
+
+        const recordToUpdate = {
+            id: clickedHotel.relationId,
+            EmployeeId: this.state.employeeHotelEmployeeId,
+            isActive: true,
+            isDefault: !clickedHotel.defaultProperty,
+        }
+
+        let updateInfo = [recordToUpdate];
+        
+        if(!clickedHotel.defaultProperty){
+            const currentDefault = this.state.myHotels.find(item => item.defaultProperty === true && item.relationId !== clickedHotel.relationId);
+            updateInfo = currentDefault ? [...updateInfo, {id: currentDefault.relationId, EmployeeId: this.state.employeeHotelEmployeeId, isActive: true, isDefault: false}] : [...updateInfo];
+        }
+
+        this.props.client.mutate({
+            mutation: BULK_UPDATE_EMPLOYEE_HOTEL_RELATION,
+            variables: {
+                relationList: updateInfo
+            }
+        })
+        .then(_ => {
+            this.props.handleOpenSnackbar('success', 'Record updated!');
+            this.setState(() => ({ openConfirmDefaultHotel: false, relationToUpdate: null }), this.getMyHotels)
+        })
+        .catch(error => {
+            this.props.handleOpenSnackbar('error', 'Error updating record!');
+            this.setState(() => ({ openConfirmDefaultHotel: false, relationToUpdate: null }), this.getMyHotels)
+        })
+    }
 
     /**
      * Before render fetch user information
      */
     componentWillMount() {
-        this.setState({
-            loading: true
-        }, () => {
-            this.getProfileInformation(this.props.applicationId);
-        })
+        /*  this.setState({
+              loading: true
+          }, () => {*/
+        this.getProfileInformation(this.props.applicationId);
+        this.getApplicationEmployees(this.props.applicationId);
+        // this.getMyHotels();
+
+        // this.getApplicationEmployees(this.props.applicationId);
+        //  })
     }
 
     handleCheckedChange = (name) => (event) => {
@@ -802,14 +888,12 @@ class General extends Component {
                 [name]: id
             },
             () => {
-                console.log("Id de la fila ", id);
                 this.validateField(name, id);
             }
         );
     };
 
     SelectContac = (id) => {
-        console.log("entro al select");
         this.props.client
             .query({
                 query: this.GET_CONTACTS_QUERY_BY_ID,
@@ -818,19 +902,12 @@ class General extends Component {
                 }
             })
             .then((data) => {
-                console.log("este es el data ", data.data.getcontacts[0].Electronic_Address);
-
                 if (data.data.getcontacts != null) {
-
-                    this.setState(
-                        {
-
-                            email: data.data.getcontacts[0].Electronic_Address,
-                            number: data.data.getcontacts[0].Phone_Number,
-                            fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
-                        },
-                    );
-                    console.log("Full Name str ", this.state.fullname);
+                    this.setState({
+                        email: data.data.getcontacts[0].Electronic_Address,
+                        number: data.data.getcontacts[0].Phone_Number,
+                        fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
+                    });
                 }
             })
             .catch((error) => {
@@ -1084,6 +1161,77 @@ class General extends Component {
         }
     `;
 
+    updateDirectDeposit = () => {
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_DIRECT_DEPOSIT,
+                        variables: {
+
+                            id: this.props.applicationId,
+                            directDeposit: this.state.directDeposit
+
+                        }
+                    })
+                    .then(({ data }) => {
+
+                        this.setState({
+                            loading: false,
+                        });
+
+                        this.props.handleOpenSnackbar('success', 'Candidate was updated!', 'bottom', 'right');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            }
+        );
+    };
+
+    updateActive = () => {
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_ISACTIVE,
+                        variables: {
+
+                            id: this.props.applicationId,
+                            isActive: this.state.isActive
+                        }
+                    })
+                    .then(({ data }) => {
+
+                        this.setState({
+                            loading: false,
+                        });
+
+                        this.props.handleOpenSnackbar('success', 'Candidate was updated!', 'bottom', 'right');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            }
+        );
+    };
+
     /**
      * Insert a user with general information and permissions
      */
@@ -1172,11 +1320,90 @@ class General extends Component {
             })
     };
 
+    handleChangeProperty = (property) => {
+        this.setState(() => ({ property }));
+    }
+
+    hanldeOpenTitleModal = () => {
+        this.setState({ titleModal: !this.state.titleModal });
+    }
+
+    hanldeCloseTitleModal = () => {
+        this.setState({ titleModal: !this.state.titleModal });
+    }
+
+    setTitleDefault = (e, trigger) => {
+        let idealJob = trigger.attributes.appIdealJob;
+        this.setState(() => {
+            return {
+                openConfirmDefaultTitle: true,
+                appIdealJobToSetDefault: idealJob
+            }
+        });
+    }
+
+    triggerConfirmDefaultHotel = (e, trigger) => {
+        const {attributes: {clickedHotel}} = trigger;
+
+        if(!clickedHotel.defaultProperty){
+            const currentDefault = this.state.myHotels.find(item => item.defaultProperty === true && item.relationId !== clickedHotel.relationId);
+            
+            if(currentDefault){
+                this.setState(_ => ({
+                    hotelToSetDefault: clickedHotel,
+                    openConfirmDefaultHotel: true,
+                    defaultHotelModalTitle: "Are you sure you want to change the employee Home Location?"
+                }))
+            }
+        }
+        else{
+            this.setState(_ => ({
+                hotelToSetDefault: clickedHotel,
+                openConfirmDefaultHotel: true,
+                defaultHotelModalTitle: "Are you sure you want to unassign the employee Home Location?"
+            }))
+        }
+
+    }
+
+    setTitleDefaultConfirm = () => {
+        let appIdealJob = this.state.appIdealJobToSetDefault;
+        let idealJobs = this.state.idealJobs;
+        this.props.client
+            .mutate({
+                mutation: SET_IDEAL_JOB_DEFAULT,
+                variables: {
+                    id: appIdealJob ? appIdealJob.id : 0
+                }
+            })
+            .then((data) => {
+                let idealJob = data.data.setDefaultApplicantIdealJob;
+                if(idealJob){
+                    this.setState(prevState => {
+                        return {
+                            idealJobs: prevState.idealJobs.map(i => {
+                                i.isDefault = (i.id === idealJob.id)
+                                return i;
+                            })
+                        }
+                    });
+                }
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to set default title',
+                    'bottom',
+                    'right'
+                );
+            });
+    }
+
     render() {
+        const { loading, success } = this.state;
         const { classes } = this.props;
         const { fullScreen } = this.props;
         let userExist = false;
-
 
         if (this.state.loading || this.state.insertDialogLoading) {
             return <LinearProgress />
@@ -1235,6 +1462,7 @@ class General extends Component {
                                         value={this.state.username}
                                         error={!this.state.usernameValid}
                                         change={(value) => this.onChangeHandler(value, 'username')}
+                                        disabled={true}
                                     />
                                 </div>
                                 <div className="col-md-12 col-lg-6">
@@ -1345,20 +1573,22 @@ class General extends Component {
         /**
          * To render a dialog to create contacts
          **/
-        let renderDialog = () => (
-            <Dialog
+        let renderDialog = () => {
+            const { classes } = this.props;
+            return <Dialog
                 fullScreen={fullScreen}
                 open={this.state.openModal}
                 onClose={this.handleCloseModal}
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
+                classes={{ paper: classes.paper }} s
             >
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">Add to property</h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{ minWidth: 600, maxWidth: 600, padding: '0px', minHeight: 200 }}>
+                <DialogContent style={{ minWidth: 600, maxWidth: 600, padding: '0px', minHeight: 200, overflowY: "unset" }}>
                     <form className="container">
                         <div className="">
                             <div className="row">
@@ -1366,109 +1596,13 @@ class General extends Component {
                                     <label>* Property Name</label>
                                     <Select
                                         options={this.state.properties}
-                                        // value={this.state.properties}
-                                        onChange={this.handleChangePositionTag}
-                                        closeMenuOnSelect={false}
+                                        value={this.state.property}
+                                        onChange={this.handleChangeProperty}
+                                        closeMenuOnSelect={true}
                                         components={makeAnimated()}
-                                        isMulti
+                                        isMulti={true}
                                     />
                                 </div>
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                {/*<label>* Hotel</label>*/}
-                                {/*<SelectForm*/}
-                                {/*id="type"*/}
-                                {/*name="type"*/}
-                                {/*data={this.state.hotels}*/}
-                                {/*update={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*hotelId: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*hotelValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*showNone={false}*/}
-                                {/*error={this.state.hotelValid}*/}
-                                {/*value={this.state.hotelId}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                {/*<label>* Contact Type</label>*/}
-                                {/*<SelectForm*/}
-                                {/*id="type"*/}
-                                {/*name="type"*/}
-                                {/*data={this.state.contactTypes}*/}
-                                {/*update={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*type: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*typeValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*showNone={false}*/}
-                                {/*error={this.state.typeValid}*/}
-                                {/*value={this.state.type}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                {/*<label>* Department</label>*/}
-                                {/*<AutosuggestInput*/}
-                                {/*id="department"*/}
-                                {/*name="department"*/}
-                                {/*data={this.state.departments}*/}
-                                {/*error={this.state.departmentNameValid}*/}
-                                {/*value={this.state.departmentName}*/}
-                                {/*onChange={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*departmentName: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*departmentNameValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*onSelect={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*departmentName: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*departmentNameValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                {/*<label>* Contact Title</label>*/}
-                                {/*<AutosuggestInput*/}
-                                {/*id="title"*/}
-                                {/*name="title"*/}
-                                {/*data={this.state.titles}*/}
-                                {/*error={this.state.titleNameValid}*/}
-                                {/*value={this.state.titleName}*/}
-                                {/*onChange={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*titleName: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*titleNameValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*onSelect={(value) => {*/}
-                                {/*this.setState({*/}
-                                {/*titleName: value*/}
-                                {/*}, () => {*/}
-                                {/*this.setState({*/}
-                                {/*titleNameValid: false*/}
-                                {/*})*/}
-                                {/*})*/}
-                                {/*}}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
                             </div>
                         </div>
                     </form>
@@ -1480,7 +1614,7 @@ class General extends Component {
                                 <button
                                     variant="fab"
                                     className="btn btn-success"
-                                    onClick={this.insertDepartment}
+                                    onClick={this.insertRelations}
                                 >
                                     Save {!this.state.saving && <i className="fas fa-save" />}
                                     {this.state.saving && <i className="fas fa-spinner fa-spin" />}
@@ -1503,29 +1637,95 @@ class General extends Component {
                     </div>
                 </DialogActions>
             </Dialog>
-        );
+        }
 
+        let { firstname, middlename, lastname, employmentType, startDate, positionName } = this.state;
+        let employeeName = `${firstname || ''} ${middlename || ''} ${lastname || ''}`;
+        let currentIdealJobsId = this.state.idealJobs.map(ij => ij.idPosition);
         return (
             <div className="Apply-container--application">
+                <Titles getProfileInformation={this.getProfileInformation} ApplicationId={this.props.applicationId} titleModal={this.state.titleModal} hanldeOpenTitleModal={this.hanldeOpenTitleModal} hanldeCloseTitleModal={this.hanldeCloseTitleModal} myHotels={this.state.myHotels.filter(h => h.relationActive)} currentIdealJobsId={currentIdealJobsId} />
+                {/* Confirmacion para eliminar location */}
+                <ConfirmDialog
+                    open={this.state.openConfirm}
+                    closeAction={() => {
+                        this.setState({ relationToUpdate: null, openConfirm: false, locationAbletoWorkId: 0, applicationEmployeeId: 0 });
+                    }}
+                    confirmAction={() => {
+                        this.removeRelation();
+                    }}
+                    title={(this.state.relationToUpdate && this.state.relationToUpdate.defaultProperty) ? "You are about to remove an Employee Home Location, are you sure you want to proceed?" : "Are you sure you want to delete the record?"}
+                    loading={this.props.removingLocationAbleToWork}
+                />
+
+                <ConfirmDialog
+                    open={this.state.openConfirmDefaultHotel}
+                    closeAction={() => {
+                        this.setState({ openConfirmDefaultHotel: false, locationAbletoWorkId: 0, applicationEmployeeId: 0, });
+                    }}
+                    confirmAction={() => {
+                        this.toggleDefaultHotel(this.state.hotelToSetDefault);
+                    }}
+                    confirmActionLabel={dialogMessages[4].label}
+                    title={this.state.defaultHotelModalTitle}
+                />      
+
+                {/* Confirmacion para establecer el title(position) por defecto */}
+                <ConfirmDialog
+                    open={this.state.openConfirmDefaultTitle}
+                    closeAction={() => {
+                        this.setState({ openConfirmDefaultTitle: false });
+                    }}
+                    confirmAction={() => {this.setState({openConfirmDefaultTitle: false}, this.setTitleDefaultConfirm())} }
+                    confirmActionLabel={dialogMessages[4].label}
+                    title={dialogMessages[3].label}
+                />
+
+
+                <Dialog
+                    open={this.state.openVerification}
+                    maxWidth="md"
+                >
+                    <DialogTitle style={{ padding: '0px' }}>
+                        <div className="modal-header">
+                            <h5 className="modal-title">Employment Verification</h5>
+                        </div>
+                    </DialogTitle>
+                    <DialogContent >
+                        <VerificationLetter employeeName={employeeName}
+                            employmentType={employmentType}
+                            startDate={startDate}
+                            positionName={positionName}
+                            handleCloseModalVerificacion={this.handleCloseModalVerificacion}
+                            ApplicationId={this.props.applicationId}
+                            handleOpenSnackbar={this.props.handleOpenSnackbar} />
+                    </DialogContent>
+                </Dialog>
+
                 <div className="">
                     <div className="">
                         <div className="applicant-card">
                             <div className="row">
-                                <div className="item col-sm-12 col-md-3 col-user-info">
+                                <div className="item col-sm-12 col-md-2 col-user-info">
                                     <div className="row">
                                         <span
                                             className="username col-sm-12">{this.state.data.firstName + ' ' + this.state.data.lastName}</span>
                                         <span
                                             className="username-number col-sm-12">Emp #: TM-0000{this.state.data.id}</span>
+                                        <span
+                                            className="username-number col-sm-12">UserName: {this.state.Code_User}</span>
                                     </div>
                                 </div>
-                                <div className="item col-sm-12 col-md-2">
+                                <div className="item col-12 col-md-2">
                                     <div className="row">
-                                        <span
-                                            className="col-sm-6 col-lg-12 font-weight-bold">Title</span>
-                                        <span
-                                            className="col-sm-6 col-lg-12">{this.state.data.position ? this.state.data.position.position.Position.trim() + '(' + this.state.data.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}</span>
-                                        {/*<span className="col-sm-6 col-lg-12">Department: Banquet</span>*/}
+                                        <span className="col-sm-12 font-weight-bold">Start Date</span>
+                                        <span className="col-sm-12">{this.state.startDate}</span>
+                                    </div>
+                                </div>
+                                <div className="item col-12 col-md-2">
+                                    <div className="row">
+                                        <span className="col-sm-12 font-weight-bold">Department</span>
+                                        <span className="col-sm-12">{this.state.DeparmentTitle == '' ? '--' : this.state.DeparmentTitle}</span>
                                     </div>
                                 </div>
                                 <div className="item col-12 col-md-2">
@@ -1534,7 +1734,7 @@ class General extends Component {
                                         <span className="col-sm-12">Text</span>
                                     </div>
                                 </div>
-                                <div className="item col-sm-12  col-md-1">
+                                <div className="item col-sm-12 col-md-1">
                                     <div className="row">
                                         <span className="col-12 col-md-12 font-weight-bold">Active</span>
                                         <div className="col-12 col-md-12">
@@ -1545,6 +1745,15 @@ class General extends Component {
                                                     name="IsActive"
                                                     className="onoffswitch-checkbox"
                                                     id="IsActive"
+                                                    value={this.state.isActive}
+                                                    disabled={!this.props.hasEmployee ? true : false}
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            isActive: event.target.checked
+                                                        }, () => {
+                                                            this.updateActive()
+                                                        });
+                                                    }}
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
                                                     <span className="onoffswitch-inner" />
@@ -1554,7 +1763,40 @@ class General extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-md-4">
+                                <div className="item col-sm-12 col-md-1">
+                                    <div className="row">
+                                        <span className="col-12 col-md-12 font-weight-bold">Direct Deposit</span>
+                                        <div className="col-12 col-md-12">
+                                            <div className="onoffswitch">
+                                                <input
+                                                    id="directDepositInput"
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            directDeposit: event.target.checked
+                                                        }, () => {
+                                                            this.updateDirectDeposit()
+                                                        })
+                                                    }}
+
+                                                    checked={this.state.directDeposit}
+                                                    value={this.state.directDeposit}
+                                                    name="directDeposit"
+                                                    type="checkbox"
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="10"
+                                                    className="onoffswitch-checkbox"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="directDepositInput">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-2">
                                     <div className="row">
                                         <div className="item col-sm-12  col-md-12">
                                             <div className="dropdown">
@@ -1565,17 +1807,21 @@ class General extends Component {
                                                 </button>
                                                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                     {
-                                                        this.state.isLead ? (
-                                                            <button className="dropdown-item" onClick={() => {
-                                                                this.handleClickConvertToEmployee();
-                                                            }}>Convert to Employee
-                                                            </button>
-                                                        ) : ('')
+                                                        // this.state.isLead ? (
+                                                        //     <button className="dropdown-item" onClick={() => {
+                                                        //         this.handleClickConvertToEmployee();
+                                                        //     }}>Convert to Employee
+                                                        //     </button>
+                                                        // ) : ('')
 
                                                     }
-                                                    <button className="dropdown-item" onClick={() => {
+                                                    {/* <button className="dropdown-item" onClick={() => {
                                                         this.handleClickOpenModal();
                                                     }}>Add to hotel
+                                                    </button> */}
+                                                    <button className="dropdown-item" onClick={() => {
+                                                        this.handleClickOpenVerification();
+                                                    }}>Employment Verification
                                                     </button>
                                                     {
                                                         userExist || this.state.createdProfile ? (
@@ -1597,66 +1843,83 @@ class General extends Component {
                         <br />
                         <div className="applicant-card general-table-container">
                             <div className="table-responsive">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">First</th>
-                                            <th scope="col">Last</th>
-                                            <th scope="col">Handle</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <PunchesReportDetail EmployeeId={this.state.EmployeeId} />
                             </div>
                             <br />
                             <br />
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <h5>Titles</h5>
+                                    <h5 className="float-left">Location able to work</h5>
+                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.handleClickOpenModal}>
+                                        <i class="far fa-plus-square"></i>
+                                    </button>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
-                                        <div className="btn btn-success btn-margin col-sm-12 col-md-6 col-lg-3">Banquet
-                                            Server
-                                        </div>
-                                        <div className="btn btn-success btn-margin col-sm-12 col-md-6 col-lg-3">Banquet
-                                            Server
-                                        </div>
+                                        {this.state.myHotels.map(hotel => {
+                                            return hotel.relationActive ? (
+                                                <div className="col-sm-12 col-md-6 col-lg-3">
+                                                    <ContextMenuTrigger id={HOTEL_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{clickedHotel: hotel}}>
+                                                        <div className={`border p-2 text-center rounded m-1 col text-truncate ${hotel.defaultProperty ? 'bg-info text-white border-info' : 'bg-light border-secondary'} `}>
+                                                            {hotel.Name.trim()}
+                                                            <button type="button" className="btn btn-link float-right p-0" style={{color: "red"}} onClick={() => {
+                                                                this.setState(() => ({relationToUpdate: hotel, openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
+                                                            }} >
+                                                                <i className="fas fa-trash"></i>
+                                                            </button>
+                                                        </div>                                                        
+                                                    </ContextMenuTrigger>
+                                                </div>
+                                            ) : ''                                            
+                                        })}
                                     </div>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col-sm-12">
-                                    <h5>Location able to work</h5>
+                                    <h5 className="float-left">Titles</h5>
+                                    <FeatureTag code="06be7c13-cbc8-41da-a338-3e8cd93fa935">
+                                        <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.hanldeOpenTitleModal}>
+                                            <i class="far fa-plus-square"></i>
+                                        </button>
+                                    </FeatureTag>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
-                                        <div className="btn btn-success btn-margin col-sm-12 col-md-6 col-lg-3">WJ
-                                            Marriot
-                                        </div>
-                                        <div className="btn btn-success btn-margin col-sm-12 col-md-6 col-lg-3">Downtown
-                                            Doubletree
-                                        </div>
+                                        {
+                                            this.state.idealJobs ?
+                                                this.state.idealJobs.sort(ij => ij.isDefault ? -1 : 1).map((idealJob, i) => {
+                                                    return <div className="col-sm-12 col-md-6 col-lg-3" key={i}>
+                                                        {
+                                                            idealJob.isDefault
+                                                                ? <div className="bg-info text-white border border-info p-2 text-center rounded m-1 col text-truncate">
+                                                                    {idealJob.description}
+                                                                </div>
+                                                                : <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{appIdealJob: idealJob}}>
+                                                                    <div className="bg-light border border-secondary p-2 text-center rounded m-1 col text-truncate">
+                                                                        {idealJob.description}
+                                                                    </div>
+                                                                </ContextMenuTrigger>
+                                                        }
+                                                    </div>
+                                                })
+                                                : ''
+                                        }
+                                        <FeatureTag code="5d49f1e4-89a7-4990-a90a-7617877ce573">
+                                            <ContextMenu id={TITLE_CONTEXT_MENU} onShow={t => console.log(t)}>
+                                                <MenuItem data={{ action: 'setTitleDefault' }} onClick={this.setTitleDefault}>
+                                                    Set as default
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </FeatureTag>
+                                        <ContextMenu id={HOTEL_CONTEXT_MENU} 
+                                            onShow={t => {
+                                                this.setState(_ => ({ hotelDefaultMenuText: t.detail.data.attributes.clickedHotel.defaultProperty ? 'Unassign Home Location' : 'Set as Home Location' }))
+                                            }}>
+                                            <MenuItem data={{ action: 'toggleDefaultHotel' }} onClick={this.triggerConfirmDefaultHotel}>
+                                                {this.state.hotelDefaultMenuText}                                                
+                                            </MenuItem>
+                                        </ContextMenu>                                           
                                     </div>
                                 </div>
                             </div>
@@ -1669,7 +1932,7 @@ class General extends Component {
                 {
                     renderUserDialog()
                 }
-            </div>
+            </div >
         );
     }
 }

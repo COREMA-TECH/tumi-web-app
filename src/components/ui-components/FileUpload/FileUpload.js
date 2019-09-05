@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
 import './index.css';
 import PropTypes from 'prop-types';
+import AWS from 'aws-sdk';
+
+const uuidv4 = require('uuid/v4');
 
 class FileUpload extends Component {
 	constructor(props) {
@@ -14,6 +16,41 @@ class FileUpload extends Component {
 
 		this.handleUpload = this.handleUpload.bind(this);
 	}
+
+	uploadImageToS3 = (image) => {
+		// Loading state
+		this.setState(() => ({
+			loading: true
+		}), () => {
+			let s3 = new AWS.S3(this.context.credentialsS3);
+			// Create a random file
+			let filename = `${uuidv4()}_${image.name}`;
+			let route = 'images/' + filename;
+			// Configure bucket and key
+			let params = {
+				Bucket: this.context.bucketS3,
+				Key: route,
+				contentType: image.type,
+				ACL: 'public-read',
+				Body: image
+			};
+
+			s3.upload(params, (err, data) => {
+				if (err) {
+					// Update the progress
+					this.setState(() => ({ uploadValue: 0, loading: false }));
+					this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
+				}
+				else {
+					this.setState(() => ({ uploadValue: 0, loading: false }));
+					this.props.updateURL(data.Location, filename)
+				};
+			}).on('httpUploadProgress', evt => {
+				// Update the progress
+				this.setState(() => ({ uploadValue: parseInt((evt.loaded * 100) / evt.total) }));
+			})
+		});
+	};
 
 	handleUpload(event) {
 		// Get the file selected
@@ -42,55 +79,10 @@ class FileUpload extends Component {
 			);
 			event.target.value = '';
 			event.preventDefault();
-		} else {
-			this.setState({
-				loading: true
-			});
-
-			// Build the reference based in the filename
-			const storageRef = firebase.storage().ref(`/files/${this.context.UID()}${file.name}`);
-
-			// Send the reference and save the file in Firebase Storage
-			const task = storageRef.put(file);
-
-			task.on(
-				'state_changed',
-				(snapshot) => {
-					let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
-
-					// Update the progress
-					this.setState({
-						uploadValue: percentage
-					});
-				},
-				(error) => {
-					this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
-					this.setState({
-						loading: false
-					});
-				},
-				() => {
-					storageRef.getDownloadURL().then((url) => {
-						this.setState(
-							{
-								uploadValue: 100,
-								fileURL: url
-							},
-							() => {
-								this.setState({
-									loading: false
-								});
-								this.props.updateURL(this.state.fileURL, file.name);
-							}
-						);
-					});
-				}
-			);
-		}
+		} else this.uploadImageToS3(file);
 	}
 
 	render() {
-		//console.log("This props", !this.props.url)
 		return (
 			<div className="">
 				<div className="">
@@ -143,7 +135,9 @@ class FileUpload extends Component {
 		extPdf: PropTypes.array,
 		extWord: PropTypes.array,
 		acceptAttachFile: PropTypes.string,
-		UID: PropTypes.func
+		UID: PropTypes.func,
+		credentialsS3: PropTypes.object,
+		bucketS3: PropTypes.string
 	};
 }
 FileUpload.propTypes = {

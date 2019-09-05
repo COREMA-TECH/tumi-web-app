@@ -52,8 +52,10 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
-	{ id: 'Delete', numeric: false, disablePadding: true, label: 'Actions' },
+	{ id: 'Delete', numeric: false, disablePadding: true, label: 'Actions' },	
 	{ id: 'Code_User', numeric: false, disablePadding: false, label: 'User Name' },
+	{ id: 'firstName', numeric: false, disablePadding: false, label: 'First Name' },
+	{ id: 'lastName', numeric: false, disablePadding: false, label: 'Last Name' },
 	//{ id: 'Full_Name', numeric: false, disablePadding: false, label: 'Full Name' },
 	{ id: 'Electronic_Address', numeric: false, disablePadding: false, label: 'Email' },
 	{ id: 'Phone_Number', numeric: false, disablePadding: false, label: 'Phone Number' },
@@ -319,10 +321,7 @@ const styles = (theme) => ({
 	tableWrapper: {
 		overflowX: 'auto'
 	},
-	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		},
+	row: {		
 		'&:hover': {
 			cursor: 'pointer'
 		}
@@ -418,83 +417,86 @@ class UsersTable extends React.Component {
 			<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-success" icon="wow" />;
 		}
 		return (
-			<Paper className={classes.root}>
-				<Table className={classes.table}>
-					<EnhancedTableHead
-						numSelected={selected.length}
-						order={order}
-						orderBy={orderBy}
-						onSelectAllClick={this.handleSelectAllClick}
-						onRequestSort={this.handleRequestSort}
-						rowCount={items.length}
-					/>
+			<React.Fragment>
+				
+					<Table className={classes.table}>
+						<EnhancedTableHead
+							numSelected={selected.length}
+							order={order}
+							orderBy={orderBy}
+							onSelectAllClick={this.handleSelectAllClick}
+							onRequestSort={this.handleRequestSort}
+							rowCount={items.length}
+						/>
 
-					<TableBody>
-						{this.getSortedItems(this.state.items, order, orderBy)
-							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-							.map((row) => {
-								return (
-									<TableRow
-										hover
-										className={classes.row}
-										key={uuidv4()}
-										onClick={() => {
-											return this.props.onEditHandler({ ...row });
-										}}
-									>
-										<CustomTableCell component="th">
-											<Tooltip title="Edit">
-												<button
-													className="btn btn-success ml-1 float-left"
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onEditHandler({ ...row });
-													}}
-												>
-													<i className="fas fa-pen" />
-												</button>
-											</Tooltip>
-											<Tooltip title="Delete">
-												<button
-													className="btn btn-danger float-left ml-1"
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onDeleteHandler(row.Id);
-													}}
-												>
-													<i className="fas fa-trash" />
-												</button>
-											</Tooltip>
-										</CustomTableCell>
-
-										<CustomTableCell>{row.Code_User}</CustomTableCell>
-										<CustomTableCell>{row.Electronic_Address}</CustomTableCell>
-										<CustomTableCell>{row.Phone_Number}</CustomTableCell>
-										<CustomTableCell>{row.role ? row.role.Description : ''}</CustomTableCell>
-										<CustomTableCell>{row.language ? row.language.DisplayLabel : ''}</CustomTableCell>
-									</TableRow>
-								);
-							})}
-					</TableBody>
-					<TableFooter>
-						<TableRow>
-							{items.length > 0 && (
-								<TablePagination
-									colSpan={3}
-									count={items.length}
-									rowsPerPage={rowsPerPage}
-									page={page}
-									onChangePage={this.handleChangePage}
-									onChangeRowsPerPage={this.handleChangeRowsPerPage}
-									ActionsComponent={TablePaginationActionsWrapped}
-								/>
-							)}
-						</TableRow>
-					</TableFooter>
-				</Table>
-			</Paper>
+						<TableBody>
+							{this.getSortedItems(this.state.items, order, orderBy)
+								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+								.map((row) => {
+									return (
+										<TableRow
+											hover
+											className={classes.row}
+											key={uuidv4()}
+											onClick={() => {
+												return this.props.onEditHandler({ ...row });
+											}}
+										>
+											<CustomTableCell component="th">
+												<Tooltip title="Edit">
+													<button
+														className="btn btn-success ml-1 float-left"
+														disabled={this.props.loading}
+														onClick={(e) => {
+															e.stopPropagation();
+															return this.props.onEditHandler({ ...row });
+														}}
+													>
+														<i className="fas fa-pen" />
+													</button>
+												</Tooltip>
+												<Tooltip title="Delete">
+													<button
+														className="btn btn-danger float-left ml-1"
+														disabled={this.props.loading}
+														onClick={(e) => {
+															e.stopPropagation();
+															return this.props.onDeleteHandler(row.Id);
+														}}
+													>
+														<i className="fas fa-trash" />
+													</button>
+												</Tooltip>
+											</CustomTableCell>
+											<CustomTableCell>{row.Code_User}</CustomTableCell>
+											<CustomTableCell>{row.firstName ? row.firstName : ''}</CustomTableCell>
+											<CustomTableCell>{row.lastName ? row.lastName: ''}</CustomTableCell>
+											<CustomTableCell>{row.Electronic_Address}</CustomTableCell>
+											<CustomTableCell>{row.Phone_Number}</CustomTableCell>
+											<CustomTableCell>{row.role ? row.role.Description : ''}</CustomTableCell>
+											<CustomTableCell>{row.language ? row.language.DisplayLabel : ''}</CustomTableCell>
+										</TableRow>
+									);
+								})}
+						</TableBody>
+						<TableFooter>
+							<TableRow>
+								{items.length > 0 && (
+									<TablePagination
+										colSpan={1}
+										count={items.length}
+										rowsPerPage={rowsPerPage}
+										page={page}
+										onChangePage={this.handleChangePage}
+										onChangeRowsPerPage={this.handleChangeRowsPerPage}
+										ActionsComponent={TablePaginationActionsWrapped}
+									/>
+								)}
+							</TableRow>
+						</TableFooter>
+					</Table>
+				
+			</React.Fragment>
 		);
 	}
 }

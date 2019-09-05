@@ -14,7 +14,7 @@ import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
 import LocationForm from '../../ui-components/LocationForm'
 import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
+import moment from 'moment';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -101,6 +101,7 @@ class Application extends Component {
         insertDialogLoading: false,
         graduated: false,
         previousEmploymentPhone: '',
+        sendInterview: false,
 
         // Application id property state is used to save languages, education, mulitary services, skills
         applicationId: null,
@@ -109,10 +110,16 @@ class Application extends Component {
 
         loading: false,
         idRecruiter: localStorage.getItem('LoginId'),
-        date: new Date().toISOString().substring(0, 10),
+        date: moment().local().format("MM/DD/YYYY"),
+        dateCreation: moment().local().format("MM/DD/YYYY"),
 
         positions: [],
-        positionsCatalogs: []
+        positionsCatalogs: [],
+        positionCatalogTag: [],
+        positionFilterList: []
+        // cellPhoneValid: false,
+        //lastNameValid: false,
+        // firstNameValid: false,
 
 
     }
@@ -180,9 +187,10 @@ class Application extends Component {
         if (
             this.state.firstName == '' ||
             this.state.lastName == '' ||
-            this.state.zipCode == ''
+            this.state.zipCode == '' ||
+            this.state.cellPhone == ''
         ) {
-            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
+            this.props.handleOpenSnackbar('warning', 'the first name, last name, Zipcode, Cell Phone are required');
         } else {
             this.setState(
                 {
@@ -199,6 +207,7 @@ class Application extends Component {
                                     lastName: this.state.lastName,
                                     lastName2: this.state.lastName2,
                                     date: this.state.date,
+                                    dateCreation: this.state.dateCreation,
                                     aptNumber: this.state.aptNumber,
                                     city: this.state.city,
                                     state: this.state.state,
@@ -215,15 +224,19 @@ class Application extends Component {
                                     comment: this.state.comment,
                                     generalComment: this.state.generalComment,
                                     isLead: true,
-                                    idRecruiter: parseInt(this.state.idRecruiter),
-                                    UserId: localStorage.getItem('LoginId')
-                                }
+                                    idRecruiter: localStorage.getItem('LoginId'),
+                                    UserId: localStorage.getItem('LoginId'),
+                                    sendInterview: this.state.sendInterview
+                                },
+                                codeuser: localStorage.getItem('LoginId'),
+                                nameUser: localStorage.getItem('FullName')
                             }
                         })
                         .then(({ data }) => {
                             localStorage.setItem('idApplication', data.addApplication.id);
                             this.setState({
-                                editing: false
+                                editing: false,
+                                insertDialogLoading: false
                             }, () => {
                                 let object = [];
                                 this.state.positionsTags.map(item => {
@@ -235,6 +248,7 @@ class Application extends Component {
                                 });
 
                                 this.addApplicantJobs(object, parseInt(data.addApplication.id));
+                                this.props.SetValidate(false)
                             });
 
                             this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
@@ -242,6 +256,7 @@ class Application extends Component {
                             // this.props.updateIdApplication(data.addAplication.id);
                         })
                         .catch((error) => {
+                            this.setState(() => ({ insertDialogLoading: false }));
                             this.props.handleOpenSnackbar(
                                 'error',
                                 'Error to insert aplicant information. Please, try again!',
@@ -258,10 +273,12 @@ class Application extends Component {
         if (
             this.state.firstName == '' ||
             this.state.lastName == '' ||
-            this.state.zipCode == ''
+            this.state.zipCode == '' ||
+            this.state.cellPhone == ''
         ) {
             this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
         } else {
+            console.log(this.state.sendInterview,'hola')
             this.setState(
                 {
                     insertDialogLoading: true
@@ -299,13 +316,17 @@ class Application extends Component {
                                     convictedExplain: this.state.convictedExplain,
                                     generalComment: this.state.generalComment,
                                     isLead: true,
-                                    idRecruiter: parseInt(this.state.idRecruiter)
-                                }
+                                    idRecruiter: parseInt(this.state.idRecruiter),
+                                    sendInterview: this.state.sendInterview
+                                },
+                                codeuser: localStorage.getItem('LoginId'),
+                                nameUser: localStorage.getItem('FullName')
                             }
                         })
                         .then(({ data }) => {
                             this.setState({
-                                editing: false
+                                editing: false,
+                                insertDialogLoading: false
                             }, () => {
                                 let object = [];
                                 this.state.positionsTags.map(item => {
@@ -317,11 +338,13 @@ class Application extends Component {
                                 });
 
                                 this.addApplicantJobs(object, this.props.applicationId);
+                                this.props.SetValidate(false)
                             });
 
                             this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                         })
                         .catch((error) => {
+                            this.setState(() => ({ insertDialogLoading: false }));
                             this.props.handleOpenSnackbar(
                                 'error',
                                 'Error to update aaplicant information. Please, try again!',
@@ -392,14 +415,17 @@ class Application extends Component {
                                     zipCode: applicantData.zipCode,
                                     homePhone: applicantData.homePhone,
                                     cellPhone: applicantData.cellPhone,
+                                    dateCreation: applicantData.dateCreation ? moment(applicantData.dateCreation).utc().format('MM/DD/YYYY') : '',
                                     positionApplyingFor: applicantData.positionApplyingFor == null ? 0 : applicantData.positionApplyingFor,
                                     car: applicantData.car,
                                     generalComment: applicantData.generalComment,
+                                    sendInterview: applicantData.sendInterview,
                                     editing: false
                                 },
                                 () => {
                                     // this.removeSkeletonAnimation();
                                     this.getIdealJobsByApplicationId();
+                                    this.getPositionsCatalogs();
                                 }
                             );
                         }
@@ -468,7 +494,8 @@ class Application extends Component {
                     positions: data.workOrder
                 }, () => {
                     this.setState({
-                        loading: false
+                        loading: false,
+                        positionFilterList: this.getPositionFilterList()
                     })
                 });
             })
@@ -481,6 +508,39 @@ class Application extends Component {
                 );
             })
     };
+
+    getPositionFilterList = _ => {
+        const positions = this.state.positions.map(item => {
+            return { value: item.id, label: `${item.position.Position.trim()} ${item.BusinessCompany.Code.trim()}` }
+        });
+
+        const options = [
+            { value: '', label: "Select a Position" },
+            { value: 0, label: "Open Position" },
+            ...positions
+        ];
+
+        return options;
+    }
+
+    handlePositionFilterChange = ({ value }) => {
+        this.setState({
+            positionApplyingFor: value
+        });
+    }
+
+    findSelectedPosition = position => {
+        const defValue = { value: '', label: 'Select a Position' };
+
+        if (!position)
+            return defValue;
+
+        const found = this.state.positions.find(item => {
+            return item.id === position;
+        });
+
+        return found ? { value: found.id, label: `${found.position.Position} ${found.BusinessCompany.Code.trim()}` } : defValue;
+    }
 
     getPositionsCatalogs = () => {
         this.props.client
@@ -489,19 +549,13 @@ class Application extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                this.setState({
-                    positionsCatalogs: data.getcatalogitem
-                }, () => {
-                    let options = [];
-                    this.state.positionsCatalogs.map((item) => (
-                        options.push({ value: item.Id, label: item.Description, key: item.Id })
-                    ));
-                    this.setState({
-                        positionCatalogTag: options
-                    });
-                    this.setState({
-                        loading: false
-                    })
+                let dataAPI = data.getcatalogitem;
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        positionCatalogTag: [...prevState.positionCatalogTag, {
+                            value: item.Id, label: item.Description.trim(), key: item.Id
+                        }]
+                    }))
                 });
             })
             .catch(error => {
@@ -514,36 +568,12 @@ class Application extends Component {
             })
     };
 
-    // To validate all the inputs and set a red border when the input is invalid
-    /*validateInvalidInput = () => {
-        if (document.addEventListener) {
-            document.addEventListener(
-                'invalid',
-                (e) => {
-                    e.target.className += ' invalid-apply-form';
-                },
-                true
-            );
-        }
-    };*/
-
-    // To show skeleton animation in css
-    /*removeSkeletonAnimation = () => {
-        let inputs, index;
-
-        inputs = document.getElementsByTagName('span');
-        for (index = 0; index < inputs.length; ++index) {
-            inputs[index].classList.remove('skeleton');
-        }
-    };
-*/
     componentWillMount() {
         if (this.props.applicationId > 0) {
             this.getHotels(() => {
                 this.getApplicationById(this.props.applicationId);
             });
         }
-        //this.removeSkeletonAnimation();
 
         if (this.props.applicationId == 0) {
             this.setState({
@@ -578,12 +608,12 @@ class Application extends Component {
     }
 
     render() {
-
         return (
             <div className="Apply-container-application">
                 <div className="applicant-card">
                     <div className="applicant-card__header">
                         <span className="applicant-card__title">{menuSpanish[0].label}</span>
+
                         {!this.state.editing && <button
                             className="applicant-card__edit-button"
                             onClick={() => {
@@ -593,38 +623,89 @@ class Application extends Component {
                             }}
                             disabled={this.state.searchigZipcode}
                         >
-                            {spanishActions[1].label} <i className="far fa-edit" />
+                            {spanishActions[1].label}<i className="far fa-edit" />
                         </button>
                         }
                     </div>
-                    <br />
+                   
                     <div className="card-body">
                         <div className="row">
+                            <div className="col-md-12 col-lg-6"></div>
+                            <div className="col-md-12 col-lg-6"><div className="row">
+                                <div className="col-md-6">
+                                </div>
+                                <div className="col-md-6">
+                                    <span className="primary applicant-card__label ">
+                                        Send to Interview
+                                        </span>
+                                    <div className="onoffswitch">
+                                        <input
+                                            id="sendInterview"
+                                            className="onoffswitch-checkbox"
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    sendInterview: event.target.checked
+                                                });
+                                            }}
+                                            checked={this.state.sendInterview}
+                                            value={this.state.sendInterview}
+                                            name="sendInterview"
+                                            type="checkbox"
+                                            disabled={!this.state.editing}
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="10"
+                                        />
+                                        <label className="onoffswitch-label" htmlFor="sendInterview">
+                                            <span className="onoffswitch-inner" />
+                                            <span className="onoffswitch-switch" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+
+
                             <div className="col-md-12 col-lg-6 form-section-1">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[25].label}
+                                        </span>
+                                        <input
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    firstName: event.target.value
+                                                },
+                                                    () => {
+                                                        this.props.SetFirstName(this.state)
+                                                    }
+                                                );
+
+                                            }}
+                                            value={this.state.dateCreation}
+                                            name="dateCreation"
+                                            type="text"
+                                            className="form-control"
+                                            disabled={true}
+                                        />
+                                    </div>
+                                </div>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">
                                             {formSpanish[16].label}
                                         </span>
-                                        <select
-                                            name="positionApply"
-                                            id="positionApply"
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    positionApplyingFor: event.target.value
-                                                });
-                                            }}
-                                            value={this.state.positionApplyingFor}
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                        >
-                                            <option value="">Select a position</option>
-                                            <option value="0">Open Position</option>
-                                            {this.state.positions.map((item) => (
-                                                <option
-                                                    value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
-                                            ))}
-                                        </select>
+                                        <Select
+                                            options={this.state.positionFilterList}
+                                            value={this.findSelectedPosition(this.state.positionApplyingFor)}
+                                            onChange={this.handlePositionFilterChange}
+                                            closeMenuOnSelect={true}
+                                            components={makeAnimated()}
+                                            isMulti={false}
+                                            isDisabled={!this.state.editing}
+                                        />
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label">
@@ -651,7 +732,12 @@ class Application extends Component {
                                             onChange={(event) => {
                                                 this.setState({
                                                     firstName: event.target.value
-                                                });
+                                                },
+                                                    () => {
+                                                        this.props.SetFirstName(this.state)
+                                                    }
+                                                );
+
                                             }}
                                             value={this.state.firstName}
                                             name="firstName"
@@ -692,7 +778,10 @@ class Application extends Component {
                                             onChange={(event) => {
                                                 this.setState({
                                                     lastName: event.target.value
-                                                });
+                                                },
+                                                    () => {
+                                                        this.props.SetLastName(this.state)
+                                                    });
                                             }}
                                             value={this.state.lastName}
                                             name="lastName"
@@ -748,6 +837,7 @@ class Application extends Component {
                                         placeholder="99999-99999"
                                         mask="99999-99999"
                                         updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
+
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[23].label}
@@ -804,7 +894,7 @@ class Application extends Component {
                                     </div>
                                     <div className="col-md-6 ">
                                         <span className="primary applicant-card__label ">
-                                            {formSpanish[10].label}
+                                            * {formSpanish[10].label}
                                         </span>
                                         <InputMask
                                             id="cell-number"
@@ -817,8 +907,12 @@ class Application extends Component {
                                             onChange={(event) => {
                                                 this.setState({
                                                     cellPhone: event.target.value
-                                                });
+                                                },
+                                                    () => {
+                                                        this.props.SetCellPhone(this.state)
+                                                    });
                                             }}
+                                            required
                                             placeholder="+(___) ___-____"
                                             minLength="15"
                                         />
@@ -839,7 +933,6 @@ class Application extends Component {
                                             className="form-control"
                                             disabled={!this.state.editing}
                                             min="0"
-                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                             maxLength="50"
                                             minLength="8"
                                         />
@@ -866,6 +959,8 @@ class Application extends Component {
                                             className="form-control textarea-apply-form"
                                         />
                                     </div>
+
+
                                 </div>
                             </div>
                         </div>
@@ -898,9 +993,9 @@ class Application extends Component {
                                         this.updateApplicationInformation(this.props.applicationId);
                                     }
                                 }}
-                                className="applicant-card__save-button" disabled={this.state.searchigZipcode}>
+                                className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
                                 {spanishActions[4].label}
-
+                                {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
                             </button>
                         </div>
                     ) : (

@@ -20,10 +20,9 @@ import InputMask from 'react-input-mask';
 import 'ui-components/InputForm/index.css';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
-import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import withGlobalContent from 'Generic/Global';
-import ErrorMessageComponent from "../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
-import TablesContracts from "../../Contract/Main/MainContract/TablesContracts";
+import {GET_USER_APPLICATION, GET_USER_CONTACT} from './Queries';
+import {UPDATE_APPLICATION_INFO, UPDATE_CONTACT_INFO} from './Mutations';
 
 const styles = (theme) => ({
     container: {
@@ -304,7 +303,10 @@ class Catalogs extends React.Component {
         lastNameValid: true,
 
         firstName: '',
-        lastName: ''
+        lastName: '',
+
+        userContact: {},
+        userApplication: {}
     };
 
     constructor(props) {
@@ -374,7 +376,22 @@ class Catalogs extends React.Component {
     };
 
     onChangeHandler(value, name) {
-        this.setState({ [name]: value }, this.validateField(name, value));
+        let username;
+
+
+        this.setState({
+            [name]: value
+        }, () => {
+            this.validateField(name, value);
+            if (name == "firstName" || name == "lastName") {
+                let random = Math.floor(Math.random() * 10000);
+                if (random.toString().length <= 3) {
+                    random = `${random}${Math.floor(Math.random() * 10)}`;
+                }
+                username = this.state.firstName.slice(0, 1) + this.state.lastName + random;
+                this.setState({ username: username });
+            }
+        });
     }
 
     onBlurHandler(e) {
@@ -618,6 +635,39 @@ class Catalogs extends React.Component {
     handleConfirmAlertDialog = () => {
         this.deleteUser();
     };
+
+    fetchUserApplication = userId => {
+        this.props.client.query({
+            query: GET_USER_APPLICATION,
+            fetchPolicy: 'no-cache',
+            variables: {
+                Id: userId
+            }
+        })
+
+        .then(({data}) => {
+            this.setState(_ => ({
+                userApplication: data.userApplication
+            }));
+        })
+    }
+
+    fetchUserContact = userId => {
+        this.props.client.query({
+            query: GET_USER_CONTACT,
+            fetchPolicy: 'no-cache',
+            variables: {
+                Id: userId
+            }
+        })
+
+        .then(({data}) => {
+            this.setState(_ => ({
+                userContact: data.userContact
+            }))
+        })
+    }
+
     onEditHandler = ({
         Id,
         Id_Contact,
@@ -640,7 +690,8 @@ class Catalogs extends React.Component {
         IdSchedulesManager,
         firstName,
         lastName
-    }) => {
+    }) => 
+    {
         this.setState({ showCircularLoading: false }, () => {
             this.setState(
                 {
@@ -686,8 +737,11 @@ class Catalogs extends React.Component {
                     idLanguageHasValue: true,
                     openModal: true,
                     buttonTitle: this.TITLE_EDIT
-                },
-                this.focusTextInput,
+                }, _ => {
+                    this.fetchUserApplication(Id);
+                    this.fetchUserContact(Id);
+                    this.focusTextInput();
+                }
             );
         });
     };
@@ -876,74 +930,136 @@ class Catalogs extends React.Component {
 
         return { isEdition: isEdition, query: query, id: this.state.idToEdit };
     };
+
+    updateUserApplication = (user) => {
+
+        if(!this.state.userApplication || !user)
+            return;
+
+        this.props.client.mutate({
+            mutation: UPDATE_APPLICATION_INFO,
+            variables: {
+                codeuser: localStorage.getItem('LoginId'),
+                nameUser: localStorage.getItem('FullName'),
+                application: {
+                    id: this.state.userApplication.id,
+                    firstName: user.firstName.trim(),
+                    lastName: user.lastName.trim(),
+                    emailAddress: user.Electronic_Address.trim(),
+                    cellPhone: user.Phone_Number.trim(),
+                    idLanguage: user.Id_Language
+                }
+            }
+        })
+
+        .then(({ data }) => {
+            this.props.handleOpenSnackbar("success", "User Application updated!");
+        })
+
+        .catch(error => {
+            this.props.handleOpenSnackbar("error", `Error to update application: ${error}`);
+        })
+    }
+
+    updateUserContact = (user) => {
+        if(!this.state.userContact || !user)
+            return;
+
+        this.props.client.mutate({
+            mutation: UPDATE_CONTACT_INFO,
+            variables: {
+                contact: {
+                    Id: this.state.userContact.Id,
+                    First_Name: user.firstName.trim(),
+                    Last_Name: user.lastName.trim(),
+                    Electronic_Address: user.Electronic_Address.trim(),
+                    Phone_Number: user.Phone_Number.trim(),
+                }
+            }
+        })
+
+        .then(({ data }) => {
+            this.props.handleOpenSnackbar("success", "User Contact info updated!");
+        })
+
+        .catch(error => {
+            this.props.handleOpenSnackbar("error", `Error to update contact: ${error}`);
+        })
+    }
+
     insertUser = () => {
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
-        this.setState(
-            {
-                loading: true
-            },
-            () => {
-                var user = {
-                    Id_Entity: 1,
-                    Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
-                    Id_Roles: this.state.idRol,
-                    Code_User: this.state.username,
-                    Full_Name: this.state.firstName + ' ' + this.state.lastName,
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    Electronic_Address: this.state.email,
-                    Phone_Number: this.state.number,
-                    Id_Language: this.state.idLanguage,
-                    IsAdmin: this.state.isAdmin ? 1 : 0,
-                    AllowDelete: this.state.allowDelete ? 1 : 0,
-                    AllowInsert: this.state.allowInsert ? 1 : 0,
-                    AllowEdit: this.state.allowEdit ? 1 : 0,
-                    AllowExport: this.state.allowExport ? 1 : 0,
-                    IsRecruiter: this.state.IsRecruiter,
-                    isEmployee: this.state.isEmployee,
-                    IdRegion: this.state.IdRegion,
-                    IsActive: this.state.IsActive ? 1 : 0,
-                    User_Created: 1,
-                    User_Updated: 1,
-                    Date_Created: new Date().toDateString(),
-                    Date_Updated: new Date().toDateString(),
-                    IdSchedulesEmployees: parseInt(this.state.IdSchedulesEmployees),
-                    IdSchedulesManager: parseInt(this.state.IdSchedulesManager),
-                }
-                if (isEdition) user = { ...user, Id: id }
-                this.props.client
-                    .mutate({
-                        mutation: query,
-                        variables: {
-                            user
-                        }
-                    })
-                    .then((data) => {
-                        if (this.state.idToEdit == null) {
-                            this.sendMail();
-                        }
-                        this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
 
-                        this.setState({ openModal: false, showCircularLoading: true }, () => {
-                            this.loadUsers(() => {
-                                this.loadContacts(() => {
-                                    this.loadRoles(() => {
-                                        this.loadLanguages(this.resetState);
-                                    });
+        this.setState({
+            loading: true
+        }, () => {
+            var user = {
+                Id_Entity: 1,
+                Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
+                Id_Roles: this.state.idRol,
+                Code_User: this.state.username,
+                Full_Name: this.state.firstName + ' ' + this.state.lastName,
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                Electronic_Address: this.state.email,
+                Phone_Number: this.state.number,
+                Id_Language: this.state.idLanguage,
+                IsAdmin: this.state.isAdmin ? 1 : 0,
+                AllowDelete: this.state.allowDelete ? 1 : 0,
+                AllowInsert: this.state.allowInsert ? 1 : 0,
+                AllowEdit: this.state.allowEdit ? 1 : 0,
+                AllowExport: this.state.allowExport ? 1 : 0,
+                IsRecruiter: this.state.IsRecruiter,
+                isEmployee: this.state.isEmployee,
+                IdRegion: null,
+                IsActive: this.state.IsActive ? 1 : 0,
+                User_Created: 1,
+                User_Updated: 1,
+                Date_Created: new Date().toDateString(),
+                Date_Updated: new Date().toDateString(),
+                IdSchedulesEmployees: parseInt(this.state.IdSchedulesEmployees),
+                IdSchedulesManager: parseInt(this.state.IdSchedulesManager),
+            }
+            if (isEdition) {
+                user = { ...user, Id: id }
+                this.updateUserApplication(user);
+                this.updateUserContact(user);
+            }
+            this.props.client
+                .mutate({
+                    mutation: query,
+                    variables: {
+                        user
+                    }
+                })
+                .then((data) => {
+                    if (this.state.idToEdit == null) {
+                        this.sendMail();
+                    } else {
+                        
+                    }
+                    this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
+
+                    this.setState({ openModal: false, showCircularLoading: true }, () => {
+                        this.loadUsers(() => {
+                            this.loadContacts(() => {
+                                this.loadRoles(() => {
+                                    this.loadLanguages(this.resetState);
                                 });
                             });
                         });
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            isEdition ? 'Error: Updating User: ' + error : 'Error: Inserting User: ' + error
-                        );
-                        this.setState({
-                            loading: false
-                        });
                     });
-            }
+                })
+                .catch((error) => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        isEdition ? 'Error: Updating User: ' + error : 'Error: Inserting User: ' + error
+                    );
+                    this.setState({
+                        loading: false
+                    });
+                });
+        }
         );
     };
     deleteUser = () => {
@@ -987,6 +1103,25 @@ class Catalogs extends React.Component {
             }
         );
     };
+
+    getApplicationByEmployees = () => {
+        this.props.client.query({
+            query: this.SEND_EMAIL,
+            variables: {
+                username: this.state.username,
+                password: `TEMP`,
+                email: this.state.email,
+                title: `Credential Information`
+            }
+        }).then((data) => {
+            this.props.handleOpenSnackbar('success', 'Email Sent!');
+        }).catch((error) => {
+            this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);
+            this.setState({
+                loadingConfirm: false
+            });
+        });
+    }
 
     sendMail = () => {
         this.setState(
@@ -1100,27 +1235,27 @@ class Catalogs extends React.Component {
     };
 
     searchUsers = (filterText) => {
-        let allUser = this.state.allData.filter((_, i) => {
-            if (filterText === "") {
-                return true;
-            }
+        const allUser = filterText === "" 
+            ? this.state.allData 
+            : this.state.allData
+                .filter((_, i) => {
+                    if( this.checkForSubstring(_.Code_User, filterText) || this.checkForSubstring(_.firstName, filterText) || this.checkForSubstring(_.lastName, filterText) ){
+                        return true;
+                    }           
+                });
 
-            if (
-                _.Code_User.indexOf(filterText) > -1 ||
-                _.Code_User
-                    .toLocaleLowerCase()
-                    .indexOf(filterText) > -1 ||
-                _.Code_User
-                    .toLocaleUpperCase()
-                    .indexOf(filterText) > -1
-            ) {
-                return true;
-            }
-        });
         this.setState(prevState => ({
             data: allUser
         }));
     };
+
+    checkForSubstring = (mainText, substring) => {
+        if(!mainText){
+            return false;
+        }
+
+        return mainText.toLocaleLowerCase().includes(substring.toLocaleLowerCase());
+    }
 
     filterChangeHandler = (e) => {
         let value = e.target.value;
@@ -1195,7 +1330,6 @@ class Catalogs extends React.Component {
                             <div className="row">
                                 <div className="col-lg-12">
                                     <div className="row">
-
                                         <div className="col-md-12 col-lg-6">
                                             <label>* First Name</label>
                                             <InputForm
@@ -1210,8 +1344,8 @@ class Catalogs extends React.Component {
                                         <div className="col-md-12 col-lg-6">
                                             <label>* Last Name</label>
                                             <InputForm
-                                                id="firstName"
-                                                name="firstName"
+                                                id="lastName"
+                                                name="lastName"
                                                 maxLength="15"
                                                 value={this.state.lastName}
                                                 error={!this.state.lastNameValid}
@@ -1227,6 +1361,7 @@ class Catalogs extends React.Component {
                                                 value={this.state.username}
                                                 error={!this.state.usernameValid}
                                                 change={(value) => this.onChangeHandler(value, 'username')}
+                                                disabled={true}
                                             />
                                         </div>
                                         <div className="col-md-12 col-lg-6">
@@ -1297,6 +1432,7 @@ class Catalogs extends React.Component {
                                                     <option
                                                         key={item.Id}
                                                         value={item.Id}
+                                                        disabled={item.Id == 199 ? "disabled" : ""}
                                                     >
                                                         {item.Name}
                                                     </option>
@@ -1306,7 +1442,7 @@ class Catalogs extends React.Component {
 
 
 
-                                        <div className="col-md-9 col-lg-6">
+                                        {/* <div className="col-md-9 col-lg-6">
                                             <label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
                                             <AutosuggestInput
                                                 id="IdRegion"
@@ -1323,7 +1459,7 @@ class Catalogs extends React.Component {
                                                 }}
                                             />
 
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
 
@@ -1388,7 +1524,7 @@ class Catalogs extends React.Component {
                 </Dialog>
 
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-4 col-xl-2">
                         <div className="input-group mb-3">
                             <div className="input-group-prepend">
                                 <span className="input-group-text" id="basic-addon1">
@@ -1404,7 +1540,7 @@ class Catalogs extends React.Component {
                             />
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 offset-md-2 offset-xl-4">
                         <button className="float-right btn btn-success mr-1" onClick={this.handleClickOpenModal}
                             disabled={isLoading}>
                             Add User<i className="fas fa-plus ml-2" />
@@ -1415,15 +1551,17 @@ class Catalogs extends React.Component {
                     <div className="col-md-12">
                         <div className="">
                             <div className="row">
-                                <div className="col-md-12">
-                                    <div className="">
-                                        <UsersTable
-                                            data={this.state.data}
-                                            loading={this.state.showCircularLoading && isLoading}
-                                            onEditHandler={this.onEditHandler}
-                                            onDeleteHandler={this.onDeleteHandler}
-                                        />
-                                    </div>
+                                <div className="col-md-12"> 
+                                    <div className="card">
+                                        <div className="card-body tumi-forcedResponsiveTable">
+                                            <UsersTable
+                                                data={this.state.data}
+                                                loading={this.state.showCircularLoading && isLoading}
+                                                onEditHandler={this.onEditHandler}
+                                                onDeleteHandler={this.onDeleteHandler}
+                                            />                                        
+                                        </div>
+                                    </div>                                  
                                 </div>
                             </div>
                         </div>

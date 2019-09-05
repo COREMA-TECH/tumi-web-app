@@ -1,0 +1,87 @@
+@media (min-width: 320px) {
+    .reset-password-container {
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(90deg, #3da2c7, #0092bd);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 300;
+    }
+
+    .reset-password-form {
+        width: 80%;
+        height: 55%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFFFFF;
+        border-radius: 5px;
+
+        padding: 2.5em;
+    }
+
+    .reset-password-title {
+        font-weight: 100;
+        color: #3da2c7;
+    }
+
+    .reset-password-container h1 {
+        text-align: center;
+    }
+
+    .input-reset-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+
+        position: relative;
+    }
+
+    .btn-reset-password {
+        width: 100%;
+    }
+
+    .invalid-input:required:invalid {
+        border: 1px solid #cd0045;
+    }
+
+    .invalid-input:required:invalid + i {
+        color: #cd0045;
+    }
+
+    .invalid-password {
+        border: 1px solid #cd0045 !important;
+    }
+
+    .invalid-password + i {
+        color: #cd0045 !important;
+    }
+
+    .input-reset-container i {
+        position: absolute;
+        top: 60%;
+        right: 10px;
+        color: #777777;
+
+        cursor: pointer;
+    }
+}
+
+@media (min-width: 768px){
+    .reset-password-form {
+        width: 50%;
+        height: 55%;
+    }
+}
+
+@media (min-width: 992px){
+    .reset-password-form {
+        width: 30%;
+        height: 55%;
+    }
+}
+

@@ -71,3 +71,17 @@
 .previous-employment-card__remove-button:hover {
     color: #0093FF;
 }
+
+.previous-employment-card__edit-button {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    color: #bbbbbb;
+    cursor: pointer;
+
+    transition: all .450s;
+}
+
+.previous-employment-card__edit-button:hover {
+    color: #0093FF;
+}

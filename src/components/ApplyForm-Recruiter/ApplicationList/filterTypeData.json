@@ -1,0 +1,14 @@
+[
+	{
+		"value": "W",
+		"label": "By week"
+	},
+	{
+		"value": "M",
+		"label": "By month"
+	},
+	{
+		"value": "C",
+		"label": "Custom date range"
+	}
+]

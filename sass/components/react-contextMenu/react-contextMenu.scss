@@ -1,0 +1,90 @@
+$color_1: #373a3c;
+$color_2: #fff;
+$color_3: #878a8c;
+$background_color_1: #fff;
+$background_color_2: #20a0ff;
+$background_color_3: transparent;
+$border_color_1: #20a0ff;
+$border_color_2: rgba(0, 0, 0, 0.15);
+
+.react-contextmenu {
+	background-color: $background_color_1;
+	background-clip: padding-box;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 0.25rem;
+	color: $color_1;
+	font-size: 16px;
+	margin: 2px 0 0;
+	min-width: 160px;
+	outline: none;
+	opacity: 0;
+	padding: 5px 0;
+	pointer-events: none;
+	text-align: left;
+	transition: opacity 250ms ease !important;
+}
+.react-contextmenu.react-contextmenu--visible {
+	opacity: 1;
+	pointer-events: auto;
+	z-index: 9999;
+}
+.react-contextmenu-item {
+	background: 0 0;
+	border: 0;
+	color: $color_1;
+	cursor: pointer;
+	font-weight: 400;
+	line-height: 1.5;
+	padding: 3px 20px;
+	text-align: inherit;
+	white-space: nowrap;
+}
+.react-contextmenu-item.react-contextmenu-item--active {
+	color: $color_2;
+	background-color: $background_color_2;
+	border-color: $border_color_1;
+	text-decoration: none;
+}
+.react-contextmenu-item.react-contextmenu-item--selected {
+	color: $color_2;
+	background-color: $background_color_2;
+	border-color: $border_color_1;
+	text-decoration: none;
+}
+.react-contextmenu-item.react-contextmenu-item--disabled {
+	background-color: $background_color_3;
+	border-color: $border_color_2;
+	color: $color_3;
+	&:hover {
+		background-color: $background_color_3;
+		border-color: $border_color_2;
+		color: $color_3;
+	}
+}
+.react-contextmenu-item--divider {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+	cursor: inherit;
+	margin-bottom: 3px;
+	padding: 2px 0;
+	&:hover {
+		background-color: $background_color_3;
+		border-color: $border_color_2;
+	}
+}
+.react-contextmenu-item.react-contextmenu-submenu {
+	padding: 0;
+	>.react-contextmenu-item {
+		&:after {
+			content: "▶";
+			display: inline-block;
+			position: absolute;
+			right: 7px;
+		}
+	}
+}
+.example-multiple-targets {
+	&::after {
+		content: attr(data-count);
+		display: block;
+	}
+}

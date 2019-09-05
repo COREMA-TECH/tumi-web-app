@@ -14,11 +14,14 @@ import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableBody from '@material-ui/core/TableBody/TableBody';
 import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
-import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import Tooltip from '@material-ui/core/Tooltip';
-import { GET_COMPLETED_STATUS } from "./Queries";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import ProfilePreview from "../Application/ProfilePreview/ProfilePreview"; //"./ProfilePreview/ProfilePreview";
+import UserFormModal from '../../ui-components/UserForm/UserApplicationForm';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -121,7 +124,7 @@ const styles = (theme) => ({
     },
     row: {
         '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.background.default
+            backgroundColor: '#fff'
         },
         '&:hover': {
             cursor: 'pointer'
@@ -146,10 +149,18 @@ class ApplicationTable extends React.Component {
     state = {
         page: 0,
         rowsPerPage: 25,
-        completed: false
+        completed: false,
+        openModal: false,
+        ApplicationId: 0,
+        openUserModal: false,
+        application: null
     };
     handleChangePage = (event, page) => {
         this.setState({ page });
+    };
+
+    handleClose = () => {
+        this.setState({ openModal: false });
     };
 
     handleChangeRowsPerPage = (event) => {
@@ -162,13 +173,29 @@ class ApplicationTable extends React.Component {
         }
         if (
             this.state.page !== nextState.page ||
-            this.state.rowsPerPage !== nextState.rowsPerPage //||
-            //	this.state.order !== nextState.order ||
+            this.state.rowsPerPage !== nextState.rowsPerPage ||
+            this.state.openModal !== nextState.openModal ||
+            this.state.openUserModal !== nextState.openUserModal ||
+            this.state.ApplicationId !== nextState.ApplicationId
             //this.state.orderBy !== nextState.orderBy
         ) {
             return true;
         }
         return false;
+    };
+
+    /**
+    * To hide modal and then restart modal state values
+    */
+    handleCloseModal = () => {
+        this.setState(() => ({ openUserModal: false, application: null }), this.props.getApplications);
+    };
+
+    /**
+         * To open modal updating the state
+         */
+    handleClickOpenModal = (row) => {
+        this.setState(() => ({ openUserModal: true, application: row }));
     };
 
     render() {
@@ -179,28 +206,30 @@ class ApplicationTable extends React.Component {
         if (this.state.loadingRemoving) {
             return <LinearProgress />;
         }
-
+        console.log({ items });
         return (
+
             <Route
                 render={({ history }) => (
-                    <Paper className={classes.root}>
+                    <div className="card-body p-3 tumi-forcedResponsiveTable">
+                        <UserFormModal handleCloseModal={this.handleCloseModal} openModal={this.state.openUserModal} application={this.state.application} />
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell padding="none" className={"Table-head text-center"}
-                                        style={{ width: '50px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Completed</CustomTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                    let hasUser = row.Employee ? true : false;
                                     return (
                                         <TableRow
                                             hover
@@ -213,10 +242,10 @@ class ApplicationTable extends React.Component {
                                                 });
                                             }}
                                         >
-                                            <CustomTableCell>
+                                            <CustomTableCell className={'text-center'} style={{ width: '80px' }}>
                                                 <Tooltip title="Delete">
                                                     <button
-                                                        className="btn btn-danger ml-1"
+                                                        className="btn btn-danger mr-1 float-left"
                                                         disabled={this.props.loading}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -227,16 +256,43 @@ class ApplicationTable extends React.Component {
                                                         <i className="fas fa-trash"></i>
                                                     </button>
                                                 </Tooltip>
+                                                <Tooltip title="Profile">
+                                                    <button
+                                                        className="btn btn-success mr-1 float-left"
+                                                        disabled={this.props.loading}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            this.setState(() => ({ openModal: true, ApplicationId: row.id }));
+
+                                                        }}
+                                                    >
+                                                        <i class="fas fa-info"></i>
+                                                    </button>
+                                                </Tooltip>
+                                                {
+                                                    !hasUser ?
+                                                        <Tooltip title="User">
+                                                            <button
+                                                                className="btn btn-outline-info float-left ml-1"
+                                                                disabled={this.props.loading}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    this.handleClickOpenModal({ ...row });
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-plus"></i>
+                                                            </button>
+                                                        </Tooltip> :
+                                                        <React.Fragment />
+                                                }
                                             </CustomTableCell>
-                                            <CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
-                                            <CustomTableCell>
-                                                {row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
-                                            </CustomTableCell>
-                                            <CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.emailAddress}</CustomTableCell>
+                                            <CustomTableCell>{row.workOrderId ? `000000${row.workOrderId}`.slice(-6) : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.Position ? `${row.Position.Position.trim()} ${row.PositionCompany ? `(${row.PositionCompany.Code.trim()})` : ''}` : 'Open Position'}</CustomTableCell>
+                                            <CustomTableCell>{row.DefaultCompany ? row.DefaultCompany.Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.Recruiter ? row.Recruiter.Full_Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.User && row.sendInterview ? row.User.Full_Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
                                         </TableRow>
                                     );
@@ -246,7 +302,7 @@ class ApplicationTable extends React.Component {
                                 <TableRow>
                                     {items.length > 0 && (
                                         <TablePagination
-                                            colSpan={3}
+                                            colSpan={1}
                                             count={items.length}
                                             rowsPerPage={rowsPerPage}
                                             page={page}
@@ -258,8 +314,34 @@ class ApplicationTable extends React.Component {
                                 </TableRow>
                             </TableFooter>
                         </Table>
-                    </Paper>
+
+                        <Dialog fullWidth maxWidth="xl" open={this.state.openModal} onClose={this.handleClose}>
+                            <DialogTitle style={{ padding: '0px' }}>
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Profile Preview</h5>
+                                </div>
+                            </DialogTitle>
+                            <DialogContent>
+                                <ProfilePreview applicationId={this.state.ApplicationId} />;
+
+                                <div className="row pl-0 pr-0">
+                                    <div className="col-md-12">
+                                        <button
+                                            className="btn btn-danger ml-1 float-right"
+                                            onClick={(e) => {
+                                                this.setState(() => ({ openModal: false, IdEmployee: 0 }));
+                                            }}
+                                        >
+                                            Close<i class="fas fa-ban ml-2" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 )}
+
+
             />
         );
     }

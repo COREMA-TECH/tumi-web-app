@@ -44,12 +44,19 @@ class Toolbar extends Component {
 		event.preventDefault();
 	};
 
-	changeLanguage = (event) => {
-		if (this.state.languageIcon == 'en') localStorage.setItem('languageForm', 'es');
-		else localStorage.setItem('languageForm', 'en');
-		window.location.reload();
-		event.preventDefault();
+	changeLanguage = async (e) => {
+		e.preventDefault();
+		let initialValue = localStorage.getItem('languageForm');
 
+		if (this.state.languageIcon == 'en') {
+			await localStorage.setItem('languageForm', 'es');
+        }
+
+        if (this.state.languageIcon == 'es') {
+			await localStorage.setItem('languageForm', 'en');
+        }
+
+		window.location.reload();
 	};
 
 	componentWillMount() {
@@ -87,13 +94,6 @@ class Toolbar extends Component {
 							dataRolForm: data.rolesforms,
 							loading: false
 						});
-
-
-						console.log("Aqui esta roles forms ", data)
-						console.log("Aqui esta roles forms WWWWooooOOO ", this.state.dataRolForm)
-
-
-
 					})
 					.catch((error) => {
 						this.setState({
@@ -125,21 +125,9 @@ class Toolbar extends Component {
 			if (wo.Forms.Value == '/home/contract/add') { Contract = true }
 		})
 
-
-
-
-		console.log("Permisos ", " WO ", WO, " Manager ", Manager, " Property ", Property, " Contract ", Contract)
-
 		return (
 			<div className="toolbar__main">
 				<ul className="RightMenu-list">
-					<span className="main-container__title-user">Hi, {localStorage.getItem('FullName') ? (localStorage.getItem('FullName').trim() == '' ? localStorage.getItem('CodeUser').trim() : localStorage.getItem('FullName').trim()) : ''}</span>
-					<li className="RightMenu-item">
-						<a href="" onClick={this.changeLanguage} className="Language-en">
-							<img src={`/languages/${this.state.languageIcon}.png`} className="Language-icon" />
-						</a>
-					</li>
-
 					<li className="RightMenu-item">
 						<div className="dropdown">
 							<button
@@ -157,6 +145,17 @@ class Toolbar extends Component {
 
 							<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<div className="row app-shortcuts">
+					
+								{/* Greeting */}
+								<div className="UserSettings">
+									<span className="main-container__title-user">Hi, {localStorage.getItem('FullName') ? (localStorage.getItem('FullName').trim() == '' ? localStorage.getItem('CodeUser').trim() : localStorage.getItem('FullName').trim()) : ''}</span>
+									<div className="RightMenu-item">
+										<a href="" onClick={this.changeLanguage} className="Language-en">
+											<img src={`/languages/${this.state.languageIcon}.png`} className="Language-icon" />
+										</a>
+									</div>								
+								</div>
+
 									{localStorage.getItem('showMenu') == "true" ?
 										<React.Fragment>
 											<a className={WO ? "col-4 app-shortcuts__item" : "col-4 isDisabled"} href="/home/work-orders">

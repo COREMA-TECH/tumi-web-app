@@ -28,7 +28,6 @@
 
 .applicant-card__header {
     width: 100%;
-    height: 80px;
     padding: 1.5em;
     background: rgba(247, 253, 255, 0.60);
     border-bottom: 1px solid #F0F0F0;
@@ -183,7 +182,6 @@
 .general-info-apply-form input:disabled,
 .general-info-apply-form select:disabled,
 .general-info-apply-form textarea:disabled {
-    border: 1px solid transparent !important;
     border-bottom: 1px solid #efefef !important;
     color: #777777;
 
@@ -193,7 +191,6 @@
 .military-service-form input:disabled,
 .military-service-form select:disabled,
 .military-service-form textarea:disabled {
-    border: 1px solid transparent !important;
     border-bottom: 1px solid #efefef !important;
     color: #777777;
 

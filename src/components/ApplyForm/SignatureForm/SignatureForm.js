@@ -2,7 +2,7 @@ import React from 'react';
 import './index.css';
 import SignaturePad from 'react-signature-canvas';
 
-import {withApollo} from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import PropTypes from 'prop-types';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
@@ -11,7 +11,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TitleIcon from '@material-ui/icons/Title';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import classNames from 'classnames';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -23,7 +23,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import withGlobalContent from 'Generic/Global';
-import {ADD_SIGNATURE} from "./Mutations";
+import { ADD_SIGNATURE } from "./Mutations";
 
 const styles = (theme) => ({
     container: {
@@ -90,7 +90,8 @@ class Signature extends React.Component {
             tokenValid: false,
             idContract: 0,
             view: 1,
-            open: false
+            open: false,
+            openFinishModal: false,
         };
     }
 
@@ -117,6 +118,17 @@ class Signature extends React.Component {
         }
     };
 
+    handleCloseFinishModal = _ => {
+        this.setState(_ => {
+            return {
+                openFinishModal: false
+            }
+        }, _ => {
+            window.location.reload()
+        })
+        
+    }
+
     insertTextIntoCanvas = () => {
         if (this.state.inputText.trim() === '') {
             this.props.handleOpenSnackbar('warning', 'You must to specify a text signature');
@@ -138,10 +150,10 @@ class Signature extends React.Component {
             ctx.textAlign = 'center';
 
             ctx.fillText(this.state.inputText, container.offsetWidth / 2, (container.offsetHeight + 10) / 2);
-            this.setState({openModal: false, disableButtonLetter: true, allowSave: true, empty: false}, () => {
+            this.setState({ openModal: false, disableButtonLetter: true, allowSave: true, empty: false }, () => {
                 this.sigPad.off();
-                this.setState({signature: this.sigPad.toDataURL()}, () => {
-                    this.sigPad.fromDataURL(this.state.signature);
+                this.setState({ signature: this.sigPad.toDataURL() }, () => {
+                    this.props.signatureValue ? this.props.signatureValue(this.state.signature) : null;
                 });
             });
         }
@@ -174,7 +186,7 @@ class Signature extends React.Component {
     };
 
     saveSignature = () => {
-        if(this.props.signatureValue !== null) {
+        if (this.props.signatureValue !== null) {
             this.props.signatureValue(this.state.signature);
         } else {
             this.setState(
@@ -203,10 +215,16 @@ class Signature extends React.Component {
                                 },
                                 () => {
                                     if (this.sigPad) this.sigPad.off();
+                                    this.setState(_ => {
+                                        return {
+                                            openFinishModal: true
+                                        }
+                                    })
                                 }
                             );
 
-                            window.location.href = "/employment-application-message";
+                            // window.location.href = "/employment-application-message";
+
                         })
                         .catch((error) => {
                             this.props.handleOpenSnackbar('error', 'Error: Signing Application: ' + error);
@@ -226,7 +244,7 @@ class Signature extends React.Component {
             this.props.handleOpenSnackbar('warning', 'You need to sign the document!');
             return false;
         }
-        this.setState({signature: this.sigPad.toDataURL()}, this.saveSignature);
+        this.setState({ signature: this.sigPad.toDataURL() }, this.saveSignature);
     };
 
     clearSignature = (e) => {
@@ -246,8 +264,8 @@ class Signature extends React.Component {
             }
         );
 
-        if(this.props.showSaveIcon !== null){
-            this.props.signatureValue('');
+        if (this.props.showSaveIcon !== null) {
+            this.props.signatureValue ? this.props.signatureValue('') : null;
         }
     };
 
@@ -257,7 +275,7 @@ class Signature extends React.Component {
     }
 
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({ openModal: true });
     };
 
     handleCloseModal = () => {
@@ -270,11 +288,11 @@ class Signature extends React.Component {
     };
 
     handleColorSelectorClick = (event) => {
-        this.setState({selectedColor: event.currentTarget.id});
+        this.setState({ selectedColor: event.currentTarget.id });
     };
 
     handleLetterSelectorClick = (event) => {
-        this.setState({selectedLetter: event.currentTarget.id});
+        this.setState({ selectedLetter: event.currentTarget.id });
     };
 
     getClassColorSelector = (id) => {
@@ -354,16 +372,16 @@ class Signature extends React.Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
         const buttonClassname = classNames({
             [classes.buttonSuccess]: success
         });
-        const {loading, success} = this.state;
-        const {fullScreen} = this.props;
+        const { loading, success } = this.state;
+        const { fullScreen } = this.props;
 
         return (
             <div className="signature-container" id="signatureMainContainer">
-                {this.state.loadingData && <LinearProgress/>}
+                {this.state.loadingData && <LinearProgress />}
                 <div className="signaturePad-MainContainer">
                     <div id="signaturePadContainer" className="signaturePad-container">
                         <SignaturePad
@@ -372,8 +390,8 @@ class Signature extends React.Component {
                             }}
                             clearOnResize={false}
                             id="signingSurface"
-                            canvas={<canvas id="signingCanvas" ref="signingCanvas" style={{maxHeight: 100}}/>}
-                            canvasProps={{className: 'signature-input', id: 'signingCanvas'}}
+                            canvas={<canvas id="signingCanvas" ref="signingCanvas" style={{ maxHeight: 100 }} />}
+                            canvasProps={{ className: 'signature-input', id: 'signingCanvas' }}
                             onEnd={(e) => {
                                 this.setState({
                                     disableButtonLetter: true,
@@ -381,8 +399,8 @@ class Signature extends React.Component {
                                     empty: false,
                                     signature: this.sigPad.toDataURL()
                                 }, () => {
-                                    if(this.props.showSaveIcon !== null){
-                                        this.props.signatureValue(this.state.signature);
+                                    if (this.props.showSaveIcon !== null) {
+                                        this.props.signatureValue ? this.props.signatureValue(this.state.signature) : null;
                                     }
                                 });
                             }}
@@ -401,7 +419,7 @@ class Signature extends React.Component {
                                         className={buttonClassname}
                                         onClick={this.clearSignature}
                                     >
-                                        <ClearAllIcon/>
+                                        <ClearAllIcon />
                                     </Button>
                                 </div>
                             </Tooltip>
@@ -419,7 +437,7 @@ class Signature extends React.Component {
                                         className={[buttonClassname, classes.buttonSuccess].join(' ')}
                                         onClick={this.handleClickOpenModal}
                                     >
-                                        <TitleIcon/>
+                                        <TitleIcon />
                                     </Button>
                                 </div>
                             </Tooltip>
@@ -430,28 +448,28 @@ class Signature extends React.Component {
                         this.props.showSaveIcon !== null ? (
                             ''
                         ) : (
-                            <div className="signature-button-root">
-                                <div className="signature-button-wrapper">
-                                    <div className="signature-button">
-                                        <Tooltip title="Sign Contract">
-                                            <div>
-                                                <Button
-                                                    disabled={this.state.loading || !this.state.allowSave || this.state.saved}
-                                                    //	disabled={!this.state.formValid}
-                                                    letiant="fab"
-                                                    color="primary"
-                                                    className={buttonClassname}
-                                                    onClick={this.handleSaveSignature}
-                                                >
-                                                    <SaveIcon/>
-                                                </Button>
-                                            </div>
-                                        </Tooltip>
-                                        {loading && <CircularProgress size={68} className={classes.fabProgress}/>}
+                                <div className="signature-button-root">
+                                    <div className="signature-button-wrapper">
+                                        <div className="signature-button">
+                                            <Tooltip title="Sign Contract">
+                                                <div>
+                                                    <Button
+                                                        disabled={this.state.loading || !this.state.allowSave || this.state.saved}
+                                                        //	disabled={!this.state.formValid}
+                                                        letiant="fab"
+                                                        color="primary"
+                                                        className={buttonClassname}
+                                                        onClick={this.handleSaveSignature}
+                                                    >
+                                                        <SaveIcon />
+                                                    </Button>
+                                                </div>
+                                            </Tooltip>
+                                            {loading && <CircularProgress size={68} className={classes.fabProgress} />}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )
+                            )
                     }
                 </div>
                 <Dialog
@@ -468,25 +486,25 @@ class Signature extends React.Component {
                                 className={this.getClassColorSelector('blackSelector')}
                                 onClick={this.handleColorSelectorClick}
                             >
-                                <div className="circleBase black"/>
+                                <div className="circleBase black" />
                             </div>
                             <div
                                 id="greenSelector"
                                 className={this.getClassColorSelector('greenSelector')}
                                 onClick={this.handleColorSelectorClick}
                             >
-                                <div className="circleBase green"/>
+                                <div className="circleBase green" />
                             </div>
                             <div
                                 id="blueSelector"
                                 className={this.getClassColorSelector('blueSelector')}
                                 onClick={this.handleColorSelectorClick}
                             >
-                                <div className="circleBase blue"/>
+                                <div className="circleBase blue" />
                             </div>
                         </div>
                         <div className="signature-handwriting-container">
-							<textarea
+                            <textarea
                                 id="signatureContainer"
                                 type="text"
                                 spellCheck="false"
@@ -495,7 +513,7 @@ class Signature extends React.Component {
                                 placeholder={'Write Signature'}
                                 value={this.state.inputText}
                                 onChange={(e) => {
-                                    this.setState({inputText: e.currentTarget.value});
+                                    this.setState({ inputText: e.currentTarget.value });
                                 }}
                             />
                         </div>
@@ -537,6 +555,21 @@ class Signature extends React.Component {
                             Cancel
                         </Button>
                     </DialogActions>
+                </Dialog>
+                <Dialog                    
+                    maxWidth={"sm"}
+                    open={this.state.openFinishModal}
+                    onClose={this.handleCloseFinishModal}
+                    className='External-finish'
+                >
+                    <DialogContent>
+                        <div className="tumi-col-centered">
+                            <p className="text-center mb-2">
+                                Thank you, you are done!
+                            </p>
+                            <a href="#" onClick={this.handleCloseFinishModal} className="btn btn-success">Ok!</a>
+                        </div>
+                    </DialogContent>
                 </Dialog>
             </div>
         );

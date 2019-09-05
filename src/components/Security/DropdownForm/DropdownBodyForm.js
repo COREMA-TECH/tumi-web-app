@@ -265,14 +265,14 @@ class EnhancedTable extends React.Component {
     };
 
     getRolForms = () => {
-      
+
         this.props.client
             .query({
                 query: GET_ROL_FORMS_QUERY,
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-        
+
                 this.setState({
                     dataRolForm: data.rolesforms
                 });
@@ -302,6 +302,7 @@ class EnhancedTable extends React.Component {
                         <th scope="col">Code</th>
                         <th scope="col">Name</th>
                         <th scope="col">Value</th>
+                        <th scope="col">Parent</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -309,6 +310,7 @@ class EnhancedTable extends React.Component {
                         let checked = false;
                         let isActive = false;
                         let idRolForm = 0;
+                        let parent = '';
 
                         this.state.dataRolForm.map((itemRolForm) => {
                             if (this.props.rolId === itemRolForm.IdRoles) {
@@ -322,6 +324,9 @@ class EnhancedTable extends React.Component {
                             }
                         });
 
+                        if (item.Parent)
+                            parent = item.Parent.Name;
+
                         return (
                             <TableItem
                                 idRolForm={idRolForm}
@@ -333,6 +338,7 @@ class EnhancedTable extends React.Component {
                                 name={item.Name}
                                 url={item.Value}
                                 updateRolForms={this.getRolForms}
+                                parent={parent}
                             />
                         );
                     })}

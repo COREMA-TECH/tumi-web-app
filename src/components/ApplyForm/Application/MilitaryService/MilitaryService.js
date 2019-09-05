@@ -24,7 +24,8 @@ class MilitaryService extends Component {
             rankAtDischarge: '',
             typeOfDischarge: '',
             militaryServiceLength: 0,
-            loading: false
+            loading: false,
+            saving: false
         }
     }
 
@@ -36,102 +37,112 @@ class MilitaryService extends Component {
         });
     }
 
+    validateInformation = (mutation = () => { }) => {
+        let { branch, startDateMilitaryService, endDateMilitaryService, rankAtDischarge, typeOfDischarge, applicationId } = this.state;
+        let formData = {
+            branch: branch,
+            startDate: startDateMilitaryService || null,
+            endDate: endDateMilitaryService || null,
+            rankAtDischarge: rankAtDischarge || null,
+            typeOfDischarge: parseInt(typeOfDischarge)
+        };
+        let values = [];
+        Object.values(formData).map(value => {
+            if (value)
+                values.push(value);
+        })
+        console.log({ formData, values })
+        if (values.length == 0)
+            this.props.handleOpenSnackbar('warning', 'You need to fill at least one field', 'bottom', 'right');
+        else {
+            mutation();
+        }
+    }
+
     // To insert a object with mnilitary service information
     insertMilitaryServicesApplication = () => {
-        // TODO: validate empty fields in this sections
-        if (
-            this.state.branch ||
-            this.state.startDateMilitaryService ||
-            this.state.endDateMilitaryService ||
-            this.state.rankAtDischarge ||
-            this.state.typeOfDischarge
-        ) {
-            this.props.client
-                .mutate({
-                    mutation: ADD_MILITARY_SERVICES,
-                    variables: {
-                        application: [
-                            {
-                                branch: this.state.branch,
-                                startDate: this.state.startDateMilitaryService,
-                                endDate: this.state.endDateMilitaryService,
-                                rankAtDischarge: this.state.rankAtDischarge,
-                                typeOfDischarge: parseInt(this.state.typeOfDischarge),
-                                ApplicationId: this.state.applicationId
-                            }
-                        ]
-                    }
-                })
-                .then(() => {
-                    //TODO: Show a success message
-                    this.getMilitaryServiceInfo(this.state.applicationId);
-                    this.props.handleOpenSnackbar(
-                        'success',
-                        'Successfully created',
-                        'bottom',
-                        'right'
-                    );
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to save military service. Please, try again!',
-                        'bottom',
-                        'right'
-                    );
-                });
-        }
+        this.setState(() => ({ saving: true }));
+        this.props.client
+            .mutate({
+                mutation: ADD_MILITARY_SERVICES,
+                variables: {
+                    application: [
+                        {
+                            branch: this.state.branch,
+                            startDate: this.state.startDateMilitaryService || null,
+                            endDate: this.state.endDateMilitaryService || null,
+                            rankAtDischarge: this.state.rankAtDischarge || null,
+                            typeOfDischarge: parseInt(this.state.typeOfDischarge),
+                            ApplicationId: this.state.applicationId
+                        }
+                    ]
+                }
+            })
+            .then(() => {
+                //TODO: Show a success message
+                this.getMilitaryServiceInfo(this.state.applicationId);
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully created',
+                    'bottom',
+                    'right'
+                );
+                this.setState(() => ({ saving: false, editing: false }));
+            })
+            .catch((error) => {
+                // Replace this alert with a Snackbar message error
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to save military service. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+                this.setState(() => ({ saving: false }));
+            });
     };
 
     // To insert a object with mnilitary service information
     updateMilitaryServicesApplication = () => {
-        // TODO: validate empty fields in this sections
-        if (
-            this.state.branch ||
-            this.state.startDateMilitaryService ||
-            this.state.endDateMilitaryService ||
-            this.state.rankAtDischarge ||
-            this.state.typeOfDischarge
-        ) {
-            this.props.client
-                .mutate({
-                    mutation: UPDATE_MILITARY_SERVICES,
-                    variables: {
-                        application: {
-                            id: this.state.id,
-                            branch: this.state.branch,
-                            startDate: this.state.startDateMilitaryService,
-                            endDate: this.state.endDateMilitaryService,
-                            rankAtDischarge: this.state.rankAtDischarge,
-                            typeOfDischarge: parseInt(this.state.typeOfDischarge),
-                            ApplicationId: this.state.applicationId
-                        }
+        this.setState(() => ({ saving: true }));
+        this.props.client
+            .mutate({
+                mutation: UPDATE_MILITARY_SERVICES,
+                variables: {
+                    application: {
+                        id: this.state.id,
+                        branch: this.state.branch,
+                        startDate: this.state.startDateMilitaryService || null,
+                        endDate: this.state.endDateMilitaryService || null,
+                        rankAtDischarge: this.state.rankAtDischarge || null,
+                        typeOfDischarge: parseInt(this.state.typeOfDischarge),
+                        ApplicationId: this.state.applicationId
                     }
-                })
-                .then(() => {
-                    this.setState({
-                        editing: false
-                    });
-
-                    this.props.handleOpenSnackbar(
-                        'success',
-                        'Successfully updated',
-                        'bottom',
-                        'right'
-                    );
-                    this.getMilitaryServiceInfo(this.state.applicationId);
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to update military services. Please, try again!',
-                        'bottom',
-                        'right'
-                    );
+                }
+            })
+            .then(() => {
+                this.setState({
+                    editing: false,
+                    saving: false
                 });
-        }
+
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully updated',
+                    'bottom',
+                    'right'
+                );
+                this.getMilitaryServiceInfo(this.state.applicationId);
+            })
+            .catch((error) => {
+                // Replace this alert with a Snackbar message error
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to update military services. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+                this.setState(() => ({ saving: false }));
+            });
     };
 
     // To get a list of previous employments saved from API
@@ -149,13 +160,14 @@ class MilitaryService extends Component {
                 })
                 .then(({ data }) => {
                     if (data.applications[0].militaryServices.length > 0) {
+                        let _ = data.applications[0].militaryServices[0];
                         this.setState({
-                            id: data.applications[0].militaryServices[0].id,
-                            branch: data.applications[0].militaryServices[0].branch,
-                            startDateMilitaryService: data.applications[0].militaryServices[0].startDate.substring(0, 10),
-                            endDateMilitaryService: data.applications[0].militaryServices[0].endDate.substring(0, 10),
-                            rankAtDischarge: data.applications[0].militaryServices[0].rankAtDischarge,
-                            typeOfDischarge: data.applications[0].militaryServices[0].typeOfDischarge,
+                            id:_.id,
+                            branch:_.branch,
+                            startDateMilitaryService:_.startDate?_.startDate.substring(0, 10):'',
+                            endDateMilitaryService:_.endDate?_.endDate.substring(0, 10):'',
+                            rankAtDischarge:_.rankAtDischarge,
+                            typeOfDischarge:_.typeOfDischarge,
                             militaryServiceLength: data.applications[0].militaryServices.length
                         });
 
@@ -190,6 +202,19 @@ class MilitaryService extends Component {
                 });
         });
     };
+
+    onClickSaveHandler = () => {
+
+        this.validateInformation(() => {
+            if (this.state.militaryServiceLength > 0) {
+                // If the register exist, just update
+                this.updateMilitaryServicesApplication();
+            } else {
+                this.insertMilitaryServicesApplication();
+            }
+        })
+
+    }
 
     render() {
         // To render the Military Service Section
@@ -355,16 +380,11 @@ class MilitaryService extends Component {
                                             {spanishActions[2].label}
                                         </button>
                                         <button
-                                            onClick={() => {
-                                                if (this.state.militaryServiceLength > 0) {
-                                                    // If the register exist, just update
-                                                    this.updateMilitaryServicesApplication();
-                                                } else {
-                                                    this.insertMilitaryServicesApplication();
-                                                }
-                                            }}
+                                            onClick={this.onClickSaveHandler}
                                             className="applicant-card__save-button">
                                             {spanishActions[4].label}
+                                            {!this.state.saving && <i className="far fa-save ml-2" />}
+                                            {this.state.saving && <i className="fa fa-spinner fa-spin ml-2" />}
                                         </button>
                                     </div>
                                 ) : (

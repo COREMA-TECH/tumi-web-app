@@ -1,4 +1,9 @@
 import React from 'react';
+
+import { gql } from 'apollo-boost';
+import withApollo from 'react-apollo/withApollo';
+import { Route } from "react-router-dom";
+
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -9,9 +14,49 @@ import ContactCompanyForm from '../ContactCompanyForm';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm';
 import Preferences from '../Preferences';
+import TablesContracts from '../../Contract/Main/MainContract/TablesContracts';//'./TablesContracts';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 
 import withGlobalContent from 'Generic/Global';
 import TitleCompanyForm from '../TitleCompanyForm/TitleCompanyForm';
+
+const styles = (theme) => ({
+	wrapper: {
+		margin: theme.spacing.unit,
+		position: 'relative'
+	},
+	buttonSuccess: {
+		background: ' #3da2c7',
+		borderRadius: '5px',
+		padding: '.5em 1em',
+
+		fontWeight: '300',
+		fontFamily: 'Segoe UI',
+		fontSize: '1.1em',
+		color: '#fff',
+		textTransform: 'none',
+		//cursor: pointer;
+		margin: '2px',
+
+		//	backgroundColor: '#357a38',
+		color: 'white',
+		'&:hover': {
+			background: ' #3da2c7'
+		}
+	},
+
+	buttonProgress: {
+		//color: ,
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12
+	}
+});
 
 const theme = createMuiTheme({
 	overrides: {
@@ -35,8 +80,41 @@ class CustomizedTabs extends React.Component {
 			item: 4,
 			activateTabs: true,
 			idCompany: props.idCompany,
-			idManagement: props.idCompany
+			idManagement: props.idCompany,
+			dataContract: []
 		}
+	};
+
+	getContractsQuery = gql`
+	query getContractById($IdManagement: Int!) {
+		getcontracts(IdManagement: $IdManagement, IsActive: 1) {
+			Id
+			Contract_Name
+			Contrat_Owner
+			Contract_Status
+			Contract_Expiration_Date
+		}
+	}
+`;
+
+	getContractData = () => {
+		this.props.client
+			.query({
+				query: this.getContractsQuery,
+				variables: {
+					IdManagement: this.state.idManagement
+				},
+				fetchPolicy: 'no-cache'
+			})
+			.then(({ data }) => {
+				if (data.getcontracts != null && data.getcontracts.length > 0) {
+					this.setState({
+						dataContract: data.getcontracts
+					});
+
+				}
+			})
+			.catch((err) => console.log(err));
 	};
 
 	handleChange = (event, value) => {
@@ -79,7 +157,85 @@ class CustomizedTabs extends React.Component {
 		this.setState({
 			value: this.props.tabSelected
 		});
+
+		this.getContractData();
 	}
+
+	handleClose = () => {
+		this.setState({ showConfirm: true, open: false });
+	};
+
+	handleOpenConfirmDialog = () => {
+		this.setState({ showConfirmCompany: false, showConfirm: true, showConfirmCompanyOrProperty: false });
+	}
+
+	handleOpenConfirmDialogCompany = () => {
+		this.setState({ showConfirmCompany: true, showConfirm: false, showConfirmCompanyOrProperty: false });
+	}
+
+	handleOpenConfirmDialogCompanyOrProperty = () => {
+		this.setState({ showConfirmCompany: false, showConfirm: false, showConfirmCompanyOrProperty: true });
+	}
+
+	handleCloseConfirmDialog = () => {
+		this.setState({ showConfirm: false });
+	}
+
+	printDialogConfirm = () => {
+		return <Dialog maxWidth="xl" open={false} >
+			<DialogContent>
+				<h2 className="text-center">What would you like to do?</h2>
+			</DialogContent>
+			<DialogActions>
+				<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompany()}>
+					Create New Contract
+				</button>
+				<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCloseConfirmDialog()}>
+					View and Renew Contracts
+				</button>
+
+			</DialogActions>
+		</Dialog>
+	}
+
+	printDialogConfirmCompany = () => {
+
+		return <Dialog maxWidth="xl" open={this.state.showConfirmCompany} >
+			<DialogContent>
+				<h2 className="text-center">Is this contract for a new or existing company?</h2>
+			</DialogContent>
+			<DialogActions>
+				<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleOpenConfirmDialogCompanyOrProperty()}>
+					New Company
+					</button>
+				<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.redirectToCreateContract()}>
+					Existing Company
+					</button>
+
+			</DialogActions>
+		</Dialog>
+	}
+
+	printDialogConfirmCompanyOrProperty = () => {
+
+		return <Dialog maxWidth="xl" open={this.state.showConfirmCompanyOrProperty} >
+			<DialogContent>
+				<h2 className="text-center">Is this contract for Property or a Management Company?</h2>
+			</DialogContent>
+			<DialogActions>
+				<button className="btn btn-success  btn-not-rounded mb-2" type="button" onClick={(e) => this.handleClickOpen(e)}>
+					Property
+						</button>
+				<button className="btn btn-info  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateCompany()}>
+					Management Company
+						</button>
+
+
+			</DialogActions>
+		</Dialog>
+	}
+
+
 
 	showSelectedTab = (value) => {
 		switch (value) {
@@ -126,20 +282,6 @@ class CustomizedTabs extends React.Component {
 					/>
 				);
 
-				{/*case 3:
-				return (
-					<TitleCompanyForm
-						idCompany={this.state.idCompany}
-						idManagement={this.state.idManagement}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						item={this.state.item}
-						next={this.nextHandleChange}
-						back={this.backHandleChange}
-						valueTab={this.state.value}
-						showStepper={this.state.showStepper}
-						toggleStepper={this.toggleStepper}
-					/>
-				); */}
 			case 3:
 				return (
 					<PositionsCompanyForm
@@ -164,6 +306,21 @@ class CustomizedTabs extends React.Component {
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 					/>
 				);
+			case 5:
+				return (
+					<TablesContracts
+						data={this.state.dataContract}
+						printDialogConfirm={this.printDialogConfirm}
+						printDialogConfirmCompany={this.printDialogConfirmCompany}
+						printDialogConfirmCompanyOrProperty={this.printDialogConfirmCompanyOrProperty}
+
+						acciones={1}
+						delete={(id) => {
+							this.deleteContractById(id);
+						}}
+					/>
+				);
+
 		}
 	};
 
@@ -196,24 +353,26 @@ class CustomizedTabs extends React.Component {
 							label="Department Contact"
 							disabled={!this.state.activateTabs}
 						/>
-						{/*<Tab
-							disableRipple
-							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Title"
-							disabled={!this.state.activateTabs}
-						/>*/}
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
 							label="Positions and Rates"
 							disabled={!this.state.activateTabs}
 						/>
-						{/*<Tab*/}
-							{/*disableRipple*/}
-							{/*classes={{ root: "Tab-item", selected: "Tab-selected" }}*/}
-							{/*label="Preferences"*/}
-							{/*disabled={!this.state.activateTabs}*/}
-						{/*/>*/}
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Preferences"
+							disabled={!this.state.activateTabs}
+						/>
+						{localStorage.getItem('ShowMarkup') == 'true' ?
+							<Tab
+								disableRipple
+								classes={{ root: "Tab-item", selected: "Tab-selected" }}
+								label="Contracts"
+								disabled={!this.state.activateTabs}
+							/> : ''}
+
 					</Tabs>
 					{this.showSelectedTab(value)}
 				</MuiThemeProvider>
@@ -226,4 +385,4 @@ CustomizedTabs.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withGlobalContent(CustomizedTabs);
+export default withStyles(styles)(withApollo(withGlobalContent(CustomizedTabs)));

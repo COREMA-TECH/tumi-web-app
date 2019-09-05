@@ -80,7 +80,7 @@ class LifeCycleWorkOrdersTable extends Component {
         if (nextProps.item && !this.state.openLife) {
             this.setState(
                 {
-                    id: nextProps.item.id,
+                    id: nextProps.item.workOrderId,
                     IdEntity: nextProps.item.IdEntity,
                     date: nextProps.item.date,
                     quantity: nextProps.item.quantity,
@@ -96,11 +96,7 @@ class LifeCycleWorkOrdersTable extends Component {
                     //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
-                    this.getPhaseWork(nextProps.item.id);
-                    // this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
-                    // this.getContacts(nextProps.item.IdEntity);
-                    //  this.getRecruiter();
-
+                    this.getPhaseWork(nextProps.item.workOrderId);
                     this.ReceiveStatus = true;
                 }
             );
@@ -143,7 +139,6 @@ class LifeCycleWorkOrdersTable extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("component unsafe ", data.phaseworkOrder);
                 this.setState({
                     data: data.phaseworkOrder
                 });
@@ -157,7 +152,6 @@ class LifeCycleWorkOrdersTable extends Component {
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
-        console.log("component items ", items);
         return (
 
             <div>
@@ -179,7 +173,6 @@ class LifeCycleWorkOrdersTable extends Component {
                             </TableHead>
                             <TableBody>
                                 {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    console.log("Inform de la row ", row);
                                     return (
                                         <TableRow>
 
@@ -210,7 +203,6 @@ class LifeCycleWorkOrdersTable extends Component {
 
                         <form action="" onSubmit={this.handleSubmit}>
                             <div className="row pl-0 pr-0">
-
                                 <div className="col-md-12">
                                     <button
                                         className="btn btn-danger ml-1 float-right"

@@ -47,17 +47,17 @@ class SimpleSlider extends React.Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const {classes, useCustomClass = false} = this.props;
         const {value} = this.state;
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root}>                
                 <Slider value={value} className={'input-form'} aria-labelledby="label" onChange={this.handleChange}/>
                 <div className={classes.labelSlider}>
-                    <span className={classes.labelLevelSkill}>{skillsLabels[2].label}</span>
-                    <Typography className={classes.labelPercentSkill}
+                    <span style={{marginRight: "5px"}} className={ useCustomClass ? "Slider-skillLabel" : classes.labelLevelSkill }>{skillsLabels[2].label}</span>
+                    <Typography className={useCustomClass ? "Slider-percentageLabel" : classes.labelPercentSkill}
                                 id="label">{Math.floor(this.state.value) + "%"} </Typography>
-                    <span className={classes.labelLevelSkill}>{skillsLabels[3].label}</span>
+                    <span className={ useCustomClass ? "Slider-skillLabel" : classes.labelLevelSkill }>{skillsLabels[3].label}</span>
                 </div>
             </div>
         );

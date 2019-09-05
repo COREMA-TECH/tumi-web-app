@@ -55,10 +55,11 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany,$w
 		date
 		comment
 		EspecialComment
-		dayWeek
+		dayWeeks: dayWeek
 		IdEntity
 		contactId
 		PositionRateId
+		departmentId
 	}
 	getusers(Id: null,IsActive: 1) {
 		Id
@@ -130,6 +131,7 @@ export const GET_HOTEL_QUERY = gql`
 			Id
 			Name
 			Contract_Expiration_Date
+			Start_Week
 		}
 	}
 `;
@@ -153,8 +155,8 @@ export const PHASE_WORK_ORDER = gql`
 `;
 
 export const GET_POSITION_BY_QUERY = gql`
-	query getPosition($id: Int) {
-		getposition(Id: null, IsActive: null, Id_Entity: $id) {
+	query getPosition($Id_Department: Int) {
+		getposition(Id: null, IsActive: null, Id_Entity: null, Id_Department: $Id_Department) {
 			Id
 			Position
 			Shift
@@ -196,3 +198,14 @@ export const GET_STATE_QUERY = gql`
 			}
 		} 
 `;
+
+export const GET_DEPARTMENTS_QUERY = gql`
+	query getcatalogitem ($Id_Entity:Int){
+			getcatalogitem(IsActive: 1, Id_Catalog: 8,  Id_Entity:$Id_Entity) {
+				Id
+				Code: Name
+				Description
+				IsActive
+			}
+		}
+	`;

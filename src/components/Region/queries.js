@@ -33,6 +33,7 @@ export const GET_USERS = gql`
 			user(IsActive: 1,Id: $Id, IdRegion:$IdRegion, Id_Roles: $Id_Roles) {
             Id
 			Id_Contact
+			Id_Roles
 			Full_Name
         }
     }

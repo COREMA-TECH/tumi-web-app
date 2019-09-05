@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_INITIAL_DATA = gql`
-query data($idEntity: Int, $idUsers: Int) {
+query data($idEntity: Int, $idUsers: Int, $Id: Int) {
     employees(isActive:true, idEntity:  $idEntity, idUsers: $idUsers) {
       id
       firstName
@@ -10,17 +10,18 @@ query data($idEntity: Int, $idUsers: Int) {
       mobileNumber
       
     } 
-    getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: -1) {
+    getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: null, Id_Parent: -1) {
           Id
           Code
-          Name         
+          Name  
+          Start_Week       
     } 
   }
 `;
 
 export const GET_POSITION = gql`
-  query positions($Id_Entity: Int, $Id: Int){
-    getposition(Id_Entity: $Id_Entity, Id: $Id){
+  query positions($Id_Entity: Int,$Id_Department: Int, $Id: Int){
+    getposition(Id_Entity: $Id_Entity, Id: $Id,Id_Department: $Id_Department){
       Id
       Position      
       Comment
@@ -67,6 +68,9 @@ export const GET_SHIFTS = gql`
             bgColor : color
             status
             idPosition
+            position {
+              Position
+            }
             company {
                 City
             }

@@ -4,8 +4,9 @@
 		background: #fff;
 		border-radius: 10px;
 		box-shadow: 0px 0px 20px #ddd;
-		overflow: hidden;
-		margin: 1em;
+		margin-bottom: 1rem;
+		margin-top: 1rem;
+		overflow: hidden;		/* margin: 1em; */
 		transition: all .150s;
 	}
 
@@ -89,6 +90,8 @@
 
 @media (min-width: 700px) {
 	.company-card {
+		margin-left: 1rem;
+		margin-right: 1rem;
 		width: 40%;
 	}
 }

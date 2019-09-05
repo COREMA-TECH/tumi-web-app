@@ -91,7 +91,6 @@ class Language extends Component {
 			this.setState(
 				(prevState) => ({
 					newLanguages: this.state.languages.filter((_, i) => {
-						console.log(_.id);
 						return _.id === undefined;
 					})
 				}),
@@ -163,6 +162,14 @@ class Language extends Component {
 		);
 	}
 
+	componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
 	render() {
 		// To render the Languages Section
 		let renderlanguagesSection = () => (
@@ -182,20 +189,18 @@ class Language extends Component {
 								writing: parseInt(document.getElementById('writingLanguage').value),
 								conversation: parseInt(document.getElementById('conversationLanguage').value)
 							};
-							this.setState(
-								(prevState) => ({
-									open: false,
-									languages: [...prevState.languages, item]
-								}),
-								() => {
-									document.getElementById('form-language').reset();
-									document.getElementById('writingLanguage').classList.remove('invalid-apply-form');
-									document
-										.getElementById('conversationLanguage')
-										.classList.remove('invalid-apply-form');
-									document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
-								}
-							);
+							this.setState((prevState) => ({
+								open: false,
+								languages: [...prevState.languages, item]
+							}), () => {
+								document.getElementById('form-language').reset();
+								document.getElementById('writingLanguage').classList.remove('invalid-apply-form');
+								document
+									.getElementById('conversationLanguage')
+									.classList.remove('invalid-apply-form');
+								document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
+								this.insertLanguagesApplication();
+							});
 						}}
 					>
 						<div className="col-md-4">
@@ -207,8 +212,8 @@ class Language extends Component {
 								className="form-control"
 								form="form-language"
 							>
-								<option value="">{spanishActions[5].label}</option>
-								{this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
+								<option value="" >{spanishActions[5].label}</option>
+								{this.state.languagesLoaded.map((item) => <option value={item.Id} disabled={item.Id == 199 ? "disabled" : ""}>{item.Name}</option>)}
 							</select>
 							<span className="check-icon" />
 						</div>
@@ -242,9 +247,9 @@ class Language extends Component {
 						</div>
 						<div className="col-md-2">
 							<br />
-							<Button type="submit" form="form-language" className="save-skill-button">
+							<button type="submit" form="form-language" className="save-skill-button applicant-card__save-button">
 								{spanishActions[0].label}
-							</Button>
+							</button>
 						</div>
 					</form>
 				) : (
@@ -381,14 +386,14 @@ class Language extends Component {
 									>
 										{spanishActions[2].label}
 									</button>
-									<button
+									{/* <button
 										onClick={() => {
 											this.insertLanguagesApplication();
 										}}
 										className="applicant-card__save-button"
 									>
 										{spanishActions[4].label}
-									</button>
+									</button> */}
 								</div>
 							) : (
 									''

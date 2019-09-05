@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -20,7 +20,7 @@ class EducationCard extends Component {
 
     // To open the skill dialog
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     // To close the skill dialog
@@ -54,8 +54,6 @@ class EducationCard extends Component {
             </Dialog>
         );
 
-        console.log(this.props.degree);
-
         return (
             <div className="education-card">
                 <span
@@ -65,6 +63,13 @@ class EducationCard extends Component {
                     }}>
                     <i className="fas fa-trash-alt"></i>
                 </span>
+                <span
+                    className="education-card__edit-button"
+                    onClick={() => {
+                        this.props.handleOpenModal();
+                    }}>
+                    <i className="fas fa-pen"></i>
+                </span>
                 <div className="education-card__job-title">{this.props.type}</div>
                 <div className="education-card__company" title="Institution">
                     <i className="fas fa-university"></i><span> {this.props.educationName}</span>
@@ -73,10 +78,10 @@ class EducationCard extends Component {
                     <i className="fas fa-map-marker-alt"></i><span> {this.props.address}</span>
                 </div>
                 <div className="education-card__phone" title="Start Date">
-                    <i className="far fa-calendar-alt"></i><span>{this.props.startDate.substring(0, 10)}</span>
+                    <i className="far fa-calendar-alt"></i><span>{this.props.startDate ? this.props.startDate.substring(0, 10) : ''}</span>
                 </div>
                 <div className="education-card__phone" title="End Date">
-                    <i className="far fa-calendar-check"></i><span>{this.props.endDate.substring(0, 10)}</span>
+                    <i className="far fa-calendar-check"></i><span>{this.props.endDate ? this.props.endDate.substring(0, 10) : ''}</span>
                 </div>
                 <div className="education-card__phone" title="Graduated">
                     <i className="fas fa-graduation-cap"></i><span>{this.props.graduated ? 'Yes' : 'No'}</span>
@@ -87,8 +92,8 @@ class EducationCard extends Component {
                             <i className="far fa-file-alt"></i><span>{this.props.degree}</span>
                         </div>
                     ) : (
-                        ''
-                    )
+                            ''
+                        )
                 }
 
                 {

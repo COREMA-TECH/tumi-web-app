@@ -273,11 +273,12 @@ class Filters extends Component {
 
     render() {
         return (
-            <div className="MasterShiftHeader">
+            <div className="MasterShiftHeader m-0">
                 <div className="row">
                     <div className="col-md-12">
                         Location: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.locationName}</a>,
                         Department: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.departmentName}</a>,
+                        Position: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.positionName}</a>,
                         Employees:
                         <div className="ScheduleWrapper">
                             <Select
@@ -286,7 +287,7 @@ class Filters extends Component {
                                 options={this.props.employees}
                                 value={this.props.selectedEmployee}
                                 onChange={this.props.onSelectedEmployeeChange}
-                                closeMenuOnSelect={false}
+                                closeMenuOnSelect={true}
                             />
                         </div>
                     </div>

@@ -153,6 +153,14 @@ class ApplicantDocument extends Component {
 		this.getTemplateDocuments();
 	}
 
+	componentWillReceiveProps(nextProps) {
+        if (nextProps.applicationId != this.props.applicationId) {
+            this.setState({
+                applicationId: nextProps.applicationId
+            });
+        }
+    }
+
 	renderStaticElement = () => {
 		return (
 			<DocumentInputFileCard
@@ -252,7 +260,7 @@ class ApplicantDocument extends Component {
 						<div className="applicant-card">
 							<div className="applicant-card__header">
 								<span className="applicant-card__title">
-									{applyTabs[6].label}
+									{applyTabs[9].label}
 									<p>
 										<small className="font-weight-light text-success">
 											supported files ({[

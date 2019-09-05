@@ -1,0 +1,476 @@
+%external-form-label{
+    color: $black !important;
+
+    font-family: 'Ropa Sans', sans-serif;
+    font-size: 0.875rem;
+
+    text-transform: uppercase;
+}
+
+%flex-row{
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    justify-content: center;
+}
+
+.External{
+    background-color: transparent;
+    font-family: 'Ropa Sans', sans-serif;
+
+    &-search{
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        flex-wrap: nowrap;
+
+        background-color: $black;
+
+        padding-bottom: 8px;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 8px;  
+        
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+
+        z-index: 10;
+    }
+
+    &-searchInputGroup{
+        .input-group-prepend, .input-group-text{
+            background-color: transparent !important;
+            border: none;
+            color: $white !important;
+        }
+    }
+
+    &-searchText{
+        color: $white;
+
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    &-searchButton{
+        background-color: transparent;
+        color: $white;
+        
+        border: 1px solid $white;
+
+        font-family: 'Ropa Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+
+        margin-left: 1.5rem;
+
+        padding: 8px 18px;
+        
+        text-transform: uppercase;
+        transition: all 0.25s ease;
+
+        width: 105px;
+
+        &:hover{
+            background-color: $white;
+            color: $black;
+        }
+    }
+
+    &-bg{
+        padding-bottom: 0;
+        padding-top: 52px;
+
+        position: relative;
+
+        &::before{
+            content: ' ';
+
+            //background-image: url('#{$img-path}/external-application-bg.jpg');
+            background-color: #F5F7F9;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+
+            display: block;
+
+            filter: blur(4px);
+
+            height: 100%;
+            width: 100%;
+
+            position: absolute;
+
+            left: 0;
+            top: 0;
+        }
+    }    
+
+    &-logo{
+        margin-bottom: 22px;
+        margin-left: auto;
+
+        padding-top: 1rem;
+
+        max-width: 340px;
+        width: 100%;
+
+        img{
+            display: block;
+
+            margin-left: 0;
+            margin-right: auto;
+
+            max-width: 125px;
+            width: 100%;
+        }
+    }
+
+    &-row{
+        margin-bottom: 35px;
+    }
+
+    &-col{
+        margin-bottom: 1rem;
+        overflow: visible !important;
+    }
+
+    &-stepper{
+        .MuiStepIcon-root-60.MuiStepIcon-active-62, .MuiStepLabel-label-52.MuiStepLabel-active-53{
+            color: $brand-primary;
+            font-family: 'Ropa Sans', sans-serif;
+        }
+    }
+
+    &-label{
+        @extend %external-form-label;
+
+        &.homePhone{
+            display: block;
+            margin-top: 8px;
+        }
+    }
+
+    &-text{
+        color: $black;
+        font-family: 'Ropa Sans', sans-serif !important;
+        font-size: 18px;
+    }
+
+    & &-input{
+        background-color: transparent !important;
+        color: $black !important;
+
+        border: 1px solid $placeholder-color;
+        border-radius: 3px;
+
+        box-shadow: none !important;
+
+        font-family: 'Ropa Sans', sans-serif !important;
+        font-size: 18px;
+
+        // margin-bottom: 1.5rem;
+
+        &::placeholder{
+            color: $placeholder-color;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        &:disabled{
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+
+        option{
+            color: $black;
+
+            &:hover{
+                color: $white;
+                background-color: $white;
+            }
+        }
+    }
+
+    &-formButtons{
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-wrap: nowrap;
+    }
+
+    & &-formButton{
+        background-color: $success;
+        color: $white;
+        
+        border: 1px solid $success;
+
+        font-family: 'Ropa Sans', sans-serif;
+        font-size: 12px;
+        
+        text-transform: uppercase;
+        transition: all 0.25s ease;
+
+        width: 155px;
+        
+        span[class*="MuiButton-label"]{
+            font-family: 'Ropa Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        &:hover{
+            background-color: transparent;
+            color: $success;
+        }
+
+        &:first-child{
+            margin-left: auto;
+        }
+
+        &[disabled]{
+            color: $success;
+            cursor: not-allowed;
+        }
+    }
+
+    & .Slider{
+        &-skillLabel, &-percentageLabel{
+            color: $white;
+
+            font-family: 'Ropa Sans', sans-serif;
+            line-height: 1;
+        }
+    }
+
+    .Stepper-wrapper{
+        border-radius: 0;
+
+        margin-left: auto;
+
+        max-width: 340px;
+        width: 100%;
+    }
+
+    .Location-label{
+        @extend %external-form-label;
+
+        &.changeCity{
+            font-size: 10px;
+        }
+    }
+
+    .ApplyForm{
+        background-color: transparent;
+        padding: 1rem;
+    }
+
+    .ApplyBlock {   
+        background-color: $white;
+        
+        border-radius: 0 0 5px 5px;
+
+        box-shadow: 0 3px 5px rgba(112, 112, 112, 0.10);
+
+        font-family: 'Ropa Sans', sans-serif;     
+
+        margin-bottom: 0;
+        margin-left: 0;
+        margin-right: 0;
+        
+        max-width: 100%;
+        width: 100%;
+
+        min-height: 100vh;
+
+        padding-top: 30px;
+
+        &-head {
+            background: $white;
+            border-radius: 5px 5px 0 0;
+        }
+
+        &-title{
+            background-color: transparent;
+            color: $black;
+
+            font-size: 24px;
+            font-weight: 700;
+
+            padding-left: 0;
+            position: unset;
+            
+            &::before, &::after{
+                display: none;
+            }
+        }
+    }
+
+    .skills{
+        &-container{
+            border: none;
+
+            margin-left: 0;
+
+            padding-bottom: 0;
+            padding-left: 0;
+            padding-top: 0;
+
+            &--header{
+                background-color: transparent;
+            }
+
+            &:hover .deleteSkillSection{
+                position: absolute;
+                top: -5px;
+            }
+        }
+
+        &-label,  &-desc{
+            color: $black !important;
+            font-family: 'Ropa Sans', sans-serif; 
+            font-size: 14px;
+        }
+
+        &-desc{
+            font-size: 18px;
+        }
+    }
+
+    @include media-breakpoint-up(md){
+        .Stepper-col{
+            padding-right: 0;
+        }
+
+        .Application-col{
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+}
+
+.Footer{
+    background-color: $black;
+
+    font-family: 'Ropa Sans', sans-serif; 
+    font-size: 10px;
+
+    padding-bottom: 56px;
+    padding-top: 52px;
+
+    &-wrapper{
+        @extend %flex-row;
+        justify-content: flex-start;
+
+        padding-left: 15px;
+        padding-right: 15px;  
+        
+        width: 100%;
+    }
+
+    &-logo{
+        flex-shrink: 0;
+
+        margin-right: 150px;
+
+        height: auto;
+        width: 125px;
+    }
+
+    &-info{
+        display: block;
+        width: 100%;
+    }
+
+    &-links{
+        @extend %flex-row;
+        margin-bottom: 30px;
+    }
+
+    &-link{
+        color: $white;
+
+        font-size: 10px;
+
+        padding-left: 10px;
+        padding-right: 10px;
+
+        text-transform: uppercase;
+
+        &:first-child{
+            padding-left: 0;
+            margin-right: auto;
+        }
+    }
+
+    &-contactInfo{
+        @extend %flex-row;
+        justify-content: flex-start;
+    }
+
+    &-contact{
+        color: $placeholder-color;
+        font-size: 10px;
+        margin-right: 70px;
+
+        // &.address, &.phone{
+        //     max-width: 130px;
+        //     width: 100%;
+        // }
+
+        &.copyright{
+            margin-right: 0;
+            text-align: right;
+        }
+    }
+
+    @include media-breakpoint-down(md){
+        &-logo{
+            margin-bottom: 10px;
+            margin-right: 0;
+        }
+
+        &-wrapper, &-contactInfo, &-links{
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+      
+        &-link{
+            margin-bottom: 10px;
+            margin-top: 10px;
+
+            &:first-child{
+                margin-right: 0;
+                padding-left: 10px;
+            }
+        }
+
+        &-contact{
+            margin-bottom: 10px;
+            margin-right: 0;
+            margin-top: 10px;
+
+            text-align: center;
+    
+            &.address, &.phone{
+                max-width: 130px;
+                width: 100%;
+            }
+
+            &.copyright{
+                margin-right: 0;
+                text-align: center;
+            }
+        }
+    }    
+}

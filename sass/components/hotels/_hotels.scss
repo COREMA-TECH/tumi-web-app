@@ -1,0 +1,85 @@
+.HotelCard {
+    &-item {
+        align-items: center;
+        background: linear-gradient(to left, $gray, $white, $white, $white, $gray);
+        border-radius: $border-radius-standar;
+        border: solid 3px lighten($brand-primary,20%);
+        color: $text-color;
+        display: flex;
+        height: 80px;
+        margin-top: 1rem;
+        padding: 0.5rem;
+        &.bg-gd-danger {
+            background: linear-gradient(to left, lighten($danger, 40%), $white, $white, $white, lighten($danger, 40%));
+            border-color: lighten($danger, 40%);
+        }
+        &.border-dark {
+            border: solid 3px map-get($gray-shades, gray-1) !important; 
+        }
+    }
+    &-controls {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        .btn {
+            border-radius: 20px;
+            color: $white;
+            height: 20px;
+            line-height: 1;
+            padding: 0;
+            width: 20px;
+            .fas {
+                color: $white;
+                font-size: .7rem;
+                line-height: 20px;
+            }
+        }
+    }
+    &-img {
+        background: url(https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png) center center;
+        background-size: contain;
+        border-radius: 50px;
+        height: 50px;
+        margin-right: .5rem;
+        min-width: 50px;
+        overflow: hidden;
+        position: relative;
+        width: 50px;
+        img {
+            height: 75px;
+            position: absolute;
+            top: 50%;  /* position the top  edge of the element at the middle of the parent */
+            left: 50%; /* position the left edge of the element at the middle of the parent */
+            transform: translate(-50%, -50%);
+            width: auto;
+        }
+    }
+    &-info {
+        height: inherit;
+        display: flex;
+        align-items: center;
+    }
+    &-title {
+        color: $text-color;
+        display: block;
+        display: -webkit-box;
+        font-weight: 700;
+        max-height: 42px;
+        max-width: 100%;
+        margin: auto 0;
+        font-size: 14px;
+        line-height: 1;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    &-wrapper {
+        position: relative;
+        &:hover {
+            .btn .fas {
+                color: map-get($gray-shades, second-light);
+            }
+        }
+    }
+}

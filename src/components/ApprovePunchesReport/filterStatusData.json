@@ -1,0 +1,14 @@
+[
+	{
+		"value": "W",
+		"label": "All Status"
+	},
+	{
+		"value": "A",
+		"label": "Approved"
+	},
+	{
+		"value": "U",
+		"label": "Unapproved"
+	}
+]

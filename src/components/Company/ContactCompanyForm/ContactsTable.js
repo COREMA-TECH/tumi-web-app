@@ -6,10 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuItem from '@material-ui/core/MenuItem';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -21,6 +18,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import Select from '@material-ui/core/Select';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import UserFormModal from '../../ui-components/UserForm/UserContactForm';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -121,9 +119,6 @@ const styles = (theme) => ({
 		overflowX: 'auto'
 	},
 	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		},
 		'&:hover': {
 			cursor: 'pointer'
 		}
@@ -144,10 +139,17 @@ const styles = (theme) => ({
 let id = 0;
 
 class ContactsTable extends React.Component {
-	state = {
-		page: 0,
-		rowsPerPage: 5
-	};
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			page: 0,
+			rowsPerPage: 5,
+			openModal: false,
+			contact: null
+		};
+	}
+
 	handleChangePage = (event, page) => {
 		this.setState({ page });
 	};
@@ -168,7 +170,8 @@ class ContactsTable extends React.Component {
 		}
 		if (
 			this.state.page !== nextState.page ||
-			this.state.rowsPerPage !== nextState.rowsPerPage //||
+			this.state.rowsPerPage !== nextState.rowsPerPage || //||
+			this.state.openModal != nextState.openModal
 			//this.state.order !== nextState.order ||
 			//this.state.orderBy !== nextState.orderBy
 		) {
@@ -176,6 +179,23 @@ class ContactsTable extends React.Component {
 		}
 		return false;
 	}
+
+	/**
+     * To open modal updating the state
+     */
+	handleClickOpenModal = (row) => {
+		this.setState(() => ({ openModal: true, contact: row }));
+	};
+
+    /**
+     * To hide modal and then restart modal state values
+     */
+	handleCloseModal = () => {
+		this.setState(() => ({ openModal: false, contact: null }), () => {
+			if (this.props.updateData)
+				this.props.updateData();
+		});
+	};
 
 	render() {
 		const { classes } = this.props;
@@ -196,11 +216,13 @@ class ContactsTable extends React.Component {
 			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
 		}
 		return (
-			<Paper className={classes.root}>
+			<React.Fragment>
+				<UserFormModal handleCloseModal={this.handleCloseModal} openModal={this.state.openModal}
+					idEntity={this.props.idEntity} contact={this.state.contact} />
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={"Table-head"}>Actions</CustomTableCell>
+							<CustomTableCell padding="none" width="40px" className={"Table-head"}>Actions</CustomTableCell>
 							<CustomTableCell className={"Table-head"} width="60px">Contact
                                 Type</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
@@ -248,6 +270,19 @@ class ContactsTable extends React.Component {
 												<i class="fas fa-trash"></i>
 											</button>
 										</Tooltip>
+										{row.users.length == 0 ?
+											<Tooltip title="User">
+												<button
+													className="btn btn-outline-info float-left ml-1"
+													disabled={this.props.loading}
+													onClick={(e) => {
+														e.stopPropagation();
+														this.handleClickOpenModal({ ...row });
+													}}
+												>
+													<i className="fas fa-plus"></i>
+												</button>
+											</Tooltip> : ''}
 									</CustomTableCell>
 									<CustomTableCell>
 										<Select
@@ -316,7 +351,7 @@ class ContactsTable extends React.Component {
 						<TableRow>
 							{items.length > 0 && (
 								<TablePagination
-									colSpan={3}
+									colSpan={1}
 									count={items.length}
 									rowsPerPage={rowsPerPage}
 									page={page}
@@ -328,7 +363,7 @@ class ContactsTable extends React.Component {
 						</TableRow>
 					</TableFooter>
 				</Table>
-			</Paper>
+			</React.Fragment >
 		);
 	}
 }

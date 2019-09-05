@@ -120,9 +120,6 @@ const styles = (theme) => ({
 		overflowX: 'auto'
 	},
 	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		},
 		'&:hover': {
 			cursor: 'pointer'
 		}
@@ -185,17 +182,17 @@ class ApplicationTable extends React.Component {
 
 		return (
 
-			<Paper className={classes.root}>
+			<React.Fragment>
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
 							<CustomTableCell padding="none" className={'Table-head'} />
+							<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
-							<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
 						</TableRow>
 					</TableHead>
@@ -232,14 +229,14 @@ class ApplicationTable extends React.Component {
 													</div>
 												</Tooltip>
 											</CustomTableCell>
+											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
 											<CustomTableCell>
 												{row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
 											</CustomTableCell>
 											<CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
-											<CustomTableCell>{row.user ? row.user.Full_Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
-											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
+											<CustomTableCell>{row.user && row.sendInterview ? row.user.Full_Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>
 
@@ -254,7 +251,7 @@ class ApplicationTable extends React.Component {
 						<TableRow>
 							{items.length > 0 && (
 								<TablePagination
-									colSpan={3}
+									colSpan={1}
 									count={items.length}
 									rowsPerPage={rowsPerPage}
 									page={page}
@@ -266,7 +263,7 @@ class ApplicationTable extends React.Component {
 						</TableRow>
 					</TableFooter>
 				</Table>
-			</Paper>
+			</React.Fragment>
 
 		);
 	}

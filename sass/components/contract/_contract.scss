@@ -1,0 +1,48 @@
+#signatureMainContainer {    
+    text-align: left !important;
+    .signature-information {
+        padding-top: 100px;
+        padding-bottom: 100px;
+        padding-right: 150px;
+        padding-left: 80px;
+    }
+}
+
+.avatar {
+    &Image-wrapper  {
+        border: 3px solid $light-gray !important;
+        border-radius: 96px;
+        height: 96px;
+
+        margin-left: auto;
+        margin-right: auto;
+
+        overflow: hidden;
+        position: relative;
+        width: 96px;
+    }
+    &-uploaded {
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        position: absolute;
+        height: 100%;
+    }
+    &-wrapper {
+        position: relative;
+    }
+}
+
+.main-contract {
+    &__header {
+        height: auto !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+    .company-list__header {
+        @media (min-width: 360px) {
+            height: auto !important;
+        }
+    }
+}

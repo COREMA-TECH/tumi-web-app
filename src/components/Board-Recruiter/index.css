@@ -85,3 +85,20 @@
     }
 }
 
+
+.btn-assign-me {
+    padding: 5px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    background: #41afd7;
+    border: none;
+    margin: 5px;
+    margin-left: auto;
+    display: block;
+    position: relative;
+    z-index: 999;
+}
+
+.btn-assign-me:focus {
+    outline: none;
+}
