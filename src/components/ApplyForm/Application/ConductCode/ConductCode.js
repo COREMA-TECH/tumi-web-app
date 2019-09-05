@@ -144,6 +144,8 @@ class ConductCode extends Component {
 	cloneForm = _ => {
 		let contentPDF = document.getElementById('DocumentPDF');
 		let contentPDFClone = contentPDF.cloneNode(true);
+		contentPDFClone.querySelector("#imgCanvasSign").style.zoom = "1.8";
+
 		return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
 	}
 
@@ -325,7 +327,7 @@ class ConductCode extends Component {
                                                 <p style="margin: 0in 0in 0.0001pt;  ">&nbsp;</p>
                                                 <li style="text-align: justify;"><span style="">I am committed to the success of Tumi Staffing, Inc and providing a positive environment to all of my fellow employees!</span></li>
                                                 </ol>
-                                                <p style="margin: 4.4pt 0in 0.0001pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img width="150" height="auto" src="` +
+                                                <p style="margin: 4.4pt 0in 0.0001pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img id ="imgCanvasSign" width="150" height="auto" src="` +
 												this.state.signature +
 												`" alt=""></u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` +
 												this.state.date.substring(0, 10) +
@@ -375,7 +377,7 @@ class ConductCode extends Component {
                                 </ol>
                                 <p style="margin: 0in 0in 0.0001pt;  ">&nbsp;</p>
                                 <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    Signed: <u><img src="` + this.state.signature + `" alt="" width="150" height="auto" /></u>
+                                    Signed: <u><img  id ="imgCanvasSign" src="` + this.state.signature + `" alt="" width="150" height="auto" /></u>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` +
 												this.state.date.substring(0, 10) + `</u>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>

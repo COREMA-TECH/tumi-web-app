@@ -53,7 +53,7 @@ class WorkerCompensation extends Component {
         });
     };
 
-    cloneForm  = _ => {
+    cloneForm = _ => {
         let contentPDF = document.getElementById('DocumentPDF');
         let contentPDFClone = contentPDF.cloneNode(true);
         return `<html style="zoom: 60%;">${contentPDFClone.innerHTML}</html>`;
@@ -465,7 +465,7 @@ class WorkerCompensation extends Component {
         );
 
         return (
-            <div className="Apply-container--application" style={{width: "100%", maxWidth: "900px", margin: "0 auto"}}>
+            <div className="Apply-container--application" style={{ width: "100%", maxWidth: "900px", margin: "0 auto" }}>
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">
@@ -516,7 +516,7 @@ class WorkerCompensation extends Component {
 <table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0" cellspacing="5">
     <tbody>
         <tr>
-            <td style="width: 80%; border-bottom: 1px solid black; margin-right: 5px;"><img src="${this.state.signature || ''}" alt="" width="150" height="auto" /></td>
+            <td style="width: 80%; border-bottom: 1px solid black; margin-right: 5px;"><img src="${this.state.signature || ''}" alt="" width="150" height="auto" style="zoom:1.5" /></td>
             <td style="width: 20%; border-bottom: 1px solid black; margin-left: 5px;">${this.state.date.substring(0, 10) || ''}</td>
         </tr>
         <tr>
