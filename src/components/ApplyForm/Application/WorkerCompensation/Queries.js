@@ -17,6 +17,7 @@ export const GET_WORKER_COMPENSATION_INFO = gql`
                 injuryNotification
                 initialNotification
                 injuryDate
+                pdfUrl
             }
         }
     }

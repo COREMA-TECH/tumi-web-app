@@ -4,7 +4,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
-import { ADD_NON_DISCLOSURE } from "./Mutations";
+import { ADD_NON_DISCLOSURE, UPDATE_PDF_URL_SUMMARY } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import renderHTML from 'react-render-html';
 import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
@@ -36,7 +36,8 @@ class Summary extends Component {
             numberId: '',
             employmentType: '',
             accounts: [],
-            exemptions: 0
+            exemptions: 0,
+            urlPDF: null
         }
     }
 
@@ -235,9 +236,14 @@ class Summary extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then((data) => {
-                if (data.data.createdocumentspdf != null) {
-                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+            .then(({data}) => {
+                if (data.createdocumentspdf !== null) {
+                    this.setState({
+                        urlPDF: data.createdocumentspdf
+                    }, () => {
+                        this.downloadDocumentsHandler();
+                        this.updatePdfUrlSummary();
+                    });
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',
@@ -252,12 +258,41 @@ class Summary extends Component {
             });
     };
 
+    updatePdfUrlSummary = () => {
+        this.props.client
+            .mutate({
+                mutation: UPDATE_PDF_URL_SUMMARY,
+                variables: {
+                    id: this.state.ApplicationId,
+                    pdfUrl: this.state.urlPDF
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to updating url Summary',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
 
-    downloadDocumentsHandler = (idv4) => {
-        var url = this.context.baseUrl + '/public/Documents/' + "Summary-" + idv4 + "-" + this.state.applicantName + '.pdf';
+    downloadDocumentsHandler = () => {
+        var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "Summary-" + idv4 + "-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
         this.setState({ downloading: false });
     };
+
+    handlePdfDownload = () => {
+        if(this.state.urlPDF){
+            this.downloadDocumentsHandler();
+        }
+        else {
+            let idv4 = uuidv4();
+            this.createDocumentsPDF(idv4);
+        }
+    }
 
     componentWillMount() {
         this.getInformation();
@@ -320,15 +355,8 @@ class Summary extends Component {
                                             <div>
                                                 {
                                                     this.state.id !== null ? (
-                                                        <button className="applicant-card__edit-button" onClick={() => {
-                                                            let idv4 = uuidv4();
-                                                            this.createDocumentsPDF(idv4);
-                                                            this.sleep().then(() => {
-                                                                this.downloadDocumentsHandler(idv4);
-                                                            }).catch(error => {
-                                                                this.setState({ downloading: false })
-                                                            })
-                                                        }}>{this.state.downloading && (
+                                                        <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+                                                            {this.state.downloading && (
                                                             <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
                                                             {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
                                                                 className="fas fa-download" /></React.Fragment>)}

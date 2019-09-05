@@ -26,64 +26,9 @@ import { red } from '@material-ui/core/es/colors';
 import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
 
-const CustomCard = props => {
-    return (
-        <div>
-            <header
-                style={{
-                    borderBottom: '1px solid #eee',
-                    paddingBottom: 0,
-                    marginBottom: 0,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    color: props.cardColor
-                }}>
-                <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{props.name}</div>
-                <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{props.dueOn}</div>
-            </header>
-            <div style={{ fontSize: 12, color: '#4C4C4C' }}>
-                <div style={{ margin: 2, color: '#4C4C4C', fontWeight: 'bold' }}>{props.subTitle}</div>
-                <div style={{ margin: 5, padding: '0px 0px' }}><i>{props.body}</i>
-                </div>
-                <header
-                    style={{
-                        paddingBottom: 0,
-                        marginBottom: 0,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        color: props.cardColor
-                    }}>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeft}</div>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenter}</div>
-                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}  </div>
-                </header>
-                <header
-                    style={{
-                        paddingBottom: 0,
-                        marginBottom: 0,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        color: props.cardColor
-                    }}>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftLead}</div>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
-                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i
-                        class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
-                </header>
-            </div>
-        </div>
-    )
-}
-
-//const { getDistance } = this.context
-
 class BoardManager extends Component {
     constructor(props) {
         super(props);
-
 
         this.state = {
             loading: false,
@@ -148,7 +93,7 @@ class BoardManager extends Component {
             LaneDestino: targetLaneId
         });
 
-        if (sourceLaneId == "lane1" || sourceLaneId == "Notify") {
+        if (sourceLaneId == "lane1") {
 
             this.props.handleOpenSnackbar('warning', "These cards can not be moved", 'bottom', 'right');
             this.KeepArray();
@@ -293,7 +238,7 @@ class BoardManager extends Component {
             .catch();
     };
 
-    updateHotel = ({value: id}) => {
+    updateHotel = ({ value: id }) => {
         if (id != 0) {
             this.setState(
                 {
@@ -397,10 +342,10 @@ class BoardManager extends Component {
 
             if (this.state.LaneOrigen != "lane1" && this.state.LaneOrigen != "Notify") {
                 this.clearArray();
+
                 needEnglish = state.needEnglish;
                 needExperience = state.needExperience;
                 Position = state.Position;
-
 
                 this.getLatLongHotel(1, state.Zipcode.substring(0, 5));//, () => {
 
@@ -414,7 +359,7 @@ class BoardManager extends Component {
         }
     }
 
-    KeepArray() {
+    KeepArray = () => {
         this.setState(
             {
                 lane: [
@@ -810,17 +755,17 @@ class BoardManager extends Component {
 
     //#region Dropdowns
     getHotelOptions = _ => {
-        const defValue = {value: 0, label: "Select a Hotel"};
+        const defValue = { value: 0, label: "Select a Hotel" };
 
         const options = this.state.hotels.map(hotel => {
-            return {value: hotel.Id, label: hotel.Name};
+            return { value: hotel.Id, label: hotel.Name };
         });
 
         return [defValue, ...options];
     }
 
     findSelectedHotel = hotelId => {
-        const defValue = {value: 0, label: "Select a Hotel"};
+        const defValue = { value: 0, label: "Select a Hotel" };
 
         const found = this.state.hotels.find(hotel => {
             return hotel.Id === hotelId;
@@ -830,17 +775,17 @@ class BoardManager extends Component {
     }
 
     getStateOptions = _ => {
-        const defValue = {value: 0, label: "Select a State"};
+        const defValue = { value: 0, label: "Select a State" };
 
         const options = this.state.states.map(state => {
-            return {value: state.Id, label: state.Name};
+            return { value: state.Id, label: state.Name };
         });
 
         return [defValue, ...options];
     }
 
     findSelectedState = stateId => {
-        const defValue = {value: 0, label: "Select a State"};
+        const defValue = { value: 0, label: "Select a State" };
 
         const found = this.state.states.find(state => {
             return state.Id === stateId;
@@ -849,7 +794,7 @@ class BoardManager extends Component {
         return found ? { value: found.Id, label: found.Name } : defValue;
     }
 
-    handleStateFilterChange = ({value}) => {
+    handleStateFilterChange = ({ value }) => {
         this.setState({
             state: value,
             city: 0,
@@ -861,17 +806,17 @@ class BoardManager extends Component {
     }
 
     getCityOptions = _ => {
-        const defValue = {value: 0, label: "Select a City"};
+        const defValue = { value: 0, label: "Select a City" };
 
         const options = this.state.cities.map(city => {
-            return {value: city.Id, label: city.Name};
+            return { value: city.Id, label: city.Name };
         });
 
         return [defValue, ...options];
     }
 
     findSelectedCity = cityId => {
-        const defValue = {value: 0, label: "Select a City"};
+        const defValue = { value: 0, label: "Select a City" };
 
         const found = this.state.cities.find(city => {
             return city.Id === cityId;
@@ -880,7 +825,7 @@ class BoardManager extends Component {
         return found ? { value: found.Id, label: found.Name } : defValue;
     }
 
-    handleCityFilterChange = ({value}) => {
+    handleCityFilterChange = ({ value }) => {
         this.setState({
             city: value
         }, () => {
@@ -888,10 +833,10 @@ class BoardManager extends Component {
         })
     }
 
-   findSelectedStatus = statusId => {
-        const defValue = {value: null, label: "Status (All)"};
+    findSelectedStatus = statusId => {
+        const defValue = { value: null, label: "Status (All)" };
 
-        if(!statusId)
+        if (!statusId)
             return defValue;
 
         const found = this.state.statusOptions.find(status => {
@@ -901,7 +846,7 @@ class BoardManager extends Component {
         return found ? found : defValue;
     }
 
-    handleStatusFilterChange = ({value}) => {
+    handleStatusFilterChange = ({ value }) => {
         if (value == "null") {
             this.updateStatus(null);
         } else {
@@ -915,7 +860,6 @@ class BoardManager extends Component {
         const { classes } = this.props;
 
         let isLoading = this.state.loading;
-
         return (
             <div>
 
@@ -940,7 +884,7 @@ class BoardManager extends Component {
                                                             isMulti={false}
                                                         />
                                                     </div>
-                                                    <div className="col-md-3 col-xl-2 mb-2">                                                       
+                                                    <div className="col-md-3 col-xl-2 mb-2">
                                                         <Select
                                                             options={this.getStateOptions()}
                                                             value={this.findSelectedState(this.state.state)}
