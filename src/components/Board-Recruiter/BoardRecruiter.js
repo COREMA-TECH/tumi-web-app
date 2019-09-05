@@ -237,14 +237,14 @@ class BoardRecruiter extends Component {
                         this.updateApplicationInformation(cardId, true, 'candidate was updated!');
                     }
 
-                    if(targetLaneId === "Applied"){
+                    if (targetLaneId === "Applied") {
                         const recruiterId = localStorage.getItem("LoginId");
 
                         this.props.client
                             .mutate({
                                 mutation: UPDATE_APPLICANT,
                                 variables: {
-        
+
                                     id: cardId,
                                     isLead: true,
                                     idRecruiter: recruiterId,
@@ -273,52 +273,7 @@ class BoardRecruiter extends Component {
 
                         });
 
-                        this.setState(
-                            {
-                                Opening: this.state.Openings,
-                                lane: [
-                                    {
-                                        id: 'lane1',
-                                        title: 'Openings',
-                                        label: ' ',
-                                        cards: this.state.Openings,
-                                        droppable: false,
-                                        draggable: false,
-                                        editable: false
-                                    },
-                                    {
-                                        id: 'Leads',
-                                        title: 'Leads',
-                                        label: ' ',
-                                        cards: this.state.leads
-                                    },
-                                    {
-                                        id: 'Applied',
-                                        title: 'Sent to Interview',
-                                        label: ' ',
-                                        cards: this.state.Applied
-                                    },
-                                    {
-                                        id: 'Candidate',
-                                        title: 'Candidate',
-                                        label: ' ',
-                                        cards: this.state.Candidate,
-                                        droppable: false,
-                                        draggable: false,
-                                        editable: false
-                                    },
-                                    {
-                                        id: 'Placement',
-                                        title: 'Placement',
-                                        label: ' ',
-                                        cards: this.state.Placement,
-                                        droppable: false,
-                                        draggable: false,
-                                        editable: false
-                                    }
-                                ],
-                                loading: false
-                            });
+                        this.KeepArray();
                     }
 
                 }
@@ -477,7 +432,9 @@ class BoardRecruiter extends Component {
             .catch();
     };
 
-    updateHotel = (id) => {
+    updateHotel = (event) => {
+
+        let id = event.target.value;
 
         if (id != 0) {
             this.setState(
@@ -494,9 +451,7 @@ class BoardRecruiter extends Component {
                 () => {
                     // this.validateField('state', id);
                     this.loadStates();
-                    this.loadCities();
                     this.getOpenings();
-                    this.getMatches();
                 }
             );
 
@@ -509,11 +464,8 @@ class BoardRecruiter extends Component {
                     matches: []
                 },
                 () => {
-                    // this.validateField('state', id);
                     this.getOpenings();
                     this.loadStates();
-                    this.loadCities();
-                    this.getMatches();
                 }
             );
 
@@ -582,9 +534,12 @@ class BoardRecruiter extends Component {
     }
 
     onCardClick = (cardId, metadata, laneId) => {
-        let needEnglish, needExperience, Position;
+        let needEnglish, needExperience, Position, state;
 
-        if (laneId.trim() == "lane1" && cardId > 0) {
+
+        state = this.state.Openings.find((item) => { return item.id == cardId })
+
+        if (laneId.trim() == "lane1" && cardId > 0 && state.Status != 0) {
 
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
@@ -594,51 +549,33 @@ class BoardRecruiter extends Component {
             });
             cardSelected[0].classList.add("CardBoard-selected");
 
+            this.setState(
+                {
+                    Intopening: state.WorkOrderId,
+                    ShiftId: cardId
+                })
+
             if (laneId.trim() == "lane1") {
                 this.clearArray();
 
-                let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
-                let anotherCards = document.querySelectorAll("article[data-id]");
-
-                anotherCards.forEach((anotherCard) => {
-                    anotherCard.classList.remove("CardBoard-selected");
-                });
-                cardSelected[0].classList.add("CardBoard-selected");
-
-                this.setState(
-                    {
-                        Intopening: this.state.Openings.find((item) => {
-                            return item.id == cardId
-                        }).WorkOrderId,
-                        ShiftId: cardId
-                    })
-
-                needEnglish = this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).needEnglish;
-                needExperience = this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).needExperience;
-                Position = this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).Position.trim();
+                needEnglish = state.needEnglish;
+                needExperience = state.needExperience;
+                Position = state.Position.trim();
 
 
-                this.getLatLongHotel(1, this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).Zipcode.trim());
+                this.getLatLongHotel(1, state.Zipcode.substring(0, 5));
 
                 if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, Position);
+                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, Position, state.WorkOrderId, cardId);
                 } else {
-                    this.getMatches(needEnglish, needExperience, 30, laneId, Position);
+                    this.getMatches(needEnglish, needExperience, 30, laneId, Position, state.WorkOrderId, cardId);
                 }
             }
         }
     }
 
 
-    KeepArray() {
+    KeepArray = () => {
         this.setState(
             {
                 Opening: this.state.Openings,
@@ -769,20 +706,9 @@ class BoardRecruiter extends Component {
         })
     };
 
-    getLatLong = async (op, zipcode, fnc = () => {
-    }) => {
-        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
-            this.setState({
-                latitud2: data.zipcode[0].Lat,
-                longitud2: data.zipcode[0].Long
-            }, fnc);
 
-        }).catch(error => {
-        })
-    };
+    getMatches = async (language, experience, location, laneId, PositionId, _WOID, _SHID) => {
 
-    getMatches = async (language, experience, location, laneId, PositionId) => {
-       
         let getleads = [];
         let getApplied = [];
         let getCandidate = [];
@@ -800,40 +726,34 @@ class BoardRecruiter extends Component {
                 },
                 () => {
                     this.props.client.query({
-                        query: GET_LEAD, variables: { language: language, experience: experience, Position: PositionId, WorkOrderId: this.state.Intopening, ShiftId: this.state.ShiftId }
+                        query: GET_LEAD, variables: {
+                            language: language,
+                            experience: experience,
+                            Position: PositionId,
+                            WorkOrderId: _WOID,
+                            ShiftId: _SHID
+                        }
                     }).then(({ data }) => {
                         let dataAPI = data.applicationsByMatches;
-                       
+
                         dataAPI.map(wo => {
                             const Phases = wo.Phases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
-                       
+
                             if (wo.Coordenadas) {
-                                    const { getDistance } = this.context;
-                                    const distance = getDistance(this.state.latitud1, this.state.longitud1, wo.Coordenadas.Lat, wo.Coordenadas.Long, 'M')
-                                    
-                                    if (distance <= location) {
+                                const { getDistance } = this.context;
+                                const distance = getDistance(this.state.latitud1, this.state.longitud1, wo.Coordenadas.Lat, wo.Coordenadas.Long, 'M')
 
-                                        if (typeof Phases == undefined || Phases == null) {
-                                            varphase = 30460;
-                                        } else { varphase = Phases.StageId }
+                                if (distance <= location) {
+
+                                    if (typeof Phases == undefined || Phases == null) {
+                                        varphase = 30460;
+                                    } else { varphase = Phases.StageId }
 
 
-                                        switch (varphase) {
-                                            case 30460:
-                                                if (wo.isLead === true) {
-                                                    getleads.push({
-                                                        id: wo.id,
-                                                        name: wo.firstName + ' ' + wo.lastName,
-                                                        subTitle: wo.cellPhone,
-                                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                        escalationTextLeftLead: wo.generalComment,
-                                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                                    });
-                                                }
-                                                break;
-                                            case 30461:
-                                                getApplied.push({
+                                    switch (varphase) {
+                                        case 30460:
+                                            if (wo.isLead === true) {
+                                                getleads.push({
                                                     id: wo.id,
                                                     name: wo.firstName + ' ' + wo.lastName,
                                                     subTitle: wo.cellPhone,
@@ -842,89 +762,56 @@ class BoardRecruiter extends Component {
                                                     escalationTextRightLead: wo.car == true ? " Yes" : " No",
                                                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                                                 });
-                                                break;
-                                            case 30462, 30464:
-                                                getCandidate.push({
-                                                    id: wo.id,
-                                                    name: wo.firstName + ' ' + wo.lastName,
-                                                    subTitle: wo.cellPhone,
-                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                    escalationTextLeftLead: wo.generalComment,
-                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                                });
-                                                break;
-                                            case 30463, 30465:
-                                                getPlacement.push({
-                                                    id: wo.id,
-                                                    name: wo.firstName + ' ' + wo.lastName,
-                                                    subTitle: wo.cellPhone,
-                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                                    escalationTextLeftLead: wo.generalComment,
-                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                                });
-                                                break;
-                                        }
+                                            }
+                                            break;
+                                        case 30461:
+                                            getApplied.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break;
+                                        case 30462, 30464:
+                                            getCandidate.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break;
+                                        case 30463, 30465:
+                                            getPlacement.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break;
                                     }
+                                }
 
-                                    this.setState({
-                                        leads: getleads,
-                                        Applied: getApplied,
-                                        Candidate: getCandidate,
-                                        Placement: getPlacement
-                                    });
-
-                                    this.setState(
-                                        {
-                                            Opening: this.state.Openings,
-                                            lane: [
-                                                {
-                                                    id: 'lane1',
-                                                    title: 'Openings',
-                                                    label: ' ',
-                                                    cards: this.state.Openings,
-                                                    droppable: false,
-                                                    draggable: false,
-                                                    editable: false
-                                                },
-                                                {
-                                                    id: 'Leads',
-                                                    title: 'Leads',
-                                                    label: ' ',
-                                                    cards: getleads
-                                                },
-                                                {
-                                                    id: 'Applied',
-                                                    title: 'Sent to Interview',
-                                                    label: ' ',
-                                                    cards: getApplied
-                                                },
-                                                {
-                                                    id: 'Candidate',
-                                                    title: 'Candidate',
-                                                    label: ' ',
-                                                    cards: getCandidate,
-                                                    droppable: false,
-                                                    draggable: false,
-                                                    editable: false
-                                                },
-                                                {
-                                                    id: 'Placement',
-                                                    title: 'Placement',
-                                                    label: ' ',
-                                                    cards: getPlacement,
-                                                    droppable: false,
-                                                    draggable: false,
-                                                    editable: false
-                                                }
-                                            ],
-                                            loading: false
-                                        });
-
-                               // });
                             }
                         });
+
+
+                        this.setState({
+                            leads: getleads,
+                            Applied: getApplied,
+                            Candidate: getCandidate,
+                            Placement: getPlacement
+                        });
+
+                        this.KeepArray();
 
                         if (data.applicationsByMatches.length === 0) {
                             this.props.handleOpenSnackbar(
@@ -938,7 +825,6 @@ class BoardRecruiter extends Component {
                             loading: false
                         })
                     }).catch(error => {
-                        console.log("error del match: ",error)
                         this.setState({
                             loading: false,
                         })
@@ -1046,52 +932,7 @@ class BoardRecruiter extends Component {
             console.log(error)
         })
 
-        this.setState({
-
-            Opening: this.state.Openings,
-            lane: [
-                {
-                    id: 'lane1',
-                    title: 'Openings',
-                    label: ' ',
-                    cards: this.state.Openings,
-                    droppable: false,
-                    draggable: false,
-                    editable: false
-                },
-                {
-                    id: 'Leads',
-                    title: 'Leads',
-                    label: ' ',
-                    cards: []
-                },
-                {
-                    id: 'Applied',
-                    title: 'Sent to Interview',
-                    label: ' ',
-                    cards: []
-                },
-                {
-                    id: 'Candidate',
-                    title: 'Candidate',
-                    label: ' ',
-                    cards: [],
-                    droppable: false,
-                    draggable: false,
-                    editable: false
-                },
-                {
-                    id: 'Placement',
-                    title: 'Placement',
-                    label: ' ',
-                    cards: [],
-                    droppable: false,
-                    draggable: false,
-                    editable: false
-                }
-            ],
-            loading: false
-        });
+        this.KeepArray();
     };
 
     handleSwitchView = (event) => {
@@ -1104,10 +945,64 @@ class BoardRecruiter extends Component {
         }, 1000);
     }
 
+    onChangeState = (event) => {
+        this.setState(() => ({
+            state: event.target.value,
+            city: 0,
+            cities: []
+        }), () => {
+            this.loadCities();
+            this.getOpenings();
+        })
+    }
+
+    onChangeCity = (event) => {
+        this.setState(() => ({
+            city: event.target.value
+        }), () => {
+            this.getOpenings();
+        })
+    }
+
+    onChangeStatus = (event) => {
+        if (event.target.value == "null") {
+            this.updateStatus(null);
+        } else {
+            this.updateStatus(event.target.value);
+        }
+    }
+
+    onClickAdvancedFilterButton = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.setState(() => ({ openModal: true }));
+    }
+
+    onClickFilterButton = (e) => {
+        this.setState(() => ({
+            hotel: 0,
+            state: 0,
+            city: 0,
+            status: null
+        }), () => {
+            this.getOpenings();
+        })
+    }
+
+    onClickNewLead = () => {
+        localStorage.setItem('idApplication', 0);
+        this.props.history.push({
+            pathname: '/home/application/Form',
+            state: { ApplicationId: 0 }
+        });
+    }
+
     render() {
         const { classes } = this.props;
 
         let isLoading = this.state.loading
+
         return (
             <div className="App">
                 {isLoading && <LinearProgress />}
@@ -1115,26 +1010,21 @@ class BoardRecruiter extends Component {
                     <div className="row">
                         <div className="col-md-12 col-lg-12">
                             <div className="card">
-                                <div className="card-header info">                                   
+                                <div className="card-header info">
                                     <div className="row">
                                         <div className="col-md-4 col-xl-2 offset-xl-1 mb-2">
                                             <select
                                                 required
                                                 name="IdEntity"
                                                 className="form-control"
-                                                id=""
-                                                onChange={(event) => {
-                                                    this.updateHotel(event.target.value);
-                                                }}
+                                                id="IdEntity"
+                                                onChange={this.updateHotel}
                                                 value={this.state.hotel}
-                                                //disabled={!isAdmin}
                                                 onBlur={this.handleValidate}
                                             >
                                                 <option value={0}>Select a Hotel</option>
                                                 {this.state.hotels.map((hotel) => (
-
                                                     <option value={hotel.Id}>{hotel.Name}</option>
-
                                                 ))}
                                             </select>
                                         </div>
@@ -1142,17 +1032,7 @@ class BoardRecruiter extends Component {
                                             <select
                                                 name="state"
                                                 className={'form-control'}
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        state: event.target.value,
-                                                        city: 0,
-                                                        cities: []
-                                                    }, () => {
-                                                        this.loadCities();
-                                                        this.getOpenings();
-                                                        this.getMatches();
-                                                    })
-                                                }}
+                                                onChange={this.onChangeState}
                                                 value={this.state.state}
                                                 showNone={false}
                                             >
@@ -1166,16 +1046,7 @@ class BoardRecruiter extends Component {
                                             <select
                                                 name="city"
                                                 className={'form-control'}
-                                                // disabled={this.state.loadingCities}
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        city: event.target.value
-                                                    }, () => {
-                                                        this.getOpenings();
-                                                        this.getMatches();
-                                                    })
-                                                }}
-                                                //error={!this.state.cityValid}
+                                                onChange={this.onChangeCity}
                                                 value={this.state.city}
                                                 showNone={false}
                                             >
@@ -1189,13 +1060,7 @@ class BoardRecruiter extends Component {
                                             <select
                                                 name="status"
                                                 className={'form-control'}
-                                                onChange={(event) => {
-                                                    if (event.target.value == "null") {
-                                                        this.updateStatus(null);
-                                                    } else {
-                                                        this.updateStatus(event.target.value);
-                                                    }
-                                                }}
+                                                onChange={this.onChangeStatus}
                                                 value={this.state.status}
                                                 showNone={false}
                                             >
@@ -1207,39 +1072,19 @@ class BoardRecruiter extends Component {
                                         </div>
                                         <div className="col-md-12 col-xl-3 mb-2 Filter-buttons">
                                             <a
-                                                className="link-board Filter-button" onClick={(e) => {
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-
-                                                    this.setState({ openModal: true })
-                                                }}>
+                                                className="link-board Filter-button" onClick={this.onClickAdvancedFilterButton}>
                                                 Advanced <i className="fas fa-filter link-icon-filter"></i>
                                             </a>
                                             <a
-                                                className="link-board Filter-button" onClick={(e) => {
-                                                    this.setState({
-                                                        hotel: 0,
-                                                        state: 0,
-                                                        city: 0,
-                                                        status: null
-                                                    }, () => {
-                                                        this.getOpenings();
-                                                    })
-                                                }}>
+                                                className="link-board Filter-button" onClick={this.onClickFilterButton}>
                                                 Clear <i className="fas fa-filter link-icon-filter"></i><i
                                                     className="fas fa-times-circle text-danger clear-filter" />
                                             </a>
                                             <button
                                                 className="btn btn-outline-info btn-sm Filter-button"
-                                                onClick={() => {
-                                                    localStorage.setItem('idApplication', 0);
-                                                    this.props.history.push({
-                                                        pathname: '/home/application/Form',
-                                                        state: { ApplicationId: 0 }
-                                                    });
-                                                }}>New Lead
+                                                onClick={this.onClickNewLead}>New Lead
                                             </button>
-                                        </div>                                                
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1255,7 +1100,7 @@ class BoardRecruiter extends Component {
                         eventBusHandle={this.setEventBus}
                         handleDragStart={this.handleDragStart}
                         handleDragEnd={this.handleDragEnd}
-                        onCardClick={this.onCardClick}
+                        onCardClick={this.state.loading ? null : this.onCardClick}
                         style={{
                             backgroundColor: '#f5f7f9'
                         }}
@@ -1263,8 +1108,8 @@ class BoardRecruiter extends Component {
                         <CustomCard
                             recruiter={this.state.userId}
                             opening={this.state.Intopening}
-                            assignRecruiterToOpening={this.assignRecruiterToOpening} 
-                            />
+                            assignRecruiterToOpening={this.assignRecruiterToOpening}
+                        />
                     </Board>
                 </div>
                 <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />

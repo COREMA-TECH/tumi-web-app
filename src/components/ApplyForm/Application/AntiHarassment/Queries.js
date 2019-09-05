@@ -32,6 +32,7 @@ export const GET_ANTI_HARRASMENT_INFO = gql`
                 content
                 date
                 applicantName
+                pdfUrl
             }
         }
     }

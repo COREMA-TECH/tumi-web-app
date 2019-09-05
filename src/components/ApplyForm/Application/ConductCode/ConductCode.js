@@ -5,7 +5,7 @@ import SignatureForm from '../../SignatureForm/SignatureForm';
 import withApollo from 'react-apollo/withApollo';
 import renderHTML from 'react-render-html';
 import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO, CREATE_DOCUMENTS_PDF_QUERY } from './Queries';
-import { ADD_CONDUCT_CODE } from './Mutations';
+import { ADD_CONDUCT_CODE, UPDATE_CONDUCT_CODE } from './Mutations';
 import withGlobalContent from '../../../Generic/Global';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
@@ -88,7 +88,8 @@ class ConductCode extends Component {
 						signature: data.applications[0].conductCode.signature,
 						content: data.applications[0].conductCode.content,
 						applicantName: data.applications[0].conductCode.applicantName,
-						date: data.applications[0].conductCode.date
+						date: data.applications[0].conductCode.date,
+						urlPDF: data.applications[0].conductCode.pdfUrl
 					});
 				} else {
 					this.setState({
@@ -139,6 +140,7 @@ class ConductCode extends Component {
 			});
 	};
 
+
 	cloneForm = _ => {
 		let contentPDF = document.getElementById('DocumentPDF');
 		let contentPDFClone = contentPDF.cloneNode(true);
@@ -160,9 +162,15 @@ class ConductCode extends Component {
 				},
 				fetchPolicy: 'no-cache'
 			})
-			.then((data) => {
-				if (data.data.createdocumentspdf != null) {
-					this.state.urlPDF = data.data.createdocumentspdf;
+			.then(({data}) => {
+				if (data.createdocumentspdf != null) {
+					//this.state.urlPDF = data.data.createdocumentspdf;
+					this.setState({
+						urlPDF: data.createdocumentspdf
+					}, () => {
+						this.updateConductCode(); 
+						this.downloadDocumentsHandler();
+					});
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
@@ -178,7 +186,7 @@ class ConductCode extends Component {
 	};
 
 	downloadDocumentsHandler = () => {
-		var url = this.context.baseUrl + this.state.urlPDF; //'/public/Documents/' + 'ConductCode-' + this.state.applicantName + '.pdf';
+		var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF;
 		window.open(url, '_blank');
 		this.setState({ downloading: false });
 	};
@@ -190,6 +198,21 @@ class ConductCode extends Component {
 
 	sleep() {
 		return new Promise((resolve) => setTimeout(resolve, 8000));
+	}
+
+	handlePdfDownload = () => {
+		if(this.state.urlPDF){
+			this.downloadDocumentsHandler();
+		}
+		else {
+			let random = uuidv4();
+			this.createDocumentsPDF(random);
+			// this.sleep().then(() => {
+			// 	this.downloadDocumentsHandler();
+			// }).catch(error => {
+			// 	this.setState({ downloading: false })
+			// });
+		}
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -257,15 +280,8 @@ class ConductCode extends Component {
 											<div>
 												{
 													this.state.id !== null ? (
-														<button className="applicant-card__edit-button" onClick={() => {
-															let random = uuidv4();
-															this.createDocumentsPDF(random);
-															this.sleep().then(() => {
-																this.downloadDocumentsHandler();
-															}).catch(error => {
-																this.setState({ downloading: false })
-															})
-														}}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+														<button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+															{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
 															{!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
 														</button>
 													) : (
