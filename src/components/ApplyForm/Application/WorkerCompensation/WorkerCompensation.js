@@ -565,11 +565,7 @@ class WorkerCompensation extends Component {
         </tr>
     </tbody>
 </table>
-<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
-<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
-<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
-<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
-<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
+
 <p style="text-align: justify; font-family: Times New Roman;">Name of Employer: <u>TUMI STAFFING INC.</u></p>
 <p style="text-align: justify; font-family: Times New Roman;">Name of Network: <em>Texas Star Network</em>&reg;</p>
 <p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>

@@ -305,6 +305,7 @@ class FormsI9 extends Component {
                                                     }}>
                                                         Sign <i className="fas fa-pencil-alt" />
                                                     </button>
+
                                                     <button className="applicant-card__edit-button" onClick={this.downloadDocumentsHandler}>
                                                         {this.state.downloading && (
                                                         <React.Fragment>Downloading <i

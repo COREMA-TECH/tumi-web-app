@@ -344,7 +344,7 @@ class FormsW4 extends Component {
                                                             <React.Fragment>{actions[9].label} <i
                                                                 className="fas fa-download" /></React.Fragment>)}
 
-                                                    </button>
+                                                    </button>                                                    
                                                 </Fragment>
                                             ) : (
                                                     <button className="applicant-card__edit-button" onClick={() => {
