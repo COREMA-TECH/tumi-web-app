@@ -112,6 +112,10 @@ class Documents extends Component {
         this.getApplicantStatus();
     }
 
+    componentWillUpdate() {
+        this.props.getApplicantStatus();
+    }
+
     getDocumentStatus = (index) => {
 
         let isCompleted = false;
