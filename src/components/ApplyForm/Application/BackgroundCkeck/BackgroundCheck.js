@@ -223,7 +223,7 @@ class BackgroundCheck extends Component {
     /**
      * To get background check info using id
      */
-    getBackgroundCheckById = (id) => {
+    getBackgroundCheckById = (id, generatePdf = false) => {
         this.setState({
             loading: true
         }, () => {
@@ -253,6 +253,8 @@ class BackgroundCheck extends Component {
                             editing: true,
                             accept: true,
                             isCreated: true
+                        }, () => {
+                            if(generatePdf) this.createDocumentsPDF(uuidv4());
                         });
                     } else {
                         this.setState({
@@ -298,7 +300,7 @@ class BackgroundCheck extends Component {
                         editing: false
                     });
 
-                    this.getBackgroundCheckById(this.props.applicationId);
+                    this.getBackgroundCheckById(this.props.applicationId, true);
 
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
@@ -352,7 +354,7 @@ class BackgroundCheck extends Component {
                         editing: false
                     });
 
-                    this.getBackgroundCheckById(this.props.applicationId);
+                    this.getBackgroundCheckById(this.props.applicationId, true);
 
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
@@ -486,13 +488,9 @@ class BackgroundCheck extends Component {
         return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
     }
 
-    createDocumentsPDF = (random) => {
-
-        this.setState(
-            {
-                downloading: true
-            }
-        )
+    createDocumentsPDF = (random, download = false) => {
+        console.log('Generar background check. Descarga -- ', download); // TODO: (LF) Quitar console log
+        this.setState({ downloading: true });
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
@@ -506,10 +504,11 @@ class BackgroundCheck extends Component {
                 if (data.createdocumentspdf !== null) {
                     this.setState({ 
                         urlPDF: data.createdocumentspdf,
-                        loadingData: false
+                        loadingData: false,
+                        downloading: false
                     }, () => {
                         this.updatePdfUrlBackgroundCheck();
-                        this.downloadDocumentsHandler();
+                        if(download) this.downloadDocumentsHandler();
                     });
                 }
                 else {
@@ -533,7 +532,6 @@ class BackgroundCheck extends Component {
     downloadDocumentsHandler = () => {
         var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "background-check-" + random + '.pdf';
         window.open(url, '_blank');
-        this.setState({ downloading: false });
     };
 
     sleep() {
@@ -546,12 +544,7 @@ class BackgroundCheck extends Component {
         }
         else {
             let random = uuidv4();
-            this.createDocumentsPDF(random);
-            // this.sleep().then(() => {
-            //     this.downloadDocumentsHandler();
-            // }).catch(error => {
-            //     this.setState({ downloading: false })
-            // })
+            this.createDocumentsPDF(random, true);
         }
     }
 

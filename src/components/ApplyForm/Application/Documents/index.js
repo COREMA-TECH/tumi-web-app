@@ -197,7 +197,7 @@ class Documents extends Component {
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header header-profile-menu">
                                 <button className="applicant-card__edit-button" onClick={this.handleMergeDocumentClick}>
-                                    Download Merged Document &nbsp;
+                                    Download NHP &nbsp;
                                     {downloading ? <i class="fas fa-spinner fa-spin" /> : <i className="fas fa-download" />}
                                 </button>
                             </div>

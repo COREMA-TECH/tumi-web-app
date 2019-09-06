@@ -79,7 +79,7 @@ class ConductCode extends Component {
 			.catch((error) => { });
 	};
 
-	getConductCodeInformation = (id) => {
+	getConductCodeInformation = (id, generatePdf = false) => {
 		this.props.client
 			.query({
 				query: GET_CONDUCT_CODE_INFO,
@@ -97,6 +97,8 @@ class ConductCode extends Component {
 						applicantName: data.applications[0].conductCode.applicantName,
 						date: this.formatDate(data.applications[0].conductCode.date, true),
 						urlPDF: data.applications[0].conductCode.pdfUrl
+					}, () => {
+						if(generatePdf) this.createDocumentsPDF(uuidv4());
 					});
 				} else {
 					this.setState({
@@ -131,6 +133,8 @@ class ConductCode extends Component {
 			})
 			.then(({ data }) => {
 				this.props.handleOpenSnackbar('success', 'Successfully signed!', 'bottom', 'right');
+
+				this.getConductCodeInformation(this.props.applicationId, true);
 
 				this.setState({
 					id: data.addConductCode[0].id
@@ -181,7 +185,7 @@ class ConductCode extends Component {
 		return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
 	}
 
-	createDocumentsPDF = (random) => {
+	createDocumentsPDF = (random, download = false) => {
 		this.setState({
 			downloading: true
 		});
@@ -198,10 +202,11 @@ class ConductCode extends Component {
 				if (data.createdocumentspdf != null) {
 					//this.state.urlPDF = data.data.createdocumentspdf;
 					this.setState({
-						urlPDF: data.createdocumentspdf
+						urlPDF: data.createdocumentspdf,
+						downloading: false
 					}, () => {
 						this.updateConductCode(); 
-						this.downloadDocumentsHandler();
+						if(download) this.downloadDocumentsHandler();
 					});
 				} else {
 					this.props.handleOpenSnackbar(
@@ -220,7 +225,6 @@ class ConductCode extends Component {
 	downloadDocumentsHandler = () => {
 		var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF;
 		window.open(url, '_blank');
-		this.setState({ downloading: false });
 	};
 
 	componentWillMount() {
@@ -238,12 +242,7 @@ class ConductCode extends Component {
 		}
 		else {
 			let random = uuidv4();
-			this.createDocumentsPDF(random);
-			// this.sleep().then(() => {
-			// 	this.downloadDocumentsHandler();
-			// }).catch(error => {
-			// 	this.setState({ downloading: false })
-			// });
+			this.createDocumentsPDF(random, true);
 		}
 	}
 

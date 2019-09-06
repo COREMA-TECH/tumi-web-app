@@ -68,12 +68,8 @@ class WorkerCompensation extends Component {
         return `<html style="zoom: 60%;">${contentPDFClone.innerHTML}</html>`;
     }
 
-    createDocumentsPDF = (uuid) => {
-        this.setState(
-            {
-                downloading: true
-            }
-        )
+    createDocumentsPDF = (uuid, download = false) => {
+        this.setState({ downloading: true });
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
@@ -87,10 +83,11 @@ class WorkerCompensation extends Component {
                 if (data.createdocumentspdf !== null) {
                     this.setState({
                         urlPDF: data.createdocumentspdf,
-                        loadingData: false
+                        loadingData: false,
+                        downloading: false
                     }, () => {
                         this.UpdatePdfUrlWorkerCompensation();
-                        this.downloadDocumentsHandler();
+                        if(download) this.downloadDocumentsHandler();
                     });
                 } else {
                     this.props.handleOpenSnackbar(
@@ -108,7 +105,7 @@ class WorkerCompensation extends Component {
 
 
     downloadDocumentsHandler = () => {
-        var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + uuid + "-" + this.state.applicantName + '.pdf';
+        var url = this.state.urlPDF;
         if(url)
             window.open(url, '_blank');
         else
@@ -118,8 +115,6 @@ class WorkerCompensation extends Component {
                 'bottom',
                 'right'
             );
-
-        this.setState({ downloading: false });
     };
 
     insertWorkerCompensation = (item) => {
@@ -149,7 +144,7 @@ class WorkerCompensation extends Component {
                     'right'
                 );
 
-                this.getWorkerCompensationInformation(this.props.applicationId);
+                this.getWorkerCompensationInformation(this.props.applicationId, true);
                 this.props.changeTabState();
             })
             .catch(error => {
@@ -211,7 +206,7 @@ class WorkerCompensation extends Component {
             })
     };
 
-    getWorkerCompensationInformation = (id) => {
+    getWorkerCompensationInformation = (id, generatePdf = false) => {
         this.props.client
             .query({
                 query: GET_WORKER_COMPENSATION_INFO,
@@ -236,6 +231,8 @@ class WorkerCompensation extends Component {
                         injuryNotification: data.applications[0].workerCompensation.injuryNotification,
                         injuryDate: this.formatDate(data.applications[0].workerCompensation.injuryDate, true),
                         urlPDF: data.applications[0].workerCompensation.pdfUrl,
+                    }, () => {
+                        if(generatePdf) this.createDocumentsPDF(uuidv4());
                     });
                 } else {
                     this.setState({
@@ -310,7 +307,7 @@ class WorkerCompensation extends Component {
         }
         else {
             const uuid = uuidv4();
-            this.createDocumentsPDF(uuid);
+            this.createDocumentsPDF(uuid, true);
         }
     }
 
