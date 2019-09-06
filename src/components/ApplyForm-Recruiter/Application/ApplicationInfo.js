@@ -62,11 +62,11 @@ class VerticalLinearStepper extends Component {
         this.state = {
             activeStep: 0,
             applicationId: null,
-            firstName:'',
-            lastName:'',
-            cellPhone:'',
-            showConfirm:false,
-            Validate:true
+            firstName: '',
+            lastName: '',
+            cellPhone: '',
+            showConfirm: false,
+            Validate: true
         }
     }
 
@@ -101,16 +101,16 @@ class VerticalLinearStepper extends Component {
         });
         window.location.href = "/home/application/Form";
     };
-    
-    NewLead = () =>{
+
+    NewLead = () => {
         if (
-           (this.state.firstName != '' ||
-           this.state.lastName != '' ||
-           this.state.cellPhone != '') && this.state.Validate
+            (this.state.firstName != '' ||
+                this.state.lastName != '' ||
+                this.state.cellPhone != '') && this.state.Validate
         ) {
             this.setState({ showConfirm: true });
-        } else{ this.redirectToCreateApplication() }
-};
+        } else { this.redirectToCreateApplication() }
+    };
 
     componentWillMount() {
         // Get id of the application and pass to the components
@@ -134,41 +134,37 @@ class VerticalLinearStepper extends Component {
 
     handleCloseConfirmDialog = () => {
         this.setState({ showConfirm: false });
-        }
-    
+    }
 
-	printDialogConfirm = () => {
-				return <Dialog maxWidth="xl" open={this.state.showConfirm} >
-					<DialogContent>
-						<h2 className="text-center">you have changes pending, do you want to continue?</h2>
-					</DialogContent>
-					<DialogActions>
-						<button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateApplication() }>
-							Continue
+
+    printDialogConfirm = () => {
+        return <Dialog maxWidth="xl" open={this.state.showConfirm} >
+            <DialogContent>
+                <h2 className="text-center">you have changes pending, do you want to continue?</h2>
+            </DialogContent>
+            <DialogActions>
+                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateApplication()}>
+                    Continue
 						</button>
-						<button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCloseConfirmDialog()}>
-							Cancel
+                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCloseConfirmDialog()}>
+                    Cancel
 						</button>
-						
-					</DialogActions>
-				</Dialog>
-		}
-    
-    SetValidate=(value)=>
-    {
-     this.setState({Validate:value})
+
+            </DialogActions>
+        </Dialog>
     }
-    SetFirstName=({firstName})=>
-    {
-      this.setState({firstName})
+
+    SetValidate = (value) => {
+        this.setState({ Validate: value })
     }
-    SetLastName=({lastName})=>
-    {
-      this.setState({lastName})
+    SetFirstName = ({ firstName }) => {
+        this.setState({ firstName })
     }
-    SetCellPhone=({cellPhone})=>
-    {
-      this.setState({cellPhone})
+    SetLastName = ({ lastName }) => {
+        this.setState({ lastName })
+    }
+    SetCellPhone = ({ cellPhone }) => {
+        this.setState({ cellPhone })
     }
 
     render() {
@@ -180,7 +176,7 @@ class VerticalLinearStepper extends Component {
             this.state.applicationId = localStorage.getItem('idApplication');
         }
 
-        
+
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
@@ -211,7 +207,7 @@ class VerticalLinearStepper extends Component {
                                     state: { ApplicationId: 0 }
                                 });
                             }}>
-                           <i className="fas fa-chevron-left" /> 
+                            <i className="fas fa-chevron-left" />
                         </button>
                         <button
                             className="btn btn-success btn-sm ml-2"
@@ -221,13 +217,13 @@ class VerticalLinearStepper extends Component {
                                     state: { ApplicationId: 0 }
                                 });
                             }}>
-                             Go To Board
+                            Go To Board
                         </button>
                         <button
                             type="button"
                             className="btn btn-success btn-sm ml-2"
                             onClick={() => {
-                             this.NewLead()
+                                this.NewLead()
                             }}>
                             <i className="fas fa-plus" /> Add New Lead
                         </button>
@@ -276,7 +272,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
 
-{this.printDialogConfirm()}
+                {this.printDialogConfirm()}
             </div>
         );
     }

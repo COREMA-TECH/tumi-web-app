@@ -41,7 +41,7 @@ const styles = (theme) => ({
 const DEFAULT_RECRUITER_VALUE = "ND";
 const DEFAULT_FILTER_TYPE = { value: "W", label: "By week" };
 const DEFAULT_FILTER_RECRUITER = { value: DEFAULT_RECRUITER_VALUE, label: "Recruited by" };
-const DEFAULT_DATA_RANGE_APP = { value: null, label: 'Report Date'};
+const DEFAULT_DATA_RANGE_APP = { value: null, label: 'Report Date' };
 
 class ApplicationList extends Component {
 	constructor(props) {
@@ -374,7 +374,9 @@ class ApplicationList extends Component {
 			fullWidth
 			maxWidth="lg"
 		>
-
+			<DialogTitle id="customized-dialog-title" onClose={this.hideNoShowReport}>
+				Modal title
+        	</DialogTitle>
 			<DialogContent maxWidth="sm" style={{ overflowY: "unset" }}>
 				<div className="card-body">
 					<div className="row">
@@ -471,7 +473,7 @@ class ApplicationList extends Component {
 	render() {
 		let { filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
 		let rectuiterFilterValue = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? recruiterFiltered.value : null;
-		let variables = rectuiterFilterValue != null ? { idRecruiter: rectuiterFilterValue  } : {}; // variable para la consulta
+		let variables = rectuiterFilterValue != null ? { idRecruiter: rectuiterFilterValue } : {}; // variable para la consulta
 
 		let Filters = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? { idRecruiter: rectuiterFilterValue } : {};
 
@@ -632,14 +634,14 @@ class ApplicationList extends Component {
 									/>
 								);
 							if (data.applications != null && data.applications.length > 0) {
-								
+
 								let dataApplication = (this.state.filterText === '' && !startDateApp && !endDateApp)
 									? data.applications
 									: data.applications.filter((_, i) => {
 										return (
-											(this.state.filterText === '' || 
-											(_.firstName + _.middleName + _.lastName)
-												.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1)
+											(this.state.filterText === '' ||
+												(_.firstName + _.middleName + _.lastName)
+													.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1)
 											&&
 											(!startDateApp || new Date(startDateApp.setUTCHours(0, 0, 0)) <= new Date(_.date))
 											&&
