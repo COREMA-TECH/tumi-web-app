@@ -200,7 +200,7 @@ class Summary extends Component {
                             area:applications.area ? applications.area : '--',
                             typeOfId: typeOfId,                        
 
-                            expireDateId:applications.expireDateId ? moment(applications.expireDateId.substring(0, 10)).format('DD/MM/YYYY'): '--',
+                            expireDateId:applications.expireDateId ? moment(applications.expireDateId).format('MM/DD/YYYY'): '--',
                             marital: applications.marital === 2 ? "MARRIED" : "SINGLE",
 
                             numberId: applications.numberId ? applications.numberId : '--',

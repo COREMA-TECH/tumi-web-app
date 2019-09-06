@@ -10,7 +10,7 @@ import withGlobalContent from '../../../Generic/Global';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import PropTypes from 'prop-types';
-
+import moment from 'moment';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -35,12 +35,19 @@ class ConductCode extends Component {
 		};
 	}
 
+	formatDate = (date, useSubstring = false) => {
+        if(!date) return '';
+
+        let substringDate = useSubstring ? String(date).substring(0, 10) : date;
+        return moment(substringDate).format('MM/DD/YYYY');
+    }
+
 	handleSignature = (value) => {
 		this.setState(
 			{
 				signature: value,
 				openSignature: false,
-				date: new Date().toISOString().substring(0, 10),
+				date: this.formatDate(new Date().toISOString(), true),
 				completed: true
 			},
 			() => {
@@ -88,7 +95,7 @@ class ConductCode extends Component {
 						signature: data.applications[0].conductCode.signature,
 						content: data.applications[0].conductCode.content,
 						applicantName: data.applications[0].conductCode.applicantName,
-						date: data.applications[0].conductCode.date,
+						date: this.formatDate(data.applications[0].conductCode.date, true),
 						urlPDF: data.applications[0].conductCode.pdfUrl
 					});
 				} else {
@@ -355,7 +362,7 @@ class ConductCode extends Component {
                                                 <p style="margin: 4.4pt 0in 0.0001pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img id ="imgCanvasSign" width="150" height="auto" src="` +
 												this.state.signature +
 												`" alt=""></u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` +
-												this.state.date.substring(0, 10) +
+												this.state.date +
 												`</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                                 <p style="margin: 4.4pt 0in 0.0001pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Printed Name: <u>` + this.state.applicantName + `</u></p>
                                                 </div>`) :
@@ -404,7 +411,7 @@ class ConductCode extends Component {
                                 <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     Signed: <u><img  id ="imgCanvasSign" src="` + this.state.signature + `" alt="" width="150" height="auto" /></u>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` +
-												this.state.date.substring(0, 10) + `</u>
+												this.state.date + `</u>
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                 <p style="margin: 0in 0in 0.0001pt;  ">&nbsp;</p>
                                 <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; ">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { NonDisclosureContent } from './Content';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import moment from 'moment';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -36,11 +37,18 @@ class NonDisclosure extends Component {
         }
     }
 
+    formatDate = (date, useSubstring = false) => {
+        if(!date) return '';
+
+        let substringDate = useSubstring ? String(date).substring(0, 10) : date;
+        return moment(substringDate).format('MM/DD/YYYY');
+    }
+
     handleSignature = (value) => {
         this.setState({
             signature: value,
             openSignature: false,
-            date: new Date().toISOString().substring(0, 10),
+            date: this.formatDate(new Date().toISOString(), true),
             completed: true
         }, () => {
             this.insertNonDisclosure(this.state)
@@ -145,7 +153,7 @@ class NonDisclosure extends Component {
                         signature: data.applications[0].disclosure.signature,
                         content: data.applications[0].disclosure.content,
                         applicantName: data.applications[0].disclosure.applicantName,
-                        date: data.applications[0].disclosure.date.substring(0, 10),
+                        date: this.formatDate(data.applications[0].disclosure.date, true),
                         urlPDF: data.applications[0].disclosure.pdfUrl,
                     });
                 } else {

@@ -11,6 +11,7 @@ import withApollo from "react-apollo/withApollo";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Button from "@material-ui/core/es/Button/Button";
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -35,12 +36,18 @@ class AntiHarassment extends Component {
         }
     }
 
+    formatDate = (date, useSubstring = false) => {
+        if(!date) return '';
+
+        let substringDate = useSubstring ? String(date).substring(0, 10) : date;
+        return moment(substringDate).format('MM/DD/YYYY');
+    }
 
     handleSignature = (value) => {
         this.setState({
             signature: value,
             openSignature: false,
-            date: new Date().toISOString().substring(0, 10),
+            date: this.formatDate(new Date().toISOString(), true),
             completed: true
         }, () => {
             this.insertAntiHarrasment(this.state);
@@ -84,7 +91,7 @@ class AntiHarassment extends Component {
                         signature: data.applications[0].harassmentPolicy.signature,
                         content: data.applications[0].harassmentPolicy.content,
                         applicantName: data.applications[0].harassmentPolicy.applicantName,
-                        date: data.applications[0].harassmentPolicy.date,
+                        date: this.formatDate(data.applications[0].harassmentPolicy.date, true),
                         urlPDF: data.applications[0].harassmentPolicy.pdfUrl
                     });
                 } else {
@@ -505,7 +512,7 @@ class AntiHarassment extends Component {
 <p style="margin: 0.15pt 0in 0.0001pt;   text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;<u><img src="` + this.state.signature + `" alt="" width="150" height="auto" style="zoom: 1.7" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
 <p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt;   text-align: justify;">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 <p style="margin: 0in 0in 0.0001pt;   text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.15pt 0in 0.0001pt;   text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date.substring(0, 10) + `</u></span></p>
+<p style="margin: 0.15pt 0in 0.0001pt;   text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date + `</u></span></p>
 <p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt;   text-align: justify;"> Date Signed</p>`)}</div>
                             </div>
                         </div>

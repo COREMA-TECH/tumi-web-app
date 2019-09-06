@@ -11,6 +11,8 @@ import withGlobalContent from "../../../Generic/Global";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import './index.css';
 import PropTypes from 'prop-types';
+import moment from 'moment';
+import DatePicker from "react-datepicker";
 const uuidv4 = require('uuid/v4');
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -45,10 +47,17 @@ class WorkerCompensation extends Component {
         }
     }
 
+    formatDate = (date, useSubstring = false) => {
+        if(!date) return '';
+
+        let substringDate = useSubstring ? String(date).substring(0, 10) : date;
+        return moment(substringDate).format('MM/DD/YYYY');
+    }
+
     handleSignature = (value) => {
         this.setState({
             signature: value,
-            date: new Date().toISOString(),
+            date: this.formatDate(new Date().toISOString()),
             completed: true
         });
     };
@@ -218,14 +227,14 @@ class WorkerCompensation extends Component {
                         signature: data.applications[0].workerCompensation.signature,
                         content: data.applications[0].workerCompensation.content,
                         applicantName: data.applications[0].workerCompensation.applicantName,
-                        date: data.applications[0].workerCompensation.date,
+                        date: this.formatDate(data.applications[0].workerCompensation.date, true),
                         applicantAddress: data.applications[0].workerCompensation.applicantAddress,
                         applicantCity: data.applications[0].workerCompensation.applicantCity,
                         applicantState: data.applications[0].workerCompensation.applicantState,
                         applicantZipCode: data.applications[0].workerCompensation.applicantZipCode,
                         initialNotification: data.applications[0].workerCompensation.initialNotification,
                         injuryNotification: data.applications[0].workerCompensation.injuryNotification,
-                        injuryDate: data.applications[0].workerCompensation.injuryDate === null ? "" : data.applications[0].workerCompensation.injuryDate.substring(0, 10),
+                        injuryDate: this.formatDate(data.applications[0].workerCompensation.injuryDate, true),
                         urlPDF: data.applications[0].workerCompensation.pdfUrl,
                     });
                 } else {
@@ -303,6 +312,13 @@ class WorkerCompensation extends Component {
             const uuid = uuidv4();
             this.createDocumentsPDF(uuid);
         }
+    }
+
+    handleChangeInjuryDate = (date) => {
+        //let injuryDate = this.formatDate(date);
+        this.setState({
+            injuryDate: date
+        });
     }
 
     componentWillMount() {
@@ -421,26 +437,21 @@ class WorkerCompensation extends Component {
                             <div className="row">
                                 <div className="col-12">
                                     <label className="primary">Injury Date</label>
-                                    <input
-                                        id="injuryDate"
-                                        form="worker-compensation-form"
-                                        name="injuryDate"
-                                        onChange={(event) => {
-                                            this.setState({
-                                                injuryDate: event.target.value
-                                            });
-                                        }}
-                                        value={this.state.injuryDate}
-                                        type="date"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        pattern=".*[^ ].*"
-                                        maxLength="50"
-                                        minLength="2"
-                                        disabled={!this.state.injuryNotification}
-
-                                    />
+                                    <div class="input-group flex-nowrap">
+                                        <DatePicker
+                                            id="injuryDate"
+                                            name="injuryDate"
+                                            selected={this.state.injuryDate}
+                                            onChange={this.handleChangeInjuryDate}
+                                            placeholderText="Injury Date"
+                                            disabled={!this.state.injuryNotification}
+                                        />
+                                        <div class="input-group-append">
+                                            <label class="input-group-text" id="addon-wrapping" for="injuryDate">
+                                                <i class="far fa-calendar"></i>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className="row">
@@ -581,7 +592,7 @@ class WorkerCompensation extends Component {
                 <p style="font-family: Times New Roman;"><span style="">Please indicate whether this is the:</span></p>
                 <ul style="margin-top: 1.0pt; margin-bottom: .0001pt; list-style: none;">
                     <li style="margin: 1pt 0in 0.0001pt 31.2px; font-family: Times New Roman;"><span style="">&#9633;  Initial Employee Notification</span></li>
-                    <li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-family: Times New Roman;"><span style="">&#9633;  Injury Notification: <u>${this.state.injuryDate.substring(0, 10) || ''}</u></span></li>
+                    <li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-family: Times New Roman;"><span style="">&#9633;  Injury Notification: <u>${this.formatDate(this.state.injuryDate, true)}</u></span></li>
                 </ul>
             </td>
         </tr>
