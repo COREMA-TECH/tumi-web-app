@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import { NonDisclosureContent } from './Content';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import moment from 'moment';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -36,11 +37,18 @@ class NonDisclosure extends Component {
         }
     }
 
+    formatDate = (date, useSubstring = false) => {
+        if(!date) return '';
+
+        let substringDate = useSubstring ? String(date).substring(0, 10) : date;
+        return moment(substringDate).format('MM/DD/YYYY');
+    }
+
     handleSignature = (value) => {
         this.setState({
             signature: value,
             openSignature: false,
-            date: new Date().toISOString().substring(0, 10),
+            date: this.formatDate(new Date().toISOString(), true),
             completed: true
         }, () => {
             this.insertNonDisclosure(this.state)
@@ -70,7 +78,7 @@ class NonDisclosure extends Component {
                     'right'
                 );
 
-                this.getDisclosureInformation(this.props.applicationId);
+                this.getDisclosureInformation(this.props.applicationId, true);
 
                 this.props.changeTabState();
             })
@@ -129,7 +137,7 @@ class NonDisclosure extends Component {
             })
     };
 
-    getDisclosureInformation = (id) => {
+    getDisclosureInformation = (id, generatePdf = false) => {
         this.props.client
             .query({
                 query: GET_DISCLOSURE_INFO,
@@ -145,8 +153,10 @@ class NonDisclosure extends Component {
                         signature: data.applications[0].disclosure.signature,
                         content: data.applications[0].disclosure.content,
                         applicantName: data.applications[0].disclosure.applicantName,
-                        date: data.applications[0].disclosure.date.substring(0, 10),
+                        date: this.formatDate(data.applications[0].disclosure.date, true),
                         urlPDF: data.applications[0].disclosure.pdfUrl,
+                    }, () => {
+                        if(generatePdf) this.createDocumentsPDF(uuidv4());
                     });
                 } else {
                     this.setState({
@@ -171,7 +181,7 @@ class NonDisclosure extends Component {
         return `<html style="zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;">${contentPDFClone.innerHTML}</html>`;
     }
 
-    createDocumentsPDF = (fileName) => {
+    createDocumentsPDF = (fileName, download = false) => {
         this.setState(() => ({ downloading: true }));
 
         this.props.client
@@ -187,10 +197,11 @@ class NonDisclosure extends Component {
                 if (data.createdocumentspdf !== null) {
                     this.state.urlPDF = data.createdocumentspdf
                     this.setState({
-                        urlPDF: data.createdocumentspdf
+                        urlPDF: data.createdocumentspdf,
+                        downloading: false
                     }, () => {
                         this.updatePdfUrlNonDisclosure();
-                        this.downloadDocumentsHandler();
+                        if(download) this.downloadDocumentsHandler();
                     });
                 } else {
                     this.props.handleOpenSnackbar(
@@ -210,7 +221,6 @@ class NonDisclosure extends Component {
     downloadDocumentsHandler = (fileName) => {
         let url = this.state.urlPDF;
         window.open(url, '_blank');
-        this.setState(() => ({ downloading: false }));
     };
 
     componentWillMount() {
@@ -236,7 +246,7 @@ class NonDisclosure extends Component {
         }
         else {
             const fileName = `${FILE_NAME}${uuidv4()}-${this.state.applicantName}`;
-            this.createDocumentsPDF(fileName);
+            this.createDocumentsPDF(fileName, true);
         }
     }
 

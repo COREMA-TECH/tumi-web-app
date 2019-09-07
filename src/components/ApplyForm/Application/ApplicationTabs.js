@@ -153,7 +153,7 @@ class CustomizedTabs extends React.Component {
             case 3:
                 return <ProfilePreview applicationId={this.state.applicationId} />;
             case 4:
-                return <Documents applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
+                return <Documents applicationId={this.state.applicationId} changeTabState={this.changeTabState} getApplicantStatus={this.getApplicantStatus} />;
             case 5:
                 return <NonDisclosure applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
             case 6:

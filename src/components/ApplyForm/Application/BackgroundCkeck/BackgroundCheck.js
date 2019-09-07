@@ -21,6 +21,8 @@ import { CREATE_DOCUMENTS_PDF_QUERY } from "../W4/Queries";
 
 import PropTypes from 'prop-types';
 import { GET_APPLICANT_INFO } from "../AntiHarassment/Queries";
+import moment from 'moment';
+import DatePicker from "react-datepicker";
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const backgroundCheckJson = require(`../languagesJSON/${localStorage.getItem('languageForm')}/backgroundCheck`);
@@ -71,6 +73,13 @@ class BackgroundCheck extends Component {
             loadingApplicantData: false,
             urlPDF: null
         }
+    }
+
+    formatDate = (date, useSubstring = false) => {
+        if(!date) return '';
+
+        let substringDate = useSubstring ? String(date).substring(0, 10) : date;
+        return moment(substringDate).format('MM/DD/YYYY');
     }
 
     getApplicantInformation = (id) => {
@@ -214,7 +223,7 @@ class BackgroundCheck extends Component {
     /**
      * To get background check info using id
      */
-    getBackgroundCheckById = (id) => {
+    getBackgroundCheckById = (id, generatePdf = false) => {
         this.setState({
             loading: true
         }, () => {
@@ -244,6 +253,8 @@ class BackgroundCheck extends Component {
                             editing: true,
                             accept: true,
                             isCreated: true
+                        }, () => {
+                            if(generatePdf) this.createDocumentsPDF(uuidv4());
                         });
                     } else {
                         this.setState({
@@ -289,7 +300,7 @@ class BackgroundCheck extends Component {
                         editing: false
                     });
 
-                    this.getBackgroundCheckById(this.props.applicationId);
+                    this.getBackgroundCheckById(this.props.applicationId, true);
 
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
@@ -343,7 +354,7 @@ class BackgroundCheck extends Component {
                         editing: false
                     });
 
-                    this.getBackgroundCheckById(this.props.applicationId);
+                    this.getBackgroundCheckById(this.props.applicationId, true);
 
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
@@ -477,13 +488,9 @@ class BackgroundCheck extends Component {
         return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
     }
 
-    createDocumentsPDF = (random) => {
-
-        this.setState(
-            {
-                downloading: true
-            }
-        )
+    createDocumentsPDF = (random, download = false) => {
+        console.log('Generar background check. Descarga -- ', download); // TODO: (LF) Quitar console log
+        this.setState({ downloading: true });
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
@@ -497,10 +504,11 @@ class BackgroundCheck extends Component {
                 if (data.createdocumentspdf !== null) {
                     this.setState({ 
                         urlPDF: data.createdocumentspdf,
-                        loadingData: false
+                        loadingData: false,
+                        downloading: false
                     }, () => {
                         this.updatePdfUrlBackgroundCheck();
-                        this.downloadDocumentsHandler();
+                        if(download) this.downloadDocumentsHandler();
                     });
                 }
                 else {
@@ -524,7 +532,6 @@ class BackgroundCheck extends Component {
     downloadDocumentsHandler = () => {
         var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "background-check-" + random + '.pdf';
         window.open(url, '_blank');
-        this.setState({ downloading: false });
     };
 
     sleep() {
@@ -537,12 +544,7 @@ class BackgroundCheck extends Component {
         }
         else {
             let random = uuidv4();
-            this.createDocumentsPDF(random);
-            // this.sleep().then(() => {
-            //     this.downloadDocumentsHandler();
-            // }).catch(error => {
-            //     this.setState({ downloading: false })
-            // })
+            this.createDocumentsPDF(random, true);
         }
     }
 
@@ -801,24 +803,26 @@ class BackgroundCheck extends Component {
                                                 <label className="primary applicant-card__label">
                                                     {backgroundCheckJson[3].label}
                                                 </label>
-                                                <input
-                                                    id="licenseExpiration"
-                                                    name="licenseExpiration"
-                                                    type="date"
-                                                    className="form-control"
-                                                    required
-                                                    min="0"
-                                                    maxLength="100"
-                                                    minLength="2"
-                                                    form="background-check-form"
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            licenseExpiration: e.target.value
-                                                        })
-                                                    }}
-                                                    value={this.state.licenseExpiration}
-                                                    disabled={this.state.editing || !this.state.vehicleReportRequired}
-                                                />
+                                                <div class="input-group flex-nowrap">
+                                                    <DatePicker
+                                                        id="licenseExpiration"
+                                                        name="licenseExpiration"
+                                                        selected={this.state.licenseExpiration}
+                                                        //onChange={this.handlelicenseExpirationDate}
+                                                        onChange={(date) => {
+                                                            this.setState({
+                                                                licenseExpiration: date
+                                                            })
+                                                        }}
+                                                        placeholderText={backgroundCheckJson[3].label}
+                                                        disabled={this.state.editing || !this.state.vehicleReportRequired}
+                                                    />
+                                                    <div class="input-group-append">
+                                                        <label class="input-group-text" id="addon-wrapping" for="injuryDate">
+                                                            <i class="far fa-calendar"></i>
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label">
@@ -1069,7 +1073,7 @@ class BackgroundCheck extends Component {
                                                             <td style={{ width: '33.3333%', height: '17px' }}>
                                                                 <div title="Page 1">
                                                                     <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE OF BIRTH:</strong></span></div>
-                                                                    <div title="Page 1">{this.state.birthDay.substring(0, 10)}</div>
+                                                                    <div title="Page 1">{this.formatDate(this.state.birthDay, true)}</div>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -1220,7 +1224,7 @@ class BackgroundCheck extends Component {
                                                             </td>
                                                             <td style={{ width: '18.4013%', height: '44px' }}>
                                                                 <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>EXPIRATION:</strong></span></div>
-                                                                <div title="Page 1">{this.state.licenseExpiration}</div>
+                                                                <div title="Page 1">{ this.formatDate(this.state.licenseExpiration) }</div>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -1326,7 +1330,7 @@ class BackgroundCheck extends Component {
                                                                     margin: 'auto'
                                                                 }} src={this.state.signature} alt="" />
                                                             </td>
-                                                            <td style={{ width: '47.1631%', height: '20px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE: </strong></span><span>{new Date().toISOString().substring(0, 10)}</span></td>
+                                                            <td style={{ width: '47.1631%', height: '20px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE: </strong></span><span>{this.formatDate(new Date().toISOString(), true)}</span></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -1347,7 +1351,7 @@ class BackgroundCheck extends Component {
                                                                 <div title="Page 1">
                                                                     <div>
                                                                         <div>
-                                                                            <p style={{ textAlign: 'right' }}>Tumi Staffing – Updated 5-6-2013</p>
+                                                                            <p style={{ textAlign: 'right' }}>Tumi Staffing – Updated 05/06/2013</p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
