@@ -9,18 +9,36 @@ import { GET_REPORT_QUERY, GET_PUNCHES_REPORT_CONSOLIDATED } from './queries';
 import { APPROVE_MARKS, UNAPPROVE_MARKS } from './mutations';
 
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
 
 import DropDown from '../PunchesReportConsolidated/DropDown';
 import TimeCardForm from '../TimeCard/TimeCardForm';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
 
+const DialogTitle = (props => {
+    const { children, classes, onClose } = props;
+    return (
+        <MuiDialogTitle disableTypography style={{
+            margin: 0,
+            padding: 10,
+        }}>
+            <Typography variant="h6">{children}</Typography>
+            {onClose ? (
+                <IconButton aria-label="close" style={{
+                    position: 'absolute',
+                    right: 30,
+                    top: 22,
+                    color: "#9e9e9e",
+                }} onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
+            ) : null}
+        </MuiDialogTitle>
+    );
+});
 
 class ApprovePunchesReport extends Component {
 
@@ -205,22 +223,14 @@ class ApprovePunchesReport extends Component {
 
                     {/* Detalle de todas las marcadas de un empleado */}
                     <Dialog
-                        fullScreen={true}
+                        fullWidth
+                        maxWidth="md"
                         open={this.state.openModalDetails}
-                        //onClose={this.handleCloseModalDetails}
-                        scroll={'paper'}
                     >
-                        <AppBar style={{ background: 'linear-gradient(to left, #3ca2c8, #254151)' }}>
-                            <Toolbar>
-                                <IconButton color="inherit" onClick={this.handleCloseModalDetails} aria-label="Close">
-                                    <CloseIcon />
-                                </IconButton>
-                                <Typography variant="title" color="inherit">
-                                    Punches Report
-                                </Typography>
-                            </Toolbar>
-                        </AppBar>
-                        <DialogContent style={{ marginTop: '90px', overflow: 'visible' }}>
+                        <DialogTitle id="customized-dialog-title" onClose={this.handleCloseModalDetails}>
+                            &nbsp;
+                        </DialogTitle>
+                        <DialogContent style={{ overflow: 'visible' }}>
                             <h5 className="text-success mt-4">
                                 {`Punches Report ${startDate ? `From: ${moment(startDate).format("MM/DD/YYYY")}` : ''} ${endDate ? `To: ${moment(endDate).format("MM/DD/YYYY")}` : ''}`}
                             </h5>
