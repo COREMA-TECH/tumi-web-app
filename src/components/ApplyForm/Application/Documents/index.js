@@ -112,9 +112,9 @@ class Documents extends Component {
         this.getApplicantStatus();
     }
 
-    componentWillUpdate() {
-        this.props.getApplicantStatus();
-    }
+    // componentWillUpdate() {
+    //     this.props.getApplicantStatus();
+    // }
 
     getDocumentStatus = (index) => {
 
@@ -137,10 +137,10 @@ class Documents extends Component {
                 isCompleted = this.state.applicationStatus.ApplicantWorkerCompensation;
                 break;
             case 5: 
-                isCompleted = this.state.applicationStatus.ApplicantW4;
+                isCompleted = this.state.applicationStatus.ApplicantI9;
                 break;
             case 6:
-                isCompleted = this.state.applicationStatus.ApplicantI9;
+                isCompleted = this.state.applicationStatus.ApplicantW4;
                 break;
             case 7:
                 isCompleted = true;
@@ -151,7 +151,8 @@ class Documents extends Component {
     }
 
     changeTabState = () => {
-        this.getApplicantStatus();
+        this.getApplicantStatus(); // local
+        this.props.getApplicantStatus(); // general
     }
 
     handleMergeDocumentClick = () => {
