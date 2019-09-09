@@ -302,6 +302,13 @@ class ApplicationList extends Component {
 
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.propertyInfo){
+			let propertyInfo = this.props.propertyInfo;
+			this.handlePropertyChange({ value: propertyInfo.id, label: propertyInfo.name });
+		}
+	}
+
 	componentWillMount() {
 		//handlePropertyChange
 		if(this.props.propertyInfo){
@@ -433,12 +440,20 @@ class ApplicationList extends Component {
 										</button>
 						</div>}
 					<div className="col-md-12">
-						<div className="card">
-							<ApplicationTable
-								data={dataApplication}
-								onDeleteHandler={this.onDeleteHandler}
-								getApplications={this.getApplications}
-							/>
+						<div className="row">
+							<div className={this.props.leftStepperComponent ? 'col-md-3 col-xl-2' : 'd-none'}>
+								{this.props.leftStepperComponent}
+							</div>
+
+							<div className={this.props.leftStepperComponent ? 'col-md-9 col-xl-10' : 'col-md-12'}>
+								<div className="card">
+									<ApplicationTable
+										data={dataApplication}
+										onDeleteHandler={this.onDeleteHandler}
+										getApplications={this.getApplications}
+									/>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
