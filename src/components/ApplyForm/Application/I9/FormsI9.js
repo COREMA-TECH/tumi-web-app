@@ -113,11 +113,12 @@ class FormsI9 extends Component {
             })
             .then(({ data }) => {
                 if (data.applicantI9.length > 0) {
+                    let fd = data.applicantI9[0].fieldsData;
                     this.setState({
                         isCreated: true,
                         html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 50%;"', '') : '',
                         urlPDF: data.applicantI9[0].url,
-                        formData: JSON.parse(data.applicantI9[0].fieldsData)
+                        formData: fd ? JSON.parse(fd) : {}
                     }, _ => {
                         if (this.state.formData) {
                             this.loadDataFromJson(this.state.formData);
@@ -165,6 +166,7 @@ class FormsI9 extends Component {
     };
 
     loadDataFromJson = fieldsData => {
+        if (!fieldsData) return;
         const { lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state, zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
             alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance, signature, todayDate, preparer0, preparer1, signature1, todayDate2, lastName2, firstName2, address2, city2, state2, zipCode2,
             docTitle, Issuing, docNumber, expireDate2, docTitle2, Issuing2, docNumb3, expDate3, docT15, IssuingT15, docT16, docT17, docT18, docT19, docT20, docT21, docT22, docL1, docL2, docL3, signature2, docL5,

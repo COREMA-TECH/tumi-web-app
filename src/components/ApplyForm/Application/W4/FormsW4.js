@@ -84,11 +84,12 @@ class FormsW4 extends Component {
             })
             .then(({ data }) => {
                 if (data.applicantW4.length > 0) {
+                    let fd = data.applicantW4[0].fieldsData;
                     this.setState({
                         isCreated: true,
                         html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 65%;"', '') : '',
                         urlPDF: data.applicantW4[0].url,
-                        formData: JSON.parse(data.applicantW4[0].fieldsData)
+                        formData: fd ? JSON.parse(fd) : {}
                     }, _ => {
                         this.loadDataFromJson(this.state.formData)
                     });
@@ -104,6 +105,7 @@ class FormsW4 extends Component {
     };
 
     loadDataFromJson = fieldsData => {
+        if(!fieldsData) return;
         const { firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse, signature, estadoCivil, estadoCivil1, estadoCivil2 } = fieldsData;
 
         this.setState(_ => ({
