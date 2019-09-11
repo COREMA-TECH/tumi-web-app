@@ -186,6 +186,7 @@ class PreFilter extends Component {
     }
 
     handleApplyFilters = (event) => {
+        event.preventDefault();
         if (!this.state.location || !this.state.department || !this.state.position)
             this.props.handleOpenSnackbar('warning', 'Filters are required, please select them all');
         else {
@@ -197,7 +198,6 @@ class PreFilter extends Component {
             });
         }
     }
-
 
     updateLocationName = (value) => {
         this.setState(
@@ -277,78 +277,76 @@ class PreFilter extends Component {
 
         return (
             <Dialog maxWidth="sm" fullWidth open={this.props.openPreFilter} classes={{ paper: classes.paper }}>
-                <form action="" onSubmit={this.handleApplyFilters}>
-                    <DialogContent style={{ overflowY: "unset" }}>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <label htmlFor="property">Property</label>
-                                    <Select
-                                        id="property"
-                                        options={this.getLocationList()}
-                                        value={this.findSelectedLocation(this.state.location)}
-                                        onChange={this.handleLocationFilterChange}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                        className='tumi-fullWidth'
-                                        isDisabled={this.state.loadingLocations}
-                                        isLoading={this.state.loadingLocations}
-                                        placeholder="Select an Option"
-                                    />
-                                </div>
-                                <div className="col-md-12">
-                                    <label htmlFor="department">Department</label>
-                                    <Select
-                                        id="department"
-                                        options={this.getDepartmentList()}
-                                        value={this.findSelectedDepartment(this.state.department)}
-                                        onChange={this.handleDepartmentFilterChange}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                        className='tumi-fullWidth'
-                                        isDisabled={this.state.loadingDepartments}
-                                        isLoading={this.state.loadingDepartments}
-                                        placeholder="Select an Option"
-                                    />
-                                </div>
-                                <div className="col-md-12">
-                                    <label htmlFor="position">Position</label>
-                                    <Select
-                                        id="position"
-                                        options={this.getPositionList()}
-                                        value={this.findSelectedPosition(this.state.department)}
-                                        onChange={this.handlePositionFilterChange}
-                                        closeMenuOnSelect={true}
-                                        components={makeAnimated()}
-                                        isMulti={false}
-                                        className='tumi-fullWidth'
-                                        isDisabled={this.state.loadingPositions}
-                                        isLoading={this.state.loadingPositions}
-                                        placeholder="Select an Option"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                <DialogContent style={{ overflowY: "unset" }}>
+                    <div className="container">
                         <div className="row">
                             <div className="col-md-12">
-                                <DialogActions>
-                                    <div className="tumi-buttonWrapper">
-                                        <button className="btn btn-success btn-not-rounded tumi-button" type="submit">
-                                            Filter
-                                                {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
-                                        </button>
-
-                                        <button className="btn btn-danger btn-not-rounded tumi-button" type="button" onClick={this.props.handleClosePreFilter}>
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </DialogActions>
+                                <label htmlFor="property">Property</label>
+                                <Select
+                                    id="property"
+                                    options={this.getLocationList()}
+                                    value={this.findSelectedLocation(this.state.location)}
+                                    onChange={this.handleLocationFilterChange}
+                                    closeMenuOnSelect={true}
+                                    components={makeAnimated()}
+                                    isMulti={false}
+                                    className='tumi-fullWidth'
+                                    isDisabled={this.state.loadingLocations}
+                                    isLoading={this.state.loadingLocations}
+                                    placeholder="Select an Option"
+                                />
+                            </div>
+                            <div className="col-md-12">
+                                <label htmlFor="department">Department</label>
+                                <Select
+                                    id="department"
+                                    options={this.getDepartmentList()}
+                                    value={this.findSelectedDepartment(this.state.department)}
+                                    onChange={this.handleDepartmentFilterChange}
+                                    closeMenuOnSelect={true}
+                                    components={makeAnimated()}
+                                    isMulti={false}
+                                    className='tumi-fullWidth'
+                                    isDisabled={this.state.loadingDepartments}
+                                    isLoading={this.state.loadingDepartments}
+                                    placeholder="Select an Option"
+                                />
+                            </div>
+                            <div className="col-md-12">
+                                <label htmlFor="position">Position</label>
+                                <Select
+                                    id="position"
+                                    options={this.getPositionList()}
+                                    value={this.findSelectedPosition(this.state.position)}
+                                    onChange={this.handlePositionFilterChange}
+                                    closeMenuOnSelect={true}
+                                    components={makeAnimated()}
+                                    isMulti={false}
+                                    className='tumi-fullWidth'
+                                    isDisabled={this.state.loadingPositions}
+                                    isLoading={this.state.loadingPositions}
+                                    placeholder="Select an Option"
+                                />
                             </div>
                         </div>
-                    </DialogContent>
-                </form>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <DialogActions>
+                                <div className="tumi-buttonWrapper">
+                                    <button className="btn btn-success btn-not-rounded tumi-button" type="button" onClick={this.handleApplyFilters}>
+                                        Filter
+                                                {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
+                                    </button>
+
+                                    <button className="btn btn-danger btn-not-rounded tumi-button" type="button" onClick={this.props.handleClosePreFilter}>
+                                        Cancel
+                                        </button>
+                                </div>
+                            </DialogActions>
+                        </div>
+                    </div>
+                </DialogContent>
             </Dialog>
         );
     }
