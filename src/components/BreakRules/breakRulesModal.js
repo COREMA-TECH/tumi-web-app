@@ -96,7 +96,7 @@ class BreakRulesModal extends Component {
                     repeatBreak: breakRuleDetail ? breakRuleDetail.isRepeating : false,
                     selectedDays: breakRuleDetail ? breakRuleDetail.days : 'MO,TU,WE,TH,FR,SA,SU',
                     breakPlacement: breakRuleDetail ? breakRuleDetail.breakPlacement : 'middle',
-                    breakStartTime: breakRuleDetail.breakStartTime ? moment(breakRuleDetail.breakStartTime, "HH:mm:ss").format("HH:mm") : "00:00",
+                    breakStartTime: breakRuleDetail ? (breakRuleDetail.breakStartTime ? moment(breakRuleDetail.breakStartTime, "HH:mm:ss").format("HH:mm") : "00:00") : 0,
                     lenghtUnit: Number.isInteger(lenght) ? "Hours" : "Minutes",
                     isActive,
                 }
