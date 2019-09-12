@@ -29,7 +29,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION, CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT, CREATE_EMPLOYEE_FOR_APPLICATION } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, UPDATE_APPLICANT, UPDATE_DIRECT_DEPOSIT, DISABLE_CONTACT_BY_HOTEL_APPLICATION, UPDATE_ISACTIVE, UPDATE_EMPLOYEE, BULK_UPDATE_EMPLOYEE_HOTEL_RELATION, CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION, UPDATE_EMPLOYEE_HOTEL_RELATION, SET_IDEAL_JOB_DEFAULT, CREATE_EMPLOYEE_FOR_APPLICATION, DELETE_IDEAL_JOB } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 import makeAnimated from "react-select/lib/animated";
@@ -268,7 +268,9 @@ class General extends Component {
         positionName: null,
 
         openConfirmDefaultTitle: false,
-        appIdealJobToSetDefault: null
+        appIdealJobToSetDefault: null,
+        openConfirmDeleteTitle: false,
+        idealJobToDelete: null
     };
 
     /**
@@ -1341,6 +1343,48 @@ class General extends Component {
         });
     }
 
+    deleteTitle = (idealJob) => {
+        this.setState({
+            openConfirmDeleteTitle: true,
+            idealJobToDelete: idealJob
+        });
+    }
+
+    confirmDeleteTitle = (idealJob) => {
+    this.props.client
+        .mutate({
+            mutation: DELETE_IDEAL_JOB,
+            variables: {
+                input: {
+                    id: idealJob.id
+                }
+            }
+        })
+        .then(({data}) => {
+            if(data){
+                this.props.handleOpenSnackbar('success', 'Record deleted!');
+    
+                this.setState({
+                    createdProfile: true
+                }, () => {
+                    this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
+                    this.resetUserModalState();
+                });
+            }
+            else{
+                this.props.handleOpenSnackbar(
+                    'error', 'Error: delete title '
+                );
+            }
+        })
+        .catch((error) => {
+            this.props.handleOpenSnackbar(
+                'error', 'Error: delete title ' + error
+            );
+        });
+
+    }
+
     triggerConfirmDefaultHotel = (e, trigger) => {
         const { attributes: { clickedHotel } } = trigger;
 
@@ -1686,6 +1730,19 @@ class General extends Component {
                     title={dialogMessages[3].label}
                 />
 
+                {/* Confirmacion para eliminar Title */}
+                <ConfirmDialog
+                    open={this.state.openConfirmDeleteTitle}
+                    closeAction={() => {
+                        this.setState({ idealJobToDelete: null, openConfirmDeleteTitle: false });
+                    }}
+                    confirmAction={() => {
+                        this.confirmDeleteTitle(this.state.idealJobToDelete);
+                    }}
+                    title={(this.state.idealJobToDelete && this.state.idealJobToDelete.isDefault) ? "You are about to remove an Employee default title, are you sure you want to proceed?" : "Are you sure you want to delete the record?"}
+                    loading={this.props.removingLocationAbleToWork}
+                />
+
 
                 <Dialog
                     open={this.state.openVerification}
@@ -1899,6 +1956,9 @@ class General extends Component {
                                                             idealJob.isDefault
                                                                 ? <div className="bg-info text-white border border-info p-2 text-center rounded m-1 col text-truncate">
                                                                     {idealJob.description}
+                                                                    <button type="button" className="btn btn-link float-right p-0" style={{ color: "red" }} onClick={_ => this.deleteTitle(idealJob)} >
+                                                                        <i className="fas fa-trash"></i>
+                                                                    </button>
                                                                 </div>
                                                                 : <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{ appIdealJob: idealJob }}>
                                                                     <div className="bg-light border border-secondary p-2 text-center rounded m-1 col text-truncate">
