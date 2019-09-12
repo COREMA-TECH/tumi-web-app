@@ -136,7 +136,7 @@ class RolesTable extends Component {
     };
 	
 	handleRowClick = () => {
-		alert('Hola');
+		//alert('Hola');
     }
 
     getCompanyName = (id) => {
