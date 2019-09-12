@@ -217,6 +217,7 @@ class ApplicationTable extends React.Component {
                             <TableHead>
                                 <TableRow>
                                     <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Id</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
@@ -286,6 +287,7 @@ class ApplicationTable extends React.Component {
                                                         <React.Fragment />
                                                 }
                                             </CustomTableCell>
+                                            <CustomTableCell>{row.id}</CustomTableCell>
                                             <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.emailAddress}</CustomTableCell>
                                             <CustomTableCell>{row.workOrderId ? `000000${row.workOrderId}`.slice(-6) : ''}</CustomTableCell>
