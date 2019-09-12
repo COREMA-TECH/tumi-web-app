@@ -541,7 +541,7 @@ class DepartmentsCompanyForm extends React.Component {
 							value={this.state.code}
 							change={(value) => this.onCodeChangeHandler(value)}
 							className="input-enable"
-							placeholder="* Department Code"
+							placeholder="* Accounting Department Code"
 						/>
 					</div>
 					<div className="col-md-4 col-xl-2 mb-2">
