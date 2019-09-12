@@ -3,6 +3,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import withApollo from 'react-apollo/withApollo';
 import { UPDATE_MARKED_EMPLOYEE } from './Mutations';
 import Tooltip from '@material-ui/core/Tooltip';
+import CustomImage from './CustomImage';
 
 class PunchesConsolidatedDropDownBody extends Component {
     state = {
@@ -94,9 +95,9 @@ class PunchesConsolidatedDropDownBody extends Component {
                                     <td>{item.hotelCode}</td>
                                     <td>
                                         <div className="avatar-container">
-                                            <img className="avatar" src={fileSrcIn} />
+                                            <CustomImage className="avatar" image={fileSrcIn} />
                                             <div className="avatar-container-pic">
-                                                <img className="avatar avatar-lg" src={fileSrcIn} onClick={() => {
+                                                <CustomImage className="avatar avatar-lg" image={fileSrcIn} onClick={() => {
                                                     this.handleClickOpenModalPicture(fileSrcIn)
                                                 }} />
                                                 <div className="avatar-description">
@@ -109,9 +110,9 @@ class PunchesConsolidatedDropDownBody extends Component {
                                             </div>
                                         </div>
                                         <div className="avatar-container">
-                                            <img className="avatar" src={fileSrcOut} />
+                                            <CustomImage className="avatar" image={fileSrcOut} />
                                             <div className="avatar-container-pic">
-                                                <img className="avatar avatar-lg" src={fileSrcOut} onClick={() => {
+                                                <CustomImage className="avatar avatar-lg" image={fileSrcOut} onClick={() => {
                                                     this.handleClickOpenModalPicture(fileSrcOut)
                                                 }} />
                                                 <div className="avatar-description">
