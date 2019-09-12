@@ -10,6 +10,12 @@ import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableBody from '@material-ui/core/TableBody/TableBody';
 import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
+import TableCell from '@material-ui/core/TableCell';
+import IconButton from '@material-ui/core/IconButton';
+import LastPageIcon from '@material-ui/icons/LastPage';
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 const actionsStyles = (theme) => ({
     root: {
@@ -124,14 +130,30 @@ const styles = (theme) => ({
 });
 
 class RolesTable extends Component {
+    state = {
+        page: 0,
+        rowsPerPage: 25
+    };
 	
 	handleRowClick = () => {
 		alert('Hola');
-	}
+    }
+
+    getCompanyName = (id) => {
+        let company = this.props.company.find(({ Id }) => Id === id);
+        return company ? company.Name : '';
+    }
+    
+    getFormName = (dataForms, default_form_id) => {
+        let form = dataForms.find(form => {return form.Id === default_form_id})
+
+        return form ? form.Name : '';
+    }
 
     render() {
 		const { classes } = this.props;
         let items = this.props.data;
+ 		let dataForms = this.props.dataForms;
 		const { rowsPerPage, page } = this.state;
 		
         return (
@@ -161,7 +183,7 @@ class RolesTable extends Component {
 												<button
 													className="btn btn-success mr-1 float-left"
 													disabled={this.props.loading}
-													onClick={() => this.props.onEditHandler(row.id)}
+													onClick={() => this.props.onEditHandler(row.Id)}
 												>
 													<i class="fas fa-pen"></i>
 												</button>
@@ -171,20 +193,16 @@ class RolesTable extends Component {
 													type="button"
 													className="btn btn-danger mr-1 float-left"
 													disabled={this.props.loading}
-													onClick={() => this.props.onDeleteHandler(row.id)}
+													onClick={() => this.props.onDeleteHandler(row.Id)}
 												>
 													<i className="fas fa-trash"></i>
 												</button>
 											</Tooltip>
 										</CustomTableCell>
-										<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
-										<CustomTableCell>{row.emailAddress}</CustomTableCell>
-										<CustomTableCell>{row.workOrderId ? `000000${row.workOrderId}`.slice(-6) : ''}</CustomTableCell>
-										<CustomTableCell>{row.Position ? `${row.Position.Position.trim()} ${row.PositionCompany ? `(${row.PositionCompany.Code.trim()})` : ''}` : 'Open Position'}</CustomTableCell>
-										<CustomTableCell>{row.DefaultCompany ? row.DefaultCompany.Name : ''}</CustomTableCell>
-										<CustomTableCell>{row.Recruiter ? row.Recruiter.Full_Name : ''}</CustomTableCell>
-										<CustomTableCell>{row.User && row.sendInterview ? row.User.Full_Name : ''}</CustomTableCell>
-										<CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
+										<CustomTableCell>{this.getCompanyName(row.Id_Company)}</CustomTableCell>
+										<CustomTableCell>{row.Description}</CustomTableCell>
+										<CustomTableCell>{this.getFormName(dataForms, row.default_form_id)}</CustomTableCell>
+                                        <CustomTableCell>{row.Description}</CustomTableCell>
 									</TableRow>
 								);
 							})}
@@ -211,7 +229,7 @@ class RolesTable extends Component {
     }
 }
 
-export default RolesTable;
+export default withStyles(styles)(RolesTable);
 
 
 
