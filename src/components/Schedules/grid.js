@@ -106,6 +106,7 @@ class Grid extends Component {
     }
 
     getEmployees = (idEntity) => {
+        this.setState(() => ({ loadingEmployees: true }));
         this.props.client.query({
             query: GET_INITIAL_DATA,
             fetchPolicy: 'no-cache',
@@ -122,8 +123,9 @@ class Grid extends Component {
                     }]
                 }))
             });
-
+            this.setState(() => ({ loadingEmployees: false }));
         }).catch(error => {
+            this.setState(() => ({ loadingEmployees: false }));
             this.props.handleOpenSnackbar(
                 'error',
                 'Error loading employees list'
@@ -305,12 +307,16 @@ class Grid extends Component {
         })
     }
 
+    setTableRef = (node) => {
+        if (node) node.style.setProperty("overflow", "unset", "important");
+    }
+
     render() {
 
         return (
             <React.Fragment>
                 <RapidForm setRow={this.setRow} propertyStartWeek={this.props.weekDayStart} open={this.state.formOpen} handleCloseForm={this.handleCloseForm} currentRow={this.state.currentRow} />
-                <table className="table table-bordered">
+                <table className="table table-bordered" ref={this.setTableRef}>
                     <thead>
                         <tr>
                             <th className="font-weight-bold align-middle">
@@ -357,6 +363,8 @@ class Grid extends Component {
                                                     components={makeAnimated()}
                                                     isMulti={false}
                                                     style={{ zIndex: 999, overFlow: 'hiden' }}
+                                                    isDisabled={this.state.loadingEmployees}
+                                                    isLoading={this.state.loadingEmployees}
                                                 />
                                             </div>
 
