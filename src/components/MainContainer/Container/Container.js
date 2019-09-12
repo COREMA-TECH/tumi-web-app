@@ -10,13 +10,10 @@ import CreateForms from '../../Security/Forms';
 import CreateRolesForms from '../../Security/RolesForms';
 import CreateUsers from '../../Security/Users';
 import Catalogs from '../../Catalogs/';
-import Signature from '../../Contract/Signature';
 import MainContract from '../../Contract/Main/MainContract/MainContract';
 import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationRecruiter from 'ApplyForm-Recruiter/ApplicationList/ApplicationList';
-import ApplicationInfo from 'ApplyForm/Application/ApplicationInfo';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
-import ApplicantDocument from 'ApplyForm/Application/ApplicantDocuments/ApplicantDocument.js';
 import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
 import WorkOrders from '../../WorkOrders';
 import WorkOrdersPosition from '../../WorkOrdersPosition';
@@ -30,7 +27,6 @@ import NotFound from '../../NotFound/NotFound';
 import DashboardManager from '../../Dashboard/TumiManager';
 import DashboardHotel from '../../Dashboard/HotelManager';
 import DashboardRecruiter from '../../Dashboard/Recruiter';
-import Holidays from '../../Holidays';
 import Calendar from '../../Holidays/Calendar';
 import Employees from "../../Employees/Employees";
 import Schedules from '../../Schedules';
@@ -56,8 +52,7 @@ import Visit from '../../Visit';
 import SchedulesvsWorkedHours from '../../SchedulesvsWorkedHours';
 import DirectDeposit from '../../DirectDeposit';
 import OperationsDashboard from '../../Dashboard/Operations';
-import { Redirect } from 'react-router-dom'
-
+import { Redirect } from 'react-router-dom';
 
 class Container extends Component {
 	constructor(props) {
@@ -232,11 +227,11 @@ class Container extends Component {
 				<Route exact path="/home/dashboard/sponsor" component={DashBoardSponsor} />
 				<Route exact path="/home/catalogs/positions" component={PositionCatalogTable} />
 				<Route exact path="/home/catalogs/departments" component={DepartmentsCatalogTable} />
-				<Route exact path="/home/logs" component={TransactionLogs} />		
-				<Route exact path="/home/active-report" component={EmployeesProperties} />	
-				<Route exact path="/home/active-report-consolidated" component={EmployeesPropertiesConsolidated} />		
-				<Route exact path="/home/hotel-manager-report" component={EmployeesPropertiesConsolidated} />		
-        		<Route exact path="/home/visit" component={Visit} />
+				<Route exact path="/home/logs" component={TransactionLogs} />
+				<Route exact path="/home/active-report" component={EmployeesProperties} />
+				<Route exact path="/home/active-report-consolidated" component={EmployeesPropertiesConsolidated} />
+				<Route exact path="/home/hotel-manager-report" component={EmployeesPropertiesConsolidated} />
+				<Route exact path="/home/visit" component={Visit} />
 				<Route exact path="/home/schedules-vs-worked" component={SchedulesvsWorkedHours} />
 				<Route exact path="/home/direct-deposit" component={DirectDeposit} />
 				<Route exact path="/home/dashboard/operations" component={OperationsDashboard} />

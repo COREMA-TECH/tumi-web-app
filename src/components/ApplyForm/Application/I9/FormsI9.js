@@ -313,9 +313,8 @@ class FormsI9 extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[8].label}</span>
-                                {
-                                    (
-                                        this.state.isCreated ? (
+                                    
+                                       
 
                                             <Fragment>
                                                 <button style={{ marginLeft: 'auto', marginRight: '8px' }} className="applicant-card__edit-button" onClick={() => {
@@ -327,7 +326,7 @@ class FormsI9 extends Component {
                                                     Sign <i className="fas fa-pencil-alt" />
                                                 </button>
 
-                                                    <button className="applicant-card__edit-button" onClick={this.downloadDocumentsHandler}>
+                                                    <button className="applicant-card__edit-button" style={{marginRight: '8px'}} onClick={this.downloadDocumentsHandler}>
                                                         {this.state.downloading && (
                                                         <React.Fragment>Downloading <i
                                                             class="fas fa-spinner fa-spin" /></React.Fragment>)}
@@ -337,14 +336,13 @@ class FormsI9 extends Component {
 
                                                 </button>
                                             </Fragment>
-                                        ) : (
+                                       
                                                 <button className="applicant-card__edit-button" onClick={() => {
                                                     this.validateI9();
                                                 }}>{actions[4].label} <i className="far fa-save" />
                                                 </button>
-                                            )
-                                    )
-                                }
+                                           
+                                    
                             </div>
                             {
                                 (

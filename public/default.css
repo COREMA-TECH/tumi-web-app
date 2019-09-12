@@ -9391,7 +9391,7 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     pointer-events: none; }
 
 .ApprovePunches-approvedLabel {
-  font-size: 12px; }
+  font-size: 0.8em; }
 
 .ApprovePunches-employeeContainer {
   display: -webkit-box;
@@ -9401,30 +9401,15 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   -ms-flex-align: center;
   align-items: center; }
 
-.ApprovePunches-totalHours {
-  font-weight: bold; }
-  .ApprovePunches-totalHours:after, .ApprovePunches-totalHours:before {
-    font-size: 26px;
-    position: absolute;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%); }
-  .ApprovePunches-totalHours:after {
-    content: attr(data-hours);
-    left: 255px;
-    text-align: right;
-    width: 100px; }
-  .ApprovePunches-totalHours:before {
-    content: ":";
-    left: 235px; }
-  .ApprovePunches-totalHours.approve:after {
-    color: #3ca2c8; }
-  .ApprovePunches-totalHours.reject:after {
-    color: var(--danger); }
-
 .ApprovePunches-separation:not(:last-child) {
   border-right: 1px solid #dddddd !important; }
+
+.ApprovePunches-titleLabel {
+  padding-top: 8px;
+  font-size: .8rem; }
+
+.ApprovePunches-valueLabel {
+  font-size: 1.2rem; }
 
 @media (max-width: 991.98px) {
   .ApprovePunches-separation {

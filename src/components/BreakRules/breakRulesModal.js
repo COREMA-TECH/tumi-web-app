@@ -30,6 +30,8 @@ class BreakRulesModal extends Component {
         
         selectedEmployees: [],
         employeeSelectOptions: [],
+        allSelectableEmployees: [],
+        shouldSelectAllEmployees: false,
         
         placeBreakOptions: [
             { value: 'middle', label: 'Middle of Shift' },
@@ -66,9 +68,14 @@ class BreakRulesModal extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let employeeSelectOptions = nextProps.employeeList.map(employee => {
-            return { value: employee.id, key: employee.id, label: `${employee.firstName} ${employee.lastName}` }
-        });
+        let employeeSelectOptions = [
+            { value: 0, key: 0, label: `All Employees`},
+            ...nextProps.employeeList.map(employee => {
+                return { value: employee.id, key: employee.id, label: `${employee.firstName} ${employee.lastName}` }
+            })
+        ]
+
+        const allSelectableEmployees = nextProps.employeeList.map(employee => employee.id);
 
         if(nextProps.isRuleEdit && nextProps.breakRuleToEdit) {
             const { id, name, code, lenght, employee_BreakRule, isAutomatic, breakRuleDetail, isActive, isPaid } = nextProps.breakRuleToEdit;
@@ -96,7 +103,7 @@ class BreakRulesModal extends Component {
                     repeatBreak: breakRuleDetail ? breakRuleDetail.isRepeating : false,
                     selectedDays: breakRuleDetail ? breakRuleDetail.days : 'MO,TU,WE,TH,FR,SA,SU',
                     breakPlacement: breakRuleDetail ? breakRuleDetail.breakPlacement : 'middle',
-                    breakStartTime: breakRuleDetail.breakStartTime ? moment(breakRuleDetail.breakStartTime, "HH:mm:ss").format("HH:mm") : "00:00",
+                    breakStartTime: breakRuleDetail ? (breakRuleDetail.breakStartTime ? moment(breakRuleDetail.breakStartTime, "HH:mm:ss").format("HH:mm") : "00:00") : 0,
                     lenghtUnit: Number.isInteger(lenght) ? "Hours" : "Minutes",
                     isActive,
                 }
@@ -104,7 +111,8 @@ class BreakRulesModal extends Component {
         }
 
         this.setState({
-            employeeSelectOptions
+            employeeSelectOptions,
+            allSelectableEmployees
         })
     }
 
@@ -184,11 +192,27 @@ class BreakRulesModal extends Component {
     }
 
     handleChangeEmployeesSelect = (selectedEmployees) => {
-        this.setState({ selectedEmployees });
+        const selectAllOption = selectedEmployees.find(item => item.value === 0);
+
+        if(selectAllOption && !this.state.shouldSelectAllEmployees){
+            this.setState({ selectedEmployees: [selectAllOption], shouldSelectAllEmployees: true });   
+            return;         
+        }
+        
+        if(selectedEmployees.length > 1){
+            this.setState({ selectedEmployees: [...selectedEmployees.filter(item => item.value > 0)], shouldSelectAllEmployees: false });            
+            return;
+        } 
     }    
 
     handleSubmit = e => {
         e.preventDefault();
+
+        const employeeList = this.state.shouldSelectAllEmployees ? 
+                             this.state.allSelectableEmployees : 
+                             this.state.selectedEmployees.map(employee => {
+                                 return employee.value
+                             });
 
         if(this.state.ruleId === 0){
             this.props.client.mutate({
@@ -204,9 +228,7 @@ class BreakRulesModal extends Component {
                         isActive: true 
                     },
     
-                    employees: this.state.selectedEmployees.map(employee => {
-                        return employee.value
-                    })
+                    employees: employeeList
                 }
             }).then(({data}) => {
                 //If its an automatic break, save the config as a break rule detail
@@ -254,9 +276,7 @@ class BreakRulesModal extends Component {
                         isActive: this.state.isActive 
                     },
     
-                    employees: this.state.selectedEmployees.map(employee => {
-                        return employee.value
-                    })
+                    employees: employeeList
                 }
             }).then(({data}) => {
                 if(this.state.isAutomaticBreak) {

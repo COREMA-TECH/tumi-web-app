@@ -49,7 +49,7 @@ class BreakRules extends Component {
     }
 
     getEmployees = _ => {
-        //Fetch employees
+        //Fetch employees        
         this.props.client.query({
             query: GET_EMPLOYEES,
             variables: { idEntity: this.props.companyId },
