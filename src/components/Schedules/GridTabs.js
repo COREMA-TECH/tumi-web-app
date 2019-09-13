@@ -14,7 +14,7 @@ class GridTabs extends Component {
         super(props);
         this.state = {
             ...this.DEFAULT_STATE
-        }
+        }        
     }
 
     DEFAULT_STATE = {
@@ -25,16 +25,6 @@ class GridTabs extends Component {
         open: false,
         tabSelected: 0
     };
-
-    componentWillMount() {
-
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.position != nextProps.position) {
-            this.getPosition(nextProps.position);
-        }
-    }
 
     getPosition = (id) => {
         this.props.client.query({
@@ -92,6 +82,8 @@ class GridTabs extends Component {
     }
 
     render() {
+        this.getPosition(this.props.position);
+
         return (
             <React.Fragment>
                 <div className="GridTab-content">
