@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './preview-profile.css';
 import './../index.css';
 import withApollo from "react-apollo/withApollo";
@@ -118,6 +118,19 @@ const styles = (theme) => ({
     paper: { overflowY: 'unset' },
     container: { overflowY: 'unset' }
 });
+
+const TitleItem = ({className, idealJob, handleClickDelete}) => {
+    return <Fragment>
+        <div className={className}>
+            {idealJob.description}
+            <FeatureTag code="f1f15787-3dd7-4f71-93c3-7686023d0a97">
+                <button type="button" className="btn btn-link float-right p-0" style={{ color: "red" }} onClick={handleClickDelete} >
+                    <i className="fas fa-trash"></i>
+                </button>
+            </FeatureTag>
+        </div>
+    </Fragment>
+}
 
 class General extends Component {
     constructor(props) {
@@ -1351,37 +1364,42 @@ class General extends Component {
     }
 
     confirmDeleteTitle = (idealJob) => {
-    this.props.client
-        .mutate({
-            mutation: DELETE_IDEAL_JOB,
-            variables: {
-                input: {
+        this.props.client
+            .mutate({
+                mutation: DELETE_IDEAL_JOB,
+                variables: {
                     id: idealJob.id
                 }
-            }
-        })
-        .then(({data}) => {
-            if(data){
-                this.props.handleOpenSnackbar('success', 'Record deleted!');
-    
+            })
+            .then(({data}) => {
+                if(data){
+                    this.props.handleOpenSnackbar('success', 'Record deleted!');
+        
+                    this.setState(prevState => {
+                        return {
+                            idealJobs: prevState.idealJobs.filter(t => t.id !== idealJob.id)
+                        }
+                    });
+                }
+                else{
+                    this.props.handleOpenSnackbar(
+                        'error', 'Error: delete title '
+                    );
+                }
                 this.setState({
-                    createdProfile: true
-                }, () => {
-                    this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
-                    this.resetUserModalState();
+                    openConfirmDeleteTitle: false,
+                    idealJobToDelete: null
                 });
-            }
-            else{
+            })
+            .catch((error) => {
                 this.props.handleOpenSnackbar(
-                    'error', 'Error: delete title '
+                    'error', 'Error: delete title ' + error
                 );
-            }
-        })
-        .catch((error) => {
-            this.props.handleOpenSnackbar(
-                'error', 'Error: delete title ' + error
-            );
-        });
+                this.setState({
+                    openConfirmDeleteTitle: false,
+                    idealJobToDelete: null
+                });
+            });
 
     }
 
@@ -1740,7 +1758,7 @@ class General extends Component {
                         this.confirmDeleteTitle(this.state.idealJobToDelete);
                     }}
                     title={(this.state.idealJobToDelete && this.state.idealJobToDelete.isDefault) ? "You are about to remove an Employee default title, are you sure you want to proceed?" : "Are you sure you want to delete the record?"}
-                    loading={this.props.removingLocationAbleToWork}
+                    //loading={this.props.removingLocationAbleToWork}
                 />
 
 
@@ -1954,16 +1972,17 @@ class General extends Component {
                                                     return <div className="col-sm-12 col-md-6 col-lg-3" key={i}>
                                                         {
                                                             idealJob.isDefault
-                                                                ? <div className="bg-info text-white border border-info p-2 text-center rounded m-1 col text-truncate">
-                                                                    {idealJob.description}
-                                                                    <button type="button" className="btn btn-link float-right p-0" style={{ color: "red" }} onClick={_ => this.deleteTitle(idealJob)} >
-                                                                        <i className="fas fa-trash"></i>
-                                                                    </button>
-                                                                </div>
+                                                                ? <TitleItem 
+                                                                        className="bg-info text-white border border-info p-2 text-center rounded m-1 col text-truncate" 
+                                                                        idealJob={idealJob}
+                                                                        handleClickDelete={_ => this.deleteTitle(idealJob)}
+                                                                        />
                                                                 : <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{ appIdealJob: idealJob }}>
-                                                                    <div className="bg-light border border-secondary p-2 text-center rounded m-1 col text-truncate">
-                                                                        {idealJob.description}
-                                                                    </div>
+                                                                    <TitleItem 
+                                                                        className="bg-light border border-secondary p-2 text-center rounded m-1 col text-truncate" 
+                                                                        idealJob={idealJob}
+                                                                        handleClickDelete={_ => this.deleteTitle(idealJob)}
+                                                                        />
                                                                 </ContextMenuTrigger>
                                                         }
                                                     </div>
