@@ -5,7 +5,6 @@ import moment from 'moment';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import { CREATE_WORKORDER } from './Mutations';
-import { conformToMask } from 'react-text-mask';
 import RapidForm from './RapidForm';
 
 const uuidv4 = require('uuid/v4');
@@ -108,6 +107,7 @@ class Grid extends Component {
     }
 
     getEmployees = (idEntity) => {
+        this.setState(() => ({ loadingEmployees: true }));
         this.props.client.query({
             query: GET_INITIAL_DATA,
             fetchPolicy: 'no-cache',
@@ -124,8 +124,9 @@ class Grid extends Component {
                     }]
                 }))
             });
-
+            this.setState(() => ({ loadingEmployees: false }));
         }).catch(error => {
+            this.setState(() => ({ loadingEmployees: false }));
             this.props.handleOpenSnackbar(
                 'error',
                 'Error loading employees list'
@@ -191,11 +192,10 @@ class Grid extends Component {
                 })
                 .then(({ data: { addWorkOrderGrid } }) => {
                     this.props.handleOpenSnackbar('success', ' Shifts created successfully!');
-                    // this.setState(() => ({ firstRow: null }));
-                    //3 records
+
                     let newData = this.state.rows.map(_row => {
                         let record = addWorkOrderGrid.find(_wo => _wo.groupKey === _row.id);
-                        return { ..._row, isInserted: record ? true : false };
+                        return { ..._row, isInserted: record ? true : _row.isInserted };
                     })
 
                     this.setState(() => ({ rows: newData, saving: false }));
@@ -210,11 +210,9 @@ class Grid extends Component {
     saveWorkOrder = () => {
         this.setState(() => ({ saving: true }), () => {
             let data = [];
-            this.state.rows.map(_ => {
-                console.log({ row: _ })
+            this.state.rows.filter(_ => _.isInserted === false).map(_ => {
                 if (Object.keys(_.employeeId).length > 0) {
                     DAYS.map(day => {
-                        console.log({ day })
                         if (_[day.description] != "0")
                             data.push(this.createWorkOrderObject({ groupKey: _.id, dayNumber: day.id, hour: _[day.description], employeeId: _.employeeId.value }));
                     })
@@ -311,11 +309,16 @@ class Grid extends Component {
         })
     }
 
+    setTableRef = (node) => {
+        if (node) node.style.setProperty("overflow", "unset", "important");
+    }
+
     render() {
+
         return (
             <React.Fragment>
                 <RapidForm setRow={this.setRow} propertyStartWeek={this.props.weekDayStart} open={this.state.formOpen} handleCloseForm={this.handleCloseForm} currentRow={this.state.currentRow} />
-                <table className="table table-bordered">
+                <table className="table table-bordered" ref={this.setTableRef}>
                     <thead>
                         <tr>
                             <th className="font-weight-bold align-middle">
@@ -348,11 +351,11 @@ class Grid extends Component {
                                     <tr className={`${this.state.currentRow.id === _.id ? 'table-active' : ''}`}>
                                         <td>
                                             <div className="d-inline-block w-25">
-                                                {_.id != this.state.firstRow ? <button className="btn" onClick={this.onClickDeleteHandler(_.id)}>
+                                                {(_.id != this.state.lastRowId && this.state.rows.length > 1) && !_.isInserted ? <button className="btn" onClick={this.onClickDeleteHandler(_.id)}>
                                                     <i className="fas fa-times"></i>
                                                 </button> : ''}
                                             </div>
-                                            <div className="d-inline-block w-75">
+                                            <div className='d-inline-block w-75' >
                                                 <Select
                                                     id={_.id}
                                                     options={this.getEmployeeList(_.id, _.employeeId)}
@@ -361,26 +364,31 @@ class Grid extends Component {
                                                     closeMenuOnSelect={true}
                                                     components={makeAnimated()}
                                                     isMulti={false}
+                                                    style={{ zIndex: 999, overFlow: 'hiden' }}
+                                                    isDisabled={this.state.loadingEmployees || _.isInserted}
+                                                    isLoading={this.state.loadingEmployees}
                                                 />
                                             </div>
 
                                         </td>
-                                        {this.state.daysOfWeek.map(day => {
-                                            let dayName = this.getDayControlName(day.index)
-                                            return (
-                                                <td>
+                                        {
+                                            this.state.daysOfWeek.map(day => {
+                                                let dayName = this.getDayControlName(day.index)
+                                                return (
+                                                    <td>
 
-                                                    <select name="" className="form-control" id={`${_.id}${WILDCARD}${day.index}`} value={_[dayName]} onChange={this.onChangeDayHandler(_.id, dayName)} >
-                                                        <option value="0">OFF</option>
-                                                        {this.state.hours.map(hour => {
-                                                            return (
-                                                                <option value={hour}>{hour}</option>
-                                                            )
-                                                        })}
-                                                    </select>
-                                                </td>
-                                            )
-                                        })}
+                                                        <select name="" className="form-control" id={`${_.id}${WILDCARD}${day.index}`} value={_[dayName]} onChange={this.onChangeDayHandler(_.id, dayName)} disabled={_.isInserted} >
+                                                            <option value="0">OFF</option>
+                                                            {this.state.hours.map(hour => {
+                                                                return (
+                                                                    <option value={hour}>{hour}</option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                    </td>
+                                                )
+                                            })
+                                        }
                                     </tr>
                                 )
                             })
@@ -392,7 +400,7 @@ class Grid extends Component {
                         </tr>
                     </tbody>
                 </table>
-            </React.Fragment>
+            </React.Fragment >
         );
     }
 

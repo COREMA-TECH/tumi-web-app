@@ -83,6 +83,12 @@ export const ADD_IDEAL_JOB = gql`
     }
 `;
 
+export const DELETE_IDEAL_JOB = gql`
+    mutation deleteApplicantIdealJob($id: [Int]) {
+        deleteApplicantIdealJob(id: $id)
+    }
+`;
+
 export const CREATE_UPDATE_EMPLOYEE_HOTEL_RELATION = gql`
     mutation addEmployeeByHotel($employeeByHotels: [inputInsertEmployeeByHotel], $relationList: [inputUpdateEmployeeByHotel]) {
         addEmployeeByHotel(employeeByHotels: $employeeByHotels) {
