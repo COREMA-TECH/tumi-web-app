@@ -20,7 +20,7 @@ class RapidForm extends Component {
         startHour: '08:00',
         endHour: '16:00',
         duration: '8',
-        dayWeeks: '',
+        dayWeeks: ',MO,TU,WE,TH,FR,SA,SU',
         dayAndHour: {}
     };
 
