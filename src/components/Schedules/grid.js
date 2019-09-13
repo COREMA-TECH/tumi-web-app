@@ -39,6 +39,7 @@ class Grid extends Component {
             fifthDay: '0',
             sixthDay: '0',
             seventhDay: '0',
+            isInserted: false
         }
     }
     constructor(props) {
@@ -78,8 +79,8 @@ class Grid extends Component {
 
         let weekStart = currentDate.clone().day(this.props.weekDayStart);
 
-        let weekEnd = weekStart.clone().add('days',6);
-        
+        let weekEnd = weekStart.clone().add('days', 6);
+
         let days = [];
         for (let i = 0; i <= 6; i++) {
             let date = moment.utc(weekStart).add(i, 'days');
@@ -94,7 +95,7 @@ class Grid extends Component {
             return {
                 daysOfWeek: days,
                 hours: hours,
-                weekStart: weekStart.subtract(6,'days'),
+                weekStart: weekStart.subtract(6, 'days'),
                 weekEnd: weekEnd
             }
         });
@@ -144,7 +145,7 @@ class Grid extends Component {
                 }
                 data.push(_);
             });
-            
+
             if (Object.keys(employeesTags).length > 0 && rowId == this.state.lastRowId)
                 data.push(this.createNewRow())
             return { rows: data, formOpen: true, currentRow }
@@ -188,15 +189,16 @@ class Grid extends Component {
                         nameUser: localStorage.getItem('FullName')
                     }
                 })
-                .then((data) => {
+                .then(({ data: { addWorkOrderGrid } }) => {
                     this.props.handleOpenSnackbar('success', ' Shifts created successfully!');
-                    this.setState(() => ({ firstRow: null }));
-                    this.setState(() => ({
-                        rows: [{
-                            ...this.createNewRow(),
-                        }],
-                        saving: false
-                    }))
+                    // this.setState(() => ({ firstRow: null }));
+                    //3 records
+                    let newData = this.state.rows.map(_row => {
+                        let record = addWorkOrderGrid.find(_wo => _wo.groupKey === _row.id);
+                        return { ..._row, isInserted: record ? true : false };
+                    })
+
+                    this.setState(() => ({ rows: newData, saving: false }));
                 })
                 .catch((error) => {
                     this.setState({ saving: false });
@@ -209,10 +211,12 @@ class Grid extends Component {
         this.setState(() => ({ saving: true }), () => {
             let data = [];
             this.state.rows.map(_ => {
+                console.log({ row: _ })
                 if (Object.keys(_.employeeId).length > 0) {
                     DAYS.map(day => {
+                        console.log({ day })
                         if (_[day.description] != "0")
-                            data.push(this.createWorkOrderObject({ dayNumber: day.id, hour: _[day.description], employeeId: _.employeeId.value }));
+                            data.push(this.createWorkOrderObject({ groupKey: _.id, dayNumber: day.id, hour: _[day.description], employeeId: _.employeeId.value }));
                     })
                 }
             })
@@ -229,9 +233,10 @@ class Grid extends Component {
     }
 
     // createWorkOrderObject = ({ dayNumber, hour, employeeId }) => {
-    createWorkOrderObject = ({ dayNumber, hour, employeeId }) => {
+    createWorkOrderObject = ({ groupKey, dayNumber, hour, employeeId }) => {
         let date = this.state.daysOfWeek.find(_ => { return _.index == dayNumber }).date;
         let workOrder = {
+            groupKey,
             IdEntity: this.props.entityId,
             PositionRateId: this.props.positionId,
             comment: "",
@@ -309,7 +314,7 @@ class Grid extends Component {
     render() {
         return (
             <React.Fragment>
-                <RapidForm setRow={this.setRow} propertyStartWeek={this.props.weekDayStart} open={this.state.formOpen} handleCloseForm={this.handleCloseForm} currentRow={this.state.currentRow}/>
+                <RapidForm setRow={this.setRow} propertyStartWeek={this.props.weekDayStart} open={this.state.formOpen} handleCloseForm={this.handleCloseForm} currentRow={this.state.currentRow} />
                 <table className="table table-bordered">
                     <thead>
                         <tr>
@@ -340,7 +345,7 @@ class Grid extends Component {
                         {
                             this.state.rows.map(_ => {
                                 return (
-                                    <tr className={`${this.state.currentRow.id === _.id ? 'table-active' : '' }`}>
+                                    <tr className={`${this.state.currentRow.id === _.id ? 'table-active' : ''}`}>
                                         <td>
                                             <div className="d-inline-block w-25">
                                                 {_.id != this.state.firstRow ? <button className="btn" onClick={this.onClickDeleteHandler(_.id)}>
