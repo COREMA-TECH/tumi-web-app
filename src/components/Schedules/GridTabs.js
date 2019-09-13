@@ -4,6 +4,7 @@ import withApollo from "react-apollo/withApollo";
 import withGlobalContent from 'Generic/Global';
 import GridTabModal from './GridTabModal';
 import { GET_POSITION } from './Queries';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const uuidv4 = require('uuid/v4');
 
@@ -114,9 +115,11 @@ class GridTabs extends Component {
                                 )
                             })
                         }
-                        <button type="button" className="btn btn-secondary" onClick={this.openGridModal}>
-                            <i className="fa fa-plus"></i>
-                        </button>
+                        <Tooltip title="Add Position Schedules">
+                            <button type="button" className="btn btn-secondary" onClick={this.openGridModal}>
+                                <i className="fa fa-plus"></i>
+                            </button>
+                        </Tooltip>
                     </div>
                 </div>
                 <GridTabModal open={this.state.open} department={this.props.department} addTab={this.addTab} closeGrdiModal={this.closeGrdiModal} />
