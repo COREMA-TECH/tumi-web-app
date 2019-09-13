@@ -4,6 +4,7 @@ import withApollo from 'react-apollo/withApollo';
 import { UPDATE_MARKED_EMPLOYEE } from './Mutations';
 import Tooltip from '@material-ui/core/Tooltip';
 import CustomImage from './CustomImage';
+import FeatureTag from '../ui-components/FeatureTag';
 
 class PunchesConsolidatedDropDownBody extends Component {
     state = {
@@ -75,9 +76,16 @@ class PunchesConsolidatedDropDownBody extends Component {
                                 <tr className={!allowEditItem ? 'PunchesReport-RowInfo' : ''} >
                                     <th>
                                         <Tooltip title={allowEditItem ? 'Edit Time' : 'View Time'} >
-                                            <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({ ...item }, allowEditItem)}>
+                                            <button type="button" className="btn btn-success float-left mr-2" onClick={_ => this.props.handleEditModal({ ...item }, allowEditItem)}>
                                                 <i className={`fas fa-${allowEditItem ? 'pen' : 'eye'}`} ></i>
                                             </button>
+                                        </Tooltip>
+                                        <Tooltip title={'Delete Time'} >
+                                            <FeatureTag code="8c857de2-735c-4bae-9b17-7aca39ceb708">
+                                                <button type="button" className="btn btn-danger" onClick={_ => this.props.handleDeleteTimeModal({ ...item }, allowEditItem)}>
+                                                    <i className={'fas fa-trash'} ></i>
+                                                </button>
+                                            </FeatureTag>
                                         </Tooltip>
                                     </th>
                                     <td>{item.name}</td>
