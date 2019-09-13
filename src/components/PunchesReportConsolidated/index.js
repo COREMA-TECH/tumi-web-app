@@ -28,7 +28,8 @@ class PunchesReportConsolidated extends Component {
         urlPicture: '',
         item: {},
         editModal: false,
-        allowEditModal: false
+        allowEditModal: false,
+        intervalTime: 30000
     }
 
     constructor(props) {
@@ -60,7 +61,7 @@ class PunchesReportConsolidated extends Component {
     };
 
     handleClickCloseModal = () => {
-        this.setState({ openModal: false, allowEditModal: false });
+        this.setState({ openModal: false, allowEditModal: false, intervalTime: 1 });
     }
 
     getDepartments = () => {
@@ -189,7 +190,10 @@ class PunchesReportConsolidated extends Component {
             if (e != BreakException) throw e;
         }
         return total;
+    }
 
+    componentDidMount(){
+        this.setState(_ => ({intervalTime: 30000}))
     }
 
     handleDeleteTimeModal = ({ clockInId, clockOutId }) => {
@@ -221,9 +225,7 @@ class PunchesReportConsolidated extends Component {
                 });
         })
     }
-
     render() {
-
         return <React.Fragment>
             <ConfirmDialog
                 open={this.state.openConfirmDeleteTime}
@@ -242,7 +244,7 @@ class PunchesReportConsolidated extends Component {
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} allowEditModal={this.state.allowEditModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>
                     <div className="card" style={{ "position": "relative" }}>
-                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="30000">
+                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval={this.state.intervalTime}>
 
                             {({ loading, error, data }) => {
 
@@ -253,10 +255,12 @@ class PunchesReportConsolidated extends Component {
                                         <span class="badge badge-primary">Total: ${total} HRS</span>
                                     </div> : <React.Fragment />
                                     }
+
                                     <DropDown data={data.markedEmployeesConsolidated || []} handleEditModal={this.handleClickOpenModal} handleDeleteTimeModal={this.handleDeleteTimeModal}></DropDown>
+
                                 </React.Fragment>
                             }}
-                        </Query>
+                        </Query>                        
                     </div>
                 </div>
             </div>
