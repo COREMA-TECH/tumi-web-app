@@ -78,8 +78,7 @@ class TimeCardForm extends Component {
     componentWillReceiveProps(nextProps) {
         if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {            
             const { clockInId, clockOutId, hotelId, employeeId, key, clockIn, clockOut, noteIn } = nextProps.item;
-            console.log(nextProps.item);
-
+            
             this.setState({
                 id: clockInId,
                 clockInId: clockInId,
@@ -145,7 +144,6 @@ class TimeCardForm extends Component {
         } else {
             this.setState({ saving: true });
             if (this.state.id == null) {
-                //if (this.state.PositionRateId == 0)
                 let mark = {
                     entityId: this.state.IdEntity === 0 ? 180 : this.state.IdEntity,
                     typeMarkedId: this.state.PositionRateId === 0 ? 30572 : 30570,
@@ -161,6 +159,7 @@ class TimeCardForm extends Component {
                     return { marks: mark }
                 }, _ => { this.addIn(); });
 
+                this.handleCloseModal();
             } else {
                 let marks = [];
 
@@ -210,15 +209,15 @@ class TimeCardForm extends Component {
                     }, _ => { this.addIn(); });
                 }
 
-                // return;
                 marks.map(mark => {
                     this.updateMark(mark);
                 });
-            }
 
-            this.handleCloseModal(event);
+                this.handleCloseModal();
+            }            
         }
     };
+    
 
     updateMark = (mark) => {
         if (!mark) return;
@@ -236,10 +235,9 @@ class TimeCardForm extends Component {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.props.toggleRefresh();
                 this.setState({ saving: false }, () => {
-                    this.handleCloseModal();
-                    //this.props.getReport();
-                });
-                // window.location.reload();
+                    this.handleCloseModal();                    
+                    // alert("Closing modal");
+                });                
             })
             .catch((error) => {
                 this.setState({ saving: false });
