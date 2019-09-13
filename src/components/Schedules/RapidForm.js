@@ -38,7 +38,6 @@ class RapidForm extends Component {
     setDay = (dayCode) => {
 
         let day = {};
-        let dayValue = 0;
 
         if (dayCode === 1)
             day = {firstDay: this.state.startHour};
@@ -60,23 +59,14 @@ class RapidForm extends Component {
     }  
 
     selectWeekDay = (dayName) => {
-        // let dayValue = WEEK_DAYS.find(_ => {
-        //     return _.code === dayName;
-        // });
-
-        // let day = this.setDay(this.props.propertyStartWeek, dayValue.day);
 
         if (this.state.dayWeeks.includes(dayName))
             this.setState((prevState) => {
-                return { 
-                    dayWeeks: prevState.dayWeeks.replace("," + dayName, ''),
-                }
+                return { dayWeeks: prevState.dayWeeks.replace("," + dayName, '') }
             })
         else
-            this.setState((prevState) => {
-                return { 
-                    dayWeeks: prevState.dayWeeks.concat(',' + dayName),
-                }
+            this.setState((prevState) => { 
+                return { dayWeeks: prevState.dayWeeks.concat(',' + dayName) }
             })
     }
 
@@ -92,6 +82,7 @@ class RapidForm extends Component {
         this.state.dayWeeks.replace(',','').split(',').map(value => {
 
             let daysOrdered = this.orderDays();
+
             let index = daysOrdered.map((e) => { return e.code; }).indexOf(value);
 
             days = {...this.setDay(index + 1), ...days};
@@ -129,11 +120,11 @@ class RapidForm extends Component {
                         </div>
                         <div className="col-md-4">
                             <label htmlFor="">* End Time</label>
-                            <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ name: "endHour", disabled: true }} />
+                            <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ name: "endHour", disabled: false }} />
                         </div>
                         <div className="col-md-4">
                             <label htmlFor="">Duration</label>
-                            <input type="text" className="form-control" disabled value={this.state.duration}/>
+                            <input type="text" className="form-control" value={this.state.duration}/>
                         </div>
                         <div className="col-md-12 mt-2">
                             <label htmlFor="">Days Off</label>

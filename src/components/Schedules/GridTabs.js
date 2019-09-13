@@ -105,7 +105,7 @@ class GridTabs extends Component {
                     }
                 </div>
                 <div className="GridTab-head">
-                    <div className="btn-group" role="group" aria-label="Basic example">
+                    <div className="btn-group GridTab-Group" role="group" aria-label="Basic example">
                         {
                             this.state.positions.map(__position => {
                                 let selected = this.state.tabSelected === __position.id ? 'GridTab-selected' : '';

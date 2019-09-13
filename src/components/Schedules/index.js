@@ -282,7 +282,7 @@ class Schedules extends Component {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="MasterShift-schedules">
-                                    <div className="MasterShift-schedulesBody" id="divToPrint">
+                                    <div className="applicant-card__header flex-row-reverse p-0 pt-4 pr-4">
                                         <div className="SmallSwitch">
                                             <span className="rightLable-Switch">Grid View</span>
                                             <div className="onoffswitch">
@@ -294,6 +294,8 @@ class Schedules extends Component {
                                             </div>
                                             <span className="leftLabel-Switch">Calendar View</span>
                                         </div>
+                                    </div>
+                                    <div className="MasterShift-schedulesBody" id="divToPrint">
                                         {
                                             !this.state.gridView ? this.gridTabsView() : this.calendarView()
                                         }
