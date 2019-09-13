@@ -41,14 +41,14 @@ class PunchesConsolidatedDropDown extends Component {
         let data = this.props.data || [];
         return <div className={classes.root}>
             {data.map(item => {
-                return <ExpansionPanel className="panel-dropdown" style={{marginTop: 0}} onChange={this.handleChange(uuidv4())}>
+                return <ExpansionPanel className="panel-dropdown" style={{ marginTop: 0 }} onChange={this.handleChange(uuidv4())}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                         <Typography className={classes.heading}>{moment(item.date).format('MMMM Do YYYY')}</Typography>
 
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className="panel-dropdown-body">
                         <Typography>
-                            <DropDownBody data={item.punches} handleEditModal={this.props.handleEditModal}></DropDownBody>
+                            <DropDownBody data={item.punches} handleEditModal={this.props.handleEditModal} handleDeleteTimeModal={this.props.handleDeleteTimeModal}></DropDownBody>
                         </Typography>
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
