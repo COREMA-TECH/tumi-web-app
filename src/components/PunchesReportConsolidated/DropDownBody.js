@@ -46,14 +46,6 @@ class PunchesConsolidatedDropDownBody extends Component {
     render() {
         let { data } = this.props;
 
-        let renderDialogPicture = () => (
-            <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModalPicture}>
-                {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
-                <img src={this.state.urlPicture} className="avatar-lg" />
-                {/*</DialogTitle>*/}
-            </Dialog>
-        );
-
         return (
             <div className="DropdownBody">
                 <table className="table DropdownBody-table">
