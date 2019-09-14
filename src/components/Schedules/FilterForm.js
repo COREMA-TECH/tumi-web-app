@@ -745,8 +745,8 @@ class FilterForm extends Component {
                                     !this.state.summaryEnable ? (
                                         <button className="btn btn-success float-left btn-not-rounded" type="button" onClick={this.savePublish}>Notify {this.showLoadingNotify()}</button>
                                     ) : (
-                                        ''
-                                    )
+                                            ''
+                                        )
                                 }
 
                             </div>}

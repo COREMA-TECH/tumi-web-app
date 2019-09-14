@@ -489,7 +489,6 @@ class BackgroundCheck extends Component {
     }
 
     createDocumentsPDF = (random, download = false) => {
-        console.log('Generar background check. Descarga -- ', download); // TODO: (LF) Quitar console log
         this.setState({ downloading: true });
         this.props.client
             .query({

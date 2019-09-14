@@ -4,9 +4,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY, GET_MARK } from './queries';
+import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_CONTACT_BY_QUERY } from './queries';
 import { ADD_MARCKED, UPDATE_MARKED } from './mutations';
-import TableCell from '@material-ui/core/TableCell';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Datetime from 'react-datetime';
@@ -40,14 +39,6 @@ const styles = (theme) => ({
 
 });
 
-const CustomTableCell = withStyles((theme) => ({
-    head: {
-        color: theme.palette.common.white
-    },
-    body: {
-        fontSize: 12
-    }
-}))(TableCell);
 
 class TimeCardForm extends Component {
     DEFAULT_STATE = {
@@ -85,11 +76,9 @@ class TimeCardForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
-        if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {
-            console.log({ item: nextProps.item })
+        if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {            
             const { clockInId, clockOutId, hotelId, employeeId, key, clockIn, clockOut, noteIn } = nextProps.item;
-
-
+            
             this.setState({
                 id: clockInId,
                 clockInId: clockInId,
@@ -106,8 +95,8 @@ class TimeCardForm extends Component {
                 newMark: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
                 readOnly: nextProps.readOnly,
             }, _ => {
-                //  this.DisabledTimeOut({ target: { checked: this.state.statusTimeOut } });
                 this.calculateHours();
+                this.getPositions(this.state.IdEntity);
             });
         } else if (!nextProps.openModal) {
             this.setState({
@@ -129,13 +118,11 @@ class TimeCardForm extends Component {
 
         this.getHotels();
         this.getEmployees();
-        //this.getPositions();
     }
 
     componentWillMount() {
         this.getHotels();
         this.getEmployees();
-        //this.getPositions();
     }
 
     handleCloseModal = (event) => {
@@ -143,21 +130,7 @@ class TimeCardForm extends Component {
             ...this.DEFAULT_STATE
         });
         this.props.handleCloseModal(event);
-    }
-
-    getPunches = () => {
-        this.props.client.query({
-            query: GET_MARK,
-            variables: {
-                typeMarkedId: 30570,
-                markedDate: this.state.startDate
-            }
-        }).then(({ data }) => {
-            this.setState(prevState => ({
-                mark: data
-            }));
-        });
-    }
+    }    
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -171,7 +144,6 @@ class TimeCardForm extends Component {
         } else {
             this.setState({ saving: true });
             if (this.state.id == null) {
-                //if (this.state.PositionRateId == 0)
                 let mark = {
                     entityId: this.state.IdEntity === 0 ? 180 : this.state.IdEntity,
                     typeMarkedId: this.state.PositionRateId === 0 ? 30572 : 30570,
@@ -183,10 +155,11 @@ class TimeCardForm extends Component {
                     notes: this.state.comment
                 }
 
-                this.setState(prevState => {
+                this.setState(() => {
                     return { marks: mark }
                 }, _ => { this.addIn(); });
 
+                this.handleCloseModal();
             } else {
                 let marks = [];
 
@@ -231,18 +204,20 @@ class TimeCardForm extends Component {
                         typeMarkedId: this.state.PositionRateId === 0 ? 30571 : 30570,
                     }
 
-                    this.setState(prevState => {
+                    this.setState(() => {
                         return { marks: markOut }
                     }, _ => { this.addIn(); });
                 }
 
-                // return;
                 marks.map(mark => {
                     this.updateMark(mark);
                 });
-            }
+
+                this.handleCloseModal();
+            }            
         }
     };
+    
 
     updateMark = (mark) => {
         if (!mark) return;
@@ -256,17 +231,16 @@ class TimeCardForm extends Component {
                     MarkedEmployees: editMark
                 }
             })
-            .then((data) => {
+            .then(() => {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.props.toggleRefresh();
                 this.setState({ saving: false }, () => {
-                    this.props.handleCloseModal();
-                    //this.props.getReport();
-                });
-                // window.location.reload();
+                    this.handleCloseModal();                    
+                    // alert("Closing modal");
+                });                
             })
             .catch((error) => {
-                this.setState({ saving: true });
+                this.setState({ saving: false });
                 this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
     }
@@ -277,20 +251,20 @@ class TimeCardForm extends Component {
             variables: {
                 MarkedEmployees: this.state.marks
             }
-        }).then((data) => {
+        }).then(() => {
             if (!this.state.statusTimeOut)
                 this.addOut()
             else {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.props.toggleRefresh();
-                this.setState({ saving: false }, () => { this.props.handleCloseModal(); this.props.toggleRefresh(); });
+                this.setState({ saving: false }, () => { this.handleCloseModal(); this.props.toggleRefresh(); });
             } 0
-
         })
-            .catch((error) => {
-                this.setState({ saving: true });
-                this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
-            });
+
+        .catch(() => {
+            this.setState({ saving: false });
+            this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
+        });
     };
 
     addOut = () => {
@@ -310,16 +284,16 @@ class TimeCardForm extends Component {
                     }
                 }
             })
-            .then((data) => {
+            .then(() => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.props.toggleRefresh();
                 this.setState({ saving: false }, () => {
-                    this.props.handleCloseModal();
+                    this.handleCloseModal();
                     //this.props.getReport();
                 });
                 // window.location.reload();
             })
-            .catch((error) => {
+            .catch(() => {
                 this.setState({ saving: true });
                 this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
             });
@@ -343,37 +317,10 @@ class TimeCardForm extends Component {
             .catch();
     };
 
-    handleChangeState = (event) => {
-        event.preventDefault();
-        if (
-            this.state.IdEntity == 0 ||
-            this.state.PositionRateId == null ||
-            this.state.contactId == 0 ||
-            this.state.quantity == '' ||
-            this.state.quantity == 0 ||
-            this.state.date == '' ||
-            this.state.startDate == '' ||
-            this.state.endDate == '' ||
-            this.state.shift == '' ||
-            this.state.shift == 0 ||
-            this.state.endShift == '' ||
-            this.state.endShift == 0 ||
-            this.state.dayWeeks == ''
-        ) {
-            this.props.handleOpenSnackbar('error', 'Error all fields are required');
-        } else {
-            this.setState({ converting: true });
-            // this.update(2);
-            this.CONVERT_TO_OPENING();
-        }
-    };
-
     handleChange = (event) => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-        let comments = '';
-        let request = '';
+        const name = target.name;       
 
         this.setState({
             [name]: value
@@ -385,7 +332,7 @@ class TimeCardForm extends Component {
         }
     };
 
-    getPositions = (id, PositionId = null) => {
+    getPositions = (id) => {
         this.props.client
             .query({
                 query: GET_POSITION_BY_QUERY,
@@ -395,26 +342,11 @@ class TimeCardForm extends Component {
                 this.setState({
                     positions: data.getposition
                 }, _ => {
-                    console.log(this.state.positions);
+                    
                 });
             })
             .catch();
-    };
-
-    getRecruiter = () => {
-        this.props.client
-            .query({
-                query: GET_RECRUITER,
-                variables: {}
-            })
-            .then(({ data }) => {
-                this.setState({
-                    recruiters: data.getusers
-
-                });
-            })
-            .catch();
-    };
+    };   
 
     getEmployees = () => {
         this.props.client
@@ -440,18 +372,6 @@ class TimeCardForm extends Component {
                 });
             })
             .catch();
-    };
-
-    validateInvalidInput = () => {
-        if (document.addEventListener) {
-            document.addEventListener(
-                'invalid',
-                (e) => {
-                    e.target.className += ' invalid-apply-form';
-                },
-                true
-            );
-        }
     };
 
     handleTimeChange = (name) => (text) => {
@@ -496,40 +416,7 @@ class TimeCardForm extends Component {
         this.setState({
             duration: duration
         });
-    }
-
-    getWeekDayStyle = (dayName) => {
-        return `btn btn-secondary ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
-    }
-
-    selectWeekDay = (dayName) => {
-        if (this.state.dayWeeks.includes(dayName))
-            this.setState((prevState) => {
-                return { dayWeeks: prevState.dayWeeks.replace(dayName, '') }
-            })
-        else
-            this.setState((prevState) => {
-                return { dayWeeks: prevState.dayWeeks.concat(dayName) }
-            })
-    }
-
-    TakeDateContract = () => {
-        const DateExpiration = this.state.hotels.find((item) => { return item.Id == this.state.IdEntity })
-        if (this.state.IdEntity == 0) {
-            this.props.handleOpenSnackbar('error', 'Please, select one property');
-            document.getElementById("materialUnchecked").checked = false
-        } else {
-            if (DateExpiration.Contract_Expiration_Date == null) {
-                this.props.handleOpenSnackbar('error', 'The property does not have a contract active, please create a contract');
-                document.getElementById("materialUnchecked").checked = false
-            } else {
-                if (document.getElementById("materialUnchecked").checked) {
-                    var ExpirationDate = new Date(DateExpiration.Contract_Expiration_Date);
-                    this.setState({ endDate: ExpirationDate.toISOString().substring(0, 10) });
-                } else { this.setState({ endDate: "" }); }
-            }
-        }
-    }
+    }    
 
     DisabledTimeOut = ({ target: { checked } }) => {
         if (checked) {
@@ -563,6 +450,7 @@ class TimeCardForm extends Component {
         });
     }
 
+    //#region Filters
     getPropertyFilterList = _ => {
         const propertyList = this.state.hotels.map(item => {
             return { value: item.Id, label: item.Name }
@@ -591,7 +479,7 @@ class TimeCardForm extends Component {
     }
 
     handlePropertySelectChange = ({ value }) => {
-        this.setState((prevState, props) => {
+        this.setState(() => {
             let hotel = this.state.hotels.find(_ => {
                 return _.Id === parseInt(value)
             })
@@ -602,13 +490,13 @@ class TimeCardForm extends Component {
     }
 
     handleEmployeeSelectChange = ({ value }) => {
-        this.setState((prevState, props) => {
+        this.setState(() => {
             return { employeeId: value }
         });
     }
 
     handlePositionChange = ({ value }) => {
-        this.setState((prevState, props) => {
+        this.setState(() => {
             return { PositionRateId: value }
         });
     }
@@ -651,6 +539,7 @@ class TimeCardForm extends Component {
 
         return found ? { value: found.Id, label: found.Position.trim() } : defValue;
     }
+    //#endregion
 
     render() {
         const propertyList = this.getPropertyFilterList();

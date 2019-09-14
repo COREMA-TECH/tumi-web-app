@@ -2,44 +2,6 @@ import React, { Component } from "react";
 import TimeCardTable from "./TimeCardTable";
 import TimeCardForm from "./TimeCardForm";
 import withGlobalContent from 'Generic/Global';
-import { GET_REGION_QUERY } from './queries';
-import withApollo from 'react-apollo/withApollo';
-import { withStyles } from '@material-ui/core/styles';
-
-import PropTypes from 'prop-types';
-
-const styles = (theme) => ({
-    root: {
-        width: '100%',
-        marginTop: theme.spacing.unit * 3,
-        overflowX: 'auto'
-    },
-    table: {
-        minWidth: 500
-    },
-    tableWrapper: {
-        overflowX: 'auto'
-    },
-    row: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.background.default
-        },
-        '&:hover': {
-            cursor: 'pointer'
-        }
-    },
-    fab: {
-        margin: theme.spacing.unit * 2
-    },
-    absolute: {
-        position: 'absolute',
-        bottom: theme.spacing.unit * 2,
-        right: theme.spacing.unit * 3
-    },
-    th: {
-        backgroundColor: '#3da2c7'
-    }
-});
 
 class TimeCard extends Component {
     constructor(props) {
@@ -58,11 +20,11 @@ class TimeCard extends Component {
         this.setState({ openModal: true, item: null });
     };
 
-    handleCloseModal = (event) => {
-        // event.preventDefault();
+    handleCloseModal = () => {
         this.setState({
             openModal: false
-
+        }, _ => {
+            this.toggleRefresh();
         });
     };
 
