@@ -40,23 +40,23 @@ class RapidForm extends Component {
         let day = {};
 
         if (dayCode === 1)
-            day = {firstDay: this.state.startHour};
+            day = { firstDay: this.state.startHour };
         else if (dayCode === 2)
-            day = {secondDay: this.state.startHour};
+            day = { secondDay: this.state.startHour };
         else if (dayCode === 3)
-            day = {thirdDay: this.state.startHour};
+            day = { thirdDay: this.state.startHour };
         else if (dayCode === 4)
-            day = {fourthDay: this.state.startHour};
+            day = { fourthDay: this.state.startHour };
         else if (dayCode === 5)
-            day = {fifthDay: this.state.startHour};
+            day = { fifthDay: this.state.startHour };
         else if (dayCode === 6)
-            day = {sixthDay: this.state.startHour};
+            day = { sixthDay: this.state.startHour };
         else if (dayCode === 7)
-            day = {seventhDay: this.state.startHour};
-        
+            day = { seventhDay: this.state.startHour };
+
         return day;
 
-    }  
+    }
 
     selectWeekDay = (dayName) => {
 
@@ -78,14 +78,14 @@ class RapidForm extends Component {
 
     save = () => {
         let days = {};
-        
-        this.state.dayWeeks.replace(',','').split(',').map(value => {
+
+        this.state.dayWeeks.replace(',', '').split(',').map(value => {
 
             let daysOrdered = this.orderDays();
 
             let index = daysOrdered.map((e) => { return e.code; }).indexOf(value);
 
-            days = {...this.setDay(index + 1), ...days};
+            days = { ...this.setDay(index + 1), ...days };
         });
 
         let obj = {
@@ -95,9 +95,14 @@ class RapidForm extends Component {
         this.props.setRow(obj);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.open !== nextProps.open && nextProps.open)
+            this.setState(() => ({ ...this.DEFAULT_STATE }));
+    }
+
     render() {
         let weekDaysFinal = this.orderDays();
-        return(
+        return (
             <React.Fragment>
                 <div className={`MasterShiftForm ${this.props.open ? 'active' : ''}`}>
                     <header className="MasterShiftForm-header">
