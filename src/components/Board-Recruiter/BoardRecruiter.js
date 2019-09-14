@@ -3,6 +3,8 @@ import './index.css'
 import withGlobalContent from "../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
 
 import {
     ADD_APPLICATION_PHASES,
@@ -24,6 +26,13 @@ import Filters from './Filters';
 import ApplicationPhasesForm from './ApplicationPhasesForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { conformToMask } from 'react-text-mask';
+
+const statusOptions = [
+    {value:1, label: 'Open'},
+    {value:null, label: 'Status (All)'},
+    {value:2, label: 'Completed'},
+    {value:0, label: 'Cancelled'}
+];
 
 class CustomCard extends Component {
 
@@ -153,7 +162,11 @@ class BoardRecruiter extends Component {
             distance: 0,
             ShiftId: 0,
             LaneOrigen: '',
-            LaneDestino: ''
+            LaneDestino: '',
+            hotelsOpt: [],
+            statesOpt: [],
+            citiesOpt: [],
+            statusOpt: statusOptions
         }
     }
 
@@ -389,9 +402,14 @@ class BoardRecruiter extends Component {
                 query: GET_HOTEL_QUERY
             })
             .then(({ data }) => {
-                this.setState({
-                    hotels: data.getbusinesscompanies
-                });
+                if(data){
+                    this.setState({
+                        hotels: data.getbusinesscompanies,
+                        hotelsOpt: data.getbusinesscompanies.map(h => {
+                            return { value: h.Id, label: h.Name ? h.Name.trim() : '' }
+                        })
+                    });
+                }
             })
             .catch();
     }
@@ -401,56 +419,70 @@ class BoardRecruiter extends Component {
             .query({
                 query: GET_STATES_QUERY,
                 variables: {
-                    id: this.state.state,
+                    //id: this.state.state,
                     parent: this.state.country
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                this.setState({
-                    states: data.getcatalogitem
-                });
+                if(data){
+                    this.setState({
+                        states: data.getcatalogitem,
+                        statesOpt: data.getcatalogitem.map(ci => {
+                            return {value: ci.Id, label: ci.Name ? ci.Name.trim() : ''}
+                        })
+                    });
+                }
             })
             .catch();
     };
 
     loadCities = () => {
-        this.props.client
-            .query({
-                query: GET_CITIES_QUERY,
-                variables: {
-                    id: this.state.city,
-                    parent: this.state.state
-                },
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                this.setState({
-                    cities: data.getcatalogitem
-                });
-            })
-            .catch();
+        this.setState({
+            loading: true
+        }, _ => {
+            this.props.client
+                .query({
+                    query: GET_CITIES_QUERY,
+                    variables: {
+                        //id: this.state.city,
+                        parent: this.state.state
+                    },
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({ data }) => {
+                    if(data){
+                        this.setState({
+                            cities: data.getcatalogitem,
+                            citiesOpt: data.getcatalogitem.map(c => {
+                                return {value: c.Id, label: c.Name ? c.Name.trim() : ''}
+                            })
+                        });
+                    }
+                    this.setState({loading: false});
+                })
+                .catch(_ => this.setState({loading: false}) );
+        })
     };
 
-    updateHotel = (event) => {
+    updateHotel = ({value}) => {
 
-        let id = event.target.value;
-
-        if (id != 0) {
+        //let id = event.target.value;
+        const id = value || 0;
+        let hotelSelected = this.state.hotels.find((item) => { return item.Id === id });
+        
+        if (hotelSelected) {
             this.setState(
                 {
                     hotel: id,
-                    state: this.state.hotels.find((item) => {
-                        return item.Id == id
-                    }).State,
-                    city: this.state.hotels.find((item) => {
-                        return item.Id == id
-                    }).City,
+                    state: hotelSelected.State,
+                    city: hotelSelected.City,
                     matches: []
                 },
                 () => {
                     // this.validateField('state', id);
                     this.loadStates();
+                    this.loadCities();
                     this.getOpenings();
                 }
             );
@@ -466,9 +498,9 @@ class BoardRecruiter extends Component {
                 () => {
                     this.getOpenings();
                     this.loadStates();
+                    this.loadCities();
                 }
             );
-
         }
 
     };
@@ -537,9 +569,9 @@ class BoardRecruiter extends Component {
         let needEnglish, needExperience, Position, state;
 
 
-        state = this.state.Openings.find((item) => { return item.id == cardId })
+        state = this.state.Openings.find((item) => { return item.id === cardId })
 
-        if (laneId.trim() == "lane1" && cardId > 0 && state.Status != 0) {
+        if (laneId.trim() === "lane1" && cardId > 0 && state.Status !== 0) {
 
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
@@ -837,19 +869,19 @@ class BoardRecruiter extends Component {
     getDataFilters = () => {
         var variables;
 
-        if (this.state.status == 0) {
+        if (this.state.status === 0) {
             variables = {
                 shift: {
                     status: [0]
                 },
             };
-        } else if (this.state.status == 1) {
+        } else if (this.state.status === 1) {
             variables = {
                 shift: {
                     status: [2]
                 },
             };
-        } else if (this.state.status == 2) {
+        } else if (this.state.status === 2) {
             variables = {
                 shift: {
                     status: [3]
@@ -945,30 +977,30 @@ class BoardRecruiter extends Component {
         }, 1000);
     }
 
-    onChangeState = (event) => {
+    onChangeState = ({value}) => {
         this.setState(() => ({
-            state: event.target.value,
+            state: value || 0,
             city: 0,
             cities: []
         }), () => {
             this.loadCities();
             this.getOpenings();
-        })
+        });
     }
 
-    onChangeCity = (event) => {
+    onChangeCity = ({value}) => {
         this.setState(() => ({
-            city: event.target.value
+            city: value || 0
         }), () => {
             this.getOpenings();
         })
     }
 
-    onChangeStatus = (event) => {
-        if (event.target.value == "null") {
+    onChangeStatus = ({value}) => {
+        if (value === null) {
             this.updateStatus(null);
         } else {
-            this.updateStatus(event.target.value);
+            this.updateStatus(value);
         }
     }
 
@@ -1000,8 +1032,14 @@ class BoardRecruiter extends Component {
 
     render() {
         const { classes } = this.props;
+        const {hotel, hotelsOpt, state, statesOpt, city, citiesOpt, status, statusOpt} = this.state;
+        const hotelValue = hotel ? hotelsOpt.find(o => o.value === hotel) : null;
+        const stateValue = state ? statesOpt.find(o => o.value === state) : null;
+        const cityValue = city ? citiesOpt.find(o => o.value === city) : null;
+        const statusValue = statusOpt.find(o => o.value === status);
 
-        let isLoading = this.state.loading
+        let isLoading = this.state.loading;
+
 
         return (
             <div className="App">
@@ -1013,62 +1051,52 @@ class BoardRecruiter extends Component {
                                 <div className="card-header info">
                                     <div className="row">
                                         <div className="col-md-4 col-xl-2 offset-xl-1 mb-2">
-                                            <select
-                                                required
-                                                name="IdEntity"
-                                                className="form-control"
+                                            <Select
                                                 id="IdEntity"
+                                                name="IdEntity"
+                                                placeholder="Select a Hotel"
+                                                options={hotelsOpt}
+                                                value={hotelValue}
                                                 onChange={this.updateHotel}
-                                                value={this.state.hotel}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Hotel</option>
-                                                {this.state.hotels.map((hotel) => (
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
-                                                ))}
-                                            </select>
+                                                components={makeAnimated()}
+                                                closeMenuOnSelect
+                                            />
                                         </div>
                                         <div className="col-md-4 col-xl-2 mb-2">
-                                            <select
+                                            <Select
+                                                id="state"
                                                 name="state"
-                                                className={'form-control'}
+                                                placeholder="Select a State"
+                                                options={statesOpt}
+                                                value={stateValue}
                                                 onChange={this.onChangeState}
-                                                value={this.state.state}
-                                                showNone={false}
-                                            >
-                                                <option value="">Select a state</option>
-                                                {this.state.states.map((item) => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))}
-                                            </select>
+                                                components={makeAnimated()}
+                                                closeMenuOnSelect
+                                            />
                                         </div>
                                         <div className="col-md-4 col-xl-2 mb-2">
-                                            <select
+                                            <Select
+                                                id="city"
                                                 name="city"
-                                                className={'form-control'}
+                                                placeholder="Select a City"
+                                                options={citiesOpt}
+                                                value={cityValue}
                                                 onChange={this.onChangeCity}
-                                                value={this.state.city}
-                                                showNone={false}
-                                            >
-                                                <option value="">Select a city</option>
-                                                {this.state.cities.map((item) => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))}
-                                            </select>
+                                                components={makeAnimated()}
+                                                closeMenuOnSelect
+                                            />
                                         </div>
                                         <div className="col-md-4 offset-md-8 col-xl-2 offset-xl-0 mb-2">
-                                            <select
+                                            <Select
+                                                id="status"
                                                 name="status"
-                                                className={'form-control'}
+                                                placeholder="Select a Status"
+                                                options={statusOpt}
+                                                value={statusValue}
                                                 onChange={this.onChangeStatus}
-                                                value={this.state.status}
-                                                showNone={false}
-                                            >
-                                                <option value={1}>Open</option>
-                                                <option value={null}>Status (All)</option>
-                                                <option value={2}>Completed</option>
-                                                <option value={0}>Cancelled</option>
-                                            </select>
+                                                components={makeAnimated()}
+                                                closeMenuOnSelect
+                                            />
                                         </div>
                                         <div className="col-md-12 col-xl-3 mb-2 Filter-buttons">
                                             <a
