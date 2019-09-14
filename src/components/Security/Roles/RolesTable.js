@@ -171,6 +171,8 @@ class RolesTable extends Component {
 						</TableHead>
 						<TableBody>
 							{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, i) => {
+                                const regionsId = this.props.regionsRoles.filter(rr => rr.RolId === row.Id).map(rr => rr.RegionId);
+                                const regionsFound = this.props.regions.filter(r => regionsId.includes(r.value)).map(r => r.label).join(',');
 								return (
 									<TableRow
 										hover
@@ -202,7 +204,7 @@ class RolesTable extends Component {
 										<CustomTableCell>{this.getCompanyName(row.Id_Company)}</CustomTableCell>
 										<CustomTableCell>{row.Description}</CustomTableCell>
 										<CustomTableCell>{this.getFormName(dataForms, row.default_form_id)}</CustomTableCell>
-                                        <CustomTableCell>{row.Description}</CustomTableCell>
+                                        <CustomTableCell>{regionsFound}</CustomTableCell>
 									</TableRow>
 								);
 							})}

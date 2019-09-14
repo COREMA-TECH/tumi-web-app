@@ -3,8 +3,8 @@ import RolesModal from './RolesModal';
 import RolesTable from './RolesTable';
 import withGlobalContent from 'Generic/Global';
 import {withApollo} from 'react-apollo';
-import {GET_ROLES_QUERY, GET_COMPANY_QUERY, GET_FORMS_QUERY, GET_REGIONS_QUERY} from './Queries';
-import {INSERT_ROLES, UPDATE_ROLES} from './Mutations';
+import {GET_ROLES_QUERY, GET_REGIONS_ROLES_QUERY, GET_COMPANY_QUERY, GET_FORMS_QUERY, GET_REGIONS_QUERY} from './Queries';
+import {INSERT_ROLES, UPDATE_ROLES, DELETE_ROLES} from './Mutations';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
 class Roles extends Component {
@@ -12,10 +12,11 @@ class Roles extends Component {
         super(props);
         this.state = {
             data: [],
-            regions: [],
+            regionsOpt: [],
             dataForms: [],
             forms: [],
             company: [],
+            companiesOpt: [],
             loading: false,
             openRolesModal: false,
 
@@ -23,13 +24,15 @@ class Roles extends Component {
             loadingConfirm: false,
             openDeleteConfirm: false,
 
-            formSelected: null
+            rolToEdit: null,
+            regionsRoles: []
         };
     }
 
     handleCloseRolesModal = () => {
         this.setState({
-            openRolesModal: false
+            openRolesModal: false,
+            rolToEdit: null
         });
     }
 
@@ -48,7 +51,7 @@ class Roles extends Component {
                             dataForms: data.data.getforms
                         },
                         () => {
-                            //this.resetState();
+                            this.getRegionsRoles();
                         }
                     );
                 } else {
@@ -59,6 +62,30 @@ class Roles extends Component {
                 this.props.handleOpenSnackbar('error', 'Error: Loading roles: ' + error);
             });
     };
+
+    getRegionsRoles = () => {
+        this.props.client
+            .query({
+                query: GET_REGIONS_ROLES_QUERY,
+                variables: {
+                    RolId: this.state.data.map(d => d.Id),
+                    isActive: true
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({data}) => {
+                if (data.regionsRolesByRolesId != null) {
+                    this.setState({
+                        regionsRoles: data.regionsRolesByRolesId
+                    });
+                } else {
+                    this.props.handleOpenSnackbar('error', 'Error: Loading regions roles');
+                }
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error: Loading regions roles: ' + error);
+            });
+    }
 
     loadCompanies = () => {
         this.props.client
@@ -71,7 +98,10 @@ class Roles extends Component {
                 if (data.data.getcompanies != null) {
                     this.setState(
                         {
-                            company: data.data.getcompanies
+                            company: data.data.getcompanies,
+                            companiesOpt: data.data.getcompanies.map(c => {
+                                return {value: c.Id, label: c.Name }
+                            })
                         },
                         () => {
                             //this.resetState();
@@ -116,11 +146,36 @@ class Roles extends Component {
         }).then(({data}) => {
             if(!data) this.props.handleOpenSnackbar('error', 'Error: Loading regions: ');
             this.setState({
-                regions: data.getcatalogitem
+                regionsOpt: data.getcatalogitem.map(r => {
+                    return {value: r.Id, label: r.Name, key:r.Id}
+                })
             });
         }).catch((error) => {
             this.props.handleOpenSnackbar('error', 'Error: Loading regions: ' + error);
         });
+    };
+
+    insertOrUpdateRoles = (rolToSave) => {
+        let {isEdition, regionsId, ...rol} = rolToSave;
+        console.log('rol a guardar - ', rolToSave); // TODO: (LF) Quitar console log
+        this.props.client
+            .mutate({
+                mutation: isEdition ? UPDATE_ROLES : INSERT_ROLES,
+                variables: {
+                    rol: rol,
+                    regionsId: regionsId
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', isEdition ? 'Roles Updated!' : 'Roles Inserted!');
+                this.loadRoles();
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    isEdition ? 'Error: Updating Roles: ' + error : 'Error: Inserting Roles: ' + error
+                );
+            });
     };
 
     deleteRoles = () => {
@@ -131,7 +186,7 @@ class Roles extends Component {
             () => {
                 this.props.client
                     .mutate({
-                        mutation: this.DELETE_ROLES_QUERY,
+                        mutation: DELETE_ROLES,
                         variables: {
                             Id: this.state.idToDelete
                         }
@@ -165,17 +220,18 @@ class Roles extends Component {
         });
     };
 
-    handleChangeForms = (formSelected) => {
-        this.setState({ formSelected });
-    };
+    // handleChangeForms = (formSelected) => {
+    //     this.setState({ formSelected });
+    // };
 
     onEditHandler = (rolId) => {
-        const {data, forms} = this.state;
+        const {data, regionsRoles} = this.state;
         const rolEdit = data.find(r => r.Id === rolId);
+        const regionsId = regionsRoles.filter(rr => rr.RolId === rolId).map(rr => rr.RegionId);
         if(!rolEdit) return this.props.handleOpenSnackbar('error', 'Error: Rol not found ');
 
         this.setState({
-            formSelected: forms.find(f => f.value === rolEdit.default_form_id),
+            rolToEdit: {...rolEdit, regionsId },
             openRolesModal: true
         });
     }
@@ -192,7 +248,7 @@ class Roles extends Component {
     }
 
     render() {
-        let {openRolesModal, forms, formSelected} = this.state;
+        let {openRolesModal, company, companiesOpt, forms, regionsRoles, regionsOpt, rolToEdit} = this.state;
         return <Fragment>
             <AlertDialogSlide
                 handleClose={this.handleCloseAlertDialog}
@@ -217,7 +273,9 @@ class Roles extends Component {
                     <RolesTable
                         data={this.state.data}
                         dataForms={this.state.dataForms}
-                        company={this.state.company}
+                        company={company}
+                        regionsRoles={regionsRoles}
+                        regions={regionsOpt}
                         loading={this.state.loading}
                         onEditHandler={this.onEditHandler}
                         onDeleteHandler={this.onDeleteHandler}
@@ -226,12 +284,14 @@ class Roles extends Component {
             </div>
 
             <RolesModal 
-                title="Modal"
+                title={rolToEdit ? 'Edit Rol' : 'New Rol'}
                 open={openRolesModal}
+                rol={rolToEdit}
                 handleClose={this.handleCloseRolesModal}
+                companies={companiesOpt}
                 forms={forms}
-                formSelected={formSelected}
-                handleChangeForms={this.handleChangeForms}
+                regions={regionsOpt}
+                handleSaveRol={this.insertOrUpdateRoles}
             />
         </Fragment>
     }
