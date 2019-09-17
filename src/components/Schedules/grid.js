@@ -6,6 +6,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import { CREATE_WORKORDER } from './Mutations';
 import RapidForm from './RapidForm';
+import { GET_SHIFTS_BY_SPECIFIC_DATE_EMPLOYEE_QUERY } from './Queries';
 
 const uuidv4 = require('uuid/v4');
 const WILDCARD = '||';
@@ -218,6 +219,7 @@ class Grid extends Component {
                     })
                 }
             })
+
             if (data.length == 0) {
                 this.setState(() => ({ saving: false }));
                 this.props.handleOpenSnackbar(
@@ -225,7 +227,36 @@ class Grid extends Component {
                     'There is nothing to save!!'
                 )
             }
-            else this.insertWorkOrders(data);
+            else {
+                var BreakException = {};
+                try {
+                    let count = 1;
+                    data.forEach(async item => {
+                        let isAvalible = await this.validateScheduleAvailability({
+                            date: item.startDate,
+                            employeeId: item.employeeId,
+                            startTime: item.shift,
+                            endTime: item.endShift,
+                        })
+                        if (!isAvalible) {
+                            let employee = this.state.employees.find(_ => _.value === item.employeeId)
+                            this.setState(() => ({ saving: false }));
+                            this.props.handleOpenSnackbar(
+                                'warning',
+                                `Shift ${item.startDate}:[${item.shift} - ${item.endShift}] for ${employee.label} is not available`
+                            )
+                            throw BreakException;
+                        }
+                        count++;
+                        if (count === data.length)
+                            this.insertWorkOrders(data);
+                    })
+                } catch (e) {
+                    this.setState(() => ({ saving: false }));
+                    if (e !== BreakException) throw e;
+                }
+
+            }
         })
 
     }
@@ -313,6 +344,22 @@ class Grid extends Component {
         if (node) node.style.setProperty("overflow", "unset", "important");
     }
 
+    validateScheduleAvailability = ({ date, employeeId, startTime, endTime }) => {
+        return this.props.client
+            .query({
+                query: GET_SHIFTS_BY_SPECIFIC_DATE_EMPLOYEE_QUERY,
+                variables: {
+                    date,
+                    employeeId,
+                    startTime,
+                    endTime
+                }
+            })
+            .then(({ data }) => {
+                return data.ShiftDetailBySpecificDate.length == 0;
+            })
+    }
+
     render() {
 
         return (
@@ -395,7 +442,7 @@ class Grid extends Component {
                         }
                         <tr>
                             <td colspan="8" align="right">
-                                <button className="btn btn-success" onClick={this.saveWorkOrder}>Save {this.state.saving && <i className="fas fa-spinner fa-spin ml-1" />}</button>
+                                <button className="btn btn-success" disabled={this.state.saving} onClick={this.saveWorkOrder}>Save {this.state.saving && <i className="fas fa-spinner fa-spin ml-1" />}</button>
                             </td>
                         </tr>
                     </tbody>
