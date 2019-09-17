@@ -37,3 +37,13 @@ export const GET_USER_CONTACT = gql`
   
 `;
 
+export const GET_REGIONS_QUERY = gql`
+    query getRegions {
+        getcatalogitem( IsActive: 1, Id_Catalog: 4) {
+            Id
+            Name
+            IsActive
+        }
+    }
+`;
+

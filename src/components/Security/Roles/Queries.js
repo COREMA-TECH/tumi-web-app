@@ -32,31 +32,11 @@ export const GET_ROLES_QUERY = gql`
     }
 `;
 
-export const GET_REGIONS_ROLES_QUERY = gql`
-    query regionsRolesByRolesId($RolId: [Int]) {
-        regionsRolesByRolesId(RolId: $RolId, isActive: true){
-            RolId
-            RegionId
-            isActive
-        }
-    }
-`;
-
 export const GET_COMPANY_QUERY = gql`
     query getcompanies {
         getcompanies(IsActive: 1) {
             Id
             Name
-        }
-    }
-`;
-
-export const GET_REGIONS_QUERY = gql`
-    query getRegions {
-        getcatalogitem( IsActive: 1, Id_Catalog: 4) {
-            Id
-            Name
-            IsActive
         }
     }
 `;

@@ -21,7 +21,7 @@ import 'ui-components/InputForm/index.css';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 import withGlobalContent from 'Generic/Global';
-import {GET_USER_APPLICATION, GET_USER_CONTACT} from './Queries';
+import {GET_USER_APPLICATION, GET_USER_CONTACT, GET_REGIONS_QUERY} from './Queries';
 import {UPDATE_APPLICATION_INFO, UPDATE_CONTACT_INFO} from './Mutations';
 
 const styles = (theme) => ({
@@ -306,7 +306,10 @@ class Catalogs extends React.Component {
         lastName: '',
 
         userContact: {},
-        userApplication: {}
+        userApplication: {},
+
+        regionsOpt: [],
+        regionsByUser: []
     };
 
     constructor(props) {

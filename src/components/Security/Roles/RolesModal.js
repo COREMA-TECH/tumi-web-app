@@ -3,6 +3,13 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import Select from 'react-select';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = () => ({
+    overflowVisible:{
+        overflow: 'visible'
+    }
+});
 
 class RolesModal extends Component {
     state = {
@@ -10,7 +17,6 @@ class RolesModal extends Component {
         rolId: 0,
         companySelected: null,
         formSelected: null,
-        regionSelected: [],
         description: null
     }
 
@@ -26,12 +32,6 @@ class RolesModal extends Component {
         });
     }
 
-    handleChangeRegion = (region) => {
-        this.setState({
-            regionSelected: region
-        });
-    }
-
     handleChangeDescription = (e) => {
         this.setState({
             description: e.currentTarget.value
@@ -39,16 +39,15 @@ class RolesModal extends Component {
     }
 
     handleSave = () => {
-        const {isEdition,companySelected, formSelected, regionSelected, description} = this.state;
+        const {rolId ,isEdition,companySelected, formSelected, description} = this.state;
         let data = {
             isEdition,
-            Id: this.state.rolId || 0,
             Date_Updated: new Date().toISOString()
         };
 
+        if(rolId) data = {...data, Id: rolId};
         if(companySelected) data = {...data, Id_Company: companySelected.value};
         if(formSelected) data = {...data, default_form_id: formSelected.value};
-        if(regionSelected) data = {...data, regionsId: regionSelected.map(r => r.value)};
         if(description) data = {...data, Description: description};
         if(!isEdition) data = {
             ...data,
@@ -58,44 +57,45 @@ class RolesModal extends Component {
             Date_Created: new Date().toISOString()
         }
         this.props.handleSaveRol({
-            ...data,
-            isEdition: isEdition
+            ...data
         });
     }
 
     componentWillReceiveProps(nextProps) {
         const rol = nextProps.rol;
-        if(rol){
-            this.setState({
-                isEdition: true,
-                rolId: rol.Id,
-                companySelected: nextProps.companies.find(c => c.value === rol.Id_Company),
-                formSelected: nextProps.forms.find(f => f.value === rol.default_form_id),
-                regionSelected: nextProps.regions.filter(r => rol.regionsId.includes(r.value)),
-                description: rol.Description
-            });
-        }
-        else{
-            this.setState({
-                isEdition: false,
-                rolId: 0,
-                companySelected: null,
-                formSelected: null,
-                regionSelected: [],
-                description: null
-            });
+        console.log('Mostrando contenido de rol',rol); // TODO: (LF) Quitar console log
+        if(!this.props.open){
+            if(rol){
+                this.setState({
+                    isEdition: rol.Id > 0, // si es cero no puede ser editable
+                    rolId: rol.Id,
+                    companySelected: nextProps.companies.find(c => c.value === rol.Id_Company),
+                    formSelected: nextProps.forms.find(f => f.value === rol.default_form_id),
+                    description: rol.Description
+                });
+            }
+            else{
+                this.setState({
+                    isEdition: false,
+                    rolId: 0,
+                    companySelected: null,
+                    formSelected: null,
+                    description: null
+                });
+            }
         }
     }
 
     render() {
+        let {classes} = this.props;
         return <Fragment>
-            <Dialog maxWidth="sm" open={this.props.open} onClose={this.props.handleClose}>
+            <Dialog maxWidth="sm" open={this.props.open} onClose={this.props.handleClose} classes={{paperScrollPaper: classes.overflowVisible }}>
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">{this.props.title}</h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{ backgroundColor: "#f5f5f5" }}>
+                <DialogContent className={classes.overflowVisible} style={{ backgroundColor: "#f5f5f5" }}>
                     <div className="card">
                         <div className="container">
                             <div className="row">
@@ -121,19 +121,7 @@ class RolesModal extends Component {
                                     />                      
                                 </div>
 
-                                <div className="col-md-12 my-3">
-                                    <Select
-                                        placeholder="Regions"
-                                        options={this.props.regions}
-                                        value={this.state.regionSelected}
-                                        onChange={this.handleChangeRegion}
-                                        isMulti={true}
-                                        closeMenuOnSelect
-                                        //components={makeAnimated()}
-                                    />
-                                </div>
-
-                                <div className="col-md-12">
+                                <div className="col-md-12 mt-3">
                                     <textarea
                                         onChange={this.handleChangeDescription}
                                         name="description"
@@ -157,9 +145,12 @@ class RolesModal extends Component {
                                         Close<i class="fas fa-ban ml-2" />
                                     </button>
 
-                                    <button className="btn btn-success ml-2" type="button" onClick={this.handleSave}>
-                                        Save {!this.state.saving && <i className="fas fa-save ml2" />}
-                                        {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
+                                    <button className="btn btn-success ml-2" type="button" onClick={this.handleSave} disabled={this.props.saving}>
+                                        Save 
+                                        {!this.props.saving 
+                                            ? <i className="fas fa-save ml-2" />
+                                            : <i className="fas fa-spinner fa-spin  ml-2" /> 
+                                        }
                                     </button>
                                 </div>
                             </div>
@@ -171,4 +162,4 @@ class RolesModal extends Component {
     }
 }
 
-export default RolesModal;
+export default withStyles(styles)(RolesModal);
