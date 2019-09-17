@@ -20,6 +20,7 @@ import makeAnimated from 'react-select/lib/animated';
 import Select from 'react-select';
 import { GET_DEPARTMENTS_QUERY, GET_POSTIONS_QUERY, GET_RATE_QUERY, GET_POSITIONS_QUERY, GET_UNIQUEPOSITION_QUERY } from './queries';
 import { INSERT_POSITION_QUERY, UPDATE_POSITION_QUERY, DELETE_POSITION_QUERY, INSERT_DEPARTMENTS_QUERY } from './mutations';
+import FeatureTag from '../../ui-components/FeatureTag';
 
 const styles = (theme) => ({
 	container: {
@@ -129,7 +130,8 @@ class PositionsCompanyForm extends React.Component {
 		showCircularLoading: false,
 		saving: false,
 		positionApplyingFor: 1,
-		userId: localStorage.getItem('LoginId')
+		userId: localStorage.getItem('LoginId'),
+		positionCode: ''
 	};
 
 	constructor(props) {
@@ -962,6 +964,12 @@ class PositionsCompanyForm extends React.Component {
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 550, overflowY: 'unset' }}>
 						<div className="row">
+							<FeatureTag code="d43f7582-d673-11e9-8a34-2a2ae2dbcce4">
+								<div className="col-md-12">
+									<label htmlFor="Position Code">Position Code</label>
+									<input type="text" className="form-control" value={this.state.positionCode} onChange={this.handleChange} name="positionCode"/>
+								</div>
+							</FeatureTag>
 							<div className="col-md-12 col-lg-6">
 								<label>* Department</label>
 								<Select
