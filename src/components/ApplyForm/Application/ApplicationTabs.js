@@ -183,7 +183,6 @@ class CustomizedTabs extends React.Component {
     render() {
         const { value } = this.state;
         let { showInternalUse } = this.props;
-        console.log({ value })
         return (
             <React.Fragment>
                 <MuiThemeProvider theme={theme}>
