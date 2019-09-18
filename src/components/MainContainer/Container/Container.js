@@ -53,6 +53,8 @@ import SchedulesvsWorkedHours from '../../SchedulesvsWorkedHours';
 import DirectDeposit from '../../DirectDeposit';
 import OperationsDashboard from '../../Dashboard/Operations';
 import { Redirect } from 'react-router-dom';
+import BusinessRules from '../../BusinessRules';
+import Holidays from '../../Holidays';
 
 class Container extends Component {
 	constructor(props) {
@@ -235,6 +237,8 @@ class Container extends Component {
 				<Route exact path="/home/schedules-vs-worked" component={SchedulesvsWorkedHours} />
 				<Route exact path="/home/direct-deposit" component={DirectDeposit} />
 				<Route exact path="/home/dashboard/operations" component={OperationsDashboard} />
+				<Route exact path="/home/business/rules" component={BusinessRules} />
+				<Route exact path="/home/business/holidays" render={(props) => <Holidays {...props} idCompany={1} />} component={Holidays} />
 			</div>
 		);
 	}

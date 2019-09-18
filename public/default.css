@@ -10627,6 +10627,15 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
 .PunchesReport-RowInfo {
   background-color: #F0F8F2; }
 
+.BRModal-section {
+  border-bottom: 1px solid #dddddd;
+  padding: 1rem 0rem; }
+  .BRModal-section.no-border {
+    border: none; }
+
+.BRModal-holidays .btn {
+  color: #FFF; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;

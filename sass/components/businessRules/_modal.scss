@@ -1,0 +1,14 @@
+.BRModal{
+    &-section{
+        border-bottom: 1px solid $border-standard;
+        padding: 1rem 0rem;
+
+        &.no-border{ border: none }
+    }
+
+    &-holidays{
+        .btn{
+            color: $white;
+        }
+    }
+}
