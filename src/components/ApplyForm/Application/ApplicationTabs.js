@@ -14,13 +14,13 @@ import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 import ProfilePreview from "./ProfilePreview/ProfilePreview";
 import FormsI9 from './I9/FormsI9';
 import FormsW4 from "./W4/FormsW4";
-import { GET_APPLICATION_STATUS, GET_COMPLETED_STATUS } from './Queries';
+import { GET_COMPLETED_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
 import IndependentContract from "./IndependentContract";
 import ApplicationInternal from './ApplicationInternal';
 import Summary from './Summary/Summary';
 import Documents from './Documents';
-
+import { connect } from "react-redux";
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 
@@ -181,9 +181,9 @@ class CustomizedTabs extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
         const { value } = this.state;
-
+        let { showInternalUse } = this.props;
+        console.log({ value })
         return (
             <React.Fragment>
                 <MuiThemeProvider theme={theme}>
@@ -204,6 +204,7 @@ class CustomizedTabs extends React.Component {
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[1].label}
                             disabled={this.state.disableTabs}
+                            hidden={!showInternalUse}
                         />
                         <Tab
                             disableRipple
@@ -242,4 +243,10 @@ CustomizedTabs.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withApollo(withStyles(styles)(CustomizedTabs));
+const mapStateToProps = (state, props) => {
+    return {
+        showInternalUse: state.permissionsReducer.permissions.some(f => f.code === "6d1848f4-aff7-4cbc-94b8-6b4225e3b298")
+    }
+}
+
+export default withApollo(withStyles(styles)(connect(mapStateToProps)(CustomizedTabs)));
