@@ -489,6 +489,7 @@ class BackgroundCheck extends Component {
     }
 
     createDocumentsPDF = (random, download = false) => {
+        console.log('Generar background check. Descarga -- ', download); // TODO: (LF) Quitar console log
         this.setState({ downloading: true });
         this.props.client
             .query({
@@ -601,7 +602,7 @@ class BackgroundCheck extends Component {
         );
 
         return (
-            <div className="Apply-container--application" style={{ width: '900px', margin: '0 auto' }}>
+            <div className="Apply-container--application" style={{ maxWidth: '900px', width: '100%', margin: '0 auto' }}>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="applicant-card">

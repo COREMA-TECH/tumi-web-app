@@ -106,7 +106,6 @@ export const CREATE_WORKORDER = gql`
 	mutation addWorkOrderGrid($workOrder: [inputInsertWorkOrderGridType],  $codeuser: Int, $nameUser: String) {
 		addWorkOrderGrid(workOrder: $workOrder, codeuser: $codeuser, nameUser: $nameUser) {
 			id
-      groupKey
 		}
 	}
 `;

@@ -5,7 +5,9 @@ import Table from './Table';
 import withApollo from 'react-apollo/withApollo';
 import { GET_REPORT_INFORMATION, CREATE_DOCUMENTS_PDF_QUERY } from './queries';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
+const pdf = require('html-pdf');
 const uuidv4 = require('uuid/v4');
 
 

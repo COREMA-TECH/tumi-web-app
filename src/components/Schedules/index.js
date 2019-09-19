@@ -167,9 +167,9 @@ class Schedules extends Component {
     };
 
     gridTabsView = () => {
-        return <GridTabs
-            location={this.state.location}
-            position={this.state.position}
+        return <GridTabs 
+            location={this.state.location} 
+            position={this.state.position} 
             department={this.state.department}
             weekDayStart={this.state.weekDayStart}
         />;
@@ -196,32 +196,29 @@ class Schedules extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.propertyInfo) {
+        if(nextProps.propertyInfo) {
             this.setState(() => {
-                return { location: nextProps.propertyInfo.id }
+                return {location: nextProps.propertyInfo.id}
             });
         }
     }
 
     componentWillMount() {
-        if (this.props.propertyInfo) {
+        if(this.props.propertyInfo){
             this.setState(() => {
-                return { location: this.props.propertyInfo.id }
+                return {location: this.props.propertyInfo.id}
             });
         }
     }
 
-    setMainRef = (node) => {
-        if (node) node.style.setProperty("overflow", "unset", "important");
-    }
     render() {
         return (
             <div className="row">
-                <div className={this.props.leftStepperComponent ? 'col-md-3 col-xl-2' : 'd-none'}>
-                    {this.props.leftStepperComponent}
-                </div>
+				<div className={this.props.leftStepperComponent ? 'col-md-3 col-xl-2' : 'd-none'}>
+					{this.props.leftStepperComponent}
+				</div>
 
-                <div className={this.props.leftStepperComponent ? 'col-md-9 col-xl-10 pt-3' : 'col-md-12'}>
+				<div className={this.props.leftStepperComponent ? 'col-md-9 col-xl-10 pt-3' : 'col-md-12'}>
                     <div className="MasterShift">
                         <PreFilter
                             openPreFilter={this.state.openPreFilter}
@@ -284,8 +281,8 @@ class Schedules extends Component {
                         />
                         <div className="row">
                             <div className="col-md-12">
-                                <div className="MasterShift-schedules" ref={this.setMainRef}>
-                                    <div className="applicant-card__header flex-row-reverse p-0 pt-4 pr-4">
+                                <div className="MasterShift-schedules">
+                                    <div className="MasterShift-schedulesBody" id="divToPrint">
                                         <div className="SmallSwitch">
                                             <span className="rightLable-Switch">Grid View</span>
                                             <div className="onoffswitch">
@@ -297,8 +294,6 @@ class Schedules extends Component {
                                             </div>
                                             <span className="leftLabel-Switch">Calendar View</span>
                                         </div>
-                                    </div>
-                                    <div className="MasterShift-schedulesBody" id="divToPrint">
                                         {
                                             !this.state.gridView ? this.gridTabsView() : this.calendarView()
                                         }
@@ -308,9 +303,9 @@ class Schedules extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
+				</div>
+			</div>
+            
         );
     }
 }

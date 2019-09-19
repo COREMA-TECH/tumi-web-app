@@ -3,11 +3,9 @@ import DropDown from './DropDown';
 import Filter from './Filter';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { GET_DEPARTMENTS_QUERY, GET_PROPERTIES_QUERY, GET_PUNCHES_REPORT_CONSOLIDATED } from './queries';
-import { DELETE_MARKED_EMPLOYEE } from './Mutations';
-import ConfirmDialog from 'material-ui/ConfirmDialog';
 import withApollo from 'react-apollo/withApollo';
+import Dialog from "@material-ui/core/Dialog/Dialog";
 import { Query } from "react-apollo";
-import withGlobalContent from '../Generic/Global';
 
 const PROPERTY_DEFAULT = { value: '', label: 'Property(All)' };
 const DEPARTMENT_DEFAULT = { value: '', label: 'Department(All)' };
@@ -28,8 +26,7 @@ class PunchesReportConsolidated extends Component {
         urlPicture: '',
         item: {},
         editModal: false,
-        allowEditModal: false,
-        intervalTime: 30000
+        allowEditModal: false
     }
 
     constructor(props) {
@@ -61,7 +58,7 @@ class PunchesReportConsolidated extends Component {
     };
 
     handleClickCloseModal = () => {
-        this.setState({ openModal: false, allowEditModal: false, intervalTime: 1 });
+        this.setState({ openModal: false, allowEditModal: false });
     }
 
     getDepartments = () => {
@@ -190,61 +187,22 @@ class PunchesReportConsolidated extends Component {
             if (e != BreakException) throw e;
         }
         return total;
-    }
 
-    componentDidMount(){
-        this.setState(_ => ({intervalTime: 30000}))
-    }
-
-    handleDeleteTimeModal = ({ clockInId, clockOutId }) => {
-        this.setState(() => ({
-            openConfirmDeleteTime: true,
-            clockInIdToDelete: clockInId,
-            clockOutIdToDelete: clockOutId
-        }))
-    }
-
-    handleCloseDeleteTimeModal = () => {
-        this.setState({ openConfirmDeleteTime: false });
-    }
-
-    handleConfirmDeleteTime = () => {
-        this.setState(() => ({ removingTime: true }), () => {
-            this.props.client
-                .mutate({
-                    mutation: DELETE_MARKED_EMPLOYEE,
-                    variables: { idsToDelete: [this.state.clockInIdToDelete, this.state.clockOutIdToDelete] }
-                })
-                .then(({ data }) => {
-                    this.setState(() => ({ clockInIdToDelete: null, clockOutIdToDelete: null, removingTime: false, openConfirmDeleteTime: false }));
-                    this.props.handleOpenSnackbar('success', 'Records deleted successfully');
-                })
-                .catch(error => {
-                    this.setState(() => ({ removingTime: false }));
-
-                });
-        })
     }
     render() {
+
         return <React.Fragment>
-            <ConfirmDialog
-                open={this.state.openConfirmDeleteTime}
-                closeAction={this.handleCloseDeleteTimeModal}
-                confirmAction={this.handleConfirmDeleteTime}
-                title={'are you sure you want to delete this record?'}
-                loading={this.state.removingTime}
-            />
             <div className="row">
                 <div className={this.props.leftStepperComponent ? 'col-md-3 col-xl-2' : 'd-none'}>
-                    {this.props.leftStepperComponent}
-                </div>
+					{this.props.leftStepperComponent}
+				</div>
 
                 <div className={this.props.leftStepperComponent ? 'col-md-9 col-xl-10' : 'col-md-12'}>
                     <div className="card" style={{ "position": "relative" }}>
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} allowEditModal={this.state.allowEditModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>
                     <div className="card" style={{ "position": "relative" }}>
-                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval={this.state.intervalTime}>
+                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval="30000">
 
                             {({ loading, error, data }) => {
 
@@ -255,12 +213,10 @@ class PunchesReportConsolidated extends Component {
                                         <span class="badge badge-primary">Total: ${total} HRS</span>
                                     </div> : <React.Fragment />
                                     }
-
-                                    <DropDown data={data.markedEmployeesConsolidated || []} handleEditModal={this.handleClickOpenModal} handleDeleteTimeModal={this.handleDeleteTimeModal}></DropDown>
-
+                                    <DropDown data={data.markedEmployeesConsolidated || []} handleEditModal={this.handleClickOpenModal}></DropDown>
                                 </React.Fragment>
                             }}
-                        </Query>                        
+                        </Query>
                     </div>
                 </div>
             </div>
@@ -270,4 +226,4 @@ class PunchesReportConsolidated extends Component {
 }
 
 
-export default withApollo(withGlobalContent(PunchesReportConsolidated));
+export default withApollo(PunchesReportConsolidated);

@@ -4,7 +4,6 @@ import withApollo from "react-apollo/withApollo";
 import withGlobalContent from 'Generic/Global';
 import GridTabModal from './GridTabModal';
 import { GET_POSITION } from './Queries';
-import Tooltip from '@material-ui/core/Tooltip';
 
 const uuidv4 = require('uuid/v4');
 
@@ -14,7 +13,7 @@ class GridTabs extends Component {
         super(props);
         this.state = {
             ...this.DEFAULT_STATE
-        }        
+        }
     }
 
     DEFAULT_STATE = {
@@ -25,6 +24,16 @@ class GridTabs extends Component {
         open: false,
         tabSelected: 0
     };
+
+    componentWillMount() {
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.position != nextProps.position) {
+            this.getPosition(nextProps.position);
+        }
+    }
 
     getPosition = (id) => {
         this.props.client.query({
@@ -82,8 +91,6 @@ class GridTabs extends Component {
     }
 
     render() {
-        this.getPosition(this.props.position);
-
         return (
             <React.Fragment>
                 <div className="GridTab-content">
@@ -98,7 +105,7 @@ class GridTabs extends Component {
                     }
                 </div>
                 <div className="GridTab-head">
-                    <div className="btn-group GridTab-Group" role="group" aria-label="Basic example">
+                    <div className="btn-group" role="group" aria-label="Basic example">
                         {
                             this.state.positions.map(__position => {
                                 let selected = this.state.tabSelected === __position.id ? 'GridTab-selected' : '';
@@ -107,11 +114,9 @@ class GridTabs extends Component {
                                 )
                             })
                         }
-                        <Tooltip title="Add Position Schedules">
-                            <button type="button" className="btn btn-secondary" onClick={this.openGridModal}>
-                                <i className="fa fa-plus"></i>
-                            </button>
-                        </Tooltip>
+                        <button type="button" className="btn btn-secondary" onClick={this.openGridModal}>
+                            <i className="fa fa-plus"></i>
+                        </button>
                     </div>
                 </div>
                 <GridTabModal open={this.state.open} department={this.props.department} addTab={this.addTab} closeGrdiModal={this.closeGrdiModal} />

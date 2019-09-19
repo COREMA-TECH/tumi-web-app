@@ -8,11 +8,7 @@ import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import moment from 'moment';
-import filterTypes from './filterTypeData';
 
-const DEFAULT_FILTER_TYPE = { value: "W", label: "By week" };
-const DEFAULT_DATA_RANGE_APP = { value: null, label: 'Report Date' };
 
 class PunchesReportConsolidatedFilter extends Component {
 
@@ -20,14 +16,12 @@ class PunchesReportConsolidatedFilter extends Component {
         endDateDisabled: true,
         openModal: false,
         directDeposit: false,
+        startDate: "",
+        endDate: "",
         employee: "",
         property: { value: "", label: "Property (All)" },
         department: this.props.department,
-        item: {},
-        startDate: null,
-        endDate: null,
-        typeDateFiltered: DEFAULT_FILTER_TYPE, // opcion seleccinada para filtro de fecha en indice
-        dateRange: DEFAULT_DATA_RANGE_APP,
+        item: {}
     }
 
     constructor(props) {
@@ -89,23 +83,25 @@ class PunchesReportConsolidatedFilter extends Component {
         })
     }
 
-    handleStartDate = (value) => {
+    handleChangeStartDate = (value) => {
         this.setState(() => ({
             startDate: value,
             endDateDisabled: false
-        }), () => {
-            if (this.props.updateFilter && this.state.endDate)
-                this.props.updateFilter(this.state)
-        });
+        }),
+            () => {
+                if (this.props.updateFilter && this.state.endDate)
+                    this.props.updateFilter(this.state)
+            });
     }
 
-    handleEndDate = (value) => {
+    handleChangeEndDate = (value) => {
         this.setState(() => ({
             endDate: value
-        }), () => {
-            if (this.state.startDate)
-                this.props.updateFilter(this.state)
-        });
+        }),
+            () => {
+                if (this.state.startDate)
+                    this.props.updateFilter(this.state)
+            });
     }
 
     handleCloseModal = () => {
@@ -166,59 +162,10 @@ class PunchesReportConsolidatedFilter extends Component {
         this.setState({ [e.target.name]: e.target.checked })
     }
 
-    getDateRange = _ => {
-        let today = new Date(), weeks = 4, months = 6, startDate, endDate, data = [], endDateValue, startDateValue;
-        let { typeDateFiltered } = this.state;
-
-        today = moment.utc(today).subtract(6 - moment.utc(today).day(), "days")._d;
-
-        if (typeDateFiltered.value == "W") {
-            while (weeks > 0) {
-                endDate = moment.utc(today).format("MM/DD/YYYY"); //get Start Date
-                today = moment.utc(today).subtract(1, "weeks").add('days', 1)._d;//Substract a week
-                startDate = moment.utc(today).format("MM/DD/YYYY");//get End Date
-                today = moment.utc(today).subtract(1, "days")._d;//Substract a day to start new week
-                data.push({ value: `${startDate}||${endDate}`, label: `${startDate} - ${endDate}` })
-                weeks--;
-            }
-        }
-
-        if (typeDateFiltered.value == "M") {
-            while (months > 0) {
-                endDate = moment.utc(today).format("MM/YYYY"); //get Start Date
-                endDateValue = moment.utc(today).endOf("month").format("MM/DD/YYYY");
-                startDateValue = moment.utc(today).startOf("month").format("MM/DD/YYYY");
-                today = moment.utc(today).subtract(1, "months")._d;//Substract a month
-
-                data.push({ value: `${startDateValue}||${endDateValue}`, label: `${endDate}` })
-                months--;
-            }
-        }
-        return data;
-    }
-
-    handleDateRange = (dateRange) => {
-        let dates = dateRange.value.split('||');
-        this.setState(() => ({ dateRange, startDate: new Date(dates[0]), endDate: new Date(dates[1]) }), () => { this.props.updateFilter(this.state) })
-    }
-
-    handleTypeDateFiltered = (option) => {
-        this.setState(() => {
-            return { typeDateFiltered: option }
-        }, () => {
-            this.setState(() => ({
-                dateRange: DEFAULT_DATA_RANGE_APP,
-                startDate: null,
-                endDate: null
-            }), () => { this.props.updateFilter(this.state) });
-        });
-    }
-
-
     render() {
         return <div className="card-header bg-light">
             <div className="row">
-                <div className="col-md-2 col-xl-2 mb-2">
+                <div className="col-md-4 col-xl-2 mb-2">
                     <div className="input-group">
                         <div className="input-group-prepend">
                             <span className="input-group-text">
@@ -229,7 +176,7 @@ class PunchesReportConsolidatedFilter extends Component {
                             onChange={this.updateFilter} value={this.state.employee} />
                     </div>
                 </div>
-                <div className="col-md-2 col-xl-2 mb-2">
+                <div className="col-md-4 col-xl-2 mb-2">
                     {
                         this.props.showPropertyFilter &&
                         <Select
@@ -242,7 +189,7 @@ class PunchesReportConsolidatedFilter extends Component {
                         />
                     }
                 </div>
-                <div className="col-md-2 col-xl-2 mb-2">
+                <div className="col-md-4 col-xl-2 mb-2">
                     <Select
                         name="department"
                         options={this.props.departments}
@@ -252,67 +199,40 @@ class PunchesReportConsolidatedFilter extends Component {
                         closeMenuOnSelect
                     />
                 </div>
-                <div className={`${this.state.typeDateFiltered.value == "C" ? 'col-md-1 col-xl-1' : 'col-md-2 col-xl-2'} mb-3`}>
-                    <Select
-                        name="typeDateFiltered"
-                        options={filterTypes}
-                        value={this.state.typeDateFiltered}
-                        onChange={this.handleTypeDateFiltered}
-                        components={makeAnimated()}
-                        closeMenuOnSelect
-                    />
-                </div>
-                {this.state.typeDateFiltered.value != "C" ?
-                    <div className="col-md-2 col-xl-2 mb-2">
-                        <Select
-                            name="dateRange"
-                            options={this.getDateRange()}
-                            value={this.state.dateRange}
-                            onChange={this.handleDateRange}
-                            components={makeAnimated()}
-                            closeMenuOnSelect
+                <div className="col-md-2 offset-md-4 col-xl-2 offset-xl-0 mb-2">
+                    <div class="input-group flex-nowrap">
+                        <DatePicker
+                            selected={this.state.startDate}
+                            onChange={this.handleChangeStartDate}
+                            placeholderText="Start date"
+                            id="startDate"
                         />
+                        <div class="input-group-append">
+                            <label class="input-group-text" id="addon-wrapping" for="startDate">
+                                <i class="far fa-calendar"></i>
+                            </label>
+                        </div>
                     </div>
-                    :
-                    <React.Fragment>
-                        <div className="col-md-2 col-xl-2 mb-2">
-                            <div class="input-group">
-                                <DatePicker
-                                    selected={this.state.startDate}
-                                    onChange={this.handleStartDate}
-                                    placeholderText="Start date"
-                                    id="startDate"
-                                />
-                                <div class="input-group-append">
-                                    <label class="input-group-text" id="addon-wrapping" for="startDate">
-                                        <i class="far fa-calendar"></i>
-                                    </label>
-                                </div>
-                            </div>
+                </div>
+                <div className="col-md-2 col-xl-2 mb-2">
+                    <div class="input-group flex-nowrap">
+                        <DatePicker
+                            selected={this.state.endDate}
+                            onChange={this.handleChangeEndDate}
+                            placeholderText="End date"
+                            id="endDate"
+                        />
+                        <div class="input-group-append">
+                            <label class="input-group-text" id="addon-wrapping" for="endDate">
+                                <i class="far fa-calendar"></i>
+                            </label>
                         </div>
-                        <div className="col-md-2 col-xl-2 mb-2">
-                            <div class="input-group">
-                                <DatePicker
-                                    selected={this.state.endDate}
-                                    onChange={this.handleEndDate}
-                                    disabled={this.state.endDateDisabled}
-                                    placeholderText="End date"
-                                    id="endDate"
-                                />
-                                <div class="input-group-append">
-                                    <label class="input-group-text" id="addon-wrapping" for="endDate">
-                                        <i class="far fa-calendar"></i>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </React.Fragment>
-                }
-
-                <div className="col-md-1 col-xl-1 mb-2">
+                    </div>
+                </div>
+                <div className="col-md-4 col-xl-2 mb-2">
                     {/* TODO: add download icon - call query to generate cvs with consolidated punches*/}
                     <div className="label-switch-container">
-                        <label style={{ fontSize: '9.5px' }} htmlFor="">Direct Deposit?</label>
+                        <label htmlFor="">Direct Deposit?</label>
                         <div className="float-right onoffswitch-container">
                             <div className="onoffswitch">
                                 <input

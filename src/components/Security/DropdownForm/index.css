@@ -19,6 +19,11 @@ p {
     overflow: hidden !important;
 
     margin: 5px !important;
+    box-shadow: 1px 1px 25px #cccccc !important;
+}
+
+.table thead {
+    background: #41afd7 !important;
 }
 
 

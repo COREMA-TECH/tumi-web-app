@@ -13,6 +13,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import { GET_HOTEL_QUERY, GET_USERS, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
+import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -585,12 +587,12 @@ class ApplicationList extends Component {
 				</div>
 
 				<div className="col-md-12 col-xl-12 mb-2">
-					<button
+					{/* <button
 						className="btn btn-success float-right ml-2"
 						onClick={this.showNoShowReportFilter}
 					>
 						No Show Report
-						</button>
+						</button> */}
 					<button
 						className="btn btn-success float-right"
 						onClick={this.redirectToCreateApplication}

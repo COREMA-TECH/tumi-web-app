@@ -11,7 +11,7 @@ class User extends Component {
         this.state = {
             company: {},
             Id_User: null,
-            Id_Entity: 0,
+            Id_Entity: 1,
             Full_Name: '',
             Electronic_Address: '',
             Phone_Number: '',
@@ -62,8 +62,7 @@ class User extends Component {
             },
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
-            console.log(data);
-            this.setState(_ => ({
+            this.setState({
                 company: data.getbusinesscompanies[0],
                 Id_Entity: data.getbusinesscompanies[0].Id,
                 fullname: data.getbusinesscompanies[0].Code,
@@ -71,7 +70,7 @@ class User extends Component {
                 email: data.getbusinesscompanies[0].Primary_Email,
                 number: data.getbusinesscompanies[0].Phone_Number,
                 _Password: 'TEMP'
-            }), this.getUser());            
+            }, this.getUser);
         });
     }
 
@@ -188,13 +187,9 @@ class User extends Component {
                         </form>
                     </div>
                 </div>
-                {
-                    this.state.Id_Entity > 0 ? (
-                        <div className="col-md-8">
-                            <BreakRules companyId={this.state.Id_Entity}/>
-                        </div>
-                    ) : ''
-                }
+                <div className="col-md-8">
+                    <BreakRules />
+                </div>
             </div>
         );
     }

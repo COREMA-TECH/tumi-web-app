@@ -198,7 +198,7 @@ class Documents extends Component {
         return (
             <React.Fragment>
                 <div className="row">
-                    <div className="col-md-2">
+                    <div className="col-md-4 col-sm-4 col-lg-2">
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header header-profile-menu">
                                 <button className="applicant-card__edit-button" onClick={this.handleMergeDocumentClick}>
@@ -206,7 +206,7 @@ class Documents extends Component {
                                     {downloading ? <i class="fas fa-spinner fa-spin" /> : <i className="fas fa-download" />}
                                 </button>
                             </div>
-                            <Stepper activeStep={activeStep} orientation="vertical" className="stepper-menu">
+                            <Stepper activeStep={activeStep} orientation="vertical">
                                 {
                                     Object.keys(steps).map((key, index) => {
                                         return (
@@ -225,7 +225,7 @@ class Documents extends Component {
                             </Stepper>
                         </div>
                     </div>
-                    <div className="col-md-10">
+                    <div className="col-md-8 col-sm-8 col-lg-10">
                         {this.getDocumentScreen(activeStep)}
                     </div>
                 </div>

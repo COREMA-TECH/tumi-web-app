@@ -3,8 +3,6 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import withApollo from 'react-apollo/withApollo';
 import { UPDATE_MARKED_EMPLOYEE } from './Mutations';
 import Tooltip from '@material-ui/core/Tooltip';
-import CustomImage from './CustomImage';
-import FeatureTag from '../ui-components/FeatureTag';
 
 class PunchesConsolidatedDropDownBody extends Component {
     state = {
@@ -47,6 +45,14 @@ class PunchesConsolidatedDropDownBody extends Component {
     render() {
         let { data } = this.props;
 
+        let renderDialogPicture = () => (
+            <Dialog maxWidth="md" open={this.state.openModalPicture} onClose={this.handleCloseModalPicture}>
+                {/*<DialogTitle style={{ width: '800px', height: '800px'}}>*/}
+                <img src={this.state.urlPicture} className="avatar-lg" />
+                {/*</DialogTitle>*/}
+            </Dialog>
+        );
+
         return (
             <div className="DropdownBody">
                 <table className="table DropdownBody-table">
@@ -76,16 +82,9 @@ class PunchesConsolidatedDropDownBody extends Component {
                                 <tr className={!allowEditItem ? 'PunchesReport-RowInfo' : ''} >
                                     <th>
                                         <Tooltip title={allowEditItem ? 'Edit Time' : 'View Time'} >
-                                            <button type="button" className="btn btn-success float-left mr-2" onClick={_ => this.props.handleEditModal({ ...item }, allowEditItem)}>
+                                            <button type="button" className="btn btn-success" onClick={_ => this.props.handleEditModal({ ...item }, allowEditItem)}>
                                                 <i className={`fas fa-${allowEditItem ? 'pen' : 'eye'}`} ></i>
                                             </button>
-                                        </Tooltip>
-                                        <Tooltip title={'Delete Time'} >
-                                            <FeatureTag code="8c857de2-735c-4bae-9b17-7aca39ceb708">
-                                                <button type="button" className="btn btn-danger" onClick={_ => this.props.handleDeleteTimeModal({ ...item }, allowEditItem)}>
-                                                    <i className={'fas fa-trash'} ></i>
-                                                </button>
-                                            </FeatureTag>
                                         </Tooltip>
                                     </th>
                                     <td>{item.name}</td>
@@ -95,9 +94,9 @@ class PunchesConsolidatedDropDownBody extends Component {
                                     <td>{item.hotelCode}</td>
                                     <td>
                                         <div className="avatar-container">
-                                            <CustomImage className="avatar" image={fileSrcIn} />
+                                            <img className="avatar" src={fileSrcIn} />
                                             <div className="avatar-container-pic">
-                                                <CustomImage className="avatar avatar-lg" image={fileSrcIn} onClick={() => {
+                                                <img className="avatar avatar-lg" src={fileSrcIn} onClick={() => {
                                                     this.handleClickOpenModalPicture(fileSrcIn)
                                                 }} />
                                                 <div className="avatar-description">
@@ -110,9 +109,9 @@ class PunchesConsolidatedDropDownBody extends Component {
                                             </div>
                                         </div>
                                         <div className="avatar-container">
-                                            <CustomImage className="avatar" image={fileSrcOut} />
+                                            <img className="avatar" src={fileSrcOut} />
                                             <div className="avatar-container-pic">
-                                                <CustomImage className="avatar avatar-lg" image={fileSrcOut} onClick={() => {
+                                                <img className="avatar avatar-lg" src={fileSrcOut} onClick={() => {
                                                     this.handleClickOpenModalPicture(fileSrcOut)
                                                 }} />
                                                 <div className="avatar-description">

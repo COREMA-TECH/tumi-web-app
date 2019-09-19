@@ -2,17 +2,12 @@ import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
 import withGlobalContent from 'Generic/Global';
 import { withApollo } from 'react-apollo';
 import { GET_INITIAL_DATA, GET_CONTACT_BY_QUERY, GET_DEPARTMENTS, GET_POSITION } from './Queries';
-import Select from 'react-select';
-import makeAnimated from "react-select/lib/animated";
-import { withStyles } from '@material-ui/core/styles';
-
-// const DEFAULT_SELECTED_LOCATION = { value: 0, label: "Select an Option" };
-const styles = {
-    paper: { overflowY: 'unset' }
-};
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 
 class PreFilter extends Component {
 
@@ -28,9 +23,8 @@ class PreFilter extends Component {
             location: 0,
             department: 0,
             position: 0,
-            loadingLocations: false,
-            loadingPositions: false,
-            loadingDepartments: false,
+            loadingPositions: true,
+            loadingDepartments: true,
         }
     }
 
@@ -62,7 +56,7 @@ class PreFilter extends Component {
     }
 
     getPositions = () => {
-        this.setState(() => ({ loadingPositions: true }), () => {
+        this.setState({ loadingPositions: true }, () => {
             this.props.client
                 .query({
                     query: GET_POSITION,
@@ -76,7 +70,7 @@ class PreFilter extends Component {
                     })
 
                 }).catch(error => {
-                    this.setState(() => ({ loadingPositions: false }), () => {
+                    this.setState({ loadingPositions: false }, () => {
                         this.props.handleOpenSnackbar(
                             'error',
                             'Error loading Department list',
@@ -94,7 +88,7 @@ class PreFilter extends Component {
         let idEntity = localStorage.getItem("Id_Entity");
         if (idRol == 5) filter = { ...filter, Id: idEntity };
 
-        this.setState({ loadingLocations: true }, () => {
+        this.setState({ loadingLoaction: true }, () => {
             this.props.client
                 .query({
                     query: GET_INITIAL_DATA,
@@ -104,9 +98,9 @@ class PreFilter extends Component {
                 })
                 .then(({ data }) => {
                     this.setState((prevState) => {
-                        return { locations: data.getbusinesscompanies, loadingLocations: false, loadingDepartments: false }
+                        return { locations: data.getbusinesscompanies, loadingLoaction: false, loadingDepartments: false }
                     }, () => {
-                        if (this.props.location) {
+                        if(this.props.location){
                             this.setState(() => {
                                 return { location: this.props.location }
                             }, () => {
@@ -117,7 +111,7 @@ class PreFilter extends Component {
                         }
                     })
                 }).catch(error => {
-                    this.setState({ loadingLocations: false }, () => {
+                    this.setState({ loadingLoaction: false }, () => {
                         this.props.handleOpenSnackbar(
                             'error',
                             'Error loading Locations list',
@@ -156,22 +150,49 @@ class PreFilter extends Component {
         })
     }
 
-    getLocationList = () => {
+    renderLocationList = () => {
         return this.state.locations.map((item) => {
-            return { value: item.Id, label: item.Name }
+            return <option key={item.Id} value={item.Id}>{item.Code} | {item.Name}</option>
         })
     }
 
-    getPositionList = () => {
-        return this.state.positions.map((item) => {
-            return { value: item.Id, label: item.Position };
+    renderContactsList = () => {
+        return this.state.contacts.map((item) => {
+            return <option key={item.Id} value={item.Id}>{item.First_Name + ' ' + item.Last_Name}</option>;
         });
     }
 
-    getDepartmentList = () => {
+    renderDeparmentList = () => {
         return this.state.departments.map((item) => {
-            return { value: item.Id, label: item.Description };
+            return <option key={item.Id} value={item.Id}>{item.Code + ' ' + item.Description}</option>;
         });
+    }
+    renderPositionList = () => {
+        return this.state.positions.map((item) => {
+            return <option key={item.Id} value={item.Id}>{item.Position}</option>;
+        });
+    }
+
+    handleSelectValueChange = (event) => {
+        var index = event.nativeEvent.target.selectedIndex;
+        var text = event.nativeEvent.target[index].text;
+
+        const element = event.target;
+
+        this.setState({
+            [element.name]: element.value,
+            [element.name + "Name"]: text,
+            disabled: false
+        }, () => {
+            if (element.name == 'location') {
+                this.getContacts();
+                this.getDepartments();
+                this.getStartWeek(element.value);
+            }
+            if (element.name == 'department') {
+                this.getPositions();
+            }
+        })
     }
 
     getStartWeek = (id) => {
@@ -187,17 +208,13 @@ class PreFilter extends Component {
 
     handleApplyFilters = (event) => {
         event.preventDefault();
-        if (!this.state.location || !this.state.department || !this.state.position)
-            this.props.handleOpenSnackbar('warning', 'Filters are required, please select them all');
-        else {
-            event.preventDefault();
-            this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department, this.state.position, this.state.startWeek);
-            this.props.handleGetTextofFilters(this.state.locationName, this.state.requestedName, this.state.departmentName, this.state.positionName);
-            this.setState({
-                disabled: !this.state.disabled
-            });
-        }
+        this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department, this.state.position, this.state.startWeek);
+        this.props.handleGetTextofFilters(this.state.locationName, this.state.requestedName, this.state.departmentName, this.state.positionName);
+        this.setState({
+            disabled: !this.state.disabled
+        });
     }
+
 
     updateLocationName = (value) => {
         this.setState(
@@ -210,147 +227,72 @@ class PreFilter extends Component {
         );
     };
 
-    findSelectedLocation = value => {
-        if (!value)
-            return null;
-
-        const found = this.state.locations.find(item => {
-            return item.Id === value;
-        });
-
-        return found ? { value: found.Id, label: found.Name } : null;
-    }
-
-    handleLocationFilterChange = ({ value, label }) => {
-        this.setState(() => ({
-            location: parseInt(value),
-            locationName: label,
-            department: null
-        }), () => {
-            this.getContacts();
-            this.getDepartments();
-            this.getStartWeek(value);
-        });
-    }
-
-    findSelectedDepartment = value => {
-        if (!value)
-            return null;
-
-        const found = this.state.departments.find(item => {
-            return item.Id === value;
-        });
-
-        return found ? { value: found.Id, label: found.Description } : null;
-    }
-
-    handleDepartmentFilterChange = ({ value, label }) => {
-        this.setState(() => ({
-            department: parseInt(value),
-            departmentName: label,
-            position: null
-        }), () => {
-            this.getPositions();
-        });
-    }
-
-    findSelectedPosition = value => {
-        if (!value)
-            return null;
-
-        const found = this.state.positions.find(item => {
-            return item.Id === value;
-        });
-
-        return found ? { value: found.Id, label: found.Position } : null;
-    }
-
-    handlePositionFilterChange = ({ value, label }) => {
-        this.setState(() => ({
-            position: parseInt(value),
-            positionName: label
-        }));
-    }
-
     render() {
-        const { classes } = this.props;
-
+        const disabled = this.state.disabled;
         return (
-            <Dialog maxWidth="sm" fullWidth open={this.props.openPreFilter} classes={{ paper: classes.paper }}>
-                <DialogContent style={{ overflowY: "unset" }}>
-                    <div className="container">
+            <Dialog maxWidth="sm" open={this.props.openPreFilter} >
+                <form action="" onSubmit={this.handleApplyFilters}>
+                    <DialogContent>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <label htmlFor="">Property</label>
+                                    {/*  <AutosuggestInput
+                                        id="location"
+                                        name="location"
+                                        data={this.state.locations}
+                                        // required
+                                        //error={!this.state.titleNameValid}
+                                        value={this.props.location}
+                                        onChange={this.updateLocationName}
+                                        onSelect={this.updateLocationName}
+                                    />*/}
+
+
+                                    <select name="location" value={this.state.location} disabled={this.props.location || this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
+                                        <option value="">Select a Option</option>
+                                        {this.renderLocationList()}
+                                    </select>
+
+                                </div>
+                                <div className="col-md-12">
+                                    <label htmlFor="">Department</label>
+                                    <select name="department" value={this.state.department} disabled={this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
+                                        <option value="">Select a Option</option>
+                                        {this.renderDeparmentList()}
+                                    </select>
+                                </div>
+                                <div className="col-md-12">
+                                    <label htmlFor="">Position</label>
+                                    <select name="position" value={this.state.position} disabled={this.state.loadingPositions} required className="form-control" onChange={this.handleSelectValueChange}>
+                                        <option value="">Select a Option</option>
+                                        {this.renderPositionList()}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-md-12">
-                                <label htmlFor="property">Property</label>
-                                <Select
-                                    id="property"
-                                    options={this.getLocationList()}
-                                    value={this.findSelectedLocation(this.state.location)}
-                                    onChange={this.handleLocationFilterChange}
-                                    closeMenuOnSelect={true}
-                                    components={makeAnimated()}
-                                    isMulti={false}
-                                    className='tumi-fullWidth'
-                                    isDisabled={this.state.loadingLocations}
-                                    isLoading={this.state.loadingLocations}
-                                    placeholder="Select an Option"
-                                />
-                            </div>
-                            <div className="col-md-12">
-                                <label htmlFor="department">Department</label>
-                                <Select
-                                    id="department"
-                                    options={this.getDepartmentList()}
-                                    value={this.findSelectedDepartment(this.state.department)}
-                                    onChange={this.handleDepartmentFilterChange}
-                                    closeMenuOnSelect={true}
-                                    components={makeAnimated()}
-                                    isMulti={false}
-                                    className='tumi-fullWidth'
-                                    isDisabled={this.state.loadingDepartments}
-                                    isLoading={this.state.loadingDepartments}
-                                    placeholder="Select an Option"
-                                />
-                            </div>
-                            <div className="col-md-12">
-                                <label htmlFor="position">Position</label>
-                                <Select
-                                    id="position"
-                                    options={this.getPositionList()}
-                                    value={this.findSelectedPosition(this.state.position)}
-                                    onChange={this.handlePositionFilterChange}
-                                    closeMenuOnSelect={true}
-                                    components={makeAnimated()}
-                                    isMulti={false}
-                                    className='tumi-fullWidth'
-                                    isDisabled={this.state.loadingPositions}
-                                    isLoading={this.state.loadingPositions}
-                                    placeholder="Select an Option"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-12">
-                            <DialogActions>
-                                <div className="tumi-buttonWrapper">
-                                    <button className="btn btn-success btn-not-rounded tumi-button" type="button" onClick={this.handleApplyFilters}>
-                                        Filter
+                                <DialogActions>
+                                    <div className="tumi-buttonWrapper">
+                                        <button className="btn btn-success btn-not-rounded tumi-button" type="submit">
+                                            Filter
                                                 {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
-                                    </button>
-
-                                    <button className="btn btn-danger btn-not-rounded tumi-button" type="button" onClick={this.props.handleClosePreFilter}>
-                                        Cancel
                                         </button>
-                                </div>
-                            </DialogActions>
+
+                                        <button className="btn btn-danger btn-not-rounded tumi-button" type="button" onClick={this.props.handleClosePreFilter}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </DialogActions>
+                            </div>
                         </div>
-                    </div>
-                </DialogContent>
+                    </DialogContent>
+                </form>
             </Dialog>
         );
     }
 
 }
 
-export default withStyles(styles)(withApollo(withGlobalContent(PreFilter)));
+export default withApollo(withGlobalContent(PreFilter));

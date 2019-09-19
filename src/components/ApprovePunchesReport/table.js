@@ -2,8 +2,8 @@ import React from 'react';
 import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 
-const LABELTEXTSIZE = { fontSize: '1vw' };
-const TIMETEXTSIZE = { fontSize: '1.7vw' };
+const LABELTEXTSIZE = {fontSize: '1vw'};
+const TIMETEXTSIZE = {fontSize: '1.7vw'};
 
 class ApprovePunchesReportTable extends React.Component {
 
@@ -43,13 +43,13 @@ class ApprovePunchesReportTable extends React.Component {
                     let hasUnapproved = _.detailUnapproved.length !== 0;
                     let hasApproved = _.detailApproved.length !== 0;
 
-                    return <div className="card mt-1 mb-1 ApprovePunches">
+                    return <div className="card mt-1 mb-1">
                         <div className="card-body pt-0 pb-0">
                             <div className="row">
                                 <div className="col-lg-1 col-sm-12 ApprovePunches-separation tumi-col-centered">
                                     <div className="ApprovePunches-employeeContainer">
                                         <input type="checkbox" class="mr-2" checked={_.selected} onChange={this.handleCheckedChange(_.id)} />
-                                        <p className="AppovePunches-valueLabel font-weight-bold mb-0 text-uppercase">{_.fullName}</p>
+                                        <p className="h5 font-weight-bold mb-0 text-uppercase">{_.fullName}</p>
                                     </div>
                                 </div>
                                 <div className="col-lg-2 col-sm-12 ApprovePunches-separation">
@@ -68,43 +68,43 @@ class ApprovePunchesReportTable extends React.Component {
                                 </div>
                                 <div className="col-lg-3 col-sm-12 d-flex justify-content-between">
                                     <div className="my-auto">
-                                        <p className="ApprovePunches-titleLabel font-weight-bold">TOTAL</p>
-                                        <p className="ApprovePunches-titleLabel font-weight-bold ApprovePunches-titleHours">WORKED HOURS</p>
+                                        <p className="h6 font-weight-bold">TOTAL</p>
+                                        <p className="h6 font-weight-bold ApprovePunches-titleHours">WORKED HOURS</p>
                                         <a href="#" className="badge badge-success badge-sm" onClick={(e) => this.openViewDetails(e, _.id)}>View Details</a>
                                     </div>
                                     <div className="my-auto">
-                                        <p className="ApprovePunches-valueLabel font-weight-bold"> : </p>
+                                        <p className="h3 font-weight-bold"> : </p>
                                     </div>
                                     <div className="my-auto align-content-center">
-                                        <p className="ApprovePunches-valueLabel font-weight-bold">
+                                        <p className="h3 font-weight-bold">
                                             {`${_.unapprovedWorkedTime + _.approvedWorkedTime}H`}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="col-lg-3 col-sm-12 d-flex justify-content-between">
                                     <div className="my-auto">
-                                        <p className="ApprovePunches-titleLabel font-weight-bold">TOTAL</p>
-                                        <p className="ApprovePunches-titleLabel font-weight-bold ApprovePunches-titleHours">APPROVED HOURS</p>
+                                    <p className="h6 font-weight-bold">TOTAL</p>
+                                    <p className="h6 font-weight-bold ApprovePunches-titleHours">APPROVED HOURS</p>
                                     </div>
                                     <div className="my-auto">
-                                        <p className="ApprovePunches-valueLabel font-weight-bold"> : </p>
+                                        <p className="h3 font-weight-bold"> : </p>
                                     </div>
                                     <div className="my-auto align-content-center">
-                                        <p className="ApprovePunches-valueLabel font-weight-bold text-success">
+                                        <p className="h3 font-weight-bold text-success">
                                             {`${_.approvedWorkedTime}H`}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="col-lg-3 col-sm-12 d-flex justify-content-between">
                                     <div className="my-auto">
-                                        <p className="ApprovePunches-titleLabel font-weight-bold">TOTAL</p>
-                                        <p className="ApprovePunches-titleLabel font-weight-bold">UNAPPROVED HOURS</p>
+                                        <p className="h6 font-weight-bold">TOTAL</p>
+                                        <p className="h6 font-weight-bold">UNAPPROVED HOURS</p>
                                     </div>
                                     <div className="my-auto">
-                                        <p className="ApprovePunches-valueLabel font-weight-bold"> : </p>
+                                        <p className="h3 font-weight-bold"> : </p>
                                     </div>
                                     <div className="my-auto align-content-center">
-                                        <p className="ApprovePunches-valueLabel font-weight-bold text-danger">
+                                        <p className="h3 font-weight-bold text-danger">
                                             {`${_.unapprovedWorkedTime}H`}
                                         </p>
                                     </div>

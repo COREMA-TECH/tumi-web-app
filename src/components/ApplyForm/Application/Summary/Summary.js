@@ -205,7 +205,7 @@ class Summary extends Component {
 
                             numberId: applications.numberId ? applications.numberId : '--',
                             employmentType: applications.employmentType ? applications.employmentType : '--',
-                            exemptions: applications.exemptions || '--'
+                            exemptions: applications.exemptions
                         }
                     });
                 }
