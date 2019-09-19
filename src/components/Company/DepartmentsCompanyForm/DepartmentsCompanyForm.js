@@ -15,6 +15,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import InputForm from 'ui-components/InputForm/InputForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import FeatureTag from '../../ui-components/FeatureTag';
 
 const styles = (theme) => ({
 	container: {
@@ -217,18 +218,17 @@ class DepartmentsCompanyForm extends React.Component {
 	}
 
 	enableCancelButton = () => {
-		let codeHasValue = this.state.code != '';
+		//let codeHasValue = this.state.code != '';
 		let descriptionHasValue = this.state.description != '';
 
-		return codeHasValue || descriptionHasValue;
+		return descriptionHasValue;
 	};
 
 	validateAllFields(func) {
-		let codeValid = this.state.code.trim().length >= 2;
+		//let codeValid = this.state.code.trim().length >= 2;
 		let descriptionValid = this.state.description.trim().length >= 2;
 		this.setState(
 			{
-				codeValid,
 				descriptionValid
 			},
 			() => {
@@ -238,17 +238,17 @@ class DepartmentsCompanyForm extends React.Component {
 	}
 
 	validateField(fieldName, value) {
-		let codeValid = this.state.codeValid;
+		//let codeValid = this.state.codeValid;
 		let descriptionValid = this.state.descriptionValid;
 
-		let codeHasValue = this.state.codeHasValue;
+		//let codeHasValue = this.state.codeHasValue;
 		let descriptionHasValue = this.state.descriptionHasValue;
 
 		switch (fieldName) {
-			case 'code':
-				codeValid = value.trim().length >= 2;
-				codeHasValue = value != '';
-				break;
+			// case 'code':
+			// 	codeValid = value.trim().length >= 2;
+			// 	codeHasValue = value != '';
+			// 	break;
 			case 'description':
 				descriptionValid = value.trim().length >= 2;
 				descriptionHasValue = value != '';
@@ -258,9 +258,9 @@ class DepartmentsCompanyForm extends React.Component {
 		}
 		this.setState(
 			{
-				codeValid,
+				//codeValid,
 				descriptionValid,
-				codeHasValue,
+				//codeHasValue,
 				descriptionHasValue
 			},
 			this.validateForm
@@ -290,11 +290,11 @@ class DepartmentsCompanyForm extends React.Component {
 				code: Code.trim(),
 				description: Description.trim(),
 				formValid: true,
-				codeValid: true,
+				//codeValid: true,
 				descriptionValid: true,
 
 				enableCancelButton: true,
-				codeHasValue: true,
+				//codeHasValue: true,
 				descriptionHasValue: true,
 
 				buttonTitle: this.TITLE_EDIT,
@@ -455,7 +455,7 @@ class DepartmentsCompanyForm extends React.Component {
 			() => {
 				this.validateAllFields(() => {
 					if (this.state.formValid)
-						this.validateDepartmentCode(this.insertDepartment);
+						this.state.code ? this.validateDepartmentCode(this.insertDepartment) : this.insertDepartment();
 					else {
 						this.props.handleOpenSnackbar(
 							'warning',
@@ -533,16 +533,18 @@ class DepartmentsCompanyForm extends React.Component {
 				/>
 				<div className="row">
 					<div className="col-md-4 offset-md-4 col-xl-2 offset-xl-8 mb-2">
-						<InputForm
-							id="code"
-							name="code"
-							maxLength="10"
-							error={!this.state.codeValid}
-							value={this.state.code}
-							change={(value) => this.onCodeChangeHandler(value)}
-							className="input-enable"
-							placeholder="* Accounting Department Code"
-						/>
+						<FeatureTag code="f7196edf-e617-477f-a88d-bcd616bc8c8f">
+							<InputForm
+								id="code"
+								name="code"
+								maxLength="10"
+								error={!this.state.codeValid}
+								value={this.state.code}
+								change={(value) => this.onCodeChangeHandler(value)}
+								className="input-enable"
+								placeholder="* Accounting Department Code"
+							/>
+						</FeatureTag>
 					</div>
 					<div className="col-md-4 col-xl-2 mb-2">
 						<InputForm

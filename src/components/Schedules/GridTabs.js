@@ -14,7 +14,7 @@ class GridTabs extends Component {
         super(props);
         this.state = {
             ...this.DEFAULT_STATE
-        }        
+        }
     }
 
     DEFAULT_STATE = {
@@ -81,8 +81,12 @@ class GridTabs extends Component {
         });
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.position != this.props.position)
+            this.getPosition(this.props.position);
+    }
+
     render() {
-        this.getPosition(this.props.position);
 
         return (
             <React.Fragment>
