@@ -30,6 +30,11 @@ class GridTabModal extends Component {
         this.getPositions(this.props.department);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.open !== this.props.open)
+            this.getPositions(this.props.department);
+    }
+
     getPositions = (departmentId) => {
         this.props.client.query({
             query: GET_POSITION,
@@ -85,6 +90,7 @@ class GridTabModal extends Component {
                                             closeMenuOnSelect={true}
                                             components={makeAnimated()}
                                             isMulti={false}
+                                            placeholder={"Select a Position"}
                                         />
                                     </div>
                                     <div className="col-md-12 mt-2 text-right">

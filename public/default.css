@@ -9391,7 +9391,7 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
     pointer-events: none; }
 
 .ApprovePunches-approvedLabel {
-  font-size: 12px; }
+  font-size: 0.8em; }
 
 .ApprovePunches-employeeContainer {
   display: -webkit-box;
@@ -9401,30 +9401,15 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
   -ms-flex-align: center;
   align-items: center; }
 
-.ApprovePunches-totalHours {
-  font-weight: bold; }
-  .ApprovePunches-totalHours:after, .ApprovePunches-totalHours:before {
-    font-size: 26px;
-    position: absolute;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%); }
-  .ApprovePunches-totalHours:after {
-    content: attr(data-hours);
-    left: 255px;
-    text-align: right;
-    width: 100px; }
-  .ApprovePunches-totalHours:before {
-    content: ":";
-    left: 235px; }
-  .ApprovePunches-totalHours.approve:after {
-    color: #3ca2c8; }
-  .ApprovePunches-totalHours.reject:after {
-    color: var(--danger); }
-
 .ApprovePunches-separation:not(:last-child) {
   border-right: 1px solid #dddddd !important; }
+
+.ApprovePunches-titleLabel {
+  padding-top: 8px;
+  font-size: .8rem; }
+
+.ApprovePunches-valueLabel {
+  font-size: 1.2rem; }
 
 @media (max-width: 991.98px) {
   .ApprovePunches-separation {
@@ -10513,31 +10498,33 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
       top: -3px;
       width: 75px; }
 
-.GridTab-head .btn-group::after, .GridTab-head .btn-group::before {
-  content: " ";
-  display: block;
-  border-top: solid 1px #bdbdbd;
-  margin-left: 5px;
-  width: 5px; }
+.GridTab-head {
+  border-top: solid 1px #999; }
+  .GridTab-head .btn-group::after, .GridTab-head .btn-group::before {
+    content: " ";
+    display: block;
+    border-top: solid 1px #bdbdbd;
+    margin-left: 5px;
+    width: 5px; }
+  .GridTab-head .btn-group::after {
+    margin-right: 5px;
+    margin-left: 0; }
+  .GridTab-head .btn-group > .btn:not(:last-child):not(.dropdown-toggle), .GridTab-head .btn-group > .btn-group:not(:last-child) > .btn {
+    border-top-left-radius: 0;
+    -webkit-box-shadow: -1px 3px 3px #dddddd;
+    box-shadow: -1px 3px 3px #dddddd; }
+  .GridTab-head .btn-group > .btn:not(:first-child), .GridTab-head .btn-group > .btn-group:not(:first-child) > .btn {
+    border-top-right-radius: 0;
+    -webkit-box-shadow: 1px 3px 3px #dddddd;
+    box-shadow: 1px 3px 3px #dddddd; }
+  .GridTab-head .btn-secondary {
+    background: #FFF;
+    border-top: 0;
+    color: #bdbdbd; }
 
-.GridTab-head .btn-group::after {
-  margin-right: 5px;
-  margin-left: 0; }
-
-.GridTab-head .btn-group > .btn:not(:last-child):not(.dropdown-toggle), .GridTab-head .btn-group > .btn-group:not(:last-child) > .btn {
-  border-top-left-radius: 0;
-  -webkit-box-shadow: -1px 3px 3px #dddddd;
-  box-shadow: -1px 3px 3px #dddddd; }
-
-.GridTab-head .btn-group > .btn:not(:first-child), .GridTab-head .btn-group > .btn-group:not(:first-child) > .btn {
-  border-top-right-radius: 0;
-  -webkit-box-shadow: 1px 3px 3px #dddddd;
-  box-shadow: 1px 3px 3px #dddddd; }
-
-.GridTab-head .btn-secondary {
-  background: #FFF;
+.GridTab-Group {
   border-top: 0;
-  color: #bdbdbd; }
+  margin-top: -1px; }
 
 .GridTab-selected {
   color: #000 !important;
@@ -13616,3 +13603,5 @@ label.input-group-text {
 
 span[class^='MySnackbarContent-message-'] {
   color: #FFF; }
+
+/*# sourceMappingURL=default.css.map */

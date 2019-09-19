@@ -1,5 +1,6 @@
 .GridTab {
     &-head {
+        border-top: solid 1px $second-light-gray;
         .btn-group {
             &::after, &::before {
                 content: " ";
@@ -26,6 +27,10 @@
             border-top: 0;
             color: map-get($gray-shades, gray-3);
         }
+    }
+    &-Group {
+        border-top: 0;
+        margin-top: -1px;
     }
     &-selected {
         color: $black !important;
