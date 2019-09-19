@@ -44,8 +44,7 @@ class VerificationLetter extends Component {
             .then(({ data: { createdocumentspdf } }) => {
                 if (createdocumentspdf != null) {
                     this.sleep().then(() => {
-                        var url = `${this.context.baseUrl}/public/Documents/${filename}.pdf`;
-                        window.open(url, '_blank');
+                        window.open(createdocumentspdf, '_blank');
                         this.setState({ downloading: false });
                         this.props.handleCloseModalVerificacion();
                     }).catch(error => {

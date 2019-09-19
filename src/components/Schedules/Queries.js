@@ -139,6 +139,17 @@ export const GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY = gql`
     }
 `;
 
+export const GET_SHIFTS_BY_SPECIFIC_DATE_EMPLOYEE_QUERY = gql`
+    query ShiftDetailBySpecificDate ($date: Date,$startTime: String,$endTime: String,$employeeId: [Int]){
+        ShiftDetailBySpecificDate(date: $date,startTime: $startTime,endTime: $endTime,employeeId:$employeeId){
+            id
+            startDate
+            endDate
+            startTime
+            endTime
+        }
+    }
+`;
 export const GET_CONTACT_BY_QUERY = gql`
 	query getcontacts($id: Int) {
 		getcontacts(Id: null, IsActive: 1, Id_Entity: $id) {
