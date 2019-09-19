@@ -133,8 +133,6 @@ class Roles extends Component {
 
     insertOrUpdateRoles = (rolToSave) => {
         let {isEdition, ...rol} = rolToSave;
-        console.log('rol a guardar - ', rolToSave); // TODO: (LF) Quitar console log
-        console.log('rol a guardar 2- ', rol); // TODO: (LF) Quitar console log
         this.setState({
             saving: true    
         }, _ => {
@@ -229,7 +227,6 @@ class Roles extends Component {
         this.setState({idToDelete: idSearch, openDeleteConfirm: true});
     };
 
-    //TODO: (LF) Descomentar esta onda
     componentWillMount() {
         this.loadRoles();
         this.loadCompanies();

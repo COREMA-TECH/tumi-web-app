@@ -47,3 +47,16 @@ export const GET_REGIONS_QUERY = gql`
     }
 `;
 
+export const GET_REGIONS_BY_USER_QUERY = gql`
+    query regionsUsersByUsersId($UserId: [Int]) {
+        regionsUsersByUsersId(UserId: $UserId, isActive: true) {
+            id
+            RegionId
+            CatalogItem {
+                Id
+                Name
+            }
+        }
+    }
+`;
+

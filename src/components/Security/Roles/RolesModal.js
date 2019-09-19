@@ -63,7 +63,6 @@ class RolesModal extends Component {
 
     componentWillReceiveProps(nextProps) {
         const rol = nextProps.rol;
-        console.log('Mostrando contenido de rol',rol); // TODO: (LF) Quitar console log
         if(!this.props.open){
             if(rol){
                 this.setState({

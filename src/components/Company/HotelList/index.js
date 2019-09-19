@@ -18,22 +18,37 @@ class HotelList extends Component {
             Markup: 0,
             idProperty: null,
             idCompany: null,
-            searchbox: ''
+            searchbox: '',
+            regions: []
         }
     }
 
     getCompaniesQuery = gql`
         query getbusinesscompanies($Id_Parent: Int) {
-            getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: $Id_Parent) {
+            getbusinesscompanies(IsActive: 1, Id_Parent: $Id_Parent) {
                 Id
                 Id_Contract
                 Id_Company
                 Code
                 Name
+                Region
                 Description
                 ImageURL
                 Address
                 Id_Parent
+            }
+        }
+    `;
+
+    GET_REGIONS_USER_QUERY = gql`
+        query regionsUsersByUsersId($UserId: [Int]) {
+            regionsUsersByUsersId(UserId: $UserId, isActive: true) {
+                id
+                RegionId
+                CatalogItem{
+                    Id
+                    Name
+                }
             }
         }
     `;
@@ -81,8 +96,31 @@ class HotelList extends Component {
         this.getHotels(-1);
     };
 
+    getRegionsByUser = () => {
+        const currentUser = localStorage.getItem('LoginId');
+        this.props.client.query({
+            query: this.GET_REGIONS_USER_QUERY,
+            variables: { UserId: currentUser ? [Number.parseInt(currentUser)] : null },
+            fetchPolicy: 'no-cache'
+        }).then(({ data }) => {
+            if(data.regionsUsersByUsersId){
+                const regions = data.regionsUsersByUsersId.map(ru => ru.CatalogItem);
+                this.setState({
+                    regions
+                });
+            }
+            this.getHotels(-1);
+        }).catch(err => {
+            this.setState({
+                regions: []
+            });
+            this.getHotels(-1);
+        });
+    }
+
     UNSAFE_componentWillMount() {
-        this.getHotels(-1);
+        //this.getHotels(-1);
+        this.getRegionsByUser();
     }
 
     getHotels = (idParent) => {
@@ -91,10 +129,14 @@ class HotelList extends Component {
             variables: { Id_Parent: idParent },
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
-            this.setState({
-                hotels: data.getbusinesscompanies,
-                allHotels: data.getbusinesscompanies
-            });
+            if(data.getbusinesscompanies){
+                const regionsId = this.state.regions.map(r => r.Id);
+                const hotelsFound = data.getbusinesscompanies.filter(bc => regionsId.includes(bc.Region));
+                this.setState({
+                    hotels: hotelsFound,
+                    allHotels: hotelsFound
+                });
+            }
         }).catch();
     }
 
