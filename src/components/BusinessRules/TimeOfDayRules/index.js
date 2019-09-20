@@ -1,10 +1,24 @@
-import React, {Component, Fragment} from 'react';
+import React, {Fragment, Component} from 'react';
+
 import Datetime from 'react-datetime';
 import moment from 'moment';
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU";
 
 class TimeOfDayRules extends Component{
+    INITIAL_STATE = {
+        start: "00:00",
+        end: "00:00",
+        selectedDays: 'MO,TU,WE,TH,FR,SA,SU',
+        multiplier: 1.00,
+        holdOpen: false
+    }
+
+    constructor(props){
+        super(props);
+        this.state = { ...this.INITIAL_STATE }
+    }
+    
     //#region Day box control
     getWeekDayStyle = (dayName) => {
         return `btn btn-secondary RowForm-day ${this.state.selectedDays.includes(dayName) ? 'btn-success' : ''}`;
@@ -21,6 +35,31 @@ class TimeOfDayRules extends Component{
             })
     }
     //#endregion
+    
+    handleStartTimeChange = text => {
+        this.setState({
+            start: moment(text, "HH:mm:ss").format("HH:mm"),
+        });
+    }
+
+    handleEndTimeChange = text => {
+        this.setState({
+            end: moment(text, "HH:mm:ss").format("HH:mm"),
+        }, _ => {
+            const {start, end, multiplier, selectedDays} = this.state;
+            this.props.setData(start, end, multiplier, selectedDays);
+        });
+    }
+
+
+    handleChange = ({name, value, type, checked}) => {
+        this.setState(_ => ({
+            [name]: type === "checkbox" ? checked : value
+        }), _ => {
+            const {start, end, multiplier, selectedDays} = this.state;
+            this.props.setData(start, end, multiplier, selectedDays);
+        });
+    }
 
     render(){
         return(
@@ -41,36 +80,7 @@ class TimeOfDayRules extends Component{
                                 <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
                             </div>
                         </div>
-                    </div>                           
-                    <div className="form-group form-row">
-                        <div className="col-sm-2">
-                            Type:
-                        </div>
-                        <div className="col-sm-10">
-                            <div className="form-row">
-                                <div className="d-inline-block mr-4">
-                                    <div class="input-group" style={{marginTop: "0.5rem"}}>
-                                        <input type="radio" name="type" id="typeday" value="day" checked={this.state.type === "day" ? true : false}/>
-                                        <span className="pl-1">Day</span>                                        
-                                    </div>  
-                                </div>
-                                <div className="d-inline-block mr-4">
-                                    <div class="input-group" style={{marginTop: "0.5rem"}}>
-                                        <input type="radio" name="week" id="typeweek" value="week" checked={this.state.type === "week" ? true : false}/>
-                                        <span className="pl-1">Week</span>                                        
-                                    </div>  
-                                </div>
-                                <div className="d-inline-block mr-4">
-                                    <div class="input-group" style={{marginTop: "0.5rem"}}>
-                                        <input type="radio" name="holiday" id="typeholiday" value="holiday" checked={this.state.type === "holiday" ? true : false}/>
-                                        <span className="pl-1">Holiday</span>                                        
-                                    </div>  
-                                </div>                                  
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="BRModal-section no-border">
+                    </div>                  
                     <div className="form-group form-row tumi-row-vert-center">
                         <label className="col-sm-2">Between:</label>
                         <div className="col-sm-10">
@@ -91,15 +101,15 @@ class TimeOfDayRules extends Component{
                         <label className="col-sm-2">Multiplier</label>
                         <div className="col-sm-10">
                             <div className="form-row">
-                                <input className="form-control col-sm-2 text-center" value={this.state.multiplier} onChange={this.handleChange} name="multiplier" type="number" min='1' step="1" pattern="[0-9]" id="multiplier"/>
+                                <input className="form-control col-sm-2 text-center" value={this.state.multiplier} onChange={this.handleChange} name="multiplier" type="number" min='1' step="0.01" id="multiplier"/>
                                 <label className="pl-2 col-sm-4" htmlFor="multiplier">x base pay</label>
                             </div>
                         </div>                                
                     </div>
                     <div className="form-group form-row justify-content-end">
-                        <div className="col-sm-3 pr-0 text-right">
-                            <a type="submit" style={{color: "#FFFFFF"}} className="btn btn-success mr-2">+ Add</a>
-                        </div>
+                        <div className="col-sm-4 pr-0 text-right">
+                            <input type="checkbox" name="holdOpen" checked={this.state.holdOpen} onChange={this.handleChange} id="holdOpen"/>&nbsp;Keep this window open.
+                        </div> 
                     </div>
                 </div>
             </Fragment>

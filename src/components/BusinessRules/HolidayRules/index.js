@@ -1,14 +1,16 @@
 import React, {Component, Fragment} from 'react';
+import {Link} from 'react-router-dom';
 
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from "../../Generic/Global";
 
 import moment from 'moment';
+
 import {GET_HOLIDAYS} from './queries';
 
 class HolidayRules extends Component{
     INITIAL_STATE = {
-        multiplier: 1,
+        multiplier: 1.00,
         holidays: []
     }
 
@@ -22,7 +24,9 @@ class HolidayRules extends Component{
     handleChange = ({target: {name, value}}) => {
         this.setState(_ => ({
             [name]: value
-        }));
+        }), _ => {
+            this.props.setData(this.state.multiplier);
+        });
     }
 
     fetchHolidays = _ => {
@@ -52,19 +56,23 @@ class HolidayRules extends Component{
                     <label className="col-sm-2">Multiplier</label>
                     <div className="col-sm-10">
                         <div className="form-row">
-                            <input className="form-control col-sm-2 text-center" value={this.state.multiplier} onChange={this.handleChange} name="multiplier" type="number" min='1' step="1" pattern="[0-9]" id="multiplier"/>
+                            <input className="form-control col-sm-2 text-center" value={this.state.multiplier} onChange={this.handleChange} name="multiplier" type="number" min='1' step="0.01" id="multiplier"/>
                             <label className="pl-2 col-sm-4" htmlFor="multiplier">x base pay</label>
                         </div>
                     </div>                                
                 </div>
                 <div className="BRModal-holidays BRModal-section no-border">
                     <div className="form-row">
+                        <div className="col-sm-12 text-right">
+                            <Link className="btn btn-success mr-2" to="/home/business/holidays">
+                                + Add Holiday
+                            </Link>
+                        </div>
                         <div className="col-sm-12">
-                            <a type="submit" style={{color: "#FFFFFF"}} className="btn btn-success mr-2">+ Add Holiday</a> 
                             <table className="table table-responsive" style={{display: "table"}}>
                                 <thead>
                                     <tr>
-                                        <th>Holyday</th>
+                                        <th>Holiday</th>
                                         <th>Active Date</th>
                                     </tr>                                    
                                 </thead>
@@ -83,7 +91,7 @@ class HolidayRules extends Component{
                             </table>
                         </div>
                     </div>
-                </div> 
+                </div>                
             </Fragment>
         )
     }
