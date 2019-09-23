@@ -10,7 +10,7 @@ query data($idEntity: Int, $idUsers: Int, $Id: Int) {
       mobileNumber
       
     } 
-    getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: null, Id_Parent: -1) {
+    getbusinesscompanies(Id: $Id, IsActive: 1, Id_Parent: -1) {
           Id
           Code
           Name  
@@ -189,5 +189,21 @@ export const GET_TEMPLATES = gql`
         id,
         title
     }
+}
+`;
+
+export const GET_SCHEDULES_GRID_VIEW_QUERY = gql`
+query workOrderForScheduleView($IdEntity: Int!, $departmentId: Int!, $startDate: Date!, $endDate: Date!, $PositionRateId: Int!){
+  workOrderForScheduleView(IdEntity:$IdEntity, departmentId: $departmentId, startDate: $startDate, endDate: $endDate, PositionRateId: $PositionRateId) {
+    IdEntity
+    groupKey
+    employeeId
+    departmentId
+    PositionRateId
+    dates {
+      code
+      value
+    }
+  }
 }
 `;
