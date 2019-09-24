@@ -207,3 +207,12 @@ query workOrderForScheduleView($IdEntity: Int!, $departmentId: Int!, $startDate:
   }
 }
 `;
+
+export const GET_SCHEDULES_TAB_POSITIONS_QUERY = gql`
+query positionsWithWorkOrders($IdEntity: Int!, $departmentId: Int!, $startDate: Date!, $endDate: Date!){
+    positionsWithWorkOrders(IdEntity:$IdEntity, departmentId: $departmentId, startDate: $startDate, endDate: $endDate) {
+        Id
+        Position
+  }
+}
+`;

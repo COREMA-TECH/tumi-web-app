@@ -48,7 +48,8 @@ class Grid extends Component {
         this.state = {
             ...this.DEFAULT_STATE,
             firstRow: null,
-            lastRow: null
+            lastRow: null,
+            loading: false
         }
     }
 
@@ -58,13 +59,14 @@ class Grid extends Component {
         weekStart: 1,
         weekEnd: 0,
         formOpen: false,
-        currentRow: {}
+        currentRow: {},
+        loading: false
     }
 
     componentWillMount() {
-        this.getCurrentWeek();
         this.setState(() => ({ rows: [this.createNewRow()] }));
         this.getEmployees(this.props.entityId);
+        this.getCurrentWeek();
     }
 
     getCurrentWeek = (newCurrentDate) => {
@@ -111,16 +113,18 @@ class Grid extends Component {
                     endDate: this.state.daysOfWeek[6].date
                 }
             }).then(({ data: { workOrderForScheduleView } }) => {
+                this.setState(() => ({ rows: [this.createNewRow()] }))
                 if (workOrderForScheduleView.length > 0) {
                     workOrderForScheduleView.forEach(_ => {
                         if (!this.state.rows.find(row => row.id === _.groupKey)) {
+                            let employee = this.state.employees.find(emp => emp.value == _.employeeId)
                             let woRecord = {
                                 id: _.groupKey,
                                 isInserted: true,
                                 employeeId: {
                                     key: _.employeeId,
                                     value: _.employeeId,
-                                    label: this.state.employees.find(emp => emp.value == _.employeeId).label
+                                    label: employee ? employee.label : ''
                                 }
                             };
                             _.dates.forEach(_woDate => {
@@ -130,12 +134,13 @@ class Grid extends Component {
                                 else woRecord = { ...woRecord, [date.title]: "OFF" };
                             })
                             this.setState(prevState => {
-                                return { rows: [woRecord, ...prevState.rows], loading: false }
+                                return { rows: [woRecord, ...prevState.rows] }
                             })
                         }
                     })
+                    this.setState(() => ({ loading: false }));
                 }
-
+                else this.setState(() => ({ loading: false }));
             }).catch(error => {
                 this.setState(() => ({ loading: false }));
                 this.props.handleOpenSnackbar(
@@ -148,9 +153,8 @@ class Grid extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.entityId != nextProps.entityId) {
-            this.getEmployees(nextProps.entityId);
-        }
+        if (this.props.positionId != nextProps.positionId)
+            this.getSchedulesGridData();
     }
 
     getEmployees = (idEntity) => {
@@ -169,7 +173,7 @@ class Grid extends Component {
                     employees: [...prevState.employees, {
                         value: item.id, label: item.firstName + ' ' + item.lastName, key: item.id
                     }]
-                }))
+                }), this.getSchedulesGridData)
             });
             this.setState(() => ({ loadingEmployees: false }));
         }).catch(error => {
@@ -407,7 +411,7 @@ class Grid extends Component {
 
     render() {
 
-        if (this.state.loading) {
+        if (this.state.loading || this.state.loadingEmployees) {
             return <LinearProgress />;
         }
 

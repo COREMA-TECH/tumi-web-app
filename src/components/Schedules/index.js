@@ -167,11 +167,12 @@ class Schedules extends Component {
     };
 
     gridTabsView = () => {
+        let { location, position, department, weekDayStart } = this.state;
         return <GridTabs
-            location={this.state.location}
-            position={this.state.position}
-            department={this.state.department}
-            weekDayStart={this.state.weekDayStart}
+            location={location}
+            position={position}
+            department={department}
+            weekDayStart={weekDayStart}
         />;
     }
 
