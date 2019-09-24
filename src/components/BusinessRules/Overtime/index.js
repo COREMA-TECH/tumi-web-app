@@ -1,14 +1,12 @@
 import React, {Component, Fragment} from 'react';
-import Datetime from 'react-datetime';
-import moment from 'moment';
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU";
 
 class OvertimeRules extends Component{
     INITIAL_STATE = {
-        selectedDays: 'MO,TU,WE,TH,FR,SA,SU',
+        days: '',
         multiplier: 1.00,
-        startAfter: 8.0,
+        startAfterHours: 8.0,
         type: "day"
     }
 
@@ -19,27 +17,33 @@ class OvertimeRules extends Component{
 
     //#region Day box control
     getWeekDayStyle = (dayName) => {
-        return `btn btn-secondary RowForm-day ${this.state.selectedDays.includes(dayName) ? 'btn-success' : ''}`;
+        return `btn btn-secondary RowForm-day ${this.state.days.includes(dayName) ? 'btn-success' : ''}`;
     }
 
     selectWeekDay = (dayName) => {
-        if (this.state.selectedDays.includes(dayName))
+        if (this.state.days.includes(dayName))
             this.setState((prevState) => {
-                return { selectedDays: prevState.selectedDays.replace(dayName, '') }
+                return { days: prevState.days.replace(dayName, '') }
+            }, _ => {
+                const {days, multiplier, startAfterHours, type} = this.state;
+                this.props.setData(days, type, multiplier, startAfterHours);
             })
         else
             this.setState((prevState) => {
-                return { selectedDays: prevState.selectedDays.concat(dayName) }
+                return { days: prevState.days.concat(dayName) }
+            }, _ => {
+                const {days, multiplier, startAfterHours, type} = this.state;
+                this.props.setData(days, type, multiplier, startAfterHours);
             })
     }
     //#endregion
 
-    handleChange = ({name, value, type, checked}) => {
+    handleChange = ({target: {name, value, type, checked}}) => {
         this.setState(_ => ({
             [name]: type === "checkbox" ? checked : value
         }), _ => {
-            const {selectedDays, multiplier, startAfter, type} = this.state;
-            this.props.setData(selectedDays, type, multiplier, startAfter);
+            const {days, multiplier, startAfterHours, type} = this.state;
+            this.props.setData(days, type, multiplier, startAfterHours);
         });
     }
 
@@ -70,19 +74,19 @@ class OvertimeRules extends Component{
                         <div className="col-sm-10">
                             <div className="form-row">
                                 <div className="d-inline-block mr-4">
-                                    <div class="input-group" >
+                                    <div className="input-group" >
                                         <input type="radio" name="type" onChange={this.handleChange} id="typeday" value="day" checked={this.state.type === "day" ? true : false}/>
                                         <span className="pl-1">Day</span>                                        
                                     </div>  
                                 </div>
                                 <div className="d-inline-block mr-4">
-                                    <div class="input-group" >
+                                    <div className="input-group" >
                                         <input type="radio" name="type" onChange={this.handleChange} id="typeweek" value="week" checked={this.state.type === "week" ? true : false}/>
                                         <span className="pl-1">Week</span>                                        
                                     </div>  
                                 </div>
                                 <div className="d-inline-block mr-4">
-                                    <div class="input-group" >
+                                    <div className="input-group" >
                                         <input type="radio" name="type" onChange={this.handleChange} id="typeholiday" value="holiday" checked={this.state.type === "holiday" ? true : false}/>
                                         <span className="pl-1">Holiday</span>                                        
                                     </div>  
@@ -102,8 +106,8 @@ class OvertimeRules extends Component{
                         <label className="col-sm-2">Start After</label>
                         <div className="col-sm-10">
                             <div className="form-row">
-                                <input className="form-control col-sm-2 text-center" value={this.state.startAfter} onChange={this.handleChange} name="startAfter" type="number" min='1' step="0.1" id="startAfter"/>
-                                <label className="pl-2 col-sm-4" htmlFor="startAfter">hours/day</label>
+                                <input className="form-control col-sm-2 text-center" value={this.state.startAfterHours} onChange={this.handleChange} name="startAfterHours" type="number" min='1' step="0.1" id="startAfterHours"/>
+                                <label className="pl-2 col-sm-4" htmlFor="startAfterHours">hours/day</label>
                             </div>
                         </div>                                
                     </div>

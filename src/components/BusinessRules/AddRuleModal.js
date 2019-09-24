@@ -13,34 +13,35 @@ import HolidayRules from './HolidayRules';
 import TimeOfDayRules from './TimeOfDayRules';
 import OvertimeRules from './Overtime';
 
+import {GET_RULE_TYPES} from './queries';
+import {CREATE_RULE, UPDATE_RULE} from './mutations';
+
 
 class AddRuleModal extends Component{
     INITIAL_STATE = {
         ruleName: '',
-        ruleType: { value: "holiday", label: "Holiday" },
-        selectedDays: 'MO,TU,WE,TH,FR,SA,SU',
+        ruleType: { value: 41755, label: "Holiday" },
+        selectedDays: '',
         start: "00:00",
         end: "00:00",
 
-        ruleTypes: [
-            { value: "holiday", label: "Holiday" },
-            { value: "tod", label: "Time of Day" },
-            { value: "overtime", label: "Overtime" },
-        ],    
+        ruleTypes: [],    
         holidayRule: {
+            id: 0,
             multiplier: 1
         },
         timeOfDayRule: {
-            hourStart: "00:00",
-            hourEnd: "00:00",
+            id: 0,
+            startTime: "00:00",
+            endTime: "00:00",
             multiplier: 1,
             days: ""
         },
         overtimeRule: {
-            days: "",
-            type: "day", //Day, Week, Holiday ??
-            payRate: 1,
-            startAfterHours: 8
+            days: '',
+            multiplier: 1.00,
+            startAfterHours: 8.0,
+            type: "day"
         }
     }
     
@@ -49,6 +50,23 @@ class AddRuleModal extends Component{
         this.state = {
             ...this.INITIAL_STATE
         }
+
+        this.fetchRuleTypes();
+    }
+
+    fetchRuleTypes = _ => {
+        this.props.client.query({
+            query: GET_RULE_TYPES
+        })
+        .then(({data: {catalogitem}}) => {
+            const options = catalogitem.map(item => {
+                return {value: item.Id, label: item.Name.trim()}
+            });
+
+            this.setState(_ => ({
+                ruleTypes: [...options]
+            }))
+        })
     }
 
     setHolidayRule = (multiplier) => {
@@ -57,15 +75,15 @@ class AddRuleModal extends Component{
         }));   
     }
 
-    setTimeOfDayRule = (hourStart, hourEnd, multiplier, days = "") => {
+    setTimeOfDayRule = (startTime, endTime, multiplier, days = "") => {
         this.setState(_ => ({
-            timeOfDayRule: {hourStart, hourEnd, multiplier, days}
+            timeOfDayRule: {startTime, endTime, multiplier, days}
         }));
     }
 
-    setOvertimeRule = (days = "", type, payRate = 1, startAfterHours) => {
+    setOvertimeRule = (days = "", type, multiplier = 1.0, startAfterHours) => {
         this.setState(_ => ({
-            ovetimeRule: {days, type, payRate, startAfterHours}
+            overtimeRule: {days, type, multiplier, startAfterHours}
         }))
     }
 
@@ -81,20 +99,67 @@ class AddRuleModal extends Component{
         }));
     }
 
+    saveRule = _ => {
+        const {ruleType, holidayRule, timeOfDayRule, overtimeRule} = this.state;
+        let data = {};
+
+        switch(ruleType.value){
+            case 41755:
+                data = {catalogItemId: ruleType.value, ...holidayRule}               
+                break;
+
+            case 41757:
+                data = {catalogItemId: ruleType.value, ...overtimeRule}               
+                break;
+                
+            case 41756:
+                data = {catalogItemId: ruleType.value, ...timeOfDayRule}               
+                break;
+        }
+
+        this.props.client.mutate({
+            mutation: CREATE_RULE,
+            variables: {
+                input: { ...data, name: this.state.ruleName }
+            }
+        })
+        .then(_ => {
+            this.props.handleOpenSnackbar(
+                'success',
+                'Saved Successfully',
+                'bottom',
+                'center'
+            );            
+        })
+        .catch(error => {
+            this.props.handleOpenSnackbar(
+                'error',
+                `Error: ${error}`,
+                'bottom',
+                'center'
+            );
+        })
+    }
+
     renderRuleType = _ => {
         switch(this.state.ruleType.value){
-            case "holiday":
+            case 41755:
                 return <HolidayRules setData={this.setHolidayRule}/>
 
-            case "tod":
-                return <TimeOfDayRules setData={this.setTimeOfDayRule}/>
-            
-            case "overtime":
+            case 41757:
                 return <OvertimeRules setData={this.setOvertimeRule}/>
+                
+            case 41756:
+                return <TimeOfDayRules setData={this.setTimeOfDayRule}/>
             
             default:
                 return <HolidayRules setData={this.setHolidayRule}/>
         }
+    }
+
+    onFormSubmit = event => {
+        event.preventDefault();
+        this.saveRule();
     }
 
     render(){
@@ -108,7 +173,7 @@ class AddRuleModal extends Component{
                         </div>
                     </DialogTitle>
                     <DialogContent>
-                        <form className="BRModal-form" onSubmit={_ => {}}>
+                        <form className="BRModal-form" onSubmit={this.onFormSubmit}>
                             <div className="BRModal-section">
                                 <div className="form-group form-row">                                
                                     <label className="col-sm-2" for="ruleName">Rule Name</label>

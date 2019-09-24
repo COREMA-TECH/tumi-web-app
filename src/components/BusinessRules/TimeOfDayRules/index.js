@@ -7,9 +7,9 @@ const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY =
 
 class TimeOfDayRules extends Component{
     INITIAL_STATE = {
-        start: "00:00",
-        end: "00:00",
-        selectedDays: 'MO,TU,WE,TH,FR,SA,SU',
+        startTime: "00:00",
+        endTime: "00:00",
+        days: '',
         multiplier: 1.00,
         holdOpen: false
     }
@@ -21,43 +21,46 @@ class TimeOfDayRules extends Component{
     
     //#region Day box control
     getWeekDayStyle = (dayName) => {
-        return `btn btn-secondary RowForm-day ${this.state.selectedDays.includes(dayName) ? 'btn-success' : ''}`;
+        return `btn btn-secondary RowForm-day ${this.state.days.includes(dayName) ? 'btn-success' : ''}`;
     }
 
     selectWeekDay = (dayName) => {
-        if (this.state.selectedDays.includes(dayName))
+        if (this.state.days.includes(dayName))
             this.setState((prevState) => {
-                return { selectedDays: prevState.selectedDays.replace(dayName, '') }
+                return { days: prevState.days.replace(dayName, '') }
             })
         else
             this.setState((prevState) => {
-                return { selectedDays: prevState.selectedDays.concat(dayName) }
+                return { days: prevState.days.concat(dayName) }
             })
     }
     //#endregion
     
     handleStartTimeChange = text => {
         this.setState({
-            start: moment(text, "HH:mm:ss").format("HH:mm"),
+            startTime: moment(text, "HH:mm:ss").format("HH:mm"),
+        }, _ => {
+            const {startTime, endTime, multiplier, days} = this.state;
+            this.props.setData(startTime, endTime, multiplier, days);
         });
     }
 
     handleEndTimeChange = text => {
         this.setState({
-            end: moment(text, "HH:mm:ss").format("HH:mm"),
+            endTime: moment(text, "HH:mm:ss").format("HH:mm"),
         }, _ => {
-            const {start, end, multiplier, selectedDays} = this.state;
-            this.props.setData(start, end, multiplier, selectedDays);
+            const {startTime, endTime, multiplier, days} = this.state;
+            this.props.setData(startTime, endTime, multiplier, days);
         });
     }
 
 
-    handleChange = ({name, value, type, checked}) => {
+    handleChange = ({target: {name, value, type, checked}}) => {
         this.setState(_ => ({
             [name]: type === "checkbox" ? checked : value
         }), _ => {
-            const {start, end, multiplier, selectedDays} = this.state;
-            this.props.setData(start, end, multiplier, selectedDays);
+            const {startTime, endTime, multiplier, days} = this.state;
+            this.props.setData(startTime, endTime, multiplier, days);
         });
     }
 
@@ -86,13 +89,13 @@ class TimeOfDayRules extends Component{
                         <div className="col-sm-10">
                             <div className="form-row">
                                 <div className="col-sm-3 pl-0 pr-0">
-                                    <Datetime dateFormat={false} value={moment(this.state.start, "HH:mm").format("hh:mm A")} inputProps={{ name: "start", required: true }} onChange={this.handleStartTimeChange} />
+                                    <Datetime dateFormat={false} value={moment(this.state.startTime, "HH:mm").format("hh:mm A")} inputProps={{ name: "startTime", required: true }} onChange={this.handleStartTimeChange} />
                                 </div>
                                 <div className="col-sm-1 pl-0 pr-0">
                                     <label className="d-block text-center">To</label>
                                 </div>
                                 <div className="col-sm-3 pl-0 pr-0">
-                                    <Datetime dateFormat={false} value={moment(this.state.end, "HH:mm").format("hh:mm A")} inputProps={{ name: "start", required: true }} onChange={this.handleEndTimeChange} />
+                                    <Datetime dateFormat={false} value={moment(this.state.endTime, "HH:mm").format("hh:mm A")} inputProps={{ name: "endTime", required: true }} onChange={this.handleEndTimeChange} />
                                 </div>
                             </div>
                         </div>
