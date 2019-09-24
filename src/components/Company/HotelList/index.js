@@ -4,7 +4,18 @@ import withApollo from 'react-apollo/withApollo';
 import HotelDialog from '../../MainContainer/Toolbar/Main/HotelDialog';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
 import TextTruncate from 'react-text-truncate';
+
+{/* <a href="" onClick={this.handleFindByTag(false)} className="badge badge-danger mr-1">Not Assigned (Orphan)</a>
+    <a href="" onClick={this.handleFindByTag(true)} className="badge badge-success mr-1">Assigned (Managed)</a>
+    <a href="" onClick={this.handleFindByTag(0)} className="badge badge-info">All</a> */}
+const ASSIGNED_FILTER_OPT = [
+    {value: true, label: 'Assigned (Managed)'},
+    {value: false, label: 'Not Assigned (Orphan)'},
+    {value: 0, label: 'All'}
+];
 
 class HotelList extends Component {
     constructor() {
@@ -19,13 +30,17 @@ class HotelList extends Component {
             idProperty: null,
             idCompany: null,
             searchbox: '',
-            regions: []
+            regions: [],
+            showInactiveProperties: false,
+            totalProperties: 0,
+            assignedFilterOpt: ASSIGNED_FILTER_OPT,
+            assignedFilterSelected: {value: 0, label: 'All'}
         }
     }
 
     getCompaniesQuery = gql`
-        query getbusinesscompanies($Id_Parent: Int) {
-            getbusinesscompanies(IsActive: 1, Id_Parent: $Id_Parent) {
+        query getbusinesscompanies($Id_Parent: Int, $IsActive: Int) {
+            getbusinesscompanies(IsActive: $IsActive, Id_Parent: $Id_Parent) {
                 Id
                 Id_Contract
                 Id_Company
@@ -36,7 +51,14 @@ class HotelList extends Component {
                 ImageURL
                 Address
                 Id_Parent
+                IsActive
             }
+        }
+    `;
+
+    getPropertiesCountQuery = gql`
+        query propertiesByUserCount($userId: Int) {
+            propertiesByUserCount(userId: $userId)
         }
     `;
 
@@ -121,12 +143,15 @@ class HotelList extends Component {
     UNSAFE_componentWillMount() {
         //this.getHotels(-1);
         this.getRegionsByUser();
+        this.getPropertiesCount();
     }
 
     getHotels = (idParent) => {
+        let params = {Id_Parent: idParent};
+        if(!this.state.showInactiveProperties) params = {...params, IsActive: 1}
         this.props.client.query({
             query: this.getCompaniesQuery,
-            variables: { Id_Parent: idParent },
+            variables: params,
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
             if(data.getbusinesscompanies){
@@ -138,6 +163,17 @@ class HotelList extends Component {
                 });
             }
         }).catch();
+    }
+
+    getPropertiesCount = () => {
+        const currentUser = localStorage.getItem('LoginId');
+        this.props.client.query({
+            query: this.getPropertiesCountQuery,
+            variables: {userId: currentUser ? Number.parseInt(currentUser) : 0},
+            fetchPolicy: 'no-cache'
+        }).then(({ data }) => {
+            this.setState({totalProperties: data.propertiesByUserCount});
+        }).catch(_ => this.setState({totalProperties: 0}));
     }
 
     handleClickOpen = (event) => {
@@ -212,44 +248,90 @@ class HotelList extends Component {
         }
     };
 
-    handleFindByTag = (isAssign) => (event) => {
-        event.preventDefault();
-        if (isAssign == true)
-            this.getHotels(-2);
-        else if (isAssign === 0) {
-            this.getHotels(-1);
+    handleFindByTag = (selected) => {
+        if(!selected) return;
+        this.setState({
+            assignedFilterSelected: selected
+        });
+        switch (selected.value) {
+            case true:
+                this.getHotels(-2);
+                break;
+            case 0:
+                this.getHotels(-1);
+                break;
+            default:
+                this.getHotels(99999);
+                break;
         }
-        else {
-            this.getHotels(99999);
-        }
-
     };
+
+    handleShowInactivePropertiesChange = () => {
+        this.setState(prevState => {
+            return {showInactiveProperties: !prevState.showInactiveProperties}
+        }, _ => this.getHotels(-1));
+    }
 
     render() {
         return (
             <div className="container-fluid">
-                <ul className="row">
-                    <div className="col-md-4 col-xl-2">
-                        <div class="input-group">
+                <ul className="row d-flex align-items-end">
+                    <div className="col-md-4 col-xl-3">
+                        <div className="input-group">
                             <input onChange={this.handleChange} type="text" name="searchbox" className="form-control" placeholder="Search" />
-                            <div class="input-group-append">
-                                <span class="input-group-text">
-                                    <i class="fas fa-search"></i>
+                            <div className="input-group-append">
+                                <span className="input-group-text">
+                                    <i className="fas fa-search"></i>
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-8 col-xl-10">
+                    <div className="col-md-6 col-xl-4 d-flex">
+                        <div className="flex-grow-1">
+                            <span>
+                                Assigned Filter
+                            </span>
+                            <Select
+                                options={this.state.assignedFilterOpt}
+                                value={this.state.assignedFilterSelected}
+                                onChange={this.handleFindByTag}
+                                closeMenuOnSelect={true}
+                                components={makeAnimated()}
+                            />
+                        </div>
+                        <div className="ml-4">
+                            <span>
+                                Show Inactive Properties
+                            </span>
+                            <div className="onoffswitch">
+                                <input
+                                    id="inactiveProperties"
+                                    onChange={this.handleShowInactivePropertiesChange}
+                                    checked={this.state.showInactiveProperties}
+                                    value={this.state.showInactiveProperties}
+                                    name="inactiveProperties"
+                                    type="checkbox"
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="10"
+                                    className="onoffswitch-checkbox"
+                                />
+                                <label className="onoffswitch-label" htmlFor="inactiveProperties">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-2 col-xl-5">
                         <div className="float-right">
                             <button className="btn btn-success mt-2 mb-1" onClick={this.handleClickOpen}>
                                 Add New Property
                             </button>
                         </div>
                     </div>
-                    <div className="col-md-12">
-                        <a href="" onClick={this.handleFindByTag(false)} className="badge badge-danger mr-1">Not Assigned (Orphan)</a>
-                        <a href="" onClick={this.handleFindByTag(true)} className="badge badge-success mr-1">Assigned (Managed)</a>
-                        <a href="" onClick={this.handleFindByTag(0)} className="badge badge-info">All</a>
+                    <div className="col-md-12 mt-3">
+                        <span className="text-success font-weight-bold">Total properties(Active and inactive): {this.state.totalProperties} </span>
                     </div>
                     <AlertDialogSlide
                         handleClose={this.handleCloseAlertDialog}
@@ -260,7 +342,7 @@ class HotelList extends Component {
                     />
                     {this.state.hotels.map((hotel, i) => (
                         <li key={i} className="col-md-4 col-xl-2">
-                            <div className="HotelCard-wrapper">
+                            <div className={`HotelCard-wrapper ${hotel.IsActive === 0 ? 'opacity-4' : ''}`}>
                                 <div className="HotelCard-controls">
                                     <button className="btn btn-link" onClick={(e) => { this.handleAlertOpen(hotel.Id) }}>
                                         <i className="fas fa-trash"></i>
