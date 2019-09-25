@@ -6,7 +6,8 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import { CREATE_WORKORDER } from './Mutations';
 import RapidForm from './RapidForm';
-import { GET_SHIFTS_BY_SPECIFIC_DATE_EMPLOYEE_QUERY } from './Queries';
+import { GET_SHIFTS_BY_SPECIFIC_DATE_EMPLOYEE_QUERY, GET_SCHEDULES_GRID_VIEW_QUERY } from './Queries';
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const uuidv4 = require('uuid/v4');
 const WILDCARD = '||';
@@ -47,7 +48,8 @@ class Grid extends Component {
         this.state = {
             ...this.DEFAULT_STATE,
             firstRow: null,
-            lastRow: null
+            lastRow: null,
+            loading: false
         }
     }
 
@@ -57,17 +59,14 @@ class Grid extends Component {
         weekStart: 1,
         weekEnd: 0,
         formOpen: false,
-        currentRow: {}
+        currentRow: {},
+        loading: false
     }
 
     componentWillMount() {
-        this.getCurrentWeek();
-        this.setState(() => ({
-            rows: [
-                this.createNewRow()
-            ]
-        }))
+        this.setState(() => ({ rows: [this.createNewRow()] }));
         this.getEmployees(this.props.entityId);
+        this.getCurrentWeek();
     }
 
     getCurrentWeek = (newCurrentDate) => {
@@ -84,7 +83,7 @@ class Grid extends Component {
         let days = [];
         for (let i = 0; i <= 6; i++) {
             let date = moment.utc(weekStart).add(i, 'days');
-            days.push({ index: i, label: date.format("MMMM Do,dddd"), date: date.format("YYYY-MM-DD") });
+            days.push({ index: i, label: date.format("MMMM Do,dddd"), date: date.format("YYYY-MM-DD"), title: DAYS[i].description, code: date.format("MM/DD/YYYY") });
         };
 
         const hours = Array(24 * 2).fill(0).map((_, i) => {
@@ -98,13 +97,64 @@ class Grid extends Component {
                 weekStart: weekStart.subtract(6, 'days'),
                 weekEnd: weekEnd
             }
+        }, this.getSchedulesGridData);
+    }
+
+    getSchedulesGridData = () => {
+        this.setState(() => ({ loading: true }), () => {
+            this.props.client.query({
+                query: GET_SCHEDULES_GRID_VIEW_QUERY,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    IdEntity: this.props.entityId,
+                    departmentId: this.props.departmentId,
+                    PositionRateId: this.props.positionId,
+                    startDate: this.state.daysOfWeek[0].date,
+                    endDate: this.state.daysOfWeek[6].date
+                }
+            }).then(({ data: { workOrderForScheduleView } }) => {
+                this.setState(() => ({ rows: [this.createNewRow()] }))
+                if (workOrderForScheduleView.length > 0) {
+                    workOrderForScheduleView.forEach(_ => {
+                        if (!this.state.rows.find(row => row.id === _.groupKey)) {
+                            let employee = this.state.employees.find(emp => emp.value == _.employeeId)
+                            let woRecord = {
+                                id: _.groupKey,
+                                isInserted: true,
+                                employeeId: {
+                                    key: _.employeeId,
+                                    value: _.employeeId,
+                                    label: employee ? employee.label : ''
+                                }
+                            };
+                            _.dates.forEach(_woDate => {
+                                let date = this.state.daysOfWeek.find(_weekDay => _weekDay.code == _woDate.code);
+                                if (date)
+                                    woRecord = { ...woRecord, [date.title]: _woDate.value };
+                                else woRecord = { ...woRecord, [date.title]: "OFF" };
+                            })
+                            this.setState(prevState => {
+                                return { rows: [woRecord, ...prevState.rows] }
+                            })
+                        }
+                    })
+                    this.setState(() => ({ loading: false }));
+                }
+                else this.setState(() => ({ loading: false }));
+            }).catch(error => {
+                this.setState(() => ({ loading: false }));
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error loading work order data'
+                );
+            });
         });
+
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.entityId != nextProps.entityId) {
-            this.getEmployees(nextProps.entityId);
-        }
+        if (this.props.positionId != nextProps.positionId)
+            this.getSchedulesGridData();
     }
 
     getEmployees = (idEntity) => {
@@ -123,7 +173,7 @@ class Grid extends Component {
                     employees: [...prevState.employees, {
                         value: item.id, label: item.firstName + ' ' + item.lastName, key: item.id
                     }]
-                }))
+                }), this.getSchedulesGridData)
             });
             this.setState(() => ({ loadingEmployees: false }));
         }).catch(error => {
@@ -261,7 +311,6 @@ class Grid extends Component {
 
     }
 
-    // createWorkOrderObject = ({ dayNumber, hour, employeeId }) => {
     createWorkOrderObject = ({ groupKey, dayNumber, hour, employeeId }) => {
         let date = this.state.daysOfWeek.find(_ => { return _.index == dayNumber }).date;
         let workOrder = {
@@ -361,6 +410,10 @@ class Grid extends Component {
     }
 
     render() {
+
+        if (this.state.loading || this.state.loadingEmployees) {
+            return <LinearProgress />;
+        }
 
         return (
             <React.Fragment>
