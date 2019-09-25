@@ -13,25 +13,24 @@ import HolidayRules from './HolidayRules';
 import TimeOfDayRules from './TimeOfDayRules';
 import OvertimeRules from './Overtime';
 
-import {GET_RULE_TYPES} from './queries';
-import {CREATE_RULE, UPDATE_RULE} from './mutations';
+import {GET_RULE_TYPES, GET_RULES} from './queries';
 
 
 class AddRuleModal extends Component{
     INITIAL_STATE = {
+        ruleId: 0,
         ruleName: '',
         ruleType: { value: 41755, label: "Holiday" },
         selectedDays: '',
         start: "00:00",
         end: "00:00",
+        keepOpen: false,
 
         ruleTypes: [],    
         holidayRule: {
-            id: 0,
             multiplier: 1
         },
         timeOfDayRule: {
-            id: 0,
             startTime: "00:00",
             endTime: "00:00",
             multiplier: 1,
@@ -52,6 +51,41 @@ class AddRuleModal extends Component{
         }
 
         this.fetchRuleTypes();
+    }    
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.isEdition && nextProps.ruleToEdit){
+            const {ruleToEdit: {id, name, type, days, multiplier, baseIncrement, startTime, endTime, startAfterHours, ruleType}} = nextProps;
+            
+            switch(ruleType.Id){
+                case 41755: 
+                    this.setState(_ => ({
+                        ruleId: id,
+                        ruleName: name,
+                        ruleType: { value: ruleType.Id, label: ruleType.Name.trim() },
+                        holidayRule: { multiplier }
+                    }));
+                    break;
+    
+                case 41757:
+                    this.setState(_ => ({
+                        ruleId: id,
+                        ruleName: name,
+                        ruleType: { value: ruleType.Id, label: ruleType.Name.trim() },
+                        overtimeRule: { multiplier, days, type, startAfterHours }
+                    }));
+                    break;
+                    
+                case 41756:
+                    this.setState(_ => ({
+                        ruleId: id,
+                        ruleName: name,
+                        ruleType: { value: ruleType.Id, label: ruleType.Name.trim() },
+                        timeOfDayRule: { multiplier, days, startTime, endTime }
+                    }));
+                    break;
+            }            
+        }
     }
 
     fetchRuleTypes = _ => {
@@ -71,19 +105,19 @@ class AddRuleModal extends Component{
 
     setHolidayRule = (multiplier) => {
         this.setState(_ => ({
-            holidayRule: {multiplier}
+            holidayRule: {...this.state.holidayRule, multiplier}
         }));   
     }
 
     setTimeOfDayRule = (startTime, endTime, multiplier, days = "") => {
         this.setState(_ => ({
-            timeOfDayRule: {startTime, endTime, multiplier, days}
+            timeOfDayRule: {...this.state.timeOfDayRule, startTime, endTime, multiplier, days}
         }));
     }
 
     setOvertimeRule = (days = "", type, multiplier = 1.0, startAfterHours) => {
         this.setState(_ => ({
-            overtimeRule: {days, type, multiplier, startAfterHours}
+            overtimeRule: {...this.state.overtimeRule, days, type, multiplier, startAfterHours}
         }))
     }
 
@@ -99,61 +133,34 @@ class AddRuleModal extends Component{
         }));
     }
 
-    saveRule = _ => {
-        const {ruleType, holidayRule, timeOfDayRule, overtimeRule} = this.state;
-        let data = {};
-
-        switch(ruleType.value){
-            case 41755:
-                data = {catalogItemId: ruleType.value, ...holidayRule}               
-                break;
-
-            case 41757:
-                data = {catalogItemId: ruleType.value, ...overtimeRule}               
-                break;
-                
-            case 41756:
-                data = {catalogItemId: ruleType.value, ...timeOfDayRule}               
-                break;
-        }
-
-        this.props.client.mutate({
-            mutation: CREATE_RULE,
-            variables: {
-                input: { ...data, name: this.state.ruleName }
+    handleClose = _ => {
+        this.setState(_ => ({
+            ...this.INITIAL_STATE
+        }), _ => {
+            if(!this.state.keepOpen){
+                this.props.toggleModal();
             }
         })
-        .then(_ => {
-            this.props.handleOpenSnackbar(
-                'success',
-                'Saved Successfully',
-                'bottom',
-                'center'
-            );            
-        })
-        .catch(error => {
-            this.props.handleOpenSnackbar(
-                'error',
-                `Error: ${error}`,
-                'bottom',
-                'center'
-            );
-        })
+    }
+
+    saveRule = _ => {
+        const {ruleType, ruleName, holidayRule, timeOfDayRule, overtimeRule} = this.state;
+        this.props.saveRule({ruleType, ruleName, holidayRule, timeOfDayRule, overtimeRule});
     }
 
     renderRuleType = _ => {
         switch(this.state.ruleType.value){
             case 41755:
-                return <HolidayRules setData={this.setHolidayRule}/>
+                return <HolidayRules {...this.state.holidayRule} setData={this.setHolidayRule}/>
 
             case 41757:
-                return <OvertimeRules setData={this.setOvertimeRule}/>
+                return <OvertimeRules {...this.state.overtimeRule} setData={this.setOvertimeRule}/>
                 
             case 41756:
-                return <TimeOfDayRules setData={this.setTimeOfDayRule}/>
+                return <TimeOfDayRules {...this.state.timeOfDayRule} setData={this.setTimeOfDayRule}/>
             
             default:
-                return <HolidayRules setData={this.setHolidayRule}/>
+                return <HolidayRules {...this.state.holidayRule} setData={this.setHolidayRule}/>
         }
     }
 
@@ -165,8 +172,7 @@ class AddRuleModal extends Component{
     render(){
         return(
             <Fragment>
-                {/* this.props.openModal */}
-                <Dialog className="BreaksModal BRModal" fullWidth maxWidth="sm" open={true}>
+                <Dialog className="BreaksModal BRModal" fullWidth maxWidth="sm" onClose={this.props.toggleModal} open={this.props.isModalOpen}>
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 className="modal-title">Add Rules</h5>

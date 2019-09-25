@@ -49,6 +49,14 @@ class HolidayRules extends Component{
         });
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.multiplier !== this.state.multiplier){
+            this.setState(_ => ({
+                multiplier: nextProps.multiplier
+            }))
+        }
+    }
+
     render(){
         return(
             <Fragment>

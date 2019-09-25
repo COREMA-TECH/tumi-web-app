@@ -16,7 +16,7 @@ class TimeOfDayRules extends Component{
 
     constructor(props){
         super(props);
-        this.state = { ...this.INITIAL_STATE }
+        this.state = { ...this.INITIAL_STATE, ...props }
     }
     
     //#region Day box control
@@ -28,10 +28,16 @@ class TimeOfDayRules extends Component{
         if (this.state.days.includes(dayName))
             this.setState((prevState) => {
                 return { days: prevState.days.replace(dayName, '') }
+            }, _ => {
+                const {startTime, endTime, multiplier, days} = this.state;
+                this.props.setData(startTime, endTime, multiplier, days);
             })
         else
             this.setState((prevState) => {
                 return { days: prevState.days.concat(dayName) }
+            }, _ => {
+                const {startTime, endTime, multiplier, days} = this.state;
+                this.props.setData(startTime, endTime, multiplier, days);
             })
     }
     //#endregion

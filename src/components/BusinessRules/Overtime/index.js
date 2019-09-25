@@ -12,8 +12,8 @@ class OvertimeRules extends Component{
 
     constructor(props){
         super(props);
-        this.state = {...this.INITIAL_STATE } 
-    }
+        this.state = {...this.INITIAL_STATE, ...props } 
+    }    
 
     //#region Day box control
     getWeekDayStyle = (dayName) => {
