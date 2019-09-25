@@ -200,28 +200,38 @@ class PunchesReportConsolidated extends Component {
         this.setState(() => ({
             openConfirmDeleteTime: true,
             clockInIdToDelete: clockInId,
-            clockOutIdToDelete: clockOutId
-        }))
+            clockOutIdToDelete: clockOutId,
+            intervalTime: 1
+        }), () => {
+            this.setState(() => ({ intervalTime: 2 }));
+        })
     }
 
     handleCloseDeleteTimeModal = () => {
-        this.setState({ openConfirmDeleteTime: false });
+        this.setState({ openConfirmDeleteTime: false, intervalTime: 30000 });
     }
 
     handleConfirmDeleteTime = () => {
-        this.setState(() => ({ removingTime: true, intervalTime: 1 }), () => {
+        this.setState(() => ({ removingTime: true }), () => {
             this.props.client
                 .mutate({
                     mutation: DELETE_MARKED_EMPLOYEE,
                     variables: { idsToDelete: [this.state.clockInIdToDelete, this.state.clockOutIdToDelete] }
                 })
                 .then(({ data }) => {
-                    this.setState(() => ({ clockInIdToDelete: null, clockOutIdToDelete: null, removingTime: false, openConfirmDeleteTime: false, intervalTime: 3000 }));
+                    this.setState(() => ({
+                        clockInIdToDelete: null,
+                        clockOutIdToDelete: null,
+                        removingTime: false,
+                        openConfirmDeleteTime: false
+                    }));
+                    setTimeout(() => {
+                        this.setState(() => ({ intervalTime: 30000 }));
+                    }, 3000);
                     this.props.handleOpenSnackbar('success', 'Records deleted successfully');
                 })
                 .catch(error => {
-                    this.setState(() => ({ removingTime: false, intervalTime: 3000 }));
-
+                    this.setState(() => ({ removingTime: false, intervalTime: 30000 }));
                 });
         })
     }

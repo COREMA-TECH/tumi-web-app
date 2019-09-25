@@ -80,13 +80,13 @@ class PunchesConsolidatedDropDownBody extends Component {
                                                 <i className={`fas fa-${allowEditItem ? 'pen' : 'eye'}`} ></i>
                                             </button>
                                         </Tooltip>
-                                        <Tooltip title={'Delete Time'} >
+                                        {allowEditItem ? <Tooltip title={'Delete Time'} >
                                             <FeatureTag code="8c857de2-735c-4bae-9b17-7aca39ceb708">
-                                                <button type="button" className="btn btn-danger" onClick={_ => this.props.handleDeleteTimeModal({ ...item }, allowEditItem)}>
+                                                <button type="button" className="btn btn-danger" onClick={_ => this.props.handleDeleteTimeModal({ ...item }, allowEditItem)} >
                                                     <i className={'fas fa-trash'} ></i>
                                                 </button>
                                             </FeatureTag>
-                                        </Tooltip>
+                                        </Tooltip> : <React.Fragment></React.Fragment>}
                                     </th>
                                     <td>{item.name}</td>
                                     <td>{item.clockIn} - {item.clockOut}</td>
