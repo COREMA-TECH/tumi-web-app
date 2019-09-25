@@ -192,8 +192,8 @@ class PunchesReportConsolidated extends Component {
         return total;
     }
 
-    componentDidMount(){
-        this.setState(_ => ({intervalTime: 30000}))
+    componentDidMount() {
+        this.setState(_ => ({ intervalTime: 30000 }))
     }
 
     handleDeleteTimeModal = ({ clockInId, clockOutId }) => {
@@ -209,18 +209,18 @@ class PunchesReportConsolidated extends Component {
     }
 
     handleConfirmDeleteTime = () => {
-        this.setState(() => ({ removingTime: true }), () => {
+        this.setState(() => ({ removingTime: true, intervalTime: 1 }), () => {
             this.props.client
                 .mutate({
                     mutation: DELETE_MARKED_EMPLOYEE,
                     variables: { idsToDelete: [this.state.clockInIdToDelete, this.state.clockOutIdToDelete] }
                 })
                 .then(({ data }) => {
-                    this.setState(() => ({ clockInIdToDelete: null, clockOutIdToDelete: null, removingTime: false, openConfirmDeleteTime: false }));
+                    this.setState(() => ({ clockInIdToDelete: null, clockOutIdToDelete: null, removingTime: false, openConfirmDeleteTime: false, intervalTime: 3000 }));
                     this.props.handleOpenSnackbar('success', 'Records deleted successfully');
                 })
                 .catch(error => {
-                    this.setState(() => ({ removingTime: false }));
+                    this.setState(() => ({ removingTime: false, intervalTime: 3000 }));
 
                 });
         })
@@ -260,7 +260,7 @@ class PunchesReportConsolidated extends Component {
 
                                 </React.Fragment>
                             }}
-                        </Query>                        
+                        </Query>
                     </div>
                 </div>
             </div>
