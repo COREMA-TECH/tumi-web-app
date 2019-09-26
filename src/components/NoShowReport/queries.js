@@ -3,12 +3,11 @@ import gql from 'graphql-tag'
 export const GET_REPORT_INFORMATION = gql`
     query applicationPhaseByDate($startDate: Date, $endDate: Date,$idRecruiter: Int){
         applicationPhaseByDate(startDate: $startDate, endDate: $endDate,idRecruiter: $idRecruiter) {
-            createdAt
-            application {
             firstName
             lastName
             cellPhone
             car
+            sentToInterview
             idWorkOrder
             positionApplyingFor
             position {
@@ -30,7 +29,6 @@ export const GET_REPORT_INFORMATION = gql`
             }
             stateInfo {
                 Description
-            }
             }
         }
         applicationPhaseByDate_Resume(startDate: $startDate, endDate: $endDate,idRecruiter: $idRecruiter){
