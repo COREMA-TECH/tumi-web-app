@@ -40,3 +40,12 @@ export const GET_COMPANY_QUERY = gql`
         }
     }
 `;
+
+export const GET_FEATURES = gql`
+    query getFeatures($RoleId: Int)  {
+        features(RoleId: $RoleId) {
+            id
+            code
+        }
+    }
+`;

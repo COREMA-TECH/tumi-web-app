@@ -146,6 +146,10 @@ class RolesTable extends Component {
         return form ? form.Name : '';
     }
 
+    handleAccessToElementClick = (rolId) => {
+
+    }
+
     render() {
 		const { classes } = this.props;
         let items = this.props.data;
@@ -197,6 +201,19 @@ class RolesTable extends Component {
                                                     }}
 												>
 													<i className="fas fa-trash"></i>
+												</button>
+											</Tooltip>
+                                            <Tooltip title="Features">
+												<button
+													type="button"
+													className="btn btn-info mr-1 float-left"
+													disabled={this.props.loading}
+													onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        this.props.onFeatureHandler(row.Id)
+                                                    }}
+												>
+													<i className="fas fa-key"></i>
 												</button>
 											</Tooltip>
 										</CustomTableCell>
