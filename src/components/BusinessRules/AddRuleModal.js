@@ -26,7 +26,7 @@ class AddRuleModal extends Component{
         end: "00:00",
         holdOpen: false,
 
-        ruleTypes: [],    
+        // ruleTypes: [],    
         holidayRule: {
             multiplier: 1
         },
@@ -85,6 +85,12 @@ class AddRuleModal extends Component{
                     }));
                     break;
             }            
+        }
+
+        if(!nextProps.isEdition){
+            this.setState(_ => ({
+                ...this.INITIAL_STATE
+            }));
         }
     }
 

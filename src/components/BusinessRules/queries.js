@@ -29,3 +29,12 @@ query businessRuleTypes{
     }
   }
 `;
+
+export const GET_OVERLAPS = gql`
+query overlapping($days:String,$ruleType:Int!){
+	overlappingRules(days:$days,ruleType:$ruleType){
+    id    
+  }  
+}
+
+`;

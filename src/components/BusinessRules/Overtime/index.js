@@ -39,8 +39,9 @@ class OvertimeRules extends Component{
     //#endregion
 
     handleChange = ({target: {name, value, type, checked}}) => {
-        this.setState(_ => ({
-            [name]: type === "checkbox" ? checked : value
+        this.setState(prevState => ({
+            [name]: type === "checkbox" ? checked : value,
+            days: (name === "type" && value === "week") ? "MOTUWETHFRSASU" : prevState.days
         }), _ => {
             const {days, multiplier, startAfterHours, type} = this.state;
             this.props.setData(days, type, multiplier, startAfterHours);
@@ -57,13 +58,13 @@ class OvertimeRules extends Component{
                         </div>
                         <div className="col-md-12">
                             <div className="btn-group RowForm-days" role="group" aria-label="Basic example">
-                                <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
-                                <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
-                                <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
-                                <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
-                                <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
-                                <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
-                                <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
+                                <button type="button" disabled={this.state.type === "week" ? true : false} className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
+                                <button type="button" disabled={this.state.type === "week" ? true : false} className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
+                                <button type="button" disabled={this.state.type === "week" ? true : false} className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
+                                <button type="button" disabled={this.state.type === "week" ? true : false} className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
+                                <button type="button" disabled={this.state.type === "week" ? true : false} className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
+                                <button type="button" disabled={this.state.type === "week" ? true : false} className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
+                                <button type="button" disabled={this.state.type === "week" ? true : false} className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
                             </div>
                         </div>
                     </div>                           

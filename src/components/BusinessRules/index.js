@@ -6,7 +6,7 @@ import AddRuleModal from './AddRuleModal';
 import RulesTable from './rulesTable';
 
 import {CREATE_RULE, UPDATE_RULE, TOGGLE_ACTIVE_RULE} from './mutations';
-import { GET_RULES } from './queries';
+import { GET_RULES, GET_OVERLAPS } from './queries';
 
 
 class BusinessRules extends Component{
@@ -61,7 +61,23 @@ class BusinessRules extends Component{
         })
     }
 
-    saveRule = ({ruleType, ruleName, holidayRule, timeOfDayRule, overtimeRule, holdOpen}) => {        
+    findOverlaps = (days, ruleType) => {
+        return new Promise((resolve, reject) => {
+            this.props.client.query({
+                query: GET_OVERLAPS,
+                fetchPolicy: "no-cache",
+                variables: {
+                    days, ruleType
+                }
+            })
+            .then(({data: {overlappingRules}}) => {
+                resolve(overlappingRules.length);
+            })
+            .catch(error => reject(error));
+        })
+    }
+
+    saveRule = async ({ruleType, ruleName, holidayRule, timeOfDayRule, overtimeRule, holdOpen}) => {        
         let data = {};        
 
         switch(ruleType.value){
@@ -78,7 +94,21 @@ class BusinessRules extends Component{
                 break;
         }
 
-        if(!this.state.isEdition){            
+        if(!this.state.isEdition && ruleType.value === 41756){
+            const overlaps = await this.findOverlaps(data.days, ruleType.value);
+            if (overlaps > 0){
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error: There is another rule overlapping the selected days',
+                    'bottom',
+                    'center'
+                ); 
+
+                return;
+            }
+        }
+
+        if(!this.state.isEdition){
             this.createRule(data, ruleName, holdOpen);
         } else{
             this.updateRule(this.state.ruleToEdit.id, data, ruleName);            
@@ -86,8 +116,6 @@ class BusinessRules extends Component{
     }
 
     createRule = (data, ruleName, holdOpen) => {
-        console.log(holdOpen);
-        
         this.props.client.mutate({
             mutation: CREATE_RULE,
             variables: {
@@ -105,6 +133,7 @@ class BusinessRules extends Component{
                 'bottom',
                 'center'
             );            
+            
             if(!holdOpen){
                 this.toggleModal();
             }
@@ -117,14 +146,14 @@ class BusinessRules extends Component{
                 `Error: ${error}`,
                 'bottom',
                 'center'
-                );
-            })
+            );
             
             if(!holdOpen){
                 this.toggleModal();
             }
-
             this.fetchRules();
+        })            
+           
     }
 
     updateRule = (id, data, ruleName) => {
