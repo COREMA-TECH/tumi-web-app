@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import RolesModal from './RolesModal';
+import FeatureModal from './FeatureModal';
 import RolesTable from './RolesTable';
 import withGlobalContent from 'Generic/Global';
 import {withApollo} from 'react-apollo';
@@ -18,6 +19,7 @@ class Roles extends Component {
             companiesOpt: [],
             loading: false,
             openRolesModal: false,
+            openFeatureModal: false,
 
             idToDelete: 0,
             loadingConfirm: false,
@@ -33,6 +35,13 @@ class Roles extends Component {
     handleCloseRolesModal = () => {
         this.setState({
             openRolesModal: false,
+            rolToEdit: null
+        });
+    }
+
+    handleCloseFeatureModal = () => {
+        this.setState({
+            openFeatureModal: false,
             rolToEdit: null
         });
     }
@@ -223,6 +232,17 @@ class Roles extends Component {
         });
     }
 
+    onFeatureHandler = (rolId) => {
+        const {data} = this.state;
+        const rolEdit = data.find(r => r.Id === rolId);
+        if(!rolEdit) return this.props.handleOpenSnackbar('error', 'Error: Rol not found ');
+
+        this.setState({
+            rolToEdit: {...rolEdit },
+            openFeatureModal: true
+        });
+    }
+
     onDeleteHandler = (idSearch) => {
         this.setState({idToDelete: idSearch, openDeleteConfirm: true});
     };
@@ -233,7 +253,7 @@ class Roles extends Component {
     }
 
     render() {
-        let {openRolesModal, company, companiesOpt, forms, rolToEdit} = this.state;
+        let {openRolesModal, openFeatureModal, company, companiesOpt, forms, rolToEdit} = this.state;
         return <Fragment>
             <AlertDialogSlide
                 handleClose={this.handleCloseAlertDialog}
@@ -276,6 +296,7 @@ class Roles extends Component {
                         company={company}
                         loading={this.state.loading}
                         onEditHandler={this.onEditHandler}
+                        onFeatureHandler={this.onFeatureHandler}
                         onDeleteHandler={this.onDeleteHandler}
                     />
                 </div>
@@ -290,6 +311,13 @@ class Roles extends Component {
                 forms={forms}
                 handleSaveRol={this.insertOrUpdateRoles}
                 saving={this.state.saving}
+            />
+
+            <FeatureModal 
+                title="Features"
+                open={openFeatureModal}
+                rol={rolToEdit}
+                handleClose={this.handleCloseFeatureModal}
             />
         </Fragment>
     }

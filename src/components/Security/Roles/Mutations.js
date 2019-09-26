@@ -24,3 +24,17 @@ export const DELETE_ROLES = gql`
     }
 `;
 
+export const ADD_FEATURE = gql`
+    mutation addFeature($features: [inputInsertFeatureType]) {
+        addFeature(features: $features) {
+            id
+        }
+    }
+`;
+
+export const DELETE_FEATURE = gql`
+    mutation deleteFeature($RoleId: Int, $code: String) {
+        deleteFeature(RoleId: $RoleId, code: $code)
+    }
+`;
+
