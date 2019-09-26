@@ -10,8 +10,7 @@ class TimeOfDayRules extends Component{
         startTime: "00:00",
         endTime: "00:00",
         days: '',
-        multiplier: 1.00,
-        holdOpen: false
+        multiplier: 1.00,        
     }
 
     constructor(props){
@@ -70,6 +69,9 @@ class TimeOfDayRules extends Component{
         });
     }
 
+    onHoldOpenChange = ({target: {checked}}) => {
+        this.props.setHoldModalOpen(checked);
+    }
     render(){
         return(
             <Fragment>
@@ -117,7 +119,7 @@ class TimeOfDayRules extends Component{
                     </div>
                     <div className="form-group form-row justify-content-end">
                         <div className="col-sm-4 pr-0 text-right">
-                            <input type="checkbox" name="holdOpen" checked={this.state.holdOpen} onChange={this.handleChange} id="holdOpen"/>&nbsp;Keep this window open.
+                            <input type="checkbox" name="holdOpen" checked={this.props.holdOpen} onChange={this.onHoldOpenChange} id="holdOpen"/>&nbsp;Keep this window open.
                         </div> 
                     </div>
                 </div>

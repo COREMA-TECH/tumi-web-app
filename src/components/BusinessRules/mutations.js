@@ -17,3 +17,11 @@ export const UPDATE_RULE = gql`
     }
   }
 `;
+
+export const TOGGLE_ACTIVE_RULE = gql`
+mutation toggleBusinessRule($id:Int, $isActive:Boolean){
+  toggleBusinessRule(id:$id,isActive:$isActive){
+    id
+  }
+}
+`;

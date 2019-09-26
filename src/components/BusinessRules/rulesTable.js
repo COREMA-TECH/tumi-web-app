@@ -11,7 +11,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import {GET_RULES} from './queries';
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -32,15 +31,13 @@ class RulesTable extends Component{
         this.state = {
             businessRules: [],
         }        
+    }    
+
+    setRuleActive = rule => _ =>{
+        this.props.toggleActiveRule(rule.id, !rule.isActive);
     }
 
-    
-
-    setRuleActive = (rule, active) => {
-        console.log({rule, active});
-    }
-
-    handleEditButton = item => event => {
+    handleEditButton = item => _ => {
         this.props.handleEdit(item);
     }
 
@@ -75,13 +72,11 @@ class RulesTable extends Component{
                                     checked={rule.isActive}                                    
                                     name="IsActive"
                                     className="onoffswitch-checkbox"
-                                    id="IsActive"
+                                    id={`isActive-${rule.id}`}
                                     value={rule.isActive}
-                                    onChange={(event) => {
-                                        this.setRuleActive(rule, event.target.checked);
-                                    }}
+                                    onClick={this.setRuleActive(rule)}
                                 />
-                                <label className="onoffswitch-label" htmlFor="IsActive">
+                                <label className="onoffswitch-label" htmlFor={`isActive-${rule.id}`}>
                                     <span className="onoffswitch-inner" />
                                     <span className="onoffswitch-switch" />
                                 </label>
