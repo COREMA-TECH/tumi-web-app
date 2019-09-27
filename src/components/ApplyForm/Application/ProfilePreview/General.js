@@ -119,7 +119,7 @@ const styles = (theme) => ({
     container: { overflowY: 'unset' }
 });
 
-const TitleItem = ({className, idealJob, handleClickDelete}) => {
+const TitleItem = ({ className, idealJob, handleClickDelete }) => {
     return <Fragment>
         <div className={className}>
             {idealJob.description}
@@ -1371,17 +1371,17 @@ class General extends Component {
                     id: idealJob.id
                 }
             })
-            .then(({data}) => {
-                if(data){
+            .then(({ data }) => {
+                if (data) {
                     this.props.handleOpenSnackbar('success', 'Record deleted!');
-        
+
                     this.setState(prevState => {
                         return {
                             idealJobs: prevState.idealJobs.filter(t => t.id !== idealJob.id)
                         }
                     });
                 }
-                else{
+                else {
                     this.props.handleOpenSnackbar(
                         'error', 'Error: delete title '
                     );
@@ -1758,7 +1758,7 @@ class General extends Component {
                         this.confirmDeleteTitle(this.state.idealJobToDelete);
                     }}
                     title={(this.state.idealJobToDelete && this.state.idealJobToDelete.isDefault) ? "You are about to remove an Employee default title, are you sure you want to proceed?" : "Are you sure you want to delete the record?"}
-                    //loading={this.props.removingLocationAbleToWork}
+                //loading={this.props.removingLocationAbleToWork}
                 />
 
 
@@ -1930,9 +1930,11 @@ class General extends Component {
                             <div className="row">
                                 <div className="col-sm-12">
                                     <h5 className="float-left">Location able to work</h5>
-                                    <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.handleClickOpenModal}>
-                                        <i class="far fa-plus-square"></i>
-                                    </button>
+                                    <FeatureTag code="c0ad5ebc-228f-476c-806a-a9434506530b">
+                                        <button className="btn btn-link float-left m-0 p-0 ml-2" type="button" onClick={this.handleClickOpenModal}>
+                                            <i class="far fa-plus-square"></i>
+                                        </button>
+                                    </FeatureTag>
                                 </div>
                                 <div className="col-sm-12">
                                     <div className="row">
@@ -1942,11 +1944,13 @@ class General extends Component {
                                                     <ContextMenuTrigger id={HOTEL_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{ clickedHotel: hotel }}>
                                                         <div className={`border p-2 text-center rounded m-1 col text-truncate ${hotel.defaultProperty ? 'bg-info text-white border-info' : 'bg-light border-secondary'} `}>
                                                             {hotel.Name.trim()}
-                                                            <button type="button" className="btn btn-link float-right p-0" style={{ color: "red" }} onClick={() => {
-                                                                this.setState(() => ({ relationToUpdate: hotel, openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
-                                                            }} >
-                                                                <i className="fas fa-trash"></i>
-                                                            </button>
+                                                            <FeatureTag code="b2d06731-b341-4b75-9b9b-020020dbb5ad">
+                                                                <button type="button" className="btn btn-link float-right p-0" style={{ color: "red" }} onClick={() => {
+                                                                    this.setState(() => ({ relationToUpdate: hotel, openConfirm: true, locationAbletoWorkId: hotel.Id, applicationEmployeeId: null }))
+                                                                }} >
+                                                                    <i className="fas fa-trash"></i>
+                                                                </button>
+                                                            </FeatureTag>
                                                         </div>
                                                     </ContextMenuTrigger>
                                                 </div>
@@ -1972,17 +1976,17 @@ class General extends Component {
                                                     return <div className="col-sm-12 col-md-6 col-lg-3" key={i}>
                                                         {
                                                             idealJob.isDefault
-                                                                ? <TitleItem 
-                                                                        className="bg-info text-white border border-info p-2 text-center rounded m-1 col text-truncate" 
-                                                                        idealJob={idealJob}
-                                                                        handleClickDelete={_ => this.deleteTitle(idealJob)}
-                                                                        />
+                                                                ? <TitleItem
+                                                                    className="bg-info text-white border border-info p-2 text-center rounded m-1 col text-truncate"
+                                                                    idealJob={idealJob}
+                                                                    handleClickDelete={_ => this.deleteTitle(idealJob)}
+                                                                />
                                                                 : <ContextMenuTrigger id={TITLE_CONTEXT_MENU} holdToDisplay={1000} collect={props => props} attributes={{ appIdealJob: idealJob }}>
-                                                                    <TitleItem 
-                                                                        className="bg-light border border-secondary p-2 text-center rounded m-1 col text-truncate" 
+                                                                    <TitleItem
+                                                                        className="bg-light border border-secondary p-2 text-center rounded m-1 col text-truncate"
                                                                         idealJob={idealJob}
                                                                         handleClickDelete={_ => this.deleteTitle(idealJob)}
-                                                                        />
+                                                                    />
                                                                 </ContextMenuTrigger>
                                                         }
                                                     </div>
@@ -1996,14 +2000,16 @@ class General extends Component {
                                                 </MenuItem>
                                             </ContextMenu>
                                         </FeatureTag>
-                                        <ContextMenu id={HOTEL_CONTEXT_MENU}
-                                            onShow={t => {
-                                                this.setState(_ => ({ hotelDefaultMenuText: t.detail.data.attributes.clickedHotel.defaultProperty ? 'Unassign Home Location' : 'Set as Home Location' }))
-                                            }}>
-                                            <MenuItem data={{ action: 'toggleDefaultHotel' }} onClick={this.triggerConfirmDefaultHotel}>
-                                                {this.state.hotelDefaultMenuText}
-                                            </MenuItem>
-                                        </ContextMenu>
+                                        <FeatureTag code="259bf7ed-3421-44bf-b6a9-46ec94c3b185">
+                                            <ContextMenu id={HOTEL_CONTEXT_MENU}
+                                                onShow={t => {
+                                                    this.setState(_ => ({ hotelDefaultMenuText: t.detail.data.attributes.clickedHotel.defaultProperty ? 'Unassign Home Location' : 'Set as Home Location' }))
+                                                }}>
+                                                <MenuItem data={{ action: 'toggleDefaultHotel' }} onClick={this.triggerConfirmDefaultHotel}>
+                                                    {this.state.hotelDefaultMenuText}
+                                                </MenuItem>
+                                            </ContextMenu>
+                                        </FeatureTag>
                                     </div>
                                 </div>
                             </div>

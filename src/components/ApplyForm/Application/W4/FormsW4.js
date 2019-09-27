@@ -337,7 +337,7 @@ class FormsW4 extends Component {
         // }
 
         return (
-            <div className="Apply-container--application" style={{ width: '900px', margin: '0 auto' }}>
+            <div className="Apply-container--application" style={{ maxWidth: '900px', width: '100%', margin: '0 auto' }}>
                 <div className="row">
                     <div className="col-12">
                         <div className="applicant-card">

@@ -206,7 +206,7 @@ class Documents extends Component {
                                     {downloading ? <i class="fas fa-spinner fa-spin" /> : <i className="fas fa-download" />}
                                 </button>
                             </div>
-                            <Stepper activeStep={activeStep} orientation="vertical" className="stepper-menu">
+                            <Stepper activeStep={activeStep} orientation="vertical">
                                 {
                                     Object.keys(steps).map((key, index) => {
                                         return (

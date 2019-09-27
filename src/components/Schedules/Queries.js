@@ -10,7 +10,7 @@ query data($idEntity: Int, $idUsers: Int, $Id: Int) {
       mobileNumber
       
     } 
-    getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: null, Id_Parent: -1) {
+    getbusinesscompanies(Id: $Id, IsActive: 1, Id_Parent: -1) {
           Id
           Code
           Name  
@@ -139,6 +139,17 @@ export const GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY = gql`
     }
 `;
 
+export const GET_SHIFTS_BY_SPECIFIC_DATE_EMPLOYEE_QUERY = gql`
+    query ShiftDetailBySpecificDate ($date: Date,$startTime: String,$endTime: String,$employeeId: [Int]){
+        ShiftDetailBySpecificDate(date: $date,startTime: $startTime,endTime: $endTime,employeeId:$employeeId){
+            id
+            startDate
+            endDate
+            startTime
+            endTime
+        }
+    }
+`;
 export const GET_CONTACT_BY_QUERY = gql`
 	query getcontacts($id: Int) {
 		getcontacts(Id: null, IsActive: 1, Id_Entity: $id) {
@@ -178,5 +189,30 @@ export const GET_TEMPLATES = gql`
         id,
         title
     }
+}
+`;
+
+export const GET_SCHEDULES_GRID_VIEW_QUERY = gql`
+query workOrderForScheduleView($IdEntity: Int!, $departmentId: Int!, $startDate: Date!, $endDate: Date!, $PositionRateId: Int!){
+  workOrderForScheduleView(IdEntity:$IdEntity, departmentId: $departmentId, startDate: $startDate, endDate: $endDate, PositionRateId: $PositionRateId) {
+    IdEntity
+    groupKey
+    employeeId
+    departmentId
+    PositionRateId
+    dates {
+      code
+      value
+    }
+  }
+}
+`;
+
+export const GET_SCHEDULES_TAB_POSITIONS_QUERY = gql`
+query positionsWithWorkOrders($IdEntity: Int!, $departmentId: Int!, $startDate: Date!, $endDate: Date!){
+    positionsWithWorkOrders(IdEntity:$IdEntity, departmentId: $departmentId, startDate: $startDate, endDate: $endDate) {
+        Id
+        Position
+  }
 }
 `;

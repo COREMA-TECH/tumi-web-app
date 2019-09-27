@@ -41,10 +41,18 @@
 	padding-right: 0 !important;
 }
 
+.hover-hand {
+	cursor: pointer;
+}
+
 .logout-link {
 	color: $white;
 	margin-right: 1rem;
 	text-decoration: none;
+}
+
+.opacity-4 {
+	opacity: 0.4;
 }
 
 .social-link {

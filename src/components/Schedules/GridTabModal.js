@@ -17,7 +17,7 @@ const styles = {
 };
 
 class GridTabModal extends Component {
-    
+
     constructor() {
         super();
         this.state = {
@@ -27,13 +27,15 @@ class GridTabModal extends Component {
     }
 
     componentWillMount() {
-        this.getPositions(this.props.department);
+        this.getPositions(this.props.department, true);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.open !== this.props.open)
             this.getPositions(this.props.department);
     }
+
+    
 
     getPositions = (departmentId) => {
         this.props.client.query({
@@ -48,7 +50,7 @@ class GridTabModal extends Component {
             let positions = [];
 
             dataAPI.map(item => {
-                positions.push( {
+                positions.push({
                     value: item.Id, label: item.Position
                 });
             });
@@ -75,7 +77,7 @@ class GridTabModal extends Component {
 
     render() {
         const { classes } = this.props;
-        return(
+        return (
             <React.Fragment>
                 <Dialog fullWidth={true} maxWidth={'sm'} open={this.props.open} classes={{ paper: classes.paper }}>
                     <DialogContent style={{ overflowY: "unset" }}>
@@ -94,7 +96,7 @@ class GridTabModal extends Component {
                                         />
                                     </div>
                                     <div className="col-md-12 mt-2 text-right">
-                                        <button className="btn btn-danger mr-1" type="button" onClick={this.props.closeGrdiModal}>  
+                                        <button className="btn btn-danger mr-1" type="button" onClick={this.props.closeGrdiModal}>
                                             Cancel
                                         </button>
                                         <button className="btn btn-success" type="submit">

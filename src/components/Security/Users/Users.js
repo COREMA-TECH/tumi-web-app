@@ -21,8 +21,10 @@ import 'ui-components/InputForm/index.css';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 import withGlobalContent from 'Generic/Global';
-import {GET_USER_APPLICATION, GET_USER_CONTACT} from './Queries';
+import {GET_USER_APPLICATION, GET_USER_CONTACT, GET_REGIONS_QUERY, GET_REGIONS_BY_USER_QUERY} from './Queries';
 import {UPDATE_APPLICATION_INFO, UPDATE_CONTACT_INFO} from './Mutations';
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
 
 const styles = (theme) => ({
     container: {
@@ -111,6 +113,9 @@ const styles = (theme) => ({
         left: '50%',
         marginTop: -12,
         marginLeft: -12
+    },
+    overflowVisible:{
+        overflow: 'visible'
     }
 });
 
@@ -204,8 +209,8 @@ class Catalogs extends React.Component {
         }
     `;
     INSERT_USER_QUERY = gql`
-        mutation insertUser($user: inputInsertUser) {
-            insertUser(user: $user) {
+        mutation insertUser($user: inputInsertUser, $regionsId: [Int]) {
+            insertUser(user: $user, regionsId: $regionsId) {
                 Id
             }
         }
@@ -218,8 +223,8 @@ class Catalogs extends React.Component {
     `;
 
     UPDATE_USER_QUERY = gql`
-        mutation udpdateUser($user: inputUpdateUser) {
-            udpdateUser(user: $user) {
+        mutation udpdateUser($user: inputUpdateUser, $regionsId: [Int]) {
+            udpdateUser(user: $user, regionsId: $regionsId) {
                 Id
             }
         }
@@ -306,7 +311,9 @@ class Catalogs extends React.Component {
         lastName: '',
 
         userContact: {},
-        userApplication: {}
+        userApplication: {},
+        
+        regionsByUser: []
     };
 
     constructor(props) {
@@ -316,7 +323,9 @@ class Catalogs extends React.Component {
             allData: [],
             contacts: [],
             roles: [{ Id: 0, Name: 'Nothing' }],
+            rolesOpt: [],
             languages: [{ Id: 0, Name: 'Nothing' }],
+            languagesOpt: [],
             regions: [{ Id: 0, Name: 'Nothing' }],
             idLanguage: '',
             loadingData: false,
@@ -330,6 +339,8 @@ class Catalogs extends React.Component {
             IdSchedulesEmployees: "",
             IdSchedulesManager: "",
             filterText: '',
+            regionsOpt: [],
+            loadingRegionsByUsers: false,
 
             ...this.DEFAULT_STATE
         };
@@ -741,17 +752,69 @@ class Catalogs extends React.Component {
                     this.fetchUserApplication(Id);
                     this.fetchUserContact(Id);
                     this.focusTextInput();
+                    this.getRegionsByUser(Id);
                 }
             );
         });
     };
 
+    getRegionsByUser = (userId) => {
+        this.setState({
+            loadingRegionsByUsers: true
+        }, _ => {
+            this.props.client
+                .query({
+                    query: GET_REGIONS_BY_USER_QUERY,
+                    variables: {
+                        UserId: [userId]
+                    },
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({data}) => {
+                    if(data.regionsUsersByUsersId){
+                        this.setState({
+                            loadingRegionsByUsers: false,
+                            regionsByUser: data.regionsUsersByUsersId.map(ru => {
+                                return {value: ru.CatalogItem.Id, label: ru.CatalogItem.Name}
+                            })
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error to get regions data - ', error);
+                    this.setState({loadingRegionsByUsers: false});
+                });
+        });
+    }
+
     onDeleteHandler = (idSearch) => {
         this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
     };
 
+    loadRegionsOptions = () => {
+        //regionsOpt
+        this.props.client
+                .query({
+                    query: GET_REGIONS_QUERY,
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({data}) => {
+                    if(data.getcatalogitem){
+                        this.setState({
+                            regionsOpt: data.getcatalogitem.map(d => {
+                                return {value: d.Id, label: d.Name}
+                            })
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.log('Error to get regions data - ', error);
+                });
+    }
+
     componentWillMount() {
         this.setState({ firstLoad: true }, () => {
+            this.loadRegionsOptions();
             this.loadUsers(() => {
                 this.loadContacts(() => {
                     this.loadRoles(() => {
@@ -856,6 +919,9 @@ class Catalogs extends React.Component {
                         this.setState(
                             {
                                 roles: data.data.getroles,
+                                rolesOpt: data.data.getroles.map(r => {
+                                    return {value: r.Id, label: r.Name}
+                                }),
                                 loadingRoles: false
                             },
                             func
@@ -893,6 +959,9 @@ class Catalogs extends React.Component {
                         this.setState(
                             {
                                 languages: data.data.getcatalogitem,
+                                languagesOpt: data.data.getcatalogitem.map(l => {
+                                    return {value: l.Id, label: l.Name}
+                                }),
                                 idLanguage: data.data.getcatalogitem[0].Id,
                                 loadingLanguages: false
                             },
@@ -1029,7 +1098,8 @@ class Catalogs extends React.Component {
                 .mutate({
                     mutation: query,
                     variables: {
-                        user
+                        user,
+                        regionsId: this.state.regionsByUser.map(ru => ru.value)
                     }
                 })
                 .then((data) => {
@@ -1257,6 +1327,12 @@ class Catalogs extends React.Component {
         return mainText.toLocaleLowerCase().includes(substring.toLocaleLowerCase());
     }
 
+    handleChangeRegions = (regions) => {
+        this.setState({
+            regionsByUser: regions
+        });
+    }
+
     filterChangeHandler = (e) => {
         let value = e.target.value;
         this.setState({
@@ -1269,6 +1345,10 @@ class Catalogs extends React.Component {
     render() {
         const { classes } = this.props;
         const { fullScreen } = this.props;
+
+        const {rolesOpt, languagesOpt, idRol, idLanguage} = this.state;
+        const rolSelected = rolesOpt.find(r => r.value === idRol);
+        const languageSelected = languagesOpt.find(l => l.value === idLanguage);
 
         const isLoading =
             this.state.loadingData ||
@@ -1311,6 +1391,7 @@ class Catalogs extends React.Component {
                     onClose={this.cancelUserHandler}
                     aria-labelledby="responsive-dialog-title"
                     maxWidth="sm"
+                    classes={{paperScrollPaper: classes.overflowVisible }}
                 >
                     <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
                         <div className="modal-header">
@@ -1325,7 +1406,7 @@ class Catalogs extends React.Component {
                             </h5>
                         </div>
                     </DialogTitle>
-                    <DialogContent maxWidth="md">
+                    <DialogContent maxWidth="md" className={classes.overflowVisible}>
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-lg-12">
@@ -1394,52 +1475,45 @@ class Catalogs extends React.Component {
                                         </div>
                                         <div className="col-md-12 col-lg-6">
                                             <label>* Role</label>
-                                            <select
+                                            <Select
                                                 name="idRol"
-                                                className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
-                                                    ' '
-                                                )}
-                                                disabled={this.state.loadingRoles}
-                                                onChange={(event) => {
-                                                    this.updateSelect(event.target.value, 'idRol');
+                                                options={this.state.rolesOpt}
+                                                value={rolSelected}
+                                                onChange={(rol) => {
+                                                    this.updateSelect(rol.value, 'idRol');
                                                 }}
-                                                value={this.state.idRol}
-                                            >
-                                                <option value="">Select a role</option>
-                                                {this.state.roles.map((item) => (
-                                                    <option key={item.Id} value={item.Id}>
-                                                        {item.Name}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                                closeMenuOnSelect={true}
+                                                components={makeAnimated()}
+                                                isDisabled={this.state.loadingRoles}
+                                            />
                                         </div>
                                         <div className="col-md-12 col-lg-6">
                                             <label>* Language</label>
-
-                                            <select
+                                            <Select
                                                 name="idLanguage"
-                                                className={[
-                                                    'form-control',
-                                                    this.state.idLanguageValid ? '' : '_invalid'
-                                                ].join(' ')}
-                                                disabled={this.state.loadingLanguages}
-                                                onChange={(event) => {
-                                                    this.updateSelect(event.target.value, 'idLanguage');
+                                                options={this.state.languagesOpt}
+                                                value={languageSelected}
+                                                onChange={(lang) => {
+                                                    this.updateSelect(lang.value, 'idLanguage');
                                                 }}
-                                                value={this.state.idLanguage}
-                                            >
-                                                {this.state.languages.map((item) => (
-                                                    <option
-                                                        key={item.Id}
-                                                        value={item.Id}
-                                                        disabled={item.Id == 199 ? "disabled" : ""}
-                                                    >
-                                                        {item.Name}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                                closeMenuOnSelect={true}
+                                                components={makeAnimated()}
+                                                isDisabled={this.state.loadingLanguages}
+                                            />
                                         </div>
 
+                                        <div className="col-md-12 col-lg-6">
+                                            <label>Regions</label>
+                                            <Select
+                                                options={this.state.regionsOpt}
+                                                value={this.state.regionsByUser}
+                                                onChange={this.handleChangeRegions}
+                                                closeMenuOnSelect={true}
+                                                components={makeAnimated()}
+                                                isLoading={this.state.loadingRegionsByUsers}
+                                                isMulti
+                                            />
+                                        </div>
 
 
                                         {/* <div className="col-md-9 col-lg-6">

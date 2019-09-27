@@ -1,0 +1,42 @@
+[
+    {
+        "code": "06be7c13-cbc8-41da-a338-3e8cd93fa935",
+        "description": "Add Titles in Employee Package > Profile"
+    },
+    {
+        "code": "5d49f1e4-89a7-4990-a90a-7617877ce573",
+        "description": "Set default Title in Employee Package > Profile"
+    },
+    {
+        "code": "f1f15787-3dd7-4f71-93c3-7686023d0a97",
+        "description": "Delete Title in Employee Package > Profile"
+    },
+    {
+        "code": "6d1848f4-aff7-4cbc-94b8-6b4225e3b298",
+        "description": "Show Internal Use tab in Employee Package"
+    },
+    {
+        "code": "8c857de2-735c-4bae-9b17-7aca39ceb708",
+        "description": "Delete punche record in Punches Report"
+    },
+    {
+        "code": "c0ad5ebc-228f-476c-806a-a9434506530b",
+        "description": "Add Location able to work in Employee Package > Profile"
+    },
+    {
+        "code": "259bf7ed-3421-44bf-b6a9-46ec94c3b185",
+        "description": "Set Home Location able to work in Employee Package > Profile"
+    },
+    {
+        "code": "b2d06731-b341-4b75-9b9b-020020dbb5ad",
+        "description": "Delete Location able to work in Employee Package > Profile"
+    },
+    {
+        "code": "d43f7582-d673-11e9-8a34-2a2ae2dbcce4",
+        "description": "Show position code input in (Man. Company/properties) > Position and Rates Modal"
+    },
+    {
+        "code": "f7196edf-e617-477f-a88d-bcd616bc8c8f",
+        "description": "Show Accounting Department Code input in (Man. Company/properties) > Departments"
+    }
+]

@@ -192,20 +192,23 @@ class PunchesReportConsolidated extends Component {
         return total;
     }
 
-    componentDidMount(){
-        this.setState(_ => ({intervalTime: 30000}))
+    componentDidMount() {
+        this.setState(_ => ({ intervalTime: 30000 }))
     }
 
     handleDeleteTimeModal = ({ clockInId, clockOutId }) => {
         this.setState(() => ({
             openConfirmDeleteTime: true,
             clockInIdToDelete: clockInId,
-            clockOutIdToDelete: clockOutId
-        }))
+            clockOutIdToDelete: clockOutId,
+            intervalTime: 1
+        }), () => {
+            this.setState(() => ({ intervalTime: 2 }));
+        })
     }
 
     handleCloseDeleteTimeModal = () => {
-        this.setState({ openConfirmDeleteTime: false });
+        this.setState({ openConfirmDeleteTime: false, intervalTime: 30000 });
     }
 
     handleConfirmDeleteTime = () => {
@@ -216,12 +219,19 @@ class PunchesReportConsolidated extends Component {
                     variables: { idsToDelete: [this.state.clockInIdToDelete, this.state.clockOutIdToDelete] }
                 })
                 .then(({ data }) => {
-                    this.setState(() => ({ clockInIdToDelete: null, clockOutIdToDelete: null, removingTime: false, openConfirmDeleteTime: false }));
+                    this.setState(() => ({
+                        clockInIdToDelete: null,
+                        clockOutIdToDelete: null,
+                        removingTime: false,
+                        openConfirmDeleteTime: false
+                    }));
+                    setTimeout(() => {
+                        this.setState(() => ({ intervalTime: 30000 }));
+                    }, 3000);
                     this.props.handleOpenSnackbar('success', 'Records deleted successfully');
                 })
                 .catch(error => {
-                    this.setState(() => ({ removingTime: false }));
-
+                    this.setState(() => ({ removingTime: false, intervalTime: 30000 }));
                 });
         })
     }
@@ -260,7 +270,7 @@ class PunchesReportConsolidated extends Component {
 
                                 </React.Fragment>
                             }}
-                        </Query>                        
+                        </Query>
                     </div>
                 </div>
             </div>

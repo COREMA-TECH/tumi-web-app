@@ -372,9 +372,9 @@ class ApplicationList extends Component {
 			fullWidth
 			maxWidth="lg"
 		>
-			<DialogTitle id="customized-dialog-title" onClose={this.hideNoShowReport}>
+			{/* <DialogTitle id="customized-dialog-title" onClose={this.hideNoShowReport}>
 				Modal title
-        	</DialogTitle>
+        	</DialogTitle> */}
 			<DialogContent maxWidth="sm" style={{ overflowY: "unset" }}>
 				<div className="card-body">
 					<div className="row">
