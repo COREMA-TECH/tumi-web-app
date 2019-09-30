@@ -47,15 +47,18 @@ class TimeCardForm extends Component {
         clockOutId: null,
         IdEntity: null,
         employeeId: null,
-        shift: moment('08:00', "HH:mm").format("HH:mm"),
-        endShift: moment('16:00', "HH:mm").format("HH:mm"),
         startDate: '',
         endDate: '',
         employees: [],
         positions: [],
         PositionRateId: 0,
         newMark: false,
-        readOnly: false
+        readOnly: false,
+
+        inboundMarkType: 30570, //Shift Start
+        inboundMarkTime: moment('08:00', "HH:mm").format("HH:mm"),
+        outboundMarkType: 30571, //Shift End
+        outboundMarkTime: moment('16:00', "HH:mm").format("HH:mm"),
     };
 
     constructor(props) {
@@ -87,11 +90,11 @@ class TimeCardForm extends Component {
                 employeeId: employeeId,
                 startDate: key ? key.substring(key.length - 8, key.length) : key,
                 endDate: !clockOutId ? '' : (key ? key.substring(key.length - 8, key.length) : key),
-                shift: clockIn,
-                endShift: !clockOutId ? '' : (clockOut !== 'Now' || clockOut !== "24:00") ? clockOut : null,
+                inboundMarkTime: clockIn,
+                outboundMarkTime: !clockOutId ? '' : (clockOut !== 'Now' || clockOut !== "24:00") ? clockOut : null,
                 comment: noteIn,
                 duration: (clockOut !== 'Now' || clockOut !== "24:00") && clockIn ? moment(clockOut, 'HH:mm').diff(moment(clockIn, 'HH:mm'), 'hours') : '',
-                statusTimeOut: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
+                currentlyWorking: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
                 newMark: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
                 readOnly: nextProps.readOnly,
             }, _ => {
@@ -105,8 +108,8 @@ class TimeCardForm extends Component {
                 clockOutId: null,
                 IdEntity: 0,
                 employeeId: 0,
-                shift: moment('08:00', "HH:mm").format("HH:mm"),
-                endShift: moment('16:00', "HH:mm").format("HH:mm"),
+                inboundMarkTime: moment('08:00', "HH:mm").format("HH:mm"),
+                outboundMarkTime: moment('16:00', "HH:mm").format("HH:mm"),
                 startDate: '',
                 endDate: '',
                 duration: 8,
@@ -134,87 +137,30 @@ class TimeCardForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if (
-            this.state.IdEntity == null ||
-            this.state.PositionRateId === null ||
-            this.state.startDate == ''
-        ) {
-
+        if (this.state.IdEntity == null || this.state.PositionRateId === null || this.state.startDate == '') {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
-        } else {
-            this.setState({ saving: true });
-            if (this.state.id == null) {
-                let mark = {
-                    entityId: this.state.IdEntity === 0 ? 180 : this.state.IdEntity,
-                    typeMarkedId: this.state.PositionRateId === 0 ? 30572 : 30570,
-                    markedDate: this.state.startDate,
-                    markedTime: this.state.shift,
-                    imageMarked: "",
-                    EmployeeId: this.state.employeeId,
-                    ShiftId: null,
-                    notes: this.state.comment
-                }
+            return;
+        } 
 
-                this.setState(() => {
-                    return { marks: mark }
-                }, _ => { this.addIn(); });
+        this.setState({ saving: true });
+        if (this.state.id === null) {
+            const { IdEntity, PositionRateId, startDate, employeeId, comment, inboundMarkType, inboundMarkTime, outboundMarkType, outboundMarkTime } = this.state;         
 
-                this.handleCloseModal();
-            } else {
-                let marks = [];
+            let mark = {
+                entityId: IdEntity === 0 ? 180 : IdEntity,
+                markedDate: startDate,
+                inboundMarkTypeId: inboundMarkType,
+                inboundMarkTime: inboundMarkTime,
+                outboundMarkTypeId: outboundMarkType,
+                outboundMarkTime: outboundMarkTime,
+                EmployeeId: employeeId,
+                notes: comment,
+                positionId: PositionRateId,
+            }
 
-                if (this.state.clockInId) {
-                    let markIn = {
-                        id: this.state.clockInId,
-                        entityId: this.state.IdEntity,
-                        markedDate: moment(this.state.startDate).format('YYYY-MM-DD'),
-                        markedTime: this.state.shift,
-                        imageMarked: "",
-                        EmployeeId: this.state.employeeId,
-                        ShiftId: null,
-                        notes: this.state.comment
-                    };
-                    marks.push(markIn);
-                }
-
-                if (this.state.clockOutId) {
-                    let markOut = {
-                        id: this.state.clockOutId,
-                        entityId: this.state.IdEntity,
-                        markedDate: this.state.endDate === '' ? moment(Date.now()).format('YYYY-MM-DD') : moment(this.state.endDate).format('YYYY-MM-DD'),
-                        markedTime: this.state.endShift,
-                        imageMarked: "",
-                        EmployeeId: this.state.endDate === '' ? 0 : this.state.employeeId,
-                        ShiftId: null,
-                        notes: this.state.comment
-                    }
-
-                    marks.push(markOut);
-                }
-
-                if (this.state.newMark && this.state.endDate) {
-                    let markOut = {
-                        entityId: this.state.IdEntity,
-                        markedDate: moment(this.state.endDate).format('YYYY-MM-DD'),
-                        markedTime: this.state.endShift,
-                        imageMarked: "",
-                        EmployeeId: this.state.employeeId,
-                        ShiftId: null,
-                        notes: this.state.comment,
-                        typeMarkedId: this.state.PositionRateId === 0 ? 30571 : 30570,
-                    }
-
-                    this.setState(() => {
-                        return { marks: markOut }
-                    }, _ => { this.addIn(); });
-                }
-
-                marks.map(mark => {
-                    this.updateMark(mark);
-                });
-
-                this.handleCloseModal();
-            }            
+            this.setState(() => {
+                return { marks: mark }
+            }, _ => { this.addIn(); });
         }
     };
     
@@ -251,14 +197,10 @@ class TimeCardForm extends Component {
             variables: {
                 MarkedEmployees: this.state.marks
             }
-        }).then(() => {
-            if (!this.state.statusTimeOut)
-                this.addOut()
-            else {
-                this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                this.props.toggleRefresh();
-                this.setState({ saving: false }, () => { this.handleCloseModal(); this.props.toggleRefresh(); });
-            } 0
+        }).then(() => {            
+            this.props.handleOpenSnackbar('success', 'Record Inserted!');
+            this.props.toggleRefresh();
+            this.setState({ saving: false }, () => { this.handleCloseModal(); this.props.toggleRefresh(); });            
         })
 
         .catch(() => {
@@ -276,7 +218,7 @@ class TimeCardForm extends Component {
                         entityId: this.state.IdEntity,
                         typeMarkedId: 30571,
                         markedDate: this.state.endDate,
-                        markedTime: this.state.endShift,
+                        markedTime: this.state.outboundMarkTime,
                         imageMarked: "",
                         EmployeeId: this.state.employeeId,
                         ShiftId: null,
@@ -394,21 +336,21 @@ class TimeCardForm extends Component {
     handleCalculatedByDuration = (event) => {
         const target = event.target;
         const value = target.value;
-        const startHour = this.state.shift;
+        const startHour = this.state.inboundMarkTime;
 
         var endHour = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(parseFloat(value), 'hours').format('HH:mm');
         var _moment = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(8, 'hours').format('HH:mm');
         var _endHour = (value == 0) ? _moment : endHour;
 
         this.setState({
-            endShift: _endHour,
+            outboundMarkTime: _endHour,
             duration: value
         });
     }
 
     calculateHours = () => {
-        let startHour = this.state.shift;
-        let endHour = this.state.endShift;
+        let startHour = this.state.inboundMarkTime;
+        let endHour = this.state.outboundMarkTime;
 
         var duration = moment.duration(moment.utc(moment(endHour, "HH:mm:ss").diff(moment(startHour, "HH:mm:ss"))).format("HH:mm")).asHours();
         duration = parseFloat(duration).toFixed(2);
@@ -421,20 +363,22 @@ class TimeCardForm extends Component {
     DisabledTimeOut = ({ target: { checked } }) => {
         if (checked) {
             this.setState({
-                statusTimeOut: true,
+                currentlyWorking: true,
                 endDate: "",
-                endShift: ""
+                outboundMarkTime: null,
+                inboundMarkType: 30570, /* Shift Start */
+                outboundMarkType: 30571 /* Shift End */
             });
         } else {
             this.setState({
-                statusTimeOut: false,
-                endShift: '16:00'
+                currentlyWorking: false,
+                outboundMarkTime: '16:00'
             }, _ => { this.calculateHours() });
         }
     }
 
     handleChangeDate = (date) => {
-        let endDate = date;//moment(date).add(7, "days").format();
+        let endDate = date; //moment(date).add(7, "days").format();
 
         this.setState({
             startDate: date,
@@ -474,7 +418,7 @@ class TimeCardForm extends Component {
             return { value: item.Id, label: item.Position }
         });
 
-        const options = [{ value: 0, label: "Select a Position" }, ...positionList];
+        const options = [{ value: 0, label: "Select a Position" }, { value: -1, label: "Lunch Break" }, ...positionList];
         return options;
     }
 
@@ -498,6 +442,12 @@ class TimeCardForm extends Component {
     handlePositionChange = ({ value }) => {
         this.setState(() => {
             return { PositionRateId: value }
+        }, _ => {
+            if(value === -1){
+                this.setState(_ => {
+                    return { inboundMarkType: 30572 /* break in */, outboundMarkType: 30573 /* break out */ }
+                })
+            }
         });
     }
 
@@ -529,9 +479,13 @@ class TimeCardForm extends Component {
 
     findSelectedPosition = positionId => {
         const defValue = { value: 0, label: "Select a Position" };
+        const lunch = { value: -1, label: "Lunch Break" };
 
         if (positionId === 'null' || positionId === 0)
             return defValue;
+
+        if(positionId === -1)
+            return lunch;
 
         const found = this.state.positions.find(item => {
             return item.Id === positionId;
@@ -539,7 +493,7 @@ class TimeCardForm extends Component {
 
         return found ? { value: found.Id, label: found.Position.trim() } : defValue;
     }
-    //#endregion
+    //#endregion   
 
     render() {
         const propertyList = this.getPropertyFilterList();
@@ -623,7 +577,7 @@ class TimeCardForm extends Component {
                                                     onChange={this.handleChangeEndDate}
                                                     placeholderText="Date Out"
                                                     id="datepickerOut"
-                                                    disabled={readOnly || this.state.statusTimeOut}
+                                                    disabled={readOnly || this.state.currentlyWorking}
                                                 />
                                                 <div class="input-group-append">
                                                     <label class="input-group-text" id="addon-wrapping" for="datepickerOut">
@@ -634,20 +588,26 @@ class TimeCardForm extends Component {
                                         </div>
                                         <div className="col-md-4">
                                             <span className="float-left">
-                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} checked={this.state.statusTimeOut} disabled={readOnly} />
+                                                <input type="checkbox" id="disabledTimeOut" name="disabledTimeOut" onChange={this.DisabledTimeOut} checked={this.state.currentlyWorking} disabled={readOnly} />
                                                 <label htmlFor="">&nbsp; Currently working</label>
                                             </span>
                                         </div>
                                         <div className="col-md-4">
                                             <label htmlFor="">* Time In</label>
-                                            <Datetime dateFormat={false} value={this.state.shift ? moment(this.state.shift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} inputProps={{ disabled: readOnly }} />
+                                            <Datetime dateFormat={false} value={this.state.inboundMarkTime ? moment(this.state.inboundMarkTime, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "inboundMarkTime", required: true }} onChange={this.handleTimeChange('inboundMarkTime')} inputProps={{ disabled: readOnly }} />
                                         </div>
                                         <div className="col-md-4">
-                                            <label htmlFor="">{!this.state.statusTimeOut ? "*" : ""} Time Out</label>
-                                            <Datetime dateFormat={false} value={!this.state.statusTimeOut && this.state.endShift ? moment(this.state.endShift, "HH:mm").format("hh:mm A") : ''} inputProps={{ name: "endShift", required: !this.state.statusTimeOut, disabled: this.state.statusTimeOut }} onChange={this.handleTimeChange('endShift')} inputProps={{ disabled: readOnly }} />
+                                            <label htmlFor="">{!this.state.currentlyWorking ? "*" : ""} Time Out</label>
+                                            <Datetime 
+                                                dateFormat={false} 
+                                                value={!this.state.currentlyWorking && this.state.outboundMarkTime ? moment(this.state.outboundMarkTime, "HH:mm").format("hh:mm A") : ''} 
+                                                inputProps={{ name: "outboundMarkTime", required: !this.state.currentlyWorking, disabled: this.state.currentlyWorking }} 
+                                                onChange={this.handleTimeChange('outboundMarkTime')} 
+                                                inputProps={{ disabled: readOnly || this.state.currentlyWorking }}
+                                             />
                                         </div>
                                         <div className="col-md-4">
-                                            <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} disabled={readOnly} />
+                                            <input placeholder="Total Hours" type="text" className="MasterShiftForm-hour form-control" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} disabled={readOnly || this.state.currentlyWorking} />
                                         </div>
                                         <div className="col-md-12 mt-2">
                                             <Select
