@@ -220,6 +220,23 @@ export const GET_STATE_QUERY = gql`
 		} 
 `;
 
+export const GET_PREVIOUS_MARK = gql`
+query previousMark($EmployeeId:Int!, $markedDate:String!, $entityId:Int){
+	previousMark(EmployeeId:$EmployeeId, markedDate:$markedDate, entityId:$entityId){
+	  id
+	  entityId
+	  markedDate
+	  inboundMarkTypeId
+	  inboundMarkTime
+	  outboundMarkTypeId
+	  outboundMarkTime
+	  positionId
+	  EmployeeId
+	  notes    
+	}
+  }
+`;
+
 
 
 

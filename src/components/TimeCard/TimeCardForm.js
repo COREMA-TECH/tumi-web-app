@@ -4,8 +4,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_CONTACT_BY_QUERY } from './queries';
-import { ADD_MARCKED, UPDATE_MARKED } from './mutations';
+import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_CONTACT_BY_QUERY, GET_PREVIOUS_MARK } from './queries';
+import { ADD_MARCKED, UPDATE_MARKED, CREATE_NEW_MARK } from './mutations';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Datetime from 'react-datetime';
@@ -135,7 +135,7 @@ class TimeCardForm extends Component {
         this.props.handleCloseModal(event);
     }    
 
-    handleSubmit = (event) => {
+    handleSubmit = async (event) => {
         event.preventDefault();
         if (this.state.IdEntity == null || this.state.PositionRateId === null || this.state.startDate == '') {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
@@ -158,23 +158,87 @@ class TimeCardForm extends Component {
                 positionId: PositionRateId,
             }
 
-            this.setState(() => {
-                return { marks: mark }
-            }, _ => { this.addIn(); });
+            this.saveMark(mark);
         }
     };
-    
+
+    saveMark = async mark => {
+        const isLunchBreak = this.state.PositionRateId === -1;
+        let markToEdit = null, fetchError = '';
+
+        if(isLunchBreak){
+            const {error, data: {previousMark: previousMark}} = await this.props.client.query({
+                query: GET_PREVIOUS_MARK,
+                variables: {
+                    entityId: mark.entityId,
+                    EmployeeId: mark.EmployeeId,
+                    markedDate: mark.markedDate
+                },
+                fetchPolicy: "no-cache"
+            });
+
+            markToEdit = {...previousMark};
+            fetchError = error;
+        }
+
+        this.props.client.mutate({
+            mutation: CREATE_NEW_MARK,
+            variables: {
+                input: mark
+            }
+        }).then(() => {            
+            this.props.handleOpenSnackbar('success', 'Record Inserted!');
+            
+            if(isLunchBreak){
+                alert("Lunch break");
+
+                console.log("Previous Mark");
+                console.log(markToEdit);
+
+                if(fetchError){
+                    this.setState({ saving: false });
+                    this.props.handleOpenSnackbar('error', 'Something went wrong.');
+                    return;
+                }
+
+                if(!markToEdit){
+                    //Saved new mark, but there was no need to update a previous mark
+                    this.props.toggleRefresh();
+                    this.setState({ saving: false }, () => {
+                        this.handleCloseModal();                                        
+                    });   
+                    
+                    return;
+                }
+
+                const updatedMark = {...markToEdit, outboundMarkTime: mark.inboundMarkTime, outboundMarkType: mark.inboundMarkType};
+                delete updatedMark.__typename;
+
+                this.updateMark(updatedMark);
+            } 
+            
+            else {
+                this.props.toggleRefresh();
+                this.setState({ saving: false }, () => {
+                    this.handleCloseModal();                                        
+                });    
+            }            
+        })
+
+        .catch(() => {
+            this.setState({ saving: false });
+            this.props.handleOpenSnackbar('error', 'Something went wrong.');
+        });
+    }
 
     updateMark = (mark) => {
         if (!mark) return;
-
-        let editMark = { ...mark };
-
+        
         this.props.client
             .mutate({
                 mutation: UPDATE_MARKED,
                 variables: {
-                    MarkedEmployees: editMark
+                    MarkedEmployees: mark
                 }
             })
             .then(() => {

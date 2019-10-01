@@ -134,3 +134,11 @@ export const UPDATE_MARKED = gql`
         }
     }
 `;
+
+export const CREATE_NEW_MARK = gql`
+  mutation createMark($input:inputInsertMarkedEmployees){
+	createMark(input:$input){
+	  id
+	}
+  }
+`;
