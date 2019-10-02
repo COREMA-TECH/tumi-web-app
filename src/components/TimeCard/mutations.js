@@ -136,9 +136,17 @@ export const UPDATE_MARKED = gql`
 `;
 
 export const CREATE_NEW_MARK = gql`
-  mutation createMark($input:inputInsertMarkedEmployees){
+  mutation createMark($input:inputTimeMark){
 	createMark(input:$input){
 	  id
 	}
   }
+`;
+
+export const UPDATE_MARK = gql`
+    mutation updateMarkedEmployees($MarkedEmployees: TimeMarkUpdateType) {
+        updateMark(markedemployees: $MarkedEmployees) {
+            id
+        }
+    }
 `;

@@ -237,6 +237,22 @@ query previousMark($EmployeeId:Int!, $markedDate:String!, $entityId:Int){
   }
 `;
 
-
+export const FETCH_SINGLE_MARK = gql`
+query mark($id:Int!){
+	mark(id:$id){
+	  id    
+	  entityId
+	  markedDate
+	  inboundMarkTypeId
+	  inboundMarkTime
+	  outboundMarkTypeId
+	  outboundMarkTime
+	  positionId
+	  EmployeeId
+	  ShiftId
+	  notes    
+	}
+  }
+`;
 
 
