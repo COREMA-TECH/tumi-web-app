@@ -35,6 +35,8 @@ class HotelList extends Component {
             searchbox: '',
             regions: [],
             showInactiveProperties: false,
+            activeProperties: 0,
+            inactiveProperties: 0,
             totalProperties: 0,
             assignedFilterOpt: ASSIGNED_FILTER_OPT,
             assignedFilterSelected: {value: 0, label: 'All'},
@@ -63,7 +65,10 @@ class HotelList extends Component {
 
     getPropertiesCountQuery = gql`
         query propertiesByUserCount($userId: Int) {
-            propertiesByUserCount(userId: $userId)
+            propertiesByUserCount(userId: $userId){
+                actives
+                inactives
+            }
         }
     `;
 
@@ -185,8 +190,15 @@ class HotelList extends Component {
             variables: {userId: currentUser ? Number.parseInt(currentUser) : 0},
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
-            this.setState({totalProperties: data.propertiesByUserCount});
-        }).catch(_ => this.setState({totalProperties: 0}));
+            if(data.propertiesByUserCount){
+                const {actives, inactives} = data.propertiesByUserCount;
+                this.setState({
+                    activeProperties: actives,
+                    inactiveProperties: inactives,
+                    totalProperties: actives + inactives
+                });
+            }
+        }).catch(_ => this.setState({activeProperties: 0, inactiveProperties: 0, totalProperties: 0}));
     }
 
     handleClickOpen = (event) => {
@@ -217,8 +229,6 @@ class HotelList extends Component {
     };
 
     handleClickOpenEdit = (boolValue, id, rate, idCompany, isActive) => (event) => {
-        //if (!this.props.showStepper) return false;
-        console.log('ola ke ase',event); // TODO:(LF) Quitar esta linea
         event.preventDefault();
 
         if(isActive){
@@ -264,7 +274,6 @@ class HotelList extends Component {
             },
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
-            console.log('reactivando el property KKK', data); // TODO: (LF) Quitar console log
             this.props.handleOpenSnackbar('success', 'Property Activated!');
             this.setState({
                 openConfirmActivateProperty: false,
@@ -312,7 +321,8 @@ class HotelList extends Component {
         }
     };
 
-    handleFindByTag = (selected) => {
+    handleFindByTag = (e, selected) => {
+        e.preventDefault();
         if(!selected) return;
         this.setState({
             assignedFilterSelected: selected
@@ -329,6 +339,13 @@ class HotelList extends Component {
                 break;
         }
     };
+
+    generateAssignedFilterItem = (assignedFilterSelected) => {
+        return ASSIGNED_FILTER_OPT.map(o => {
+            const opacityClass = assignedFilterSelected.value !== o.value ? 'opacity-4' : '';
+            return <a href="#" onClick={(e) => this.handleFindByTag(e, o)} className={`p-1 badge badge-info mr-1 ${opacityClass}`}>{o.label}</a>
+        });
+    }
 
     handleShowInactivePropertiesChange = () => {
         this.setState(prevState => {
@@ -351,17 +368,18 @@ class HotelList extends Component {
                         </div>
                     </div>
                     <div className="col-md-6 col-xl-4 d-flex">
-                        <div className="flex-grow-1">
-                            <span>
+                        <div className="flex-grow-1 d-flex flex-column justify-content-between">
+                            <div>
                                 Assigned Filter
-                            </span>
-                            <Select
+                            </div>
+                            {/* <Select
                                 options={this.state.assignedFilterOpt}
                                 value={this.state.assignedFilterSelected}
                                 onChange={this.handleFindByTag}
                                 closeMenuOnSelect={true}
                                 components={makeAnimated()}
-                            />
+                            /> */}
+                            <div>{this.generateAssignedFilterItem(this.state.assignedFilterSelected)}</div>
                         </div>
                         <div className="ml-4">
                             <span>
@@ -395,7 +413,9 @@ class HotelList extends Component {
                         </div>
                     </div>
                     <div className="col-md-12 mt-3">
-                        <span className="text-success font-weight-bold">Total properties(Active and inactive): {this.state.totalProperties} </span>
+                        <span className="text-success font-weight-bold h5">
+                            {`Properties: Actives(${this.state.activeProperties}) Inactives(${this.state.inactiveProperties}) Total(${this.state.totalProperties})`}
+                        </span>
                     </div>
                     <AlertDialogSlide
                         handleClose={this.handleCloseAlertDialog}
