@@ -7,6 +7,9 @@ import withGlobalContent from 'Generic/Global';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import TextTruncate from 'react-text-truncate';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 
 {/* <a href="" onClick={this.handleFindByTag(false)} className="badge badge-danger mr-1">Not Assigned (Orphan)</a>
     <a href="" onClick={this.handleFindByTag(true)} className="badge badge-success mr-1">Assigned (Managed)</a>
@@ -34,7 +37,9 @@ class HotelList extends Component {
             showInactiveProperties: false,
             totalProperties: 0,
             assignedFilterOpt: ASSIGNED_FILTER_OPT,
-            assignedFilterSelected: {value: 0, label: 'All'}
+            assignedFilterSelected: {value: 0, label: 'All'},
+            openConfirmActivateProperty: false,
+            updateOnActivateProperty: null
         }
     }
 
@@ -71,6 +76,14 @@ class HotelList extends Component {
                     Id
                     Name
                 }
+            }
+        }
+    `;
+
+    UPDATE_PROPERTY = gql`
+        mutation updateBusinessCompany($businessCompany: inputUpdateBusinessCompany) {
+            updateBusinessCompany(businessCompany: $businessCompany) {
+                Id
             }
         }
     `;
@@ -203,18 +216,69 @@ class HotelList extends Component {
         });
     };
 
-    handleClickOpenEdit = (boolValue, id, rate, idCompany) => (event) => {
+    handleClickOpenEdit = (boolValue, id, rate, idCompany, isActive) => (event) => {
         //if (!this.props.showStepper) return false;
+        console.log('ola ke ase',event); // TODO:(LF) Quitar esta linea
         event.preventDefault();
-        this.setState({
-            propertyClick: boolValue,
-            idProperty: id,
-            Markup: rate,
-            idCompany: idCompany
-        }, () => {
-            this.setState({ open: true });
-        });
+
+        if(isActive){
+            this.setState({
+                propertyClick: boolValue,
+                idProperty: id,
+                Markup: rate,
+                idCompany: idCompany
+            }, () => {
+                this.setState({ open: true });
+            });
+        }
+        else{
+            this.setState({
+                openConfirmActivateProperty: true,
+                updateOnActivateProperty: {
+                    propertyClick: boolValue,
+                    idProperty: id,
+                    Markup: rate,
+                    idCompany: idCompany
+                }
+                //this.handleClickOpenEdit(boolValue, id, rate, idCompany, true)
+            });
+        }
     };
+
+    handleCloseConfirmActivateProperty = () => {
+        this.setState({
+            openConfirmActivateProperty: false,
+            updateOnActivateProperty: null
+        });
+    }
+
+    handleActivateProperty = () => {
+        const stateToUpdate = this.state.updateOnActivateProperty;
+        this.props.client.mutate({
+            mutation: this.UPDATE_PROPERTY,
+            variables: { 
+                businessCompany: {
+                    Id: stateToUpdate ? stateToUpdate.idProperty : 0,
+                    IsActive: 1
+                }
+            },
+            fetchPolicy: 'no-cache'
+        }).then(({ data }) => {
+            console.log('reactivando el property KKK', data); // TODO: (LF) Quitar console log
+            this.props.handleOpenSnackbar('success', 'Property Activated!');
+            this.setState({
+                openConfirmActivateProperty: false,
+                ...stateToUpdate,
+                updateOnActivateProperty: null,
+            }, _ => {
+                this.getHotels(-1);
+                this.getPropertiesCount();
+                this.setState({ open: true })
+            });
+        }).catch(err => {
+            this.props.handleOpenSnackbar('error', 'Error to activate property');
+        });
+    }
 
     handleChange = (event) => {
         const target = event.target;
@@ -348,7 +412,7 @@ class HotelList extends Component {
                                         <i className="fas fa-trash"></i>
                                     </button>
                                 </div>
-                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent)} className={hotel.Id_Parent === 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
+                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent, hotel.IsActive === 1)} className={hotel.Id_Parent === 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
                                     <div className="HotelCard-img">
                                         <figure>
                                             <img src={`${hotel.ImageURL}`} alt="" />
@@ -372,6 +436,21 @@ class HotelList extends Component {
                     handleClose={this.handleClose}
                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                 />
+
+                <Dialog maxWidth="md" open={this.state.openConfirmActivateProperty} >
+                    <DialogContent>
+                        <h3 className="text-center">To manage a property it must be active. Do you want to activate this property?</h3>
+                    </DialogContent>
+                    <DialogActions>
+                        <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={this.handleActivateProperty}>
+                            Activate
+                                </button>
+                        <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={this.handleCloseConfirmActivateProperty}>
+                            Cancel
+                                </button>
+
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }
