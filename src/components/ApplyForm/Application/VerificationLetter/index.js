@@ -31,7 +31,7 @@ class VerificationLetter extends Component {
         e.preventDefault();
         e.stopPropagation();
         this.setState(() => ({ downloading: true }));
-        let filename = `ApplicantVerificationLetter_${this.props.ApplicationId}`;
+        let filename = `ApplicantVerificationLetter_${this.props.ApplicationId}_${uuidv4()}`;
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
@@ -43,9 +43,13 @@ class VerificationLetter extends Component {
             })
             .then(({ data: { createdocumentspdf } }) => {
                 if (createdocumentspdf != null) {
-                    window.open(createdocumentspdf, '_blank');
-                    this.setState({ downloading: false });
-                    this.props.handleCloseModalVerificacion();
+                    this.sleep().then(() => {
+                        window.open(createdocumentspdf, '_blank');
+                        this.setState({ downloading: false });
+                        this.props.handleCloseModalVerificacion();
+                    }).catch(error => {
+                        this.setState({ downloading: false })
+                    })
                 } else {
                     this.props.handleOpenSnackbar('error', 'Error downloading PDF');
                     this.setState({ downloading: false });
