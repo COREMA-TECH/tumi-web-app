@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import withGlobalContent from 'Generic/Global';
 import { CREATE_HOLIDAY, UPDATE_HOLIDAY, DELETE_HOLIDAY } from "./Mutations";
 import { GET_HOLIDAYS } from './Queries';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
@@ -168,7 +167,7 @@ class Holidays extends Component {
             this.setState({ id: data.addHoliday[0].id, inserting: false })
             this.props.handleOpenSnackbar('success', "Holiday Inserted", 'bottom', 'right');
             this.props.handleClose();
-        }).catch((error) => {
+        }).catch(() => {
             this.setState({ inserting: false })
             this.props.handleOpenSnackbar(
                 'error',
@@ -197,11 +196,11 @@ class Holidays extends Component {
                     calendarDays: JSON.stringify(this.state.calendarDays)
                 }
             }
-        }).then(({ data }) => {
+        }).then(() => {
             this.setState({ inserting: false })
             this.props.handleOpenSnackbar('success', "Holiday Updated", 'bottom', 'right');
             this.props.handleClose();
-        }).catch((error) => {
+        }).catch(() => {
             this.setState({ inserting: false })
             this.props.handleOpenSnackbar(
                 'error',
@@ -399,7 +398,7 @@ class Holidays extends Component {
                     })
                 }
             })
-            .catch(e => {
+            .catch(() => {
                 this.props.handleOpenSnackbar('warning', "Error loading holiday", 'bottom', 'right');
             });
     }
@@ -457,11 +456,11 @@ class Holidays extends Component {
             variables: {
                 id: this.state.id,
             }
-        }).then(({ data }) => {
+        }).then(() => {
             this.setState({ inserting: false })
             this.props.handleOpenSnackbar('success', "Holiday Deleted", 'bottom', 'right');
             this.props.handleClose();
-        }).catch((error) => {
+        }).catch(() => {
             this.setState({ inserting: false })
             this.props.handleOpenSnackbar(
                 'error',
