@@ -85,13 +85,13 @@ class BreaksTable extends Component {
                                     checked={rule.isActive}
                                     name="IsActive"
                                     className="onoffswitch-checkbox"
-                                    id="IsActive"
+                                    id={`IsActive-${rule.id}`}
                                     value={rule.isActive}
                                     onChange={(event) => {
                                         this.setRuleActive(rule.id, event.target.checked);
                                     }}
                                 />
-                                <label className="onoffswitch-label" htmlFor="IsActive">
+                                <label className="onoffswitch-label" htmlFor={`IsActive-${rule.id}`}>
                                     <span className="onoffswitch-inner" />
                                     <span className="onoffswitch-switch" />
                                 </label>

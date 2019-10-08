@@ -7,6 +7,9 @@ import withGlobalContent from 'Generic/Global';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import TextTruncate from 'react-text-truncate';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 
 {/* <a href="" onClick={this.handleFindByTag(false)} className="badge badge-danger mr-1">Not Assigned (Orphan)</a>
     <a href="" onClick={this.handleFindByTag(true)} className="badge badge-success mr-1">Assigned (Managed)</a>
@@ -32,9 +35,13 @@ class HotelList extends Component {
             searchbox: '',
             regions: [],
             showInactiveProperties: false,
+            activeProperties: 0,
+            inactiveProperties: 0,
             totalProperties: 0,
             assignedFilterOpt: ASSIGNED_FILTER_OPT,
-            assignedFilterSelected: {value: 0, label: 'All'}
+            assignedFilterSelected: {value: 0, label: 'All'},
+            openConfirmActivateProperty: false,
+            updateOnActivateProperty: null
         }
     }
 
@@ -58,7 +65,10 @@ class HotelList extends Component {
 
     getPropertiesCountQuery = gql`
         query propertiesByUserCount($userId: Int) {
-            propertiesByUserCount(userId: $userId)
+            propertiesByUserCount(userId: $userId){
+                actives
+                inactives
+            }
         }
     `;
 
@@ -71,6 +81,14 @@ class HotelList extends Component {
                     Id
                     Name
                 }
+            }
+        }
+    `;
+
+    UPDATE_PROPERTY = gql`
+        mutation updateBusinessCompany($businessCompany: inputUpdateBusinessCompany) {
+            updateBusinessCompany(businessCompany: $businessCompany) {
+                Id
             }
         }
     `;
@@ -172,8 +190,15 @@ class HotelList extends Component {
             variables: {userId: currentUser ? Number.parseInt(currentUser) : 0},
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
-            this.setState({totalProperties: data.propertiesByUserCount});
-        }).catch(_ => this.setState({totalProperties: 0}));
+            if(data.propertiesByUserCount){
+                const {actives, inactives} = data.propertiesByUserCount;
+                this.setState({
+                    activeProperties: actives,
+                    inactiveProperties: inactives,
+                    totalProperties: actives + inactives
+                });
+            }
+        }).catch(_ => this.setState({activeProperties: 0, inactiveProperties: 0, totalProperties: 0}));
     }
 
     handleClickOpen = (event) => {
@@ -203,18 +228,66 @@ class HotelList extends Component {
         });
     };
 
-    handleClickOpenEdit = (boolValue, id, rate, idCompany) => (event) => {
-        //if (!this.props.showStepper) return false;
+    handleClickOpenEdit = (boolValue, id, rate, idCompany, isActive) => (event) => {
         event.preventDefault();
-        this.setState({
-            propertyClick: boolValue,
-            idProperty: id,
-            Markup: rate,
-            idCompany: idCompany
-        }, () => {
-            this.setState({ open: true });
-        });
+
+        if(isActive){
+            this.setState({
+                propertyClick: boolValue,
+                idProperty: id,
+                Markup: rate,
+                idCompany: idCompany
+            }, () => {
+                this.setState({ open: true });
+            });
+        }
+        else{
+            this.setState({
+                openConfirmActivateProperty: true,
+                updateOnActivateProperty: {
+                    propertyClick: boolValue,
+                    idProperty: id,
+                    Markup: rate,
+                    idCompany: idCompany
+                }
+                //this.handleClickOpenEdit(boolValue, id, rate, idCompany, true)
+            });
+        }
     };
+
+    handleCloseConfirmActivateProperty = () => {
+        this.setState({
+            openConfirmActivateProperty: false,
+            updateOnActivateProperty: null
+        });
+    }
+
+    handleActivateProperty = () => {
+        const stateToUpdate = this.state.updateOnActivateProperty;
+        this.props.client.mutate({
+            mutation: this.UPDATE_PROPERTY,
+            variables: { 
+                businessCompany: {
+                    Id: stateToUpdate ? stateToUpdate.idProperty : 0,
+                    IsActive: 1
+                }
+            },
+            fetchPolicy: 'no-cache'
+        }).then(({ data }) => {
+            this.props.handleOpenSnackbar('success', 'Property Activated!');
+            this.setState({
+                openConfirmActivateProperty: false,
+                ...stateToUpdate,
+                updateOnActivateProperty: null,
+            }, _ => {
+                this.getHotels(-1);
+                this.getPropertiesCount();
+                this.setState({ open: true })
+            });
+        }).catch(err => {
+            this.props.handleOpenSnackbar('error', 'Error to activate property');
+        });
+    }
 
     handleChange = (event) => {
         const target = event.target;
@@ -248,7 +321,8 @@ class HotelList extends Component {
         }
     };
 
-    handleFindByTag = (selected) => {
+    handleFindByTag = (e, selected) => {
+        e.preventDefault();
         if(!selected) return;
         this.setState({
             assignedFilterSelected: selected
@@ -265,6 +339,13 @@ class HotelList extends Component {
                 break;
         }
     };
+
+    generateAssignedFilterItem = (assignedFilterSelected) => {
+        return ASSIGNED_FILTER_OPT.map(o => {
+            const opacityClass = assignedFilterSelected.value !== o.value ? 'opacity-4' : '';
+            return <a href="#" onClick={(e) => this.handleFindByTag(e, o)} className={`p-1 badge badge-info mr-1 ${opacityClass}`}>{o.label}</a>
+        });
+    }
 
     handleShowInactivePropertiesChange = () => {
         this.setState(prevState => {
@@ -287,17 +368,18 @@ class HotelList extends Component {
                         </div>
                     </div>
                     <div className="col-md-6 col-xl-4 d-flex">
-                        <div className="flex-grow-1">
-                            <span>
+                        <div className="flex-grow-1 d-flex flex-column justify-content-between">
+                            <div>
                                 Assigned Filter
-                            </span>
-                            <Select
+                            </div>
+                            {/* <Select
                                 options={this.state.assignedFilterOpt}
                                 value={this.state.assignedFilterSelected}
                                 onChange={this.handleFindByTag}
                                 closeMenuOnSelect={true}
                                 components={makeAnimated()}
-                            />
+                            /> */}
+                            <div>{this.generateAssignedFilterItem(this.state.assignedFilterSelected)}</div>
                         </div>
                         <div className="ml-4">
                             <span>
@@ -331,7 +413,9 @@ class HotelList extends Component {
                         </div>
                     </div>
                     <div className="col-md-12 mt-3">
-                        <span className="text-success font-weight-bold">Total properties(Active and inactive): {this.state.totalProperties} </span>
+                        <span className="text-success font-weight-bold h5">
+                            {`Properties: Actives(${this.state.activeProperties}) Inactives(${this.state.inactiveProperties}) Total(${this.state.totalProperties})`}
+                        </span>
                     </div>
                     <AlertDialogSlide
                         handleClose={this.handleCloseAlertDialog}
@@ -348,7 +432,7 @@ class HotelList extends Component {
                                         <i className="fas fa-trash"></i>
                                     </button>
                                 </div>
-                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent)} className={hotel.Id_Parent === 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
+                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent, hotel.IsActive === 1)} className={hotel.Id_Parent === 99999 ? "HotelCard-item border-dark" : "HotelCard-item"}>
                                     <div className="HotelCard-img">
                                         <figure>
                                             <img src={`${hotel.ImageURL}`} alt="" />
@@ -372,6 +456,21 @@ class HotelList extends Component {
                     handleClose={this.handleClose}
                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                 />
+
+                <Dialog maxWidth="md" open={this.state.openConfirmActivateProperty} >
+                    <DialogContent>
+                        <h3 className="text-center">To manage a property it must be active. Do you want to activate this property?</h3>
+                    </DialogContent>
+                    <DialogActions>
+                        <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={this.handleActivateProperty}>
+                            Activate
+                                </button>
+                        <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={this.handleCloseConfirmActivateProperty}>
+                            Cancel
+                                </button>
+
+                    </DialogActions>
+                </Dialog>
             </div>
         );
     }

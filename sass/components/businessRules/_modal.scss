@@ -2,9 +2,16 @@
     &-section{
         border-bottom: 1px solid $border-standard;
         padding: 1rem 0rem;
+        position: relative;
 
         &.no-border{ border: none }
-    }
+
+        .remove-item{
+            position: absolute;
+            right: 2rem;
+            top: 2rem;
+        }
+    }    
 
     &-holidays{
         .btn{
