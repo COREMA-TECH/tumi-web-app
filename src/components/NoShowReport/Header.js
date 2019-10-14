@@ -17,31 +17,31 @@ class HeaderNoShowReport extends Component {
         return (
             <React.Fragment>
                 <span className="applicant-card__title">NO SHOW REPORT</span>
-                <table style={{borderCollapse: "collapse", width: "100%"}} border="1">
+                <table style={{ borderCollapse: "collapse", width: "100%" }} border="1">
                     <tbody>
                         <tr>
-                            <td style={{width: "50%", backgroundColor: "#cbebea", color: "#2d4d40"}}>TOTAL LEADS GENERATED</td>
-                            <td style={{width: "50%", backgroundColor: "#cbebea", color: "#2d4d40"}}>REPORT PERIOD</td>
+                            <td style={{ width: "50%", backgroundColor: "#cbebea", color: "#2d4d40" }}>TOTAL LEADS GENERATED</td>
+                            <td style={{ width: "50%", backgroundColor: "#cbebea", color: "#2d4d40" }}>REPORT PERIOD {this.props.reportPeriod}</td>
                         </tr>
                         <tr>
-                            <td style={{width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40"}}><img style={{marginRight: "5px", marginLeft: "5px"}} src="/images/tumi-user.png" width="16" height="16" /> 
+                            <td style={{ width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40" }}><img style={{ marginRight: "5px", marginLeft: "5px" }} src="/images/tumi-user.png" width="16" height="16" />
                                 Recruiter: {recruiter}
                             </td>
-                            <td style={{width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40"}}>
+                            <td style={{ width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40" }}>
                                 <p>Showed: {showed}</p>
                             </td>
                         </tr>
                         <tr>
-                            <td style={{width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40"}}><img style={{marginRight: "5px", marginLeft: "5px"}} src="/images/tumi-mail.png" width="16" height="16" />
+                            <td style={{ width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40" }}><img style={{ marginRight: "5px", marginLeft: "5px" }} src="/images/tumi-mail.png" width="16" height="16" />
                                 Lead Entered: {leadEntered}
                             </td>
-                            <td style={{width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40"}}>No Show: {noShow}</td>
+                            <td style={{ width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40" }}>No Show: {noShow}</td>
                         </tr>
                         <tr>
-                            <td style={{width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40"}}><img style={{marginRight: "5px", marginLeft: "5px"}} src="/images/tumi-phone.png" width="16" height="16" />
+                            <td style={{ width: "50%", display: "tableCell", verticalAlign: "middle", backgroundColor: "#f2f2f2", color: "#2d4d40" }}><img style={{ marginRight: "5px", marginLeft: "5px" }} src="/images/tumi-phone.png" width="16" height="16" />
                                 Sent To Interview: {sentToInterview}
                             </td>
-                            <td style={{width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40"}}>Hired: {hired}</td>
+                            <td style={{ width: "50%", backgroundColor: "#f2f2f2", color: "#2d4d40" }}>Hired: {hired}</td>
                         </tr>
                     </tbody>
                 </table>

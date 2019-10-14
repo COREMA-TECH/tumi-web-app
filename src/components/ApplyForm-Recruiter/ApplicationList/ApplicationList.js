@@ -40,7 +40,18 @@ const DEFAULT_RECRUITER_VALUE = "ND";
 const DEFAULT_FILTER_TYPE = { value: "W", label: "By week" };
 const DEFAULT_FILTER_RECRUITER = { value: DEFAULT_RECRUITER_VALUE, label: "Recruited by" };
 const DEFAULT_DATA_RANGE_APP = { value: null, label: 'Report Date' };
-
+const NO_SHOW_FIELDS = {
+	filterType: DEFAULT_FILTER_TYPE,
+	filterRecruiter: DEFAULT_FILTER_RECRUITER,
+	recruiterFiltered: DEFAULT_FILTER_RECRUITER, // opcion seleccionada para filtro de recruiter en indice
+	typeDateFiltered: DEFAULT_FILTER_TYPE, // opcion seleccinada para filtro de fecha en indice
+	startDateApp: null,
+	endDateApp: null,
+	startDate: null,
+	endDate: null,
+	dateRangeApp: DEFAULT_DATA_RANGE_APP,
+	dateRange: DEFAULT_DATA_RANGE_APP
+}
 class ApplicationList extends Component {
 	constructor(props) {
 		super(props);
@@ -52,14 +63,9 @@ class ApplicationList extends Component {
 			opendialog: false,
 			recruitersTags: [],
 			showNoShowPrefilterModal: false,
-			filterType: DEFAULT_FILTER_TYPE,
-			filterRecruiter: DEFAULT_FILTER_RECRUITER,
 			filterRecruiters: [],
-			recruiterFiltered: DEFAULT_FILTER_RECRUITER, // opcion seleccionada para filtro de recruiter en indice
-			typeDateFiltered: DEFAULT_FILTER_TYPE, // opcion seleccinada para filtro de fecha en indice
-			startDateApp: null,
-			endDateApp: null,
-			dateRangeApp: DEFAULT_DATA_RANGE_APP
+			...NO_SHOW_FIELDS
+
 		};
 	}
 
@@ -162,7 +168,7 @@ class ApplicationList extends Component {
 	};
 
 	showNoShowReportFilter = () => {
-		this.setState(() => ({ showNoShowPrefilterModal: true }))
+		this.setState(() => ({ showNoShowPrefilterModal: true, ...NO_SHOW_FIELDS }))
 	}
 
 	hideNoShowReportFilter = () => {

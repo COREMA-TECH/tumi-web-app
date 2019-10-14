@@ -5,6 +5,7 @@ import Table from './Table';
 import withApollo from 'react-apollo/withApollo';
 import { GET_REPORT_INFORMATION, CREATE_DOCUMENTS_PDF_QUERY } from './queries';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const uuidv4 = require('uuid/v4');
 
@@ -119,6 +120,9 @@ class NoShowReport extends Component {
 
     render() {
         let { tableData, loadingReport, downloading } = this.state;
+        let { startDate, endDate } = this.props;
+
+        let reportPeriod = `( ${moment(startDate).format("MM/DD/YYYY")} TO ${moment(endDate).format("MM/DD/YYYY")} )`;
 
         return <React.Fragment>
             {loadingReport && <LinearProgress />}
@@ -133,7 +137,7 @@ class NoShowReport extends Component {
             <div id="noShowReportPDF" className="row p-0">
                 <div className="col-md-12 p-0">
                     <div className="card">
-                        <Header header={{ recruiter: this.props.recruiter, ...this.state.header }} handleOpenSnackbar={this.props.handleOpenSnackbar} />
+                        <Header header={{ recruiter: this.props.recruiter, ...this.state.header }} handleOpenSnackbar={this.props.handleOpenSnackbar} reportPeriod={reportPeriod} />
                         <Table data={tableData} />
                     </div>
                 </div>
