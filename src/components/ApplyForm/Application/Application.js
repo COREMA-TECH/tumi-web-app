@@ -153,29 +153,29 @@ class Application extends Component {
 
     // Update user info on application save
     updateUserInfo = applicationId => {
-        const {applicationUser, firstName = "", lastName = "", cellPhone = "", emailAddress = ""} = this.state;        
+        const { applicationUser, firstName = "", lastName = "", cellPhone = "", emailAddress = "" } = this.state;
 
-        if(applicationId <= 0 || !applicationUser){
+        if (applicationId <= 0 || !applicationUser) {
             return;
         }
 
         this.props.client.mutate({
             mutation: UPDATE_USER_INFO,
-            variables:{
+            variables: {
                 user: {
                     Id: applicationUser.Id,
                     firstName: firstName.trim(),
                     lastName: lastName.trim(),
                     Phone_Number: cellPhone.trim(),
-                    Electronic_Address: emailAddress.trim(),  
-                    Full_Name: `${firstName.trim()} ${lastName.trim()}`          
+                    Electronic_Address: emailAddress ? emailAddress.trim() : '',
+                    Full_Name: `${firstName.trim()} ${lastName.trim()}`
                 }
             }
         })
-        .then(_ => {
-            this.props.handleOpenSnackbar('success', 'User info updated', 'bottom', 'right');
-        })
-        .catch(error => console.log(error));
+            .then(_ => {
+                this.props.handleOpenSnackbar('success', 'User info updated', 'bottom', 'right');
+            })
+            .catch(error => console.log(error));
     }
 
     /*<
@@ -306,11 +306,11 @@ class Application extends Component {
                 Id: applicationId
             }
         })
-        .then(({data}) => {
-            this.setState(_ => ({
-                applicationUser: data.applicationUser
-            }))
-        })
+            .then(({ data }) => {
+                this.setState(_ => ({
+                    applicationUser: data.applicationUser
+                }))
+            })
     }
 
     /**
@@ -657,8 +657,9 @@ class Application extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
-
-        this.submitForm()
+        if (!this.state.socialSecurityNumber.replace(/-/g, ""))
+            this.props.handleOpenSnackbar("warning", "Social Security Number is required!");
+        else this.submitForm()
     }
 
     updateSearchingZipCodeProgress = (searchigZipcode) => {
@@ -887,6 +888,23 @@ class Application extends Component {
                                 <div className="row">
                                     <div className="col-md-12 col-lg-6 form-section-1">
                                         <div className="row">
+                                            <div className="col-md-12 ">
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[11].label}
+                                                </span>
+                                                <InputMask
+                                                    id="socialSecurityNumber"
+                                                    name="socialSecurityNumber"
+                                                    mask="999-99-9999"
+                                                    maskChar=" "
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    onChange={this.handleInputChange}
+                                                    value={this.state.socialSecurityNumber}
+                                                    placeholder="___-__-____"
+                                                    minLength="11"
+                                                />
+                                            </div>
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[0].label}
@@ -1044,23 +1062,7 @@ class Application extends Component {
                                                     minLength="15"
                                                 />
                                             </div>
-                                            <div className="col-md-12 ">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    {formSpanish[11].label}
-                                                </span>
-                                                <InputMask
-                                                    id="socialSecurityNumber"
-                                                    name="socialSecurityNumber"
-                                                    mask="999-99-9999"
-                                                    maskChar=" "
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    onChange={this.handleInputChange}
-                                                    value={this.state.socialSecurityNumber}
-                                                    placeholder="___-__-____"
-                                                    minLength="11"
-                                                />
-                                            </div>
+
                                         </div>
                                     </div>
                                     <div className="col-md-12 col-lg-6 form-section-2">
@@ -1076,9 +1078,9 @@ class Application extends Component {
                                                     type="text"
                                                     className="form-control"
                                                     disabled={true}
-                                                    //min="0"
-                                                    //maxLength="50"
-                                                    //minLength="10"
+                                                //min="0"
+                                                //maxLength="50"
+                                                //minLength="10"
                                                 />
                                             </div>
                                             <div className="col-md-6">
