@@ -13,6 +13,7 @@ import FormW4 from "../W4/FormsW4";
 import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from '../../../Generic/Global';
+import {generateDocuments} from './GenerateDocuments';
 
 const steps = {
     0: "Background Check",
@@ -110,6 +111,7 @@ class Documents extends Component {
 
     componentWillMount() {
         this.getApplicantStatus();
+        generateDocuments(this.props.client, this.props.applicationId);
     }
 
     // componentWillUpdate() {

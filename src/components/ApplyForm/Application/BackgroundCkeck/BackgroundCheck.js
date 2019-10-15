@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
 import { GET_APPLICANT_INFO } from "../AntiHarassment/Queries";
 import moment from 'moment';
 import DatePicker from "react-datepicker";
+import Document from './Document';
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const backgroundCheckJson = require(`../languagesJSON/${localStorage.getItem('languageForm')}/backgroundCheck`);
@@ -463,6 +464,10 @@ class BackgroundCheck extends Component {
             this.updateBackgroundCheck(backgroundCheckItem);
         }
     };
+
+    externalSetState = (updateData, callback = () => {}) => {
+        this.setState(updateData, _ => callback());
+    }
 
     componentWillMount() {
         // FIXME: pass dynamic id
@@ -995,7 +1000,28 @@ class BackgroundCheck extends Component {
                                 {
                                     this.state.isCreated ? (
                                         <div className="row" id="DocumentPDF" style={{ maxWidth: '100%', margin: '0' }}>
-                                            <div style={{ width: '100%', margin: '0 auto' }}>
+                                            <Document
+                                                setState={this.externalSetState}
+                                                data={{
+                                                    firstName: this.state.firstName,
+                                                    middleName: this.state.middleName,
+                                                    lastName: this.state.lastName,
+                                                    birthDay: this.formatDate(this.state.birthDay, true),
+                                                    streetAddress: this.state.streetAddress,
+                                                    cityName: this.state.cityName,
+                                                    stateName: this.state.stateName,
+                                                    zipCode: this.state.zipCode,
+                                                    socialSecurityNumber: this.state.socialSecurityNumber,
+                                                    vehicleReportRequired: this.state.vehicleReportRequired,
+                                                    driverLicenseNumber: this.state.driverLicenseNumber,
+                                                    licenseStateName: this.state.licenseStateName,
+                                                    licenseExpiration: this.formatDate(this.state.licenseExpiration),
+                                                    commercialDriverLicense: this.state.commercialDriverLicense,
+                                                    signature: this.state.signature,
+                                                }}
+                                            />
+                                            {/* TODO: (LF) Quitar codigo comentado */}
+                                            {/* <div style={{ width: '100%', margin: '0 auto' }}>
                                                 <p><img style={{ display: 'block', marginLeft: '-8.5%', marginTop: '-10px' }} src="https://i.imgur.com/bHDSsLu.png" alt width="116%" height={192} /></p>
                                                 <div title="Page 1">
                                                     <table style={{ borderCollapse: 'collapse', width: '100%', height: '59px' }} border={0}>
@@ -1093,7 +1119,6 @@ class BackgroundCheck extends Component {
                                                         <tr style={{ height: '41px' }}>
                                                             <td style={{ width: '50.0173%', height: '41px' }}>
                                                                 <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>CITY:</strong></span><span>{this.state.cityName}</span></div>
-                                                                {/*<div title="Page 1">{this.state.cityName}</div>*/}
                                                             </td>
                                                             <td style={{ width: '28.7453%', height: '41px' }}>
                                                                 <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>STATE:</strong></span><span>{this.state.stateName}</span></div>
@@ -1358,7 +1383,7 @@ class BackgroundCheck extends Component {
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     ) : (
                                             ''

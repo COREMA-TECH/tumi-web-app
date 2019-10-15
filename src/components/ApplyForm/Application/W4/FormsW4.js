@@ -8,9 +8,10 @@ import { ADD_W4 } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
-import w4_form_english from './w4_header_eng.png';
+//import w4_form_english from './w4_header_eng.png';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import Document from './Document';
 
 const uuidv4 = require('uuid/v4');
 
@@ -276,6 +277,10 @@ class FormsW4 extends Component {
         return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
+    externalSetState = (updateData, callback = () => {}) => {
+        this.setState(updateData, _ => callback());
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.applicationId != this.props.applicationId) {
             this.setState({
@@ -372,7 +377,29 @@ class FormsW4 extends Component {
                                 (
                                     <div style={{ width: '100%', margin: '0 auto' }}>
                                         <div className="row pdf-container" id="w4Html" style={{ maxWidth: '100%' }}>
-                                            <div id="DocumentPDF" className="signature-information">
+                                            <Document 
+                                                setState={this.externalSetState}
+                                                languageForm = {localStorage.getItem('languageForm')}
+                                                data={{
+                                                    firstName: this.state.firstName,
+                                                    lastName: this.state.lastName,
+                                                    socialSecurityNumber: this.state.socialSecurityNumber,
+                                                    address: this.state.address,
+                                                    estadoCivil: this.state.estadoCivil,
+                                                    estadoCivil1: this.state.estadoCivil1,
+                                                    estadoCivil2: this.state.estadoCivil2,
+                                                    postalCode: this.state.postalCode,
+                                                    socialSecurityExtention: this.state.socialSecurityExtention,
+                                                    excention: this.state.excention,
+                                                    payCheck: this.state.payCheck,
+                                                    excentionYear: this.state.excentionYear,
+                                                    signature: this.state.signature,
+                                                    employeer: this.state.employeer,
+                                                    firstEmployeeDate: this.state.firstEmployeeDate,
+                                                    idNumber: this.state.idNumber
+                                                }}
+                                            />
+                                            {/* <div id="DocumentPDF" className="signature-information">
                                                 {
                                                     localStorage.getItem('languageForm') == 'es' ? (
                                                         <div>
@@ -937,49 +964,7 @@ class FormsW4 extends Component {
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                            {/*<table style={{*/}
-                                                            {/*borderCollapse: 'collapse',*/}
-                                                            {/*width: '100%',*/}
-                                                            {/*height: '51px',*/}
-                                                            {/*borderTop: 0*/}
-                                                            {/*}} border={1}>*/}
-                                                            {/*<tbody>*/}
-                                                            {/*<tr style={{ height: '17px' }}>*/}
-                                                            {/*<td style={{ lineHeight: "1.5",*/}
-                                                            {/*fontSize: '11px',*/}
-                                                            {/*fontFamily: 'Times New Roman',*/}
-                                                            {/*verticalAlign: 'top',*/}
-                                                            {/*width: '50%',*/}
-                                                            {/*borderTop: '0px #ffffff',*/}
-                                                            {/*height: '17px'*/}
-                                                            {/*}}>*/}
-                                                            {/*Dirección (número de casa y*/}
-                                                            {/*calle o ruta rural)*/}
-                                                            {/*<input*/}
-                                                            {/*//disabled={this.state.isCreated}*/}
-                                                            {/*type="text"*/}
-                                                            {/*style={{ width: '100%', border: 0 }}*/}
-                                                            {/*id="address"*/}
-                                                            {/*value={this.state.address}*/}
-                                                            {/*onChange={(e) => {*/}
-                                                            {/*this.setState({*/}
-                                                            {/*address: e.target.value*/}
-                                                            {/*})*/}
-                                                            {/*}}*/}
-                                                            {/*/>*/}
-                                                            {/*</td>*/}
-                                                            {/*<td style={{ lineHeight: "1.5",*/}
-                                                            {/*fontFamily: 'Times New Roman',*/}
-                                                            {/*verticalAlign: 'top',*/}
-                                                            {/*width: '50%',*/}
-                                                            {/*borderTop: '0px #ffffff',*/}
-                                                            {/*height: '17px'*/}
-                                                            {/*}}>*/}
-                                                            {/*&nbsp;</td>*/}
-                                                            {/*</tr>*/}
-
-                                                            {/*</tbody>*/}
-                                                            {/*</table>*/}
+                                                            
                                                             <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                 <tbody>
                                                                     <tr>
@@ -990,7 +975,7 @@ class FormsW4 extends Component {
                                                                             width: '65%',
                                                                             verticalAlign: 'top'
                                                                         }}>
-                                                                            8 Nombre y dirección del empleador (<span style={{ fontWeight: '900' }}>Empleador:</span> Complete
+                                                                            8 Nombre y dirección del empleador <span style={{ fontWeight: '900' }}>Empleador:</span> Complete
                                                                             las líneas <span style={{ fontWeight: '900' }}>8 y 10</span> si
                                                                             envía este
                                                                             certificado
@@ -1240,9 +1225,6 @@ class FormsW4 extends Component {
                                                         </div>
                                                     ) : (
                                                             <div>
-                                                                {/* <div style={}>
-
-                                                                </div> */}
                                                                 <table style={{
                                                                     fontFamily: 'Times New Roman',
                                                                     fontSize: '11px',
@@ -1457,10 +1439,6 @@ class FormsW4 extends Component {
                                                                                     Married, but withhold at higher Single rate&nbsp;&nbsp;
                                                                                 <span style={{ fontWeight: '900' }}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
     
-                                                                                {/* <span style={{paddingRight: "5px", paddingLeft: "5px", paddingTop: "5px", textIndent: "5px"}}>Married</span>
-                                                                                <input style={{paddingTop: "5px",textIndent: "8px"}} type="checkbox" /> Married, but withhold at higher Single rate  
-                                                                                <span style={{paddingTop: "5px",fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.” */}
-
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
@@ -1784,7 +1762,7 @@ class FormsW4 extends Component {
 
                                                         )
                                                 }
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 )

@@ -12,6 +12,7 @@ import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import Document from './Document';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -214,6 +215,10 @@ class FormsI9 extends Component {
         return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
+    externalSetState = (updateData, callback = () => {}) => {
+        this.setState(updateData, _ => callback());
+    }
+
 
     validateI9 = () => {
         const html = this.cloneForm();
@@ -348,7 +353,79 @@ class FormsI9 extends Component {
                                 (
                                     <div style={{ width: '100%', margin: '0 auto' }}>
                                         <div className="row pdf-container" id="i9Html" style={{ maxWidth: '100%' }}>
-                                            <div id="DocumentPDF" className="signature-information">
+                                            <Document 
+                                                setState={this.externalSetState}
+                                                data={{
+                                                    lastName: this.state.lastName,
+                                                    firstName: this.state.firstName,
+                                                    middleName: this.state.middleName,
+                                                    otherLastName: this.state.otherLastName,
+                                                    streetNumber: this.state.streetNumber,
+                                                    aptNumber: this.state.aptNumber,
+                                                    city: this.state.city,
+                                                    state: this.state.state,
+                                                    zipCode: this.state.zipCode,
+                                                    dateOfBirth: this.state.dateOfBirth,
+                                                    socialSecurityNumber: this.state.socialSecurityNumber,
+                                                    email: this.state.email,
+                                                    telephone: this.state.telephone,
+                                                    oneCheck: this.state.oneCheck,
+                                                    oneCheck1: this.state.oneCheck1,
+                                                    oneCheck2: this.state.oneCheck2,
+                                                    oneCheck3Explain: this.state.oneCheck3Explain,
+                                                    oneCheck3: this.state.oneCheck3,
+                                                    alienExplain: this.state.alienExplain,
+                                                    alienRegister: this.state.alienRegister,
+                                                    admissionNumber: this.state.admissionNumber,
+                                                    foreignPassport: this.state.foreignPassport,
+                                                    countryIssuance: this.state.countryIssuance,
+                                                    signature: this.state.signature,
+                                                    todayDate: this.state.todayDate,
+                                                    preparer0: this.state.preparer0,
+                                                    preparer1: this.state.preparer1,
+                                                    signature1: this.state.signature1,
+                                                    todayDate2: this.state.todayDate2,
+                                                    lastName2: this.state.lastName2,
+                                                    firstName2: this.state.firstName2,
+                                                    address2: this.state.address2,
+                                                    city2: this.state.city2,
+                                                    state2: this.state.state2,
+                                                    zipCode2: this.state.zipCode2,
+                                                    docTitle: this.state.docTitle,
+                                                    Issuing: this.state.Issuing,
+                                                    docNumber: this.state.docNumber,
+                                                    expireDate2: this.state.expireDate2,
+                                                    docTitle2: this.state.docTitle2,
+                                                    Issuing2: this.state.Issuing2,
+                                                    docNumb3: this.state.docNumb3,
+                                                    expDate3: this.state.expDate3,
+                                                    docT15: this.state.docT15,
+                                                    IssuingT15: this.state.IssuingT15,
+                                                    docT16: this.state.docT16,
+                                                    docT17: this.state.docT17,
+                                                    docT18: this.state.docT18,
+                                                    docT19: this.state.docT19,
+                                                    docT20: this.state.docT20,
+                                                    docT21: this.state.docT21,
+                                                    docT22: this.state.docT22,
+                                                    docL1: this.state.docL1,
+                                                    docL2: this.state.docL2,
+                                                    docL3: this.state.docL3,
+                                                    signature2: this.state.signature2,
+                                                    docL5: this.state.docL5,
+                                                    docL6: this.state.docL6,
+                                                    docL7: this.state.docL7,
+                                                    docL8: this.state.docL8,
+                                                    docL9: this.state.docL9,
+                                                    docP1: this.state.docP1,
+                                                    docP2: this.state.docP2,
+                                                    docP3: this.state.docP3,
+                                                    signature4: this.state.signature4,
+                                                    todayDateDay1: this.state.todayDateDay1,
+                                                    empAuth15: this.state.empAuth15
+                                                }}
+                                            />
+                                            {/* <div id="DocumentPDF" className="signature-information">
                                                 <div style={{ width: '100%' }}>
                                                     <img src="https://i.imgur.com/EXoWtMF.png" style={{ width: '100%' }} alt />
                                                     <div data-font-name="g_d0_f3" data-angle={0}
@@ -939,14 +1016,6 @@ class FormsI9 extends Component {
                                                                         fontSize: '8pt'
                                                                     }}>Signature
                                 of Employee:
-                                                                    {/*<input*/}
-                                                                        {/*value={this.state.signature}*/}
-                                                                        {/*onChange={(e) => {*/}
-                                                                        {/*this.setState({*/}
-                                                                        {/*signature: e.target.value*/}
-                                                                        {/*})*/}
-                                                                        {/*}}*/}
-                                                                        {/*style={{border: 0, width: '100%'}} type="text" id="signature"/>*/}
                                                                         <img id="employee-signature-box" src={this.state.signature} style={{
                                                                             width: '100px',
                                                                             height: '30px',
@@ -2258,7 +2327,7 @@ class FormsI9 extends Component {
                                                     </div>
 
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 )

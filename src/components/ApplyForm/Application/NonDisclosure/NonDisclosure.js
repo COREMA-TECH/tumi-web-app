@@ -9,10 +9,10 @@ import renderHTML from 'react-render-html';
 import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
 import { CREATE_DOCUMENTS_PDF_QUERY, GET_DISCLOSURE_INFO } from "./Queries";
 import PropTypes from 'prop-types';
-import { NonDisclosureContent } from './Content';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import moment from 'moment';
+import Document from './Document';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -322,7 +322,13 @@ class NonDisclosure extends Component {
 
                             <div className="p-4">
                                 <div id="DocumentPDF" className="signature-information">
-                                    {renderHTML(NonDisclosureContent(this.state))}
+                                    {renderHTML(
+                                        Document({
+                                            signature: this.state.signature,
+                                            date: this.state.date ? this.state.date.substring(0, 10) : '--',
+                                            applicantName: this.state.applicantName
+                                        })
+                                    )}
                                 </div>
                             </div>
                         </div>
