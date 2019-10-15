@@ -8,6 +8,7 @@ import ConductCode from "../ConductCode/ConductCode";
 import AntiHarassment from "../AntiHarassment/AntiHarassment";
 import WorkerCompensation from "../WorkerCompensation/WorkerCompensation";
 import ApplicantDocument from "../ApplicantDocuments/ApplicantDocument";
+import AntiDiscrimination from '../AntiDiscrimination/'
 import FormI9 from '../I9/FormsI9';
 import FormW4 from "../W4/FormsW4";
 import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
@@ -22,7 +23,8 @@ const steps = {
     4: "Worker's Compensation",
     5: "I9",
     6: "W4",
-    7: "General Documents"
+    7: "General Documents",
+    8: "Anti Discrimination"
 };
 
 const styles = theme => ({
@@ -57,32 +59,35 @@ class Documents extends Component {
     getDocumentScreen = (step) => {
 
         let stepScreen = '';
-        let applicationId = this.state.applicationId; 
+        let applicationId = this.state.applicationId;
 
-        switch(step) {
+        switch (step) {
             case 0:
                 stepScreen = <BackgroundCheck applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 1:
                 stepScreen = <NonDisclosure applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 2: 
+            case 2:
                 stepScreen = <ConductCode applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 3: 
+            case 3:
                 stepScreen = <AntiHarassment applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 4:
                 stepScreen = <WorkerCompensation applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 5: 
+            case 5:
                 stepScreen = <FormI9 applicationId={applicationId} changeTabState={this.changeTabState} />;
                 break;
             case 6:
                 stepScreen = <FormW4 applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 7: 
+            case 7:
                 stepScreen = <ApplicantDocument applicationId={applicationId} changeTabState={this.changeTabState} />
+                break;
+            case 8:
+                stepScreen = <AntiDiscrimination applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
         }
 
@@ -120,23 +125,23 @@ class Documents extends Component {
 
         let isCompleted = false;
 
-        switch(index) {
+        switch (index) {
             case 0:
                 isCompleted = this.state.applicationStatus.ApplicantBackgroundCheck;
                 break;
             case 1:
                 isCompleted = this.state.applicationStatus.ApplicantDisclosure;
                 break;
-            case 2: 
+            case 2:
                 isCompleted = this.state.applicationStatus.ApplicantConductCode;
                 break;
-            case 3: 
+            case 3:
                 isCompleted = this.state.applicationStatus.ApplicantHarassmentPolicy;
                 break;
             case 4:
                 isCompleted = this.state.applicationStatus.ApplicantWorkerCompensation;
                 break;
-            case 5: 
+            case 5:
                 isCompleted = this.state.applicationStatus.ApplicantI9;
                 break;
             case 6:
@@ -156,8 +161,8 @@ class Documents extends Component {
     }
 
     handleMergeDocumentClick = () => {
-        let {downloading} = this.state;
-        if(!downloading){
+        let { downloading } = this.state;
+        if (!downloading) {
             this.setState({
                 downloading: true
             }, () => {
@@ -168,7 +173,7 @@ class Documents extends Component {
                         applicationId: this.state.applicationId
                     }
                 }).then(({ data }) => {
-                    if(data.pdfMergeQuery)
+                    if (data.pdfMergeQuery)
                         window.open(data.pdfMergeQuery, '_blank');
                     else
                         this.props.handleOpenSnackbar(
@@ -177,10 +182,10 @@ class Documents extends Component {
                             'bottom',
                             'center'
                         );
-                    this.setState({downloading: false});
+                    this.setState({ downloading: false });
                 }).catch(error => {
                     console.log(error);
-                    this.setState({downloading: false});
+                    this.setState({ downloading: false });
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error to merge documents!',
