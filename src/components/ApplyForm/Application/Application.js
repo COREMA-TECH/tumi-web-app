@@ -684,8 +684,13 @@ class Application extends Component {
             let currentFullName = `${firstName || ''}${middleName || ''}${lastName || ''}${lastName2 || ''}`;
             let currentSocialSecurityNumber = socialSecurityNumber || '';
             let currentAddress = `${streetAddress || ''}-${aptNumber || ''}-${city || ''}-${state || ''}-${zipCode || ''}`;
-            if (currentFullName !== dbFullName || currentAddress !== dbAddress || currentSocialSecurityNumber !== dbSocialSecurityNumber)
-                this.setState(() => ({ openConfirm: true }));
+            let confirmTitle = "New Hire Package is going to be affected because of these changes"
+            if (currentFullName !== dbFullName || currentAddress !== dbAddress || currentSocialSecurityNumber !== dbSocialSecurityNumber) {
+                if (currentAddress !== dbAddress)
+                    confirmTitle = `${confirmTitle}, also you need to sign again W4 and Workers Comp, do you want to continue?`;
+                else confirmTitle = `${confirmTitle}, do you want to continue?`;
+                this.setState(() => ({ openConfirm: true, confirmTitle }));
+            }
             else this.submitForm();
         }
     }
@@ -891,7 +896,7 @@ class Application extends Component {
                     open={this.state.openConfirm}
                     closeAction={this.onHandleCloseConfirmDialog}
                     confirmAction={this.submitForm}
-                    title={"New Hire Package is going to be affected because of these changes, do you  want to continue?"}
+                    title={this.state.confirmTitle}
                     loading={this.state.insertDialogLoading}
                     confirmActionLabel={"Continue"}
                 />
