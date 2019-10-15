@@ -254,7 +254,7 @@ class PunchesReportConsolidated extends Component {
                         <Filter {...this.state} updateFilter={this.updateFilter} getFilters={this.getFilters} editModal={this.state.openModal} allowEditModal={this.state.allowEditModal} item={this.state.item} handleClickCloseModal={this.handleClickCloseModal} />
                     </div>
                     <div className="card" style={{ "position": "relative" }}>
-                        <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval={this.state.intervalTime}>
+                        {/* <Query query={GET_PUNCHES_REPORT_CONSOLIDATED} variables={this.getFilters()} fetchPolicy="cache-and-network" pollInterval={this.state.intervalTime}>
 
                             {({ loading, error, data }) => {
 
@@ -270,7 +270,7 @@ class PunchesReportConsolidated extends Component {
 
                                 </React.Fragment>
                             }}
-                        </Query>
+                        </Query> */}
                     </div>
                 </div>
             </div>

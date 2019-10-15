@@ -209,3 +209,9 @@ export const GET_DEPARTMENTS_QUERY = gql`
 			}
 		}
 	`;
+
+export const VERIFY_EMPLOYEE_COUNT = gql`
+  query countRelatedEmployees($workOrderId:Int){
+	worKOrderEmployeeCount(workOrderId:$workOrderId)
+  }
+`;
