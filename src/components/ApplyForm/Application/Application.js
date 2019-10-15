@@ -19,7 +19,7 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import ShiftRestrictionModal from './ShiftRestrictionModal';
 import IndependentContractDialog from './IndependentContract/Modal';
 import moment from 'moment';
-
+import ConfirmDialog from 'material-ui/ConfirmDialog';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null)
     localStorage.setItem('languageForm', 'en');
@@ -134,7 +134,10 @@ class Application extends Component {
             openRestrictionsModal: false,
             applicationIdForIndependent: 0,
             hasIndependentContract: false,
-            applicationUser: null
+            applicationUser: null,
+            dbFullName: '',
+            dbSocialSecurityNumber: '',
+            dbAddress: ''
         };
     }
 
@@ -240,10 +243,16 @@ class Application extends Component {
                         } else
                             applicationId = data.updateApplication.id;
 
+                        let { firstName, middleName, lastName2, lastName, socialSecurityNumber, streetAddress, aptNumber, city, state, zipCode } = this.state;
+
                         this.setState({
                             editing: false,
                             insertDialogLoading: false,
-                            savingIndependentContract: false
+                            savingIndependentContract: false,
+                            openConfirm: false,
+                            dbFullName: `${firstName || ''}${middleName || ''}${lastName || ''}${lastName2 || ''}`,
+                            dbSocialSecurityNumber: socialSecurityNumber || '',
+                            dbAddress: `${streetAddress || ''}-${aptNumber || ''}-${city || ''}-${state || ''}-${zipCode || ''}`,
                         }, () => {
                             let object = [];
                             this.state.positionsTags.map(item => {
@@ -261,7 +270,7 @@ class Application extends Component {
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
                     .catch((error) => {
-                        this.setState(() => ({ insertDialogLoading: false, savingIndependentContract: false }));
+                        this.setState(() => ({ insertDialogLoading: false, savingIndependentContract: false, openConfirm: false }));
                         if (error = 'Error: "GraphQL error: Validation error') {
                             this.props.handleOpenSnackbar(
                                 'error',
@@ -334,29 +343,34 @@ class Application extends Component {
                         let applicantData = data.applications[0];
                         let homePhoneNumberValid = homePhoneNumberValid || '';
                         let cellPhoneNumberValid = applicantData.cellPhone || '';
+                        let { firstName, middleName, lastName, lastName2, socialSecurityNumber, streetAddress, aptNumber, city, state, zipCode } = applicantData;
+
                         this.setState(
                             {
-                                firstName: applicantData.firstName,
-                                middleName: applicantData.middleName,
-                                lastName: applicantData.lastName,
-                                lastName2: applicantData.lastName2,
+                                dbFullName: `${firstName || ''}${middleName || ''}${lastName || ''}${lastName2 || ''}`,
+                                dbSocialSecurityNumber: socialSecurityNumber || '',
+                                dbAddress: `${streetAddress || ''}-${aptNumber || ''}-${city || ''}-${state || ''}-${zipCode || ''}`,
+                                firstName,
+                                middleName,
+                                lastName,
+                                lastName2,
                                 date:
                                     applicantData.date !== null
                                         ? applicantData.date.substring(0, 10)
                                         : applicantData.date,
-                                streetAddress: applicantData.streetAddress,
+                                streetAddress,
                                 emailAddress: applicantData.emailAddress,
-                                aptNumber: applicantData.aptNumber,
-                                city: applicantData.city,
-                                state: applicantData.state,
-                                zipCode: applicantData.zipCode,
+                                aptNumber,
+                                city,
+                                state,
+                                zipCode,
                                 homePhone: applicantData.homePhone,
                                 homePhoneNumberValid: true,
                                 cellPhone: applicantData.cellPhone,
                                 cellPhoneNumberValid: true,
                                 birthDay:
                                     applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
-                                socialSecurityNumber: applicantData.socialSecurityNumber,
+                                socialSecurityNumber,
                                 positionApplyingFor: applicantData.positionApplyingFor,
                                 car: applicantData.car,
                                 typeOfId: applicantData.typeOfId,
@@ -614,13 +628,15 @@ class Application extends Component {
                         if (socialSecurityNumber === null) {
                             this.setState(() => ({
                                 openSSNDialog: true,
-                                insertDialogLoading: false
+                                insertDialogLoading: false,
+                                openConfirm: false
                             }))
                         } else {
                             if (!this.state.hasIndependentContract && socialSecurityNumber.length === 0)
                                 this.setState(() => ({
                                     openSSNDialog: true,
-                                    insertDialogLoading: false
+                                    insertDialogLoading: false,
+                                    openConfirm: false
                                 }))
                             else this.InsertUpdateApplicationInformation(this.props.applicationId);
                         }
@@ -633,7 +649,8 @@ class Application extends Component {
                             'right'
                         );
                         this.setState(() => ({
-                            insertDialogLoading: false
+                            insertDialogLoading: false,
+                            openConfirm: false
                         }));
                     }
                 })
@@ -645,7 +662,8 @@ class Application extends Component {
                         'right'
                     );
                     this.setState(() => ({
-                        insertDialogLoading: false
+                        insertDialogLoading: false,
+                        openConfirm: false
                     }));
                 })
 
@@ -657,9 +675,19 @@ class Application extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        //Verifiy if the SSN is not empty
         if (!this.state.socialSecurityNumber.replace(/-/g, ""))
             this.props.handleOpenSnackbar("warning", "Social Security Number is required!");
-        else this.submitForm()
+        else {
+            //Verify if SSN, Name or Address has been changed to alert the user
+            let { firstName, middleName, lastName, lastName2, socialSecurityNumber, streetAddress, aptNumber, city, state, zipCode, dbAddress, dbFullName, dbSocialSecurityNumber } = this.state;
+            let currentFullName = `${firstName || ''}${middleName || ''}${lastName || ''}${lastName2 || ''}`;
+            let currentSocialSecurityNumber = socialSecurityNumber || '';
+            let currentAddress = `${streetAddress || ''}-${aptNumber || ''}-${city || ''}-${state || ''}-${zipCode || ''}`;
+            if (currentFullName !== dbFullName || currentAddress !== dbAddress || currentSocialSecurityNumber !== dbSocialSecurityNumber)
+                this.setState(() => ({ openConfirm: true }));
+            else this.submitForm();
+        }
     }
 
     updateSearchingZipCodeProgress = (searchigZipcode) => {
@@ -848,6 +876,10 @@ class Application extends Component {
         }, () => this.handleRestrictionModalClose())
     }
 
+    onHandleCloseConfirmDialog = () => {
+        this.setState({ openConfirm: false });
+    }
+
     render() {
 
         return (
@@ -855,6 +887,15 @@ class Application extends Component {
                 {
                     this.renderSSNDialog()
                 }
+                <ConfirmDialog
+                    open={this.state.openConfirm}
+                    closeAction={this.onHandleCloseConfirmDialog}
+                    confirmAction={this.submitForm}
+                    title={"New Hire Package is going to be affected because of these changes, do you  want to continue?"}
+                    loading={this.state.insertDialogLoading}
+                    confirmActionLabel={"Continue"}
+                />
+
                 <IndependentContractDialog
                     open={this.state.openIndependentContractDialog}
                     handleVisibility={this.handleVisivilityIndependentContractDialog}
