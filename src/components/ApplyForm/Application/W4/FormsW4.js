@@ -50,7 +50,7 @@ class FormsW4 extends Component {
             estadoCivil2: false,
             urlPDF: '',
             formData: '',
-            showReadOnlyFields: false
+            showReadOnlyFields: localStorage.getItem('IdRoles') == 13
         }
     }
 
@@ -97,6 +97,8 @@ class FormsW4 extends Component {
                         isCreated: false,
                     })
                 }
+
+                this.fetchApplicantInfo();
             })
             .catch(error => {
                 console.log(error);
@@ -118,8 +120,8 @@ class FormsW4 extends Component {
                 socialSecurityNumber,
                 address: address.trim(),
                 postalCode: `${city.trim()}, ${state.trim()}; ${zipCode}`,
-                estadoCivil1: (marital && marital === 1) ? true : false,
-                estadoCivil2: (marital && marital === 2) ? true : false,
+                estadoCivil: (marital && marital === 1 && !this.state.estadoCivil2) ? true : false,
+                estadoCivil1: (marital && marital === 2 && !this.state.estadoCivil2) ? true : false,
                 excention: exemptions || 0
             }));
         })
@@ -141,7 +143,7 @@ class FormsW4 extends Component {
             socialSecurityExtention: sse,
             signature,
             estadoCivil, estadoCivil1, estadoCivil2
-        }), this.fetchApplicantInfo);
+        }));
     }
 
     createDocumentsPDF = (random) => {
@@ -192,7 +194,7 @@ class FormsW4 extends Component {
     };
 
     componentWillMount() {
-        this.getApplicantInformation(this.props.applicationId);        
+        this.getApplicantInformation(this.props.applicationId); 
     }
 
     validateW4 = () => {
