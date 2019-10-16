@@ -14,6 +14,7 @@ import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from '../../../Generic/Global';
 import {generateDocuments} from './GenerateDocuments';
+import HistoricalNHP from '../HistoricalNHP';
 
 const steps = {
     0: "Background Check",
@@ -23,7 +24,8 @@ const steps = {
     4: "Worker's Compensation",
     5: "I9",
     6: "W4",
-    7: "General Documents"
+    7: "General Documents",
+    8: "Historical NHP"
 };
 
 const styles = theme => ({
@@ -85,6 +87,9 @@ class Documents extends Component {
             case 7: 
                 stepScreen = <ApplicantDocument applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
+            case 8: 
+                stepScreen = <HistoricalNHP applicationId={applicationId}/>
+                break;
         }
 
         return stepScreen;
@@ -145,6 +150,9 @@ class Documents extends Component {
                 isCompleted = this.state.applicationStatus.ApplicantW4;
                 break;
             case 7:
+                isCompleted = true;
+                break;
+            case 8:
                 isCompleted = true;
                 break;
         }

@@ -73,7 +73,7 @@ class FormsW4 extends Component {
 
         return `<html style="zoom: 65%;">${contentPDFClone.innerHTML}</html>`;
     }
-
+    
     getApplicantInformation = (id) => {
         this.props.client
             .query({
@@ -104,6 +104,37 @@ class FormsW4 extends Component {
                 console.log(error);
             })
     };
+
+    // getApplicantInformation = (id) => {
+    //     this.props.client
+    //         .query({
+    //             query: GET_APPLICANT_INFO,
+    //             variables: {
+    //                 ApplicationId: id
+    //             },
+    //             fetchPolicy: 'no-cache'
+    //         })
+    //         .then(({ data }) => {
+    //             if (data.applicantW4.length > 0) {
+    //                 let fd = data.applicantW4[0].fieldsData;
+    //                 this.setState({
+    //                     isCreated: true,
+    //                     //html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 65%;"', '') : '',
+    //                     urlPDF: data.applicantW4[0].url,
+    //                     formData: fd ? JSON.parse(fd) : {}
+    //                 }, _ => {
+    //                     this.loadDataFromJson(this.state.formData)
+    //                 });
+    //             } else {
+    //                 this.setState({
+    //                     isCreated: false,
+    //                 })
+    //             }
+    //         })
+    //         .catch(error => {
+    //             console.log(error);
+    //         })
+    // };
 
     loadDataFromJson = fieldsData => {
         if(!fieldsData) return;

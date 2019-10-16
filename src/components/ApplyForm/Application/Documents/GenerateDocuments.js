@@ -111,5 +111,6 @@ export const generateDocuments = async (client, applicationId) => {
         summaryHtml = SummaryDoc();
     }
 
-    createDocumentsPDF('zoom: 50%; font-family: Arial, Helvetica, sans-serif;', summaryHtml, 'Sumary de prueba');
+    //TODO: (LF) Quitar codigo comentado
+    //createDocumentsPDF('zoom: 50%; font-family: Arial, Helvetica, sans-serif;', summaryHtml, 'Sumary de prueba');
 }
