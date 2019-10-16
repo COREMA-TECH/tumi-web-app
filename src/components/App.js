@@ -171,7 +171,8 @@ class App extends Component {
 		UID: PropTypes.func,
 		getDistance: PropTypes.func,
 		credentialsS3: PropTypes.object,
-		bucketS3: PropTypes.string
+		bucketS3: PropTypes.string,
+		loginHttpLink: PropTypes.string
 	};
 
 	getChildContext = () => ({
@@ -195,7 +196,8 @@ class App extends Component {
 			secretAccessKey: 'egShi0jnq9gL0yzpa+iMD4LM3dclw//96Uu7dGP9',
 			region: 'us-east-1'
 		},
-		bucketS3: 'orion1-files'
+		bucketS3: 'orion1-files',
+		loginHttpLink: `${baseEndpointURL}/login`,
 	});
 }
 

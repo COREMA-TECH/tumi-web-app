@@ -10,10 +10,15 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withApollo } from 'react-apollo';
-import { GET_WORKORDERS_QUERY, GET_RECRUITER, GET_HOTEL_QUERY, GET_STATE_QUERY } from './queries';
+import { GET_WORKORDERS_QUERY, GET_RECRUITER, GET_HOTEL_QUERY, GET_STATE_QUERY, VERIFY_EMPLOYEE_COUNT } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import { DELETE_WORKORDER, DELETE_SHIFT, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_ALL_SHIFT } from './mutations';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+
+import { DISABLE_WORK_ORDER, DISABLE_SHIFT, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_ALL_SHIFT } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -189,21 +194,21 @@ class WorkOrdersTable extends Component {
             });
     }
 
-    handleDelete = (ShiftId, WorkOrderId) => {
+    handleDelete = (ShiftId, WorkOrderId, deleteSeries = false) => {
         this.setState({ removing: true })
         this.props.client.mutate({
-            mutation: DELETE_SHIFT,
+            mutation: DISABLE_SHIFT,
             variables: {
                 id: ShiftId
             }
         }).then((data) => {
-            this.CancelWO(WorkOrderId);
-            //this.CancelAllShift({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 1, targetStatus: 0 });
             this.getWorkOrders();
             this.getRecruiter();
             this.getHotel();
-            this.props.handleOpenSnackbar('success', 'Record Deleted!');
-            this.setState({ openConfirm: false, removing: false });
+
+            this.props.handleOpenSnackbar('success', 'Shift Deleted!');
+            
+            this.setState({ openConfirm: false, removing: false });            
         }).catch((error) => {
             this.setState({ removing: false })
             this.props.handleOpenSnackbar('error', 'Error: ' + error);
@@ -211,44 +216,37 @@ class WorkOrdersTable extends Component {
     }
 
 
-    DeleteWo = (WorkOrderId) => {
-        this.setState({ removing: true })
-        this.props.client.mutate({
-            mutation: DELETE_WORKORDER,
+    DeleteWo = async (workOrderId) => {
+        this.setState({ removing: true });
+
+        const {data: {worKOrderEmployeeCount: count}} = await this.props.client.query({
+            query: VERIFY_EMPLOYEE_COUNT,
             variables: {
-                id: WorkOrderId
+                workOrderId
+            },
+            fetchPolicy: "no-cache"
+        });
+
+        
+        if(count > 0){
+            this.setState({ openConfirm: false, removing: false });
+            this.props.handleOpenSnackbar('error', 'This Work Order has Employees associated, please remove them before deleting this record ');
+            return;
+        }
+
+        this.props.client.mutate({
+            mutation: DISABLE_WORK_ORDER,
+            variables: {
+                id: workOrderId,                
             }
         }).then((data) => {
-
+            this.setState({ openConfirm: false, removing: false })
+            this.props.handleOpenSnackbar('success', 'Work Order Deleted!');
         }).catch((error) => {
-            this.setState({ removing: false })
+            this.setState({ openConfirm: false, removing: false })
             this.props.handleOpenSnackbar('error', 'Error: ' + error);
         });
-    }
-
-    CancelWO = (workOrderId) => {
-        this.props.client
-            .query({
-                query: GET_WORKORDERS_QUERY,
-                fetchPolicy: 'no-cache',
-                variables: {
-                    shift: {
-                        status: [1, 2]
-                    },
-                    workOrder: {
-                        id: workOrderId,
-                    }
-                }
-            })
-            .then(({ data }) => {
-                if (data.ShiftBoard.length == 0) {
-                    this.DeleteWo(workOrderId)
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    }
+    }    
 
     CancelAllShift = (args) => {
         this.props.client
@@ -709,7 +707,7 @@ class WorkOrdersTable extends Component {
 
                             </TableFooter>
                         </Table>
-                        <ConfirmDialog
+                        {/* <ConfirmDialog
                             open={this.state.openConfirm}
                             closeAction={() => {
                                 this.setState({ openConfirm: false });
@@ -719,7 +717,29 @@ class WorkOrdersTable extends Component {
                             }}
                             title={'are you sure you want to cancel this record?'}
                             loading={this.state.removing}
-                        />
+                        /> */}
+                        <Dialog open={this.state.openConfirm} loading={this.state.removing}>
+                            <DialogContent>
+                                <h2 className="text-center">Do you want to delete this shift, or the whole series?</h2>
+                            </DialogContent>
+                            <DialogActions>
+                                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" 
+                                    onClick={() => this.DeleteWo(this.state.idWoToDelete)}
+                                >
+                                    Delete Series
+                                </button>
+                                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" 
+                                    onClick={() => this.handleDelete(this.state.idToDelete, this.state.idWoToDelete, false)}
+                                >
+                                    Delete Shift
+                                </button>
+                                <button className="btn btn-info  btn-not-rounded mb-2" type="button" 
+                                    onClick={() => this.setState({ openConfirm: false })}
+                                >
+                                    Cancel
+                                </button>
+                            </DialogActions>
+                        </Dialog>
                     </React.Fragment>
                 </div>
             </div >
