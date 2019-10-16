@@ -43,8 +43,6 @@ const createDocumentsPDF = async (style, html, documentName) => {
         .catch((error) => {
             return null;
         });
-
-    console.log('url de sumary generado', sumaryUrl); // TODO: (LF) Quitar console log
 };
 
 export const generateDocuments = async (client, applicationId) => {

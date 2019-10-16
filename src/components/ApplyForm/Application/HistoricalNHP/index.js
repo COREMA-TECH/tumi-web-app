@@ -15,7 +15,6 @@ class HistoricalNHP extends Component {
             query: GET_DOCUMENT_TYPES,
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
-            console.log('tipos de documentos', data); // TODO: (Lf) Quitar console log
             this.setState({
                 typeDocuments: data ? data.applicationDocumentTypes : []
             })
