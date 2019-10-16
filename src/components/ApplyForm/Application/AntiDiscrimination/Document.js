@@ -17,14 +17,14 @@ export const Document = (props) => {
             philosophy.</p>
         <h1 style=" text-decoration: underline; font-size: 12pt; margin-bottom: 15px; margin-top: 30px; ">
             TUMI STAFFING, INC. Diversity and inclusion philosophy</h1>
-        <ul style=" font-size: 10pt;">
-            <li style="font-size: 10pt;">A diverse, high-‐achieving workforce is the sustainable competitive
+        <ul style=" font-size: 10pt; margin-left: 16px;">
+            <li style="font-size: 10pt; list-style-type: circle;">A diverse, high-‐achieving workforce is the sustainable competitive
                 advantage that differentiates Tumi Staffing</li>
-            <li style="font-size: 10pt;">An inclusive, flexible work environment that values
+            <li style="font-size: 10pt; list-style-type: circle;">An inclusive, flexible work environment that values
                 differences motivates employees to contribute their best.</li>
-            <li style="font-size: 10pt;">To better serve our customers, we must attract,
+            <li style="font-size: 10pt; list-style-type: circle;">To better serve our customers, we must attract,
                 develop, promote and retain a diverse workforce.</li>
-            <li style="font-size: 10pt;">Trust, mutual respect and dignity are fundamental
+            <li style="font-size: 10pt; list-style-type: circle;">Trust, mutual respect and dignity are fundamental
                 beliefs that are reflected in our behavior and actions.</li>
         </ul>
         <p>
@@ -53,19 +53,19 @@ export const Document = (props) => {
                 termination of employment.</p>
             <h1 style="text-decoration: underline; font-size: 12pt; margin-bottom: 15px; margin-top: 30px; ">
                 Other Discriminatory Harassment</h1>
-            <ul style="font-size: 10pt;">
-                <li style="font-size: 10pt;">A diverse, Any conduct based on a person&rsquo;s race, color, religion,
+            <ul style="font-size: 10pt; margin-left: 16px;">
+                <li style="font-size: 10pt; list-style-type: circle;">A diverse, Any conduct based on a person&rsquo;s race, color, religion,
                     gender, national origin,
                     age, disability, or any other characteristic protected by local or federal law is considered
                     harassing if it creates a hostile, intimidating or offensive work environment, or unreasonably
                     interferes with an employee&rsquo;s work performance.</li>
-                <li style="font-size: 10pt;">As with sexual harassment, other discriminatory
+                <li style="font-size: 10pt; list-style-type: circle;">As with sexual harassment, other discriminatory
                     harassment can be verbal, non-&shy;‐verbal or physical. Examples of what may, if unwelcome and
                     severe or pervasive, constitute other discriminatory harassment include, but are not limited to,
                     the use of racial or ethnic slurs, jokes, or derogatory remarks; the use of
                     insults, threats, literature, pictures or cartoons based on a
                     protected characteristic; or any physical aggression based on a protected characteristic.</li>
-                <li style="font-size: 10pt;">This policy applies anywhere employees are functioning on behalf of
+                <li style="font-size: 10pt; list-style-type: circle;">This policy applies anywhere employees are functioning on behalf of
                     Tumi
                     Staffing, Inc. regardless
                     of whether it is at a Tumi Staffing facility of in a different location.</li>
@@ -134,9 +134,9 @@ export const Document = (props) => {
             <p style="font-weight: normal; font-size: 10pt;">
                 I understand compliance with the Non-‐Discrimination policy is a condition of
                 my employment with TUMI STAFFING, INC., and I agree to abide by the above policy.</p>
-            <p style="margin-bottom: 0; font-size: 10pt;">Employee Name</p>
+            <p style="margin-bottom: 0; margin-top: 20px; font-size: 10pt;">Employee Name</p>
             <div style="display: table; column-count: 2; width: 90%;">
-                <div style="display: table-cell; width: 10%; padding-right: 30px; font-size: 10pt;">
+                <div style="display: table-cell; width: 21%; padding-right: 30px; font-size: 10pt;">
                     (printed)
                 </div>
                 <div style="display: table-cell; border-bottom: 1px solid black; font-size: 10pt;">
@@ -144,17 +144,17 @@ export const Document = (props) => {
                 </div>
             </div>
             <div style="display: table; width: 90%; margin-top: 40px;">
-                <div style="display: table-cell; width: 10%; padding-right: 30px; font-size: 10pt;">
+                <div style="display: table-cell; width: 21%; padding-right: 30px; font-size: 10pt;">
                     Employee Signature
                 </div>
-                <div style="display: table-cell; border-bottom: 1px solid black; width: 78%;">
+                <div style="display: table-cell; border-bottom: 1px solid black; width: 50%;">
                     <img src='${props.signature}' alt="" width="200" height="auto" />
                 </div>
-                <div style="display: table-cell; padding-left: 20px; width: 15%; font-size: 10pt; vertical-align: bottom;">
+                <div style="display: table-cell; padding-left: 60px; width: 15%; font-size: 10pt; vertical-align: bottom;">
                     Date
                 </div>
                 <div
-                    style="display: table-cell; border-bottom: 1px solid black; width: 20%; text-align: center; font-size: 10pt; vertical-align: bottom;">
+                    style="display: table-cell; border-bottom: 1px solid black; text-align: center; font-size: 10pt; vertical-align: bottom;">
                     ${props.date}
                 </div>
             </div>

@@ -1,19 +1,19 @@
 import gql from 'graphql-tag';
 
-export const GET_DISCLOSURE_INFO = gql`
-    query applications($id: Int!) {
-        applications(id: $id) {
-            id
-            disclosure {
-                id
-                signature
-                content
-                date
-                applicantName
-                pdfUrl
-            }
-        }
+export const GET_DOCUMENT_INFO = gql`
+query lastApplicantLegalDocument($ApplicationId: Int! ) {
+    lastApplicantLegalDocument(ApplicationDocumentTypeId: 19, ApplicationId: $ApplicationId) {
+        id	
+        fieldsData
+        url
     }
+    applications (id: $ApplicationId){
+        firstName
+        middleName
+        lastName
+        lastName2
+    }
+}
 `;
 
 export const CREATE_DOCUMENTS_PDF_QUERY = gql`
