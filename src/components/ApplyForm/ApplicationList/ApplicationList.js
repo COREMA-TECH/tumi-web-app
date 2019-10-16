@@ -82,8 +82,8 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-		query applicationsByUser($idUsers: Int,$Id_Deparment: Int, $idEntity: Int, $isActive:[Boolean] ){
-			applicationsByUser(idUsers: $idUsers, Id_Deparment: $Id_Deparment, idEntity: $idEntity, isActive: $isActive) {
+		query applicationsByUser($idUsers: Int,$Id_Deparment: Int, $idEntity: Int, $isActive:[Boolean] ,$isLead:Boolean){
+			applicationsByUser(idUsers: $idUsers, Id_Deparment: $Id_Deparment, idEntity: $idEntity, isActive: $isActive,isLead:$isLead) {
 				id
 				firstName
 				middleName
@@ -262,6 +262,7 @@ class ApplicationList extends Component {
 			let department = this.state.department.value;
 			let variables = {
 				idEntity: property ? property : null,
+				isLead: false
 			};
 			if (localStorage.getItem('isEmployee') == 'true')
 				variables = { ...variables, idUsers: localStorage.getItem('LoginId') }
@@ -303,7 +304,7 @@ class ApplicationList extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(nextProps.propertyInfo){
+		if (nextProps.propertyInfo) {
 			let propertyInfo = this.props.propertyInfo;
 			this.handlePropertyChange({ value: propertyInfo.id, label: propertyInfo.name });
 		}
@@ -311,11 +312,11 @@ class ApplicationList extends Component {
 
 	componentWillMount() {
 		//handlePropertyChange
-		if(this.props.propertyInfo){
+		if (this.props.propertyInfo) {
 			let propertyInfo = this.props.propertyInfo;
 			this.handlePropertyChange({ value: propertyInfo.id, label: propertyInfo.name });
 		}
-		else{
+		else {
 			this.getProperties();
 			this.getDepartments();
 			this.getApplications();
