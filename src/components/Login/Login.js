@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-import InputForm from 'ui-components/InputForm/InputForm';
 import './index.css';
 import Redirect from 'react-router-dom/es/Redirect';
 import Route from 'react-router-dom/es/Route';
-import Link from '@material-ui/icons/es/Link';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
-import { withApollo } from 'react-apollo';
-import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
 import './images/icons/favicon.ico';
 import './images/login.png';
@@ -21,11 +17,9 @@ import './vendor/daterangepicker/daterangepicker.css';
 import './css/util.css';
 import './css/main.css';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
-
 import withGlobalContent from 'Generic/Global';
-import { flattenSelections } from 'apollo-utilities';
+
+import axios from 'axios';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -100,7 +94,7 @@ class Login extends Component {
 		}
 	`;
 
-	handleSubmit = (e, data) => {
+	handleSubmit = (e) => {
 		this.setState({ loadingLogin: true });
 		e.preventDefault();
 		if (this.checkInputs()) {
@@ -125,90 +119,89 @@ class Login extends Component {
 	}
 
 	// To check valid credentials
-	checkUser() {
-		this.context.loginClient
-			.query({
-				query: this.GET_USERS_QUERY,
-				variables: {
-					Code_User: `'${document.getElementById('username').value}'`,
-					Password: `'${document.getElementById('pass').value}'`
-				},
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getvalid_users) {
-					const user = data.data.getvalid_users;
-					if (user.IsActive == 0) {
-						localStorage.clear();
-						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
-						this.setState({ loadingLogin: false });
-					}
-					else {
-						if (document.getElementById('pass').value === 'TEMP') {
-							localStorage.setItem('ChangePassword', user.Id);
-							window.location.href = '/reset';
-						}
-						else {
-							localStorage.setItem('ChangePassword', user.Id);
-							localStorage.setItem('LoginId', user.Id);
-							localStorage.setItem('CodeUser', user.Code_User);
-							localStorage.setItem('FullName', user.Full_Name);
-							localStorage.setItem('Token', user.Token);
-							localStorage.setItem('IdRoles', user.Id_Roles);
-							localStorage.setItem("Id_Entity", user.Id_Entity);
-							localStorage.setItem('IdSchedulesEmployees', user.IdSchedulesEmployees);
-							localStorage.setItem('IdSchedulesManager', user.IdSchedulesManager);
+	async checkUser() {
+		const config = {
+			headers: {
+			  "Content-Type": "application/json",
+			}
+		}
 
-							localStorage.setItem('isEmployee', user.Id_Roles == 13 ? true : false);
-
-							if (user.Id_Roles == 1 || user.Id_Roles == 10 || user.Id_Roles == 2) { localStorage.setItem('ShowMarkup', true); }
-							else { localStorage.setItem('ShowMarkup', false); }
-
-							if (user.IsAdmin == 1) {
-								localStorage.setItem('IsAdmin', true);
-							} else {
-								localStorage.setItem('IsAdmin', true);
-							}
-							if (user.AllowEdit == 1) {
-								localStorage.setItem('AllowEdit', true);
-							} else {
-								localStorage.setItem('AllowEdit', true);
-							}
-							if (user.AllowDelete == 1) {
-								localStorage.setItem('AllowDelete', true);
-							} else {
-								localStorage.setItem('AllowDelete', true);
-							}
-							if (user.AllowInsert == 1) {
-								localStorage.setItem('AllowInsert', true);
-							} else {
-								localStorage.setItem('AllowInsert', true);
-							}
-							if (user.AllowExport == 1) {
-								localStorage.setItem('AllowExport', true);
-							} else {
-								localStorage.setItem('AllowExport', true);
-							}
-
-							window.location.href = '/home';
-						}
-
-					}
-				} else {
+		axios.post(this.context.loginHttpLink, {
+			Code_User: document.getElementById('username').value.trim(),
+			Password: document.getElementById('pass').value.trim()
+		}, config)
+		.then(({data: user}) => {
+			if (user) {
+				// const user = data.data.getvalid_users;
+				if (user.IsActive == 0) {
 					localStorage.clear();
-					this.props.handleOpenSnackbar('error', 'Error: Loading users: User not exists in data base');
+					this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
 					this.setState({ loadingLogin: false });
 				}
-			})
-			.catch((error) => {
-				this.props.handleOpenSnackbar('error', 'Error: Validating user: ' + error);
+				else {
+					if (document.getElementById('pass').value === 'TEMP') {
+						localStorage.setItem('ChangePassword', user.Id);
+						window.location.href = '/reset';
+					}
+					else {
+						localStorage.setItem('ChangePassword', user.Id);
+						localStorage.setItem('LoginId', user.Id);
+						localStorage.setItem('CodeUser', user.Code_User);
+						localStorage.setItem('FullName', user.Full_Name);
+						localStorage.setItem('Token', user.Token);
+						localStorage.setItem('IdRoles', user.Id_Roles);
+						localStorage.setItem("Id_Entity", user.Id_Entity);
+						localStorage.setItem('IdSchedulesEmployees', user.IdSchedulesEmployees);
+						localStorage.setItem('IdSchedulesManager', user.IdSchedulesManager);
 
+						localStorage.setItem('isEmployee', user.Id_Roles == 13 ? true : false);
+
+						if (user.Id_Roles == 1 || user.Id_Roles == 10 || user.Id_Roles == 2) { localStorage.setItem('ShowMarkup', true); }
+						else { localStorage.setItem('ShowMarkup', false); }
+
+						if (user.IsAdmin == 1) {
+							localStorage.setItem('IsAdmin', true);
+						} else {
+							localStorage.setItem('IsAdmin', true);
+						}
+						if (user.AllowEdit == 1) {
+							localStorage.setItem('AllowEdit', true);
+						} else {
+							localStorage.setItem('AllowEdit', true);
+						}
+						if (user.AllowDelete == 1) {
+							localStorage.setItem('AllowDelete', true);
+						} else {
+							localStorage.setItem('AllowDelete', true);
+						}
+						if (user.AllowInsert == 1) {
+							localStorage.setItem('AllowInsert', true);
+						} else {
+							localStorage.setItem('AllowInsert', true);
+						}
+						if (user.AllowExport == 1) {
+							localStorage.setItem('AllowExport', true);
+						} else {
+							localStorage.setItem('AllowExport', true);
+						}
+
+						window.location.href = '/home';
+					}
+
+				}
+			} else {
+				localStorage.clear();
+				this.props.handleOpenSnackbar('error', 'Error: Loading users: User not exists in data base');
 				this.setState({ loadingLogin: false });
-			});
+			}
+		})
+		.catch(e => {
+			this.props.handleOpenSnackbar('error', 'Error logging in, please try again.');
+			this.setState({ loadingLogin: false });
+		});
 	}
 
 	render(data) {
-		const { classes } = this.props;
 		// When user is logged redirect to the private routes
 		//localStorage.clear();
 		if (this.state.logged) {
@@ -299,7 +292,8 @@ class Login extends Component {
 		);
 	}
 	static contextTypes = {
-		loginClient: PropTypes.object
+		loginClient: PropTypes.object,
+		loginHttpLink: PropTypes.string
 	};
 }
 Login.propTypes = {
@@ -307,19 +301,3 @@ Login.propTypes = {
 };
 export default withStyles(styles)(withGlobalContent(Login));
 
-const PrivateRouteComponent = ({ component: Component, ...rest }) => (
-	<Route
-		{...rest}
-		render={(props) =>
-			1 === 1 ? (
-				<Component {...props} />
-			) : (
-					<Redirect
-						to={{
-							pathname: '/login',
-							state: { from: props.location }
-						}}
-					/>
-				)}
-	/>
-);
