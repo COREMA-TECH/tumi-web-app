@@ -39,6 +39,7 @@ class Application extends Component {
             middleName: '',
             lastName: '',
             lastName2: '',
+            alias: '',
 
             date: new Date().toISOString().substring(0, 10),
             streetAddress: '',
@@ -200,6 +201,7 @@ class Application extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 lastName2: this.state.lastName2,
+                                alias: this.state.alias,
                                 date: this.state.date,
                                 streetAddress: this.state.streetAddress,
                                 aptNumber: this.state.aptNumber,
@@ -347,6 +349,7 @@ class Application extends Component {
 
                         this.setState(
                             {
+                                alias: applicantData.alias || "",
                                 dbFullName: `${firstName || ''}${middleName || ''}${lastName || ''}${lastName2 || ''}`,
                                 dbSocialSecurityNumber: socialSecurityNumber || '',
                                 dbAddress: `${streetAddress || ''}-${aptNumber || ''}-${city || ''}-${state || ''}-${zipCode || ''}`,
@@ -574,13 +577,14 @@ class Application extends Component {
     }
 
     submitForm = () => {
-        let { firstName, middleName, lastName, lastName2, streetAddress, aptNumber, city, state, zipCode, homePhone, cellPhone, socialSecurityNumber, emailAddress, optionHearTumi, nameReferences, positionApplyingFor, immediately, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain } = this.state;
+        let { firstName, middleName, lastName, lastName2, alias, streetAddress, aptNumber, city, state, zipCode, homePhone, cellPhone, socialSecurityNumber, emailAddress, optionHearTumi, nameReferences, positionApplyingFor, immediately, dateAvailable, scheduleRestrictions, scheduleExplain, convicted, convictedExplain } = this.state;
         let values = [];
         let formData = {
             firstName,
             middleName,
             lastName,
             lastName2,
+            alias,
             streetAddress,
             aptNumber,
             city,
@@ -1013,6 +1017,22 @@ class Application extends Component {
                                                     min="0"
                                                     maxLength="50"
                                                     minLength="3"
+                                                />
+                                            </div>
+                                            <div className="col-md-12 ">
+                                                <span className="primary applicant-card__label skeleton">
+                                                    A.K.A. (Alias)
+                                                </span>
+                                                <input
+                                                    onChange={this.handleInputChange}
+                                                    value={this.state.alias}
+                                                    name="alias"
+                                                    type="text"
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="5"
                                                 />
                                             </div>
                                             <div className="col-md-12 ">
