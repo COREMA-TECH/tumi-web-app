@@ -54,5 +54,9 @@
   {
     "id": 13,
     "label": "Background Check"
+  },
+  {
+    "id": 14,
+    "label": "Anti Discrimination"
   }
 ]
