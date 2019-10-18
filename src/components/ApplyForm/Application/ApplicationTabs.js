@@ -88,7 +88,7 @@ class CustomizedTabs extends React.Component {
     };
 
     handleChange = (event, value) => {
-        this.setState({ value });
+        this.setState({ value }, this.getApplicantStatus);
     };
 
     getApplicantStatus = () => {
@@ -102,13 +102,9 @@ class CustomizedTabs extends React.Component {
                     id: this.state.applicationId
                 }
             })
-            .then(({ data: applicationCompletedData }) => {
-                let applicationStatus = false;
-                if (applicationCompletedData)
-                    applicationStatus = Object.values(applicationCompletedData).filter(value => value === false).length > 0
-                this.setState({
-                    applicationStatus
-                });
+            .then(({ data: { applicationCompletedData } }) => {
+                let completed = Object.values(applicationCompletedData).filter(value => value === false).length === 0;
+                this.setState(() => ({ applicationStatus: completed }));
             })
             .catch();
     }
@@ -222,7 +218,7 @@ class CustomizedTabs extends React.Component {
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${this.state.applicationStatus ? 'completed' : 'incomplete'}` }}
                             label={applyTabs[3].label}
                             disabled={this.state.disableTabs}
                         />
