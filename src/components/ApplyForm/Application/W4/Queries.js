@@ -42,5 +42,29 @@ query createdocumentspdf($contentHTML:String,$Name:String) {
 }
 `;
 
+export const GET_GENERAL_INFO = gql`
+  query getApplication($id:Int){
+    applications(id:$id){
+      id
+      firstName
+      middleName
+      lastName    
+      socialSecurityNumber
+      streetAddress,
+      city,
+      marital,
+      cityInfo{
+        Name
+      },
+      state,
+      stateInfo{
+        Name
+      },
+      zipCode,
+      exemptions
+    }
+  }
+`;
+
 
 

@@ -5,7 +5,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_APPLICANT_INFO, GET_DOCUMENT_TYPE } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_APPLICANT_INFO, GET_DOCUMENT_TYPE, GET_GENERAL_INFO } from "./Queries";
 import { ADD_I9 } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
@@ -49,7 +49,8 @@ class FormsI9 extends Component {
             urlPDF: '',
             formData: '',
             userId: 0,
-            typeDocumentId: 0
+            typeDocumentId: 0,
+            lockFields: localStorage.getItem('IdRoles') == 13
         }
     }
 
@@ -133,6 +134,8 @@ class FormsI9 extends Component {
                         isCreated: false,
                     })
                 }
+
+                this.fetchApplicantInfo();
             })
             .catch(error => {
 
@@ -161,6 +164,34 @@ class FormsI9 extends Component {
                 console.log(error);
             })
     };
+
+    fetchApplicantInfo = _ => {
+        this.props.client.query({
+            query: GET_GENERAL_INFO,
+            variables: { id: this.props.applicationId }
+        })
+        .then(({data: {applications: [applicant]}}) => {
+            const {firstName, middleName, lastName, lastName2, emailAddress, cellPhone, socialSecurityNumber, 
+                streetAddress: address, zipCode, cityInfo: {Name: city}, 
+                stateInfo: {Name: state}, aptNumber} =  applicant;            
+
+            this.setState(_ => ({
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                otherLastName: lastName2.trim(),
+                middleName: middleName.trim(),
+                socialSecurityNumber,
+                streetNumber: address.trim(),
+                aptNumber,
+                city, state, zipCode,
+                email: emailAddress.trim(),
+                telephone: cellPhone
+            }));
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
 
     createDocumentsPDF = (random) => {
         this.setState(
@@ -194,13 +225,13 @@ class FormsI9 extends Component {
 
     loadDataFromJson = fieldsData => {
         if (!fieldsData) return;
-        const { lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state, zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
+        const { streetNumber, dateOfBirth, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
             alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance, signature, todayDate, preparer0, preparer1, signature1, todayDate2, lastName2, firstName2, address2, city2, state2, zipCode2,
             docTitle, Issuing, docNumber, expireDate2, docTitle2, Issuing2, docNumb3, expDate3, docT15, IssuingT15, docT16, docT17, docT18, docT19, docT20, docT21, docT22, docL1, docL2, docL3, signature2, docL5,
             docL6, docL7, docL8, docL9, docP1, docP2, docP3, signature4, todayDateDay1, empAuth15 } = fieldsData;
 
         this.setState(_ => ({
-            lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state, zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
+            streetNumber, dateOfBirth, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
             alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance, signature, todayDate, preparer0, preparer1, signature1, todayDate2, lastName2, firstName2, address2, city2, state2, zipCode2,
             docTitle, Issuing, docNumber, expireDate2, docTitle2, Issuing2, docNumb3, expDate3, docT15, IssuingT15, docT16, docT17, docT18, docT19, docT20, docT21, docT22, docL1, docL2, docL3, signature2, docL5,
             docL6, docL7, docL8, docL9, docP1, docP2, docP3, signature4, todayDateDay1, empAuth15
@@ -237,6 +268,8 @@ class FormsI9 extends Component {
                 applicationId: nextProps.applicationId
             });
         }
+
+        this.fetchApplicantInfo();   
     }
 
     sleep() {
@@ -527,6 +560,7 @@ class FormsI9 extends Component {
                                                                                     fontFamily: 'arial, helvetica, sans-serif',
                                                                                     fontSize: '8pt'
                                                                                 }}>Last Name&nbsp;(Family Name) <input
+                                                                                    disabled={true}
                                                                                     value={this.state.lastName}
                                                                                     onChange={(e) => {
                                                                                         this.setState({
@@ -535,6 +569,7 @@ class FormsI9 extends Component {
                                                                                     }} style={{ border: 0, width: '100%' }}
                                                                                     type="text"
                                                                                     id="lastName" /></span>
+                                                                                    
                                                                         </div>
                                                                     </td>
                                                                     <td style={{ width: '25%' }}>
@@ -544,6 +579,7 @@ class FormsI9 extends Component {
                                                                             fontSize: '8pt'
                                                                         }}>First Name (Given Name)
                                                                         <input value={this.state.firstName}
+                                                                                disabled={true}
                                                                                 onChange={(e) => {
                                                                                     this.setState({
                                                                                         firstName: e.target.value
@@ -558,6 +594,7 @@ class FormsI9 extends Component {
                                                                             fontSize: '8pt'
                                                                         }}>Middle Initial
                                                                         <input value={this.state.middleName}
+                                                                                disabled={true}
                                                                                 onChange={(e) => {
                                                                                     this.setState({
                                                                                         middleName: e.target.value
@@ -576,6 +613,7 @@ class FormsI9 extends Component {
                                                                                     otherLastName: e.target.value
                                                                                 })
                                                                             }} style={{ border: 0, width: '100%' }} type="text"
+                                                                            disabled={true}
                                                                             id="otherLastName" /></span>
                                                                     </td>
                                                                 </tr>
@@ -602,6 +640,7 @@ class FormsI9 extends Component {
                                                                                     fontSize: '8pt'
                                                                                 }}>Address
                       (Street Number and Name) <input value={this.state.streetNumber}
+                      disabled={true}
                                                                                     onChange={(e) => {
                                                                                         this.setState({
                                                                                             streetNumber: e.target.value
@@ -624,7 +663,9 @@ class FormsI9 extends Component {
                                                                                     this.setState({
                                                                                         aptNumber: e.target.value
                                                                                     })
-                                                                                }} style={{ border: 0, width: '100%' }} type="text" id="aptNumber" /></span></td>
+                                                                                }} 
+                                                                                disabled={true}
+                                                                                style={{ border: 0, width: '100%' }} type="text" id="aptNumber" /></span></td>
                                                                     <td style={{
                                                                         width: '20%',
                                                                         height: '17px',
@@ -639,7 +680,9 @@ class FormsI9 extends Component {
                                                                                     this.setState({
                                                                                         city: e.target.value
                                                                                     })
-                                                                                }} style={{ border: 0, width: '100%' }} type="text" id="city" /></span></td>
+                                                                                }} 
+                                                                                disabled={true}
+                                                                                style={{ border: 0, width: '100%' }} type="text" id="city" /></span></td>
                                                                     <td style={{
                                                                         width: '20%',
                                                                         height: '17px',
@@ -649,7 +692,7 @@ class FormsI9 extends Component {
                                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                                         fontSize: '8pt'
                                                                     }}>State
-                    <input value={this.state.state}
+                    <input value={this.state.state} disabled={true}
                                                                                 onChange={(e) => {
                                                                                     this.setState({
                                                                                         state: e.target.value
@@ -669,7 +712,9 @@ class FormsI9 extends Component {
                                                                                     this.setState({
                                                                                         zipCode: e.target.value
                                                                                     })
-                                                                                }} style={{ border: 0, width: '100%' }} type="text" id="zipCode" /></span></td>
+                                                                                }} 
+                                                                                disabled={true}
+                                                                                style={{ border: 0, width: '100%' }} type="text" id="zipCode" /></span></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -687,7 +732,9 @@ class FormsI9 extends Component {
                                                                                 this.setState({
                                                                                     dateOfBirth: e.target.value
                                                                                 })
-                                                                            }} style={{ border: 0, width: '100%' }} type="text"
+                                                                            }} style={{ border: 0, width: '100%' }} 
+                                                                            disabled={true}
+                                                                            type="text"
                                                                             id="dateOfBirth" /></span>
                                                                     </td>
                                                                     <td style={{ width: '25%' }}><span style={{
@@ -700,14 +747,16 @@ class FormsI9 extends Component {
                                                                                 this.setState({
                                                                                     socialSecurityNumber: e.target.value
                                                                                 })
-                                                                            }} style={{ border: 0, width: '100%' }} type="text"
+                                                                            }} 
+                                                                            disabled={true}
+                                                                            style={{ border: 0, width: '100%' }} type="text"
                                                                             id="socialSecurityNumber" /></span></td>
                                                                     <td style={{ width: '25%' }}><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                                         fontSize: '8pt'
                                                                     }}>Employee's
-                    E-mail Address <input value={this.state.email}
+                    E-mail Address <input value={this.state.email}  disabled={true}
                                                                             onChange={(e) => {
                                                                                 this.setState({
                                                                                     email: e.target.value
@@ -718,7 +767,7 @@ class FormsI9 extends Component {
                                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                                         fontSize: '8pt'
                                                                     }}>Employee's
-                    Telephone Number <input value={this.state.telephone}
+                    Telephone Number <input value={this.state.telephone}    disabled={true}
                                                                             onChange={(e) => {
                                                                                 this.setState({
                                                                                     telephone: e.target.value
@@ -1442,6 +1491,7 @@ class FormsI9 extends Component {
                                                                                                     docTitle: e.target.value
                                                                                                 })
                                                                                             }}
+                                                                                            disabled={this.state.lockFields}
                                                                                             style={{ width: '100%', border: 0 }}
                                                                                             type="text" /></span></td>
                                                                                 </tr>
@@ -1453,6 +1503,7 @@ class FormsI9 extends Component {
                                                                                     }}>Issuing
                             Authority <input
                                                                                             value={this.state.Issuing}
+                                                                                            disabled={this.state.lockFields}
                                                                                             onChange={(e) => {
                                                                                                 this.setState({
                                                                                                     Issuing: e.target.value
@@ -1469,6 +1520,7 @@ class FormsI9 extends Component {
                                                                                     }}>Document
                             Number <input
                                                                                             value={this.state.docNumber}
+                                                                                            disabled={this.state.lockFields}
                                                                                             onChange={(e) => {
                                                                                                 this.setState({
                                                                                                     docNumber: e.target.value
@@ -1485,6 +1537,7 @@ class FormsI9 extends Component {
                                                                                     }}>
                                                                                         Expiration Date (if any)(mm/dd/yyyy) <input
                                                                                             value={this.state.expireDate2}
+                                                                                            disabled={this.state.lockFields}
                                                                                             onChange={(e) => {
                                                                                                 this.setState({
                                                                                                     expireDate2: e.target.value
@@ -1514,6 +1567,7 @@ class FormsI9 extends Component {
                                                                                         }}>Document
                             Title <input
                                                                                                 value={this.state.docTitle2}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docTitle2: e.target.value
@@ -1534,6 +1588,7 @@ class FormsI9 extends Component {
                                                                                         }}>Issuing
                             Authority <input
                                                                                                 value={this.state.Issuing2}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         Issuing2: e.target.value
@@ -1554,6 +1609,7 @@ class FormsI9 extends Component {
                                                                                         }}>Document
                             Number <input
                                                                                                 value={this.state.docNumb3}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docNumb3: e.target.value
@@ -1574,6 +1630,7 @@ class FormsI9 extends Component {
                                                                                         }}>
                                                                                             Expiration Date (if any)(mm/dd/yyyy) <input
                                                                                                 value={this.state.expDate3}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         expDate3: e.target.value
@@ -1603,6 +1660,7 @@ class FormsI9 extends Component {
                                                                                         }}>Document
                             Title <input
                                                                                                 value={this.state.docT15}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docT15: e.target.value
@@ -1623,6 +1681,7 @@ class FormsI9 extends Component {
                                                                                         }}>Issuing
                             Authority <input
                                                                                                 value={this.state.IssuingT15}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         IssuingT15: e.target.value
@@ -1643,6 +1702,7 @@ class FormsI9 extends Component {
                                                                                         }}>Document
                             Number <input
                                                                                                 value={this.state.docT16}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docT16: e.target.value
@@ -1663,6 +1723,7 @@ class FormsI9 extends Component {
                                                                                         }}>
                                                                                             Expiration Date (if any)(mm/dd/yyyy) <input
                                                                                                 value={this.state.docT17}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docT17: e.target.value
@@ -1703,6 +1764,7 @@ class FormsI9 extends Component {
                                                                                         }}>Document
                             Title <input
                                                                                                 value={this.state.docT18}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docT18: e.target.value
@@ -1725,6 +1787,7 @@ class FormsI9 extends Component {
                                                                                         }}>Document
                             Title <input
                                                                                                 value={this.state.docT19}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docT19: e.target.value
@@ -1749,6 +1812,7 @@ class FormsI9 extends Component {
                                                                                         }}>Issuing
                             Authority <input
                                                                                                 value={this.state.docT20}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docT20: e.target.value
@@ -1771,6 +1835,7 @@ class FormsI9 extends Component {
                                                                                         }}>Issuing
                             Authority <input
                                                                                                 value={this.state.docT21}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docT21: e.target.value
@@ -1795,6 +1860,7 @@ class FormsI9 extends Component {
                                                                                         }}>Document
                             Number <input
                                                                                                 value={this.state.docT22}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docT22: e.target.value
@@ -1817,6 +1883,7 @@ class FormsI9 extends Component {
                                                                                         }}>Document
                             Number<input
                                                                                                 value={this.state.docL1}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docL1: e.target.value
@@ -1841,6 +1908,7 @@ class FormsI9 extends Component {
                                                                                         }}>Expiration
                             Date (if any)(mm/dd/yyyy) <input
                                                                                                 value={this.state.docL2}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 onChange={(e) => {
                                                                                                     this.setState({
                                                                                                         docL2: e.target.value
@@ -1867,6 +1935,7 @@ class FormsI9 extends Component {
                                                                                                         docL3: e.target.value
                                                                                                     })
                                                                                                 }}
+                                                                                                disabled={this.state.lockFields}
                                                                                                 style={{
                                                                                                     width: '100%',
                                                                                                     border: 0,
@@ -1983,6 +2052,7 @@ class FormsI9 extends Component {
                                                                                     docL5: e.target.value
                                                                                 })
                                                                             }}
+                                                                            disabled={this.state.lockFields}
                                                                             style={{ width: '100%', border: 0 }}
                                                                             type="text" /></span></td>
                                                                     <td style={{ width: '40.9554%' }}><span style={{
@@ -1992,6 +2062,7 @@ class FormsI9 extends Component {
                                                                     }}>Title of
                     Employer or Authorized Representative <input
                                                                             value={this.state.docL6}
+                                                                            disabled={this.state.lockFields}
                                                                             onChange={(e) => {
                                                                                 this.setState({
                                                                                     docL6: e.target.value
@@ -2019,6 +2090,7 @@ class FormsI9 extends Component {
                                                                                     docL7: e.target.value
                                                                                 })
                                                                             }}
+                                                                            disabled={this.state.lockFields}
                                                                             style={{ width: '100%', border: 0 }}
                                                                             type="text" /></span></td>
                                                                     <td style={{ width: '33.3333%' }}><span style={{
@@ -2028,6 +2100,7 @@ class FormsI9 extends Component {
                                                                     }}>First
                     Name of Employer or Authorized Representative <input
                                                                             value={this.state.docL8}
+                                                                            disabled={this.state.lockFields}
                                                                             onChange={(e) => {
                                                                                 this.setState({
                                                                                     docL8: e.target.value
@@ -2163,6 +2236,7 @@ class FormsI9 extends Component {
                                                                         }}>Last
                     Name (Family Name) <input
                                                                             value={this.state.docL9}
+                                                                            disabled={this.state.lockFields}
                                                                             onChange={(e) => {
                                                                                 this.setState({
                                                                                     docL9: e.target.value
@@ -2178,6 +2252,7 @@ class FormsI9 extends Component {
                                                                         }}>First
                     Name (Given Name) <input
                                                                             value={this.state.docP1}
+                                                                            disabled={this.state.lockFields}
                                                                             onChange={(e) => {
                                                                                 this.setState({
                                                                                     docP1: e.target.value
@@ -2193,6 +2268,7 @@ class FormsI9 extends Component {
                                                                         }}>Middle
                     Initial <input
                                                                             value={this.state.docP2}
+                                                                            disabled={this.state.lockFields}
                                                                             onChange={(e) => {
                                                                                 this.setState({
                                                                                     docP2: e.target.value
@@ -2208,6 +2284,7 @@ class FormsI9 extends Component {
                                                                         }}>Date
                     (mm/dd/yyyy) <input
                                                                             value={this.state.docP3}
+                                                                            disabled={this.state.lockFields}
                                                                             onChange={(e) => {
                                                                                 this.setState({
                                                                                     docP3: e.target.value
@@ -2253,6 +2330,7 @@ class FormsI9 extends Component {
                                                                                 //     docL9: e.target.value
                                                                                 // })
                                                                             }}
+                                                                            disabled={this.state.lockFields}
                                                                             style={{ width: '100%', border: 0 }}
                                                                             type="text" />
                                                                     </span></td>
@@ -2269,6 +2347,7 @@ class FormsI9 extends Component {
                                                                                 //     docL9: e.target.value
                                                                                 // })
                                                                             }}
+                                                                            disabled={this.state.lockFields}
                                                                             style={{ width: '100%', border: 0 }}
                                                                             type="text" />
                                                                     </span></td>
@@ -2285,6 +2364,7 @@ class FormsI9 extends Component {
                                                                                 //     docL9: e.target.value
                                                                                 // })
                                                                             }}
+                                                                            disabled={this.state.lockFields}
                                                                             style={{ width: '100%', border: 0 }}
                                                                             type="text" />
                                                                     </span>
@@ -2325,14 +2405,14 @@ class FormsI9 extends Component {
                                                                                 })
                                                                             });
 
-                                                                        }}
+                                                                        }}  disabled={this.state.lockFields}
                                                                             src={this.state.signature4} alt="" /></span></td>
                                                                     <td style={{ width: '27.0634%' }}><span style={{
                                                                         color: '#000000',
                                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                                         fontSize: '8pt'
                                                                     }}>Today's
-                    Date (mm/dd/yyyy) <input
+                    Date (mm/dd/yyyy) <input                                disabled={this.state.lockFields}
                                                                             value={this.state.todayDateDay1}
                                                                             onChange={(e) => {
                                                                                 this.setState({
@@ -2346,7 +2426,7 @@ class FormsI9 extends Component {
                                                                         fontFamily: 'arial, helvetica, sans-serif',
                                                                         fontSize: '8pt'
                                                                     }}>Name of
-                    Employer or Authorized Representative <input
+                    Employer or Authorized Representative <input disabled={this.state.lockFields}
                                                                             value={this.state.empAuth15}
                                                                             onChange={(e) => {
                                                                                 this.setState({
