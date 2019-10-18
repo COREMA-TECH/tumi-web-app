@@ -1,5 +1,11 @@
 import React, {Fragment, Component} from 'react';
 
+import withGlobalContent from "../../../Generic/Global";
+import withApollo from "react-apollo/withApollo";
+
+import {ADD_DOC} from './mutations';
+import {GET_APPLICANT_INFO} from './queries';
+
 import Select from 'react-select';
 import makeAnimated from "react-select/lib/animated";
 import Button from "@material-ui/core/es/Button/Button";
@@ -9,6 +15,7 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 
 import Dependent from './dependents';
+const uuidv4 = require('uuid/v4');
 
 class Benefits extends Component{
     INITIAL_STATE = {
@@ -17,12 +24,12 @@ class Benefits extends Component{
         hmo: 0,
         hmoReason: "",
         ooaReason: "",
-        outOfArea: 0,
-        coverage: 0,
+        outOfArea: 0,        
         marital: true, //single
         gender: true, //male
         dependents: [],
-        preTax: true,        
+        preTax: true,  
+        isCreated: false      
     }
 
     constructor(props){
@@ -53,11 +60,106 @@ class Benefits extends Component{
         }
     }
 
+    componentWillMount(){
+        this.loadDocumentInfo();       
+    }
+
+    loadDocumentInfo = _ => {
+        this.props.client
+            .query({
+                query: GET_APPLICANT_INFO,
+                variables: {
+                    ApplicationId: this.props.applicationId,
+                    ApplicationDocumentTypeId: 22
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.lastApplicantLegalDocument) {
+                    const fd = data.lastApplicantLegalDocument.fieldsData;
+                    const formData = fd ? JSON.parse(fd) : {}
+                    
+                    this.setState({
+                        isCreated: true,
+                        urlPDF: data.lastApplicantLegalDocument.url || '',
+                        ...formData
+                    });
+                } else {
+                    this.setState({
+                        isCreated: false,
+                    })
+                }
+                // this.fetchApplicantInfo();
+            })
+            .catch(error => {                
+                console.log(error);
+            })
+    }
+
+    saveDocument = _ => {
+        const { signature, hmo, hmoReason, outOfArea, ooaReason, preTax, dependents, name, ssn, marital, effectiveDate, address, birthday,
+            gender, location, city, state, zipcode, hiredate, homePhone, workPhone, date } = this.state;
+
+        const saveData = {
+            name, gender, marital, ssn, effectiveDate, address, birthday, location, city, state, zipcode, hiredate, homePhone, workPhone,
+            signature,
+            hmo,
+            outOfArea,
+            hmoReason: hmo ? hmoReason : "",
+            ooaReason: outOfArea ? ooaReason : "",
+            dependents: (hmo === 0 && outOfArea === 0) ? [] : [...dependents],
+            preTax,
+            date: date || ""
+        }
+
+        const jsonFields = JSON.stringify(saveData);
+        const random = uuidv4();
+
+        this.props.client.mutate({
+            mutation: ADD_DOC,            
+            variables: {
+                fileName: "BenefitsForm-" + random + name,
+                applicantLegalDocument: {
+                    fieldsData: jsonFields,
+                    ApplicationDocumentTypeId: 22,
+                    ApplicationId: this.props.applicationId,
+                    UserId: localStorage.getItem('LoginId') || 0,
+                    completed: true
+                }
+            }
+        })
+        .then(() => {
+            this.props.handleOpenSnackbar(
+                'success',
+                'Record Saved!',
+                'bottom',
+                'right'
+            );
+
+            this.props.changeTabState();
+        })
+        .catch(error => {
+            // If there's an error show a snackbar with a error message
+            this.props.handleOpenSnackbar(
+                'error',
+                'Failed to save Benefits Form. Please, try again!',
+                'bottom',
+                'right'
+            );
+
+            console.log(error);
+        });
+    }
+
     handleSignature = (value) => {
         this.setState({
             signature: value,
             openSignature: false,
             date: new Date().toISOString().substring(0, 10)
+        }, _ => {
+            if(this.state.signature) {
+                this.saveDocument()
+            }
         });
     };
 
@@ -77,13 +179,7 @@ class Benefits extends Component{
         this.setState(_ => {
             return { outOfArea: value }
         })
-    }
-
-    handleCoverageChange = ({value}) => {
-        this.setState(_ => {
-            return { coverage: value }
-        })
-    }
+    }    
 
     removeDependent = position => {
         this.setState(_ => ({
@@ -120,7 +216,7 @@ class Benefits extends Component{
         this.setState(_ => ({
             dependents: [...current]
         }));
-    }
+    }  
 
     render(){
         return(
@@ -303,7 +399,6 @@ class Benefits extends Component{
                                                     </div>                                                
                                                     {
                                                         this.state.dependents.map((item, index) => {
-                                                            console.log(item);
                                                             return <Dependent removeDependent={this.removeDependent} updateDependent={this.updateDependent} index={index} info={item}/>
                                                         })
                                                     }
@@ -333,7 +428,7 @@ class Benefits extends Component{
                                                             <input onChange={_ => { this.setState({preTax: true}) }} type="checkbox" checked={this.state.preTax} name="preTax"/> I elect to participate in the pre-tax option of the current Plan Year. I authorize my employer to reduce my annual compensation during the Plan Year on a pre-tax basis to pay for my share of the premium for those benefits for which I have enrolled on separate benefit enrollment form(s)
                                                         </div>
                                                         <div className="col-md-12">
-                                                            <input onChange={_ => { this.setState({preTax: false}) }} type="checkbox" checked={this.state.preTax} name="preTax"/> I elect to pay for my eligible premiums on an after-tax basis outside of this Plan, and I authorize appropriate after-tax payroll deductions.
+                                                            <input onChange={_ => { this.setState({preTax: false}) }} type="checkbox" checked={!this.state.preTax} name="preTax"/> I elect to pay for my eligible premiums on an after-tax basis outside of this Plan, and I authorize appropriate after-tax payroll deductions.
                                                         </div>
                                                     </div>
                                                 </div>
@@ -423,4 +518,4 @@ class Benefits extends Component{
     }
 }
 
-export default Benefits;
+export default withApollo(withGlobalContent(Benefits));

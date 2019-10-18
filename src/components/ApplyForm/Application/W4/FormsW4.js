@@ -142,10 +142,10 @@ class FormsW4 extends Component {
             const {firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo: {Name: city}, stateInfo: {Name: state}, marital, exemptions} =  applicant;
 
             this.setState(_ => ({
-                firstName: firstName.trim(),
-                lastName: lastName.trim(),
+                firstName: firstName ? firstName.trim() : "",
+                lastName: lastName ? lastName.trim() : "",
                 socialSecurityNumber,
-                address: address.trim(),
+                address: address ? address.trim() : "",
                 postalCode: `${city.trim()}, ${state.trim()}; ${zipCode}`,
                 estadoCivil: (marital && marital === 1 && !this.state.estadoCivil2) ? true : false,
                 estadoCivil1: (marital && marital === 2 && !this.state.estadoCivil2) ? true : false,
