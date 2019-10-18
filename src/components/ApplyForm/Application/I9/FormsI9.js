@@ -423,6 +423,7 @@ class FormsI9 extends Component {
                                         <div className="row pdf-container" id="i9Html" style={{ maxWidth: '100%' }}>
                                             <Document 
                                                 setState={this.externalSetState}
+                                                lockFields={this.state.lockFields}
                                                 data={{
                                                     lastName: this.state.lastName,
                                                     firstName: this.state.firstName,
