@@ -1,0 +1,38 @@
+.BenefitsDoc{
+    &-secTitle{
+        background-color: $black;
+        color: $white; 
+
+        display: block;
+
+        font-size: 16px;
+        
+        padding-left: 5px;
+        padding-right: 5px;
+        
+        width: 100%;
+    }
+
+    &-remove{
+        background-color: red; 
+        color: $white;
+        
+        padding: 5px;
+        
+        position: absolute;
+        right: -5px;
+        top: 16px;
+        
+        z-index: 100; 
+    }
+
+    &-label{
+        display: block;
+        font-size: 10px;
+        
+        padding-left: 5px;
+        padding-right: 5px;
+        
+        text-transform: capitalize;
+    }
+}

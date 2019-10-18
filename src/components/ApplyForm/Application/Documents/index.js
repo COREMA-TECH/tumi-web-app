@@ -10,6 +10,7 @@ import WorkerCompensation from "../WorkerCompensation/WorkerCompensation";
 import ApplicantDocument from "../ApplicantDocuments/ApplicantDocument";
 import FormI9 from '../I9/FormsI9';
 import FormW4 from "../W4/FormsW4";
+import Benefits from '../Benefits';
 import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from '../../../Generic/Global';
@@ -22,7 +23,8 @@ const steps = {
     4: "Worker's Compensation",
     5: "I9",
     6: "W4",
-    7: "General Documents"
+    7: "General Documents",
+    8: "Benefits Selection"
 };
 
 const styles = theme => ({
@@ -83,6 +85,9 @@ class Documents extends Component {
                 break;
             case 7: 
                 stepScreen = <ApplicantDocument applicationId={applicationId} changeTabState={this.changeTabState} />
+                break;
+            case 8: 
+                stepScreen = <Benefits applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
         }
 

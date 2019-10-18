@@ -82,8 +82,8 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-		query applicationsByUser($idUsers: Int,$Id_Deparment: Int, $idEntity: Int, $isActive:[Boolean], $isLead:Boolean ){
-			applicationsByUser(idUsers: $idUsers, Id_Deparment: $Id_Deparment, idEntity: $idEntity, isActive: $isActive, isLead:$isLead) {
+		query applicationsByUser($idUsers: Int,$Id_Deparment: Int, $idEntity: Int, $isActive:[Boolean] ){
+			applicationsByUser(idUsers: $idUsers, Id_Deparment: $Id_Deparment, idEntity: $idEntity, isActive: $isActive) {
 				id
 				firstName
 				middleName
@@ -261,8 +261,7 @@ class ApplicationList extends Component {
 			let property = this.state.property.value;
 			let department = this.state.department.value;
 			let variables = {
-				idEntity: property ? property : null,
-				isLead: false
+				idEntity: property ? property : null,				
 			};
 			if (localStorage.getItem('isEmployee') == 'true')
 				variables = { ...variables, idUsers: localStorage.getItem('LoginId') }
