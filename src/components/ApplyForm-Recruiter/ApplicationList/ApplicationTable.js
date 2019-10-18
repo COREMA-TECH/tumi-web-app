@@ -171,6 +171,11 @@ class ApplicationTable extends React.Component {
 		return false;
 	}
 
+	onSendToApplicationPackage = (id) => (e) => {
+		e.stopPropagation();
+		this.props.openConfirmDialog(id);
+	}
+
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;
@@ -186,7 +191,7 @@ class ApplicationTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={'Table-head'} />
+							<CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Actions</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
 							<CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
@@ -212,23 +217,30 @@ class ApplicationTable extends React.Component {
 												});
 											}}
 										>
-											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
+											<CustomTableCell className={'text-center'} style={{ width: '80px' }}>
 												<Tooltip title="Delete">
-													<div>
-														<button
-															className="btn btn-danger ml-1"
-															disabled={this.props.loading}
-															onClick={(e) => {
-																e.stopPropagation();
+													<button
+														className="btn btn-danger ml-1 float-left"
+														disabled={this.props.loading}
+														onClick={(e) => {
+															e.stopPropagation();
 
-																return this.props.onDeleteHandler(row.id);
-															}}
-														>
-															<i className="fas fa-trash"></i>
-														</button>
-													</div>
+															return this.props.onDeleteHandler(row.id);
+														}}
+													>
+														<i className="fas fa-trash"></i>
+													</button>
+												</Tooltip>
+												<Tooltip title="Send Lead to Application Package">
+													<button
+														className="btn btn-primary ml-1 float-left"
+														onClick={this.onSendToApplicationPackage(row.id)}
+													>
+														<i class="far fa-paper-plane"></i>
+													</button>
 												</Tooltip>
 											</CustomTableCell>
+
 											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
 											<CustomTableCell>

@@ -2,15 +2,17 @@ import React, { Component, Fragment } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_APPLICANT_INFO, GET_GENERAL_INFO } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO, GET_DOCUMENT_TYPE, GET_GENERAL_INFO } from "./Queries";
 import { ADD_W4 } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
-import w4_form_english from './w4_header_eng.png';
+//import w4_form_english from './w4_header_eng.png';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
-import FeatureTag from '../../../ui-components/FeatureTag';
+import Document from './Document';
+
+const uuidv4 = require('uuid/v4');
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -50,6 +52,8 @@ class FormsW4 extends Component {
             estadoCivil2: false,
             urlPDF: '',
             formData: '',
+            typeDocumentId: 0,
+            userId: 0,
             showReadOnlyFields: localStorage.getItem('IdRoles') == 13
         }
     }
@@ -71,23 +75,24 @@ class FormsW4 extends Component {
 
         return `<html style="zoom: 65%;">${contentPDFClone.innerHTML}</html>`;
     }
-
+    
+    
     getApplicantInformation = (id) => {
         this.props.client
             .query({
                 query: GET_APPLICANT_INFO,
                 variables: {
-                    ApplicationId: id
+                    ApplicationId: id,
+                    ApplicationDocumentTypeId: this.state.typeDocumentId
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.applicantW4.length > 0) {
-                    let fd = data.applicantW4[0].fieldsData;
+                if (data.lastApplicantLegalDocument) {
+                    let fd = data.lastApplicantLegalDocument.fieldsData;
                     this.setState({
                         isCreated: true,
-                        html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 65%;"', '') : '',
-                        urlPDF: data.applicantW4[0].url,
+                        urlPDF: data.lastApplicantLegalDocument.url,
                         formData: fd ? JSON.parse(fd) : {}
                     }, _ => {
                         this.loadDataFromJson(this.state.formData)
@@ -105,6 +110,28 @@ class FormsW4 extends Component {
             })
     };
 
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'W4'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }, _ => {
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
     fetchApplicantInfo = _ => {
         this.props.client.query({
             query: GET_GENERAL_INFO,
@@ -193,14 +220,19 @@ class FormsW4 extends Component {
         this.setState({ downloading: false });
     };
 
-    componentWillMount() {
-        this.getApplicantInformation(this.props.applicationId); 
+
+
+    componentDidMount() {
+        this.setState({
+            userId: localStorage.getItem('LoginId') || 0
+        }, () => this.getDocumentType());
     }
 
     validateW4 = () => {
         let firstNameField = document.getElementById('firstName');
         let lastNameField = document.getElementById('lastName');
         let socialSecurityNumberField = document.getElementById('socialSecurityNumber');
+        const random = uuidv4();
 
         if (firstNameField.value.length > 0 &&
             lastNameField.value.length > 0 &&
@@ -215,9 +247,15 @@ class FormsW4 extends Component {
                 .mutate({
                     mutation: ADD_W4,
                     variables: {
+                        fileName: "W4-" + random + this.state.applicantName,
                         html,
-                        ApplicantId: this.props.applicationId,
-                        json: jsonFields
+                        applicantLegalDocument: {
+                            fieldsData: jsonFields,
+                            ApplicationDocumentTypeId: this.state.typeDocumentId,
+                            ApplicationId: this.props.applicationId,
+                            UserId: this.state.userId,
+                            completed: true
+                        }
                     }
                 })
                 .then(() => {
@@ -254,6 +292,10 @@ class FormsW4 extends Component {
 
     sleep() {
         return new Promise((resolve) => setTimeout(resolve, 8000));
+    }
+
+    externalSetState = (updateData, callback = () => {}) => {
+        this.setState(updateData, _ => callback());
     }
 
     componentWillReceiveProps(nextProps) {
@@ -344,7 +386,29 @@ class FormsW4 extends Component {
                                 (
                                     <div style={{ width: '100%', margin: '0 auto' }}>
                                         <div className="row pdf-container" id="w4Html" style={{ maxWidth: '100%' }}>
-                                            <div id="DocumentPDF" className="signature-information">
+                                            <Document 
+                                                setState={this.externalSetState}
+                                                languageForm = {localStorage.getItem('languageForm')}
+                                                data={{
+                                                    firstName: this.state.firstName,
+                                                    lastName: this.state.lastName,
+                                                    socialSecurityNumber: this.state.socialSecurityNumber,
+                                                    address: this.state.address,
+                                                    estadoCivil: this.state.estadoCivil,
+                                                    estadoCivil1: this.state.estadoCivil1,
+                                                    estadoCivil2: this.state.estadoCivil2,
+                                                    postalCode: this.state.postalCode,
+                                                    socialSecurityExtention: this.state.socialSecurityExtention,
+                                                    excention: this.state.excention,
+                                                    payCheck: this.state.payCheck,
+                                                    excentionYear: this.state.excentionYear,
+                                                    signature: this.state.signature,
+                                                    employeer: this.state.employeer,
+                                                    firstEmployeeDate: this.state.firstEmployeeDate,
+                                                    idNumber: this.state.idNumber
+                                                }}
+                                            />
+                                            {/* <div id="DocumentPDF" className="signature-information">
                                                 {
                                                     localStorage.getItem('languageForm') == 'es' ? (
                                                         <div>
@@ -909,8 +973,8 @@ class FormsW4 extends Component {
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                           
-                                                            <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
+
+<table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                 <tbody>
                                                                     <tr>
                                                                         <td style={{
@@ -920,7 +984,7 @@ class FormsW4 extends Component {
                                                                             width: '65%',
                                                                             verticalAlign: 'top'
                                                                         }}>
-                                                                            8 Nombre y dirección del empleador (<span style={{ fontWeight: '900' }}>Empleador:</span> Complete
+                                                                            8 Nombre y dirección del empleador <span style={{ fontWeight: '900' }}>Empleador:</span> Complete
                                                                             las líneas <span style={{ fontWeight: '900' }}>8 y 10</span> si
                                                                             envía este
                                                                             certificado
@@ -1195,9 +1259,6 @@ class FormsW4 extends Component {
                                                         </div>
                                                     ) : (
                                                             <div>
-                                                                {/* <div style={}>
-
-                                                                </div> */}
                                                                 <table style={{
                                                                     fontFamily: 'Times New Roman',
                                                                     fontSize: '11px',
@@ -1412,10 +1473,6 @@ class FormsW4 extends Component {
                                                                                     Married, but withhold at higher Single rate&nbsp;&nbsp;
                                                                                 <span style={{ fontWeight: '900' }}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
     
-                                                                                {/* <span style={{paddingRight: "5px", paddingLeft: "5px", paddingTop: "5px", textIndent: "5px"}}>Married</span>
-                                                                                <input style={{paddingTop: "5px",textIndent: "8px"}} type="checkbox" /> Married, but withhold at higher Single rate  
-                                                                                <span style={{paddingTop: "5px",fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.” */}
-
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
@@ -1648,9 +1705,7 @@ class FormsW4 extends Component {
                                                                                 verticalAlign: 'top'
                                                                             }}>
                                                                                 8 Employer’s name and address (Employer: Complete boxes 8 and 10 if sending to IRS and complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)
-                                                                                {/* <FeatureTag code="3807ee0a-d05b-4f51-8f13-6c896f84cc31">
-                                                                                                                                                                                                                                                                                                         
-                                                                                </FeatureTag> */}
+                                                                                
                                                                                 {this.state.showReadOnlyFields ? (
                                                                                     <label 
                                                                                         dangerouslySetInnerHTML={{
@@ -1765,7 +1820,7 @@ class FormsW4 extends Component {
 
                                                         )
                                                 }
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 )

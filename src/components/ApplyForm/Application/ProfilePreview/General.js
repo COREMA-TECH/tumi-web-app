@@ -277,7 +277,7 @@ class General extends Component {
         showCircularLoading: false,
         titleModal: false,
         employmentType: null,
-        startDate: null,
+        hireDate: null,
         positionName: null,
 
         openConfirmDefaultTitle: false,
@@ -504,7 +504,7 @@ class General extends Component {
                                 employeeHotelEmployeeId: this.state.data.employee ? this.state.data.employee.EmployeeId : 0,
                                 employeeHotelName: this.state.data.employee ? (this.state.data.employee.Employees.BusinessCompany ? this.state.data.employee.Employees.BusinessCompany.Name : '') : '',
                                 employmentType: this.state.data.employmentType ? this.state.data.employmentType.replace('FT', 'FULL TIME').replace('PT', 'PART TIME') : 'N/D',
-                                startDate: this.state.data.employee ? (this.state.data.employee.Employees ? (this.state.data.employee.Employees.startDate ? moment(this.state.data.employee.Employees.startDate).format("MM/DD/YYYY") : 'N/D') : 'N/D') : 'N/D',
+                                hireDate: this.state.data.employee ? (this.state.data.employee.Employees ? (this.state.data.employee.Employees.hireDate ? moment(this.state.data.employee.Employees.hireDate).format("MM/DD/YYYY") : 'N/D') : 'N/D') : 'N/D',
                                 positionName: this.state.data.position ? (this.state.data.position.position ? this.state.data.position.position.Position : 'N/D') : 'N/D'
 
                             }, _ => {
@@ -737,7 +737,7 @@ class General extends Component {
             variables: {
                 id: 0,
                 hireDate: moment(Date.now()).format('MM/DD/YYYY'),
-                startDate: moment(Date.now()).format('MM/DD/YYYY'),
+                hireDate: moment(Date.now()).format('MM/DD/YYYY'),
                 ApplicationId,
                 codeuser: localStorage.getItem('LoginId'),
                 nameUser: localStorage.getItem('FullName')
@@ -1706,7 +1706,7 @@ class General extends Component {
             </Dialog>
         }
 
-        let { firstname, middlename, lastname, employmentType, startDate, positionName } = this.state;
+        let { firstname, middlename, lastname, employmentType, hireDate, positionName } = this.state;
         let employeeName = `${firstname || ''} ${middlename || ''} ${lastname || ''}`;
         let currentIdealJobsId = this.state.idealJobs.map(ij => ij.idPosition);
         return (
@@ -1774,7 +1774,7 @@ class General extends Component {
                     <DialogContent >
                         <VerificationLetter employeeName={employeeName}
                             employmentType={employmentType}
-                            startDate={startDate}
+                            startDate={hireDate}
                             positionName={positionName}
                             handleCloseModalVerificacion={this.handleCloseModalVerificacion}
                             ApplicationId={this.props.applicationId}
@@ -1798,8 +1798,8 @@ class General extends Component {
                                 </div>
                                 <div className="item col-12 col-md-2">
                                     <div className="row">
-                                        <span className="col-sm-12 font-weight-bold">Start Date</span>
-                                        <span className="col-sm-12">{this.state.startDate}</span>
+                                        <span className="col-sm-12 font-weight-bold">Hire Date</span>
+                                        <span className="col-sm-12">{this.state.hireDate}</span>
                                     </div>
                                 </div>
                                 <div className="item col-12 col-md-2">

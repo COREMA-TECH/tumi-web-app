@@ -1,24 +1,23 @@
 import gql from 'graphql-tag';
 
-export const GET_WORKER_COMPENSATION_INFO = gql`
-    query applications($id: Int!) {
-        applications(id: $id) {
+export const GET_DOCUMENT_TYPE = gql`
+    query applicationDocumentTypes($name: String) {
+        applicationDocumentTypes(name: $name) {
             id
-            workerCompensation {
-                id
-                signature
-                content
-                date
-                applicantName
-                applicantCity
-                applicantState
-                applicantAddress
-                applicantZipCode
-                injuryNotification
-                initialNotification
-                injuryDate
-                pdfUrl
-            }
+            name
+            description
+        }
+    }
+`;
+
+
+export const GET_WORKER_COMPENSATION_INFO = gql`
+    query lastApplicantLegalDocument($ApplicationId: Int!, $ApplicationDocumentTypeId: Int!) {
+        lastApplicantLegalDocument(ApplicationDocumentTypeId: $ApplicationDocumentTypeId, ApplicationId: $ApplicationId) {
+            id
+            fieldsData
+            url
+            completed
         }
     }
 `;

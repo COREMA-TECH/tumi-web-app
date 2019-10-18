@@ -64,3 +64,17 @@ export const DELETE_ALL_SHIFT = gql`
 		}
 	}
 `;
+
+export const DISABLE_SHIFT = gql`
+	mutation disableShiftCascade($id:Int!){
+		disableShiftCascade(id:$id)
+	}
+`;
+
+export const DISABLE_WORK_ORDER = gql`
+	mutation cascadeDisableWO($id:Int!){
+		cascadeDisableWO(id:$id)
+	}
+`;
+
+

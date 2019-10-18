@@ -1,12 +1,10 @@
 import gql from 'graphql-tag';
 
-/**
- * Mutation to insert anti-harassment information
- */
+
 export const ADD_ANTI_HARASSMENT = gql`
-    mutation addHarassmentPolicy($harassmentPolicy: [inputInsertApplicantHarassmentPolicy]) {
-        addHarassmentPolicy(harassmentPolicy: $harassmentPolicy) {
-            id
+    mutation newApplicantLegalDocument($fileName: String, $html: String, $applicantLegalDocument: inputInsertApplicantLegalDocuments) {
+        newApplicantLegalDocument(fileName: $fileName, html: $html, applicantLegalDocument: $applicantLegalDocument) {
+            id 
         }
     }
 `;

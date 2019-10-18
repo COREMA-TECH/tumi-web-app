@@ -3,44 +3,40 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
-import { ADD_NON_DISCLOSURE, UPDATE_NON_DISCLOSURE } from "./Mutations";
+import { ADD_DOCUMENT, UPDATE_DOCUMENT } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import renderHTML from 'react-render-html';
-import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_DISCLOSURE_INFO, GET_DOCUMENT_TYPE } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_DOCUMENT_INFO } from "./Queries";
 import PropTypes from 'prop-types';
+import { Document } from './Document';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import moment from 'moment';
-import Document from './Document';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
-const FILE_NAME = "nonDisclosure-";
+const FILE_NAME = "antiDiscrimination-";
 
 const uuidv4 = require('uuid/v4');
 
-class NonDisclosure extends Component {
+class AntiDiscrimination extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             id: '',
             signature: '',
-            content: '',
             date: '',
-            applicantName: '',
+            name: '',
             ApplicationId: this.props.applicationId,
             openSignature: false,
             completed: false,
-            urlPDF: null,
-            userId: 0,
-            typeDocumentId: 0
+            urlPDF: null
         }
     }
 
     formatDate = (date, useSubstring = false) => {
-        if(!date) return '';
+        if (!date) return '';
 
         let substringDate = useSubstring ? String(date).substring(0, 10) : date;
         return moment(substringDate).format('MM/DD/YYYY');
@@ -53,33 +49,25 @@ class NonDisclosure extends Component {
             date: this.formatDate(new Date().toISOString(), true),
             completed: true
         }, () => {
-            this.insertNonDisclosure();
+            this.saveAntiDiscrimination();
         });
     };
 
-    insertNonDisclosure = () => {
-        // let disclosureObject = Object.assign({}, item);
-        // delete disclosureObject.openSignature;
-        // delete disclosureObject.id;
-        // delete disclosureObject.accept;
-        // delete disclosureObject.urlPDF; // al guardar no es necesario
-        const random = uuidv4();
-        const html = this.cloneForm();
-        const {applicantName, date, signature} = this.state;
-        const jsonFields = JSON.stringify({applicantName, date, signature});
+    saveAntiDiscrimination = () => {
+        let { name, signature, date } = this.state;
+        const jsonFields = JSON.stringify({ name, signature, date });
 
         this.props.client
             .mutate({
-                mutation: ADD_NON_DISCLOSURE,
+                mutation: ADD_DOCUMENT,
                 variables: {
-                    fileName: "NonDisclosure-" + random + "-" + this.state.applicantName,
-                    html,
-                    applicantLegalDocument: {
+                    applicantLegalDocuments: {
                         fieldsData: jsonFields,
-                        ApplicationDocumentTypeId: this.state.typeDocumentId,
-                        ApplicationId: this.props.applicationId,
-                        UserId: this.state.userId,
-                        completed: true
+                        url: "",
+                        ApplicationDocumentTypeId: 19,
+                        ApplicationId: this.state.ApplicationId,
+                        completed: true,
+                        UserId: localStorage.getItem('LoginId')
                     }
                 }
             })
@@ -92,7 +80,7 @@ class NonDisclosure extends Component {
                     'right'
                 );
 
-                this.getDisclosureInformation(this.props.applicationId);
+                this.getDocumentInformation(this.props.applicationId, true);
 
                 this.props.changeTabState();
             })
@@ -100,23 +88,21 @@ class NonDisclosure extends Component {
                 // If there's an error show a snackbar with a error message
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error to sign Non-Disclosure document. Please, try again!',
+                    'Error to sign Anti-Discrimination document. Please, try again!',
                     'bottom',
                     'right'
                 );
             });
     };
 
-    updatePdfUrlNonDisclosure = () => {
+    updatePdfUrlAntiDiscrimination = () => {
         this.props.client
             .mutate({
-                mutation: UPDATE_NON_DISCLOSURE,
+                mutation: UPDATE_DOCUMENT,
                 variables: {
-                    disclosure: {
+                    applicantLegalDocument: {
                         id: this.state.id,
-						pdfUrl: this.state.urlPDF,
-						content: this.state.content || '',
-						ApplicationId: this.state.ApplicationId
+                        url: this.state.urlPDF
                     }
                 }
             })
@@ -124,60 +110,61 @@ class NonDisclosure extends Component {
                 // If there's an error show a snackbar with a error message
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error to updating url Non-Disclosure',
+                    'Error to updating url Anti-Discrimination',
                     'bottom',
                     'right'
                 );
             });
     };
 
-    getApplicantInformation = (id) => {
+    getJSONFields = (data) => {
+        let name = '', signature = '', date = '';
+        if (data) {
+            let fields = JSON.parse(data);
+            name = fields.name;
+            signature = fields.signature;
+            date = fields.date;
+        }
+        return { name, signature, date };
+    }
+
+    getDocumentInformation = (ApplicationId, generatePdf = false) => {
+        this.setState(() => ({ loadingData: true }));
         this.props.client
             .query({
-                query: GET_APPLICANT_INFO,
+                query: GET_DOCUMENT_INFO,
                 variables: {
-                    id: id
-                }
-            })
-            .then(({ data }) => {
-                if (data.applications[0] !== null) {
-                    this.setState({
-                        applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
-                    });
-                }
-            })
-            .catch(error => {
-
-            })
-    };
-
-    getDisclosureInformation = (id) => {
-        this.props.client
-            .query({
-                query: GET_DISCLOSURE_INFO,
-                variables: {
-                    ApplicationId: id,
-                    ApplicationDocumentTypeId: this.state.typeDocumentId
+                    ApplicationId
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({ data }) => {
-                if (data.lastApplicantLegalDocument) {
-                    const fd = data.lastApplicantLegalDocument.fieldsData;
-                    const formData = fd ? JSON.parse(fd) : {};
+            .then(({ data: { lastApplicantLegalDocument: record, applications } }) => {
+                let { firstName, middleName, lastName, lastName2 } = applications[0];
+                if (record) {
+                    let { name, signature, date } = this.getJSONFields(record.fieldsData);
                     this.setState({
-                        signature: formData.signature,
-                        applicantName: formData.applicantName,
-                        date: this.formatDate(formData.date),
-                        urlPDF: data.lastApplicantLegalDocument.url,
+                        id: record.id,
+                        url: record.url,
+                        name,
+                        signature,
+                        date,
+                        loadingData: false
+                    }, () => {
+                        if (generatePdf) this.createDocumentsPDF(uuidv4());
                     });
                 } else {
-                    this.setState({
-                        id: null
-                    })
+                    this.setState(() => ({
+                        id: null,
+                        name: `${firstName || ''} ${middleName || ''} ${lastName || ''} ${lastName2 || ''}`,
+                        loadingData: false,
+                        signature: '',
+                        date: ''
+                    }));
                 }
             })
             .catch(error => {
+                console.log({ error })
+                this.setState(() => ({ loadingData: false }));
                 // If there's an error show a snackbar with a error message
                 this.props.handleOpenSnackbar(
                     'error',
@@ -185,30 +172,6 @@ class NonDisclosure extends Component {
                     'bottom',
                     'right'
                 );
-            })
-    };
-
-    getDocumentType = () => {
-        this.props.client
-            .query({
-                query: GET_DOCUMENT_TYPE,
-                variables: {
-                    name: 'Non Disclosure'
-                },
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                if (data.applicationDocumentTypes.length) {
-                    this.setState({
-                        typeDocumentId: data.applicationDocumentTypes[0].id
-                    }, _ => {
-                        this.getDisclosureInformation(this.props.applicationId);
-                        this.getApplicantInformation(this.props.applicationId);
-                    });
-                }
-            })
-            .catch(error => {
-                console.log(error);
             })
     };
 
@@ -230,15 +193,15 @@ class NonDisclosure extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.createdocumentspdf !== null) {
                     this.state.urlPDF = data.createdocumentspdf
                     this.setState({
                         urlPDF: data.createdocumentspdf,
                         downloading: false
                     }, () => {
-                        this.updatePdfUrlNonDisclosure();
-                        if(download) this.downloadDocumentsHandler();
+                        this.updatePdfUrlAntiDiscrimination();
+                        if (download) this.downloadDocumentsHandler();
                     });
                 } else {
                     this.props.handleOpenSnackbar(
@@ -257,13 +220,11 @@ class NonDisclosure extends Component {
 
     downloadDocumentsHandler = (fileName) => {
         let url = this.state.urlPDF;
-        if(url) window.open(url, '_blank');
+        window.open(url, '_blank');
     };
 
-    componentDidMount() {
-        this.setState({
-            userId: localStorage.getItem('LoginId') || 0
-        }, () => this.getDocumentType());
+    componentWillMount() {
+        this.getDocumentInformation(this.props.applicationId);
     }
 
     sleep() {
@@ -279,7 +240,19 @@ class NonDisclosure extends Component {
     }
 
     handlePdfDownload = () => {
-        this.downloadDocumentsHandler();
+        if (this.state.urlPDF) {
+            this.downloadDocumentsHandler();
+        }
+        else {
+            const fileName = `${FILE_NAME}${uuidv4()}-${this.state.applicantName}`;
+            this.createDocumentsPDF(fileName, true);
+        }
+    }
+
+    onHandleOpenSignatureClick = () => {
+        this.setState(() => ({
+            openSignature: true
+        }));
     }
 
     render() {
@@ -331,38 +304,26 @@ class NonDisclosure extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{applyTabs[4].label}</span>
-                                <div>
-                                    {
-                                        this.state.urlPDF ?
-                                            <button className="applicant-card__edit-button" onClick={this.handlePdfDownload} disabled={this.state.downloading}>
-                                                {this.state.downloading ?
-                                                    <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>
-                                                    :
-                                                    <React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>
-                                                }
+                                <span className="applicant-card__title">{applyTabs[14].label}</span>
+                                {
+                                    this.state.id ?
+                                        <button className="applicant-card__edit-button" onClick={this.handlePdfDownload} disabled={this.state.downloading || this.state.loadingData}>
+                                            {this.state.downloading ?
+                                                <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>
+                                                :
+                                                <React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>
+                                            }
 
-                                            </button>
-                                            : ''
-                                    }
-                                    <button className="applicant-card__edit-button ml-2" onClick={() => {
-                                        this.setState({
-                                            openSignature: true
-                                        })
-                                        }}>{actions[8].label} <i className="far fa-edit"></i>
-                                    </button>
-                                </div>
+                                        </button>
+                                        :
+                                        <button className="applicant-card__edit-button" disabled={this.state.loadingData} onClick={this.onHandleOpenSignatureClick}>{actions[8].label} <i className="far fa-edit"></i>
+                                        </button>
+                                }
                             </div>
 
                             <div className="p-4">
                                 <div id="DocumentPDF" className="signature-information">
-                                    {renderHTML(
-                                        Document({
-                                            signature: this.state.signature,
-                                            date: this.state.date ? this.state.date.substring(0, 10) : '--',
-                                            applicantName: this.state.applicantName
-                                        })
-                                    )}
+                                    {renderHTML(Document(this.state))}
                                 </div>
                             </div>
                         </div>
@@ -381,4 +342,4 @@ class NonDisclosure extends Component {
 }
 
 
-export default withApollo(withGlobalContent(NonDisclosure));
+export default withApollo(withGlobalContent(AntiDiscrimination));
