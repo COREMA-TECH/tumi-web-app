@@ -15,8 +15,8 @@ export const GET_APPLICATION_STATUS = gql`
 `;
 
 export const GET_MERGED_DOCUMENT = gql`
-    query pdfMergeQuery($applicationId: Int!) {
-        pdfMergeQuery (applicationId:$applicationId)
+    query pdfMergeQuery($applicationId: Int!, $summaryHtml: String) {
+        pdfMergeQuery (applicationId:$applicationId, summaryHtml: $summaryHtml)
     }
 `;
 

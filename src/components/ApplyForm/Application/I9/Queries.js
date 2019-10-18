@@ -1,20 +1,25 @@
 import gql from 'graphql-tag';
 
 
-/**
- * To get basic info about the applicant
- */
-/**
- * To get basic info about the applicant
- */
+
 export const GET_APPLICANT_INFO = gql`
-    query applicantI9($ApplicationId: Int!){
-          applicantI9(ApplicationId: $ApplicationId){
-                id
-                html
-                url
-                fieldsData
-          }
+    query lastApplicantLegalDocument($ApplicationId: Int!, $ApplicationDocumentTypeId: Int!) {
+        lastApplicantLegalDocument(ApplicationDocumentTypeId: $ApplicationDocumentTypeId, ApplicationId: $ApplicationId) {
+            id
+            fieldsData
+            url
+            completed
+        }
+    }
+`;
+
+export const GET_DOCUMENT_TYPE = gql`
+    query applicationDocumentTypes($name: String) {
+        applicationDocumentTypes(name: $name) {
+            id
+            name
+            description
+        }
     }
 `;
 

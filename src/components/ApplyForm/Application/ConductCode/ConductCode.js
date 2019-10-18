@@ -4,7 +4,7 @@ import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 import SignatureForm from '../../SignatureForm/SignatureForm';
 import withApollo from 'react-apollo/withApollo';
 import renderHTML from 'react-render-html';
-import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO, CREATE_DOCUMENTS_PDF_QUERY } from './Queries';
+import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO, CREATE_DOCUMENTS_PDF_QUERY, GET_DOCUMENT_TYPE } from './Queries';
 import { ADD_CONDUCT_CODE, UPDATE_CONDUCT_CODE } from './Mutations';
 import withGlobalContent from '../../../Generic/Global';
 import Button from "@material-ui/core/es/Button/Button";
@@ -32,7 +32,9 @@ class ConductCode extends Component {
 			applicantName: '',
 			ApplicationId: this.props.applicationId,
 			openSignature: false,
-			completed: false
+			completed: false,
+			userId: 0,
+            typeDocumentId: 0
 		};
 	}
 
@@ -52,7 +54,7 @@ class ConductCode extends Component {
 				completed: true
 			},
 			() => {
-				this.insertConductCode(this.state);
+				this.insertConductCode();
 			}
 		);
 	};
@@ -80,26 +82,25 @@ class ConductCode extends Component {
 			.catch((error) => { });
 	};
 
-	getConductCodeInformation = (id, generatePdf = false) => {
+	getConductCodeInformation = (id) => {
 		this.props.client
 			.query({
 				query: GET_CONDUCT_CODE_INFO,
 				variables: {
-					id: id
+					ApplicationId: id,
+                    ApplicationDocumentTypeId: this.state.typeDocumentId
 				},
 				fetchPolicy: 'no-cache'
 			})
 			.then(({ data }) => {
-				if (data.applications[0].conductCode !== null) {
+				if (data.lastApplicantLegalDocument) {
+					const fd = data.lastApplicantLegalDocument.fieldsData;
+                    const formData = fd ? JSON.parse(fd) : {};
 					this.setState({
-						id: data.applications[0].conductCode.id,
-						signature: data.applications[0].conductCode.signature,
-						content: data.applications[0].conductCode.content,
-						applicantName: data.applications[0].conductCode.applicantName,
-						date: this.formatDate(data.applications[0].conductCode.date, true),
-						urlPDF: data.applications[0].conductCode.pdfUrl
-					}, () => {
-						if(generatePdf) this.createDocumentsPDF(uuidv4());
+						signature: formData.signature,
+						applicantName: formData.applicantName,
+						date: this.formatDate(formData.date),
+						urlPDF: data.lastApplicantLegalDocument.url
 					});
 				} else {
 					this.setState({
@@ -118,28 +119,61 @@ class ConductCode extends Component {
 			});
 	};
 
-	insertConductCode = (item) => {
-		let conductObject = Object.assign({}, item);
-		delete conductObject.openSignature;
-		delete conductObject.id;
-		delete conductObject.accept;
-		delete conductObject.urlPDF; // no es necesario en el crear
+	getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'Conduct Code'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }, _ => {
+                        this.getConductCodeInformation(this.props.applicationId);
+						this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
+
+	insertConductCode = () => {
+		// let conductObject = Object.assign({}, item);
+		// delete conductObject.openSignature;
+		// delete conductObject.id;
+		// delete conductObject.accept;
+		// delete conductObject.urlPDF; // no es necesario en el crear
+		const random = uuidv4();
+        const html = this.cloneForm();
+        const {applicantName, date, signature} = this.state;
+        const jsonFields = JSON.stringify({applicantName, date, signature});
 
 		this.props.client
 			.mutate({
 				mutation: ADD_CONDUCT_CODE,
 				variables: {
-					conductCode: conductObject
+					fileName: "ConductCode-" + random + "-" + this.state.applicantName,
+                    html,
+                    applicantLegalDocument: {
+                        fieldsData: jsonFields,
+                        ApplicationDocumentTypeId: this.state.typeDocumentId,
+                        ApplicationId: this.props.applicationId,
+                        UserId: this.state.userId,
+                        completed: true
+                    }
 				}
 			})
 			.then(({ data }) => {
 				this.props.handleOpenSnackbar('success', 'Successfully signed!', 'bottom', 'right');
 
-				this.getConductCodeInformation(this.props.applicationId, true);
+				this.getConductCodeInformation(this.props.applicationId);
 
-				this.setState({
-					id: data.addConductCode[0].id
-				});
 				this.props.changeTabState();
 			})
 			.catch((error) => {
@@ -224,13 +258,14 @@ class ConductCode extends Component {
 	};
 
 	downloadDocumentsHandler = () => {
-		var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF;
-		window.open(url, '_blank');
+		const url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF;
+		if(url) window.open(url, '_blank');
 	};
 
 	componentWillMount() {
-		this.getConductCodeInformation(this.props.applicationId);
-		this.getApplicantInformation(this.props.applicationId);
+		this.setState({
+            userId: localStorage.getItem('LoginId') || 0
+        }, () => this.getDocumentType());
 	}
 
 	sleep() {
@@ -306,27 +341,22 @@ class ConductCode extends Component {
 							<div className="applicant-card__header">
 								<span className="applicant-card__title">{applyTabs[5].label}</span>
 								{
-									this.state.id === '' ? (
-										''
-									) : (
-											<div>
-												{
-													this.state.id !== null ? (
-														<button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
-															{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-															{!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
-														</button>
-													) : (
-															<button className="applicant-card__edit-button" onClick={() => {
-																this.setState({
-																	openSignature: true
-																})
-															}}>{actions[8].label} <i className="far fa-edit"></i>
-															</button>
-														)
-												}
-											</div>
-										)
+									<div>
+										{
+											this.state.urlPDF ? (
+												<button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+													{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+													{!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
+												</button>
+											) : ''
+										}
+										<button className="applicant-card__edit-button ml-2" onClick={() => {
+											this.setState({
+												openSignature: true
+											})
+											}}>{actions[8].label} <i className="far fa-edit"></i>
+										</button>
+									</div>
 								}
 							</div>
 							<div className="row pdf-container" style={{ margin: '0 auto', maxWidth: '95%', fontSize: '1.1rem' }}>

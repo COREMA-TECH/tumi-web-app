@@ -1,6 +1,16 @@
 import { graphql } from 'react-apollo';
 import { GET_APPLICATION, CREATE_DOCUMENTS_PDF_QUERY } from './Queries';
 import SummaryDoc from '../Summary/Document';
+import W4Doc from '../W4/Document';
+import I9Doc from '../I9/Document';
+import BackgroundCkeckDoc from '../BackgroundCkeck/Document';
+import AntiHarassmentDoc from '../AntiHarassment/Document';
+import NonDisclosureDoc from '../NonDisclosure/Document';
+import ConductCodeDoc from '../ConductCode/Document';
+import WorkerCompensationDoc from '../WorkerCompensation/Document';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+
 import moment from 'moment';
 
 let apolloClient;
@@ -21,6 +31,31 @@ const getSource = (opt, nameReference) => {
     }
 
     return source;
+}
+
+// Solo se usa cuando se actualizan los documentos vacios
+const jsxToString = (Comp) => {
+    return ReactDOMServer.renderToStaticMarkup(<Comp data={{}} />)
+}
+
+const updateEmptyFiles = () => {
+    const summaryHtml = SummaryDoc();
+    const w4Html = jsxToString(W4Doc);
+    const i9Html = jsxToString(I9Doc);
+    const backgroundCkeckHtml = jsxToString(BackgroundCkeckDoc);
+    const antiHarassmentHtml = AntiHarassmentDoc();
+    const nonDisclosureHtml = NonDisclosureDoc();
+    const conductCodeHtml = ConductCodeDoc();
+    const workerCompensationHtml = WorkerCompensationDoc();
+
+    createDocumentsPDF('zoom: 50%; font-family: Arial, Helvetica, sans-serif;', summaryHtml, 'Summary-EMPTY');
+    createDocumentsPDF('zoom: 65%;', w4Html, 'W4-EMPTY');
+    createDocumentsPDF('zoom: 50%;', i9Html, 'I9-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;`, backgroundCkeckHtml, 'BackgroundCheck-EMPTY');
+    createDocumentsPDF('zoom: 60%; font-family: Time New Roman; letter-spacing: 0', antiHarassmentHtml, 'AntiHarassment-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman', Times, serif  !important; line-height: 1.5 !important;`, nonDisclosureHtml, 'NonDisclosure-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;`, conductCodeHtml, 'ConductCode-EMPTY');
+    createDocumentsPDF('zoom: 60%;', workerCompensationHtml, 'WorkerCompensation-EMPTY');
 }
 
 const htmlWrapper = (style, htmlContent) => {
@@ -45,7 +80,7 @@ const createDocumentsPDF = async (style, html, documentName) => {
         });
 };
 
-export const generateDocuments = async (client, applicationId) => {
+export const generateDocuments = async (client, applicationId, setSumaryHtml) => {
     let appQuery;
     let summaryHtml;
 
@@ -67,7 +102,7 @@ export const generateDocuments = async (client, applicationId) => {
     });
 
     console.log('query terminada ',appQuery.application); // TODO: Quitar console log
-    if(!appQuery.application){
+    if(appQuery.application){
         console.log('Entra a application'); // TODO: Quitar console log
         const {firstName, middleName, lastName, employee, employmentType, marital, exemptions, optionHearTumi, nameReferences, Accounts,
             socialSecurityNumber, cellPhone, gender, birthDay, streetAddress, city, cityInfo, state, stateInfo, zipCode,
@@ -105,10 +140,11 @@ export const generateDocuments = async (client, applicationId) => {
         });
     }
     else{
-        console.log('Application no encontrado'); // TODO: Quitar console log
         summaryHtml = SummaryDoc();
     }
 
-    //TODO: (LF) Quitar codigo comentado
-    //createDocumentsPDF('zoom: 50%; font-family: Arial, Helvetica, sans-serif;', summaryHtml, 'Sumary de prueba');
+    setSumaryHtml(`<html style="zoom: 50%; font-family: Arial, Helvetica, sans-serif;">${summaryHtml}</html>`);
+    
+    ////* Descomentar para actualizar los documentos vacios */
+    //updateEmptyFiles();
 }

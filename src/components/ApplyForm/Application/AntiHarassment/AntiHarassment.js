@@ -4,7 +4,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import renderHTML from 'react-render-html';
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO, GET_DOCUMENT_TYPE } from "./Queries";
 import { ADD_ANTI_HARASSMENT, UPDATE_ANTI_HARASSMENT } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
@@ -33,7 +33,9 @@ class AntiHarassment extends Component {
             companyPhoneNumber: '',
             ApplicationId: this.props.applicationId,
             completed: false,
-            urlPDF: null
+            urlPDF: null,
+            userId: 0,
+            typeDocumentId: 0
         }
     }
 
@@ -51,7 +53,7 @@ class AntiHarassment extends Component {
             date: this.formatDate(new Date().toISOString(), true),
             completed: true
         }, () => {
-            this.insertAntiHarrasment(this.state);
+            this.insertAntiHarrasment();
         });
     };
 
@@ -75,27 +77,27 @@ class AntiHarassment extends Component {
             })
     };
 
-    getHarrasmentInformation = (id, generatePdf = false) => {
+    getHarrasmentInformation = (id) => {
         this.props.client
             .query({
                 query: GET_ANTI_HARRASMENT_INFO,
                 variables: {
-                    id: id
+                    ApplicationId: id,
+                    ApplicationDocumentTypeId: this.state.typeDocumentId
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-
-                if (data.applications[0].harassmentPolicy !== null) {
+                if (data.lastApplicantLegalDocument) {
+                    const fd = data.lastApplicantLegalDocument.fieldsData;
+                    const formData = fd ? JSON.parse(fd) : {};
                     this.setState({
-                        id: data.applications[0].harassmentPolicy.id,
-                        signature: data.applications[0].harassmentPolicy.signature,
-                        content: data.applications[0].harassmentPolicy.content,
-                        applicantName: data.applications[0].harassmentPolicy.applicantName,
-                        date: this.formatDate(data.applications[0].harassmentPolicy.date, true),
-                        urlPDF: data.applications[0].harassmentPolicy.pdfUrl
-                    }, () => {
-                        if(generatePdf) this.createDocumentsPDF(uuidv4());
+                        //id: 0, 
+                        signature: formData.signature,
+                        //content: data.applications[0].harassmentPolicy.content,
+                        applicantName: formData.applicantName,
+                        date: this.formatDate(formData.date),
+                        urlPDF: data.lastApplicantLegalDocument.url
                     });
                 } else {
                     this.setState({
@@ -114,18 +116,49 @@ class AntiHarassment extends Component {
             })
     };
 
-    insertAntiHarrasment = (item) => {
-        let harassmentObject = Object.assign({}, item);
-        delete harassmentObject.openSignature;
-        delete harassmentObject.id;
-        delete harassmentObject.accept;
-        delete harassmentObject.urlPDF; // no es necesario en el crear
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'Harassment Policies'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }, _ => {
+                        this.getHarrasmentInformation(this.props.applicationId);
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
+
+    insertAntiHarrasment = () => {
+        const random = uuidv4();
+        const html = '<html style="zoom: 60%; font-family: Time New Roman; letter-spacing: 0">' + document.getElementById('DocumentPDF').innerHTML + '</html>'
+        const {applicantName, date, signature} = this.state;
+        const jsonFields = JSON.stringify({applicantName, date, signature});
 
         this.props.client
             .mutate({
                 mutation: ADD_ANTI_HARASSMENT,
                 variables: {
-                    harassmentPolicy: harassmentObject
+                    fileName: "Anti-Harrasment-" + random + "-" + this.state.applicantName,
+                    html,
+                    applicantLegalDocument: {
+                        fieldsData: jsonFields,
+                        ApplicationDocumentTypeId: this.state.typeDocumentId,
+                        ApplicationId: this.props.applicationId,
+                        UserId: this.state.userId,
+                        completed: true
+                    }
                 }
             })
             .then(({ data }) => {
@@ -136,9 +169,7 @@ class AntiHarassment extends Component {
                     'right'
                 );
                 
-                this.setState({
-                    id: data.addHarassmentPolicy[0].id
-                }, () => this.getHarrasmentInformation(this.props.applicationId, true) );
+                this.getHarrasmentInformation(this.props.applicationId)
 
                 this.props.changeTabState();
             })
@@ -214,14 +245,15 @@ class AntiHarassment extends Component {
 
 
     downloadDocumentsHandler = () => {
-        var url = this.state.urlPDF;
-        window.open(url, '_blank');
+        const url = this.state.urlPDF;
+        if(url) window.open(url, '_blank');
     };
 
 
-    componentWillMount() {
-        this.getHarrasmentInformation(this.props.applicationId);
-        this.getApplicantInformation(this.props.applicationId);
+    componentDidMount() {
+        this.setState({
+            userId: localStorage.getItem('LoginId') || 0
+        }, () => this.getDocumentType());
     }
 
     sleep() {
@@ -229,13 +261,7 @@ class AntiHarassment extends Component {
     }
 
     handlePdfDownload = () => {
-        if(this.state.urlPDF){
-            this.downloadDocumentsHandler();
-        }
-        else {
-            let idv4 = uuidv4();
-            this.createDocumentsPDF(idv4, true);
-        }
+        this.downloadDocumentsHandler();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -297,25 +323,27 @@ class AntiHarassment extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[6].label}</span>
-                                {
-                                    this.state.id !== null ? (
-                                        <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
-                                            {this.state.downloading && (
-                                            <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                            {!this.state.downloading && (
-                                                <React.Fragment>{actions[9].label} <i
-                                                    className="fas fa-download" /></React.Fragment>)}
+                                <div>
+                                    {
+                                        this.state.urlPDF !== null ? (
+                                            <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+                                                {this.state.downloading && (
+                                                <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                {!this.state.downloading && (
+                                                    <React.Fragment>{actions[9].label} <i
+                                                        className="fas fa-download" /></React.Fragment>)}
 
-                                        </button>
-                                    ) : (
-                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                this.setState({
-                                                    openSignature: true
-                                                })
-                                            }}>{actions[8].label} <i className="far fa-edit" />
                                             </button>
-                                        )
-                                }
+                                        ) : ''                                    
+                                    }
+                                    <button className="applicant-card__edit-button ml-2" 
+                                        onClick={() => {
+                                            this.setState({
+                                                openSignature: true
+                                            })
+                                        }}>{actions[8].label} <i className="far fa-edit" />
+                                    </button>
+                                </div>
                             </div>
                             <div className="">
                                 <div id="DocumentPDF" className="signature-information">
