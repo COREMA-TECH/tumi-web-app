@@ -79,7 +79,7 @@ class BackgroundCheck extends Component {
     }
 
     formatDate = (date, useSubstring = false, customFormat = 'YYYY-MM-DD') => {
-        if(!date) return '';
+        if (!date) return '';
 
         let substringDate = useSubstring ? String(date).substring(0, 10) : date;
         return moment(substringDate).format(customFormat);
@@ -238,10 +238,10 @@ class BackgroundCheck extends Component {
                     if (data.lastApplicantLegalDocument) {
                         const fd = data.lastApplicantLegalDocument.fieldsData;
                         const formData = fd ? JSON.parse(fd) : {};
-                        const licenseExpiration= this.formatDate(formData.licenseExpiration, false, 'YYYY-MM-DD');
-                        const date= this.formatDate(formData.date, false, 'YYYY-MM-DD');
+                        const licenseExpiration = this.formatDate(formData.licenseExpiration, false, 'YYYY-MM-DD');
+                        const date = this.formatDate(formData.date, false, 'YYYY-MM-DD');
 
-                        this.setState(()=>({
+                        this.setState(() => ({
                             loading: false,
                             id: 1,
                             vehicleReportRequired: formData.vehicleReportRequired,
@@ -290,9 +290,9 @@ class BackgroundCheck extends Component {
             })
             .then(({ data }) => {
                 if (data.applicationDocumentTypes.length) {
-                    this.setState(()=>({
+                    this.setState(() => ({
                         typeDocumentId: data.applicationDocumentTypes[0].id
-                    }),()=>{
+                    }), () => {
                         this.getBackgroundCheckById(this.props.applicationId);
                         this.getApplicantInformation(this.props.applicationId);
                     });
@@ -421,9 +421,9 @@ class BackgroundCheck extends Component {
                 variables: {
                     backgroundCheck: {
                         id: this.state.id,
-						pdfUrl: this.state.urlPDF,
-						content: this.state.content || '',
-						ApplicationId: this.props.applicationId
+                        pdfUrl: this.state.urlPDF,
+                        content: this.state.content || '',
+                        ApplicationId: this.props.applicationId
                     }
                 }
             })
@@ -452,7 +452,7 @@ class BackgroundCheck extends Component {
         // Get elements from background check
         let form = document.getElementById("background-check-form").elements;
         let backgroundCheckItem;
-        const {firstName, middleName, lastName} = this.state;
+        const { firstName, middleName, lastName } = this.state;
 
         // Build the object with form information
         if (form.item(0).checked) {
@@ -480,10 +480,10 @@ class BackgroundCheck extends Component {
 
 
         this.insertBackgroundCheck(JSON.stringify(backgroundCheckItem));
-        
+
     };
 
-    externalSetState = (updateData, callback = () => {}) => {
+    externalSetState = (updateData, callback = () => { }) => {
         this.setState(updateData, _ => callback());
     }
 
@@ -521,15 +521,15 @@ class BackgroundCheck extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.createdocumentspdf !== null) {
-                    this.setState({ 
+                    this.setState({
                         urlPDF: data.createdocumentspdf,
                         loadingData: false,
                         downloading: false
                     }, () => {
                         this.updatePdfUrlBackgroundCheck();
-                        if(download) this.downloadDocumentsHandler();
+                        if (download) this.downloadDocumentsHandler();
                     });
                 }
                 else {
@@ -539,7 +539,7 @@ class BackgroundCheck extends Component {
                     );
                     this.setState({
                         loadingData: false,
-                        downloading: false 
+                        downloading: false
                     });
                 }
             })
@@ -560,7 +560,7 @@ class BackgroundCheck extends Component {
     }
 
     handlePdfDownload = () => {
-        if(this.state.urlPDF){
+        if (this.state.urlPDF) {
             this.downloadDocumentsHandler();
         }
         else {
@@ -633,9 +633,9 @@ class BackgroundCheck extends Component {
                                     {
                                         this.state.isCreated && !this.state.loadingApplicantData ? (
                                             <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
-                                            {this.state.downloading && (
-                                                <React.Fragment>Downloading <i
-                                                    className="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                {this.state.downloading && (
+                                                    <React.Fragment>Downloading <i
+                                                        className="fas fa-spinner fa-spin" /></React.Fragment>)}
                                                 {!this.state.downloading && (
                                                     <React.Fragment>{spanishActions[9].label} <i
                                                         className="fas fa-download" /></React.Fragment>)}
@@ -1011,34 +1011,28 @@ class BackgroundCheck extends Component {
                                 position: 'relative', display: 'none', width: '100%',
                                 margin: 'auto'
                             }}>
-                                {
-                                    this.state.isCreated ? (
-                                        <div className="row" id="DocumentPDF" style={{ maxWidth: '100%', margin: '0' }}>
-                                            <Document
-                                                setState={this.externalSetState}
-                                                data={{
-                                                    firstName: this.state.firstName,
-                                                    middleName: this.state.middleName,
-                                                    lastName: this.state.lastName,
-                                                    birthDay: this.formatDate(this.state.birthDay, true),
-                                                    streetAddress: this.state.streetAddress,
-                                                    cityName: this.state.cityName,
-                                                    stateName: this.state.stateName,
-                                                    zipCode: this.state.zipCode,
-                                                    socialSecurityNumber: this.state.socialSecurityNumber,
-                                                    vehicleReportRequired: this.state.vehicleReportRequired,
-                                                    driverLicenseNumber: this.state.driverLicenseNumber,
-                                                    licenseStateName: this.state.licenseStateName,
-                                                    licenseExpiration: this.formatDate(this.state.licenseExpiration),
-                                                    commercialDriverLicense: this.state.commercialDriverLicense,
-                                                    signature: this.state.signature,
-                                                }}
-                                            />
-                                        </div>
-                                    ) : (
-                                            ''
-                                        )
-                                }
+                                <div className="row" id="DocumentPDF" style={{ maxWidth: '100%', margin: '0' }}>
+                                    <Document
+                                        setState={this.externalSetState}
+                                        data={{
+                                            firstName: this.state.firstName,
+                                            middleName: this.state.middleName,
+                                            lastName: this.state.lastName,
+                                            birthDay: this.formatDate(this.state.birthDay, true),
+                                            streetAddress: this.state.streetAddress,
+                                            cityName: this.state.cityName,
+                                            stateName: this.state.stateName,
+                                            zipCode: this.state.zipCode,
+                                            socialSecurityNumber: this.state.socialSecurityNumber,
+                                            vehicleReportRequired: this.state.vehicleReportRequired,
+                                            driverLicenseNumber: this.state.driverLicenseNumber,
+                                            licenseStateName: this.state.licenseStateName,
+                                            licenseExpiration: this.formatDate(this.state.licenseExpiration),
+                                            commercialDriverLicense: this.state.commercialDriverLicense,
+                                            signature: this.state.signature,
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

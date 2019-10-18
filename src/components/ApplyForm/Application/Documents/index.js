@@ -14,7 +14,7 @@ import FormW4 from "../W4/FormsW4";
 import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from '../../../Generic/Global';
-import {generateDocuments} from './GenerateDocuments';
+import { generateDocuments } from './GenerateDocuments';
 import HistoricalNHP from '../HistoricalNHP';
 
 const steps = {
@@ -74,7 +74,7 @@ class Documents extends Component {
             case 1:
                 stepScreen = <FormI9 applicationId={applicationId} changeTabState={this.changeTabState} />;
                 break;
-            case 2: 
+            case 2:
                 stepScreen = <BackgroundCheck applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 3:
@@ -83,16 +83,16 @@ class Documents extends Component {
             case 4:
                 stepScreen = <AntiDiscrimination applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 5: 
+            case 5:
                 stepScreen = <NonDisclosure applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 6:
                 'Non Retaliation Policy'
                 break;
-            case 7: 
+            case 7:
                 stepScreen = <ConductCode applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 8: 
+            case 8:
                 'Benefit Election form'
                 break;
             case 9:
@@ -129,7 +129,7 @@ class Documents extends Component {
     }
 
     setSummaryHtml = (summaryHtml) => {
-        this.setState({summaryHtml});
+        this.setState({ summaryHtml });
     }
 
     componentWillMount() {
@@ -147,34 +147,34 @@ class Documents extends Component {
 
         switch (index) {
             case 0:
-                isCompleted = this.state.applicationStatus.ApplicantW4;    
+                isCompleted = this.state.applicationStatus.W4;
                 break;
             case 1:
-                isCompleted = this.state.applicationStatus.ApplicantI9;
+                isCompleted = this.state.applicationStatus.I9;
                 break;
-            case 2: 
-                isCompleted = this.state.applicationStatus.ApplicantBackgroundCheck;
+            case 2:
+                isCompleted = this.state.applicationStatus.BackgroundCheck;
                 break;
             case 3:
-                isCompleted = this.state.applicationStatus.ApplicantHarassmentPolicy;
+                isCompleted = this.state.applicationStatus.HarassmentPolicy;
                 break;
             case 4:
-                isCompleted = true;//Anti Discrimination
+                isCompleted = this.state.applicationStatus.AntiDiscrimination;
                 break;
-            case 5: 
-                isCompleted = this.state.applicationStatus.ApplicantDisclosure;
+            case 5:
+                isCompleted = this.state.applicationStatus.Disclosure;
                 break;
             case 6:
-                isCompleted = true; // Non retaliation policy
+                isCompleted = this.state.applicationStatus.NonRelation;
                 break;
             case 7:
-                isCompleted = this.state.applicationStatus.ApplicantConductCode;
+                isCompleted = this.state.applicationStatus.ConductCode;
                 break;
             case 8:
-                isCompleted = true; // benefit Election
+                isCompleted = this.state.applicationStatus.BenefitElection;
                 break;
             case 9:
-                isCompleted = this.state.applicationStatus.ApplicantWorkerCompensation;
+                isCompleted = this.state.applicationStatus.WorkerCompensation;
                 break;
             case 10:
                 isCompleted = true; // General Documents
