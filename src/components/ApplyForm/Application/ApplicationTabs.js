@@ -14,7 +14,7 @@ import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 import ProfilePreview from "./ProfilePreview/ProfilePreview";
 import FormsI9 from './I9/FormsI9';
 import FormsW4 from "./W4/FormsW4";
-import { GET_COMPLETED_STATUS } from './Queries';
+import { GET_APPLICATION_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
 import IndependentContract from "./IndependentContract";
 import ApplicationInternal from './ApplicationInternal';
@@ -96,15 +96,18 @@ class CustomizedTabs extends React.Component {
             return;
         this.props.client
             .query({
-                query: GET_COMPLETED_STATUS,
+                query: GET_APPLICATION_STATUS,
                 fetchPolicy: 'no-cache',
                 variables: {
                     id: this.state.applicationId
                 }
             })
-            .then(({ data }) => {
+            .then(({ data: applicationCompletedData }) => {
+                let applicationStatus = false;
+                if (applicationCompletedData)
+                    applicationStatus = Object.values(applicationCompletedData).filter(value => value === false).length > 0
                 this.setState({
-                    applicationStatus: data.applicationCompleted
+                    applicationStatus
                 });
             })
             .catch();
