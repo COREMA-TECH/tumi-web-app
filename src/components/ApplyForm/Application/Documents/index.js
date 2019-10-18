@@ -14,6 +14,8 @@ import FormW4 from "../W4/FormsW4";
 import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from '../../../Generic/Global';
+import {generateDocuments} from './GenerateDocuments';
+import HistoricalNHP from '../HistoricalNHP';
 
 const steps = {
     0: "Background Check",
@@ -24,7 +26,8 @@ const steps = {
     5: "I9",
     6: "W4",
     7: "General Documents",
-    8: "Anti Discrimination"
+    8: "Historical NHP"
+    9: "Anti Discrimination"
 };
 
 const styles = theme => ({
@@ -86,7 +89,9 @@ class Documents extends Component {
             case 7:
                 stepScreen = <ApplicantDocument applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 8:
+            case 8: 
+                stepScreen = <HistoricalNHP applicationId={applicationId}/>
+            case 9:
                 stepScreen = <AntiDiscrimination applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
         }
@@ -115,6 +120,7 @@ class Documents extends Component {
 
     componentWillMount() {
         this.getApplicantStatus();
+        generateDocuments(this.props.client, this.props.applicationId);
     }
 
     // componentWillUpdate() {
@@ -148,6 +154,9 @@ class Documents extends Component {
                 isCompleted = this.state.applicationStatus.ApplicantW4;
                 break;
             case 7:
+                isCompleted = true;
+                break;
+            case 8:
                 isCompleted = true;
                 break;
         }

@@ -15,6 +15,17 @@ export const GET_APPLICANT_INFO = gql`
     }
 `;
 
+// export const GET_APPLICANT_INFO = gql`
+//     query applicantLegalDocuments($applicantLegalDocument: inputUpdateApplicantLegalDocuments){
+//         applicantLegalDocuments(applicantLegalDocument: $applicantLegalDocument){
+//                 id
+//                 html
+//                 url
+//                 fieldsData
+//           }
+//     }
+// `;
+
 export const CREATE_DOCUMENTS_PDF_QUERY = gql`
 query createdocumentspdf($contentHTML:String,$Name:String) {
     createdocumentspdf(contentHTML: $contentHTML, Name: $Name) 

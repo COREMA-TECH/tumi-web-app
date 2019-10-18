@@ -11,6 +11,7 @@ import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
 import { CREATE_DOCUMENTS_PDF_QUERY, GET_SUMMARY_INFO } from "./Queries";
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import Document from './Document';
 
 const uuidv4 = require('uuid/v4');
 
@@ -378,7 +379,31 @@ class Summary extends Component {
                             <div className="SummaryTab">
                                 <div className="row pdf-container">
                                 <div id="DocumentPDF" className="signature-information">
-                                    {renderHTML(`<div class="WordSection1">
+                                    {renderHTML(
+                                        Document({
+                                            applicantName: this.state.applicantName,
+                                            socialSecurityNumber: this.state.socialSecurityNumber,
+                                            cellphone: this.state.cellphone,
+                                            gender: this.state.gender,
+                                            birthDay: this.state.birthDay,
+                                            address: address,
+                                            hotel: this.state.hotel,
+                                            hireDate: this.state.hireDate,
+                                            employmentType: this.state.employmentType,
+                                            marital: this.state.marital,
+                                            exemptions: this.state.exemptions,
+                                            source: this.state.source,
+                                            accountNumber: appAccount ? appAccount.accountNumber : '--',
+                                            bankName: appAccount ? appAccount.bankName : '--',
+                                            routingNumber: appAccount ? appAccount.routingNumber : '--',
+                                            numberId: this.state.numberId,
+                                            typeOfId: this.state.typeOfId,
+                                            expireDateId: this.state.expireDateId,
+                                            car: this.state.car,
+                                            area: this.state.area
+                                        })
+                                    )}
+                                    {/* {renderHTML(`<div class="WordSection1">
                                     <table style="border-collapse: collapse; width: 100%; height: 75px;" border='0'>
 
                                     <tbody style='border-bottom: solid 3px #b40639;'>
@@ -528,7 +553,7 @@ class Summary extends Component {
                                     
                                     </table>
                                     
-                                    <p>&nbsp;</p>`)}
+                                    <p>&nbsp;</p>`)} */}
                                 </div>
                             </div>
                             </div>
