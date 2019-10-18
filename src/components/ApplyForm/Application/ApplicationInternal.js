@@ -466,7 +466,7 @@ class ApplicationInternal extends Component {
                                                 autoComplete="off"
                                                 onSubmit={this.handleSubmit}
                                             >
-                                                <div className="row">                                                    
+                                                <div className="row">
                                                     <div className="col-md-6">
                                                         <span className="primary applicant-card__label skeleton">
                                                             {formSpanish[32].label}
@@ -525,28 +525,6 @@ class ApplicationInternal extends Component {
                                                             </div>
                                                         </div>
                                                     </div>
-
-                                                    <div className="col-md-6">
-                                                        <span className="primary applicant-card__label skeleton">
-                                                            {formSpanish[36].label}
-                                                        </span>
-                                                        <div class="input-group flex-nowrap">
-                                                            <DatePicker
-                                                                selected={this.state.startDate}
-                                                                onChange={(date) => this.handleDatePickerChange('startDate', date)}
-                                                                placeholderText={formSpanish[36].label}
-                                                                name="startDate"
-                                                                id="startDate"
-                                                                disabled={!this.state.editing}
-                                                            />
-                                                            <div class="input-group-append">
-                                                                <label class="input-group-text" id="addon-wrapping" for="startDate">
-                                                                    <i class="far fa-calendar"></i>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
                                                     <div className="col-md-12">
                                                         <span className="primary applicant-card__label skeleton">
                                                             {formSpanish[38].label}
@@ -583,7 +561,7 @@ class ApplicationInternal extends Component {
                                                     ) : ('')}
                                                 </div>
                                             </form>
-                                        
+
                                         </div>
                                     </div>
                                 </div>
@@ -600,7 +578,7 @@ class ApplicationInternal extends Component {
                         <div className="applicant-card">
                             <div className="card-body">
                                 <div className="row">
-                                    
+
                                 </div>
                                 <Skills applicationId={this.props.applicationId} />
                             </div>
