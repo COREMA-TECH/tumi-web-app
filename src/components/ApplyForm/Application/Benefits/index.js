@@ -2,16 +2,27 @@ import React, {Fragment, Component} from 'react';
 
 import Select from 'react-select';
 import makeAnimated from "react-select/lib/animated";
+import Button from "@material-ui/core/es/Button/Button";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import SignatureForm from "../../SignatureForm/SignatureForm";
+
 import Dependent from './dependents';
 
 class Benefits extends Component{
     INITIAL_STATE = {
+        openSignature: false,
+        signature: null,
         hmo: 0,
+        hmoReason: "",
+        ooaReason: "",
         outOfArea: 0,
         coverage: 0,
         marital: true, //single
         gender: true, //male
-        dependents: []
+        dependents: [],
+        preTax: true,        
     }
 
     constructor(props){
@@ -41,6 +52,14 @@ class Benefits extends Component{
             ...this.INITIAL_STATE
         }
     }
+
+    handleSignature = (value) => {
+        this.setState({
+            signature: value,
+            openSignature: false,
+            date: new Date().toISOString().substring(0, 10)
+        });
+    };
 
     handleChange = ({target: {name, value}}) => {
         this.setState(_ => ({
@@ -134,11 +153,11 @@ class Benefits extends Component{
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <label htmlFor="" className="BenefitsDoc-label">Employee Name (Last, First, M)</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.name} name="name" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.name} name="name" id=""/>
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Social Security Number</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.ssn} name="ssn" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.ssn} name="ssn" id=""/>
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Marital Status</label>
@@ -147,17 +166,17 @@ class Benefits extends Component{
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Effective Date</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.effectiveDate} name="effectiveDate" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.effectiveDate} name="effectiveDate" id=""/>
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <label htmlFor="" className="BenefitsDoc-label">Mailing Address</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.address} name="address" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.address} name="address" id=""/>
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Date of Birth</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.birthday} name="birthday" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.birthday} name="birthday" id=""/>
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Gender</label>
@@ -166,33 +185,33 @@ class Benefits extends Component{
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Location</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.location} name="location" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.location} name="location" id=""/>
                                             </div>
                                         </div>
                                         <div className="row">
                                             <div className="col-md-4">
                                                 <label htmlFor="" className="BenefitsDoc-label">City</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.city} name="city" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.city} name="city" id=""/>
                                             </div>
                                             <div className="col-md-1">
                                                 <label htmlFor="" className="BenefitsDoc-label">State</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.state} name="state" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.state} name="state" id=""/>
                                             </div>
                                             <div className="col-md-1">
                                                 <label htmlFor="" className="BenefitsDoc-label">Zip Code</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.zipcode} name="zipcode" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.zipcode} name="zipcode" id=""/>
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Full-Time Date of Hire</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.hiredate} name="hiredate" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.hiredate} name="hiredate" id=""/>
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Home Phone Number</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.homePhone} name="homePhone" id=""/>                                                
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.homePhone} name="homePhone" id=""/>                                                
                                             </div>
                                             <div className="col-md-2">
                                                 <label htmlFor="" className="BenefitsDoc-label">Work Phone Number</label>
-                                                <input type="text" onChange={this.handleChange} value={this.state.workPhone} name="workPhone" id=""/>
+                                                <input className="BenefitsDoc-input" type="text" onChange={this.handleChange} value={this.state.workPhone} name="workPhone" id=""/>
                                             </div>
                                         </div>
                                     </div>
@@ -222,7 +241,7 @@ class Benefits extends Component{
                                                 this.state.hmo === 0 ? (
                                                     <div className="col-md-6">
                                                         <label htmlFor="">Decline (I choose NOT to participate) Reason:</label>
-                                                        <input type="text" name="hmoReason" value={this.state.hmoReason} style={{borderBottom: "1px solid black"}} id=""/>
+                                                        <input className="BenefitsDoc-input" type="text" name="hmoReason" value={this.state.hmoReason} style={{marginTop: "0"}} id=""/>
                                                     </div>
                                                 ) : ''
                                             }
@@ -245,7 +264,7 @@ class Benefits extends Component{
                                                 this.state.outOfArea === 0 ? (
                                                     <div className="col-md-6">
                                                         <label htmlFor="">Decline (I choose NOT to participate) Reason:</label>
-                                                        <input type="text" name="hmoReason" value={this.state.hmoReason} style={{borderBottom: "1px solid black"}} id=""/>
+                                                        <input className="BenefitsDoc-input" type="text" name="ooaReason" value={this.state.ooaReason} style={{marginTop: "0"}} id=""/>
                                                     </div>
                                                 ) : ''
                                             }
@@ -253,54 +272,152 @@ class Benefits extends Component{
                                     </div>
                                     {
                                         this.state.hmo === 0 && this.state.outOfArea === 0 ? "" : (
-                                            <div className="BenefitsDoc-sec section-3">
-                                                <div className="row">
-                                                    <div className="col-md-12">
-                                                        <div className="BenefitsDoc-secTitle">
-                                                            <span>Section III: Tell Us About Your Eligible Dependents...</span>
+                                            <Fragment>
+                                                <div className="BenefitsDoc-sec section-3">
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <div className="BenefitsDoc-secTitle">
+                                                                <span>Section III: Tell Us About Your Eligible Dependents...</span>
+                                                            </div>
+                                                        </div>                                            
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-md-1">
+                                                            <label htmlFor="">Add/Cancel</label>
                                                         </div>
-                                                    </div>                                            
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-md-1">
-                                                        <label htmlFor="">Add/Cancel</label>
-                                                    </div>
-                                                    <div className="col-md-3">
-                                                        <label htmlFor="">Dependant Name (Last, First, M)</label>
-                                                    </div>
-                                                    <div className="col-md-2">
-                                                        <label htmlFor="">Date of Birth</label>
-                                                    </div>
-                                                    <div className="col-md-2">
-                                                        <label htmlFor="">Gender</label>
-                                                    </div>
-                                                    <div className="col-md-2">
-                                                        <label htmlFor="">Relationship</label>
-                                                    </div>
-                                                    <div className="col-md-2">
-                                                        <label class="d-block" htmlFor="">Coverage</label>                                                
-                                                    </div>
-                                                </div>                                                
-                                                {
-                                                    this.state.dependents.map((item, index) => {
-                                                        console.log(item);
-                                                        return <Dependent removeDependent={this.removeDependent} updateDependent={this.updateDependent} index={index} info={item}/>
-                                                    })
-                                                }
-                                                <div className="row">
-                                                    <div className="col-md-12">
-                                                        <input type="button" onClick={_ => { this.addDependent({}) }} class="btn btn-success" value="Add +"/>
+                                                        <div className="col-md-3">
+                                                            <label htmlFor="">Dependant Name (Last, First, M)</label>
+                                                        </div>
+                                                        <div className="col-md-2">
+                                                            <label htmlFor="">Date of Birth</label>
+                                                        </div>
+                                                        <div className="col-md-2">
+                                                            <label htmlFor="">Gender</label>
+                                                        </div>
+                                                        <div className="col-md-2">
+                                                            <label htmlFor="">Relationship</label>
+                                                        </div>
+                                                        <div className="col-md-2">
+                                                            <label class="d-block" htmlFor="">Coverage</label>                                                
+                                                        </div>
+                                                    </div>                                                
+                                                    {
+                                                        this.state.dependents.map((item, index) => {
+                                                            console.log(item);
+                                                            return <Dependent removeDependent={this.removeDependent} updateDependent={this.updateDependent} index={index} info={item}/>
+                                                        })
+                                                    }
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <input type="button" onClick={_ => { this.addDependent({}) }} class="btn btn-success" value="Add +"/>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                <div className="BenefitsDoc-sec section-4">
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <div className="BenefitsDoc-secTitle">
+                                                                <span>Section IV: Section 125</span>
+                                                            </div>
+                                                        </div>                                            
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <p>
+                                                                Premiums for the benefits listed above can be tax-sheltered under the Premium Conversion Plan. Electing to have the premiums pre-tax (tax-sheltered) means that the premiums taken out of your salary are taken out before taxes, not after taxes. The amount you pay for the benefit will automatically be taken out of your pay pre-tax if you elect to participate in the pre-tax program (by checkiing the “yes” box below). Sectionn 125 enables you to pay your share of the cost for medical and/or dental coverage on a pre-tax basis. This means you do not pay federal income tax and social security taxes on the money you spend for medical, dental and or vision premiums. Your contribution to the cost of coverage(s) is automatically deduced from your paycheck on a pre-tax basis. This means the amount you spend for coverage will not be included in the amount reported as federal taxable income on your W-2 at the end of the year. Since you do not pay Social Security taxes on your contributions, the amount you receive from Social Security when you retire may be slightly reduced. The reduction, if any, depends on your salary, how many years you make pre-tax contributions and other factors. The benefit elections you make initially cannot change until the next annual enrollment unless you have a qualified status change under Section 125 of the Internal Revenue Code and you request the change within thirty days of the at event.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <input onChange={_ => { this.setState({preTax: true}) }} type="checkbox" checked={this.state.preTax} name="preTax"/> I elect to participate in the pre-tax option of the current Plan Year. I authorize my employer to reduce my annual compensation during the Plan Year on a pre-tax basis to pay for my share of the premium for those benefits for which I have enrolled on separate benefit enrollment form(s)
+                                                        </div>
+                                                        <div className="col-md-12">
+                                                            <input onChange={_ => { this.setState({preTax: false}) }} type="checkbox" checked={this.state.preTax} name="preTax"/> I elect to pay for my eligible premiums on an after-tax basis outside of this Plan, and I authorize appropriate after-tax payroll deductions.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="BenefitsDoc-sec section-5">
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <div className="BenefitsDoc-secTitle">
+                                                                <span>Section V: Payroll Deduction Authorization</span>
+                                                            </div>
+                                                        </div>                                            
+                                                    </div>
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <p>
+                                                                I represent that all the information supplied in this application is true and complete. I certify that these are my benefit elections and authorize my employer to deduct premiums for these benefits from my pay. I understand that I cannot change my pre-tax benefit elections during the plan year unless I have a qualified change in my family status. If I have a qualified change in my family status, I will be allowed to make corresponding changes in my benefit elections provided that I request these changes in writing within 31 days of the qualifying event. These benefit elections will remain in force for subsequent plan years unless I submit a new form changing my benefit elections. I understand that I must submit a new form each plan year to continue my flexible benefit account elections. If a new form is not submitted, my flexible spending account elections will be discontinued in subsequent plan years.
+                                                            </p>
+                                                        </div>
+                                                    </div>                                                    
+                                                </div>
+                                            </Fragment>
                                         )
                                     }
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <label htmlFor="" className="BenefitsDoc-label">Employee Signature</label>
+                                            <img src={this.state.signature}
+                                                style={{
+                                                    width: '100px',
+                                                    height: '30px',
+                                                    display: 'inline-block',
+                                                    backgroundColor: '#f9f9f9',
+                                                    cursor: 'pointer'
+                                                }} onClick={() => { this.setState({ openSignature: true, }); }}                                                
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label htmlFor="" className="BenefitsDoc-label">Date</label>
+                                            <input className="BenefitsDoc-input" type="text" name="date" disabled={true} value={this.state.date} style={{marginTop: "0"}} id=""/>
+                                        </div>
+                                    </div>
                                     
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <Dialog
+                    open={this.state.openSignature}
+                    fullWidth
+                    onClose={() => {
+                        this.setState({
+                            openSignature: false,
+                        }, () => {
+                            if (this.state.signature === '') {
+                                this.setState({
+                                    accept: false
+                                })
+                            }
+                        })
+                    }}
+                    aria-labelledby="form-dialog-title">
+                   <Toolbar>
+                        <h1 className="primary apply-form-container__label">Please Sign</h1>
+                        <Button color="default" onClick={() => {
+                            this.setState(() => ({ openSignature: false }),
+                                () => {
+                                    if (this.state.signature === '') {
+                                        this.setState({
+                                            accept: false
+                                        })
+                                    }
+                                });
+                        }}>
+                            Close
+                                </Button>
+                    </Toolbar>
+                    <DialogContent>
+                        <SignatureForm
+                            applicationId={0}
+                            signatureValue={this.handleSignature}
+                            showSaveIcon={null}
+                        />
+                    </DialogContent>
+                </Dialog>
             </Fragment>
         )
     }

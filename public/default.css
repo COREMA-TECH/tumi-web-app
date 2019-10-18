@@ -10656,6 +10656,10 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   padding-right: 5px;
   width: 100%; }
 
+.BenefitsDoc-input {
+  border-bottom: 1px solid #000;
+  width: 100%; }
+
 .BenefitsDoc-remove {
   background-color: red;
   color: #FFF;

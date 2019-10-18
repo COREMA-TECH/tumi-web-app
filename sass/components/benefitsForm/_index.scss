@@ -13,6 +13,11 @@
         width: 100%;
     }
 
+    &-input{
+        border-bottom: 1px solid $black;
+        width: 100%;
+    }
+
     &-remove{
         background-color: red; 
         color: $white;
