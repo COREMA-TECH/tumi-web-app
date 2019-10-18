@@ -28,7 +28,7 @@ const EMPTY_FUNCTION = _ => {};
  */
 const Document = props => {
     const setState = props.setState || EMPTY_FUNCTION;
-    const {languageForm} = props;
+    const {languageForm, showReadOnlyFields} = props;
     const{ firstName, lastName, socialSecurityNumber, address, estadoCivil,
         estadoCivil1, estadoCivil2, postalCode, socialSecurityExtention, excention,
         payCheck, excentionYear, signature, employeer, firstEmployeeDate, idNumber
@@ -235,9 +235,9 @@ const Document = props => {
                                         type="text"
                                         style={{ width: '100%', border: 0 }}
                                         id="firstName"
-                                        value={props.firstName}
+                                        value={firstName}
                                         onChange={(e) => {
-                                            this.setState({ firstName: e.target.value })
+                                            setState({ firstName: e.target.value })
                                         }}
                                     />
 
@@ -255,9 +255,9 @@ const Document = props => {
                                         type="text"
                                         style={{ width: '100%', border: 0 }}
                                         id="lastName"
-                                        value={props.lastName}
+                                        value={lastName}
                                         onChange={(e) => {
-                                            this.setState({ lastName: e.target.value })
+                                            setState({ lastName: e.target.value })
                                         }}
                                     />
                                 </td>
@@ -273,9 +273,9 @@ const Document = props => {
                                         //disabled={this.state.isCreated}
                                         type="text" style={{ width: '100%', border: 0 }}
                                         id="socialSecurityNumber"
-                                        value={props.socialSecurityNumber}
+                                        value={socialSecurityNumber}
                                         onChange={(e) => {
-                                            this.setState({ socialSecurityNumber: e.target.value })
+                                            setState({ socialSecurityNumber: e.target.value })
                                         }}
                                     />
                                 </td>
@@ -298,9 +298,9 @@ const Document = props => {
                                             type="text"
                                             style={{ width: '100%', border: 0 }}
                                             id="address"
-                                            value={props.address}
+                                            value={address}
                                             onChange={(e) => {
-                                                this.setState({
+                                                setState({
                                                     address: e.target.value
                                                 })
                                             }}
@@ -322,10 +322,10 @@ const Document = props => {
                                         3. <input
                                             type="radio"
                                             name="estadoCivil"
-                                            value={props.estadoCivil}
-                                            defaultChecked={props.estadoCivil}
+                                            value={estadoCivil}
+                                            defaultChecked={estadoCivil}
                                             onChange={(e) => {
-                                                this.setState({
+                                                setState({
                                                     estadoCivil: e.target.checked,
                                                     estadoCivil1: false,
                                                     estadoCivil2: false,
@@ -335,10 +335,10 @@ const Document = props => {
                                         <input
                                             type="radio"
                                             name="estadoCivil"
-                                            value={props.estadoCivil1}
-                                            defaultChecked={props.estadoCivil1}
+                                            value={estadoCivil1}
+                                            defaultChecked={estadoCivil1}
                                             onChange={(e) => {
-                                                this.setState({
+                                                setState({
                                                     estadoCivil1: e.target.checked,
                                                     estadoCivil: false,
                                                     estadoCivil2: false,
@@ -348,10 +348,10 @@ const Document = props => {
                                         <input
                                             type="radio"
                                             name="estadoCivil"
-                                            value={props.estadoCivil2}
-                                            defaultChecked={props.estadoCivil2}
+                                            value={estadoCivil2}
+                                            defaultChecked={estadoCivil2}
                                             onChange={(e) => {
-                                                this.setState({
+                                                setState({
                                                     estadoCivil2: e.target.checked,
                                                     estadoCivil: false,
                                                     estadoCivil1: false,
@@ -382,9 +382,9 @@ const Document = props => {
                                             type="text"
                                             style={{ width: '100%', border: 0 }}
                                             id="postalCode"
-                                            value={props.postalCode}
+                                            value={postalCode}
                                             onChange={(e) => {
-                                                this.setState({
+                                                setState({
                                                     postalCode: e.target.value
                                                 })
                                             }}
@@ -415,10 +415,10 @@ const Document = props => {
                                             //disabled={this.state.isCreated}
                                             type="checkbox"
                                             id="socialSecurityExtention"
-                                            value={props.socialSecurityExtention}
-                                            defaultChecked={props.socialSecurityExtention}
+                                            value={socialSecurityExtention}
+                                            defaultChecked={socialSecurityExtention}
                                             onClick={(e) => {
-                                                this.setState({ socialSecurityExtention: e.target.checked })
+                                                setState({ socialSecurityExtention: e.target.checked })
                                             }}
                                         />
                                     </div>
@@ -521,9 +521,9 @@ const Document = props => {
                                                         type="text"
                                                         style={{ border: 0, height: '16.5px' }}
                                                         id="excention"
-                                                        value={props.excention}
+                                                        value={excention}
                                                         onChange={(e) => {
-                                                            this.setState({ excention: e.target.value })
+                                                            setState({ excention: e.target.value })
                                                         }}
                                                     />
                                                 </td>
@@ -540,9 +540,9 @@ const Document = props => {
                                                         type="text"
                                                         style={{ border: 0, height: '16.5px' }}
                                                         id="payCheck"
-                                                        value={props.payCheck}
+                                                        value={payCheck}
                                                         onChange={(e) => {
-                                                            this.setState({ payCheck: e.target.value })
+                                                            setState({ payCheck: e.target.value })
                                                         }}
                                                     />
                                                 </td>
@@ -564,10 +564,10 @@ const Document = props => {
                                                         type="text"
                                                         style={{ border: 0, height: '16.5px' }}
                                                         id="excention-year"
-                                                        value={props.excentionYear}
+                                                        value={excentionYear}
                                                         onChange={(e) => {
                                                             // console.log(e.target.value);
-                                                            this.setState({ excentionYear: e.target.value })
+                                                            setState({ excentionYear: e.target.value })
                                                         }}
                                                     />
                                                 </td>
@@ -581,7 +581,7 @@ const Document = props => {
                                     Bajo pena de perjurio, declaro haber examinado este certificado y que a mi leal saber y entender, es verídico, correcto y completo.
                                     <span style={{ fontWeight: '900' }}>Firma del empleado</span>
                                     (Este formulario no es válido a menos que usted lo firme).  ▶
-                                    <img src={props.signature}
+                                    <img src={signature}
                                         style={{
                                             width: '100px',
                                             height: '30px',
@@ -622,15 +622,23 @@ const Document = props => {
                                     of New Hires
                                     (Directorio
                                     estatal de personas recién empleadas).
-                                    <input
-                                        //disabled={this.state.isCreated}
-                                        type="text" style={{ width: '100%', border: 0 }}
-                                        id="employeer"
-                                        value={props.employeer}
-                                        onChange={(e) => {
-                                            this.setState({ employeer: e.target.value })
-                                        }}
-                                    />
+                                    {showReadOnlyFields ? (
+                                        <label 
+                                            dangerouslySetInnerHTML={{
+                                                __html: `${employeer}`
+                                            }}
+                                        />
+                                    ) : (
+                                        <input
+                                            //disabled={this.state.isCreated}
+                                            type="text" style={{ width: '100%', border: 0 }}
+                                            id="employeer"
+                                            value={employeer}
+                                            onChange={(e) => {
+                                                setState({ employeer: e.target.value })
+                                            }}
+                                        />
+                                    )}
                                 </td>
                                 <td style={{
                                     lineHeight: "1.5",
@@ -640,16 +648,24 @@ const Document = props => {
                                     verticalAlign: 'top'
                                 }}>
                                     9 Primera fecha de empleo
-                                    <input
-                                        //disabled={this.state.isCreated}
-                                        type="text"
-                                        style={{ width: '100%', border: 0, height: '65px' }}
-                                        id="firstEmployeeDate"
-                                        value={props.firstEmployeeDate}
-                                        onChange={(e) => {
-                                            this.setState({ firstEmployeeDate: e.target.value })
-                                        }}
-                                    />
+                                    {showReadOnlyFields ? (
+                                        <label 
+                                            dangerouslySetInnerHTML={{
+                                                __html: `${firstEmployeeDate}`
+                                            }}
+                                        />
+                                    ) : (
+                                        <input
+                                            //disabled={this.state.isCreated}
+                                            type="text"
+                                            style={{ width: '100%', border: 0, height: '65px' }}
+                                            id="firstEmployeeDate"
+                                            value={firstEmployeeDate}
+                                            onChange={(e) => {
+                                                setState({ firstEmployeeDate: e.target.value })
+                                            }}
+                                        />
+                                    )} 
                                 </td>
                                 <td style={{
                                     lineHeight: "1.5",
@@ -659,16 +675,24 @@ const Document = props => {
                                     verticalAlign: 'top'
                                 }}>
                                     10 Número de identificación del empleador(EIN)
-                                    <input
-                                        //disabled={this.state.isCreated}
-                                        type="text"
-                                        style={{ width: '100%', border: 0, height: '65px' }}
-                                        id="idNumber"
-                                        value={props.idNumber}
-                                        onChange={(e) => {
-                                            this.setState({ idNumber: e.target.value })
-                                        }}
-                                    />
+                                    {showReadOnlyFields ? (
+                                        <label 
+                                            dangerouslySetInnerHTML={{
+                                                __html: `${idNumber}`
+                                            }}
+                                        />
+                                    ) : (
+                                        <input
+                                            //disabled={this.state.isCreated}
+                                            type="text"
+                                            style={{ width: '100%', border: 0, height: '65px' }}
+                                            id="idNumber"
+                                            value={idNumber}
+                                            onChange={(e) => {
+                                                setState({ idNumber: e.target.value })
+                                            }}                                                                       
+                                        />
+                                    )}
                                 </td>
                             </tr>
                         </tbody>
@@ -1305,8 +1329,15 @@ const Document = props => {
                                         verticalAlign: 'top'
                                     }}>
                                         8 Employer’s name and address (Employer: Complete boxes 8 and 10 if sending to IRS and complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)
-                                    <input
-                                            //disabled={this.state.isCreated}
+                                    
+                                        {showReadOnlyFields ? (
+                                            <label 
+                                                dangerouslySetInnerHTML={{
+                                                    __html: `${employeer}`
+                                                }}
+                                            />
+                                        ) : (
+                                            <input
                                             type="text" style={{ width: '100%', border: 0 }}
                                             id="employeer"
                                             value={employeer}
@@ -1314,6 +1345,7 @@ const Document = props => {
                                                 setState({ employeer: e.target.value })
                                             }}
                                         />
+                                        )}
                                     </td>
                                     <td style={{
                                         lineHeight: "1.5",
@@ -1323,16 +1355,24 @@ const Document = props => {
                                         verticalAlign: 'top'
                                     }}>
                                         9 First date of employment
-                                    <input
-                                            //disabled={this.state.isCreated}
-                                            type="text"
-                                            style={{ width: '100%', border: 0, height: '65px' }}
-                                            id="firstEmployeeDate"
-                                            value={firstEmployeeDate}
-                                            onChange={(e) => {
-                                                setState({ firstEmployeeDate: e.target.value })
-                                            }}
-                                        />
+                                        {showReadOnlyFields ? (
+                                                <label 
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: `${firstEmployeeDate}`
+                                                    }}
+                                                />
+                                        ) : (
+                                            <input
+                                                //disabled={this.state.isCreated}
+                                                type="text"
+                                                style={{ width: '100%', border: 0, height: '65px' }}
+                                                id="firstEmployeeDate"
+                                                value={firstEmployeeDate}
+                                                onChange={(e) => {
+                                                    setState({ firstEmployeeDate: e.target.value })
+                                                }}
+                                            />
+                                        )}
                                     </td>
                                     <td style={{
                                         lineHeight: "1.5",
@@ -1342,16 +1382,24 @@ const Document = props => {
                                         verticalAlign: 'top'
                                     }}>
                                         Employer identification number (EIN)
-                                    <input
-                                            //disabled={this.state.isCreated}
-                                            type="text"
-                                            style={{ width: '100%', border: 0, height: '65px' }}
-                                            id="idNumber"
-                                            value={idNumber}
-                                            onChange={(e) => {
-                                                setState({ idNumber: e.target.value })
-                                            }}
-                                        />
+                                        {showReadOnlyFields ? (
+                                                <label 
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: `${idNumber}`
+                                                    }}
+                                                />
+                                        ) : (
+                                            <input
+                                                //disabled={this.state.isCreated}
+                                                type="text"
+                                                style={{ width: '100%', border: 0, height: '65px' }}
+                                                id="idNumber"
+                                                value={idNumber}
+                                                onChange={(e) => {
+                                                    setState({ idNumber: e.target.value })
+                                                }}
+                                            />
+                                        )}
                                     </td>
                                 </tr>
                             </tbody>

@@ -78,6 +78,7 @@ const EMPTY_FUNCTION = _ => {};
 
 const Document = props => {
     const setState = props.setState || EMPTY_FUNCTION;
+    const {lockFields} = props; // campos desabilitado
     const{ lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state,
         zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2,
         oneCheck3Explain, oneCheck3, alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance,
@@ -1068,6 +1069,7 @@ Title <input
                                                                 docTitle: e.target.value
                                                             })
                                                         }}
+                                                        disabled={lockFields}
                                                         style={{ width: '100%', border: 0 }}
                                                         type="text" /></span></td>
                                             </tr>
@@ -1079,6 +1081,7 @@ Title <input
                                                 }}>Issuing
 Authority <input
                                                         value={Issuing}
+                                                        disabled={lockFields}
                                                         onChange={(e) => {
                                                             setState({
                                                                 Issuing: e.target.value
@@ -1095,6 +1098,7 @@ Authority <input
                                                 }}>Document
 Number <input
                                                         value={docNumber}
+                                                        disabled={lockFields}
                                                         onChange={(e) => {
                                                             setState({
                                                                 docNumber: e.target.value
@@ -1111,6 +1115,7 @@ Number <input
                                                 }}>
                                                     Expiration Date (if any)(mm/dd/yyyy) <input
                                                         value={expireDate2}
+                                                        disabled={lockFields}
                                                         onChange={(e) => {
                                                             setState({
                                                                 expireDate2: e.target.value
@@ -1140,6 +1145,7 @@ Number <input
                                                     }}>Document
 Title <input
                                                             value={docTitle2}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docTitle2: e.target.value
@@ -1160,6 +1166,7 @@ Title <input
                                                     }}>Issuing
 Authority <input
                                                             value={Issuing2}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     Issuing2: e.target.value
@@ -1180,6 +1187,7 @@ Authority <input
                                                     }}>Document
 Number <input
                                                             value={docNumb3}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docNumb3: e.target.value
@@ -1200,6 +1208,7 @@ Number <input
                                                     }}>
                                                         Expiration Date (if any)(mm/dd/yyyy) <input
                                                             value={expDate3}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     expDate3: e.target.value
@@ -1229,6 +1238,7 @@ Number <input
                                                     }}>Document
 Title <input
                                                             value={docT15}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docT15: e.target.value
@@ -1249,6 +1259,7 @@ Title <input
                                                     }}>Issuing
 Authority <input
                                                             value={IssuingT15}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     IssuingT15: e.target.value
@@ -1269,6 +1280,7 @@ Authority <input
                                                     }}>Document
 Number <input
                                                             value={docT16}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docT16: e.target.value
@@ -1289,6 +1301,7 @@ Number <input
                                                     }}>
                                                         Expiration Date (if any)(mm/dd/yyyy) <input
                                                             value={docT17}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docT17: e.target.value
@@ -1329,6 +1342,7 @@ Number <input
                                                     }}>Document
 Title <input
                                                             value={docT18}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docT18: e.target.value
@@ -1351,6 +1365,7 @@ Title <input
                                                     }}>Document
 Title <input
                                                             value={docT19}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docT19: e.target.value
@@ -1375,6 +1390,7 @@ Title <input
                                                     }}>Issuing
 Authority <input
                                                             value={docT20}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docT20: e.target.value
@@ -1397,6 +1413,7 @@ Authority <input
                                                     }}>Issuing
 Authority <input
                                                             value={docT21}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docT21: e.target.value
@@ -1421,6 +1438,7 @@ Authority <input
                                                     }}>Document
 Number <input
                                                             value={docT22}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docT22: e.target.value
@@ -1443,6 +1461,7 @@ Number <input
                                                     }}>Document
 Number<input
                                                             value={docL1}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docL1: e.target.value
@@ -1467,6 +1486,7 @@ Number<input
                                                     }}>Expiration
 Date (if any)(mm/dd/yyyy) <input
                                                             value={docL2}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docL2: e.target.value
@@ -1488,6 +1508,7 @@ Date (if any)(mm/dd/yyyy) <input
                                                     }}>Expiration
 Date (if any)(mm/dd/yyyy) <input
                                                             value={docL3}
+                                                            disabled={lockFields}
                                                             onChange={(e) => {
                                                                 setState({
                                                                     docL3: e.target.value
@@ -1609,6 +1630,7 @@ Date(mm/dd/yyyy) <input
                                                 docL5: e.target.value
                                             })
                                         }}
+                                        disabled={lockFields}
                                         style={{ width: '100%', border: 0 }}
                                         type="text" /></span></td>
                                 <td style={{ width: '40.9554%' }}><span style={{
@@ -1618,6 +1640,7 @@ Date(mm/dd/yyyy) <input
                                 }}>Title of
 Employer or Authorized Representative <input
                                         value={docL6}
+                                        disabled={lockFields}
                                         onChange={(e) => {
                                             setState({
                                                 docL6: e.target.value
@@ -1645,6 +1668,7 @@ Name of Employer or Authorized Representative <input
                                                 docL7: e.target.value
                                             })
                                         }}
+                                        disabled={lockFields}
                                         style={{ width: '100%', border: 0 }}
                                         type="text" /></span></td>
                                 <td style={{ width: '33.3333%' }}><span style={{
@@ -1654,6 +1678,7 @@ Name of Employer or Authorized Representative <input
                                 }}>First
 Name of Employer or Authorized Representative <input
                                         value={docL8}
+                                        disabled={lockFields}
                                         onChange={(e) => {
                                             setState({
                                                 docL8: e.target.value
@@ -1789,6 +1814,7 @@ Code</span></p>
                                     }}>Last
 Name (Family Name) <input
                                         value={docL9}
+                                        disabled={lockFields}
                                         onChange={(e) => {
                                             setState({
                                                 docL9: e.target.value
@@ -1804,6 +1830,7 @@ Name (Family Name) <input
                                     }}>First
 Name (Given Name) <input
                                         value={docP1}
+                                        disabled={lockFields}
                                         onChange={(e) => {
                                             setState({
                                                 docP1: e.target.value
@@ -1819,6 +1846,7 @@ Name (Given Name) <input
                                     }}>Middle
 Initial <input
                                         value={docP2}
+                                        disabled={lockFields}
                                         onChange={(e) => {
                                             setState({
                                                 docP2: e.target.value
@@ -1834,6 +1862,7 @@ Initial <input
                                     }}>Date
 (mm/dd/yyyy) <input
                                         value={docP3}
+                                        disabled={lockFields}
                                         onChange={(e) => {
                                             setState({
                                                 docP3: e.target.value
@@ -1879,6 +1908,7 @@ in the space provided below.</span></td>
                                             //     docL9: e.target.value
                                             // })
                                         }}
+                                        disabled={lockFields}
                                         style={{ width: '100%', border: 0 }}
                                         type="text" />
                                 </span></td>
@@ -1895,6 +1925,7 @@ in the space provided below.</span></td>
                                             //     docL9: e.target.value
                                             // })
                                         }}
+                                        disabled={lockFields}
                                         style={{ width: '100%', border: 0 }}
                                         type="text" />
                                 </span></td>
@@ -1911,6 +1942,7 @@ in the space provided below.</span></td>
                                             //     docL9: e.target.value
                                             // })
                                         }}
+                                        disabled={lockFields}
                                         style={{ width: '100%', border: 0 }}
                                         type="text" />
                                 </span>
@@ -1951,14 +1983,14 @@ of Employer or Authorized Representative <img style={{
                                             })
                                         });
 
-                                    }}
+                                    }}  disabled={lockFields}
                                         src={signature4} alt="" /></span></td>
                                 <td style={{ width: '27.0634%' }}><span style={{
                                     color: '#000000',
                                     fontFamily: 'arial, helvetica, sans-serif',
                                     fontSize: '8pt'
                                 }}>Today's
-Date (mm/dd/yyyy) <input
+Date (mm/dd/yyyy) <input                disabled={lockFields}
                                         value={todayDateDay1}
                                         onChange={(e) => {
                                             setState({
@@ -1974,6 +2006,7 @@ Date (mm/dd/yyyy) <input
                                 }}>Name of
 Employer or Authorized Representative <input
                                         value={empAuth15}
+                                        disabled={lockFields}
                                         onChange={(e) => {
                                             setState({
                                                 empAuth15: e.target.value
