@@ -93,7 +93,6 @@ export const generateDocuments = async (client, applicationId, setSumaryHtml) =>
             id: applicationId
         }
     }).then(({ data }) => {
-        console.log('Probando query de generar documentos ** ', data); // TODO: Quitar console log
         appQuery = {
             application: data.applications[0]
         }
@@ -101,9 +100,7 @@ export const generateDocuments = async (client, applicationId, setSumaryHtml) =>
         console.log(error)
     });
 
-    console.log('query terminada ',appQuery.application); // TODO: Quitar console log
     if(appQuery.application){
-        console.log('Entra a application'); // TODO: Quitar console log
         const {firstName, middleName, lastName, employee, employmentType, marital, exemptions, optionHearTumi, nameReferences, Accounts,
             socialSecurityNumber, cellPhone, gender, birthDay, streetAddress, city, cityInfo, state, stateInfo, zipCode,
             numberId, typeOfId, expireDateId, car, area
