@@ -100,7 +100,7 @@ class Benefits extends Component{
         
         this.setState(_ => ({
             dependents: [...current]
-        }), console.log(this.state.dependents))
+        }));
     }
 
     render(){
@@ -283,7 +283,8 @@ class Benefits extends Component{
                                                 </div>                                                
                                                 {
                                                     this.state.dependents.map((item, index) => {
-                                                        return <Dependent removeDependent={this.removeDependent} updateDependent={this.updateDependent} index={index} {...item}/>
+                                                        console.log(item);
+                                                        return <Dependent removeDependent={this.removeDependent} updateDependent={this.updateDependent} index={index} info={item}/>
                                                     })
                                                 }
                                                 <div className="row">
