@@ -222,7 +222,7 @@ class Summary extends Component {
             })
     };
 
-    createDocumentsPDF = (idv4) => {
+    createDocumentsPDF = () => {
         this.setState(
             {
                 downloading: true
@@ -233,7 +233,7 @@ class Summary extends Component {
                 query: CREATE_DOCUMENTS_PDF_QUERY,
                 variables: {
                     contentHTML: '<html style="zoom: 50%; font-family: Arial, Helvetica, sans-serif;">' + document.getElementById('DocumentPDF').innerHTML + '</html>',
-                    Name: "Summary-" + idv4 + "-" + this.state.applicantName
+                    Name: "Summary-" + "-" + this.state.applicantName
                 },
                 fetchPolicy: 'no-cache'
             })
@@ -243,7 +243,7 @@ class Summary extends Component {
                         urlPDF: data.createdocumentspdf
                     }, () => {
                         this.downloadDocumentsHandler();
-                        this.updatePdfUrlSummary();
+                        //this.updatePdfUrlSummary();
                     });
                 } else {
                     this.props.handleOpenSnackbar(
@@ -259,48 +259,41 @@ class Summary extends Component {
             });
     };
 
-    updatePdfUrlSummary = () => {
-        this.props.client
-            .mutate({
-                mutation: UPDATE_PDF_URL_SUMMARY,
-                variables: {
-                    id: this.state.ApplicationId,
-                    pdfUrl: this.state.urlPDF
-                }
-            })
-            .catch(error => {
-                // If there's an error show a snackbar with a error message
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to updating url Summary',
-                    'bottom',
-                    'right'
-                );
-            });
-    };
+    // updatePdfUrlSummary = () => {
+    //     this.props.client
+    //         .mutate({
+    //             mutation: UPDATE_PDF_URL_SUMMARY,
+    //             variables: {
+    //                 id: this.state.ApplicationId,
+    //                 pdfUrl: this.state.urlPDF
+    //             }
+    //         })
+    //         .catch(error => {
+    //             // If there's an error show a snackbar with a error message
+    //             this.props.handleOpenSnackbar(
+    //                 'error',
+    //                 'Error to updating url Summary',
+    //                 'bottom',
+    //                 'right'
+    //             );
+    //         });
+    // };
 
     downloadDocumentsHandler = () => {
         var url = this.state.urlPDF; //this.context.baseUrl + '/public/Documents/' + "Summary-" + idv4 + "-" + this.state.applicantName + '.pdf';
-        window.open(url, '_blank');
+        if(url) window.open(url, '_blank');
         this.setState({ downloading: false });
     };
 
     handlePdfDownload = () => {
-        if(this.state.urlPDF){
+        if(this.state.urlPDF)
             this.downloadDocumentsHandler();
-        }
-        else {
-            let idv4 = uuidv4();
-            this.createDocumentsPDF(idv4);
-        }
+        else
+            this.createDocumentsPDF();
     }
 
     componentWillMount() {
         this.getInformation();
-    }
-
-    sleep() {
-        return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
     componentWillReceiveProps(nextProps) {

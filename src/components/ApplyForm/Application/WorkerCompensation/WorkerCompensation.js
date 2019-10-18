@@ -3,7 +3,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import renderHTML from 'react-render-html';
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO, GET_DOCUMENT_TYPE } from "./Queries";
 import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
 import { ADD_WORKER_COMPENSATION, UPDATE_WORKER_COMPENSATION } from "./Mutations";
 import withApollo from "react-apollo/withApollo";
@@ -44,7 +44,9 @@ class WorkerCompensation extends Component {
             injuryNotification: false,
             injuryDate: '',
             completed: false,
-            urlPDF: null
+            urlPDF: null,
+            userId: 0,
+            typeDocumentId: 0
         }
     }
 
@@ -118,22 +120,38 @@ class WorkerCompensation extends Component {
             );
     };
 
-    insertWorkerCompensation = (item) => {
-        let workerCompensationObject = Object.assign({}, item);
-        delete workerCompensationObject.openSignature;
-        delete workerCompensationObject.id;
-        delete workerCompensationObject.accept;
-        delete workerCompensationObject.urlPDF; // no es necesario en el crear
+    insertWorkerCompensation = () => {
+        // let workerCompensationObject = Object.assign({}, item);
+        // delete workerCompensationObject.openSignature;
+        // delete workerCompensationObject.id;
+        // delete workerCompensationObject.accept;
+        // delete workerCompensationObject.urlPDF; // no es necesario en el crear
 
-        if (workerCompensationObject.injuryDate === '') {
-            workerCompensationObject.injuryDate = null;
-        }
+        // if (workerCompensationObject.injuryDate === '') {
+        //     workerCompensationObject.injuryDate = null;
+        // }
+
+        const random = uuidv4();
+        const html = this.cloneForm();
+        const { signature, applicantName, date, applicantAddress, applicantCity,
+            applicantState, applicantZipCode, initialNotification, injuryNotification, injuryDate        
+        } = this.state;
+        const jsonFields = JSON.stringify({signature, applicantName, date, applicantAddress, applicantCity,
+            applicantState, applicantZipCode, initialNotification, injuryNotification, injuryDate});
 
         this.props.client
             .mutate({
                 mutation: ADD_WORKER_COMPENSATION,
                 variables: {
-                    workerCompensation: workerCompensationObject
+                    fileName: "WorkerCompensation-" + random + "-" + this.state.applicantName,
+                    html,
+                    applicantLegalDocument: {
+                        fieldsData: jsonFields,
+                        ApplicationDocumentTypeId: this.state.typeDocumentId,
+                        ApplicationId: this.props.applicationId,
+                        UserId: this.state.userId,
+                        completed: true
+                    }
                 }
             })
             .then(({ data }) => {
@@ -145,7 +163,7 @@ class WorkerCompensation extends Component {
                     'right'
                 );
 
-                this.getWorkerCompensationInformation(this.props.applicationId, true);
+                this.getWorkerCompensationInformation(this.props.applicationId);
                 this.props.changeTabState();
             })
             .catch(error => {
@@ -207,37 +225,32 @@ class WorkerCompensation extends Component {
             })
     };
 
-    getWorkerCompensationInformation = (id, generatePdf = false) => {
+    getWorkerCompensationInformation = (id) => {
         this.props.client
             .query({
                 query: GET_WORKER_COMPENSATION_INFO,
                 variables: {
-                    id: id
+                    ApplicationId: id,
+                    ApplicationDocumentTypeId: this.state.typeDocumentId
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.applications[0].workerCompensation !== null) {
+                if (data.lastApplicantLegalDocument) {
+                    const fd = data.lastApplicantLegalDocument.fieldsData;
+                    const formData = fd ? JSON.parse(fd) : {};
                     this.setState({
-                        id: data.applications[0].workerCompensation.id,
-                        signature: data.applications[0].workerCompensation.signature,
-                        content: data.applications[0].workerCompensation.content,
-                        applicantName: data.applications[0].workerCompensation.applicantName,
-                        date: this.formatDate(data.applications[0].workerCompensation.date, true),
-                        applicantAddress: data.applications[0].workerCompensation.applicantAddress,
-                        applicantCity: data.applications[0].workerCompensation.applicantCity,
-                        applicantState: data.applications[0].workerCompensation.applicantState,
-                        applicantZipCode: data.applications[0].workerCompensation.applicantZipCode,
-                        initialNotification: data.applications[0].workerCompensation.initialNotification,
-                        injuryNotification: data.applications[0].workerCompensation.injuryNotification,
-                        injuryDate: this.formatDate(data.applications[0].workerCompensation.injuryDate, true),
-                        urlPDF: data.applications[0].workerCompensation.pdfUrl,
-                    }, () => {
-                        if(generatePdf) this.createDocumentsPDF(uuidv4());
-                    });
-                } else {
-                    this.setState({
-                        id: null
+                        signature: formData.signature,
+                        applicantName: formData.applicantName,
+                        date: this.formatDate(formData.date),
+                        applicantAddress: formData.applicantAddress,
+                        applicantCity: formData.applicantCity,
+                        applicantState: formData.applicantState,
+                        applicantZipCode: formData.applicantZipCode,
+                        initialNotification: formData.initialNotification,
+                        injuryNotification: formData.injuryNotification,
+                        injuryDate: this.formatDate(formData.injuryDate),
+                        urlPDF: data.lastApplicantLegalDocument.url,
                     });
                 }
             })
@@ -249,6 +262,30 @@ class WorkerCompensation extends Component {
                     'bottom',
                     'right'
                 );
+            })
+    };
+
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'Worker Compensation'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }, _ => {
+                        this.getWorkerCompensationInformation(this.props.applicationId);
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
             })
     };
 
@@ -303,13 +340,7 @@ class WorkerCompensation extends Component {
     };
 
     handlePdfDownload = () => {
-        if(this.state.urlPDF){
-            this.downloadDocumentsHandler();
-        }
-        else {
-            const uuid = uuidv4();
-            this.createDocumentsPDF(uuid, true);
-        }
+        this.downloadDocumentsHandler();
     }
 
     handleChangeInjuryDate = (date) => {
@@ -320,8 +351,9 @@ class WorkerCompensation extends Component {
     }
 
     componentWillMount() {
-        this.getWorkerCompensationInformation(this.props.applicationId);
-        this.getApplicantInformation(this.props.applicationId);
+        this.setState({
+            userId: localStorage.getItem('LoginId') || 0
+        }, () => this.getDocumentType());
     }
 
     sleep() {
@@ -354,7 +386,7 @@ class WorkerCompensation extends Component {
                         );
                     } else {
 
-                        this.insertWorkerCompensation(this.state);
+                        this.insertWorkerCompensation();
                         this.setState({
                             openSignature: false
                         })
@@ -485,30 +517,25 @@ class WorkerCompensation extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[7].label}</span>
                                 {
-                                    this.state.id === '' ? (
-                                        ''
-                                    ) : (
-                                            <div>
-                                                {
-                                                    this.state.id !== null ? (
-                                                        <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
-                                                            {this.state.downloading && (
-                                                            <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                            {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
-                                                                className="fas fa-download" /></React.Fragment>)}
+                                    <div>
+                                        {
+                                            this.state.urlPDF ? (
+                                                <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+                                                    {this.state.downloading && (
+                                                    <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                    {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
+                                                        className="fas fa-download" /></React.Fragment>)}
 
-                                                        </button>
-                                                    ) : (
-                                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                                this.setState({
-                                                                    openSignature: true
-                                                                })
-                                                            }}>{actions[8].label} <i className="far fa-edit"></i>
-                                                            </button>
-                                                        )
-                                                }
-                                            </div>
-                                        )
+                                                </button>
+                                            ) : ''
+                                        }
+                                        <button className="applicant-card__edit-button ml-2" onClick={() => {
+                                            this.setState({
+                                                openSignature: true
+                                            })
+                                            }}>{actions[8].label} <i className="far fa-edit"></i>
+                                        </button>
+                                    </div>
                                 }
                             </div>
                             <div className="p-4">

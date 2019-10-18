@@ -5,7 +5,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_APPLICANT_INFO, GET_GENERAL_INFO } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_APPLICANT_INFO, GET_DOCUMENT_TYPE, GET_GENERAL_INFO } from "./Queries";
 import { ADD_I9 } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Document from './Document';
+const uuidv4 = require('uuid/v4');
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -47,6 +48,8 @@ class FormsI9 extends Component {
             oneCheck3: false,
             urlPDF: '',
             formData: '',
+            userId: 0,
+            typeDocumentId: 0,
             lockFields: localStorage.getItem('IdRoles') == 13
         }
     }
@@ -109,17 +112,17 @@ class FormsI9 extends Component {
             .query({
                 query: GET_APPLICANT_INFO,
                 variables: {
-                    ApplicationId: id
+                    ApplicationId: id,
+                    ApplicationDocumentTypeId: this.state.typeDocumentId
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.applicantI9.length > 0) {
-                    let fd = data.applicantI9[0].fieldsData;
+                if (data.lastApplicantLegalDocument) {
+                    let fd = data.lastApplicantLegalDocument.fieldsData;
                     this.setState({
                         isCreated: true,
-                        html: data.applicantI9[0].html ? data.applicantI9[0].html.replace('style="zoom: 50%;"', '') : '',
-                        urlPDF: data.applicantI9[0].url,
+                        urlPDF: data.lastApplicantLegalDocument.url,
                         formData: fd ? JSON.parse(fd) : {}
                     }, _ => {
                         if (this.state.formData) {
@@ -136,6 +139,29 @@ class FormsI9 extends Component {
             })
             .catch(error => {
 
+            })
+    };
+
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'I9'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }, _ => {
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
             })
     };
 
@@ -230,8 +256,10 @@ class FormsI9 extends Component {
     };
 
 
-    componentWillMount() {
-        this.getApplicantInformation(this.props.applicationId);
+    componentDidMount() {
+        this.setState({
+            userId: localStorage.getItem('LoginId') || 0
+        }, () => this.getDocumentType());
     }
 
     componentWillReceiveProps(nextProps) {
@@ -255,6 +283,7 @@ class FormsI9 extends Component {
 
     validateI9 = () => {
         const html = this.cloneForm();
+        const random = uuidv4();
 
         const { lastName, firstName, middleName, otherLastName, streetNumber, aptNumber, city, state, zipCode, dateOfBirth, socialSecurityNumber, email, telephone, oneCheck, oneCheck1, oneCheck2, oneCheck3Explain, oneCheck3,
             alienExplain, alienRegister, admissionNumber, foreignPassport, countryIssuance, signature, todayDate, preparer0, preparer1, signature1, todayDate2, lastName2, firstName2, address2, city2, state2, zipCode2,
@@ -272,9 +301,15 @@ class FormsI9 extends Component {
             .mutate({
                 mutation: ADD_I9,
                 variables: {
+                    fileName: "I9-" + random + this.state.applicantName,
                     html,
-                    ApplicantId: this.props.applicationId,
-                    json: jsonFields
+                    applicantLegalDocument: {
+                        fieldsData: jsonFields,
+                        ApplicationDocumentTypeId: this.state.typeDocumentId,
+                        ApplicationId: this.props.applicationId,
+                        UserId: this.state.userId,
+                        completed: true
+                    }
                 }
             })
             .then(({ data }) => {

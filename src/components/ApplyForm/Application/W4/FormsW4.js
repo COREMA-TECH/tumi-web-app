@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_APPLICANT_INFO, GET_GENERAL_INFO } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO, GET_DOCUMENT_TYPE, GET_GENERAL_INFO } from "./Queries";
 import { ADD_W4 } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
@@ -13,7 +13,6 @@ import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Document from './Document';
 
 const uuidv4 = require('uuid/v4');
-import FeatureTag from '../../../ui-components/FeatureTag';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -53,6 +52,8 @@ class FormsW4 extends Component {
             estadoCivil2: false,
             urlPDF: '',
             formData: '',
+            typeDocumentId: 0,
+            userId: 0,
             showReadOnlyFields: localStorage.getItem('IdRoles') == 13
         }
     }
@@ -75,22 +76,23 @@ class FormsW4 extends Component {
         return `<html style="zoom: 65%;">${contentPDFClone.innerHTML}</html>`;
     }
     
+    
     getApplicantInformation = (id) => {
         this.props.client
             .query({
                 query: GET_APPLICANT_INFO,
                 variables: {
-                    ApplicationId: id
+                    ApplicationId: id,
+                    ApplicationDocumentTypeId: this.state.typeDocumentId
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.applicantW4.length > 0) {
-                    let fd = data.applicantW4[0].fieldsData;
+                if (data.lastApplicantLegalDocument) {
+                    let fd = data.lastApplicantLegalDocument.fieldsData;
                     this.setState({
                         isCreated: true,
-                        html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 65%;"', '') : '',
-                        urlPDF: data.applicantW4[0].url,
+                        urlPDF: data.lastApplicantLegalDocument.url,
                         formData: fd ? JSON.parse(fd) : {}
                     }, _ => {
                         this.loadDataFromJson(this.state.formData)
@@ -108,6 +110,28 @@ class FormsW4 extends Component {
             })
     };
 
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'W4'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }, _ => {
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
     fetchApplicantInfo = _ => {
         this.props.client.query({
             query: GET_GENERAL_INFO,
@@ -196,14 +220,19 @@ class FormsW4 extends Component {
         this.setState({ downloading: false });
     };
 
-    componentWillMount() {
-        this.getApplicantInformation(this.props.applicationId); 
+
+
+    componentDidMount() {
+        this.setState({
+            userId: localStorage.getItem('LoginId') || 0
+        }, () => this.getDocumentType());
     }
 
     validateW4 = () => {
         let firstNameField = document.getElementById('firstName');
         let lastNameField = document.getElementById('lastName');
         let socialSecurityNumberField = document.getElementById('socialSecurityNumber');
+        const random = uuidv4();
 
         if (firstNameField.value.length > 0 &&
             lastNameField.value.length > 0 &&
@@ -218,9 +247,15 @@ class FormsW4 extends Component {
                 .mutate({
                     mutation: ADD_W4,
                     variables: {
+                        fileName: "W4-" + random + this.state.applicantName,
                         html,
-                        ApplicantId: this.props.applicationId,
-                        json: jsonFields
+                        applicantLegalDocument: {
+                            fieldsData: jsonFields,
+                            ApplicationDocumentTypeId: this.state.typeDocumentId,
+                            ApplicationId: this.props.applicationId,
+                            UserId: this.state.userId,
+                            completed: true
+                        }
                     }
                 })
                 .then(() => {
@@ -1670,9 +1705,7 @@ class FormsW4 extends Component {
                                                                                 verticalAlign: 'top'
                                                                             }}>
                                                                                 8 Employer’s name and address (Employer: Complete boxes 8 and 10 if sending to IRS and complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)
-                                                                                {/* <FeatureTag code="3807ee0a-d05b-4f51-8f13-6c896f84cc31">
-                                                                                                                                                                                                                                                                                                         
-                                                                                </FeatureTag> */}
+                                                                                
                                                                                 {this.state.showReadOnlyFields ? (
                                                                                     <label 
                                                                                         dangerouslySetInnerHTML={{

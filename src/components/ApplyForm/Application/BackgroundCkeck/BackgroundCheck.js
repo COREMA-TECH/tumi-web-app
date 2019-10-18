@@ -12,7 +12,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
-import { GET_APPLICATION_CHECK_ID } from "./Queries";
+import { GET_APPLICATION_CHECK_ID, GET_DOCUMENT_TYPE } from "./Queries";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
@@ -72,15 +72,17 @@ class BackgroundCheck extends Component {
 
 
             loadingApplicantData: false,
-            urlPDF: null
+            urlPDF: null,
+            userId: 0,
+            typeDocumentId: 0
         }
     }
 
-    formatDate = (date, useSubstring = false) => {
+    formatDate = (date, useSubstring = false, customFormat = 'YYYY-MM-DD') => {
         if(!date) return '';
 
         let substringDate = useSubstring ? String(date).substring(0, 10) : date;
-        return moment(substringDate).format('MM/DD/YYYY');
+        return moment(substringDate).format(customFormat);
     }
 
     getApplicantInformation = (id) => {
@@ -202,9 +204,6 @@ class BackgroundCheck extends Component {
                     return element.Id == cityId;
                 });
 
-
-
-
                 if (citySelect != undefined) {
                     this.setState({
                         cityName: citySelect.Name
@@ -221,10 +220,7 @@ class BackgroundCheck extends Component {
             });
     };
 
-    /**
-     * To get background check info using id
-     */
-    getBackgroundCheckById = (id, generatePdf = false) => {
+    getBackgroundCheckById = (id) => {
         this.setState({
             loading: true
         }, () => {
@@ -232,31 +228,35 @@ class BackgroundCheck extends Component {
                 .query({
                     query: GET_APPLICATION_CHECK_ID,
                     variables: {
-                        id: id
+                        ApplicationId: id,
+                        ApplicationDocumentTypeId: this.state.typeDocumentId
                     },
                     fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
 
-                    if (data.applications[0].backgroundCheck !== null) {
-                        this.setState({
+                    if (data.lastApplicantLegalDocument) {
+                        const fd = data.lastApplicantLegalDocument.fieldsData;
+                        const formData = fd ? JSON.parse(fd) : {};
+                        const licenseExpiration= this.formatDate(formData.licenseExpiration, false, 'YYYY-MM-DD');
+                        const date= this.formatDate(formData.date, false, 'YYYY-MM-DD');
+
+                        this.setState(()=>({
                             loading: false,
-                            id: data.applications[0].backgroundCheck.id,
-                            vehicleReportRequired: data.applications[0].backgroundCheck.vehicleReportRequired,
-                            driverLicenseNumber: data.applications[0].backgroundCheck.driverLicenseNumber,
-                            commercialDriverLicense: data.applications[0].backgroundCheck.commercialDriverLicense,
-                            licenseState: data.applications[0].backgroundCheck.licenseState === null ? "" : data.applications[0].backgroundCheck.licenseState,
-                            licenseExpiration: data.applications[0].backgroundCheck.licenseExpiration === null ? "" : data.applications[0].backgroundCheck.licenseExpiration.substring(0, 10),
-                            signature: data.applications[0].backgroundCheck.signature,
-                            date: data.applications[0].backgroundCheck.date.substring(0, 10),
+                            id: 1,
+                            vehicleReportRequired: formData.vehicleReportRequired,
+                            driverLicenseNumber: formData.driverLicenseNumber,
+                            commercialDriverLicense: formData.commercialDriverLicense,
+                            licenseState: formData.licenseState,
+                            licenseExpiration,
+                            signature: formData.signature,
+                            date,
                             loadedBackgroundCheckById: true,
-                            urlPDF: data.applications[0].backgroundCheck.pdfUrl,
+                            urlPDF: data.lastApplicantLegalDocument.url,
                             editing: true,
                             accept: true,
                             isCreated: true
-                        }, () => {
-                            if(generatePdf) this.createDocumentsPDF(uuidv4());
-                        });
+                        }));
                     } else {
                         this.setState({
                             loading: false,
@@ -279,7 +279,32 @@ class BackgroundCheck extends Component {
         })
     };
 
-    insertBackgroundCheck = (item) => {
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'Background Check'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState(()=>({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }),()=>{
+                        this.getBackgroundCheckById(this.props.applicationId);
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
+
+    insertBackgroundCheck = (jsonFields) => {
+        const random = uuidv4();
         this.setState({
             loading: true
         }, () => {
@@ -287,7 +312,15 @@ class BackgroundCheck extends Component {
                 .mutate({
                     mutation: ADD_BACKGROUND_CHECK,
                     variables: {
-                        backgroundCheck: item
+                        fileName: "BackgroundCheck-" + random + this.props.applicationId,
+                        html: this.cloneForm(),
+                        applicantLegalDocument: {
+                            fieldsData: jsonFields,
+                            ApplicationDocumentTypeId: this.state.typeDocumentId,
+                            ApplicationId: this.props.applicationId,
+                            UserId: this.state.userId,
+                            completed: true
+                        }
                     }
                 })
                 .then(data => {
@@ -301,7 +334,7 @@ class BackgroundCheck extends Component {
                         editing: false
                     });
 
-                    this.getBackgroundCheckById(this.props.applicationId, true);
+                    this.getBackgroundCheckById(this.props.applicationId);
 
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
@@ -355,7 +388,7 @@ class BackgroundCheck extends Component {
                         editing: false
                     });
 
-                    this.getBackgroundCheckById(this.props.applicationId, true);
+                    this.getBackgroundCheckById(this.props.applicationId);
 
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
@@ -419,6 +452,7 @@ class BackgroundCheck extends Component {
         // Get elements from background check
         let form = document.getElementById("background-check-form").elements;
         let backgroundCheckItem;
+        const {firstName, middleName, lastName} = this.state;
 
         // Build the object with form information
         if (form.item(0).checked) {
@@ -427,15 +461,10 @@ class BackgroundCheck extends Component {
                 driverLicenseNumber: form.item(1).value.trim(),
                 commercialDriverLicense: form.item(4).checked,
                 licenseState: form.item(2).value.trim(),
-                licenseExpiration: form.item(3).value.trim(),
+                licenseExpiration: this.formatDate(form.item(3).value.trim()),
+                date: this.formatDate(new Date().toISOString()),
                 signature: this.state.signature,
-
-                // TODO: Fix this static fields
-                content: "".trim(),
-                date: new Date().toISOString(),
-                applicantName: "".trim(),
-                ApplicationId: this.props.applicationId,
-                completed: true
+                applicantName: [firstName || '', middleName || '', lastName || ''].join(' ')
             };
         } else {
             backgroundCheckItem = {
@@ -445,24 +474,13 @@ class BackgroundCheck extends Component {
                 licenseState: null,
                 licenseExpiration: null,
                 signature: this.state.signature,
-
-                // TODO: Fix this static fields
-                content: "".trim(),
-                date: new Date().toISOString(),
-                applicantName: "".trim(),
-                ApplicationId: this.props.applicationId,
-                completed: true
+                date: this.formatDate(new Date().toISOString()),
             };
         }
 
 
-        // To insert background check
-        if (this.state.id === null) {
-            this.insertBackgroundCheck(backgroundCheckItem);
-        } else {
-            backgroundCheckItem.id = this.state.id;
-            this.updateBackgroundCheck(backgroundCheckItem);
-        }
+        this.insertBackgroundCheck(JSON.stringify(backgroundCheckItem));
+        
     };
 
     externalSetState = (updateData, callback = () => {}) => {
@@ -470,12 +488,11 @@ class BackgroundCheck extends Component {
     }
 
     componentWillMount() {
-        // FIXME: pass dynamic id
-        this.getBackgroundCheckById(this.props.applicationId);
         this.setState({
-            loadingApplicantData: true
+            loadingApplicantData: true,
+            userId: localStorage.getItem('LoginId') || 0
         }, () => {
-            this.getApplicantInformation(this.props.applicationId);
+            this.getDocumentType();
         });
     }
 
@@ -631,10 +648,7 @@ class BackgroundCheck extends Component {
                                     {
                                         this.state.editing ? (
                                             <button
-                                                style={{
-                                                    marginLeft: '5px'
-                                                }}
-                                                className="applicant-card__edit-button" onClick={() => {
+                                                className="applicant-card__edit-button ml-2" onClick={() => {
                                                     this.setState({
                                                         editing: false
                                                     })
