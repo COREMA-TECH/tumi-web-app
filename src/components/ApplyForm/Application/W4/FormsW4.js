@@ -389,6 +389,7 @@ class FormsW4 extends Component {
                                             <Document 
                                                 setState={this.externalSetState}
                                                 languageForm = {localStorage.getItem('languageForm')}
+                                                showReadOnlyFields={this.state.showReadOnlyFields}
                                                 data={{
                                                     firstName: this.state.firstName,
                                                     lastName: this.state.lastName,
