@@ -21,26 +21,24 @@ export const GET_BACKGROUND_CHECK_INFO = gql`
     }
 `;
 
-/**
- * To get background check info by id
- */
-export const GET_APPLICATION_CHECK_ID = gql`
-    query applications($id: Int!) {
-        applications(id: $id) {
+
+export const GET_DOCUMENT_TYPE = gql`
+    query applicationDocumentTypes($name: String) {
+        applicationDocumentTypes(name: $name) {
             id
-            backgroundCheck {
-                id
-                vehicleReportRequired
-                driverLicenseNumber
-                commercialDriverLicense
-                licenseState
-                licenseExpiration
-                signature
-                content
-                date
-                applicantName
-                pdfUrl
-            }
+            name
+            description
+        }
+    }
+`;
+
+export const GET_APPLICATION_CHECK_ID = gql`
+    query lastApplicantLegalDocument($ApplicationId: Int!, $ApplicationDocumentTypeId: Int!) {
+        lastApplicantLegalDocument(ApplicationDocumentTypeId: $ApplicationDocumentTypeId, ApplicationId: $ApplicationId) {
+            id
+            fieldsData
+            url
+            completed
         }
     }
 `;

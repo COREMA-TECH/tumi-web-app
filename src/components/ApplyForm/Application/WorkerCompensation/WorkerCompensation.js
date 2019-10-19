@@ -3,7 +3,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import renderHTML from 'react-render-html';
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO, GET_DOCUMENT_TYPE } from "./Queries";
 import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
 import { ADD_WORKER_COMPENSATION, UPDATE_WORKER_COMPENSATION } from "./Mutations";
 import withApollo from "react-apollo/withApollo";
@@ -13,6 +13,7 @@ import './index.css';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import DatePicker from "react-datepicker";
+import Document from './Document';
 const uuidv4 = require('uuid/v4');
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -43,7 +44,9 @@ class WorkerCompensation extends Component {
             injuryNotification: false,
             injuryDate: '',
             completed: false,
-            urlPDF: null
+            urlPDF: null,
+            userId: 0,
+            typeDocumentId: 0
         }
     }
 
@@ -117,22 +120,38 @@ class WorkerCompensation extends Component {
             );
     };
 
-    insertWorkerCompensation = (item) => {
-        let workerCompensationObject = Object.assign({}, item);
-        delete workerCompensationObject.openSignature;
-        delete workerCompensationObject.id;
-        delete workerCompensationObject.accept;
-        delete workerCompensationObject.urlPDF; // no es necesario en el crear
+    insertWorkerCompensation = () => {
+        // let workerCompensationObject = Object.assign({}, item);
+        // delete workerCompensationObject.openSignature;
+        // delete workerCompensationObject.id;
+        // delete workerCompensationObject.accept;
+        // delete workerCompensationObject.urlPDF; // no es necesario en el crear
 
-        if (workerCompensationObject.injuryDate === '') {
-            workerCompensationObject.injuryDate = null;
-        }
+        // if (workerCompensationObject.injuryDate === '') {
+        //     workerCompensationObject.injuryDate = null;
+        // }
+
+        const random = uuidv4();
+        const html = this.cloneForm();
+        const { signature, applicantName, date, applicantAddress, applicantCity,
+            applicantState, applicantZipCode, initialNotification, injuryNotification, injuryDate        
+        } = this.state;
+        const jsonFields = JSON.stringify({signature, applicantName, date, applicantAddress, applicantCity,
+            applicantState, applicantZipCode, initialNotification, injuryNotification, injuryDate});
 
         this.props.client
             .mutate({
                 mutation: ADD_WORKER_COMPENSATION,
                 variables: {
-                    workerCompensation: workerCompensationObject
+                    fileName: "WorkerCompensation-" + random + "-" + this.state.applicantName,
+                    html,
+                    applicantLegalDocument: {
+                        fieldsData: jsonFields,
+                        ApplicationDocumentTypeId: this.state.typeDocumentId,
+                        ApplicationId: this.props.applicationId,
+                        UserId: this.state.userId,
+                        completed: true
+                    }
                 }
             })
             .then(({ data }) => {
@@ -144,7 +163,7 @@ class WorkerCompensation extends Component {
                     'right'
                 );
 
-                this.getWorkerCompensationInformation(this.props.applicationId, true);
+                this.getWorkerCompensationInformation(this.props.applicationId);
                 this.props.changeTabState();
             })
             .catch(error => {
@@ -206,37 +225,32 @@ class WorkerCompensation extends Component {
             })
     };
 
-    getWorkerCompensationInformation = (id, generatePdf = false) => {
+    getWorkerCompensationInformation = (id) => {
         this.props.client
             .query({
                 query: GET_WORKER_COMPENSATION_INFO,
                 variables: {
-                    id: id
+                    ApplicationId: id,
+                    ApplicationDocumentTypeId: this.state.typeDocumentId
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.applications[0].workerCompensation !== null) {
+                if (data.lastApplicantLegalDocument) {
+                    const fd = data.lastApplicantLegalDocument.fieldsData;
+                    const formData = fd ? JSON.parse(fd) : {};
                     this.setState({
-                        id: data.applications[0].workerCompensation.id,
-                        signature: data.applications[0].workerCompensation.signature,
-                        content: data.applications[0].workerCompensation.content,
-                        applicantName: data.applications[0].workerCompensation.applicantName,
-                        date: this.formatDate(data.applications[0].workerCompensation.date, true),
-                        applicantAddress: data.applications[0].workerCompensation.applicantAddress,
-                        applicantCity: data.applications[0].workerCompensation.applicantCity,
-                        applicantState: data.applications[0].workerCompensation.applicantState,
-                        applicantZipCode: data.applications[0].workerCompensation.applicantZipCode,
-                        initialNotification: data.applications[0].workerCompensation.initialNotification,
-                        injuryNotification: data.applications[0].workerCompensation.injuryNotification,
-                        injuryDate: this.formatDate(data.applications[0].workerCompensation.injuryDate, true),
-                        urlPDF: data.applications[0].workerCompensation.pdfUrl,
-                    }, () => {
-                        if(generatePdf) this.createDocumentsPDF(uuidv4());
-                    });
-                } else {
-                    this.setState({
-                        id: null
+                        signature: formData.signature,
+                        applicantName: formData.applicantName,
+                        date: this.formatDate(formData.date),
+                        applicantAddress: formData.applicantAddress,
+                        applicantCity: formData.applicantCity,
+                        applicantState: formData.applicantState,
+                        applicantZipCode: formData.applicantZipCode,
+                        initialNotification: formData.initialNotification,
+                        injuryNotification: formData.injuryNotification,
+                        injuryDate: this.formatDate(formData.injuryDate),
+                        urlPDF: data.lastApplicantLegalDocument.url,
                     });
                 }
             })
@@ -248,6 +262,30 @@ class WorkerCompensation extends Component {
                     'bottom',
                     'right'
                 );
+            })
+    };
+
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'Worker Compensation'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }, _ => {
+                        this.getWorkerCompensationInformation(this.props.applicationId);
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
             })
     };
 
@@ -302,13 +340,7 @@ class WorkerCompensation extends Component {
     };
 
     handlePdfDownload = () => {
-        if(this.state.urlPDF){
-            this.downloadDocumentsHandler();
-        }
-        else {
-            const uuid = uuidv4();
-            this.createDocumentsPDF(uuid, true);
-        }
+        this.downloadDocumentsHandler();
     }
 
     handleChangeInjuryDate = (date) => {
@@ -319,8 +351,9 @@ class WorkerCompensation extends Component {
     }
 
     componentWillMount() {
-        this.getWorkerCompensationInformation(this.props.applicationId);
-        this.getApplicantInformation(this.props.applicationId);
+        this.setState({
+            userId: localStorage.getItem('LoginId') || 0
+        }, () => this.getDocumentType());
     }
 
     sleep() {
@@ -353,7 +386,7 @@ class WorkerCompensation extends Component {
                         );
                     } else {
 
-                        this.insertWorkerCompensation(this.state);
+                        this.insertWorkerCompensation();
                         this.setState({
                             openSignature: false
                         })
@@ -484,119 +517,41 @@ class WorkerCompensation extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[7].label}</span>
                                 {
-                                    this.state.id === '' ? (
-                                        ''
-                                    ) : (
-                                            <div>
-                                                {
-                                                    this.state.id !== null ? (
-                                                        <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
-                                                            {this.state.downloading && (
-                                                            <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                            {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
-                                                                className="fas fa-download" /></React.Fragment>)}
+                                    <div>
+                                        {
+                                            this.state.urlPDF ? (
+                                                <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
+                                                    {this.state.downloading && (
+                                                    <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                    {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
+                                                        className="fas fa-download" /></React.Fragment>)}
 
-                                                        </button>
-                                                    ) : (
-                                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                                this.setState({
-                                                                    openSignature: true
-                                                                })
-                                                            }}>{actions[8].label} <i className="far fa-edit"></i>
-                                                            </button>
-                                                        )
-                                                }
-                                            </div>
-                                        )
+                                                </button>
+                                            ) : ''
+                                        }
+                                        <button className="applicant-card__edit-button ml-2" onClick={() => {
+                                            this.setState({
+                                                openSignature: true
+                                            })
+                                            }}>{actions[8].label} <i className="far fa-edit"></i>
+                                        </button>
+                                    </div>
                                 }
                             </div>
                             <div className="p-4">
                                 <div id="DocumentPDF" className="signature-information">
-                                    {renderHTML(`<p style="text-align: center; font-family: 'Times New Roman';"><span style="font-family: Times New Roman;"><b>Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&apos; Compensation Network</b></span></p>
-<p style="text-align: justify; font-family: Times New Roman;"><strong><span style="font-family: 'Times New Roman';">&nbsp;</span></strong></p>
-<p style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I &nbsp;have &nbsp;received information that tells me how to get health care under my employer&apos;s workers&apos; compensation insurance.</p>
-<p style="text-align: justify; font-family: Times New Roman;"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="text-align: justify; font-family: Times New Roman;">If I am hurt on the job and live in a service area described in this information, I understand that:</p>
-<ol style="margin-top: 0in; margin-bottom: .0001pt;">
-    <li style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I must choose a treating doctor from the list of doctors in the network. Or, I may ask my HMO primary care physician to agree to serve as my treating doctor. If I select my HMO primary care physician as my treating doctor, I will call Texas Mutual at (800) 859-5995 to notify them of my choice.</li>
-    <li style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I must go to my treating doctor for all health care for my injury. If I need a specialist, my treating doctor will refer me. If I need emergency care, I may go anywhere.</li>
-    <li style="text-align: justify; font-family: Times New Roman;">The insurance carrier will pay the treating doctor and other network providers.</li>
-    <li style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">I might have to pay the bill if I get health care from someone other than a network doctor without network approval.</li>
-    <li style="text-align: justify; line-height: 1.5; font-family: Times New Roman;">Knowingly making a false workers&apos; compensation claim may lead to a criminal investigation that could result in criminal penalties such as fines and imprisonment.</li>
-</ol>
-<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
-<table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0" cellspacing="5">
-    <tbody>
-        <tr>
-            <td style="width: 80%; border-bottom: 1px solid black; margin-right: 5px;"><img src="${this.state.signature || ''}" alt="" width="150" height="auto" style="zoom:1.5" /></td>
-            <td style="width: 20%; border-bottom: 1px solid black; margin-left: 5px;">${this.state.date.substring(0, 10) || ''}</td>
-        </tr>
-        <tr>
-            <td style="width: 80%; font-size: 10px; vertical-align: top;">Signature</td>
-            <td style="width: 20%; font-size: 10px; vertical-align: top;">Date</td>
-        </tr>
-    </tbody>
-</table>
-<table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0" cellspacing="5">
-    <tbody>
-        <tr>
-            <td style="width: 80%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantName || ''}</td>
-            <td style="width: 20%;">&nbsp;</td>
-        </tr>
-        <tr>
-            <td style="width: 80%; font-size: 10px; vertical-align: top;">Printed Name</td>
-            <td style="width: 20%;">&nbsp;</td>
-        </tr>
-    </tbody>
-</table>
-<table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0">
-    <tbody>
-        <tr>
-            <td style="width: 20%; margin-left: 5px;">I live at:</td>
-            <td style="width: 80%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantAddress || ''}</td>
-        </tr>
-        <tr>
-            <td style="width: 20%; margin-left: 5px;">&nbsp;</td>
-            <td style="width: 80%; margin-right: 5px; font-size: 10px; vertical-align: top;">Street Address</td>
-        </tr>
-    </tbody>
-</table>
-<table style="border-collapse: collapse; width: 100%; border-style: none; margin-bottom: 14px" border="0">
-    <tbody>
-        <tr>
-            <td style="width: 20%; margin-left: 5px;">&nbsp;</td>
-            <td style="width: 20%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantCity || ''}</td>
-            <td style="width: 40%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantState || ''}</td>
-            <td style="width: 20%; border-bottom: 1px solid black; margin-right: 5px;">${this.state.applicantZipCode || ''}</td>
-        </tr>
-        <tr>
-            <td style="width: 20%; margin-left: 5px;">&nbsp;</td>
-            <td style="width: 20%; margin-right: 5px; font-size: 10px; vertical-align: top;">City</td>
-            <td style="width: 40%; margin-right: 5px; font-size: 10px; vertical-align: top;">State</td>
-            <td style="width: 20%; margin-right: 5px; font-size: 10px; vertical-align: top;">Zip Code</td>
-        </tr>
-    </tbody>
-</table>
-
-<p style="text-align: justify; font-family: Times New Roman;">Name of Employer: <u>TUMI STAFFING INC.</u></p>
-<p style="text-align: justify; font-family: Times New Roman;">Name of Network: <em>Texas Star Network</em>&reg;</p>
-<p style="text-align: justify; font-family: Times New Roman;"><span style="">&nbsp;</span></p>
-<p style="text-align: justify; line-height: 1.5; font-family: Times New Roman;"><strong><span style="font-family: 'Times New Roman';">Network service areas are subject to change. Call (800) 381-8067 if you need a network treating </span></strong><strong><span style="font-family: 'Times New Roman';">provider.</span></strong></p>
-<table style="border-collapse: collapse; width: 100%;" border="1">
-    <tbody>
-        <tr>
-            <td style="width: 100%; padding: 8px;">
-                <p style="font-family: Times New Roman;"><span style="">Please indicate whether this is the:</span></p>
-                <ul style="margin-top: 1.0pt; margin-bottom: .0001pt; list-style: none;">
-                    <li style="margin: 1pt 0in 0.0001pt 31.2px; font-family: Times New Roman;"><span style="">&#9633;  Initial Employee Notification</span></li>
-                    <li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-family: Times New Roman;"><span style="">&#9633;  Injury Notification: <u>${this.formatDate(this.state.injuryDate, true)}</u></span></li>
-                </ul>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<p style="text-align: justify; font-family: Times New Roman;">&nbsp;</p>
-<p style="text-align: justify; font-family: Times New Roman;"><strong><span style="font-family: 'Times New Roman';">DO NOT RETURN THIS FORM TO TEXAS MUTUAL INSURANCE COMPANY UNLESS REQUESTED</span></strong></p>`)}
+                                    {renderHTML(
+                                        Document({
+                                            signature: this.state.signature,
+                                            date: this.formatDate(this.state.date, true),
+                                            applicantName: this.state.applicantName,
+                                            applicantAddress: this.state.applicantAddress,
+                                            applicantCity: this.state.applicantCity,
+                                            applicantState: this.state.applicantState,
+                                            applicantZipCode: this.state.applicantZipCode,
+                                            injuryDate: this.formatDate(this.state.injuryDate, true)
+                                        })
+                                    )}
                                 </div>
                             </div>
                         </div>

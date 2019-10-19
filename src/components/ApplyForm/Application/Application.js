@@ -349,6 +349,7 @@ class Application extends Component {
 
                         this.setState(
                             {
+                                alias: applicantData.alias || "",
                                 dbFullName: `${firstName || ''}${middleName || ''}${lastName || ''}${lastName2 || ''}`,
                                 dbSocialSecurityNumber: socialSecurityNumber || '',
                                 dbAddress: `${streetAddress || ''}-${aptNumber || ''}-${city || ''}-${state || ''}-${zipCode || ''}`,

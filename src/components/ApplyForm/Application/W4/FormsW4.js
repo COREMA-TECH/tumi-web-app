@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
-import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO } from "./Queries";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_ANTI_HARRASMENT_INFO, GET_APPLICANT_INFO, GET_DOCUMENT_TYPE, GET_GENERAL_INFO } from "./Queries";
 import { ADD_W4 } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
-import w4_form_english from './w4_header_eng.png';
+//import w4_form_english from './w4_header_eng.png';
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import Document from './Document';
 
 const uuidv4 = require('uuid/v4');
 
@@ -51,7 +51,10 @@ class FormsW4 extends Component {
             estadoCivil1: false,
             estadoCivil2: false,
             urlPDF: '',
-            formData: ''
+            formData: '',
+            typeDocumentId: 0,
+            userId: 0,
+            showReadOnlyFields: localStorage.getItem('IdRoles') == 13
         }
     }
 
@@ -73,22 +76,23 @@ class FormsW4 extends Component {
         return `<html style="zoom: 65%;">${contentPDFClone.innerHTML}</html>`;
     }
 
+
     getApplicantInformation = (id) => {
         this.props.client
             .query({
                 query: GET_APPLICANT_INFO,
                 variables: {
-                    ApplicationId: id
+                    ApplicationId: id,
+                    ApplicationDocumentTypeId: this.state.typeDocumentId
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.applicantW4.length > 0) {
-                    let fd = data.applicantW4[0].fieldsData;
+                if (data.lastApplicantLegalDocument) {
+                    let fd = data.lastApplicantLegalDocument.fieldsData;
                     this.setState({
                         isCreated: true,
-                        html: data.applicantW4[0].html ? data.applicantW4[0].html.replace('style="zoom: 65%;"', '') : '',
-                        urlPDF: data.applicantW4[0].url,
+                        urlPDF: data.lastApplicantLegalDocument.url,
                         formData: fd ? JSON.parse(fd) : {}
                     }, _ => {
                         this.loadDataFromJson(this.state.formData)
@@ -98,71 +102,76 @@ class FormsW4 extends Component {
                         isCreated: false,
                     })
                 }
+
+                this.fetchApplicantInfo();
             })
             .catch(error => {
                 console.log(error);
             })
     };
 
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'W4'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }, _ => {
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
+    fetchApplicantInfo = _ => {
+        this.props.client.query({
+            query: GET_GENERAL_INFO,
+            variables: { id: this.props.applicationId }
+        })
+            .then(({ data: { applications: [applicant] } }) => {
+
+                const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo: { Name: city }, stateInfo: { Name: state }, marital, exemptions } = applicant;
+
+                this.setState(_ => ({
+                    firstName: firstName.trim(),
+                    lastName: lastName.trim(),
+                    socialSecurityNumber,
+                    address: address.trim(),
+                    postalCode: `${city.trim()}, ${state.trim()}; ${zipCode}`,
+                    estadoCivil: (marital && marital === 1 && !this.state.estadoCivil2) ? true : false,
+                    estadoCivil1: (marital && marital === 2 && !this.state.estadoCivil2) ? true : false,
+                    excention: exemptions || 0
+                }));
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
     loadDataFromJson = fieldsData => {
-        if(!fieldsData) return;
-        const { firstName, lastName, ssn, idNumber, firstEmployeeDate, employeer, excention, payCheck, excentionYear, address, postalCode, sse, signature, estadoCivil, estadoCivil1, estadoCivil2 } = fieldsData;
+        if (!fieldsData) return;
+        const { idNumber, firstEmployeeDate, employeer, payCheck, excentionYear, sse, signature, estadoCivil, estadoCivil1, estadoCivil2 } = fieldsData;
 
         this.setState(_ => ({
-            firstName,
-            lastName,
-            socialSecurityNumber: ssn,
             idNumber,
             firstEmployeeDate,
             employeer,
-            excention,
             payCheck,
             excentionYear,
-            address,
-            postalCode,
             socialSecurityExtention: sse,
             signature,
             estadoCivil, estadoCivil1, estadoCivil2
         }));
     }
-
-    // insertW4 = (item) => {
-    //     let harassmentObject = Object.assign({}, item);
-    //     delete harassmentObject.openSignature;
-    //     delete harassmentObject.id;
-    //     delete harassmentObject.accept;
-    //
-    //
-    //     this.props.client
-    //         .mutate({
-    //             mutation: ADD_ANTI_HARASSMENT,
-    //             variables: {
-    //                 harassmentPolicy: harassmentObject
-    //             }
-    //         })
-    //         .then(({ data }) => {
-    //             console.log("entro al data ", data);
-    //             this.props.handleOpenSnackbar(
-    //                 'success',
-    //                 'Successfully signed!',
-    //                 'bottom',
-    //                 'right'
-    //             );
-    //
-    //             this.setState({
-    //                 id: data.addHarassmentPolicy[0].id
-    //             })
-    //         })
-    //         .catch(error => {
-    //             // If there's an error show a snackbar with a error message
-    //             this.props.handleOpenSnackbar(
-    //                 'error',
-    //                 'Error to sign Anti Harrasment information. Please, try again!',
-    //                 'bottom',
-    //                 'right'
-    //             );
-    //         });
-    // };
 
     createDocumentsPDF = (random) => {
         this.setState(
@@ -199,7 +208,7 @@ class FormsW4 extends Component {
 
     downloadDocumentsHandler = () => {
         var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF.replace(".", "");
-        if(url)
+        if (url)
             window.open(url, '_blank');
         else
             this.props.handleOpenSnackbar(
@@ -213,14 +222,17 @@ class FormsW4 extends Component {
 
 
 
-    componentWillMount() {
-        this.getApplicantInformation(this.props.applicationId);
+    componentDidMount() {
+        this.setState({
+            userId: localStorage.getItem('LoginId') || 0
+        }, () => this.getDocumentType());
     }
 
     validateW4 = () => {
         let firstNameField = document.getElementById('firstName');
         let lastNameField = document.getElementById('lastName');
         let socialSecurityNumberField = document.getElementById('socialSecurityNumber');
+        const random = uuidv4();
 
         if (firstNameField.value.length > 0 &&
             lastNameField.value.length > 0 &&
@@ -235,12 +247,18 @@ class FormsW4 extends Component {
                 .mutate({
                     mutation: ADD_W4,
                     variables: {
+                        fileName: "W4-" + random + this.state.applicantName,
                         html,
-                        ApplicantId: this.props.applicationId,
-                        json: jsonFields
+                        applicantLegalDocument: {
+                            fieldsData: jsonFields,
+                            ApplicationDocumentTypeId: this.state.typeDocumentId,
+                            ApplicationId: this.props.applicationId,
+                            UserId: this.state.userId,
+                            completed: true
+                        }
                     }
                 })
-                .then(({ data }) => {
+                .then(() => {
                     this.props.handleOpenSnackbar(
                         'success',
                         this.state.html ? 'Updated Successfully' : 'Created Successfully',
@@ -276,6 +294,10 @@ class FormsW4 extends Component {
         return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
+    externalSetState = (updateData, callback = () => { }) => {
+        this.setState(updateData, _ => callback());
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.applicationId != this.props.applicationId) {
             this.setState({
@@ -302,7 +324,7 @@ class FormsW4 extends Component {
                         })
                     }}
                     aria-labelledby="form-dialog-title">
-                   <Toolbar>
+                    <Toolbar>
                         <h1 className="primary apply-form-container__label">Please Sign</h1>
                         <Button color="default" onClick={() => {
                             this.setState(() => ({ openSignature: false }),
@@ -328,14 +350,6 @@ class FormsW4 extends Component {
             </div>
         );
 
-        // if(this.state.isCreated){
-        //     let inputs = document.getElementsByTagName('input');
-        //     for (let index = 0; index < inputs.length; ++index) {
-        //         // deal with inputs[index] element.
-        //         inputs[index].disabled = true;
-        //     }
-        // }
-
         return (
             <div className="Apply-container--application" style={{ maxWidth: '900px', width: '100%', margin: '0 auto' }}>
                 <div className="row">
@@ -343,36 +357,59 @@ class FormsW4 extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[10].label}</span>
-                                
-                                                <Fragment>
-                                                    <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
-                                                       this.setState(_ => ({
-                                                           openSignature: true
-                                                       }))
-                                                    }}>
-                                                        Sign <i className="fas fa-pencil-alt" />
-                                                    </button>
-                                                    <button className="applicant-card__edit-button" style={{marginRight: '8px'}} onClick={this.downloadDocumentsHandler}>
-                                                        {this.state.downloading && (
-                                                        <React.Fragment>Downloading <i
-                                                            class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                        {!this.state.downloading && (
-                                                            <React.Fragment>{actions[9].label} <i
-                                                                className="fas fa-download" /></React.Fragment>)}
-                                                </button>
-                                            </Fragment>
-                                       
-                                                <button className="applicant-card__edit-button" onClick={() => {
-                                                    this.validateW4();
-                                                }}>{actions[4].label} <i className="far fa-save" />
-                                                </button>
-                                           
+
+                                <Fragment>
+                                    <button style={{ marginLeft: 'auto', marginRight: '8px' }} className="applicant-card__edit-button" onClick={() => {
+                                        this.setState(_ => ({
+                                            openSignature: true
+                                        }))
+                                    }}>
+                                        Sign <i className="fas fa-pencil-alt" />
+                                    </button>
+                                    <button className="applicant-card__edit-button" style={{ marginRight: '8px' }} onClick={this.downloadDocumentsHandler}>
+                                        {this.state.downloading && (
+                                            <React.Fragment>Downloading <i
+                                                class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                        {!this.state.downloading && (
+                                            <React.Fragment>{actions[9].label} <i
+                                                className="fas fa-download" /></React.Fragment>)}
+                                    </button>
+                                </Fragment>
+
+                                <button className="applicant-card__edit-button" onClick={() => {
+                                    this.validateW4();
+                                }}>{actions[4].label} <i className="far fa-save" />
+                                </button>
+
                             </div>
                             {
                                 (
                                     <div style={{ width: '100%', margin: '0 auto' }}>
                                         <div className="row pdf-container" id="w4Html" style={{ maxWidth: '100%' }}>
-                                            <div id="DocumentPDF" className="signature-information">
+                                            <Document
+                                                setState={this.externalSetState}
+                                                languageForm={localStorage.getItem('languageForm')}
+                                                showReadOnlyFields={this.state.showReadOnlyFields}
+                                                data={{
+                                                    firstName: this.state.firstName,
+                                                    lastName: this.state.lastName,
+                                                    socialSecurityNumber: this.state.socialSecurityNumber,
+                                                    address: this.state.address,
+                                                    estadoCivil: this.state.estadoCivil,
+                                                    estadoCivil1: this.state.estadoCivil1,
+                                                    estadoCivil2: this.state.estadoCivil2,
+                                                    postalCode: this.state.postalCode,
+                                                    socialSecurityExtention: this.state.socialSecurityExtention,
+                                                    excention: this.state.excention,
+                                                    payCheck: this.state.payCheck,
+                                                    excentionYear: this.state.excentionYear,
+                                                    signature: this.state.signature,
+                                                    employeer: this.state.employeer,
+                                                    firstEmployeeDate: this.state.firstEmployeeDate,
+                                                    idNumber: this.state.idNumber
+                                                }}
+                                            />
+                                            {/* <div id="DocumentPDF" className="signature-information">
                                                 {
                                                     localStorage.getItem('languageForm') == 'es' ? (
                                                         <div>
@@ -568,7 +605,7 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             1 Su primer nombre e inicial del segundo
                                                                             <input
-                                                                                //disabled={this.state.isCreated}
+                                                                                disabled={true}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0 }}
                                                                                 id="firstName"
@@ -588,7 +625,7 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             Apellido
                                                                             <input
-                                                                                //disabled={this.state.isCreated}
+                                                                                disabled={true}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0 }}
                                                                                 id="lastName"
@@ -607,7 +644,7 @@ class FormsW4 extends Component {
                                                                         }}>
                                                                             <span style={{ fontWeight: '900' }}>2 Su número de Seguro Social</span>
                                                                             <input
-                                                                                //disabled={this.state.isCreated}
+                                                                                disabled={true}
                                                                                 type="text" style={{ width: '100%', border: 0 }}
                                                                                 id="socialSecurityNumber"
                                                                                 value={this.state.socialSecurityNumber}
@@ -631,7 +668,7 @@ class FormsW4 extends Component {
                                                                             <div data-font-name="g_d8_f3" data-angle={0}
                                                                                 data-canvas-width="218.47000000000006">Dirección (número de casa y calle o ruta rural)
                                                                                 <input
-                                                                                    //disabled={this.state.isCreated}
+                                                                                    disabled={true}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0 }}
                                                                                     id="address"
@@ -715,7 +752,7 @@ class FormsW4 extends Component {
                                                                                 data-canvas-width="218.47000000000006">Ciudad o pueblo,
                                                                                estado y código postal (ZIP)
                                                                                 <input
-                                                                                    //disabled={this.state.isCreated}
+                                                                                    disabled={true}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0 }}
                                                                                     id="postalCode"
@@ -937,50 +974,8 @@ class FormsW4 extends Component {
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
-                                                            {/*<table style={{*/}
-                                                            {/*borderCollapse: 'collapse',*/}
-                                                            {/*width: '100%',*/}
-                                                            {/*height: '51px',*/}
-                                                            {/*borderTop: 0*/}
-                                                            {/*}} border={1}>*/}
-                                                            {/*<tbody>*/}
-                                                            {/*<tr style={{ height: '17px' }}>*/}
-                                                            {/*<td style={{ lineHeight: "1.5",*/}
-                                                            {/*fontSize: '11px',*/}
-                                                            {/*fontFamily: 'Times New Roman',*/}
-                                                            {/*verticalAlign: 'top',*/}
-                                                            {/*width: '50%',*/}
-                                                            {/*borderTop: '0px #ffffff',*/}
-                                                            {/*height: '17px'*/}
-                                                            {/*}}>*/}
-                                                            {/*Dirección (número de casa y*/}
-                                                            {/*calle o ruta rural)*/}
-                                                            {/*<input*/}
-                                                            {/*//disabled={this.state.isCreated}*/}
-                                                            {/*type="text"*/}
-                                                            {/*style={{ width: '100%', border: 0 }}*/}
-                                                            {/*id="address"*/}
-                                                            {/*value={this.state.address}*/}
-                                                            {/*onChange={(e) => {*/}
-                                                            {/*this.setState({*/}
-                                                            {/*address: e.target.value*/}
-                                                            {/*})*/}
-                                                            {/*}}*/}
-                                                            {/*/>*/}
-                                                            {/*</td>*/}
-                                                            {/*<td style={{ lineHeight: "1.5",*/}
-                                                            {/*fontFamily: 'Times New Roman',*/}
-                                                            {/*verticalAlign: 'top',*/}
-                                                            {/*width: '50%',*/}
-                                                            {/*borderTop: '0px #ffffff',*/}
-                                                            {/*height: '17px'*/}
-                                                            {/*}}>*/}
-                                                            {/*&nbsp;</td>*/}
-                                                            {/*</tr>*/}
 
-                                                            {/*</tbody>*/}
-                                                            {/*</table>*/}
-                                                            <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
+<table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
                                                                 <tbody>
                                                                     <tr>
                                                                         <td style={{
@@ -990,7 +985,7 @@ class FormsW4 extends Component {
                                                                             width: '65%',
                                                                             verticalAlign: 'top'
                                                                         }}>
-                                                                            8 Nombre y dirección del empleador (<span style={{ fontWeight: '900' }}>Empleador:</span> Complete
+                                                                            8 Nombre y dirección del empleador <span style={{ fontWeight: '900' }}>Empleador:</span> Complete
                                                                             las líneas <span style={{ fontWeight: '900' }}>8 y 10</span> si
                                                                             envía este
                                                                             certificado
@@ -1001,15 +996,23 @@ class FormsW4 extends Component {
                                                                             of New Hires
                                                                             (Directorio
                                                                             estatal de personas recién empleadas).
-                                                                            <input
-                                                                                //disabled={this.state.isCreated}
-                                                                                type="text" style={{ width: '100%', border: 0 }}
-                                                                                id="employeer"
-                                                                                value={this.state.employeer}
-                                                                                onChange={(e) => {
-                                                                                    this.setState({ employeer: e.target.value })
-                                                                                }}
-                                                                            />
+                                                                            {this.state.showReadOnlyFields ? (
+                                                                                <label 
+                                                                                    dangerouslySetInnerHTML={{
+                                                                                        __html: `${this.state.employeer}`
+                                                                                    }}
+                                                                                />
+                                                                            ) : (
+                                                                                <input
+                                                                                    //disabled={this.state.isCreated}
+                                                                                    type="text" style={{ width: '100%', border: 0 }}
+                                                                                    id="employeer"
+                                                                                    value={this.state.employeer}
+                                                                                    onChange={(e) => {
+                                                                                        this.setState({ employeer: e.target.value })
+                                                                                    }}
+                                                                                />
+                                                                            )}
                                                                         </td>
                                                                         <td style={{
                                                                             lineHeight: "1.5",
@@ -1019,7 +1022,14 @@ class FormsW4 extends Component {
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             9 Primera fecha de empleo
-                                                                            <input
+                                                                            {this.state.showReadOnlyFields ? (
+                                                                                <label 
+                                                                                    dangerouslySetInnerHTML={{
+                                                                                        __html: `${this.state.firstEmployeeDate}`
+                                                                                    }}
+                                                                                />
+                                                                            ) : (
+                                                                                <input
                                                                                 //disabled={this.state.isCreated}
                                                                                 type="text"
                                                                                 style={{ width: '100%', border: 0, height: '65px' }}
@@ -1029,6 +1039,7 @@ class FormsW4 extends Component {
                                                                                     this.setState({ firstEmployeeDate: e.target.value })
                                                                                 }}
                                                                             />
+                                                                            )}                                                                            
                                                                         </td>
                                                                         <td style={{
                                                                             lineHeight: "1.5",
@@ -1038,16 +1049,25 @@ class FormsW4 extends Component {
                                                                             verticalAlign: 'top'
                                                                         }}>
                                                                             10 Número de identificación del empleador(EIN)
-                                                                            <input
-                                                                                //disabled={this.state.isCreated}
-                                                                                type="text"
-                                                                                style={{ width: '100%', border: 0, height: '65px' }}
-                                                                                id="idNumber"
-                                                                                value={this.state.idNumber}
-                                                                                onChange={(e) => {
-                                                                                    this.setState({ idNumber: e.target.value })
-                                                                                }}
-                                                                            />
+                                                                            {this.state.showReadOnlyFields ? (
+                                                                                <label 
+                                                                                    dangerouslySetInnerHTML={{
+                                                                                        __html: `${this.state.idNumber}`
+                                                                                    }}
+                                                                                />
+                                                                            ) : (
+                                                                                <input
+                                                                                    //disabled={this.state.isCreated}
+                                                                                    type="text"
+                                                                                    style={{ width: '100%', border: 0, height: '65px' }}
+                                                                                    id="idNumber"
+                                                                                    value={this.state.idNumber}
+                                                                                    onChange={(e) => {
+                                                                                        this.setState({ idNumber: e.target.value })
+                                                                                    }}                                                                                
+                                                                                />
+                                                                            )}           
+                                                                            
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -1240,9 +1260,6 @@ class FormsW4 extends Component {
                                                         </div>
                                                     ) : (
                                                             <div>
-                                                                {/* <div style={}>
-
-                                                                </div> */}
                                                                 <table style={{
                                                                     fontFamily: 'Times New Roman',
                                                                     fontSize: '11px',
@@ -1302,7 +1319,7 @@ class FormsW4 extends Component {
                                                                             }}>
                                                                                 1 Your first name and middle initial
                                                                             <input
-                                                                                    //disabled={this.state.isCreated}
+                                                                                    disabled={true}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0 }}
                                                                                     id="firstName"
@@ -1322,7 +1339,7 @@ class FormsW4 extends Component {
                                                                             }}>
                                                                                 Last name
                                                                             <input
-                                                                                    //disabled={this.state.isCreated}
+                                                                                    disabled={true}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0 }}
                                                                                     id="lastName"
@@ -1341,7 +1358,7 @@ class FormsW4 extends Component {
                                                                             }}>
                                                                                 <span style={{ fontWeight: '900' }}>2 Your social security Number</span>
                                                                                 <input
-                                                                                    //disabled={this.state.isCreated}
+                                                                                    disabled={true}
                                                                                     type="text" style={{ width: '100%', border: 0 }}
                                                                                     id="socialSecurityNumber"
                                                                                     value={this.state.socialSecurityNumber}
@@ -1365,7 +1382,7 @@ class FormsW4 extends Component {
                                                                                 <div data-font-name="g_d8_f3" data-angle={0}
                                                                                     data-canvas-width="218.47000000000006">Home address (number and street or rural route)
                                                                                 <input
-                                                                                        //disabled={this.state.isCreated}
+                                                                                        disabled={true}
                                                                                         type="text"
                                                                                         style={{ width: '100%', border: 0 }}
                                                                                         id="address"
@@ -1397,7 +1414,7 @@ class FormsW4 extends Component {
                                                                                         value={this.state.estadoCivil}
                                                                                         style={{ paddingTop: "5px" }}
                                                                                         defaultChecked={this.state.estadoCivil}
-                                                                                        onChange={(e) => {
+                                                                                        onChange={() => {
                                                                                             this.setState({
                                                                                                 estadoCivil: true,
                                                                                                 estadoCivil1: false,
@@ -1421,7 +1438,7 @@ class FormsW4 extends Component {
                                                                                         value={this.state.estadoCivil1}
                                                                                         defaultChecked={this.state.estadoCivil1}
                                                                                         style={{ paddingTop: "5px" }}
-                                                                                        onChange={(e) => {
+                                                                                        onChange={() => {
                                                                                             this.setState({
                                                                                                 estadoCivil1: true,
                                                                                                 estadoCivil: false,
@@ -1438,7 +1455,7 @@ class FormsW4 extends Component {
                                                                                     />
                                                                                     Married&nbsp;&nbsp;
                                                                                 <input type="checkbox"
-                                                                                        onChange={(e) => {
+                                                                                        onChange={() => {
                                                                                             this.setState({
                                                                                                 estadoCivil2: true,
                                                                                                 estadoCivil: false,
@@ -1457,10 +1474,6 @@ class FormsW4 extends Component {
                                                                                     Married, but withhold at higher Single rate&nbsp;&nbsp;
                                                                                 <span style={{ fontWeight: '900' }}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.”
     
-                                                                                {/* <span style={{paddingRight: "5px", paddingLeft: "5px", paddingTop: "5px", textIndent: "5px"}}>Married</span>
-                                                                                <input style={{paddingTop: "5px",textIndent: "8px"}} type="checkbox" /> Married, but withhold at higher Single rate  
-                                                                                <span style={{paddingTop: "5px",fontWeight: '900'}}>Note:</span> If married filing separately, check “Married, but withhold at higher Single rate.” */}
-
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
@@ -1479,7 +1492,7 @@ class FormsW4 extends Component {
                                                                                 <div data-font-name="g_d8_f3" data-angle={0}
                                                                                     data-canvas-width="218.47000000000006">City or town, state, and ZIP code
                                                                                 <input
-                                                                                        //disabled={this.state.isCreated}
+                                                                                        disabled={true}
                                                                                         type="text"
                                                                                         style={{ width: '100%', border: 0 }}
                                                                                         id="postalCode"
@@ -1693,8 +1706,15 @@ class FormsW4 extends Component {
                                                                                 verticalAlign: 'top'
                                                                             }}>
                                                                                 8 Employer’s name and address (Employer: Complete boxes 8 and 10 if sending to IRS and complete boxes 8, 9, and 10 if sending to State Directory of New Hires.)
-                                                                            <input
-                                                                                    //disabled={this.state.isCreated}
+                                                                                
+                                                                                {this.state.showReadOnlyFields ? (
+                                                                                    <label 
+                                                                                        dangerouslySetInnerHTML={{
+                                                                                            __html: `${this.state.employeer}`
+                                                                                        }}
+                                                                                    />
+                                                                                ) : (
+                                                                                    <input
                                                                                     type="text" style={{ width: '100%', border: 0 }}
                                                                                     id="employeer"
                                                                                     value={this.state.employeer}
@@ -1702,6 +1722,7 @@ class FormsW4 extends Component {
                                                                                         this.setState({ employeer: e.target.value })
                                                                                     }}
                                                                                 />
+                                                                                )}
                                                                             </td>
                                                                             <td style={{
                                                                                 lineHeight: "1.5",
@@ -1711,7 +1732,14 @@ class FormsW4 extends Component {
                                                                                 verticalAlign: 'top'
                                                                             }}>
                                                                                 9 First date of employment
-                                                                            <input
+                                                                            {this.state.showReadOnlyFields ? (
+                                                                                    <label 
+                                                                                        dangerouslySetInnerHTML={{
+                                                                                            __html: `${this.state.firstEmployeeDate}`
+                                                                                        }}
+                                                                                    />
+                                                                            ) : (
+                                                                                <input
                                                                                     //disabled={this.state.isCreated}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0, height: '65px' }}
@@ -1721,6 +1749,7 @@ class FormsW4 extends Component {
                                                                                         this.setState({ firstEmployeeDate: e.target.value })
                                                                                     }}
                                                                                 />
+                                                                            )}                                                                            
                                                                             </td>
                                                                             <td style={{
                                                                                 lineHeight: "1.5",
@@ -1730,7 +1759,14 @@ class FormsW4 extends Component {
                                                                                 verticalAlign: 'top'
                                                                             }}>
                                                                                 Employer identification number (EIN)
-                                                                            <input
+                                                                                {this.state.showReadOnlyFields ? (
+                                                                                    <label 
+                                                                                        dangerouslySetInnerHTML={{
+                                                                                            __html: `${this.state.idNumber}`
+                                                                                        }}
+                                                                                    />
+                                                                            ) : (
+                                                                                <input
                                                                                     //disabled={this.state.isCreated}
                                                                                     type="text"
                                                                                     style={{ width: '100%', border: 0, height: '65px' }}
@@ -1740,6 +1776,7 @@ class FormsW4 extends Component {
                                                                                         this.setState({ idNumber: e.target.value })
                                                                                     }}
                                                                                 />
+                                                                            )}                                                                            
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
@@ -1784,7 +1821,7 @@ class FormsW4 extends Component {
 
                                                         )
                                                 }
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 )

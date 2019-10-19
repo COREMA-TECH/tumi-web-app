@@ -8,21 +8,28 @@ import ConductCode from "../ConductCode/ConductCode";
 import AntiHarassment from "../AntiHarassment/AntiHarassment";
 import WorkerCompensation from "../WorkerCompensation/WorkerCompensation";
 import ApplicantDocument from "../ApplicantDocuments/ApplicantDocument";
+import AntiDiscrimination from '../AntiDiscrimination/'
 import FormI9 from '../I9/FormsI9';
 import FormW4 from "../W4/FormsW4";
 import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from '../../../Generic/Global';
+import { generateDocuments } from './GenerateDocuments';
+import HistoricalNHP from '../HistoricalNHP';
 
 const steps = {
-    0: "Background Check",
-    1: "Non-Disclousure",
-    2: "Code of Conduct",
+    0: "W4",
+    1: "I9",
+    2: "Background Check",
     3: "Anti Harassment",
-    4: "Worker's Compensation",
-    5: "I9",
-    6: "W4",
-    7: "General Documents"
+    4: "Anti Discrimination",
+    5: "Non-Disclousure",
+    6: "Non Retaliation",
+    7: "Code of Conduct",
+    8: "Benefit election form",
+    9: "Worker's Compensation",
+    10: "General Documents",
+    11: "Historical NHP"
 };
 
 const styles = theme => ({
@@ -44,7 +51,8 @@ class Documents extends Component {
             activeStep: 0,
             applicationStatus: {},
             applicationId: this.props.applicationId,
-            downloading: false
+            downloading: false,
+            summaryHtml: ''
         };
     }
 
@@ -57,32 +65,44 @@ class Documents extends Component {
     getDocumentScreen = (step) => {
 
         let stepScreen = '';
-        let applicationId = this.state.applicationId; 
+        let applicationId = this.state.applicationId;
 
-        switch(step) {
+        switch (step) {
             case 0:
-                stepScreen = <BackgroundCheck applicationId={applicationId} changeTabState={this.changeTabState} />
+                stepScreen = <FormW4 applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 1:
-                stepScreen = <NonDisclosure applicationId={applicationId} changeTabState={this.changeTabState} />
+                stepScreen = <FormI9 applicationId={applicationId} changeTabState={this.changeTabState} />;
                 break;
-            case 2: 
-                stepScreen = <ConductCode applicationId={applicationId} changeTabState={this.changeTabState} />
+            case 2:
+                stepScreen = <BackgroundCheck applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 3: 
+            case 3:
                 stepScreen = <AntiHarassment applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 4:
-                stepScreen = <WorkerCompensation applicationId={applicationId} changeTabState={this.changeTabState} />
+                stepScreen = <AntiDiscrimination applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 5: 
-                stepScreen = <FormI9 applicationId={applicationId} changeTabState={this.changeTabState} />;
+            case 5:
+                stepScreen = <NonDisclosure applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 6:
-                stepScreen = <FormW4 applicationId={applicationId} changeTabState={this.changeTabState} />
+                'Non Retaliation Policy'
                 break;
-            case 7: 
+            case 7:
+                stepScreen = <ConductCode applicationId={applicationId} changeTabState={this.changeTabState} />
+                break;
+            case 8:
+                'Benefit Election form'
+                break;
+            case 9:
+                stepScreen = <WorkerCompensation applicationId={applicationId} changeTabState={this.changeTabState} />
+                break;
+            case 10:
                 stepScreen = <ApplicantDocument applicationId={applicationId} changeTabState={this.changeTabState} />
+                break;
+            case 11:
+                stepScreen = <HistoricalNHP applicationId={applicationId} />
                 break;
         }
 
@@ -108,8 +128,13 @@ class Documents extends Component {
         });
     }
 
+    setSummaryHtml = (summaryHtml) => {
+        this.setState({ summaryHtml });
+    }
+
     componentWillMount() {
         this.getApplicantStatus();
+        generateDocuments(this.props.client, this.props.applicationId, this.setSummaryHtml);
     }
 
     // componentWillUpdate() {
@@ -120,30 +145,42 @@ class Documents extends Component {
 
         let isCompleted = false;
 
-        switch(index) {
+        switch (index) {
             case 0:
-                isCompleted = this.state.applicationStatus.ApplicantBackgroundCheck;
+                isCompleted = this.state.applicationStatus.W4;
                 break;
             case 1:
-                isCompleted = this.state.applicationStatus.ApplicantDisclosure;
+                isCompleted = this.state.applicationStatus.I9;
                 break;
-            case 2: 
-                isCompleted = this.state.applicationStatus.ApplicantConductCode;
+            case 2:
+                isCompleted = this.state.applicationStatus.BackgroundCheck;
                 break;
-            case 3: 
-                isCompleted = this.state.applicationStatus.ApplicantHarassmentPolicy;
+            case 3:
+                isCompleted = this.state.applicationStatus.HarassmentPolicy;
                 break;
             case 4:
-                isCompleted = this.state.applicationStatus.ApplicantWorkerCompensation;
+                isCompleted = this.state.applicationStatus.AntiDiscrimination;
                 break;
-            case 5: 
-                isCompleted = this.state.applicationStatus.ApplicantI9;
+            case 5:
+                isCompleted = this.state.applicationStatus.Disclosure;
                 break;
             case 6:
-                isCompleted = this.state.applicationStatus.ApplicantW4;
+                isCompleted = this.state.applicationStatus.NonRelation;
                 break;
             case 7:
-                isCompleted = true;
+                isCompleted = this.state.applicationStatus.ConductCode;
+                break;
+            case 8:
+                isCompleted = this.state.applicationStatus.BenefitElection;
+                break;
+            case 9:
+                isCompleted = this.state.applicationStatus.WorkerCompensation;
+                break;
+            case 10:
+                isCompleted = true; // General Documents
+                break;
+            case 11:
+                isCompleted = true; // NHP History
                 break;
         }
 
@@ -156,8 +193,8 @@ class Documents extends Component {
     }
 
     handleMergeDocumentClick = () => {
-        let {downloading} = this.state;
-        if(!downloading){
+        let { downloading } = this.state;
+        if (!downloading) {
             this.setState({
                 downloading: true
             }, () => {
@@ -165,10 +202,11 @@ class Documents extends Component {
                     query: GET_MERGED_DOCUMENT,
                     fetchPolicy: 'no-cache',
                     variables: {
-                        applicationId: this.state.applicationId
+                        applicationId: this.state.applicationId,
+                        summaryHtml: this.state.summaryHtml
                     }
                 }).then(({ data }) => {
-                    if(data.pdfMergeQuery)
+                    if (data.pdfMergeQuery)
                         window.open(data.pdfMergeQuery, '_blank');
                     else
                         this.props.handleOpenSnackbar(
@@ -177,10 +215,10 @@ class Documents extends Component {
                             'bottom',
                             'center'
                         );
-                    this.setState({downloading: false});
+                    this.setState({ downloading: false });
                 }).catch(error => {
                     console.log(error);
-                    this.setState({downloading: false});
+                    this.setState({ downloading: false });
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error to merge documents!',

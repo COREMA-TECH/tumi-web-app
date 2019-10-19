@@ -12,7 +12,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
-import { GET_APPLICATION_CHECK_ID } from "./Queries";
+import { GET_APPLICATION_CHECK_ID, GET_DOCUMENT_TYPE } from "./Queries";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
 import { GET_APPLICANT_INFO } from "../AntiHarassment/Queries";
 import moment from 'moment';
 import DatePicker from "react-datepicker";
+import Document from './Document';
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const backgroundCheckJson = require(`../languagesJSON/${localStorage.getItem('languageForm')}/backgroundCheck`);
@@ -71,15 +72,17 @@ class BackgroundCheck extends Component {
 
 
             loadingApplicantData: false,
-            urlPDF: null
+            urlPDF: null,
+            userId: 0,
+            typeDocumentId: 0
         }
     }
 
-    formatDate = (date, useSubstring = false) => {
-        if(!date) return '';
+    formatDate = (date, useSubstring = false, customFormat = 'YYYY-MM-DD') => {
+        if (!date) return '';
 
         let substringDate = useSubstring ? String(date).substring(0, 10) : date;
-        return moment(substringDate).format('MM/DD/YYYY');
+        return moment(substringDate).format(customFormat);
     }
 
     getApplicantInformation = (id) => {
@@ -201,9 +204,6 @@ class BackgroundCheck extends Component {
                     return element.Id == cityId;
                 });
 
-
-
-
                 if (citySelect != undefined) {
                     this.setState({
                         cityName: citySelect.Name
@@ -220,10 +220,7 @@ class BackgroundCheck extends Component {
             });
     };
 
-    /**
-     * To get background check info using id
-     */
-    getBackgroundCheckById = (id, generatePdf = false) => {
+    getBackgroundCheckById = (id) => {
         this.setState({
             loading: true
         }, () => {
@@ -231,31 +228,35 @@ class BackgroundCheck extends Component {
                 .query({
                     query: GET_APPLICATION_CHECK_ID,
                     variables: {
-                        id: id
+                        ApplicationId: id,
+                        ApplicationDocumentTypeId: this.state.typeDocumentId
                     },
                     fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
 
-                    if (data.applications[0].backgroundCheck !== null) {
-                        this.setState({
+                    if (data.lastApplicantLegalDocument) {
+                        const fd = data.lastApplicantLegalDocument.fieldsData;
+                        const formData = fd ? JSON.parse(fd) : {};
+                        const licenseExpiration = this.formatDate(formData.licenseExpiration, false, 'YYYY-MM-DD');
+                        const date = this.formatDate(formData.date, false, 'YYYY-MM-DD');
+
+                        this.setState(() => ({
                             loading: false,
-                            id: data.applications[0].backgroundCheck.id,
-                            vehicleReportRequired: data.applications[0].backgroundCheck.vehicleReportRequired,
-                            driverLicenseNumber: data.applications[0].backgroundCheck.driverLicenseNumber,
-                            commercialDriverLicense: data.applications[0].backgroundCheck.commercialDriverLicense,
-                            licenseState: data.applications[0].backgroundCheck.licenseState === null ? "" : data.applications[0].backgroundCheck.licenseState,
-                            licenseExpiration: data.applications[0].backgroundCheck.licenseExpiration === null ? "" : data.applications[0].backgroundCheck.licenseExpiration.substring(0, 10),
-                            signature: data.applications[0].backgroundCheck.signature,
-                            date: data.applications[0].backgroundCheck.date.substring(0, 10),
+                            id: 1,
+                            vehicleReportRequired: formData.vehicleReportRequired,
+                            driverLicenseNumber: formData.driverLicenseNumber,
+                            commercialDriverLicense: formData.commercialDriverLicense,
+                            licenseState: formData.licenseState,
+                            licenseExpiration,
+                            signature: formData.signature,
+                            date,
                             loadedBackgroundCheckById: true,
-                            urlPDF: data.applications[0].backgroundCheck.pdfUrl,
+                            urlPDF: data.lastApplicantLegalDocument.url,
                             editing: true,
                             accept: true,
                             isCreated: true
-                        }, () => {
-                            if(generatePdf) this.createDocumentsPDF(uuidv4());
-                        });
+                        }));
                     } else {
                         this.setState({
                             loading: false,
@@ -278,7 +279,32 @@ class BackgroundCheck extends Component {
         })
     };
 
-    insertBackgroundCheck = (item) => {
+    getDocumentType = () => {
+        this.props.client
+            .query({
+                query: GET_DOCUMENT_TYPE,
+                variables: {
+                    name: 'Background Check'
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                if (data.applicationDocumentTypes.length) {
+                    this.setState(() => ({
+                        typeDocumentId: data.applicationDocumentTypes[0].id
+                    }), () => {
+                        this.getBackgroundCheckById(this.props.applicationId);
+                        this.getApplicantInformation(this.props.applicationId);
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
+
+    insertBackgroundCheck = (jsonFields) => {
+        const random = uuidv4();
         this.setState({
             loading: true
         }, () => {
@@ -286,7 +312,15 @@ class BackgroundCheck extends Component {
                 .mutate({
                     mutation: ADD_BACKGROUND_CHECK,
                     variables: {
-                        backgroundCheck: item
+                        fileName: "BackgroundCheck-" + random + this.props.applicationId,
+                        html: this.cloneForm(),
+                        applicantLegalDocument: {
+                            fieldsData: jsonFields,
+                            ApplicationDocumentTypeId: this.state.typeDocumentId,
+                            ApplicationId: this.props.applicationId,
+                            UserId: this.state.userId,
+                            completed: true
+                        }
                     }
                 })
                 .then(data => {
@@ -300,7 +334,7 @@ class BackgroundCheck extends Component {
                         editing: false
                     });
 
-                    this.getBackgroundCheckById(this.props.applicationId, true);
+                    this.getBackgroundCheckById(this.props.applicationId);
 
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
@@ -354,7 +388,7 @@ class BackgroundCheck extends Component {
                         editing: false
                     });
 
-                    this.getBackgroundCheckById(this.props.applicationId, true);
+                    this.getBackgroundCheckById(this.props.applicationId);
 
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
@@ -387,9 +421,9 @@ class BackgroundCheck extends Component {
                 variables: {
                     backgroundCheck: {
                         id: this.state.id,
-						pdfUrl: this.state.urlPDF,
-						content: this.state.content || '',
-						ApplicationId: this.props.applicationId
+                        pdfUrl: this.state.urlPDF,
+                        content: this.state.content || '',
+                        ApplicationId: this.props.applicationId
                     }
                 }
             })
@@ -418,6 +452,7 @@ class BackgroundCheck extends Component {
         // Get elements from background check
         let form = document.getElementById("background-check-form").elements;
         let backgroundCheckItem;
+        const { firstName, middleName, lastName } = this.state;
 
         // Build the object with form information
         if (form.item(0).checked) {
@@ -426,15 +461,10 @@ class BackgroundCheck extends Component {
                 driverLicenseNumber: form.item(1).value.trim(),
                 commercialDriverLicense: form.item(4).checked,
                 licenseState: form.item(2).value.trim(),
-                licenseExpiration: form.item(3).value.trim(),
+                licenseExpiration: this.formatDate(form.item(3).value.trim()),
+                date: this.formatDate(new Date().toISOString()),
                 signature: this.state.signature,
-
-                // TODO: Fix this static fields
-                content: "".trim(),
-                date: new Date().toISOString(),
-                applicantName: "".trim(),
-                ApplicationId: this.props.applicationId,
-                completed: true
+                applicantName: [firstName || '', middleName || '', lastName || ''].join(' ')
             };
         } else {
             backgroundCheckItem = {
@@ -444,33 +474,25 @@ class BackgroundCheck extends Component {
                 licenseState: null,
                 licenseExpiration: null,
                 signature: this.state.signature,
-
-                // TODO: Fix this static fields
-                content: "".trim(),
-                date: new Date().toISOString(),
-                applicantName: "".trim(),
-                ApplicationId: this.props.applicationId,
-                completed: true
+                date: this.formatDate(new Date().toISOString()),
             };
         }
 
 
-        // To insert background check
-        if (this.state.id === null) {
-            this.insertBackgroundCheck(backgroundCheckItem);
-        } else {
-            backgroundCheckItem.id = this.state.id;
-            this.updateBackgroundCheck(backgroundCheckItem);
-        }
+        this.insertBackgroundCheck(JSON.stringify(backgroundCheckItem));
+
     };
 
+    externalSetState = (updateData, callback = () => { }) => {
+        this.setState(updateData, _ => callback());
+    }
+
     componentWillMount() {
-        // FIXME: pass dynamic id
-        this.getBackgroundCheckById(this.props.applicationId);
         this.setState({
-            loadingApplicantData: true
+            loadingApplicantData: true,
+            userId: localStorage.getItem('LoginId') || 0
         }, () => {
-            this.getApplicantInformation(this.props.applicationId);
+            this.getDocumentType();
         });
     }
 
@@ -499,15 +521,15 @@ class BackgroundCheck extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.createdocumentspdf !== null) {
-                    this.setState({ 
+                    this.setState({
                         urlPDF: data.createdocumentspdf,
                         loadingData: false,
                         downloading: false
                     }, () => {
                         this.updatePdfUrlBackgroundCheck();
-                        if(download) this.downloadDocumentsHandler();
+                        if (download) this.downloadDocumentsHandler();
                     });
                 }
                 else {
@@ -517,7 +539,7 @@ class BackgroundCheck extends Component {
                     );
                     this.setState({
                         loadingData: false,
-                        downloading: false 
+                        downloading: false
                     });
                 }
             })
@@ -538,7 +560,7 @@ class BackgroundCheck extends Component {
     }
 
     handlePdfDownload = () => {
-        if(this.state.urlPDF){
+        if (this.state.urlPDF) {
             this.downloadDocumentsHandler();
         }
         else {
@@ -611,9 +633,9 @@ class BackgroundCheck extends Component {
                                     {
                                         this.state.isCreated && !this.state.loadingApplicantData ? (
                                             <button className="applicant-card__edit-button" onClick={this.handlePdfDownload}>
-                                            {this.state.downloading && (
-                                                <React.Fragment>Downloading <i
-                                                    className="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                {this.state.downloading && (
+                                                    <React.Fragment>Downloading <i
+                                                        className="fas fa-spinner fa-spin" /></React.Fragment>)}
                                                 {!this.state.downloading && (
                                                     <React.Fragment>{spanishActions[9].label} <i
                                                         className="fas fa-download" /></React.Fragment>)}
@@ -626,10 +648,7 @@ class BackgroundCheck extends Component {
                                     {
                                         this.state.editing ? (
                                             <button
-                                                style={{
-                                                    marginLeft: '5px'
-                                                }}
-                                                className="applicant-card__edit-button" onClick={() => {
+                                                className="applicant-card__edit-button ml-2" onClick={() => {
                                                     this.setState({
                                                         editing: false
                                                     })
@@ -992,378 +1011,28 @@ class BackgroundCheck extends Component {
                                 position: 'relative', display: 'none', width: '100%',
                                 margin: 'auto'
                             }}>
-                                {
-                                    this.state.isCreated ? (
-                                        <div className="row" id="DocumentPDF" style={{ maxWidth: '100%', margin: '0' }}>
-                                            <div style={{ width: '100%', margin: '0 auto' }}>
-                                                <p><img style={{ display: 'block', marginLeft: '-8.5%', marginTop: '-10px' }} src="https://i.imgur.com/bHDSsLu.png" alt width="116%" height={192} /></p>
-                                                <div title="Page 1">
-                                                    <table style={{ borderCollapse: 'collapse', width: '100%', height: '59px' }} border={0}>
-                                                        <tbody>
-                                                            <tr style={{ height: '59px' }}>
-                                                                <td style={{ width: '100%', height: '59px', textAlign: 'justify' }}>
-                                                                    <p><span style={{ color: '#000000' }}>In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</span></p>
-                                                                    <div title="Page 1">
-                                                                        <div>
-                                                                            <div>
-                                                                                <p><span style={{ color: '#000000' }}>I further understand that for the purposes of this background inquiry, various sources will be contacted to provide information, including but not limited to various Federal, State, County, municipal, corporate, private and other agencies, which may maintain records concerning my past activities relating to my criminal conduct, civil court litigation, driving record, and credit performance, as well as various other experiences.</span></p>
-                                                                                <p><span style={{ color: '#000000' }}>I hereby authorize without reservation, any company, agency, party of other source contracted to furnish the above information as requested. I do hereby release, discharge and indemnify the prospective employer, it’s agents and associates to the full extent permitted by law from any claims, damages, losses, liabilities, cost and expenses arising from the retrieving and reporting of the requested information.</span></p>
-                                                                                <p><span style={{ color: '#000000' }}>I acknowledge that a photocopy of this authorization be accepted with the same authority as the original and this signed release expires one (1) year after the date of origination.</span></p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                    <p>&nbsp;</p>
-                                                </div>
-                                                <table style={{
-                                                    marginTop: '15px',
-                                                    backgroundColor: '#ddd',
-                                                    borderCollapse: 'collapse', width: '100%', height: '35px'
-                                                }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '35px' }}>
-                                                            <td style={{ width: '100%', height: '35px' }}>
-                                                                <div title="Page 1">
-                                                                    <div>
-                                                                        <div>
-                                                                            <div style={{ textAlign: 'center' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>APPLICANT INFORMATION</strong></span></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%' }} border={1}>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td style={{ width: '100%' }}><strong><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}>Please print clearly, use black ink, and use your full legal name.</span></strong></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '28px' }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '17px' }}>
-                                                            <td style={{ width: '33.3333%', height: '28px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>FIRST NAME:</strong></span></div>
-                                                                <div title="Page 1">{this.state.firstName}</div>
-                                                            </td>
-                                                            <td style={{ width: '33.3333%', height: '28px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>MIDDLE NAME:</strong></span></div>
-                                                                <div title="Page 1">&nbsp;{this.state.middleName}</div>
-                                                            </td>
-                                                            <td style={{ width: '33.3333%', height: '28px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>LAST NAME:</strong></span></div>
-                                                                <div title="Page 1">&nbsp;{this.state.lastName}</div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '17px' }}>
-                                                            <td style={{ width: '33.3333%', height: '17px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>SOCIAL SECURITY NUMBER:</strong></span></div>
-                                                                <div title="Page 1">{this.state.socialSecurityNumber}</div>
-                                                            </td>
-                                                            <td style={{ width: '33.3333%', height: '17px' }}>
-                                                                <div title="Page 1">
-                                                                    <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE OF BIRTH:</strong></span></div>
-                                                                    <div title="Page 1">{this.formatDate(this.state.birthDay, true)}</div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '41px' }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '41px' }}>
-                                                            <td style={{ width: '100%', height: '41px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>CURRENT STREET ADDRESS:</strong></span></div>
-                                                                <div title="Page 1">{this.state.streetAddress}</div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '41px' }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '41px' }}>
-                                                            <td style={{ width: '50.0173%', height: '41px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>CITY:</strong></span><span>{this.state.cityName}</span></div>
-                                                                {/*<div title="Page 1">{this.state.cityName}</div>*/}
-                                                            </td>
-                                                            <td style={{ width: '28.7453%', height: '41px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>STATE:</strong></span><span>{this.state.stateName}</span></div>
-                                                                <div title="Page 1">{}</div>
-                                                            </td>
-                                                            <td style={{ width: '18.4013%', height: '41px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>ZIP CODE:</strong></span></div>
-                                                                <div title="Page 1">{this.state.zipCode}</div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <table style={{ backgroundColor: '#ddd', borderCollapse: 'collapse', width: '100%', height: '35px', marginTop: '300px' }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '35px' }}>
-                                                            <td style={{ width: '100%', height: '35px' }}>
-                                                                <div title="Page 1">
-                                                                    <div>
-                                                                        <div>
-                                                                            <div style={{ textAlign: 'center' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>MOTOR VEHICLE RECORD</strong></span></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '42px' }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '42px' }}>
-                                                            <td style={{ width: '100%', height: '42px' }}>
-                                                                <div title="Page 1" style={{
-                                                                    display: 'flex',
-                                                                    flexDirection: 'row',
-                                                                }}>
-                                                                    <span style={{ color: '#000000' }}>
-                                                                        <span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>WILL A MOTOR VEHICLE REPORT BE REQUIRED?: </strong>
-                                                                        </span>
-                                                                    </span>
-
-                                                                    {
-                                                                        this.state.vehicleReportRequired ? (
-                                                                            <span style={{
-                                                                                display: 'flex',
-                                                                                flexDirection: 'row',
-                                                                                marginLeft: '10px',
-                                                                                position: 'relative',
-                                                                                top: '-5px'
-                                                                            }}>
-                                                                                <div style={{
-                                                                                    width: '20px',
-                                                                                    display: 'inline',
-                                                                                    marginRight: '5px'
-                                                                                }}>
-                                                                                    <label htmlFor="" style={{
-                                                                                        width: '100%'
-                                                                                    }}>Yes</label>
-                                                                                    <input type="checkbox"
-                                                                                        value={true}
-                                                                                        defaultChecked={true} />
-                                                                                </div>
-                                                                                <div style={{
-                                                                                    width: '20px',
-                                                                                    display: 'inline',
-                                                                                }}>
-                                                                                    <label htmlFor="" style={{
-                                                                                        width: '100%'
-                                                                                    }}>No</label>
-                                                                                    <input type="checkbox" value={false} defaultChecked={false} />
-
-                                                                                </div>
-                                                                            </span>
-                                                                        ) : (
-                                                                                <span style={{
-                                                                                    display: 'flex',
-                                                                                    flexDirection: 'row',
-                                                                                    marginLeft: '10px',
-                                                                                    position: 'relative',
-                                                                                    top: '-5px'
-                                                                                }}>
-                                                                                    <div style={{
-                                                                                        width: '20px',
-                                                                                        display: 'inline',
-                                                                                        marginRight: '5px'
-                                                                                    }}>
-                                                                                        <label htmlFor="" style={{
-                                                                                            width: '100%'
-                                                                                        }}>Yes</label>
-                                                                                        <input type="checkbox"
-                                                                                            value={false}
-                                                                                            defaultChecked={false} />
-                                                                                    </div>
-                                                                                    <div style={{
-                                                                                        width: '20px',
-                                                                                        display: 'inline',
-                                                                                    }}>
-                                                                                        <label htmlFor="" style={{
-                                                                                            width: '100%'
-                                                                                        }}>No</label>
-                                                                                        <input type="checkbox" value={true} defaultChecked={true} />
-
-                                                                                    </div>
-                                                                                </span>
-                                                                            )
-                                                                    }</div>
-                                                                <div title="Page 1"><br /><br /></div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '44px' }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '44px' }}>
-                                                            <td style={{ width: '50.0173%', height: '44px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DRIVERS LICENSE NUMBER:</strong></span></div>
-                                                                <div title="Page 1">{this.state.driverLicenseNumber}</div>
-                                                            </td>
-                                                            <td style={{ width: '28.7453%', height: '44px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>STATE: </strong></span><span>{this.state.licenseStateName}</span><span>
-                                                                </span><span>
-                                                                        {
-
-                                                                        }
-                                                                    </span></div>
-                                                                <div title="Page 1"></div>
-                                                            </td>
-                                                            <td style={{ width: '18.4013%', height: '44px' }}>
-                                                                <div title="Page 1"><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>EXPIRATION:</strong></span></div>
-                                                                <div title="Page 1">{ this.formatDate(this.state.licenseExpiration) }</div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <div title="Page 1">
-                                                    <table style={{ borderCollapse: 'collapse', width: '100%', height: '45px' }} border={1}>
-                                                        <tbody>
-                                                            <tr style={{ height: '45px' }}>
-                                                                <td style={{
-                                                                    width: '100%', height: '45px', display: 'flex',
-                                                                    flexDirection: 'row'
-                                                                }}>
-                                                                    <span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}>
-                                                                        <strong>IS THIS A COMMERCIAL DRIVERS LICENSE?:</strong></span><span>
-                                                                        {
-                                                                            this.state.commercialDriverLicense ? (
-                                                                                <span style={{
-                                                                                    display: 'flex',
-                                                                                    flexDirection: 'row',
-                                                                                    marginLeft: '10px',
-                                                                                    position: 'relative',
-                                                                                    top: '-5px'
-                                                                                }}>
-                                                                                    <div style={{
-                                                                                        width: '20px',
-                                                                                        display: 'inline',
-                                                                                        marginRight: '5px'
-                                                                                    }}>
-                                                                                        <label htmlFor="" style={{
-                                                                                            width: '100%'
-                                                                                        }}>Yes</label>
-                                                                                        <input type="checkbox"
-                                                                                            value={true}
-                                                                                            defaultChecked={true} />
-                                                                                    </div>
-                                                                                    <div style={{
-                                                                                        width: '20px',
-                                                                                        display: 'inline',
-                                                                                    }}>
-                                                                                        <label htmlFor="" style={{
-                                                                                            width: '100%'
-                                                                                        }}>No</label>
-                                                                                        <input type="checkbox" value={false} defaultChecked={false} />
-
-                                                                                    </div>
-                                                                                </span>
-                                                                            ) : (
-                                                                                    <span style={{
-                                                                                        display: 'flex',
-                                                                                        flexDirection: 'row',
-                                                                                        marginLeft: '10px',
-                                                                                        position: 'relative',
-                                                                                        top: '-5px'
-                                                                                    }}>
-                                                                                        <div style={{
-                                                                                            width: '20px',
-                                                                                            display: 'inline',
-                                                                                            marginRight: '5px'
-                                                                                        }}>
-                                                                                            <label htmlFor="" style={{
-                                                                                                width: '100%'
-                                                                                            }}>Yes</label>
-                                                                                            <input type="checkbox"
-                                                                                                value={false}
-                                                                                                defaultChecked={false} />
-                                                                                        </div>
-                                                                                        <div style={{
-                                                                                            width: '20px',
-                                                                                            display: 'inline',
-                                                                                        }}>
-                                                                                            <label htmlFor="" style={{
-                                                                                                width: '100%'
-                                                                                            }}>No</label>
-                                                                                            <input type="checkbox" value={true} defaultChecked={true} />
-
-                                                                                        </div>
-                                                                                    </span>
-                                                                                )
-                                                                        }
-                                                                    </span></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <p>&nbsp;</p>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={0}>
-                                                    <tbody>
-                                                        <tr style={{ height: '17px' }}>
-                                                            <td style={{ width: '100%', height: '17px', textAlign: 'justify' }}><span><strong><span style={{ color: '#000000' }}>In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry.</span></strong></span></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '20px' }} border={1}>
-                                                    <tbody>
-                                                        <tr style={{ height: '20px', verticalAlign: "middle" }}>
-                                                            <td style={{ width: '50%', height: '17px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>SIGNATURE: </strong></span>
-                                                                <img style={{
-                                                                    width: '100px',
-                                                                    height: '20px',
-                                                                    display: 'inline-block',
-                                                                    backgroundColor: '#f9f9f9',
-                                                                    zoom: "2.5",
-                                                                    margin: 'auto'
-                                                                }} src={this.state.signature} alt="" />
-                                                            </td>
-                                                            <td style={{ width: '47.1631%', height: '20px' }}><span style={{ color: '#000000', fontWeight: '400', marginLeft: '2px' }}><strong>DATE: </strong></span><span>{this.formatDate(new Date().toISOString(), true)}</span></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <p>&nbsp;</p>
-                                                <table style={{ borderCollapse: 'collapse', width: '100%', height: '17px' }} border={0}>
-                                                    <tbody>
-                                                        <tr style={{ height: '17px' }}>
-                                                            <td style={{ width: '50%', height: '17px' }}>
-                                                                <div title="Page 1">
-                                                                    <div>
-                                                                        <div>
-                                                                            <p>Background Authorization - English</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td style={{ width: '47.1631%', height: '17px' }}>
-                                                                <div title="Page 1">
-                                                                    <div>
-                                                                        <div>
-                                                                            <p style={{ textAlign: 'right' }}>Tumi Staffing – Updated 05/06/2013</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                            ''
-                                        )
-                                }
+                                <div className="row" id="DocumentPDF" style={{ maxWidth: '100%', margin: '0' }}>
+                                    <Document
+                                        setState={this.externalSetState}
+                                        data={{
+                                            firstName: this.state.firstName,
+                                            middleName: this.state.middleName,
+                                            lastName: this.state.lastName,
+                                            birthDay: this.formatDate(this.state.birthDay, true),
+                                            streetAddress: this.state.streetAddress,
+                                            cityName: this.state.cityName,
+                                            stateName: this.state.stateName,
+                                            zipCode: this.state.zipCode,
+                                            socialSecurityNumber: this.state.socialSecurityNumber,
+                                            vehicleReportRequired: this.state.vehicleReportRequired,
+                                            driverLicenseNumber: this.state.driverLicenseNumber,
+                                            licenseStateName: this.state.licenseStateName,
+                                            licenseExpiration: this.formatDate(this.state.licenseExpiration),
+                                            commercialDriverLicense: this.state.commercialDriverLicense,
+                                            signature: this.state.signature,
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

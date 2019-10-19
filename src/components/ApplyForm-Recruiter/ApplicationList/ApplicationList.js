@@ -13,7 +13,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
-
+import ConfirmDialog from 'material-ui/ConfirmDialog';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -64,7 +64,9 @@ class ApplicationList extends Component {
 			recruitersTags: [],
 			showNoShowPrefilterModal: false,
 			filterRecruiters: [],
-			...NO_SHOW_FIELDS
+			...NO_SHOW_FIELDS,
+			idToSend: null,
+			dummy: false
 
 		};
 	}
@@ -125,6 +127,16 @@ class ApplicationList extends Component {
 			}
 		}
 	`;
+	UPDATE_APPLICATION_QUERY = gql`
+		mutation updateApplication($codeUser: Int, $nameUser: String, $application: inputUpdateApplication) {
+			updateApplication(codeuser: $codeUser, nameUser:$nameUser, application:$application)
+			{
+			id
+			codeuser
+			}
+		}	  
+	`;
+
 	deleteApplication = () => {
 		this.setState(
 			{
@@ -474,17 +486,61 @@ class ApplicationList extends Component {
 		});
 	}
 
+	onCloseConfirmDialogHandler = () => {
+		this.setState({ openConfirm: false, idToSend: null });
+	}
+
+	onOpenConfirmDialogHandler = (idToSend) => {
+		this.setState({ openConfirm: true, idToSend });
+	}
+
+	onConfirmDialogHandler = () => {
+		this.setState(
+			{
+				convertingToPackage: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						mutation: this.UPDATE_APPLICATION_QUERY,
+						variables: {
+							codeUser: localStorage.getItem('LoginId'),
+							nameUser: localStorage.getItem('FullName'),
+							application: {
+								id: this.state.idToSend,
+								isLead: false
+							}
+						}
+					})
+					.then((data) => {
+						this.props.handleOpenSnackbar('success', 'Lead successfully sent!');
+						this.setState(() => ({ openConfirm: false, convertingToPackage: false, idToSend: null, dummy: !this.state.dummy }));
+					})
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error sending Lead');
+						this.setState(() => ({ convertingToPackage: false }));
+					});
+			}
+		);
+	}
+
+	renderConfirmSendToPackageDialog = () => {
+		return <ConfirmDialog
+			open={this.state.openConfirm}
+			closeAction={this.onCloseConfirmDialogHandler}
+			confirmAction={this.onConfirmDialogHandler}
+			title={"Do you really want to send this Lead to the Application Package?"}
+			loading={this.state.convertingToPackage}
+			confirmActionLabel="Send"
+		/>
+	}
+
 	render() {
 		let { filterRecruiters, recruiterFiltered, typeDateFiltered, startDateApp, endDateApp, dateRangeApp } = this.state;
 		let rectuiterFilterValue = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? recruiterFiltered.value : null;
 		let variables = rectuiterFilterValue != null ? { idRecruiter: rectuiterFilterValue } : {}; // variable para la consulta
 
 		let Filters = recruiterFiltered.value !== DEFAULT_RECRUITER_VALUE ? { idRecruiter: rectuiterFilterValue } : {};
-
-		// If contracts query is loading, show a progress component
-		if (this.state.loadingContracts) {
-			return <LinearProgress />;
-		}
 
 		// To render the content of the header
 		let renderHeaderContent = () => (
@@ -609,10 +665,13 @@ class ApplicationList extends Component {
 			</div>
 		);
 
+		console.log({ Filters })
+
 		return (
 			<div className="main-application">
 				{this.printNoShowReportPrefilter()}
 				{this.printNoShowReport()}
+				{this.renderConfirmSendToPackageDialog()}
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -622,7 +681,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={{ ...Filters }} fetchPolicy="no-cache">
+					<Query query={this.GET_APPLICATION_QUERY} variables={{ ...Filters, dummy: this.state.dummy }} fetchPolicy="no-cache">
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
@@ -661,6 +720,7 @@ class ApplicationList extends Component {
 													<ApplicationTable
 														data={dataApplication}
 														onDeleteHandler={this.onDeleteHandler}
+														openConfirmDialog={this.onOpenConfirmDialogHandler}
 													/>
 												</div>
 											</div>

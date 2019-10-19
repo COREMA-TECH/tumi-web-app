@@ -54,5 +54,13 @@
   {
     "id": 12,
     "label": "Contrato Independiente"
+  },
+  {
+    "id": 13,
+    "label": "Verificación de Antecedentes"
+  },
+  {
+    "id": 14,
+    "label": "Anti Discriminación"
   }
 ]
