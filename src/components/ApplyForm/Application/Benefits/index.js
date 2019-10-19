@@ -5,6 +5,7 @@ import withApollo from "react-apollo/withApollo";
 
 import {ADD_DOC} from './mutations';
 import {GET_APPLICANT_INFO} from './queries';
+import PrintDoc from './Document';
 
 import Select from 'react-select';
 import makeAnimated from "react-select/lib/animated";
@@ -88,8 +89,7 @@ class Benefits extends Component{
                     this.setState({
                         isCreated: false,
                     })
-                }
-                // this.fetchApplicantInfo();
+                }                
             })
             .catch(error => {                
                 console.log(error);
@@ -114,11 +114,13 @@ class Benefits extends Component{
 
         const jsonFields = JSON.stringify(saveData);
         const random = uuidv4();
+        const html = this.cloneForm();
 
         this.props.client.mutate({
             mutation: ADD_DOC,            
             variables: {
                 fileName: "BenefitsForm-" + random + name,
+                html,
                 applicantLegalDocument: {
                     fieldsData: jsonFields,
                     ApplicationDocumentTypeId: 22,
@@ -137,6 +139,7 @@ class Benefits extends Component{
             );
 
             this.props.changeTabState();
+            this.loadDocumentInfo();
         })
         .catch(error => {
             // If there's an error show a snackbar with a error message
@@ -150,6 +153,20 @@ class Benefits extends Component{
             console.log(error);
         });
     }
+
+    downloadDocumentsHandler = () => {
+        var url = this.state.urlPDF; 
+        if(url)
+            window.open(url, '_blank');
+        else
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error to open document.',
+                'bottom',
+                'right'
+            );
+        this.setState({ downloading: false });
+    };
 
     handleSignature = (value) => {
         this.setState({
@@ -218,15 +235,39 @@ class Benefits extends Component{
         }));
     }  
 
+    cloneForm = _ => {
+        let contentPDF = document.getElementById('benefitsDoc');
+        let contentPDFClone = contentPDF.cloneNode(true);
+
+        return `<html style="zoom: 45%;">${contentPDFClone.innerHTML}</html>`;
+    }
+
     render(){
         return(
-            <Fragment>
+            <Fragment>                
                 <div className="Apply-container--application">
                     <div className="row">
                         <div className="col-12">
                             <div className="applicant-card">
                                 <div className="applicant-card__header">
                                     <span className="applicant-card__title">Benefits</span>
+                                    <Fragment>
+                                            <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
+                                                this.setState(_ => ({
+                                                    openSignature: true
+                                                }))
+                                            }}>
+                                                Sign <i className="fas fa-pencil-alt" />
+                                            </button>
+                                            <button className="applicant-card__edit-button" style={{marginRight: '8px'}} onClick={this.downloadDocumentsHandler}>
+                                                {this.state.downloading && (
+                                                <React.Fragment>Downloading <i
+                                                    class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                {!this.state.downloading && (
+                                                    <React.Fragment>Download<i
+                                                        className="fas fa-download" /></React.Fragment>)}
+                                        </button>
+                                    </Fragment>
                                 </div>
                                 <div className="applicant-card__body BenefitsDoc" style={{padding: "1.5rem"}}>
                                     <div className="row">
@@ -513,6 +554,9 @@ class Benefits extends Component{
                         />
                     </DialogContent>
                 </Dialog>
+                <div style={{display: "none"}}>
+                    <PrintDoc {...this.state} />
+                </div>
             </Fragment>
         )
     }
