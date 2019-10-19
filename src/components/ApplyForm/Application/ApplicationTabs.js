@@ -14,7 +14,7 @@ import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 import ProfilePreview from "./ProfilePreview/ProfilePreview";
 import FormsI9 from './I9/FormsI9';
 import FormsW4 from "./W4/FormsW4";
-import { GET_COMPLETED_STATUS } from './Queries';
+import { GET_APPLICATION_STATUS } from './Queries';
 import { withApollo } from 'react-apollo';
 import IndependentContract from "./IndependentContract";
 import ApplicationInternal from './ApplicationInternal';
@@ -88,7 +88,7 @@ class CustomizedTabs extends React.Component {
     };
 
     handleChange = (event, value) => {
-        this.setState({ value });
+        this.setState({ value }, this.getApplicantStatus);
     };
 
     getApplicantStatus = () => {
@@ -96,16 +96,15 @@ class CustomizedTabs extends React.Component {
             return;
         this.props.client
             .query({
-                query: GET_COMPLETED_STATUS,
+                query: GET_APPLICATION_STATUS,
                 fetchPolicy: 'no-cache',
                 variables: {
                     id: this.state.applicationId
                 }
             })
-            .then(({ data }) => {
-                this.setState({
-                    applicationStatus: data.applicationCompleted
-                });
+            .then(({ data: { applicationCompletedData } }) => {
+                let completed = Object.values(applicationCompletedData).filter(value => value === false).length === 0;
+                this.setState(() => ({ applicationStatus: completed }));
             })
             .catch();
     }
@@ -219,7 +218,7 @@ class CustomizedTabs extends React.Component {
                         />
                         <Tab
                             disableRipple
-                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${!this.state.applicationStatus ? 'incomplete' : 'completed'}` }}
+                            classes={{ root: "Tab-item", selected: "Tab-selected", label: `Tab-fa-icon Tab-fa-circle ${this.state.applicationStatus ? 'completed' : 'incomplete'}` }}
                             label={applyTabs[3].label}
                             disabled={this.state.disableTabs}
                         />

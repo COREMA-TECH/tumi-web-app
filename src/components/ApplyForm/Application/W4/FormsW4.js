@@ -75,8 +75,8 @@ class FormsW4 extends Component {
 
         return `<html style="zoom: 65%;">${contentPDFClone.innerHTML}</html>`;
     }
-    
-    
+
+
     getApplicantInformation = (id) => {
         this.props.client
             .query({
@@ -137,10 +137,9 @@ class FormsW4 extends Component {
             query: GET_GENERAL_INFO,
             variables: { id: this.props.applicationId }
         })
-        .then(({data: {applications: [applicant]}}) => {
+            .then(({ data: { applications: [applicant] } }) => {
 
-            const {firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo: {Name: city}, stateInfo: {Name: state}, marital, exemptions} =  applicant;
-
+            const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo: { Name: city }, stateInfo: { Name: state }, marital, exemptions } = applicant;
             this.setState(_ => ({
                 firstName: firstName ? firstName.trim() : "",
                 lastName: lastName ? lastName.trim() : "",
@@ -154,17 +153,17 @@ class FormsW4 extends Component {
         })
         .catch(error => {
             console.log(error);
-        })
+        })               
     }
 
     loadDataFromJson = fieldsData => {
-        if(!fieldsData) return;
+        if (!fieldsData) return;
         const { idNumber, firstEmployeeDate, employeer, payCheck, excentionYear, sse, signature, estadoCivil, estadoCivil1, estadoCivil2 } = fieldsData;
 
         this.setState(_ => ({
             idNumber,
             firstEmployeeDate,
-            employeer,            
+            employeer,
             payCheck,
             excentionYear,
             socialSecurityExtention: sse,
@@ -208,7 +207,7 @@ class FormsW4 extends Component {
 
     downloadDocumentsHandler = () => {
         var url = this.state.urlPDF; //this.context.baseUrl + this.state.urlPDF.replace(".", "");
-        if(url)
+        if (url)
             window.open(url, '_blank');
         else
             this.props.handleOpenSnackbar(
@@ -294,7 +293,7 @@ class FormsW4 extends Component {
         return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
-    externalSetState = (updateData, callback = () => {}) => {
+    externalSetState = (updateData, callback = () => { }) => {
         this.setState(updateData, _ => callback());
     }
 
@@ -324,7 +323,7 @@ class FormsW4 extends Component {
                         })
                     }}
                     aria-labelledby="form-dialog-title">
-                   <Toolbar>
+                    <Toolbar>
                         <h1 className="primary apply-form-container__label">Please Sign</h1>
                         <Button color="default" onClick={() => {
                             this.setState(() => ({ openSignature: false }),
@@ -357,38 +356,39 @@ class FormsW4 extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[10].label}</span>
-                                
-                                                <Fragment>
-                                                    <button style={{marginLeft: 'auto', marginRight: '8px'}} className="applicant-card__edit-button" onClick={() => {
-                                                       this.setState(_ => ({
-                                                           openSignature: true
-                                                       }))
-                                                    }}>
-                                                        Sign <i className="fas fa-pencil-alt" />
-                                                    </button>
-                                                    <button className="applicant-card__edit-button" style={{marginRight: '8px'}} onClick={this.downloadDocumentsHandler}>
-                                                        {this.state.downloading && (
-                                                        <React.Fragment>Downloading <i
-                                                            class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                        {!this.state.downloading && (
-                                                            <React.Fragment>{actions[9].label} <i
-                                                                className="fas fa-download" /></React.Fragment>)}
-                                                </button>
-                                            </Fragment>
-                                       
-                                                <button className="applicant-card__edit-button" onClick={() => {
-                                                    this.validateW4();
-                                                }}>{actions[4].label} <i className="far fa-save" />
-                                                </button>
-                                           
+
+                                <Fragment>
+                                    <button style={{ marginLeft: 'auto', marginRight: '8px' }} className="applicant-card__edit-button" onClick={() => {
+                                        this.setState(_ => ({
+                                            openSignature: true
+                                        }))
+                                    }}>
+                                        Sign <i className="fas fa-pencil-alt" />
+                                    </button>
+                                    <button className="applicant-card__edit-button" style={{ marginRight: '8px' }} onClick={this.downloadDocumentsHandler}>
+                                        {this.state.downloading && (
+                                            <React.Fragment>Downloading <i
+                                                class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                        {!this.state.downloading && (
+                                            <React.Fragment>{actions[9].label} <i
+                                                className="fas fa-download" /></React.Fragment>)}
+                                    </button>
+                                </Fragment>
+
+                                <button className="applicant-card__edit-button" onClick={() => {
+                                    this.validateW4();
+                                }}>{actions[4].label} <i className="far fa-save" />
+                                </button>
+
                             </div>
                             {
                                 (
                                     <div style={{ width: '100%', margin: '0 auto' }}>
                                         <div className="row pdf-container" id="w4Html" style={{ maxWidth: '100%' }}>
-                                            <Document 
+                                            <Document
                                                 setState={this.externalSetState}
-                                                languageForm = {localStorage.getItem('languageForm')}
+                                                languageForm={localStorage.getItem('languageForm')}
+                                                showReadOnlyFields={this.state.showReadOnlyFields}
                                                 data={{
                                                     firstName: this.state.firstName,
                                                     lastName: this.state.lastName,
