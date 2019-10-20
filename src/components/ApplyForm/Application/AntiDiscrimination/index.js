@@ -178,7 +178,7 @@ class AntiDiscrimination extends Component {
     cloneForm = _ => {
         let contentPDF = document.getElementById('DocumentPDF');
         let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;">${contentPDFClone.innerHTML}</html>`;
+        return `<html style="zoom: 70%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;">${contentPDFClone.innerHTML}</html>`;
     }
 
     createDocumentsPDF = (fileName, download = false) => {

@@ -679,8 +679,9 @@ class Application extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         e.stopPropagation();
+        let ssNumber = this.state.socialSecurityNumber || '';
         //Verifiy if the SSN is not empty
-        if (!this.state.socialSecurityNumber.replace(/-/g, ""))
+        if (!ssNumber.replace(/-/g, ""))
             this.props.handleOpenSnackbar("warning", "Social Security Number is required!");
         else {
             //Verify if SSN, Name or Address has been changed to alert the user
@@ -938,7 +939,7 @@ class Application extends Component {
                                 <div className="row">
                                     <div className="col-md-12 col-lg-6 form-section-1">
                                         <div className="row">
-                                            <div className="col-md-12 ">
+                                            <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[11].label}
                                                 </span>
@@ -1019,7 +1020,7 @@ class Application extends Component {
                                                     minLength="3"
                                                 />
                                             </div>
-                                            <div className="col-md-12 ">
+                                            <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
                                                     A.K.A. (Alias)
                                                 </span>
