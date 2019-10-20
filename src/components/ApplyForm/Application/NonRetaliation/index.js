@@ -4,6 +4,7 @@ import { CREATE_DOCUMENTS_PDF_QUERY, GET_APPLICANT_INFO, GET_DOCUMENT_INFO } fro
 import { ADD_DOCUMENT } from './Mutation';
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "../../../Generic/Global";
+import Signature from './Signature';
 
 const uuidv4 = require('uuid/v4');
 
@@ -12,15 +13,29 @@ class NonRetaliation extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            signature: '',
             downloading: false,
             applicantName: '',
             haveDocument: false
         }
     }
 
+    handleSignature = (value) => {
+        this.setState(_ => ({
+            signature: value
+        }), _ => {
+            this.createStatesFields(this.state.signature, this.state.applicantName);
+        });
+    }
+
     handlePdfDownload = () => {
-        const fileName = `${'nonRetaliation'}${uuidv4()}-${this.state.applicantName}`;
-        this.createDocumentsPDF(fileName, true);
+        if(this.state.urlPDF){
+            this.downloadDocumentsHandler();
+        }
+        else{
+            const fileName = `${'nonRetaliation'}${uuidv4()}-${this.state.applicantName}`;
+            this.createDocumentsPDF(fileName, true);
+        }
     }
 
     createDocumentsPDF = (fileName, download = false) => {
@@ -40,6 +55,7 @@ class NonRetaliation extends Component {
                     urlPDF: data.createdocumentspdf,
                     downloading: false
                 }, () => {
+                    this.saveDocument(data.createdocumentspdf);
                     if(download) this.downloadDocumentsHandler();
                 });
             } else {
@@ -57,7 +73,6 @@ class NonRetaliation extends Component {
 
     downloadDocumentsHandler = (fileName) => {
         let url = this.state.urlPDF;
-        this.saveDocument(url);
         window.open(url, '_blank');
     };
 
@@ -115,6 +130,7 @@ class NonRetaliation extends Component {
             if (record) {
                 let { fullName, signature, date } = this.getJSONFields(record.fieldsData);
                 this.setState({
+                    urlPDF: record.url,
                     fullName,
                     signature,
                     date,
@@ -179,6 +195,9 @@ class NonRetaliation extends Component {
                 signature,
                 fullName
             }
+        }, () => {
+            const fileName = `${'nonRetaliation'}${uuidv4()}-${this.state.applicantName}`;
+            this.createDocumentsPDF(fileName, false);
         });
     }
 
@@ -200,7 +219,11 @@ class NonRetaliation extends Component {
                                     </button>
                                 </div>
                                 <div id="DocumentPDF" className="signature-information">
-                                    <Document signature={this.state.signature} fullName={this.state.fullName} applicationId={this.props.applicationId} applicantName={this.state.applicantName} createStatesFields={this.createStatesFields} haveDocument={this.state.haveDocument}/>
+                                    <Document signature={this.state.signature} applicantName={this.state.applicantName} />
+                                    { !this.state.signature ?  
+                                        <Signature applicationId={this.props.applicationId} handleSignature={this.handleSignature} />
+                                        : ''
+                                    }
                                 </div>
                             </div>
                         </div>
