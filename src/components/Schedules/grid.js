@@ -397,6 +397,7 @@ class Grid extends Component {
         return this.props.client
             .query({
                 query: GET_SHIFTS_BY_SPECIFIC_DATE_EMPLOYEE_QUERY,
+                fetchPolicy: 'no-cache',
                 variables: {
                     date,
                     employeeId,

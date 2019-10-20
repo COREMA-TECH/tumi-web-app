@@ -1,7 +1,7 @@
 export const Document = (props) => {
     return `
     <div style=" font-family: Calibri, sans-serif;">
-        <p style="font-size: 18.0pt;">Anti--Discrimination Policy</p>
+        <p style="font-size: 18.0pt;">Anti-Discrimination Policy</p>
         <h1 style="font-size: 12pt; text-decoration: underline; margin-bottom: 15px; margin-top: 30px;">Policy statement
         </h1>
         <p style="font-size: 10pt;">
