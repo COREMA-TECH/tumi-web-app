@@ -10,3 +10,31 @@ export const GET_APPLICANT_INFO = gql`
         }
     }
 `;
+
+export const GET_GENERAL_INFO = gql`
+  query getApplication($id:Int){
+    applications(id:$id){
+      id
+      firstName
+      middleName
+      lastName    
+      socialSecurityNumber
+      streetAddress,
+      city,
+      marital,
+      cityInfo{
+        Name
+      },
+      state,
+      stateInfo{
+        Name
+      },
+      zipCode,
+      exemptions,
+      gender,
+      birthDay,
+      homePhone,
+      cellPhone
+    }
+  }
+`;

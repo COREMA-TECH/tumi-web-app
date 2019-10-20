@@ -138,7 +138,10 @@ class FormsW4 extends Component {
             variables: { id: this.props.applicationId }
         })
             .then(({ data: { applications: [applicant] } }) => {
-                const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo: { Name: city }, stateInfo: { Name: state }, marital, exemptions } = applicant;
+                const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo, stateInfo, marital, exemptions } = applicant;
+                
+                const city = cityInfo ? cityInfo.Name : "";
+                const state = stateInfo ? stateInfo.Name : "";
 
                 this.setState(_ => ({
                     firstName: firstName ? firstName.trim() : "",
