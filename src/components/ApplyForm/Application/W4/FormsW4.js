@@ -138,7 +138,6 @@ class FormsW4 extends Component {
             variables: { id: this.props.applicationId }
         })
             .then(({ data: { applications: [applicant] } }) => {
-
                 const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo: { Name: city }, stateInfo: { Name: state }, marital, exemptions } = applicant;
 
                 this.setState(_ => ({

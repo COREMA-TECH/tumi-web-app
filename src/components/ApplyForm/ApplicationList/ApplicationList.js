@@ -261,8 +261,7 @@ class ApplicationList extends Component {
 			let property = this.state.property.value;
 			let department = this.state.department.value;
 			let variables = {
-				idEntity: property ? property : null,
-				isLead: false
+				idEntity: property ? property : null,				
 			};
 			if (localStorage.getItem('isEmployee') == 'true')
 				variables = { ...variables, idUsers: localStorage.getItem('LoginId') }
