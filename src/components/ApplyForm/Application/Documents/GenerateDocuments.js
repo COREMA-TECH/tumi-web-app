@@ -5,8 +5,11 @@ import W4Doc from '../W4/Document';
 import I9Doc from '../I9/Document';
 import BackgroundCkeckDoc from '../BackgroundCkeck/Document';
 import AntiHarassmentDoc from '../AntiHarassment/Document';
+import {Document as AntiDiscriminationDoc} from '../AntiDiscrimination/Document';
 import NonDisclosureDoc from '../NonDisclosure/Document';
+import NonRetaliationDoc from '../NonRetaliation/Document'
 import ConductCodeDoc from '../ConductCode/Document';
+import BenefitElectionDoc from '../Benefits/Document';
 import WorkerCompensationDoc from '../WorkerCompensation/Document';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
@@ -44,17 +47,23 @@ const updateEmptyFiles = () => {
     const i9Html = jsxToString(I9Doc);
     const backgroundCkeckHtml = jsxToString(BackgroundCkeckDoc);
     const antiHarassmentHtml = AntiHarassmentDoc();
+    const antiDiscriminationHtml = AntiDiscriminationDoc({});
     const nonDisclosureHtml = NonDisclosureDoc();
+    const nonRetaliationHtml = jsxToString(NonRetaliationDoc);
     const conductCodeHtml = ConductCodeDoc();
+    const benefitElectionHtml = jsxToString(BenefitElectionDoc);
     const workerCompensationHtml = WorkerCompensationDoc();
 
-    createDocumentsPDF('zoom: 50%; font-family: Arial, Helvetica, sans-serif;', summaryHtml, 'Summary-EMPTY');
-    createDocumentsPDF('zoom: 65%;', w4Html, 'W4-EMPTY');
-    createDocumentsPDF('zoom: 50%;', i9Html, 'I9-EMPTY');
+    createDocumentsPDF(`zoom: 50%; font-family: Arial, Helvetica, sans-serif;`, summaryHtml, 'Summary-EMPTY');
+    createDocumentsPDF(`zoom: 65%;`, w4Html, 'W4-EMPTY');
+    createDocumentsPDF(`zoom: 50%;`, i9Html, 'I9-EMPTY');
     createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;`, backgroundCkeckHtml, 'BackgroundCheck-EMPTY');
-    createDocumentsPDF('zoom: 60%; font-family: Time New Roman; letter-spacing: 0', antiHarassmentHtml, 'AntiHarassment-EMPTY');
-    createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman', Times, serif  !important; line-height: 1.5 !important;`, nonDisclosureHtml, 'NonDisclosure-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: Time New Roman; letter-spacing: 0`, antiHarassmentHtml, 'AntiHarassment-EMPTY');
+    createDocumentsPDF(`zoom: 70%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;`, antiDiscriminationHtml, 'AntiDiscrimination-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;`, nonDisclosureHtml, 'NonDisclosure-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.0 !important;`, nonRetaliationHtml, 'NonRetaliation-EMPTY');
     createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;`, conductCodeHtml, 'ConductCode-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.0 !important;`, benefitElectionHtml, 'BenefitElection-EMPTY');
     createDocumentsPDF('zoom: 60%;', workerCompensationHtml, 'WorkerCompensation-EMPTY');
 }
 
@@ -63,7 +72,7 @@ const htmlWrapper = (style, htmlContent) => {
 }
 
 const createDocumentsPDF = async (style, html, documentName) => {
-    const sumaryUrl = await apolloClient
+    await apolloClient
         .query({
             query: CREATE_DOCUMENTS_PDF_QUERY,
             variables: {
@@ -73,7 +82,8 @@ const createDocumentsPDF = async (style, html, documentName) => {
             fetchPolicy: 'no-cache'
         })
         .then(({data}) => {
-            return data.createdocumentspdf;
+            console.log(data.createdocumentspdf); // Muestar url generada
+            //return data.createdocumentspdf;
         })
         .catch((error) => {
             return null;

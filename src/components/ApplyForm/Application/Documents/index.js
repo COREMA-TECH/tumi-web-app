@@ -15,10 +15,7 @@ import Benefits from '../Benefits';
 import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from '../../../Generic/Global';
-<<<<<<< HEAD
 import NonRetaliation from '../NonRetaliation';
-=======
->>>>>>> 17e85c69cfb1446fe997c081aaefc27ddc2cbdf1
 import { generateDocuments } from './GenerateDocuments';
 import HistoricalNHP from '../HistoricalNHP';
 
@@ -97,13 +94,8 @@ class Documents extends Component {
             case 7:
                 stepScreen = <ConductCode applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-<<<<<<< HEAD
-            case 8:
-                'Benefit Election form'
-=======
             case 8: 
                 stepScreen = <Benefits applicationId={applicationId} changeTabState={this.changeTabState} />
->>>>>>> 17e85c69cfb1446fe997c081aaefc27ddc2cbdf1
                 break;
             case 9:
                 stepScreen = <WorkerCompensation applicationId={applicationId} changeTabState={this.changeTabState} />
@@ -191,9 +183,6 @@ class Documents extends Component {
                 break;
             case 11:
                 isCompleted = true; // NHP History
-                break;
-            case 7:
-                isCompleted = false;
                 break;
         }
 
