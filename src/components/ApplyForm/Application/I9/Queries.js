@@ -68,7 +68,8 @@ export const GET_GENERAL_INFO = gql`
         Name
       },
       zipCode,
-      exemptions
+      exemptions,
+      birthDay
     }
   }
 `;

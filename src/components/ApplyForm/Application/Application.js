@@ -345,11 +345,11 @@ class Application extends Component {
                         let applicantData = data.applications[0];
                         let homePhoneNumberValid = homePhoneNumberValid || '';
                         let cellPhoneNumberValid = applicantData.cellPhone || '';
-                        let { firstName, middleName, lastName, lastName2, socialSecurityNumber, streetAddress, aptNumber, city, state, zipCode } = applicantData;
+                        let { firstName, alias, middleName, lastName, lastName2, socialSecurityNumber, streetAddress, aptNumber, city, state, zipCode } = applicantData;
 
                         this.setState(
                             {
-                                alias: applicantData.alias || "",
+                                alias: alias || "",
                                 dbFullName: `${firstName || ''}${middleName || ''}${lastName || ''}${lastName2 || ''}`,
                                 dbSocialSecurityNumber: socialSecurityNumber || '',
                                 dbAddress: `${streetAddress || ''}-${aptNumber || ''}-${city || ''}-${state || ''}-${zipCode || ''}`,
