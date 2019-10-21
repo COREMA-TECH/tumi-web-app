@@ -4,7 +4,7 @@ import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 
 import {ADD_DOC} from './mutations';
-import {GET_APPLICANT_INFO} from './queries';
+import {GET_APPLICANT_INFO, GET_GENERAL_INFO} from './queries';
 import PrintDoc from './Document';
 
 import Select from 'react-select';
@@ -65,6 +65,34 @@ class Benefits extends Component{
         this.loadDocumentInfo();       
     }
 
+    fetchApplicantInfo = _ => {
+        alert("Fetching");
+        this.props.client.query({
+            query: GET_GENERAL_INFO,
+            variables: { id: this.props.applicationId }
+        })
+        .then(({ data: { applications: [applicant] } }) => {
+            const { firstName, lastName, gender, socialSecurityNumber, birthDay, streetAddress: address, zipCode, cityInfo, stateInfo, marital, homePhone, cellPhone } = applicant;
+            console.log(applicant);
+            this.setState(_ => ({
+                name: `${lastName ? lastName.trim() : ""}, ${firstName ? firstName.trim() : ""}`,
+                ssn: socialSecurityNumber || "",
+                city: cityInfo ? cityInfo.Name : "", 
+                state: stateInfo ? stateInfo.Name : "", 
+                zipcode: zipCode || "",
+                marital: marital === 1 ? true : false,
+                gender: gender === 1 ? true : false,
+                address: address || "",
+                birthday: birthDay ? birthDay.substring(0, 10) : '',
+                homePhone: homePhone || "",
+                workPhone: cellPhone || ""
+            }));
+        })
+        .catch(error => {
+            console.log(error);
+        })
+    }
+
     loadDocumentInfo = _ => {
         this.props.client
             .query({
@@ -84,6 +112,8 @@ class Benefits extends Component{
                         isCreated: true,
                         urlPDF: data.lastApplicantLegalDocument.url || '',
                         ...formData
+                    }, _ => {
+                        this.fetchApplicantInfo();
                     });
                 } else {
                     this.setState({

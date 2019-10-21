@@ -201,6 +201,12 @@ class NonRetaliation extends Component {
         });
     }
 
+    enableSignature = () => {
+        this.setState(_ => {
+            return { signature: false }
+        });
+    }
+
     render() {
         return(
             <Fragment>
@@ -210,6 +216,9 @@ class NonRetaliation extends Component {
                             <div className="applicant-card">
                                 <div className="applicant-card__header">
                                     <span className="applicant-card__title">Non Retaliation</span>
+                                    <button className="applicant-card__edit-button ml-auto mr-2" onClick={this.enableSignature}>
+                                        Sign
+                                    </button>
                                     <button className="applicant-card__edit-button" onClick={this.handlePdfDownload} disabled={this.state.downloading}>
                                         {this.state.downloading ?
                                             <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>

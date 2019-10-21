@@ -172,8 +172,8 @@ class FormsI9 extends Component {
         })
         .then(({data: {applications: [applicant]}}) => {
             const {birthDay: dateOfBirth, firstName, middleName, lastName, lastName2, emailAddress, cellPhone, socialSecurityNumber, 
-                streetAddress: address, zipCode, cityInfo: {Name: city}, 
-                stateInfo: {Name: state}, aptNumber} =  applicant;            
+                streetAddress: address, zipCode, cityInfo, 
+                stateInfo, aptNumber} =  applicant;            
 
             this.setState(_ => ({
                 firstName: firstName ? firstName.trim() : "",
@@ -183,8 +183,8 @@ class FormsI9 extends Component {
                 socialSecurityNumber,
                 streetNumber: address ? address.trim() : "",
                 aptNumber,
-                city, 
-                state, 
+                city: cityInfo ? cityInfo.Name : "", 
+                state: stateInfo ? stateInfo.Name : "",  
                 zipCode,
                 email: emailAddress ? emailAddress.trim() : "",
                 telephone: cellPhone,
