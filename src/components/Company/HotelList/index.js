@@ -174,7 +174,7 @@ class HotelList extends Component {
         }).then(({ data }) => {
             if(data.getbusinesscompanies){
                 const regionsId = this.state.regions.map(r => r.Id);
-                const hotelsFound = data.getbusinesscompanies.filter(bc => regionsId.includes(bc.Region));
+                const hotelsFound = data.getbusinesscompanies; //data.getbusinesscompanies.filter(bc => regionsId.includes(bc.Region));
                 this.setState({
                     hotels: hotelsFound,
                     allHotels: hotelsFound
