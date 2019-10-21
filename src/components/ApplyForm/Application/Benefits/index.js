@@ -66,14 +66,12 @@ class Benefits extends Component{
     }
 
     fetchApplicantInfo = _ => {
-        alert("Fetching");
         this.props.client.query({
             query: GET_GENERAL_INFO,
             variables: { id: this.props.applicationId }
         })
         .then(({ data: { applications: [applicant] } }) => {
             const { firstName, lastName, gender, socialSecurityNumber, birthDay, streetAddress: address, zipCode, cityInfo, stateInfo, marital, homePhone, cellPhone } = applicant;
-            console.log(applicant);
             this.setState(_ => ({
                 name: `${lastName ? lastName.trim() : ""}, ${firstName ? firstName.trim() : ""}`,
                 ssn: socialSecurityNumber || "",
@@ -113,13 +111,13 @@ class Benefits extends Component{
                         urlPDF: data.lastApplicantLegalDocument.url || '',
                         ...formData
                     }, _ => {
-                        this.fetchApplicantInfo();
                     });
                 } else {
                     this.setState({
                         isCreated: false,
                     })
                 }                
+                this.fetchApplicantInfo();
             })
             .catch(error => {                
                 console.log(error);
@@ -135,8 +133,8 @@ class Benefits extends Component{
             signature,
             hmo,
             outOfArea,
-            hmoReason: hmo ? hmoReason : "",
-            ooaReason: outOfArea ? ooaReason : "",
+            hmoReason: !hmo ? hmoReason : "",
+            ooaReason: !outOfArea ? ooaReason : "",
             dependents: (hmo === 0 && outOfArea === 0) ? [] : [...dependents],
             preTax,
             date: date || ""
@@ -408,7 +406,7 @@ class Benefits extends Component{
                                                 this.state.hmo === 0 ? (
                                                     <div className="col-md-6">
                                                         <label htmlFor="">Decline (I choose NOT to participate) Reason:</label>
-                                                        <input className="BenefitsDoc-input" type="text" name="hmoReason" value={this.state.hmoReason} style={{marginTop: "0"}} id=""/>
+                                                        <input className="BenefitsDoc-input" type="text" name="hmoReason" onChange={this.handleChange} value={this.state.hmoReason} style={{marginTop: "0"}} id=""/>
                                                     </div>
                                                 ) : ''
                                             }
@@ -431,7 +429,7 @@ class Benefits extends Component{
                                                 this.state.outOfArea === 0 ? (
                                                     <div className="col-md-6">
                                                         <label htmlFor="">Decline (I choose NOT to participate) Reason:</label>
-                                                        <input className="BenefitsDoc-input" type="text" name="ooaReason" value={this.state.ooaReason} style={{marginTop: "0"}} id=""/>
+                                                        <input className="BenefitsDoc-input" type="text" name="ooaReason" onChange={this.handleChange} value={this.state.ooaReason} style={{marginTop: "0"}} id=""/>
                                                     </div>
                                                 ) : ''
                                             }

@@ -38,9 +38,5 @@
     {
         "code": "f7196edf-e617-477f-a88d-bcd616bc8c8f",
         "description": "Show Accounting Department Code input in (Man. Company/properties) > Departments"
-    },
-    {
-        "code": "3807ee0a-d05b-4f51-8f13-6c896f84cc31",
-        "description": "Show fields 8, 9 and 10 to Tumi admins only"
     }
 ]
