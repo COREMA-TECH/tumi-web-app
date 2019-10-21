@@ -65,7 +65,7 @@ class TimeCard extends Component {
                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                     openModal={this.state.openModal}
                     handleCloseModal={this.handleCloseModal}
-                    toggleRefresh={this.toggleRefresh}
+                    toggleRefresh={this.toggleRefresh}                    
                 />
             </div>
         );
