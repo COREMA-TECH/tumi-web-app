@@ -19,7 +19,7 @@ const BenefitsForm = props => {
                             </tr>
                             </tbody>
                         </table>
-                        <p><span style={{display: "block", width:"100", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>SECTION I: TELL US ABOUT YOU...</span></p>
+                        <p><span style={{display: "block", width:"100%", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>SECTION I: TELL US ABOUT YOU...</span></p>
                         <table style={{borderCollapse: 'collapse', width: '100%', height: 32}} border={1}>
                             <tbody>
                             <tr style={{height: 10}}>
@@ -120,7 +120,7 @@ const BenefitsForm = props => {
                             </tr>
                             </tbody>
                         </table>
-                        <p><span style={{display: "block", width:"100", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>SECTION II: TELL US ABOUT THE BENEFITS YOU ARE ELECTING...</span></p>
+                        <p><span style={{display: "block", width:"100%", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>SECTION II: TELL US ABOUT THE BENEFITS YOU ARE ELECTING...</span></p>
                         <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
                             <tbody>
                             <tr>
@@ -177,7 +177,7 @@ const BenefitsForm = props => {
                             </tr>
                             </tbody>
                         </table>
-                        <p><span style={{display: "block", width:"100", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>SECTION III: TELL US ABOUT YOUR ELIGIBLE DEPENDENTS ATTACH AN ADDITIONAL SHEET IF NECESSARY</span></p>
+                        <p><span style={{display: "block", width:"100%", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>SECTION III: TELL US ABOUT YOUR ELIGIBLE DEPENDENTS ATTACH AN ADDITIONAL SHEET IF NECESSARY</span></p>
                         <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
                             <tbody>
                             <tr style={{backgroundColor: "#c7c7c7"}}>
@@ -238,13 +238,13 @@ const BenefitsForm = props => {
                             }
                             </tbody>
                         </table>
-                        <p><span style={{display: "block", width:"100", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>Section IV: Section 125</span></p>
+                        <p><span style={{display: "block", width:"100%", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>Section IV: Section 125</span></p>
                         <p style={{backgroundColor: "#c8c8c8", padding: "5px 2px", border: "1px solid black"}}>Premiums for the benefits listed above can be tax-sheltered under the Premium Conversion Plan. Electing to have the premiums pre-tax (tax-sheltered) means that the premiums taken out of your salary are taken out before taxes, not after taxes. The amount you pay for the benefit will automatically be taken out of your pay pre-tax if you elect to participate in the pre-tax program (by checkiing the “yes” box below). Sectionn 125 enables you to pay your share of the cost for medical and/or dental coverage on a pre-tax basis. This means you do not pay federal income tax and social security taxes on the money you spend for medical, dental and or vision premiums. Your contribution to the cost of coverage(s) is automatically deduced from your paycheck on a pre-tax basis. This means the amount you spend for coverage will not be included in the amount reported as federal taxable income on your W-2 at the end of the year. Since you do not pay Social Security taxes on your contributions, the amount you receive from Social Security when you retire may be slightly reduced. The reduction, if any, depends on your salary, how many years you make pre-tax contributions and other factors. The benefit elections you make initially cannot change until the next annual enrollment unless you have a qualified status change under Section 125 of the Internal Revenue Code and you request the change within thirty days of the at event.</p>
                         <div style={{padding: "10px 5px", borderLeft: "1px solid black", borderRight: "1px solid black"}}>
                             <p style={{marginBottom: "10px"}}><label style={{ fontSize: "18px" }} dangerouslySetInnerHTML={{ __html: `${props.preTax ? '&#10003;' : '&#9633;'}`}} /> Pre-Tax: I elect to participate in the pre-tax option of the current Plan Year. I authorize my employer to reduce my annual compensation during the Plan Year on a pro-tax basis to pay for my share of the premium for those benefits for which I have enrolled on separate benefit form(s).</p>
                             <p><label style={{ fontSize: "18px" }} dangerouslySetInnerHTML={{ __html: `${!props.preTax ? '&#10003;' : '&#9633;'}`}} /> Post-Tax: I elect to pay for my eligible premiums on an after-tax basis outside of this Plan, and I authorize appropriate after-tax payroll deductions.</p>
                         </div>                        
-                        <p><span style={{display: "block", width:"100", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>Section V: Payroll Deduction Authorization</span></p>
+                        <p><span style={{display: "block", width:"100%", color: "white", backgroundColor: "black", padding: "5px", fontWeight: "700"}}>Section V: Payroll Deduction Authorization</span></p>
                         <p style={{backgroundColor: "#c8c8c8", padding: "5px 2px", border: "1px solid black"}}>I represent that all the information supplied in this application is true and complete. I certify that these are my benefit elections and authorize my employer to deduct premiums for these benefits from my pay. I understand that I cannot change my pre-tax benefit elections during the plan year unless I have a qualified change in my family status. If I have a qualified change in my family status, I will be allowed to make corresponding changes in my benefit elections provided that I request these changes in writing within 31 days of the qualifying event. These benefit elections will remain in force for subsequent plan years unless I submit a new form changing my benefit elections. I understand that I must submit a new form each plan year to continue my flexible benefit account elections. If a new form is not submitted, my flexible spending account elections will be discontinued in subsequent plan years.</p>
                         <table style={{borderCollapse: 'collapse', width: '100%'}} border={1}>
                             <tbody>

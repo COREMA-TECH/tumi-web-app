@@ -63,7 +63,7 @@ const updateEmptyFiles = () => {
     createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;`, nonDisclosureHtml, 'NonDisclosure-EMPTY');
     createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.0 !important;`, nonRetaliationHtml, 'NonRetaliation-EMPTY');
     createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;`, conductCodeHtml, 'ConductCode-EMPTY');
-    createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.0 !important;`, benefitElectionHtml, 'BenefitElection-EMPTY');
+    createDocumentsPDF(`zoom: 45%;`, benefitElectionHtml, 'BenefitElection-EMPTY');
     createDocumentsPDF('zoom: 60%;', workerCompensationHtml, 'WorkerCompensation-EMPTY');
 }
 
