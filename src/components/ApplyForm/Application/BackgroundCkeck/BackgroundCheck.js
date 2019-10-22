@@ -20,7 +20,7 @@ import renderHTML from "react-render-html";
 import { CREATE_DOCUMENTS_PDF_QUERY } from "../W4/Queries";
 
 import PropTypes from 'prop-types';
-import { GET_APPLICANT_INFO } from "../AntiHarassment/Queries";
+import { GET_APPLICANT_INFO, GET_GENERAL_INFO } from "../AntiHarassment/Queries";
 import moment from 'moment';
 import DatePicker from "react-datepicker";
 import Document from './Document';
@@ -88,23 +88,27 @@ class BackgroundCheck extends Component {
     getApplicantInformation = (id) => {
         this.props.client
             .query({
-                query: GET_APPLICANT_INFO,
+                query: GET_GENERAL_INFO,
                 variables: {
                     id: id
                 }
             })
-            .then(({ data }) => {
-                if (data.applications[0] !== null) {
+            .then(({ data: { applications: [applicant] } }) => {
+                if (applicant) {
+                    const { firstName, middleName, lastName, socialSecurityNumber, birthDay, streetAddress, zipCode, city, cityInfo, state, stateInfo } = applicant;
+
                     this.setState({
-                        firstName: data.applications[0].firstName == null ? '' : data.applications[0].firstName,
-                        middleName: data.applications[0].middleName == null ? '' : data.applications[0].middleName,
-                        lastName: data.applications[0].lastName == null ? '' : data.applications[0].lastName,
-                        streetAddress: data.applications[0].streetAddress == null ? '' : data.applications[0].streetAddress,
-                        birthDay: data.applications[0].birthDay == null ? '' : data.applications[0].birthDay,
-                        socialSecurityNumber: data.applications[0].socialSecurityNumber == null ? '' : data.applications[0].socialSecurityNumber,
-                        zipCode: data.applications[0].zipCode == null ? '' : data.applications[0].zipCode,
-                        stateSelected: data.applications[0].state,
-                        citySelected: data.applications[0].city,
+                        firstName: firstName || "",
+                        middleName: middleName || "",
+                        lastName: lastName || "",
+                        streetAddress: streetAddress || "",
+                        birthDay: birthDay || "",
+                        socialSecurityNumber: socialSecurityNumber || "",
+                        zipCode: zipCode || "",
+                        stateSelected: state,
+                        citySelected: city,
+                        cityName: cityInfo ? cityInfo.Name : "", 
+                        stateName: stateInfo ? stateInfo.Name : "",
                     }, () => {
                         //this.getStates(this.state.stateSelected);
                         this.getCities(this.state.stateSelected, this.state.citySelected);

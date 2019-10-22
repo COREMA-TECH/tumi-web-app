@@ -67,17 +67,17 @@ class Dependent extends Component{
                         <div><input onBlur={this.updateDependent} onChange={_ => { this.setState(_ => ({addCancel: false}), _ => {this.updateDependent()}) }} type="checkbox" checked={!this.state.addCancel} name="addCancel" id=""/> CANCEL</div>
                     </div>
                     <div className="col-md-3">
-                        <input onBlur={this.updateDependent} onChange={this.handleChange} type="text" name="dependent_name" value={this.state.dependent_name} id=""/>
+                        <input onBlur={this.updateDependent} className="BenefitsDoc-input" onChange={this.handleChange} type="text" name="dependent_name" value={this.state.dependent_name} id=""/>
                     </div>
                     <div className="col-md-2">
-                        <input onBlur={this.updateDependent} onChange={this.handleChange} type="text" name="dependent_dob" value={this.state.dependent_dob} id=""/>                        
+                        <input onBlur={this.updateDependent} className="BenefitsDoc-input" onChange={this.handleChange} type="text" name="dependent_dob" value={this.state.dependent_dob} id=""/>                        
                     </div>
                     <div className="col-md-2">
                         <div><input onBlur={this.updateDependent} onChange={_ => { this.setState(_ => ({dependent_gender: true}), _ => { this.updateDependent() }) }} type="checkbox" checked={this.state.dependent_gender} name="dependent_gender" value={true} id=""/> MALE</div>
                         <div><input onChange={_ => { this.setState(_ => ({dependent_gender: false}), _ => { this.updateDependent() }) }}type="checkbox" checked={!this.state.dependent_gender} name="dependent_gender" value={false} id=""/> FEMALE</div>
                     </div>
                     <div className="col-md-2">
-                        <input onBlur={this.updateDependent} onChange={this.handleChange} type="text" name="relationship" value={this.state.relationship} id=""/>                                                
+                        <input onBlur={this.updateDependent} className="BenefitsDoc-input" onChange={this.handleChange} type="text" name="relationship" value={this.state.relationship} id=""/>                                                
                     </div>
                     <div className="col-md-2">
                         <Select
