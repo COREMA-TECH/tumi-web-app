@@ -36,6 +36,12 @@ query applications($id: Int){
                 BusinessCompany{ Name }
             }
         }
+        idealJobs {
+            id
+            description
+            idPosition
+            isDefault
+        }
         Accounts {
             bankName
             routingNumber
