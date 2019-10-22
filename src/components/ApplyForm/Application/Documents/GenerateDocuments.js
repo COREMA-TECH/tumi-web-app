@@ -153,5 +153,5 @@ export const generateDocuments = async (client, applicationId, setSumaryHtml) =>
     setSumaryHtml(`<html style="zoom: 50%; font-family: Arial, Helvetica, sans-serif;">${summaryHtml}</html>`);
     
     ////* Descomentar para actualizar los documentos vacios */
-    //updateEmptyFiles();
+    updateEmptyFiles();
 }
