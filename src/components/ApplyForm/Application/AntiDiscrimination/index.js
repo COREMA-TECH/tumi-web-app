@@ -178,7 +178,7 @@ class AntiDiscrimination extends Component {
     cloneForm = _ => {
         let contentPDF = document.getElementById('DocumentPDF');
         let contentPDFClone = contentPDF.cloneNode(true);
-        return `<html style="zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;">${contentPDFClone.innerHTML}</html>`;
+        return `<html style="zoom: 70%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;">${contentPDFClone.innerHTML}</html>`;
     }
 
     createDocumentsPDF = (fileName, download = false) => {
@@ -305,8 +305,9 @@ class AntiDiscrimination extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{applyTabs[14].label}</span>
-                                {
-                                    this.state.id ?
+                                <div>
+                                    {
+                                        this.state.id &&
                                         <button className="applicant-card__edit-button" onClick={this.handlePdfDownload} disabled={this.state.downloading || this.state.loadingData}>
                                             {this.state.downloading ?
                                                 <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>
@@ -315,10 +316,10 @@ class AntiDiscrimination extends Component {
                                             }
 
                                         </button>
-                                        :
-                                        <button className="applicant-card__edit-button" disabled={this.state.loadingData} onClick={this.onHandleOpenSignatureClick}>{actions[8].label} <i className="far fa-edit"></i>
-                                        </button>
-                                }
+                                    }
+                                    <button className="applicant-card__edit-button ml-1" disabled={this.state.loadingData} onClick={this.onHandleOpenSignatureClick}>{actions[8].label} <i className="far fa-edit"></i>
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="p-4">

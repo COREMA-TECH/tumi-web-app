@@ -11,9 +11,11 @@ import ApplicantDocument from "../ApplicantDocuments/ApplicantDocument";
 import AntiDiscrimination from '../AntiDiscrimination/'
 import FormI9 from '../I9/FormsI9';
 import FormW4 from "../W4/FormsW4";
+import Benefits from '../Benefits';
 import { GET_APPLICATION_STATUS, GET_MERGED_DOCUMENT } from './Queries';
 import { withApollo } from 'react-apollo';
 import withGlobalContent from '../../../Generic/Global';
+import NonRetaliation from '../NonRetaliation';
 import { generateDocuments } from './GenerateDocuments';
 import HistoricalNHP from '../HistoricalNHP';
 
@@ -87,13 +89,13 @@ class Documents extends Component {
                 stepScreen = <NonDisclosure applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 6:
-                'Non Retaliation Policy'
+                stepScreen = <NonRetaliation applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 7:
                 stepScreen = <ConductCode applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
-            case 8:
-                'Benefit Election form'
+            case 8: 
+                stepScreen = <Benefits applicationId={applicationId} changeTabState={this.changeTabState} />
                 break;
             case 9:
                 stepScreen = <WorkerCompensation applicationId={applicationId} changeTabState={this.changeTabState} />

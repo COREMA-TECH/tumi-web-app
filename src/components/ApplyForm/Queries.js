@@ -71,6 +71,7 @@ export const GET_LANGUAGES_QUERY = gql`
 export const GET_APPLICATION_BY_ID = gql`
 	query applications($id: Int!) {
 		applications(id: $id) {
+			alias
 			firstName
 			middleName
 			lastName

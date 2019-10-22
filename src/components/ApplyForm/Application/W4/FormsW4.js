@@ -138,15 +138,17 @@ class FormsW4 extends Component {
             variables: { id: this.props.applicationId }
         })
             .then(({ data: { applications: [applicant] } }) => {
-
-                const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo: { Name: city }, stateInfo: { Name: state }, marital, exemptions } = applicant;
+                const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo, stateInfo, marital, exemptions } = applicant;
+                
+                const city = cityInfo ? cityInfo.Name : "";
+                const state = stateInfo ? stateInfo.Name : "";
 
                 this.setState(_ => ({
-                    firstName: firstName.trim(),
-                    lastName: lastName.trim(),
-                    socialSecurityNumber,
-                    address: address.trim(),
-                    postalCode: `${city.trim()}, ${state.trim()}; ${zipCode}`,
+                    firstName: firstName ? firstName.trim() : "",
+                    lastName: lastName ? lastName.trim() : "",
+                    socialSecurityNumber: socialSecurityNumber || "",
+                    address: address ? address.trim() : "",
+                    postalCode: `${city ? city.trim() : ""}, ${state ? state.trim() : ""}; ${zipCode || ""}`,
                     estadoCivil: (marital && marital === 1 && !this.state.estadoCivil2) ? true : false,
                     estadoCivil1: (marital && marital === 2 && !this.state.estadoCivil2) ? true : false,
                     excention: exemptions || 0

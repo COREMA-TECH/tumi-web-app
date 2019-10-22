@@ -10647,6 +10647,35 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
 .BRModal-holidays .btn {
   color: #FFF; }
 
+.BenefitsDoc-secTitle {
+  background-color: #000;
+  color: #FFF;
+  display: block;
+  font-size: 16px;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 100%; }
+
+.BenefitsDoc-input {
+  border-bottom: 1px solid #000;
+  width: 100%; }
+
+.BenefitsDoc-remove {
+  background-color: red;
+  color: #FFF;
+  padding: 5px;
+  position: absolute;
+  right: -5px;
+  top: 16px;
+  z-index: 100; }
+
+.BenefitsDoc-label {
+  display: block;
+  font-size: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  text-transform: capitalize; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -13623,3 +13652,5 @@ label.input-group-text {
 
 span[class^='MySnackbarContent-message-'] {
   color: #FFF; }
+
+/*# sourceMappingURL=default.css.map */

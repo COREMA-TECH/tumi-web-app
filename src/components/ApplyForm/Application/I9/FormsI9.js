@@ -171,21 +171,24 @@ class FormsI9 extends Component {
             variables: { id: this.props.applicationId }
         })
         .then(({data: {applications: [applicant]}}) => {
-            const {firstName, middleName, lastName, lastName2, emailAddress, cellPhone, socialSecurityNumber, 
-                streetAddress: address, zipCode, cityInfo: {Name: city}, 
-                stateInfo: {Name: state}, aptNumber} =  applicant;            
+            const {birthDay: dateOfBirth, firstName, middleName, lastName, lastName2, emailAddress, cellPhone, socialSecurityNumber, 
+                streetAddress: address, zipCode, cityInfo, 
+                stateInfo, aptNumber} =  applicant;            
 
             this.setState(_ => ({
-                firstName: firstName.trim(),
-                lastName: lastName.trim(),
-                otherLastName: lastName2.trim(),
-                middleName: middleName.trim(),
+                firstName: firstName ? firstName.trim() : "",
+                lastName: lastName ? lastName.trim() : "",                
+                otherLastName: lastName2 ? lastName2.trim() : "",
+                middleName: middleName ? middleName.trim() : "",
                 socialSecurityNumber,
-                streetNumber: address.trim(),
+                streetNumber: address ? address.trim() : "",
                 aptNumber,
-                city, state, zipCode,
-                email: emailAddress.trim(),
-                telephone: cellPhone
+                city: cityInfo ? cityInfo.Name : "", 
+                state: stateInfo ? stateInfo.Name : "",  
+                zipCode,
+                email: emailAddress ? emailAddress.trim() : "",
+                telephone: cellPhone,
+                dateOfBirth: dateOfBirth ? dateOfBirth.substring(0, 10) : ""
             }));
         })
         .catch(error => {

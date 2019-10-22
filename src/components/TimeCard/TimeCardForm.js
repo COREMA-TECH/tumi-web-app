@@ -4,8 +4,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_CONTACT_BY_QUERY } from './queries';
-import { ADD_MARCKED, UPDATE_MARKED } from './mutations';
+import { FETCH_SINGLE_MARK, GET_HOTEL_QUERY, GET_EMPLOYEES, GET_POSITION_BY_QUERY, GET_CONTACT_BY_QUERY, GET_PREVIOUS_MARK } from './queries';
+import { ADD_MARCKED, UPDATE_MARK, CREATE_NEW_MARK } from './mutations';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Datetime from 'react-datetime';
@@ -45,20 +45,23 @@ class TimeCardForm extends Component {
         id: null,
         clockInId: null,
         clockOutId: null,
-        IdEntity: null,
-        employeeId: null,
+        entityId: null,
+        EmployeeId: null,
         startDate: '',
         endDate: '',
         employees: [],
         positions: [],
-        PositionRateId: 0,
+        positionId: 0,
         newMark: false,
         readOnly: false,
 
-        inboundMarkType: 30570, //Shift Start
+        inboundMarkTypeId: 30570, //Shift Start
         inboundMarkTime: moment('08:00', "HH:mm").format("HH:mm"),
-        outboundMarkType: 30571, //Shift End
+        outboundMarkTypeId: 30571, //Shift End
         outboundMarkTime: moment('16:00', "HH:mm").format("HH:mm"),
+
+        notes: '',
+        currentlyWorking: false,
     };
 
     constructor(props) {
@@ -79,48 +82,55 @@ class TimeCardForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
-        if (Object.keys(nextProps.item).length > 0 && nextProps.openModal) {            
-            const { clockInId, clockOutId, hotelId, employeeId, key, clockIn, clockOut, noteIn } = nextProps.item;
-            
+        const {markId} = nextProps;        // const markId = 3526;
+        
+        if(markId && nextProps.markId !== this.state.id && nextProps.openModal){
+            this.props.client.query({
+                query: FETCH_SINGLE_MARK,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    id: markId
+                }
+            })
+            .then(({data: {mark}}) => {
+                const {id, entityId, markedDate, inboundMarkTypeId, inboundMarkTime, outboundMarkTypeId, outboundMarkTime, positionId, EmployeeId, notes} = mark;
+                
+                this.setState({
+                    id,                    
+                    entityId,
+                    positionId: !positionId ? -1 : positionId,
+                    EmployeeId,
+                    startDate: markedDate,
+                    endDate: markedDate,
+                    
+                    inboundMarkTypeId,
+                    inboundMarkTime,
+                    outboundMarkTypeId,
+                    outboundMarkTime,
+                    
+                    notes,
+                    currentlyWorking: !!!outboundMarkTypeId,
+                    newMark: (outboundMarkTime === 'Now' || outboundMarkTime === "24:00") ? true : false,
+                    readOnly: false,
+                }, _ => {
+                    this.calculateHours();
+                    this.getPositions(this.state.entityId);
+                    this.getHotels();
+                    this.getEmployees();
+                });
+            })
+            .catch(_ => {
+                this.props.handleOpenSnackbar('error', 'Failed to fetch mark info.');                
+            })
+        } if (!nextProps.openModal) {
             this.setState({
-                id: clockInId,
-                clockInId: clockInId,
-                clockOutId: clockOutId,
-                IdEntity: hotelId,
-                employeeId: employeeId,
-                startDate: key ? key.substring(key.length - 8, key.length) : key,
-                endDate: !clockOutId ? '' : (key ? key.substring(key.length - 8, key.length) : key),
-                inboundMarkTime: clockIn,
-                outboundMarkTime: !clockOutId ? '' : (clockOut !== 'Now' || clockOut !== "24:00") ? clockOut : null,
-                comment: noteIn,
-                duration: (clockOut !== 'Now' || clockOut !== "24:00") && clockIn ? moment(clockOut, 'HH:mm').diff(moment(clockIn, 'HH:mm'), 'hours') : '',
-                currentlyWorking: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
-                newMark: (clockOut === 'Now' || clockOut === "24:00") ? true : false,
-                readOnly: nextProps.readOnly,
-            }, _ => {
-                this.calculateHours();
-                this.getPositions(this.state.IdEntity);
+                ...this.DEFAULT_STATE
             });
-        } else if (!nextProps.openModal) {
-            this.setState({
-                id: null,
-                clockInId: null,
-                clockOutId: null,
-                IdEntity: 0,
-                employeeId: 0,
-                inboundMarkTime: moment('08:00', "HH:mm").format("HH:mm"),
-                outboundMarkTime: moment('16:00', "HH:mm").format("HH:mm"),
-                startDate: '',
-                endDate: '',
-                duration: 8,
-                comment: '',
-                PositionRateId: 0
-            });
-        }
-
-
-        this.getHotels();
-        this.getEmployees();
+        } else {
+            this.getHotels();
+            this.getEmployees();
+        }       
+        
     }
 
     componentWillMount() {
@@ -135,111 +145,122 @@ class TimeCardForm extends Component {
         this.props.handleCloseModal(event);
     }    
 
-    handleSubmit = (event) => {
+    handleSubmit = async (event) => {
         event.preventDefault();
-        if (this.state.IdEntity == null || this.state.PositionRateId === null || this.state.startDate == '') {
+        if (this.state.entityId == null || this.state.positionId === null || this.state.startDate == '') {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
             return;
         } 
-
+        
         this.setState({ saving: true });
+        const { entityId, positionId, startDate, EmployeeId, notes, inboundMarkTypeId, inboundMarkTime, outboundMarkTypeId, outboundMarkTime } = this.state;         
+
+        let mark = {
+            entityId: entityId === 0 ? 180 : entityId,
+            markedDate: startDate,
+            inboundMarkTypeId: inboundMarkTypeId,
+            inboundMarkTime: inboundMarkTime,
+            outboundMarkTypeId: outboundMarkTypeId,
+            outboundMarkTime: outboundMarkTime,
+            EmployeeId: EmployeeId,
+            notes: notes,
+            positionId: positionId === -1 ? null : positionId,
+        }
+        
         if (this.state.id === null) {
-            const { IdEntity, PositionRateId, startDate, employeeId, comment, inboundMarkType, inboundMarkTime, outboundMarkType, outboundMarkTime } = this.state;         
-
-            let mark = {
-                entityId: IdEntity === 0 ? 180 : IdEntity,
-                markedDate: startDate,
-                inboundMarkTypeId: inboundMarkType,
-                inboundMarkTime: inboundMarkTime,
-                outboundMarkTypeId: outboundMarkType,
-                outboundMarkTime: outboundMarkTime,
-                EmployeeId: employeeId,
-                notes: comment,
-                positionId: PositionRateId,
-            }
-
-            this.setState(() => {
-                return { marks: mark }
-            }, _ => { this.addIn(); });
+            this.saveMark(mark);
+        } else {
+            const editMark = {...mark, id: this.state.id};
+            this.updateMark(editMark);
         }
     };
-    
+
+    saveMark = async mark => {
+        const isLunchBreak = this.state.positionId === -1;
+        let markToEdit = null, fetchError = '';
+
+        if(isLunchBreak){
+            const {error, data: {previousMark: previousMark}} = await this.props.client.query({
+                query: GET_PREVIOUS_MARK,
+                variables: {
+                    entityId: mark.entityId,
+                    EmployeeId: mark.EmployeeId,
+                    markedDate: mark.markedDate
+                },
+                fetchPolicy: "no-cache"
+            });
+
+            markToEdit = {...previousMark};
+            fetchError = error;
+        }
+
+        this.props.client.mutate({
+            mutation: CREATE_NEW_MARK,
+            variables: {
+                input: mark
+            }
+        }).then(() => {            
+            this.props.handleOpenSnackbar('success', 'Record Inserted!');
+            
+            if(isLunchBreak){
+                if(fetchError){
+                    this.setState({ saving: false });
+                    this.props.handleOpenSnackbar('error', 'Something went wrong.');
+                    return;
+                }
+
+                if(!markToEdit){
+                    //Saved new mark, but there was no need to update a previous mark
+                    this.props.toggleRefresh();
+                    this.setState({ saving: false }, () => {
+                        this.handleCloseModal();                                        
+                    });   
+                    
+                    return;
+                }
+
+                const updatedMark = {...markToEdit, outboundMarkTime: mark.inboundMarkTime, outboundMarkTypeId: mark.inboundMarkTypeId};
+                delete updatedMark.__typename;
+
+                this.updateMark(updatedMark);
+            } 
+            
+            else {
+                this.props.toggleRefresh();
+                this.setState({ saving: false }, () => {
+                    this.handleCloseModal();                                        
+                });    
+            }            
+        })
+
+        .catch(() => {
+            this.setState({ saving: false });
+            this.props.handleOpenSnackbar('error', 'Something went wrong.');
+        });
+    }
 
     updateMark = (mark) => {
         if (!mark) return;
-
-        let editMark = { ...mark };
-
+        
         this.props.client
             .mutate({
-                mutation: UPDATE_MARKED,
+                mutation: UPDATE_MARK,
                 variables: {
-                    MarkedEmployees: editMark
+                    MarkedEmployees: mark
                 }
             })
             .then(() => {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.props.toggleRefresh();
                 this.setState({ saving: false }, () => {
-                    this.handleCloseModal();                    
-                    // alert("Closing modal");
+                    this.handleCloseModal();                                        
                 });                
             })
             .catch((error) => {
                 this.setState({ saving: false });
                 this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
-    }
-
-    addIn = () => {
-        this.props.client.mutate({
-            mutation: ADD_MARCKED,
-            variables: {
-                MarkedEmployees: this.state.marks
-            }
-        }).then(() => {            
-            this.props.handleOpenSnackbar('success', 'Record Inserted!');
-            this.props.toggleRefresh();
-            this.setState({ saving: false }, () => { this.handleCloseModal(); this.props.toggleRefresh(); });            
-        })
-
-        .catch(() => {
-            this.setState({ saving: false });
-            this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
-        });
-    };
-
-    addOut = () => {
-        this.props.client
-            .mutate({
-                mutation: ADD_MARCKED,
-                variables: {
-                    MarkedEmployees: {
-                        entityId: this.state.IdEntity,
-                        typeMarkedId: 30571,
-                        markedDate: this.state.endDate,
-                        markedTime: this.state.outboundMarkTime,
-                        imageMarked: "",
-                        EmployeeId: this.state.employeeId,
-                        ShiftId: null,
-                        notes: this.state.comment
-                    }
-                }
-            })
-            .then(() => {
-                this.props.handleOpenSnackbar('success', 'Record Inserted!');
-                this.props.toggleRefresh();
-                this.setState({ saving: false }, () => {
-                    this.handleCloseModal();
-                    //this.props.getReport();
-                });
-                // window.location.reload();
-            })
-            .catch(() => {
-                this.setState({ saving: true });
-                this.props.handleOpenSnackbar('error', 'Error: Ups!!!, Something went wrong.');
-            });
-    };
+    }        
 
     getContacts = (id) => {
         this.props.client
@@ -268,7 +289,7 @@ class TimeCardForm extends Component {
             [name]: value
         });
 
-        if (name === 'IdEntity') {
+        if (name === 'entityId') {
             this.getPositions(value);
             this.getContacts(value);
         }
@@ -366,8 +387,8 @@ class TimeCardForm extends Component {
                 currentlyWorking: true,
                 endDate: "",
                 outboundMarkTime: null,
-                inboundMarkType: 30570, /* Shift Start */
-                outboundMarkType: 30571 /* Shift End */
+                inboundMarkTypeId: 30570, /* Shift Start */
+                outboundMarkTypeId: 30571 /* Shift End */
             });
         } else {
             this.setState({
@@ -427,7 +448,7 @@ class TimeCardForm extends Component {
             let hotel = this.state.hotels.find(_ => {
                 return _.Id === parseInt(value)
             })
-            return { IdEntity: value, propertyStartWeek: hotel ? hotel.Start_Week : null }
+            return { entityId: value, propertyStartWeek: hotel ? hotel.Start_Week : null }
         }, _ => {
             this.getPositions(parseInt(value));
         });
@@ -435,17 +456,17 @@ class TimeCardForm extends Component {
 
     handleEmployeeSelectChange = ({ value }) => {
         this.setState(() => {
-            return { employeeId: value }
+            return { EmployeeId: value }
         });
     }
 
     handlePositionChange = ({ value }) => {
         this.setState(() => {
-            return { PositionRateId: value }
+            return { positionId: value }
         }, _ => {
             if(value === -1){
                 this.setState(_ => {
-                    return { inboundMarkType: 30572 /* break in */, outboundMarkType: 30573 /* break out */ }
+                    return { inboundMarkTypeId: 30572 /* break in */, outboundMarkTypeId: 30573 /* break out */ }
                 })
             }
         });
@@ -464,14 +485,14 @@ class TimeCardForm extends Component {
         return found ? { value: found.Id, label: found.Name.trim() } : defValue;
     }
 
-    findSelectedEmployee = employeeId => {
+    findSelectedEmployee = EmployeeId => {
         const defValue = { value: 0, label: "Select a Employee" };
 
-        if (employeeId === 'null' || employeeId === 0)
+        if (EmployeeId === 'null' || EmployeeId === 0)
             return defValue;
 
         const found = this.state.employees.find(item => {
-            return item.id === employeeId;
+            return item.id === EmployeeId;
         });
 
         return found ? { value: found.id, label: found.firstName.trim() + " " + found.lastName.trim() } : defValue;
@@ -524,7 +545,7 @@ class TimeCardForm extends Component {
                                     <div className="col-md-6">
                                         <Select
                                             options={propertyList}
-                                            value={this.findSelectedProperty(this.state.IdEntity)}
+                                            value={this.findSelectedProperty(this.state.entityId)}
                                             onChange={this.handlePropertySelectChange}
                                             closeMenuOnSelect={true}
                                             components={makeAnimated()}
@@ -537,7 +558,7 @@ class TimeCardForm extends Component {
                                     <div className="col-md-6">
                                         <Select
                                             options={employeeList}
-                                            value={this.findSelectedEmployee(this.state.employeeId)}
+                                            value={this.findSelectedEmployee(this.state.EmployeeId)}
                                             onChange={this.handleEmployeeSelectChange}
                                             closeMenuOnSelect={true}
                                             components={makeAnimated()}
@@ -612,7 +633,7 @@ class TimeCardForm extends Component {
                                         <div className="col-md-12 mt-2">
                                             <Select
                                                 options={positionList}
-                                                value={this.findSelectedPosition(this.state.PositionRateId)}
+                                                value={this.findSelectedPosition(this.state.positionId)}
                                                 onChange={this.handlePositionChange}
                                                 closeMenuOnSelect={true}
                                                 components={makeAnimated()}
@@ -624,12 +645,12 @@ class TimeCardForm extends Component {
                                         <div className="col-md-12 mt-2">
                                             <textarea
                                                 onChange={this.handleChange}
-                                                name="comment"
+                                                name="notes"
                                                 className="form-control"
                                                 id=""
                                                 cols="30"
                                                 rows="3"
-                                                value={this.state.comment}
+                                                value={this.state.notes}
                                                 placeholder="Notes"
                                                 disabled={readOnly}
                                             />
