@@ -93,9 +93,7 @@ class TimeCardForm extends Component {
                 }
             })
             .then(({data: {mark}}) => {
-                const {id, entityId, markedDate, inboundMarkTypeId, inboundMarkTime, outboundMarkTypeId, outboundMarkTime, positionId, EmployeeId, notes} = mark;
-                alert("Fetched");
-                console.log(mark)
+                const {id, entityId, markedDate, inboundMarkTypeId, inboundMarkTime, outboundMarkTypeId, outboundMarkTime, positionId, EmployeeId, notes} = mark;                
                 this.setState({
                     id,                    
                     entityId,
@@ -122,8 +120,7 @@ class TimeCardForm extends Component {
             })
             .catch(error => {
                 this.props.handleOpenSnackbar('error', 'Failed to fetch mark info.');       
-                console.clear();
-                console.log(error)         ;
+                console.log(error);
             })
         } if (!nextProps.openModal) {
             this.setState({
