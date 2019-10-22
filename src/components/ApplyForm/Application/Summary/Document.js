@@ -24,7 +24,7 @@
  * @param {*}  data.area
  */
 const Document = (data = {}) => {
-    const { applicantName, socialSecurityNumber, cellphone, gender, birthDay, address, hotel, hireDate, employmentType,
+    const { applicantName, socialSecurityNumber, cellphone, gender, birthDay, address, hotel, jobDescription, hireDate, employmentType,
         marital, exemptions, source, accountNumber, bankName, routingNumber, numberId, typeOfId, expireDateId, car, area
     } = data;
     
@@ -97,7 +97,7 @@ const Document = (data = {}) => {
     
     <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>DEPARTMENT:</strong></span> -- </span></p>
     
-    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>JOB DESCRIPTION:</strong></span> -- </span></p>
+    <p><span style="font-family: 'times new roman', times;"><span style='color: #b40639;'><strong>JOB DESCRIPTION:</strong></span> ${jobDescription} </span></p>
     
     </td>
     
