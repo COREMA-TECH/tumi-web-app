@@ -529,7 +529,7 @@ class ApplicationList extends Component {
 			open={this.state.openConfirm}
 			closeAction={this.onCloseConfirmDialogHandler}
 			confirmAction={this.onConfirmDialogHandler}
-			title={"Do you really want to send this Lead to the Application Package?"}
+			title={"Do you really want to send this Lead to Interview?"}
 			loading={this.state.convertingToPackage}
 			confirmActionLabel="Send"
 		/>

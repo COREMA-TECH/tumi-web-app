@@ -231,7 +231,7 @@ class ApplicationTable extends React.Component {
 														<i className="fas fa-trash"></i>
 													</button>
 												</Tooltip>
-												<Tooltip title="Send Lead to Application Package">
+												<Tooltip title="Send to Interview">
 													<button
 														className="btn btn-primary ml-1 float-left"
 														onClick={this.onSendToApplicationPackage(row.id)}
