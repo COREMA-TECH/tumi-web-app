@@ -12,7 +12,7 @@ export default class CustomImage extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log({ nextImage: nextProps.image, image: this.props.image })
+        // console.log({ nextImage: nextProps.image, image: this.props.image })
         if (nextProps.image != this.props.image)
             this.setState(() => ({ image: nextProps.image }));
     }

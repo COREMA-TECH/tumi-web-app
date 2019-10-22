@@ -175,6 +175,9 @@ class FormsI9 extends Component {
                 streetAddress: address, zipCode, cityInfo, 
                 stateInfo, aptNumber} =  applicant;            
 
+                
+            const [year, month, day] = dateOfBirth ? dateOfBirth.substring(0, 10).split("-") : [];
+
             this.setState(_ => ({
                 firstName: firstName ? firstName.trim() : "",
                 lastName: lastName ? lastName.trim() : "",                
@@ -188,7 +191,7 @@ class FormsI9 extends Component {
                 zipCode,
                 email: emailAddress ? emailAddress.trim() : "",
                 telephone: cellPhone,
-                dateOfBirth: dateOfBirth ? dateOfBirth.substring(0, 10) : ""
+                dateOfBirth: dateOfBirth ? `${month}/${day}/${year}` : ""
             }));
         })
         .catch(error => {

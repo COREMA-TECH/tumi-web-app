@@ -169,9 +169,14 @@ class PunchesReportConsolidated extends Component {
 
 
     calculateTotalHrs = (data) => {
-        let dataList = data.markedEmployeesConsolidated || [];
+        let dataList = data ? data.markedEmployeesConsolidated : [];
         let total = 0, currentId = 0;
         let BreakException = {};
+        
+        if(!dataList){
+            return;
+        }
+
         try {
             dataList.forEach(_ => {
                 _.punches.forEach(_punch => {

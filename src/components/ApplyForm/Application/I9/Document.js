@@ -947,6 +947,9 @@ Town <input
                         </tbody>
                     </table>
                     <img src="https://i.imgur.com/yP3pq57.png" style={{ width: '100%' }} alt />
+                    <br/>
+                    <br/>
+                    <br/>
                     <img src="https://i.imgur.com/EXoWtMF.png" style={{ width: '100%' }} alt />
                     <table style={{
                         borderCollapse: 'collapse',

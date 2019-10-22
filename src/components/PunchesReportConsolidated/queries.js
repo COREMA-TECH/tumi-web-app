@@ -6,6 +6,7 @@ export const GET_PUNCHES_REPORT_CONSOLIDATED = gql`
           key
           date
           punches {
+            markId
             key
             name
             employeeId

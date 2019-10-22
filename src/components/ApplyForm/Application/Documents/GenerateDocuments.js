@@ -1,3 +1,4 @@
+
 import { graphql } from 'react-apollo';
 import { GET_APPLICATION, CREATE_DOCUMENTS_PDF_QUERY } from './Queries';
 import SummaryDoc from '../Summary/Document';
@@ -154,4 +155,5 @@ export const generateDocuments = async (client, applicationId, setSumaryHtml) =>
 
     ////* Descomentar para actualizar los documentos vacios */
     // updateEmptyFiles();
+
 }
