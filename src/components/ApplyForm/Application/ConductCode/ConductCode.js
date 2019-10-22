@@ -217,7 +217,7 @@ class ConductCode extends Component {
 		let contentPDFClone = contentPDF.cloneNode(true);
 		contentPDFClone.querySelector("#imgCanvasSign").style.zoom = "1.8";
 
-		return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;">${contentPDFClone.innerHTML}</html>`;
+		return `<html style="zoom: 60%; font-family: 'Times New Roman'; line-height: 1.3;">${contentPDFClone.innerHTML}</html>`;
 	}
 
 	createDocumentsPDF = (random, download = false) => {

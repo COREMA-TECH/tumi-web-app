@@ -1,4 +1,3 @@
-import { graphql } from 'react-apollo';
 import { GET_APPLICATION, CREATE_DOCUMENTS_PDF_QUERY } from './Queries';
 import SummaryDoc from '../Summary/Document';
 import W4Doc from '../W4/Document';
@@ -62,7 +61,7 @@ const updateEmptyFiles = () => {
     createDocumentsPDF(`zoom: 70%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;`, antiDiscriminationHtml, 'AntiDiscrimination-EMPTY');
     createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;`, nonDisclosureHtml, 'NonDisclosure-EMPTY');
     createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.0 !important;`, nonRetaliationHtml, 'NonRetaliation-EMPTY');
-    createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;`, conductCodeHtml, 'ConductCode-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.3;`, conductCodeHtml, 'ConductCode-EMPTY');
     createDocumentsPDF(`zoom: 45%;`, benefitElectionHtml, 'BenefitElection-EMPTY');
     createDocumentsPDF('zoom: 60%;', workerCompensationHtml, 'WorkerCompensation-EMPTY');
 }
