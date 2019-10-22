@@ -82,9 +82,7 @@ class TimeCardForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
-        const {markId} = nextProps.item;
-        alert(markId);
-        console.log(nextProps.item);
+        const {markId} = nextProps.item;        
         
         if(markId && nextProps.markId !== this.state.id && nextProps.openModal){
             this.props.client.query({
