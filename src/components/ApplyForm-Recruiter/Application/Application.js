@@ -223,7 +223,7 @@ class Application extends Component {
                                     convictedExplain: this.state.convictedExplain,
                                     comment: this.state.comment,
                                     generalComment: this.state.generalComment,
-                                    isLead: true,
+                                    isLead: !this.state.sendInterview,
                                     idRecruiter: localStorage.getItem('LoginId'),
                                     UserId: localStorage.getItem('LoginId'),
                                     sendInterview: this.state.sendInterview
@@ -278,7 +278,6 @@ class Application extends Component {
         ) {
             this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
         } else {
-            console.log(this.state.sendInterview,'hola')
             this.setState(
                 {
                     insertDialogLoading: true
@@ -296,26 +295,20 @@ class Application extends Component {
                                     lastName: this.state.lastName,
                                     lastName2: this.state.lastName2,
                                     date: this.state.date,
-                                    //streetAddress: this.state.streetAddress,
                                     aptNumber: this.state.aptNumber,
                                     city: this.state.city,
                                     state: this.state.state,
                                     zipCode: this.state.zipCode,
                                     homePhone: this.state.homePhone,
                                     cellPhone: this.state.cellPhone,
-                                    //socialSecurityNumber: this.state.socialSecurityNumber,
                                     car: this.state.car,
-                                    //typeOfId: parseInt(this.state.typeOfId),
-                                    //expireDateId: this.state.expireDateId,
                                     emailAddress: this.state.emailAddress,
                                     positionApplyingFor: parseInt(this.state.positionApplyingFor) == 0 ? null : parseInt(this.state.positionApplyingFor),
-                                    //dateAvailable: this.state.dateAvailable,
-                                    //scheduleRestrictions: this.state.scheduleRestrictions,
                                     scheduleExplain: this.state.scheduleExplain,
                                     convicted: this.state.convicted,
                                     convictedExplain: this.state.convictedExplain,
                                     generalComment: this.state.generalComment,
-                                    isLead: true,
+                                    isLead: !this.state.sendInterview,
                                     idRecruiter: parseInt(this.state.idRecruiter),
                                     sendInterview: this.state.sendInterview
                                 },
@@ -627,7 +620,7 @@ class Application extends Component {
                         </button>
                         }
                     </div>
-                   
+
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-12 col-lg-6"></div>

@@ -1,3 +1,5 @@
+
+import { graphql } from 'react-apollo';
 import { GET_APPLICATION, CREATE_DOCUMENTS_PDF_QUERY } from './Queries';
 import SummaryDoc from '../Summary/Document';
 import W4Doc from '../W4/Document';
@@ -61,7 +63,7 @@ const updateEmptyFiles = () => {
     createDocumentsPDF(`zoom: 70%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;`, antiDiscriminationHtml, 'AntiDiscrimination-EMPTY');
     createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.5 !important;`, nonDisclosureHtml, 'NonDisclosure-EMPTY');
     createDocumentsPDF(`zoom: 60%; font-family: "Times New Roman", Times, serif  !important; line-height: 1.0 !important;`, nonRetaliationHtml, 'NonRetaliation-EMPTY');
-    createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.3;`, conductCodeHtml, 'ConductCode-EMPTY');
+    createDocumentsPDF(`zoom: 60%; font-family: 'Times New Roman'; line-height: 1.5;`, conductCodeHtml, 'ConductCode-EMPTY');
     createDocumentsPDF(`zoom: 45%;`, benefitElectionHtml, 'BenefitElection-EMPTY');
     createDocumentsPDF('zoom: 60%;', workerCompensationHtml, 'WorkerCompensation-EMPTY');
 }
@@ -109,8 +111,8 @@ export const generateDocuments = async (client, applicationId, setSumaryHtml) =>
         console.log(error)
     });
 
-    if(appQuery.application){
-        const {firstName, middleName, lastName, employee, employmentType, marital, exemptions, optionHearTumi, nameReferences, Accounts,
+    if (appQuery.application) {
+        const { firstName, middleName, lastName, employee, employmentType, marital, exemptions, optionHearTumi, nameReferences, Accounts,
             socialSecurityNumber, cellPhone, gender, birthDay, streetAddress, city, cityInfo, state, stateInfo, zipCode,
             numberId, typeOfId, expireDateId, car, area
         } = appQuery.application;
@@ -118,7 +120,7 @@ export const generateDocuments = async (client, applicationId, setSumaryHtml) =>
         const address = streetAddress && zipCode && city ? `${streetAddress}, ${cityInfo.Name}, ${stateInfo ? stateInfo.Name : ''}, ${zipCode.substring(0, 5)}` : '--';
         const appAccount = Array.isArray(Accounts) && Accounts.length ? Accounts[0] : null;
         let hotel, hireDate;
-        if (employee){
+        if (employee) {
             hireDate = employee.Employees.hireDate ? moment(employee.Employees.hireDate).format('MM/DD/YYYY') : null;
             hotel = employee.Employees.BusinessCompany ? employee.Employees.BusinessCompany.Name : null;
         }
@@ -140,17 +142,18 @@ export const generateDocuments = async (client, applicationId, setSumaryHtml) =>
             routingNumber: appAccount ? appAccount.routingNumber : null,
             numberId,
             typeOfId,
-            expireDateId: expireDateId ? moment(expireDateId).format('MM/DD/YYYY'): null,
+            expireDateId: expireDateId ? moment(expireDateId).format('MM/DD/YYYY') : null,
             car: car ? 'YES' : 'NO',
             area
         });
     }
-    else{
+    else {
         summaryHtml = SummaryDoc();
     }
 
     setSumaryHtml(`<html style="zoom: 50%; font-family: Arial, Helvetica, sans-serif;">${summaryHtml}</html>`);
-    
+
     ////* Descomentar para actualizar los documentos vacios */
     // updateEmptyFiles();
+
 }

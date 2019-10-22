@@ -690,7 +690,9 @@ class Application extends Component {
             let currentSocialSecurityNumber = socialSecurityNumber || '';
             let currentAddress = `${streetAddress || ''}-${aptNumber || ''}-${city || ''}-${state || ''}-${zipCode || ''}`;
             let confirmTitle = "New Hire Package is going to be affected because of these changes"
-            if (currentFullName !== dbFullName || currentAddress !== dbAddress || currentSocialSecurityNumber !== dbSocialSecurityNumber) {
+            console.clear();
+            console.log({ applicationId: this.props.applicationId })
+            if (this.props.applicationId != 0 && (currentFullName !== dbFullName || currentAddress !== dbAddress || currentSocialSecurityNumber !== dbSocialSecurityNumber)) {
                 if (currentAddress !== dbAddress)
                     confirmTitle = `${confirmTitle}, also you need to sign again W4 and Workers Comp, do you want to continue?`;
                 else confirmTitle = `${confirmTitle}, do you want to continue?`;
