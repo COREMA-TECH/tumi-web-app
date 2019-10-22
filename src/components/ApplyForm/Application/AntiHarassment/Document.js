@@ -185,16 +185,16 @@ const Document = (data = {}) => {
     <p style="margin: 0.1pt 0in 0.0001pt; text-align: justify;  "><span style="font-size: 12.5pt;">&nbsp;</span></p>
     <h1 style="font-size: 1rem; text-align: left;   ;">Remedy:</h1>
     <p style="margin: 0.85pt 34.85pt 0.0001pt 5.2pt; text-align: justify; line-height: 118%;  ">Any employee who violates this policy is subject to disciplinary action, up to and including termination of employment.</p>
-    <p style="text-align: justify; margin: 0in 0in 0.0001pt;  "><span style="font-size: 14.0pt;">&nbsp;</span></p>
+    
     <p style="margin: 0.25pt 0in 0.0001pt; text-align: justify;  "><span style="font-size: 17.5pt;">&nbsp;</span></p>
     <h1 style="font-size: 1rem; text-align: left;   ;"><u>Employee Acknowledgment</u></h1>
     <p style="text-align: justify; margin: 0in 0in 0.0001pt;  "><strong><span style="font-size: 9.0pt; ;">&nbsp;</span></strong></p>
     <p style="margin: 5.3pt 83.2pt 0.0001pt 5.2pt; text-align: justify; line-height: 1.5;  ">I understand compliance with the Non-Discrimination policy is a condition of my employment with TUMI STAFFING, INC., and I agree to abide by the above policy.</p>
     <p style="text-align: justify; margin: 0in 0in 0.0001pt;  "><span style="font-size: 14.0pt;">&nbsp;</span></p>
-    <p style="text-align: justify; margin: 0in 0in 0.0001pt;  "><span style="font-size: 14.0pt;">&nbsp;</span></p>
-    <p style="margin: 0.1pt 0in 0.0001pt; text-align: justify;  "><span style="font-size: 11.0pt;">&nbsp;</span></p>
+    
+    
     <p style=" text-align: justify;  ">Employee Name (printed)&nbsp;&nbsp;&nbsp; <u>` + applicantName + `</u></p>
-    <p style="text-align: justify; margin: 0in 0in 0.0001pt;  "><span style="font-size: 10.0pt; ">&nbsp;</span></p>
+    
     <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify;  "><span style="font-size: 11.0pt; ">&nbsp;</span></p>
     <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify;  "><span style="font-size: 11.0pt; ">&nbsp;</span></p>
     

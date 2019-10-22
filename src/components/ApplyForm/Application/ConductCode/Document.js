@@ -5,7 +5,7 @@
  * @param {*} data.date
  * @param {*} data.signature
  */
-const Document = (data = {}, lenguageform) => {
+const Document = (data = {}, lenguageform = 'en') => {
     const { applicantName, date, signature } = data;
     return lenguageform === 'en' 
     ?   `<div class="WordSection1">
