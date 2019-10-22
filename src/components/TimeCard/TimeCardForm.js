@@ -82,7 +82,9 @@ class TimeCardForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
-        const {markId} = nextProps;        // const markId = 3526;
+        const {markId} = nextProps.item;
+        alert(markId);
+        console.log(nextProps.item);
         
         if(markId && nextProps.markId !== this.state.id && nextProps.openModal){
             this.props.client.query({
@@ -94,7 +96,8 @@ class TimeCardForm extends Component {
             })
             .then(({data: {mark}}) => {
                 const {id, entityId, markedDate, inboundMarkTypeId, inboundMarkTime, outboundMarkTypeId, outboundMarkTime, positionId, EmployeeId, notes} = mark;
-                
+                alert("Fetched");
+                console.log(mark)
                 this.setState({
                     id,                    
                     entityId,
@@ -119,8 +122,10 @@ class TimeCardForm extends Component {
                     this.getEmployees();
                 });
             })
-            .catch(_ => {
-                this.props.handleOpenSnackbar('error', 'Failed to fetch mark info.');                
+            .catch(error => {
+                this.props.handleOpenSnackbar('error', 'Failed to fetch mark info.');       
+                console.clear();
+                console.log(error)         ;
             })
         } if (!nextProps.openModal) {
             this.setState({
