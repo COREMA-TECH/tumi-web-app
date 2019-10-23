@@ -151,7 +151,8 @@ class FormsW4 extends Component {
                     postalCode: `${city ? city.trim() : ""}, ${state ? state.trim() : ""}; ${zipCode || ""}`,
                     estadoCivil: (marital && marital === 1 && !this.state.estadoCivil2) ? true : false,
                     estadoCivil1: (marital && marital === 2 && !this.state.estadoCivil2) ? true : false,
-                    excention: exemptions || 0
+                    excention: exemptions || 0,
+                    isCreated: true
                 }));
             })
             .catch(error => {
@@ -408,7 +409,8 @@ class FormsW4 extends Component {
                                                     signature: this.state.signature,
                                                     employeer: this.state.employeer,
                                                     firstEmployeeDate: this.state.firstEmployeeDate,
-                                                    idNumber: this.state.idNumber
+                                                    idNumber: this.state.idNumber,
+                                                    isCreated: this.state.isCreated
                                                 }}
                                             />
                                             {/* <div id="DocumentPDF" className="signature-information">

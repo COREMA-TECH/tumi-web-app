@@ -25,13 +25,14 @@ const EMPTY_FUNCTION = _ => {};
  * @param {*} props.data.employeer
  * @param {*} props.data.firstEmployeeDate
  * @param {*} props.data.idNumber
+ * @param {*} props.data.isCreated
  */
 const Document = props => {
     const setState = props.setState || EMPTY_FUNCTION;
     const {languageForm, showReadOnlyFields} = props;
     const{ firstName, lastName, socialSecurityNumber, address, estadoCivil,
         estadoCivil1, estadoCivil2, postalCode, socialSecurityExtention, excention,
-        payCheck, excentionYear, signature, employeer, firstEmployeeDate, idNumber
+        payCheck, isCreated, excentionYear, signature, employeer, firstEmployeeDate, idNumber
     } = props.data;
 
     return <Fragment>
@@ -229,7 +230,7 @@ const Document = props => {
                                 }}>
                                     1 Su primer nombre e inicial del segundo
                                     <input
-                                        //disabled={this.state.isCreated}
+                                        disabled={isCreated}
                                         type="text"
                                         style={{ width: '100%', border: 0 }}
                                         id="firstName"
@@ -249,7 +250,7 @@ const Document = props => {
                                 }}>
                                     Apellido
                                     <input
-                                        //disabled={this.state.isCreated}
+                                        disabled={isCreated}
                                         type="text"
                                         style={{ width: '100%', border: 0 }}
                                         id="lastName"
@@ -268,7 +269,7 @@ const Document = props => {
                                 }}>
                                     <span style={{ fontWeight: '900' }}>2 Su número de Seguro Social</span>
                                     <input
-                                        //disabled={this.state.isCreated}
+                                        disabled={isCreated}
                                         type="text" style={{ width: '100%', border: 0 }}
                                         id="socialSecurityNumber"
                                         value={socialSecurityNumber}
@@ -292,7 +293,7 @@ const Document = props => {
                                     <div data-font-name="g_d8_f3" data-angle={0}
                                         data-canvas-width="218.47000000000006">Dirección (número de casa y calle o ruta rural)
                                         <input
-                                            //disabled={this.state.isCreated}
+                                            disabled={isCreated}
                                             type="text"
                                             style={{ width: '100%', border: 0 }}
                                             id="address"
@@ -322,6 +323,7 @@ const Document = props => {
                                             name="estadoCivil"
                                             value={estadoCivil}
                                             defaultChecked={estadoCivil}
+                                            disabled={isCreated}
                                             onChange={(e) => {
                                                 setState({
                                                     estadoCivil: e.target.checked,
@@ -335,6 +337,7 @@ const Document = props => {
                                             name="estadoCivil"
                                             value={estadoCivil1}
                                             defaultChecked={estadoCivil1}
+                                            disabled={isCreated}
                                             onChange={(e) => {
                                                 setState({
                                                     estadoCivil1: e.target.checked,
@@ -348,6 +351,7 @@ const Document = props => {
                                             name="estadoCivil"
                                             value={estadoCivil2}
                                             defaultChecked={estadoCivil2}
+                                            disabled={isCreated}
                                             onChange={(e) => {
                                                 setState({
                                                     estadoCivil2: e.target.checked,
@@ -376,7 +380,7 @@ const Document = props => {
                                         data-canvas-width="218.47000000000006">Ciudad o pueblo,
                                         estado y código postal (ZIP)
                                         <input
-                                            //disabled={this.state.isCreated}
+                                            disabled={isCreated}
                                             type="text"
                                             style={{ width: '100%', border: 0 }}
                                             id="postalCode"
@@ -410,7 +414,7 @@ const Document = props => {
                                             reemplazo. ▶
                                         </span>
                                         <input
-                                            //disabled={this.state.isCreated}
+                                            disabled={isCreated}
                                             type="checkbox"
                                             id="socialSecurityExtention"
                                             value={socialSecurityExtention}
@@ -515,7 +519,7 @@ const Document = props => {
                                                     borderBottom: 'solid 1px #000'
                                                 }}>
                                                     <input
-                                                        //disabled={this.state.isCreated}
+                                                        disabled={isCreated}
                                                         type="text"
                                                         style={{ border: 0, height: '16.5px' }}
                                                         id="excention"
@@ -534,7 +538,7 @@ const Document = props => {
                                                     borderBottom: 'solid 1px #000'
                                                 }}>
                                                     <input
-                                                        //disabled={this.state.isCreated}
+                                                        disabled={isCreated}
                                                         type="text"
                                                         style={{ border: 0, height: '16.5px' }}
                                                         id="payCheck"
@@ -558,7 +562,7 @@ const Document = props => {
                                             <tr>
                                                 <td style={{ lineHeight: "1", verticalAlign: 'top' }}>
                                                     <input
-                                                        //disabled={this.state.isCreated}
+                                                        disabled={isCreated}
                                                         type="text"
                                                         style={{ border: 0, height: '16.5px' }}
                                                         id="excention-year"
@@ -587,7 +591,7 @@ const Document = props => {
                                             backgroundColor: '#f9f9f9',
                                             // cursor: 'pointer'
                                         }} onClick={() => {
-                                            // if(this.state.isCreated === false){
+                                            // if(isCreated === false){
                                             //     this.setState({
                                             //         openSignature: true,
                                             //     })
@@ -628,7 +632,7 @@ const Document = props => {
                                         />
                                     ) : (
                                         <input
-                                            //disabled={this.state.isCreated}
+                                            //disabled={isCreated}
                                             type="text" style={{ width: '100%', border: 0 }}
                                             id="employeer"
                                             value={employeer}
@@ -654,7 +658,7 @@ const Document = props => {
                                         />
                                     ) : (
                                         <input
-                                            //disabled={this.state.isCreated}
+                                            //disabled={isCreated}
                                             type="text"
                                             style={{ width: '100%', border: 0, height: '65px' }}
                                             id="firstEmployeeDate"
@@ -681,7 +685,7 @@ const Document = props => {
                                         />
                                     ) : (
                                         <input
-                                            //disabled={this.state.isCreated}
+                                            //disabled={isCreated}
                                             type="text"
                                             style={{ width: '100%', border: 0, height: '65px' }}
                                             id="idNumber"
@@ -941,6 +945,7 @@ const Document = props => {
                                     }}>
                                         1 Your first name and middle initial 
                                     <input
+                                        disabled={isCreated}
                                         type="text"
                                         style={{ width: '100%', border: 0 }}
                                         id="firstName"
@@ -960,7 +965,7 @@ const Document = props => {
                                     }}>
                                         Last name 
                                         <input
-                                            //disabled={this.state.isCreated}
+                                            disabled={isCreated}
                                             type="text"
                                             style={{ width: '100%', border: 0 }}
                                             id="lastName"
@@ -979,7 +984,7 @@ const Document = props => {
                                     }}>
                                         <span style={{ fontWeight: '900' }}>2 Your social security Number</span>
                                         <input
-                                            //disabled={this.state.isCreated}
+                                            disabled={isCreated}
                                             type="text" style={{ width: '100%', border: 0 }}
                                             id="socialSecurityNumber"
                                             value={socialSecurityNumber}
@@ -1003,7 +1008,7 @@ const Document = props => {
                                         <div data-font-name="g_d8_f3" data-angle={0} data-canvas-width="218.47000000000006">
                                             Home address (number and street or rural route) 
                                         <input
-                                                //disabled={this.state.isCreated}
+                                                disabled={isCreated}
                                                 type="text"
                                                 style={{ width: '100%', border: 0 }}
                                                 id="address"
@@ -1034,7 +1039,8 @@ const Document = props => {
                                                 id="estadoCivilSingle"
                                                 value={estadoCivil}
                                                 style={{ paddingTop: "5px" }}
-                                                defaultChecked={estadoCivil}
+                                                disabled={isCreated}
+                                                checked={estadoCivil}
                                                 onChange={(e) => {
                                                     setState({
                                                         estadoCivil: true,
@@ -1057,8 +1063,9 @@ const Document = props => {
                                                 name="estadoCivil"
                                                 id="estadoCivil"
                                                 value={estadoCivil1}
-                                                defaultChecked={estadoCivil1}
+                                                checked={estadoCivil1}
                                                 style={{ paddingTop: "5px" }}
+                                                disabled={isCreated}
                                                 onChange={(e) => {
                                                     setState({
                                                         estadoCivil1: true,
@@ -1083,9 +1090,10 @@ const Document = props => {
                                                         estadoCivil1: false,
                                                     })
                                                 }}
-                                                defaultChecked={estadoCivil2}
+                                                checked={estadoCivil2}
                                                 id="estadoCivil2"
                                                 style={{ display: "none" }}
+                                                disabled={isCreated}
                                             />
                                             <label style={{ fontSize: "18px", paddingLeft: "5px" }} htmlFor="estadoCivil2"
                                                 dangerouslySetInnerHTML={{
@@ -1113,7 +1121,7 @@ const Document = props => {
                                         <div data-font-name="g_d8_f3" data-angle={0}
                                             data-canvas-width="218.47000000000006">City or town, state, and ZIP code
                                         <input
-                                                //disabled={this.state.isCreated}
+                                                disabled={isCreated}
                                                 type="text"
                                                 style={{ width: '100%', border: 0 }}
                                                 id="postalCode"
@@ -1139,7 +1147,7 @@ const Document = props => {
                                         <div data-font-name="g_d8_f2" data-angle={0}
                                             data-canvas-width="408.9536499999999"><strong>4  If your last name differs from that shown on your social security card, check here. You must call 800-772-1213 for a replacement card. ▶
                                         <input
-                                                    //disabled={this.state.isCreated}
+                                                    disabled={isCreated}
                                                     type="checkbox"
                                                     id="socialSecurityExtention"
                                                     value={socialSecurityExtention}
@@ -1234,7 +1242,7 @@ const Document = props => {
                                                         borderBottom: 'solid 1px #000'
                                                     }}>
                                                         <input
-                                                            //disabled={this.state.isCreated}
+                                                            disabled={isCreated}
                                                             type="text"
                                                             style={{ border: 0, height: '16.5px' }}
                                                             id="excention"
@@ -1253,7 +1261,7 @@ const Document = props => {
                                                         borderBottom: 'solid 1px #000'
                                                     }}>
                                                         <input
-                                                            //disabled={this.state.isCreated}
+                                                            disabled={isCreated}
                                                             type="text"
                                                             style={{ border: 0, height: '16.5px' }}
                                                             id="payCheck"
@@ -1277,6 +1285,7 @@ const Document = props => {
                                                 <tr>
                                                     <td style={{ lineHeight: "1", verticalAlign: 'top' }}>
                                                         <input
+                                                            disabled={isCreated}
                                                             type="text"
                                                             style={{ border: 0, height: '16.5px' }}
                                                             id="excention-year"
@@ -1303,7 +1312,7 @@ const Document = props => {
                                                 backgroundColor: '#f9f9f9',
                                                 // cursor: 'pointer'
                                             }} onClick={() => {
-                                                // if(this.state.isCreated === false){
+                                                // if(isCreated === false){
                                                 //     this.setState({
                                                 //         openSignature: true,
                                                 //     })
@@ -1335,6 +1344,7 @@ const Document = props => {
                                             />
                                         ) : (
                                             <input
+                                            //disabled={isCreated}
                                             type="text" style={{ width: '100%', border: 0 }}
                                             id="employeer"
                                             value={employeer}
@@ -1360,7 +1370,7 @@ const Document = props => {
                                                 />
                                         ) : (
                                             <input
-                                                //disabled={this.state.isCreated}
+                                                //disabled={isCreated}
                                                 type="text"
                                                 style={{ width: '100%', border: 0, height: '65px' }}
                                                 id="firstEmployeeDate"
@@ -1387,7 +1397,7 @@ const Document = props => {
                                                 />
                                         ) : (
                                             <input
-                                                //disabled={this.state.isCreated}
+                                                //disabled={isCreated}
                                                 type="text"
                                                 style={{ width: '100%', border: 0, height: '65px' }}
                                                 id="idNumber"
