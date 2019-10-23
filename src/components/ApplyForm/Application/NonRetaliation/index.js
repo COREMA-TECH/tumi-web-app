@@ -16,13 +16,15 @@ class NonRetaliation extends Component {
             signature: '',
             downloading: false,
             applicantName: '',
-            haveDocument: false
+            haveDocument: false,
+            openSignature: false
         }
     }
 
     handleSignature = (value) => {
         this.setState(_ => ({
-            signature: value
+            signature: value,
+            openSignature: !this.state.openSignature
         }), _ => {
             this.createStatesFields(this.state.signature, this.state.applicantName);
         });
@@ -151,7 +153,7 @@ class NonRetaliation extends Component {
 
     saveDocument = (url) => {
         const { fullName, signature } = this.state;
-        const jsonFields = JSON.stringify({ fullName, signature });
+        const jsonFields = JSON.stringify({ fullName, signature, date: new Date().toISOString().substring(0, 10) });
 
         this.props.client
             .mutate({
@@ -203,7 +205,7 @@ class NonRetaliation extends Component {
 
     enableSignature = () => {
         this.setState(_ => {
-            return { signature: false }
+            return { openSignature: !this.state.openSignature }
         });
     }
 
@@ -228,9 +230,9 @@ class NonRetaliation extends Component {
                                     </button>
                                 </div>
                                 <div id="DocumentPDF" className="signature-information">
-                                    <Document signature={this.state.signature} applicantName={this.state.applicantName} />
-                                    { !this.state.signature ?  
-                                        <Signature applicationId={this.props.applicationId} handleSignature={this.handleSignature} />
+                                    <Document signature={this.state.signature} applicantName={this.state.applicantName} date={this.state.date} />
+                                    { this.state.openSignature ?  
+                                        <Signature applicationId={this.props.applicationId} handleSignature={this.handleSignature} openSignature={this.state.openSignature} enableSignature={this.enableSignature} />
                                         : ''
                                     }
                                 </div>
