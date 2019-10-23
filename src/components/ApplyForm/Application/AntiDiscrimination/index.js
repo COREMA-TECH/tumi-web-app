@@ -145,7 +145,7 @@ class AntiDiscrimination extends Component {
                     this.setState({
                         id: record.id,
                         url: record.url,
-                        name,
+                        name: `${firstName || ''} ${middleName || ''} ${lastName || ''} ${lastName2 || ''}`,
                         signature,
                         date,
                         loadingData: false
