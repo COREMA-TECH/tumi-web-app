@@ -2,25 +2,12 @@ import React, {Component, Fragment} from 'react';
 import { withApollo } from 'react-apollo';
 import {GET_DOCUMENT_TYPES, GET_HISTORICAL_DOCUMENTS} from './Queries';
 import Dropdown from './Dropdown';
+import typeDocuments from '../../../../data/TypeDocuments';
 
 class HistoricalNHP extends Component {
 
     state = {
-        typeDocuments: [],
         historicalDocuments: []
-    }
-
-    getTypeDocument = () => {
-        this.props.client.query({
-            query: GET_DOCUMENT_TYPES,
-            fetchPolicy: 'no-cache'
-        }).then(({ data }) => {
-            this.setState({
-                typeDocuments: data ? data.applicationDocumentTypes : []
-            })
-        }).catch(error => {
-            console.log(error)
-        });
     }
 
     getHistoricalDocuments = () => {
@@ -40,12 +27,11 @@ class HistoricalNHP extends Component {
     }
 
     componentDidMount() {
-        this.getTypeDocument();
         this.getHistoricalDocuments();
     }
 
     render() {
-        const {typeDocuments, historicalDocuments} = this.state;
+        const {historicalDocuments} = this.state;
         return <Fragment>
             <div className="card">
                 <div className="card-body">

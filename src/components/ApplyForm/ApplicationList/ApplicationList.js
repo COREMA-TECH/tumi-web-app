@@ -261,7 +261,7 @@ class ApplicationList extends Component {
 			let property = this.state.property.value;
 			let department = this.state.department.value;
 			let variables = {
-				idEntity: property ? property : null,				
+				idEntity: property ? property : null,
 			};
 			if (localStorage.getItem('isEmployee') == 'true')
 				variables = { ...variables, idUsers: localStorage.getItem('LoginId') }
@@ -420,9 +420,15 @@ class ApplicationList extends Component {
 				this.state.filterText === ''
 					? applications
 					: applications.filter((_, i) => {
+						let { id, firstName, lastName } = _;
+						let employee = { id, firstName, lastName };
+						let filterValue = [];
+						Object.keys(employee).forEach(key => {
+							if (employee[key])
+								filterValue.push(employee[key]);
+						})
 						return (
-							(_.firstName + _.middleName + _.lastName)
-								.toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
+							filterValue.join(' ').toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
 						);
 					});
 

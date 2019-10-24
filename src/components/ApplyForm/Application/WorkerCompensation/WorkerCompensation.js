@@ -207,7 +207,8 @@ class WorkerCompensation extends Component {
                 query: GET_APPLICANT_INFO,
                 variables: {
                     id: id
-                }
+                },
+                fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
                 if (data.applications[0] !== null) {
@@ -241,7 +242,7 @@ class WorkerCompensation extends Component {
                     const formData = fd ? JSON.parse(fd) : {};
                     this.setState({
                         signature: formData.signature,
-                        applicantName: formData.applicantName,
+                        //applicantName: formData.applicantName,
                         date: this.formatDate(formData.date),
                         applicantAddress: formData.applicantAddress,
                         applicantCity: formData.applicantCity,
