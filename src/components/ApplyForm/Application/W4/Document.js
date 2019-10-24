@@ -649,7 +649,7 @@ const Document = props => {
                                     width: '15%',
                                     verticalAlign: 'top'
                                 }}>
-                                    9 Primera fecha de empleo
+                                    9 Primera fecha de empleo <br/>
                                     {showReadOnlyFields ? (
                                         <label 
                                             dangerouslySetInnerHTML={{
@@ -660,7 +660,7 @@ const Document = props => {
                                         <input
                                             //disabled={isCreated}
                                             type="text"
-                                            style={{ width: '100%', border: 0, height: '65px' }}
+                                            style={{ width: '100%', border: 0}}
                                             id="firstEmployeeDate"
                                             value={firstEmployeeDate}
                                             onChange={(e) => {
@@ -687,7 +687,7 @@ const Document = props => {
                                         <input
                                             //disabled={isCreated}
                                             type="text"
-                                            style={{ width: '100%', border: 0, height: '65px' }}
+                                            style={{ width: '100%', border: 0}}
                                             id="idNumber"
                                             value={idNumber}
                                             onChange={(e) => {
@@ -1361,7 +1361,7 @@ const Document = props => {
                                         width: '15%',
                                         verticalAlign: 'top'
                                     }}>
-                                        9 First date of employment
+                                        9 First date of employment <br/>
                                         {showReadOnlyFields ? (
                                                 <label 
                                                     dangerouslySetInnerHTML={{
@@ -1372,7 +1372,7 @@ const Document = props => {
                                             <input
                                                 //disabled={isCreated}
                                                 type="text"
-                                                style={{ width: '100%', border: 0, height: '65px' }}
+                                                style={{ width: '100%', border: 0 }}
                                                 id="firstEmployeeDate"
                                                 value={firstEmployeeDate}
                                                 onChange={(e) => {
@@ -1399,7 +1399,7 @@ const Document = props => {
                                             <input
                                                 //disabled={isCreated}
                                                 type="text"
-                                                style={{ width: '100%', border: 0, height: '65px' }}
+                                                style={{ width: '100%', border: 0 }}
                                                 id="idNumber"
                                                 value={idNumber}
                                                 onChange={(e) => {

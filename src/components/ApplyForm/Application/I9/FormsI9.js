@@ -68,7 +68,8 @@ class FormsI9 extends Component {
                 signature: value,
                 openSignature: false,
                 isEmployeeSignature: false,
-                date: new Date().toISOString().substring(0, 10)
+                date: new Date().toISOString().substring(0, 10),
+                todayDate: new Date().toISOString().substring(0, 10),
             }, () => {
                 this.validateI9();
             });
@@ -76,7 +77,7 @@ class FormsI9 extends Component {
             this.setState({
                 signature1: value,
                 openSignature: false,
-                date: new Date().toISOString().substring(0, 10)
+                todayDate2: new Date().toISOString().substring(0, 10)
             }, () => {
                 //this.insertAntiHarrasment(this.state);
             });
@@ -84,7 +85,7 @@ class FormsI9 extends Component {
             this.setState({
                 signature2: value,
                 openSignature: false,
-                date: new Date().toISOString().substring(0, 10)
+                docL5: new Date().toISOString().substring(0, 10)
             }, () => {
                 //this.insertAntiHarrasment(this.state);
             });
@@ -100,7 +101,7 @@ class FormsI9 extends Component {
             this.setState({
                 signature4: value,
                 openSignature: false,
-                date: new Date().toISOString().substring(0, 10)
+                todayDateDay1: new Date().toISOString().substring(0, 10)
             }, () => {
                 //this.insertAntiHarrasment(this.state);
             });
