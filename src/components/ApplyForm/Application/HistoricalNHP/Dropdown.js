@@ -39,11 +39,11 @@ class DropDown extends Component {
         const { classes } = this.props;
         let data = this.props.data || [];
         return <div className={classes.root}>
-            {data.map(item => {
+            {data.map((item, i) => {
                 const historical = this.props.historicalDocuments.filter(h => h.ApplicationDocumentTypeId === item.id);
-                return <ExpansionPanel className="panel-dropdown" style={{ marginTop: 0 }} onChange={this.handleChange(uuidv4())}>
+                return <ExpansionPanel key={i} className="panel-dropdown" style={{ marginTop: 0 }} onChange={this.handleChange(uuidv4())}>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography className={classes.heading}>{item.name}</Typography>
+                        <Typography className={classes.heading}>{item.label}</Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails className="panel-dropdown-body">
                         <Typography>

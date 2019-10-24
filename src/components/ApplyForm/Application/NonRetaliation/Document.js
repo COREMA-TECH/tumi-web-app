@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
 
 const Document = props => {
-    const {applicantName, signature} = props;
+    const {applicantName, signature, date} = props;
     return(
         <Fragment>
-            <h3>Tumi Staffing Policy on Non-­‐Retaliation.</h3>
+            <h3>Tumi Staffing Policy on Non‐Retaliation.</h3>
             <p>Tumi Staffing policy prohibits the taking of any retaliatory action for reporting or inquiring about alleged improper or wrongful activity.&nbsp; &nbsp;&nbsp;</p>
             <p><span style={{textDecoration: 'underline'}}><strong>Encouragement of Reporting.</strong></span></p>
             <p>Tumi Staffing Managers and employees are encouraged to report in good faith all information regarding alleged improper or wrongful activity that may constitute:&nbsp; &nbsp;&nbsp;</p>
@@ -27,15 +27,16 @@ const Document = props => {
             <table style={{borderCollapse: 'collapse', width: '100%'}} border={0}>
             <tbody>
                 <tr>
-                    <td style={{width: '15.7839%'}}>Employee Name:&nbsp; &nbsp;&nbsp;</td>
-                    <td style={{width: '84.216%'}} colSpan={2}>{applicantName}</td>
+                    <td style={{width: '20%'}}>Employee Name:&nbsp; &nbsp;&nbsp;</td>
+                    <td style={{width: '60%'}}>{applicantName}</td>
+                    <td style={{width: '20%'}}>Date: {date}</td>
                 </tr>
                 <tr>
                     <td style={{width: '15.7839%'}}>Employee Signature</td>
                     <td style={{width: '37.447%'}}>
                         {
                             signature ? 
-                                <img src={`${signature}`} />
+                                <img src={`${signature}`} width="50%" />
                             : ''
                             }
                     </td>

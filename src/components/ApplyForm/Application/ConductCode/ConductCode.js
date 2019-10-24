@@ -65,7 +65,8 @@ class ConductCode extends Component {
 				query: GET_APPLICANT_INFO,
 				variables: {
 					id: id
-				}
+				},
+				fetchPolicy: 'no-cache'
 			})
 			.then(({ data }) => {
 				if (data.applications[0] !== null) {
@@ -98,7 +99,7 @@ class ConductCode extends Component {
                     const formData = fd ? JSON.parse(fd) : {};
 					this.setState({
 						signature: formData.signature,
-						applicantName: formData.applicantName,
+						//applicantName: formData.applicantName,
 						date: this.formatDate(formData.date),
 						urlPDF: data.lastApplicantLegalDocument.url
 					});

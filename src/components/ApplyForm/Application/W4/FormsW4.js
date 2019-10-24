@@ -135,11 +135,11 @@ class FormsW4 extends Component {
     fetchApplicantInfo = _ => {
         this.props.client.query({
             query: GET_GENERAL_INFO,
-            variables: { id: this.props.applicationId }
+            variables: { id: this.props.applicationId },
+            fetchPolicy: 'no-cache'
         })
             .then(({ data: { applications: [applicant] } }) => {
-                const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo, stateInfo, marital, exemptions } = applicant;
-                
+                const { firstName, lastName, socialSecurityNumber, streetAddress: address, zipCode, cityInfo, stateInfo, marital, exemptions } = applicant;                
                 const city = cityInfo ? cityInfo.Name : "";
                 const state = stateInfo ? stateInfo.Name : "";
 

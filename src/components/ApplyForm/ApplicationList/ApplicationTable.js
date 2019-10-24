@@ -206,7 +206,6 @@ class ApplicationTable extends React.Component {
         if (this.state.loadingRemoving) {
             return <LinearProgress />;
         }
-        console.log({ items });
         return (
 
             <Route

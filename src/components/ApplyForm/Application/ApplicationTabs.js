@@ -167,8 +167,8 @@ class CustomizedTabs extends React.Component {
                 return <FormsW4 applicationId={this.state.applicationId} changeTabState={this.changeTabState} />;
             case 11:
                 return <ApplicantDocument applicationId={this.state.applicationId} />;
-            case 12:
-                return <IndependentContract applicationId={this.state.applicationId} />;
+            // case 12:
+            //     return <IndependentContract applicationId={this.state.applicationId} />;
 
         }
     };
@@ -222,11 +222,11 @@ class CustomizedTabs extends React.Component {
                             label={applyTabs[3].label}
                             disabled={this.state.disableTabs}
                         />
-                        {this.state.independentContract ? <Tab
+                        {/* {this.state.independentContract ? <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected", label: 'Tab-fa-icon' }}
                             label={applyTabs[12].label}
-                        /> : <React.Fragment />}
+                        /> : <React.Fragment />} */}
 
 
                     </Tabs>

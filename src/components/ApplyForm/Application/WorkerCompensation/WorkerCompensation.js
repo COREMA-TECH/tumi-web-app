@@ -207,7 +207,8 @@ class WorkerCompensation extends Component {
                 query: GET_APPLICANT_INFO,
                 variables: {
                     id: id
-                }
+                },
+                fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
                 if (data.applications[0] !== null) {
@@ -241,7 +242,7 @@ class WorkerCompensation extends Component {
                     const formData = fd ? JSON.parse(fd) : {};
                     this.setState({
                         signature: formData.signature,
-                        applicantName: formData.applicantName,
+                        //applicantName: formData.applicantName,
                         date: this.formatDate(formData.date),
                         applicantAddress: formData.applicantAddress,
                         applicantCity: formData.applicantCity,
@@ -411,14 +412,36 @@ class WorkerCompensation extends Component {
                     }}
                     aria-labelledby="form-dialog-title">
                     <DialogTitle className="worker-compensation-form ">
-                        <h1 className="primary apply-form-container__label text-center">Please Complete and
-                            Sign</h1>
+                        <h1 className="primary apply-form-container__label text-center">Please Complete and Sign</h1>
                     </DialogTitle>
                     <DialogContent className="no-margin">
                         <div className="col-12 form-section-1">
                             <div className="row">
-                                <div className="col-12">
-                                    <label className="primary">Is this a initial notification?</label>
+                            <div className="col-6">
+                                    <label className="primary">Initialing the network program (companywide)</label>
+                                    <label className="switch">
+                                        <input
+                                            id="initialNotification"
+                                            form="worker-compensation-form"
+                                            name="worker-compensation-form"
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    initialProgram: event.target.checked
+                                                });
+                                            }}
+                                            checked={this.state.initialProgram}
+                                            value={this.state.initialProgram}
+                                            type="checkbox"
+                                            className="form-control"
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="10"
+                                        />
+                                        <p className="slider round"></p>
+                                    </label>
+                                </div>
+                                <div className="col-6">
+                                    <label className="primary">Initial employee notification (new hire)</label>
                                     <label className="switch">
                                         <input
                                             id="initialNotification"
@@ -440,7 +463,7 @@ class WorkerCompensation extends Component {
                                         <p className="slider round"></p>
                                     </label>
                                 </div>
-                                <div className="col-12">
+                                <div className="col-6">
                                     <label className="primary">Is this a injury notification?</label>
                                     <label className="switch">
                                         <input
@@ -463,9 +486,7 @@ class WorkerCompensation extends Component {
                                         <p className="slider round"></p>
                                     </label>
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-12">
+                                <div className="col-6">
                                     <label className="primary">Injury Date</label>
                                     <div class="input-group flex-nowrap">
                                         <DatePicker
@@ -542,6 +563,9 @@ class WorkerCompensation extends Component {
                                 <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(
                                         Document({
+                                            initialProgram: this.state.initialProgram,
+                                            initialNotification: this.state.initialNotification,
+                                            injuryNotification: this.state.injuryNotification,
                                             signature: this.state.signature,
                                             date: this.formatDate(this.state.date, true),
                                             applicantName: this.state.applicantName,

@@ -63,7 +63,8 @@ class AntiHarassment extends Component {
                 query: GET_APPLICANT_INFO,
                 variables: {
                     id: id
-                }
+                },
+                fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
                 if (data.applications[0] !== null) {
@@ -95,7 +96,7 @@ class AntiHarassment extends Component {
                         //id: 0, 
                         signature: formData.signature,
                         //content: data.applications[0].harassmentPolicy.content,
-                        applicantName: formData.applicantName,
+                        //applicantName: formData.applicantName,
                         date: this.formatDate(formData.date),
                         urlPDF: data.lastApplicantLegalDocument.url
                     });

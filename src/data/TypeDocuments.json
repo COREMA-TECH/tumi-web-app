@@ -1,0 +1,52 @@
+[
+    {
+        "id": 16,
+        "name": "W4",
+        "label": "W4"
+    },
+    {
+        "id": 12,
+        "name": "I9",
+        "label": "I9"
+    },
+    {
+        "id": 7,
+        "name": "Background Check",
+        "label": "Background Check"
+    },
+    {
+        "id": 11,
+        "name": "Harassment Policies",
+        "label": "Anti Harassment"
+    },
+    {
+        "id": 19,
+        "name": "Anti Discrimination",
+        "label": "Anti Discrimination"
+    },
+    {
+        "id": 10,
+        "name": "Non Disclosure",
+        "label": "Non-Disclousure"
+    },
+    {
+        "id": 21,
+        "name": "Non Retaliation",
+        "label": "Non Retaliation"
+    },
+    {
+        "id": 8,
+        "name": "Conduct Code",
+        "label": "Code of Conduct"
+    },
+    {
+        "id": 22,
+        "name": "Benefit Form",
+        "label": "Benefit election form"
+    },
+    {
+        "id": 17,
+        "name": "Worker Compensation",
+        "label": "Worker's Compensation"
+    }
+]
