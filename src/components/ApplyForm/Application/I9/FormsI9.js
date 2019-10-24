@@ -168,7 +168,8 @@ class FormsI9 extends Component {
     fetchApplicantInfo = _ => {
         this.props.client.query({
             query: GET_GENERAL_INFO,
-            variables: { id: this.props.applicationId }
+            variables: { id: this.props.applicationId },
+            fetchPolicy: 'no-cache'
         })
         .then(({data: {applications: [applicant]}}) => {
             const {birthDay: dateOfBirth, firstName, middleName, lastName, lastName2, emailAddress, cellPhone, socialSecurityNumber, 

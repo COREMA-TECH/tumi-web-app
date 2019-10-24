@@ -91,7 +91,8 @@ class BackgroundCheck extends Component {
                 query: GET_GENERAL_INFO,
                 variables: {
                     id: id
-                }
+                },
+                fetchPolicy: 'no-cache'
             })
             .then(({ data: { applications: [applicant] } }) => {
                 if (applicant) {

@@ -90,7 +90,8 @@ class NonRetaliation extends Component {
                 query: GET_APPLICANT_INFO,
                 variables: {
                     id: id
-                }
+                },
+                fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
                 if (data.applications[0] !== null) {

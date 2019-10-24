@@ -68,7 +68,8 @@ class Benefits extends Component{
     fetchApplicantInfo = _ => {
         this.props.client.query({
             query: GET_GENERAL_INFO,
-            variables: { id: this.props.applicationId }
+            variables: { id: this.props.applicationId },
+            fetchPolicy: 'no-cache'
         })
         .then(({ data: { applications: [applicant] } }) => {
             const { firstName, lastName, gender, socialSecurityNumber, birthDay, streetAddress: address, zipCode, cityInfo, stateInfo, marital, homePhone, cellPhone } = applicant;
