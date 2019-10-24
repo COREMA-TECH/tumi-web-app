@@ -26,6 +26,7 @@ import LeftStepper from './LeftStepper';
 import ApplicationList from '../../ApplyForm/ApplicationList/ApplicationList';
 import Schedules from '../../Schedules';
 import PunchesReportConsolidated from '../../PunchesReportConsolidated';
+import FeatureTag from '../../../components/ui-components/FeatureTag';
 
 
 const styles = theme => ({
@@ -1312,7 +1313,7 @@ class GeneralInfoProperty extends Component {
                                 <div className="row">
                                     <div className="col-md-12 col-lg-12">
                                         <div className="row">
-                                            {localStorage.getItem('ShowMarkup') == 'true' ?
+                                            <FeatureTag code="4d025eb6-438f-4270-8b0f-5972057dd861">
                                                 <div className="col-md-6 col-lg-1">
                                                     <label>* Markup</label>
                                                     <InputValid
@@ -1328,7 +1329,7 @@ class GeneralInfoProperty extends Component {
                                                         placeholder='0'
                                                     />
                                                 </div>
-                                                : ''}
+                                            </FeatureTag>
                                             <div className="col-md-6 col-lg-4">
                                                 <label>* Hotel Name</label>
                                                 <InputValid

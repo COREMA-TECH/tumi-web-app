@@ -32,6 +32,7 @@ import Hotels from './hotels';
 import LocationForm from '../../ui-components/LocationForm'
 import makeAnimated from "react-select/lib/animated";
 import Select from 'react-select';
+import FeatureTag from '../../../components/ui-components/FeatureTag';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -1403,7 +1404,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									{localStorage.getItem('ShowMarkup') == 'true' ?
+									<FeatureTag code="4d025eb6-438f-4270-8b0f-5972057dd861">
 										<div className="col-md-6 col-lg-3">
 											<label className="">* Markup</label>
 											<InputForm
@@ -1418,7 +1419,7 @@ class GeneralInformation extends Component {
 												disabled={!this.props.showStepper}
 											/>
 										</div>
-										: ''}
+									</FeatureTag>
 									<div className="col-md-6 col-lg-3">
 										<label className="">* Company Code</label>
 										<InputForm
