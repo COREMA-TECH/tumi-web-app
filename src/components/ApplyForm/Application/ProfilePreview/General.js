@@ -1922,11 +1922,6 @@ class General extends Component {
                         </div>
                         <br />
                         <div className="applicant-card general-table-container">
-                            <div className="table-responsive">
-                                <PunchesReportDetail EmployeeId={this.state.EmployeeId} />
-                            </div>
-                            <br />
-                            <br />
                             <div className="row">
                                 <div className="col-sm-12">
                                     <h5 className="float-left">Location able to work</h5>
