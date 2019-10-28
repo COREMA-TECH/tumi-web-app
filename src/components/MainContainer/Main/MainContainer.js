@@ -4,6 +4,7 @@ import Toolbar from '../Toolbar/Main/Toolbar';
 import Container from '../Container/';
 import MobileMenu from '../../Nav/MobileMenu';
 import Global from 'Generic/Global';
+import CustomBreadcrumb from '../../../components/ui-components/CustomBreadcrumb';
 
 class MainContainer extends Component {
 
@@ -74,6 +75,7 @@ class MainContainer extends Component {
 					<span className="main-container__title"> {this.setTitle(window.location.pathname)}</span>
 					<Toolbar handleOpenSnackbar={this.props.handleOpenSnackbar} />
 				</div>
+				<CustomBreadcrumb />
 			</div>
 	}
 
