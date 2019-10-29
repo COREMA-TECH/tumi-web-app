@@ -57,8 +57,8 @@ class ResetPassword extends Component {
                 .mutate({
                     mutation: UPDATE_USER_PASSWORD,
                     variables: {
-                        id: localStorage.getItem('ChangePassword'),
-                        password: "'" + this.state.password + "','AES_KEY'"
+                        Code_User: localStorage.getItem('CodeUser'),
+                        password: this.state.password
                     },
                     fetchPolicy: 'no-cache'
                 })
