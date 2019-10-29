@@ -1,0 +1,14 @@
+.CustomBreadcrumb {
+    background-color: #ffffff;
+    height: 30px;
+    margin-top: 50px;
+    padding: 4px 15px;
+    position: fixed;
+    width: 100%;
+    z-index: 1050;
+    &-content{
+        background-color: #B3D3DF;
+        border-radius: 13px;
+        padding: 2px 8px;
+    }
+}
