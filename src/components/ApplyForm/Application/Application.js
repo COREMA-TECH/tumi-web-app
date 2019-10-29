@@ -382,7 +382,21 @@ class Application extends Component {
                         try {
                             restrictionData = scheduleExplain ? JSON.parse(scheduleExplain) : "";
                         } catch(error) {
-                            restrictionData = "";
+                            //Data is coming, but it's not a valid json
+                            
+                            if(!scheduleExplain.toLowerCase().includes("days")){
+                                //I can't convert this data to a valid json
+                                restrictionData = "";
+                            } else {
+                                const days = scheduleExplain.match(/[A-Z][A-Z]/g);
+                                const hours = scheduleExplain.match(/\d?\d:\d\d/g);
+
+                                restrictionData = {
+                                    weekDays: [...days],
+                                    startTime: hours[0],
+                                    endTime: hours[1],
+                                }
+                            }
                         }
 
                         this.setState(
