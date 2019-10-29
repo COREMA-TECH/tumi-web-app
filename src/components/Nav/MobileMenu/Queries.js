@@ -22,15 +22,16 @@ export const GET_ROLES_FORMS = gql`
 
 
 export const GET_MENU = gql`
-    query activeFormsByRole($parentId: Int) {
-        activeFormsByRole(ParentId: $parentId, show: true) {
-        Id
-        Name
-        Code
-        Value
-        ParentId
+    query activeFormsByRole($parentId: Int, $IdRole: Int) {
+        activeFormsByRole(ParentId: $parentId, show: true, IdRoles: $IdRole) {
+            Id
+            Name
+            Code
+            Value
+            ParentId
+        }
     }
-}`;
+`;
 
 
 /**

@@ -31,7 +31,8 @@ class MobileMenu extends Component {
         this.props.client.query({
             query: GET_MENU,
             variables: {
-                parentId: this.state.ParentId
+                parentId: this.state.ParentId,
+                IdRole: localStorage.getItem('IdRoles')
             }
         })
         .then(({ data }) => {

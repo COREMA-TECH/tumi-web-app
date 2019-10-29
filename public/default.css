@@ -10689,17 +10689,15 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   text-transform: capitalize; }
 
 .CustomBreadcrumb {
-  background-color: #ffffff;
-  height: 30px;
   margin-top: 50px;
-  padding: 4px 15px;
+  padding: 10px 15px;
   position: fixed;
   width: 100%;
   z-index: 1050; }
   .CustomBreadcrumb-content {
     background-color: #B3D3DF;
-    border-radius: 13px;
-    padding: 2px 8px; }
+    border-radius: 5px;
+    padding: 2px 15px; }
 
 .Header-mobileMenu {
   color: #FFF;
@@ -10988,7 +10986,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
         width: calc(100% - 87px);*/ }
 
 .Tabs-wrapper {
-  background: #FFF;
+  background: transparent;
   border-bottom: solid 1px #dddddd !important;
   padding-top: 1rem;
   padding-left: 15px;

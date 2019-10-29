@@ -466,30 +466,28 @@ class Application extends Component {
     processRestrictions = _ => {        
         const { endTime, startTime, weekDays } = this.state.restrictionData;
 
-        if(!weekDays) {
-            return "";
-        }
-
         return (
             <Fragment>
                 {                    
-                    weekDays.map((day) => {
-                        return (
-                            <span className="badge badge-primary mr-1 mb-1">
-                                {`${day}: ${startTime} - ${endTime}`}
-                                {
-                                    this.state.editing ? (
-                                        <button
-                                            type="button" 
-                                            disabled={!this.state.editing} 
-                                            class="pl-2 pr-2 pt-0 pb-0 btn btn-default tumi-badge-remove" 
-                                            onClick={_ => this.removeScheduleRestriction(day)}>&times;
-                                        </button>
-                                    ) : ""
-                                }                                 
-                            </span>
-                        )
-                    })
+                    weekDays ? (
+                        weekDays.map((day) => {
+                            return (
+                                <span className="badge badge-primary mr-1 mb-1">
+                                    {`${day}: ${startTime} - ${endTime}`}
+                                    {
+                                        this.state.editing ? (
+                                            <button
+                                                type="button" 
+                                                disabled={!this.state.editing} 
+                                                class="pl-2 pr-2 pt-0 pb-0 btn btn-default tumi-badge-remove" 
+                                                onClick={_ => this.removeScheduleRestriction(day)}>&times;
+                                            </button>
+                                        ) : ""
+                                    }                                 
+                                </span>
+                            )
+                        })
+                    ) : ""
                 }
                 
                 <button 
