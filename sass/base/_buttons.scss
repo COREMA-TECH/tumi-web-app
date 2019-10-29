@@ -197,6 +197,10 @@
 		margin-right: 5px;
 	}
 
+	&-primary-button{
+		background-color: $primary-blue;
+	}
+
 	&-modalButton{
 		display: block;
 		
@@ -223,6 +227,17 @@
 		flex-direction: row;
 		flex-wrap: nowrap;
 		justify-content: flex-end;		
+	}
+
+	&-badge-remove{
+		color: $white;
+		cursor: pointer;
+
+		&:hover {
+			background-color: darken($primary-blue, 15%);
+			color: $white;
+			transition: background-color 0.25s ease;
+		}
 	}
 }
 
