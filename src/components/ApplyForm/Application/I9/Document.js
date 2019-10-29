@@ -157,6 +157,7 @@ const Document = props => {
                                                 fontSize: '8pt'
                                             }}>Last Name&nbsp;(Family Name) <input
                                                 value={lastName}
+                                                disabled={true}
                                                 onChange={(e) => {
                                                     setState({
                                                         lastName: e.target.value
@@ -173,6 +174,7 @@ const Document = props => {
                                         fontSize: '8pt'
                                     }}>First Name (Given Name)
                                     <input value={firstName}
+                                            disabled={true}
                                             onChange={(e) => {
                                                 setState({
                                                     firstName: e.target.value
@@ -187,6 +189,7 @@ const Document = props => {
                                         fontSize: '8pt'
                                     }}>Middle Initial
                                     <input value={middleName}
+                                            disabled={true}
                                             onChange={(e) => {
                                                 setState({
                                                     middleName: e.target.value
@@ -200,6 +203,7 @@ const Document = props => {
                                     fontSize: '8pt'
                                 }}>Other
 Last Names Used (if any) <input value={otherLastName}
+                                        disabled={true}
                                         onChange={(e) => {
                                             setState({
                                                 otherLastName: e.target.value
@@ -231,6 +235,7 @@ Last Names Used (if any) <input value={otherLastName}
                                                 fontSize: '8pt'
                                             }}>Address
 (Street Number and Name) <input value={streetNumber}
+disabled={true}
                                                 onChange={(e) => {
                                                     setState({
                                                         streetNumber: e.target.value
@@ -249,6 +254,7 @@ Last Names Used (if any) <input value={otherLastName}
                                     fontSize: '8pt'
                                 }}>Apt.
 Number <input value={aptNumber}
+disabled={true}
                                             onChange={(e) => {
                                                 setState({
                                                     aptNumber: e.target.value
@@ -268,7 +274,7 @@ Town <input value={city}
                                                 setState({
                                                     city: e.target.value
                                                 })
-                                            }} style={{ border: 0, width: '100%' }} type="text" id="city" /></span></td>
+                                            }} disabled={true} style={{ border: 0, width: '100%' }} type="text" id="city" /></span></td>
                                 <td style={{
                                     width: '20%',
                                     height: '17px',
@@ -283,7 +289,7 @@ Town <input value={city}
                                                 setState({
                                                     state: e.target.value
                                                 })
-                                            }} style={{ border: 0, width: '100%' }} type="text" id="state" /></span></td>
+                                            }} disabled={true} style={{ border: 0, width: '100%' }} type="text" id="state" /></span></td>
                                 <td style={{
                                     width: '20%',
                                     height: '17px',
@@ -298,7 +304,7 @@ Town <input value={city}
                                                 setState({
                                                     zipCode: e.target.value
                                                 })
-                                            }} style={{ border: 0, width: '100%' }} type="text" id="zipCode" /></span></td>
+                                            }} disabled={true} style={{ border: 0, width: '100%' }} type="text" id="zipCode" /></span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -316,7 +322,7 @@ Birth (mm/dd/yyyy) <input value={dateOfBirth}
                                             setState({
                                                 dateOfBirth: e.target.value
                                             })
-                                        }} style={{ border: 0, width: '100%' }} type="text"
+                                        }} disabled={true} style={{ border: 0, width: '100%' }} type="text"
                                         id="dateOfBirth" /></span>
                                 </td>
                                 <td style={{ width: '25%' }}><span style={{
@@ -329,7 +335,7 @@ Social Security Number <input value={socialSecurityNumber}
                                             setState({
                                                 socialSecurityNumber: e.target.value
                                             })
-                                        }} style={{ border: 0, width: '100%' }} type="text"
+                                        }} disabled={true} style={{ border: 0, width: '100%' }} type="text"
                                         id="socialSecurityNumber" /></span></td>
                                 <td style={{ width: '25%' }}><span style={{
                                     color: '#000000',
@@ -341,7 +347,7 @@ E-mail Address <input value={email}
                                             setState({
                                                 email: e.target.value
                                             })
-                                        }} style={{ border: 0, width: '100%' }} type="text" id="email" /></span></td>
+                                        }} disabled={true} style={{ border: 0, width: '100%' }} type="text" id="email" /></span></td>
                                 <td style={{ width: '25%' }}><span style={{
                                     color: '#000000',
                                     fontFamily: 'arial, helvetica, sans-serif',
@@ -352,7 +358,7 @@ Telephone Number <input value={telephone}
                                             setState({
                                                 telephone: e.target.value
                                             })
-                                        }} style={{ border: 0, width: '100%' }} type="text" id="telephone" /></span>
+                                        }} disabled={true} style={{ border: 0, width: '100%' }} type="text" id="telephone" /></span>
                                 </td>
                             </tr>
                         </tbody>
@@ -389,6 +395,7 @@ Telephone Number <input value={telephone}
                                         value={oneCheck}
                                         defaultChecked={oneCheck}
                                         style={{ display: "none" }}
+                                        
                                         onChange={(e) => {
                                             setState({
                                                 oneCheck: e.target.checked,
@@ -835,6 +842,8 @@ Date (mm/dd/yyyy) <input
                                                 todayDate2: e.target.value
                                             })
                                         }}
+                                        
+                                        disabled={true}
                                         style={{ width: '100%', border: 0 }}
                                         type="text" /></span></td>
                             </tr>

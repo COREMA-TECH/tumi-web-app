@@ -34,3 +34,13 @@ query applicationUser($Id:Int){
     }
 }
 `;
+
+export const GET_RECRUITERS = gql`
+query recruiters{
+    recruiters{
+      id
+      firstName
+      lastName
+    }
+  }
+`;

@@ -8399,6 +8399,9 @@ label:not(.custom-file-label):not(.form-check-label) {
   margin-left: 5px;
   margin-right: 5px; }
 
+.tumi-primary-button {
+  background-color: #007bff; }
+
 .tumi-modalButton {
   display: block;
   margin-left: auto !important;
@@ -8429,6 +8432,16 @@ label:not(.custom-file-label):not(.form-check-label) {
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: flex-end; }
+
+.tumi-badge-remove {
+  color: #FFF;
+  cursor: pointer; }
+  .tumi-badge-remove:hover {
+    background-color: #0056b3;
+    color: #FFF;
+    -webkit-transition: background-color 0.25s ease;
+    -o-transition: background-color 0.25s ease;
+    transition: background-color 0.25s ease; }
 
 @media (max-width: 767.98px) {
   .tumi-buttonWrapper {
@@ -9120,9 +9133,9 @@ td.rdtMonth:hover, td.rdtYear:hover {
   display: block;
   float: left;
   width: 50%;
-  height: 30px;
+  height: 20px;
   padding: 0;
-  line-height: 30px;
+  line-height: 20px;
   font-size: 11px;
   color: #FFF;
   font-family: Trebuchet, Arial, sans-serif;
@@ -9132,7 +9145,7 @@ td.rdtMonth:hover, td.rdtYear:hover {
 
 .onoffswitch {
   position: relative;
-  width: 75px; }
+  width: 65px; }
 
 .onoffswitch-checkbox {
   display: none; }
@@ -9146,7 +9159,7 @@ td.rdtMonth:hover, td.rdtYear:hover {
   overflow: hidden;
   cursor: pointer;
   border: 1px solid #FFF;
-  border-radius: 20px; }
+  border-radius: 3px; }
 
 .onoffswitch-inner {
   display: block;
@@ -9170,7 +9183,7 @@ td.rdtMonth:hover, td.rdtYear:hover {
 
 .onoffswitch-switch {
   display: block;
-  width: 24px;
+  width: 16px;
   margin: 3px;
   background: #FFF;
   position: absolute;
@@ -9178,7 +9191,6 @@ td.rdtMonth:hover, td.rdtYear:hover {
   bottom: 0;
   right: 44px;
   border: 2px solid #FFF;
-  border-radius: 20px;
   -webkit-transition: all 0.3s ease-in 0s;
   -o-transition: all 0.3s ease-in 0s;
   transition: all 0.3s ease-in 0s; }

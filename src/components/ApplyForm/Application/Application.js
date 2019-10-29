@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 import { GET_APPLICANT_IDEAL_JOBS, GET_APPLICATION_BY_ID, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_VALIDATE_APPLICATION_UNIQUENESS } from '../Queries';
-import { GET_APPLICATION_USER } from './Queries';
+import { GET_APPLICATION_USER, GET_RECRUITERS } from './Queries';
 import { UPDATE_USER_INFO } from './Mutations';
 import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, CREATE_APPLICATION, ADD_INDEPENDENT_CONTRACT } from '../Mutations';
 import withGlobalContent from '../../Generic/Global';
@@ -115,10 +115,8 @@ class Application extends Component {
             loading: false,
             tags: [],
 
-
             // React tag input with suggestions
             positionsTags: [],
-
 
             // Validation
             homePhoneNumberValid: true,
@@ -129,31 +127,60 @@ class Application extends Component {
             positionCatalogTag: [],
             dataWorkOrder: [],
 
-
             openSSNDialog: false,
-            //Open/Close schedule restrictions modal
             openRestrictionsModal: false,
             applicationIdForIndependent: 0,
             hasIndependentContract: false,
             applicationUser: null,
             dbFullName: '',
             dbSocialSecurityNumber: '',
-            dbAddress: ''
+            dbAddress: '',
+            recruiterOptions: [],
+            recruiter: 0,
+            restrictionData: {},            
         };
     }
 
-
     handleChangePositionTag = (positionsTags) => {
         this.setState({ positionsTags });
-    };
+    };    
 
-    handleChange = (positionsTags) => {
-        this.setState({ positionsTags });
-    };
+    toggleRestrictionModal = _ => {
+        this.setState({ openRestrictionsModal: !this.state.openRestrictionsModal });
+    };   
 
-    handleRestrictionModalClose = () => {
-        this.setState({ openRestrictionsModal: false });
-    };
+    fetchRecruiterOptions = _ => {
+        this.props.client.query({
+            query: GET_RECRUITERS,
+            fetchPolicy: "no-cache"
+        })
+        .then(({data: {recruiters}}) => {
+            const recruiterOptions = recruiters.map(item => {
+                return {value: parseInt(item.id), label: `${item.firstName[0].toUpperCase()}${item.firstName.substring(1)} ${item.lastName[0].toUpperCase()}${item.lastName.substring(1)}`} //Capitalizes firstName and lastName                
+            });
+
+            this.setState(_ => {
+                return  { recruiterOptions: [{value: 0, label: "Select a Recruiter"}, ...recruiterOptions] }
+            });
+        })
+        .catch(error => {
+            console.clear();
+            console.log(error);
+        })
+    }
+
+    findSelectedRecruiter = selected => {
+        const defValue = { value: 0, label: "Select a Recruiter" }
+        const found = this.state.recruiterOptions.find(item => item.value == selected);
+
+        return found || defValue;
+    }
+
+    handleRecruiterChange = ({value}) => {
+        this.setState(_ => {
+            return { recruiter: parseInt(value) }
+        })
+    }
 
     // Update user info on application save
     updateUserInfo = applicationId => {
@@ -161,7 +188,7 @@ class Application extends Component {
 
         if (applicationId <= 0 || !applicationUser) {
             return;
-        }
+        } 
 
         this.props.client.mutate({
             mutation: UPDATE_USER_INFO,
@@ -191,6 +218,9 @@ class Application extends Component {
             savingIndependentContract: true
         },
             () => {
+                const nameRef = (this.state.optionHearTumi == 1 || this.state.optionHearTumi == 4) ? parseInt(this.state.recruiter) : this.state.nameReferences;
+                const restrictions = this.state.restrictionData ? JSON.stringify(this.state.restrictionData) : "";
+
                 this.props.client
                     .mutate({
                         mutation: id == 0 ? CREATE_APPLICATION : UPDATE_APPLICATION,
@@ -218,8 +248,8 @@ class Application extends Component {
                                 emailAddress: this.state.emailAddress,
                                 positionApplyingFor: parseInt(this.state.positionApplyingFor),
                                 dateAvailable: this.state.immediately || this.state.immediately === "" ? Date.now() : this.state.dateAvailable,
-                                scheduleRestrictions: this.state.scheduleRestrictions,
-                                scheduleExplain: this.state.scheduleExplain,
+                                scheduleRestrictions: !!this.state.restrictionData.weekDays,
+                                scheduleExplain: restrictions,
                                 convicted: this.state.convicted,
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
@@ -228,7 +258,7 @@ class Application extends Component {
                                 dateCreation: id == 0 ? moment().local().format("MM/DD/YYYY") : this.state.dateCreation,
                                 immediately: this.state.immediately,
                                 optionHearTumi: this.state.optionHearTumi,
-                                nameReferences: this.state.nameReferences
+                                nameReferences: nameRef
                             },
                             codeuser: localStorage.getItem('LoginId'),
                             nameUser: localStorage.getItem('FullName')
@@ -345,7 +375,9 @@ class Application extends Component {
                         let applicantData = data.applications[0];
                         let homePhoneNumberValid = homePhoneNumberValid || '';
                         let cellPhoneNumberValid = applicantData.cellPhone || '';
-                        let { firstName, alias, middleName, lastName, lastName2, socialSecurityNumber, streetAddress, aptNumber, city, state, zipCode } = applicantData;
+                        let { optionHearTumi, firstName, alias, middleName, lastName, lastName2, socialSecurityNumber, streetAddress, aptNumber, city, state, zipCode, nameReferences, scheduleExplain } = applicantData;
+                        
+                        const restrictionData = scheduleExplain ? JSON.parse(scheduleExplain) : "";
 
                         this.setState(
                             {
@@ -399,13 +431,17 @@ class Application extends Component {
                                 dateCreation: applicantData.dateCreation ? moment(applicantData.dateCreation).utc().format("MM/DD/YYYY") : null,
                                 immediately: applicantData.immediately,
                                 optionHearTumi: applicantData.optionHearTumi,
-                                nameReferences: applicantData.nameReferences,
-                                hasIndependentContract: applicantData.independentContract != null
+                                nameReferences: (optionHearTumi === 1 || optionHearTumi === 4) ? "" : nameReferences,
+                                recruiter: (optionHearTumi === 1 || optionHearTumi === 4) ? parseInt(nameReferences) : 0,
+                                hasIndependentContract: applicantData.independentContract != null,
+                                restrictionData
                             },
                             () => {
+                                //Handle schedule restrictions data
+                                this.processRestrictions();
+
                                 //Enable tabs
                                 this.props.enableTabs();
-
 
                                 if (this.state.hasIndependentContract)
                                     this.props.handleContract();
@@ -416,11 +452,9 @@ class Application extends Component {
                         );
                     })
                     .catch((error) => {
-                        console.log(error)
-                        // TODO: replace alert with snackbar error message
                         this.props.handleOpenSnackbar(
                             'error',
-                            'Error to show applicant information. Please, try again!',
+                            `Error to show applicant information. ${error}`,
                             'bottom',
                             'right'
                         );
@@ -428,6 +462,52 @@ class Application extends Component {
             }
         );
     };
+
+    processRestrictions = _ => {        
+        const { endTime, startTime, weekDays } = this.state.restrictionData;
+
+        if(!weekDays) {
+            return "";
+        }
+
+        return (
+            <Fragment>
+                {                    
+                    weekDays.map((day) => {
+                        return (
+                            <span className="badge badge-primary mr-1 mb-1">
+                                {`${day}: ${startTime} - ${endTime}`}
+                                {
+                                    this.state.editing ? (
+                                        <button
+                                            type="button" 
+                                            disabled={!this.state.editing} 
+                                            class="pl-2 pr-2 pt-0 pb-0 btn btn-default tumi-badge-remove" 
+                                            onClick={_ => this.removeScheduleRestriction(day)}>&times;
+                                        </button>
+                                    ) : ""
+                                }                                 
+                            </span>
+                        )
+                    })
+                }
+                
+                <button 
+                    type="button"
+                    disabled={!this.state.editing} 
+                    class="badge badge-primary tumi-badge-remove" 
+                    onClick={this.toggleRestrictionModal}>Add +
+                </button>                
+            </Fragment>
+        )                    
+    }
+
+    removeScheduleRestriction = removed => {
+        const filtered = this.state.restrictionData.weekDays.filter(day => day !== removed);
+        this.setState(_ => ({
+            restrictionData: {...this.state.restrictionData, weekDays: filtered}
+        }));
+    }
 
     // get ideal jobs
     getIdealJobsByApplicationId = () => {
@@ -543,6 +623,8 @@ class Application extends Component {
     };
 
     componentWillMount() {
+        this.fetchRecruiterOptions();
+
         if (this.props.applicationId > 0) {
             this.getApplicationById(this.props.applicationId);
             this.fetchApplicationUser(this.props.applicationId);
@@ -825,9 +907,11 @@ class Application extends Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
+
         if (name === "immediately" && value == true) {
             this.setState({ dateAvailable: new Date().toISOString().substring(0, 10) })
         }
+
         if (name === "optionHearTumi" && !"3,4".includes(value)) {
             this.setState(() => ({ nameReferences: '' }))
         }
@@ -839,13 +923,12 @@ class Application extends Component {
 
     handleScheduleInput = (event) => {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
+        const value = target.type === 'checkbox' ? target.checked : target.value;        
 
-        this.setState(prevState => {
+        this.setState(_ => {
             return {
                 scheduleRestrictions: value,
-                openRestrictionsModal: value
+                // openRestrictionsModal: value
             }
         }, _ => {
             if (!this.state.scheduleRestrictions) {
@@ -878,12 +961,10 @@ class Application extends Component {
         });
     }
 
-    handleScheduleExplain = (scheduleExplain) => {
+    handleScheduleExplain = (restrictions) => {
         this.setState(() => {
-            let days = scheduleExplain.weekDays.join();
-            let explain = `Days: ${days}\n from: ${scheduleExplain.startTime}\n To: ${scheduleExplain.endTime}`;
-            return { scheduleExplain: explain }
-        }, () => this.handleRestrictionModalClose())
+            return { restrictionData: restrictions }
+        }, this.toggleRestrictionModal)
     }
 
     onHandleCloseConfirmDialog = () => {
@@ -1204,28 +1285,43 @@ class Application extends Component {
                                                     onChange={this.handleInputChange}
                                                     value={this.state.optionHearTumi}
                                                 >
-                                                    <option value="">Select an option</option>
-                                                    <option value="1">facebook</option>
-                                                    <option value="2">newspaper</option>
-                                                    <option value="3">employee</option>
-                                                    <option value="4">recruiter</option>
+                                                    <option value="0">Select an option</option>
+                                                    <option value="1">Facebook</option>
+                                                    <option value="2">Newspaper</option>
+                                                    <option value="3">Employee</option>
+                                                    <option value="4">Recruiter</option>
                                                 </select>
                                             </div>
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[28].label}
                                                 </span>
-                                                <input
-                                                    onChange={this.handleInputChange}
-                                                    value={this.state.nameReferences}
-                                                    name="nameReferences"
-                                                    type="text"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing || (this.state.optionHearTumi == 3 ? false : (this.state.optionHearTumi == 4 ? false : true))}
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="3"
-                                                />
+                                                {
+                                                    this.state.optionHearTumi == 1 || this.state.optionHearTumi == 4 ? (
+                                                        // this.state.editing ? (
+                                                            <Select
+                                                                options={this.state.recruiterOptions}
+                                                                value={this.findSelectedRecruiter(this.state.recruiter)}
+                                                                onChange={this.handleRecruiterChange}
+                                                                closeMenuOnSelect={true}
+                                                                components={makeAnimated()}
+                                                                isMulti={false}
+                                                                isDisabled={!this.state.editing}                                                                
+                                                            />
+                                                    ) : (
+                                                        <input
+                                                            onChange={this.handleInputChange}
+                                                            value={this.state.nameReferences}
+                                                            name="nameReferences"
+                                                            type="text"
+                                                            className="form-control"
+                                                            disabled={!this.state.editing || this.state.optionHearTumi == 2}
+                                                            min="0"
+                                                            maxLength="50"
+                                                            minLength="3"
+                                                        />
+                                                    )
+                                                }
                                             </div>
                                             {/* <div className="col-md-12">
                                                 <span className="primary applicant-card__label skeleton">
@@ -1314,7 +1410,10 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[21].label}
                                                 </span>
-                                                <textarea
+                                                <div className="d-block">
+                                                    { this.state.scheduleRestrictions ? this.processRestrictions() : "" }
+                                                </div>
+                                                {/* <textarea
                                                     onChange={this.handleInputChange}
                                                     value={this.state.scheduleExplain}
                                                     name="scheduleExplain"
@@ -1322,7 +1421,7 @@ class Application extends Component {
                                                     rows="3"
                                                     disabled={!this.state.editing || !this.state.scheduleRestrictions}
                                                     className="form-control textarea-apply-form"
-                                                />
+                                                /> */}
                                             </div>
                                             <div className="col-md-6">
                                                 <span className="primary applicant-card__label skeleton">
@@ -1392,7 +1491,7 @@ class Application extends Component {
                 <ShiftRestrictionModal
                     openModal={this.state.openRestrictionsModal}
                     handleScheduleExplain={this.handleScheduleExplain}
-                    handleCloseModal={this.handleRestrictionModalClose}
+                    handleCloseModal={this.toggleRestrictionModal}
                 />
             </div >
         );
