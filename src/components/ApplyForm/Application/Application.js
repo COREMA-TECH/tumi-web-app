@@ -377,7 +377,13 @@ class Application extends Component {
                         let cellPhoneNumberValid = applicantData.cellPhone || '';
                         let { optionHearTumi, firstName, alias, middleName, lastName, lastName2, socialSecurityNumber, streetAddress, aptNumber, city, state, zipCode, nameReferences, scheduleExplain } = applicantData;
                         
-                        const restrictionData = scheduleExplain ? JSON.parse(scheduleExplain) : "";
+                        let restrictionData = "";
+
+                        try {
+                            restrictionData = scheduleExplain ? JSON.parse(scheduleExplain) : "";
+                        } catch(error) {
+                            restrictionData = "";
+                        }
 
                         this.setState(
                             {
