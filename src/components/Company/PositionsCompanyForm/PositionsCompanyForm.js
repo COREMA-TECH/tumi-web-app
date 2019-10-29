@@ -1009,7 +1009,8 @@ class PositionsCompanyForm extends React.Component {
 									/>
 								</div>
 							)}
-							{localStorage.getItem('ShowMarkup') == 'true' ?
+							
+							<FeatureTag code="4d025eb6-438f-4270-8b0f-5972057dd861">
 								<div className="col-md-12 col-lg-6">
 									<label>* Bill Rate</label>
 									<InputForm
@@ -1025,7 +1026,8 @@ class PositionsCompanyForm extends React.Component {
 										change={(text) => this.onNumberChangeHandler(text, 'billrate')}
 									/>
 								</div>
-								: ''}
+							</FeatureTag>
+
 							<div className="col-md-12 col-lg-12">
 								<label htmlFor="">Special Comments</label>
 								<textarea

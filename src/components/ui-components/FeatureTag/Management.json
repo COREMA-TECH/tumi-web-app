@@ -38,5 +38,9 @@
     {
         "code": "f7196edf-e617-477f-a88d-bcd616bc8c8f",
         "description": "Show Accounting Department Code input in (Man. Company/properties) > Departments"
+    },
+    {
+        "code": "4d025eb6-438f-4270-8b0f-5972057dd861",
+        "description": "ShowMarkup input in (Man. Company/Properties) > General Information, Show Bill Rate in (Man. Company/Properties) > Position and Rate"
     }
 ]

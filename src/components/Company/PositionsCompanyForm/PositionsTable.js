@@ -24,6 +24,7 @@ import NumberFormat from 'react-number-format';
 import Select from '@material-ui/core/Select';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import FeatureTag from '../../../components/ui-components/FeatureTag';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -253,9 +254,9 @@ class PositionsTable extends React.Component {
 							</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '50px' }}>Department</CustomTableCell>
 							<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Title</CustomTableCell>
-							{localStorage.getItem('ShowMarkup') == 'true' ?	
+							<FeatureTag code="4d025eb6-438f-4270-8b0f-5972057dd861">
 								<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Bill Rate</CustomTableCell>
-							:''}
+							</FeatureTag>
 							
 							{this.props.showPayRate && (
 								<CustomTableCell className={'Table-head'} style={{width: '80px' }}>Pay Rate</CustomTableCell>
@@ -323,11 +324,12 @@ class PositionsTable extends React.Component {
 										</Select>
 									</CustomTableCell>
 									<CustomTableCell  style={{width: '80px' }}>{row.Position}</CustomTableCell>
-									{localStorage.getItem('ShowMarkup') =='true' ?	
-									<CustomTableCell  style={{width: '80px' }}>
-										$ {row.Bill_Rate}
-									</CustomTableCell>
-									:''}
+									<FeatureTag code="4d025eb6-438f-4270-8b0f-5972057dd861">
+										<CustomTableCell  style={{width: '80px' }}>
+											$ {row.Bill_Rate}
+										</CustomTableCell>
+									</FeatureTag>
+
 									{this.props.showPayRate && (
 										<CustomTableCell  style={{width: '80px' }}>
 											$ {row.Pay_Rate}
