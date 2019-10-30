@@ -232,8 +232,8 @@ class Catalogs extends React.Component {
 
 
     UPDATE_PASSWORD_USER_QUERY = gql`
-        mutation UpdUsersPassword($Id: Int!,$Password: String!) {
-            upduserspassword(Id: $Id,Password: $Password) {
+        mutation updatePassword($Code_User: String!, $password: String!) {
+            updatePassword(Code_User: $Code_User, password: $password) {
                 Id
             }
         }
@@ -1258,8 +1258,8 @@ class Catalogs extends React.Component {
                     .mutate({
                         mutation: this.UPDATE_PASSWORD_USER_QUERY,
                         variables: {
-                            Id: this.state.idToEdit,
-                            Password: `'TEMP','AES_KEY'`
+                            Code_User: this.state.username,
+                            Password: 'TEMP'
                         }
                     })
                     .then((data) => {

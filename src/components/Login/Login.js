@@ -141,6 +141,7 @@ class Login extends Component {
 				else {
 					if (document.getElementById('pass').value === 'TEMP') {
 						localStorage.setItem('ChangePassword', user.Id);
+						localStorage.setItem('CodeUser', user.Code_User);
 						window.location.href = '/reset';
 					}
 					else {
