@@ -33,3 +33,32 @@ export const GET_ROL_FORMS_QUERY = gql`
     }
 `;
 
+export const GET_PARENT_ITEMS = gql`
+query parentNodes{
+    getParentItems{
+          Id
+        Code
+        Name
+        Value
+          ParentId
+          Children{
+          Id
+          Code
+          Name
+          Value
+        }
+    }
+  }
+`;
+
+export const GET_ROLE_FORMS_BY_ROLE = gql`
+query rolesforms($IdRoles:Int) {    
+    rolesforms(IsActive: 1, IdRoles:$IdRoles){
+        Id
+        IdRoles
+        IdForms
+        IsActive
+    }
+} 
+`
+

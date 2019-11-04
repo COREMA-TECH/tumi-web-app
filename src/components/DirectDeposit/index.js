@@ -160,7 +160,7 @@ class DirectDeposit extends Component{
                                 amount={this.state.amount}
                                 accountType={this.state.accountType}
                                 setAmountType={this.setAmountType}
-                                address={this.address}
+                                address={this.state.address}
                                 handleFullPaycheckSelected={this.handleFullPaycheckSelected}
                                 percentage={this.state.percentage}
                             />
