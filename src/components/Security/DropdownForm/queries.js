@@ -53,7 +53,7 @@ query parentNodes{
 
 export const GET_ROLE_FORMS_BY_ROLE = gql`
 query rolesforms($IdRoles:Int) {    
-    rolesforms(IsActive: 1, IdRoles:$IdRoles){
+    rolesforms(IdRoles:$IdRoles){
         Id
         IdRoles
         IdForms
