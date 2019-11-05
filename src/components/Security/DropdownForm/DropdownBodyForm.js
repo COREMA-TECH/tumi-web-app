@@ -17,7 +17,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { INSERT_ROL_FORM } from "./mutations";
 import withApollo from "react-apollo/withApollo";
-import { GET_ROL_FORMS_QUERY, GET_PARENT_ITEMS, GET_ROLE_FORMS_BY_ROLE } from "./queries";
+import { GET_PARENT_ITEMS, GET_ROLE_FORMS_BY_ROLE } from "./queries";
 import withGlobalContent from "../../Generic/Global";
 import TableItem from "./TableItem";
 import RoleFormItem from './FormItem';
@@ -228,55 +228,9 @@ class EnhancedTable extends Component {
         page: 0,
         rowsPerPage: 5,
         dataRolForm: [],
-        parentNodes: []
-    };
-
-    insertRolForm = (object) => {
-        this.props.client
-            .mutate({
-                mutation: INSERT_ROL_FORM,
-                variables: {
-                    rolesforms: object
-                }
-            })
-            .then(({ data }) => {
-                // Show a snackbar with a success message
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Successfully inserted!',
-                    'bottom',
-                    'right'
-                );
-
-                this.props.closeItem();
-            })
-            .catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to save permission. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            })
-    };
-
-    handleInsertRolForm = () => {
-        let objectRolForm = {
-            IdRoles: this.props.rolId,
-            IdForms: 0,
-            IsActive: 1,
-            User_Created: 1,
-            User_Updated: 1,
-            Date_Created: "'2018-08-14'",
-            Date_Updated: "'2018-08-14'"
-        };
-
-        this.state.selected.map(item => {
-            objectRolForm.IdForms = item;
-
-            this.insertRolForm(objectRolForm);
-        });
-    };
+        parentNodes: [],
+        dummyRefreshState: false
+    };       
 
     getRolForms = () => {
         this.props.client
@@ -299,10 +253,32 @@ class EnhancedTable extends Component {
                     'bottom',
                     'right'
                 );
-            })
-    };
+            })    
+        };
+
+    toggleDummyState = _ => {
+        this.setState(prev => {
+            return { dummyRefreshState: !prev.dummyRefreshState }
+        })
+    }
 
     componentWillMount() {
+        this.fetchData();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+		if(this.state.parentNodes === nextState.parentNodes && this.state.dataRolForm === nextState.dataRolForm){
+            return false;
+        } 
+            
+        if(this.state.dataRolForm.length > 0 && nextState.dataRolForm === 0){
+            return false;
+        }
+
+        return true;        
+	}
+
+    fetchData = _ => {
         this.getRolForms()
         this.fetchParentItems();
     }
@@ -331,7 +307,7 @@ class EnhancedTable extends Component {
         return (
             this.state.parentNodes.map(node => {
                 return(                    
-                    <RoleFormItem item={node} role={this.props.rolId} roleFormsInfo={this.state.dataRolForm} />
+                    <RoleFormItem refreshData={_ => {this.fetchData()}} item={node} role={this.props.rolId} roleFormsInfo={this.state.dataRolForm} />
                 )
             })
         );
@@ -361,57 +337,7 @@ class EnhancedTable extends Component {
         return (
             <Fragment>
                 { this.renderFormsTable() }
-            </Fragment>
-            // <table className="table">
-            //     <thead className="thead-dark">
-            //         <tr>
-            //             <th scope="col">Assigned</th>
-            //             <th scope="col">Code</th>
-            //             <th scope="col">Name</th>
-            //             <th scope="col">Value</th>
-            //             <th scope="col">Parent</th>
-            //         </tr>
-            //     </thead>
-            //     <tbody>
-            //         {/* props.data brings in Form info */}
-            //         {this.props.data.map((item) => {
-            //             let checked = false;
-            //             let isActive = false;
-            //             let idRolForm = 0;
-            //             let parent = '';
-
-            //             this.state.dataRolForm.map((itemRolForm) => {
-            //                 if (this.props.rolId === itemRolForm.IdRoles) {
-            //                     if (itemRolForm.IdForms === item.Id) {
-            //                         if (itemRolForm.IsActive === 1) {
-            //                             checked = true;
-            //                         }
-            //                         isActive = true;
-            //                         idRolForm = itemRolForm.Id;
-            //                     }
-            //                 }
-            //             });
-
-            //             if (item.Parent)
-            //                 parent = item.Parent.Name;
-
-            //             return (
-            //                 <TableItem
-            //                     idRolForm={idRolForm}
-            //                     formId={item.Id}
-            //                     rolId={this.props.rolId}
-            //                     active={isActive}
-            //                     asiggned={checked}
-            //                     code={item.Code}
-            //                     name={item.Name}
-            //                     url={item.Value}
-            //                     updateRolForms={this.getRolForms}
-            //                     parent={parent}
-            //                 />
-            //             );
-            //         })}
-            //     </tbody>
-            // </table>
+            </Fragment>           
         );
     }
 }

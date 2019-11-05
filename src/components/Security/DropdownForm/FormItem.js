@@ -8,7 +8,6 @@ import { withStyles } from '@material-ui/core/styles';
 import withApollo from "react-apollo/withApollo";
 
 import { INSERT_ROL_FORM, TOGGLE_ROL_FORMS } from "./mutations";
-import { GET_ROLE_FORMS_BY_ROLE } from "./queries";
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -32,8 +31,16 @@ class RoleFormItem extends Component{
 
     componentWillMount(){        
         this.setState(_ => ({
-            hasRelationship: this.findMatch(this.props.item.Id)
+            hasRelationship: this.findMatch(this.props.item.Id, this.props.roleFormsInfo)
         }))
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(this.props.roleFormsInfo !== nextProps.roleFormsInfo && nextProps.roleFormsInfo.length > 0){
+            this.setState(_ => ({
+                hasRelationship: this.findMatch(this.props.item.Id, nextProps.roleFormsInfo)
+            }));
+        }
     }
 
     toggleOpen = _ => {
@@ -45,11 +52,11 @@ class RoleFormItem extends Component{
     toggleRelationship = _ => {
         this.setState(prev => ({
             hasRelationship: !prev.hasRelationship
-        }), this.updateRecord)
+        }), this.props.refreshData);
     }
 
-    findMatch = formId => {
-        const found = this.props.roleFormsInfo.find(item => {
+    findMatch = (formId, roleFormsInfo) => {
+        const found = roleFormsInfo.find(item => {
             return (item.IdForms === formId && item.IsActive)
         });
 
@@ -70,18 +77,15 @@ class RoleFormItem extends Component{
                 variables: {
                     rolesForms: [...idsToUpdate, this.props.item.Id],
                     IdRoles: this.props.role,
-                    IsActive: this.state.hasRelationship
-                },
-                refetchQueries: [{
-                    query: GET_ROLE_FORMS_BY_ROLE
-                }]
+                    IsActive: !this.state.hasRelationship
+                }                
             })
-            .then(data => {
-                
+            .then(() => {
+                this.props.refreshData();
+                // this.toggleRelationship();
             })
             .catch(error => {
-                console.log(error);
-                this.toggleRelationship();
+                console.log(error);                
             })
         } 
         
@@ -112,25 +116,19 @@ class RoleFormItem extends Component{
                 mutation: INSERT_ROL_FORM,
                 variables: {
                     rolesforms: [newRelation, ...childRelations]
-                },
-                refetchQueries: [{
-                    query: GET_ROLE_FORMS_BY_ROLE
-                }]
+                }
             })
-            .then(data => {
-                
+            .then(() => {
+                // this.toggleRelationship();
             })
-            .catch(error => {
-                this.toggleRelationship();
+            .catch(error => {                
                 console.log(error);
             })            
-        }
-        
+        }        
     }
 
     render(){
-        const {Id, Code, Name, Value, Children} = this.props.item
-        
+        const {Id, Code, Name, Value, Children} = this.props.item        
         return (
             <Fragment>
                 <TableRow onClick={this.toggleOpen} style={{cursor: "pointer"}}>                
@@ -143,7 +141,8 @@ class RoleFormItem extends Component{
                                 className="onoffswitch-checkbox"
                                 id={`${Id}-hasRelationship`}
                                 value={this.state.hasRelationship}
-                                onChange={this.toggleRelationship}
+                                // onChange={this.toggleRelationship}
+                                onChange={this.updateRecord}
                             />
                             <label className="onoffswitch-label" htmlFor={`${Id}-hasRelationship`}>
                                 <span className="onoffswitch-inner" />
