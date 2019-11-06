@@ -131,7 +131,7 @@ class RoleFormItem extends Component{
         const {Id, Code, Name, Value, Children} = this.props.item        
         return (
             <Fragment>
-                <TableRow onClick={this.toggleOpen} style={{cursor: "pointer"}}>                
+                <TableRow className={`collapsible-row ${this.state.open ? "open" : ""}`} onClick={this.toggleOpen}>                
                     <CustomTableCell style={{position: "relative"}}>
                         {
                             (Children && Children.length > 0) ? (

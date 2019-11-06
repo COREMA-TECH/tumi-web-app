@@ -9336,13 +9336,21 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 .skills-container--header span {
   color: #FFF; }
 
-.children-indicator {
-  left: -12px;
-  position: absolute;
-  top: 45%;
-  -webkit-transform: rotateZ(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotateZ(90deg); }
+.collapsible-row {
+  cursor: pointer; }
+  .collapsible-row .children-indicator {
+    left: -12px;
+    position: absolute;
+    top: 45%;
+    -webkit-transform: rotateZ(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotateZ(90deg);
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease; }
+  .collapsible-row.open .children-indicator {
+    left: 10px;
+    top: 65px; }
 
 .table.tumi-nested-table {
   margin-left: 50px !important; }

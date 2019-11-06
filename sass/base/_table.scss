@@ -93,16 +93,28 @@ tbody[class^="MuiTableBody-"] {
     }
 }
 
-.children-indicator{
-    left: -12px;
-    position: absolute;
-    top: 45%;
-    transform: rotateZ(90deg);
+.collapsible-row{
+    cursor: pointer;
+
+    .children-indicator{
+        left: -12px;
+        position: absolute;
+        top: 45%;
+        transform: rotateZ(90deg);
+        transition: all 0.5s ease;
+    }
+
+    &.open{
+        .children-indicator{
+            left: 10px;
+            top: 65px;            
+        }
+    }
+
 }
 
 .table.tumi-nested-table{
     margin-left: 50px !important;
-
 
     th{
         border-top: none;
