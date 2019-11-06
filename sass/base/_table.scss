@@ -92,3 +92,20 @@ tbody[class^="MuiTableBody-"] {
         color: $white;
     }
 }
+
+.children-indicator{
+    left: -12px;
+    position: absolute;
+    top: 45%;
+    transform: rotateZ(90deg);
+}
+
+.table.tumi-nested-table{
+    margin-left: 50px !important;
+
+
+    th{
+        border-top: none;
+        font-weight: 700;
+    }
+}

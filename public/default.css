@@ -9336,6 +9336,20 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 .skills-container--header span {
   color: #FFF; }
 
+.children-indicator {
+  left: -12px;
+  position: absolute;
+  top: 45%;
+  -webkit-transform: rotateZ(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotateZ(90deg); }
+
+.table.tumi-nested-table {
+  margin-left: 50px !important; }
+  .table.tumi-nested-table th {
+    border-top: none;
+    font-weight: 700; }
+
 .flag-select {
   position: relative;
   display: inline-block;
@@ -13675,3 +13689,5 @@ label.input-group-text {
 
 span[class^='MySnackbarContent-message-'] {
   color: #FFF; }
+
+/*# sourceMappingURL=default.css.map */

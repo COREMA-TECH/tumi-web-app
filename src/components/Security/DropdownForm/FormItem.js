@@ -132,7 +132,12 @@ class RoleFormItem extends Component{
         return (
             <Fragment>
                 <TableRow onClick={this.toggleOpen} style={{cursor: "pointer"}}>                
-                    <CustomTableCell>
+                    <CustomTableCell style={{position: "relative"}}>
+                        {
+                            (Children && Children.length > 0) ? (
+                                <i class="fas fa-level-up-alt children-indicator"></i>
+                            ) : ""
+                        }
                         <div className="onoffswitch">
                             <input
                                 type="checkbox"
@@ -158,8 +163,8 @@ class RoleFormItem extends Component{
                 {
                     (Children && Children.length > 0) ? (
                         <TableRow style={{display: `${this.state.open ? "table-row" : "none"}`}}>
-                            <CustomTableCell colspan={4} style={{paddingLeft: "50px !important"}}>
-                                <table class="table">
+                            <CustomTableCell colspan={4} style={{border: "none"}}>
+                                <table class="table tumi-nested-table">
                                     <thead>
                                         <tr>
                                         <th scope="col">Assigned</th>
