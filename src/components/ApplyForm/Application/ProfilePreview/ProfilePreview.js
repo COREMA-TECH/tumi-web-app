@@ -16,6 +16,7 @@ import Shifts from '../../../Schedules/Shifts';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import DirectDeposit from "../../../DirectDeposit";
 
 import { GET_APPLICATION_PROFILE_INFO, GET_ACTIVE_EMPLOYEES_BY_MARKS } from "./Queries";
 import { UDPATE_PROFILE_PICTURE } from './Mutations';
@@ -23,12 +24,7 @@ import { UDPATE_PROFILE_PICTURE } from './Mutations';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { ProfilePicture } from 'ui-components/ProfilePicture/'
 import GenericContent from 'Generic/Global'
-import Schedules from '../../../Schedules';
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
-
-
-
-const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
     tabs: {
@@ -256,6 +252,8 @@ class VerticalLinearStepper extends Component {
                             selectedEmployee={EmployeeId}
                         />
                     </div>
+                case 6:
+                    return <DirectDeposit applicationId={this.props.applicationId} />
             }
         };
 

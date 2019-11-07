@@ -106,4 +106,12 @@ export const REMOVE_APPLICANT_SKILL = gql`
     }
 `;
 
+export const ADD_TASK = gql`
+    mutation addSendtoInterviewTask($task: inputInsertTask, $applicationId: Int){
+        addSendtoInterviewTask(task: $task, applicationId: $applicationId){
+            id
+        }
+    }
+`;
+
 

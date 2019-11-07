@@ -22,7 +22,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import withGlobalContent from 'Generic/Global';
 import RolesDropdown from "../DropdownForm/RolesDropdown";
 
-import { GET_COMPANY_QUERY, GET_ROLES_QUERY } from './queries';
+import { GET_ROLES_QUERY } from './queries';
 import { UPDATE_ROLES_QUERY, INSERT_ROLES_QUERY, DELETE_ROLES_QUERY } from './mutations';
 
 const styles = (theme) => ({
@@ -42,13 +42,9 @@ const styles = (theme) => ({
 		margin: theme.spacing.unit
 		//width: '100px'
 	},
-	id_companyControl: {
-		//width: '200px'
-	},
 	descriptionControl: {
 		//width: '100px'
 	},
-
 	resize: {
 		//width: '200px'
 	},
@@ -100,13 +96,9 @@ class RolesForm extends React.Component {
 		id: '',
 		idToDelete: null,
 		idToEdit: null,
-		id_company: '',
 		description: '',
 
-		id_companyValid: false,
 		descriptionValid: false,
-
-		id_companyHasValue: false,
 		descriptionHasValue: false,
 
 		formValid: false,
@@ -130,10 +122,7 @@ class RolesForm extends React.Component {
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
 	}
-	focusTextInput() {
-		document.getElementById('id_company').focus();
-		document.getElementById('id_company').select();
-	}
+	
 	componentDidMount() {
 		this.resetState();
 	}
@@ -145,11 +134,7 @@ class RolesForm extends React.Component {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
-			},
-			() => {
-				this.focusTextInput();
-			}
-		);
+			});
 	};
 	handleClose = (event, reason) => {
 		if (reason === 'clickaway') {
@@ -176,34 +161,23 @@ class RolesForm extends React.Component {
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
-		let id_companyHasValue = this.state.code.trim() != '';
 		let descriptionHasValue = this.state.description.trim() != '';
-
 		return descriptionHasValue;
 	};
 	validateAllFields() {
-		let id_companyValid = this.state.id_company;
 		let descriptionValid = this.state.description.trim().length >= 2;
 		this.setState(
 			{
-				id_companyValid,
 				descriptionValid
 			},
 			this.validateForm
 		);
 	}
 	validateField(fieldName, value) {
-		let id_companyValid = this.state.id_companyValid;
 		let descriptionValid = this.state.descriptionValid;
-
-		let id_companyHasValue = this.state.id_companyHasValue;
 		let descriptionHasValue = this.state.descriptionHasValue;
 
 		switch (fieldName) {
-			case 'id_company':
-				id_companyValid = value !== null && value !== 0 && value !== '';
-				id_companyHasValue = value !== null && value !== '';
-				break;
 			case 'description':
 				descriptionValid = value.trim().length >= 2;
 				descriptionHasValue = value.trim() != '';
@@ -213,9 +187,7 @@ class RolesForm extends React.Component {
 		}
 		this.setState(
 			{
-				id_companyValid,
 				descriptionValid,
-				id_companyHasValue,
 				descriptionHasValue
 			},
 			this.validateForm
@@ -235,26 +207,19 @@ class RolesForm extends React.Component {
 	handleConfirmAlertDialog = () => {
 		this.deleteRoles();
 	};
-	onEditHandler = ({ Id, Id_Company, Description }) => {
+	onEditHandler = ({ Id, Description }) => {
 		this.setState(
 			{
 				idToEdit: Id,
-				id_company: Id_Company,
 				description: Description.trim(),
 				formValid: true,
-				id_companyValid: true,
 				descriptionValid: true,
 
 				enableCancelButton: true,
-				id_companyHasValue: true,
 				descriptionHasValue: true,
 
 				buttonTitle: this.TITLE_EDIT
-			},
-			() => {
-				this.focusTextInput();
-			}
-		);
+			});
 	};
 
 	onDeleteHandler = (idSearch) => {
@@ -262,7 +227,6 @@ class RolesForm extends React.Component {
 	};
 	componentWillMount() {
 		this.loadRoles();
-		this.loadCompanies();
 	}
 
 	loadRoles = () => {
@@ -291,35 +255,6 @@ class RolesForm extends React.Component {
 			});
 	};
 
-	loadCompanies = () => {
-		this.props.client
-			.query({
-				query: GET_COMPANY_QUERY,
-				variables: {},
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getcompanies != null) {
-					this.setState(
-						{
-							company: data.data.getcompanies
-						},
-						() => {
-							this.resetState();
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading Companies: getCompany not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				this.props.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
-			});
-	};
-
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
 		let query = INSERT_ROLES_QUERY;
@@ -345,8 +280,7 @@ class RolesForm extends React.Component {
 						mutation: query,
 						variables: {
 							input: {
-								Id: id,
-								Id_Company: this.state.id_company,
+								Id: id,								
 								Description: `'${this.state.description}'`,
 								IsActive: 1,
 								User_Created: 1,
@@ -445,30 +379,7 @@ class RolesForm extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className={classes.divStyle}>
-					<FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
-						<TextField
-							id="id_company"
-							select
-							name="id_company"
-							error={!this.state.id_companyValid}
-							value={this.state.id_company}
-							InputProps={{
-								classes: {
-									input: classes.inputControl
-								}
-							}}
-							onChange={(event) => this.onSelectChangeHandler(event)}
-							helperText="Company"
-							margin="normal"
-						>
-							{this.state.company.map(({ Id, Name }) => (
-								<MenuItem key={Id} value={Id} name={Name}>
-									{Name}
-								</MenuItem>
-							))}
-						</TextField>
-					</FormControl>
+				<div className={classes.divStyle}>					
 					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
 						<InputLabel htmlFor="description">Description</InputLabel>
 						<Input

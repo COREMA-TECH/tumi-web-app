@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_POSITIONS_CATALOG, getCompaniesQuery } from '../Queries';
+import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_POSITIONS_CATALOG, getCompaniesQuery, GET_RECRUITER_QUERY } from '../Queries';
 import { CREATE_APPLICATION, UPDATE_APPLICATION } from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -15,6 +15,7 @@ import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
 import LocationForm from '../../ui-components/LocationForm'
 import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
+import SendtoInterviewModal from './SendtoInterviewModal';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -116,17 +117,18 @@ class Application extends Component {
         positions: [],
         positionsCatalogs: [],
         positionCatalogTag: [],
-        positionFilterList: []
+        positionFilterList: [],
         // cellPhoneValid: false,
         //lastNameValid: false,
         // firstNameValid: false,
 
-
+        openSendtoInterviewModal: false
     }
     constructor(props) {
         super(props);
 
         this.state = {
+            userId: 0,
             // Languages array
             languages: [],
             // Skills array
@@ -141,6 +143,7 @@ class Application extends Component {
             languagesLoaded: [],
             // React tag input with suggestions
             positionsTags: [],
+            recruitersOpt: [],
             ...this.DEFAULT_STATE
         };
     }
@@ -561,7 +564,31 @@ class Application extends Component {
             })
     };
 
+    handleChangeSendtoInterview = (event) => {
+        const isChecked = event.target.checked;
+        this.setState({
+            openSendtoInterviewModal: isChecked
+        });
+    }
+
+    confirmSendtoInterview = () => {
+        this.setState({
+            openSendtoInterviewModal: false,
+            sendInterview: true
+        });
+    }
+
+    handleCloseSendtoInterviewModal = () => {
+        this.setState({
+            openSendtoInterviewModal: false
+        });
+    }
+
     componentWillMount() {
+        this.setState(() => {
+            const userId = localStorage.getItem('LoginId');
+            return { userId }
+        })
         if (this.props.applicationId > 0) {
             this.getHotels(() => {
                 this.getApplicationById(this.props.applicationId);
@@ -575,6 +602,7 @@ class Application extends Component {
         }
         this.getPositions();
         this.getPositionsCatalogs();
+        this.getRecruiters();
     }
 
     updateCity = (city) => {
@@ -600,419 +628,434 @@ class Application extends Component {
         })
     }
 
+    getRecruiters = () => {
+        this.setState(() => {
+            this.props.client
+                .query({
+                    query: GET_RECRUITER_QUERY,
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({ data }) => {
+                    this.setState(() => {
+                        const recruitersOpt = data.user ? data.user.map(r => ({value: r.Id, label: r.Full_Name})) : [];
+                        return { recruitersOpt }
+                    });
+                });
+        })
+    }
+
     render() {
         return (
-            <div className="Apply-container-application">
-                <div className="applicant-card">
-                    <div className="applicant-card__header">
-                        <span className="applicant-card__title">{menuSpanish[0].label}</span>
+            <Fragment>
+                <div className="Apply-container-application">
+                    <div className="applicant-card">
+                        <div className="applicant-card__header">
+                            <span className="applicant-card__title">{menuSpanish[0].label}</span>
 
-                        {!this.state.editing && <button
-                            className="applicant-card__edit-button"
-                            onClick={() => {
-                                this.setState({
-                                    editing: true
-                                });
-                            }}
-                            disabled={this.state.searchigZipcode}
-                        >
-                            {spanishActions[1].label}<i className="far fa-edit" />
-                        </button>
-                        }
-                    </div>
+                            {!this.state.editing && <button
+                                className="applicant-card__edit-button"
+                                onClick={() => {
+                                    this.setState({
+                                        editing: true
+                                    });
+                                }}
+                                disabled={this.state.searchigZipcode}
+                            >
+                                {spanishActions[1].label}<i className="far fa-edit" />
+                            </button>
+                            }
+                        </div>
 
-                    <div className="card-body">
-                        <div className="row">
-                            <div className="col-md-12 col-lg-6"></div>
-                            <div className="col-md-12 col-lg-6"><div className="row">
-                                <div className="col-md-6">
-                                </div>
-                                <div className="col-md-6">
-                                    <span className="primary applicant-card__label ">
-                                        Send to Interview
-                                        </span>
-                                    <div className="onoffswitch">
-                                        <input
-                                            id="sendInterview"
-                                            className="onoffswitch-checkbox"
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    sendInterview: event.target.checked
-                                                });
-                                            }}
-                                            checked={this.state.sendInterview}
-                                            value={this.state.sendInterview}
-                                            name="sendInterview"
-                                            type="checkbox"
-                                            disabled={!this.state.editing}
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="10"
-                                        />
-                                        <label className="onoffswitch-label" htmlFor="sendInterview">
-                                            <span className="onoffswitch-inner" />
-                                            <span className="onoffswitch-switch" />
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-
-
-
-                            <div className="col-md-12 col-lg-6 form-section-1">
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <span className="primary applicant-card__label ">
-                                            {formSpanish[25].label}
-                                        </span>
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    firstName: event.target.value
-                                                },
-                                                    () => {
-                                                        this.props.SetFirstName(this.state)
-                                                    }
-                                                );
-
-                                            }}
-                                            value={this.state.dateCreation}
-                                            name="dateCreation"
-                                            type="text"
-                                            className="form-control"
-                                            disabled={true}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <span className="primary applicant-card__label">
-                                            {formSpanish[16].label}
-                                        </span>
-                                        <Select
-                                            options={this.state.positionFilterList}
-                                            value={this.findSelectedPosition(this.state.positionApplyingFor)}
-                                            onChange={this.handlePositionFilterChange}
-                                            closeMenuOnSelect={true}
-                                            components={makeAnimated()}
-                                            isMulti={false}
-                                            isDisabled={!this.state.editing}
-                                        />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <span className="primary applicant-card__label">
-                                            {formSpanish[17].label}
-                                        </span>
-                                        <Select
-                                            isDisabled={!this.state.editing}
-                                            options={this.state.positionCatalogTag}
-                                            value={this.state.positionsTags}
-                                            onChange={this.handleChangePositionTag}
-                                            closeMenuOnSelect={false}
-                                            components={makeAnimated()}
-                                            isMulti
-                                        />
-
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <span className="primary applicant-card__label ">
-                                            * {formSpanish[0].label}
-                                        </span>
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    firstName: event.target.value
-                                                },
-                                                    () => {
-                                                        this.props.SetFirstName(this.state)
-                                                    }
-                                                );
-
-                                            }}
-                                            value={this.state.firstName}
-                                            name="firstName"
-                                            type="text"
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                    </div>
-                                    <div className="col-md-6 ">
-                                        <span className="primary applicant-card__label ">
-                                            {formSpanish[1].label}
-                                        </span>
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    middleName: event.target.value
-                                                });
-                                            }}
-                                            value={this.state.middleName}
-                                            name="middleName"
-                                            type="text"
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="1"
-                                        />
-                                    </div>
-                                    <div className="col-md-6 ">
-                                        <span className="primary applicant-card__label ">
-                                            * {formSpanish[2].label}
-                                        </span>
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    lastName: event.target.value
-                                                },
-                                                    () => {
-                                                        this.props.SetLastName(this.state)
-                                                    });
-                                            }}
-                                            value={this.state.lastName}
-                                            name="lastName"
-                                            type="text"
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                    </div>
-                                    <div className="col-md-6 ">
-                                        <span className="primary applicant-card__label ">
-                                            {formSpanish[24].label}
-                                        </span>
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    lastName2: event.target.value
-                                                });
-                                            }}
-                                            value={this.state.lastName2}
-                                            id="lastName2"
-                                            name="lastName2"
-                                            type="text"
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                    </div>
-                                    <LocationForm
-                                        disabledCheck={!this.state.editing}
-                                        disabledCity={!this.state.editing}
-                                        disabledZipCode={!this.state.editing}
-                                        onChangeCity={this.updateCity}
-                                        onChangeState={this.updateState}
-                                        onChageZipCode={this.updateZipCode}
-                                        city={this.state.city}
-                                        state={this.state.state}
-                                        zipCode={this.state.zipCode}
-                                        changeCity={this.state.changeCity}
-                                        cityColClass="col-md-6"
-                                        stateColClass="col-md-6"
-                                        zipCodeColClass="col-md-6"
-                                        zipCodeTitle={`* ${formSpanish[5].label}`}
-                                        stateTitle={`${formSpanish[6].label}`}
-                                        cityTitle={`${formSpanish[7].label}`}
-                                        cssTitle={"text-primary-application"}
-                                        placeholder="99999-99999"
-                                        mask="99999-99999"
-                                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
-
-                                    <div className="col-md-6">
-                                        <span className="primary applicant-card__label ">
-                                            {formSpanish[23].label}
-                                        </span>
-
-                                        <div className="onoffswitch">
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-md-12 col-lg-6 form-section-1">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[25].label}
+                                            </span>
                                             <input
-                                                id="carSwitch"
-                                                className="onoffswitch-checkbox"
                                                 onChange={(event) => {
                                                     this.setState({
-                                                        car: event.target.checked
+                                                        firstName: event.target.value
+                                                    },
+                                                        () => {
+                                                            this.props.SetFirstName(this.state)
+                                                        }
+                                                    );
+
+                                                }}
+                                                value={this.state.dateCreation}
+                                                name="dateCreation"
+                                                type="text"
+                                                className="form-control"
+                                                disabled={true}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <span className="primary applicant-card__label">
+                                                {formSpanish[16].label}
+                                            </span>
+                                            <Select
+                                                options={this.state.positionFilterList}
+                                                value={this.findSelectedPosition(this.state.positionApplyingFor)}
+                                                onChange={this.handlePositionFilterChange}
+                                                closeMenuOnSelect={true}
+                                                components={makeAnimated()}
+                                                isMulti={false}
+                                                isDisabled={!this.state.editing}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <span className="primary applicant-card__label">
+                                                {formSpanish[17].label}
+                                            </span>
+                                            <Select
+                                                isDisabled={!this.state.editing}
+                                                options={this.state.positionCatalogTag}
+                                                value={this.state.positionsTags}
+                                                onChange={this.handleChangePositionTag}
+                                                closeMenuOnSelect={false}
+                                                components={makeAnimated()}
+                                                isMulti
+                                            />
+
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[0].label}
+                                            </span>
+                                            <input
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        firstName: event.target.value
+                                                    },
+                                                        () => {
+                                                            this.props.SetFirstName(this.state)
+                                                        }
+                                                    );
+
+                                                }}
+                                                value={this.state.firstName}
+                                                name="firstName"
+                                                type="text"
+                                                className="form-control"
+                                                disabled={!this.state.editing}
+                                                required
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="3"
+                                            />
+                                        </div>
+                                        <div className="col-md-6 ">
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[1].label}
+                                            </span>
+                                            <input
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        middleName: event.target.value
                                                     });
                                                 }}
-                                                checked={this.state.car}
-                                                value={this.state.car}
-                                                name="car"
-                                                type="checkbox"
+                                                value={this.state.middleName}
+                                                name="middleName"
+                                                type="text"
+                                                className="form-control"
                                                 disabled={!this.state.editing}
                                                 min="0"
                                                 maxLength="50"
-                                                minLength="10"
+                                                minLength="1"
                                             />
-                                            <label className="onoffswitch-label" htmlFor="carSwitch">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
-                                            </label>
+                                        </div>
+                                        <div className="col-md-6 ">
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[2].label}
+                                            </span>
+                                            <input
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        lastName: event.target.value
+                                                    },
+                                                        () => {
+                                                            this.props.SetLastName(this.state)
+                                                        });
+                                                }}
+                                                value={this.state.lastName}
+                                                name="lastName"
+                                                type="text"
+                                                className="form-control"
+                                                disabled={!this.state.editing}
+                                                required
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="3"
+                                            />
+                                        </div>
+                                        <div className="col-md-6 ">
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[24].label}
+                                            </span>
+                                            <input
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        lastName2: event.target.value
+                                                    });
+                                                }}
+                                                value={this.state.lastName2}
+                                                id="lastName2"
+                                                name="lastName2"
+                                                type="text"
+                                                className="form-control"
+                                                disabled={!this.state.editing}
+
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="3"
+                                            />
+                                        </div>
+                                        <LocationForm
+                                            disabledCheck={!this.state.editing}
+                                            disabledCity={!this.state.editing}
+                                            disabledZipCode={!this.state.editing}
+                                            onChangeCity={this.updateCity}
+                                            onChangeState={this.updateState}
+                                            onChageZipCode={this.updateZipCode}
+                                            city={this.state.city}
+                                            state={this.state.state}
+                                            zipCode={this.state.zipCode}
+                                            changeCity={this.state.changeCity}
+                                            cityColClass="col-md-6"
+                                            stateColClass="col-md-6"
+                                            zipCodeColClass="col-md-6"
+                                            zipCodeTitle={`* ${formSpanish[5].label}`}
+                                            stateTitle={`${formSpanish[6].label}`}
+                                            cityTitle={`${formSpanish[7].label}`}
+                                            cssTitle={"text-primary-application"}
+                                            placeholder="99999-99999"
+                                            mask="99999-99999"
+                                            updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
+
+                                        <div className="col-md-6">
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[23].label}
+                                            </span>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    id="carSwitch"
+                                                    className="onoffswitch-checkbox"
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            car: event.target.checked
+                                                        });
+                                                    }}
+                                                    checked={this.state.car}
+                                                    value={this.state.car}
+                                                    name="car"
+                                                    type="checkbox"
+                                                    disabled={!this.state.editing}
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="10"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="carSwitch">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-12 col-lg-6 form-section-2">
+                                    <div className="row">
+                                        <div className="col-md-6 ">
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[9].label}
+                                            </span>
+                                            <InputMask
+                                                id="home-number"
+                                                name="homePhone"
+                                                mask="+(999) 999-9999"
+                                                maskChar=" "
+                                                value={this.state.homePhone}
+                                                className="form-control"
+                                                disabled={!this.state.editing}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        homePhone: event.target.value
+                                                    });
+                                                }}
+                                                placeholder="+(___) ___-____"
+                                                minLength="15"
+                                            />
+                                        </div>
+                                        <div className="col-md-6 ">
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[10].label}
+                                            </span>
+                                            <InputMask
+                                                id="cell-number"
+                                                name="cellPhone"
+                                                mask="+(999) 999-9999"
+                                                maskChar=" "
+                                                value={this.state.cellPhone}
+                                                className="form-control"
+                                                disabled={!this.state.editing}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        cellPhone: event.target.value
+                                                    },
+                                                        () => {
+                                                            this.props.SetCellPhone(this.state)
+                                                        });
+                                                }}
+                                                required
+                                                placeholder="+(___) ___-____"
+                                                minLength="15"
+                                            />
+                                        </div>
+                                        <div className="col-md-12">
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[13].label}
+                                            </span>
+                                            <input
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        emailAddress: event.target.value
+                                                    });
+                                                }}
+                                                value={this.state.emailAddress}
+                                                name="emailAddress"
+                                                type="email"
+                                                className="form-control"
+                                                disabled={!this.state.editing}
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="8"
+                                            />
+
+                                        </div>
+
+                                        <div className="col-md-12">
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[21].label}
+                                            </span>
+                                            <textarea
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        generalComment: event.target.value
+                                                    });
+                                                }}
+                                                name="generalComment"
+                                                className="form-control"
+                                                id=""
+                                                cols="60"
+                                                rows="3"
+                                                value={this.state.generalComment}
+                                                disabled={!this.state.editing}
+                                                className="form-control textarea-apply-form"
+                                            />
+                                        </div>
+
+                                        <div className="col-md-12 mt-3">
+                                            <span className="primary applicant-card__label ">
+                                                Send to Interview
+                                            </span>
+                                            <div className="onoffswitch">
+                                                <input
+                                                    id="sendInterview"
+                                                    className="onoffswitch-checkbox"
+                                                    onChange={this.handleChangeSendtoInterview}
+                                                    checked={!!this.state.sendInterview}
+                                                    value={!!this.state.sendInterview}
+                                                    name="sendInterview"
+                                                    type="checkbox"
+                                                    disabled={this.state.sendInterview || !this.state.editing}
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="10"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="sendInterview">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-12 col-lg-6 form-section-2">
-                                <div className="row">
-                                    <div className="col-md-6 ">
-                                        <span className="primary applicant-card__label ">
-                                            {formSpanish[9].label}
-                                        </span>
-                                        <InputMask
-                                            id="home-number"
-                                            name="homePhone"
-                                            mask="+(999) 999-9999"
-                                            maskChar=" "
-                                            value={this.state.homePhone}
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    homePhone: event.target.value
-                                                });
-                                            }}
-                                            placeholder="+(___) ___-____"
-                                            minLength="15"
-                                        />
-                                    </div>
-                                    <div className="col-md-6 ">
-                                        <span className="primary applicant-card__label ">
-                                            * {formSpanish[10].label}
-                                        </span>
-                                        <InputMask
-                                            id="cell-number"
-                                            name="cellPhone"
-                                            mask="+(999) 999-9999"
-                                            maskChar=" "
-                                            value={this.state.cellPhone}
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    cellPhone: event.target.value
-                                                },
-                                                    () => {
-                                                        this.props.SetCellPhone(this.state)
-                                                    });
-                                            }}
-                                            required
-                                            placeholder="+(___) ___-____"
-                                            minLength="15"
-                                        />
-                                    </div>
-                                    <div className="col-md-12">
-                                        <span className="primary applicant-card__label ">
-                                            {formSpanish[13].label}
-                                        </span>
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    emailAddress: event.target.value
-                                                });
-                                            }}
-                                            value={this.state.emailAddress}
-                                            name="emailAddress"
-                                            type="email"
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="8"
-                                        />
-
-                                    </div>
-
-                                    <div className="col-md-12">
-                                        <span className="primary applicant-card__label ">
-                                            {formSpanish[21].label}
-                                        </span>
-                                        <textarea
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    generalComment: event.target.value
-                                                });
-                                            }}
-                                            name="generalComment"
-                                            className="form-control"
-                                            id=""
-                                            cols="60"
-                                            rows="3"
-                                            value={this.state.generalComment}
-                                            disabled={!this.state.editing}
-                                            className="form-control textarea-apply-form"
-                                        />
-                                    </div>
-
-
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                    {this.state.editing ? (
-                        <div className="applicant-card__footer">
-                            <button
-                                className="applicant-card__cancel-button"
-                                onClick={() => {
-                                    if (this.props.applicationId == 0) {
-                                        window.location.href = '/home/Recruiter'
-                                    }
-
-                                    //this.removeSkeletonAnimation();
-                                    this.setState({
-                                        loading: false, editing: false
-                                    });
-                                }}
-                            >
-
-                                {spanishActions[2].label}
-                            </button>
-                            <button type="submit"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    if (this.props.applicationId == 0) {
-                                        this.insertApplicationInformation();
-                                    } else {
-                                        this.updateApplicationInformation(this.props.applicationId);
-                                    }
-                                }}
-                                className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
-                                {spanishActions[4].label}
-                                {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
-                            </button>
-                        </div>
-                    ) : (
+                        {this.state.editing ? (
                             <div className="applicant-card__footer">
                                 <button
                                     className="applicant-card__cancel-button"
                                     onClick={() => {
-                                        window.location.href = '/home/Recruiter'
+                                        if (this.props.applicationId == 0) {
+                                            window.location.href = '/home/Recruiter'
+                                        }
+
+                                        //this.removeSkeletonAnimation();
+                                        this.setState({
+                                            loading: false, editing: false
+                                        });
                                     }}
                                 >
-                                    {spanishActions[9].label}
+
+                                    {spanishActions[2].label}
                                 </button>
-                                <button
-                                    onClick={() => {
-                                        this.props.handleNext();
+                                <button type="submit"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        if (this.props.applicationId == 0) {
+                                            this.insertApplicationInformation();
+                                        } else {
+                                            this.updateApplicationInformation(this.props.applicationId);
+                                        }
                                     }}
-                                    className="applicant-card__save-button">
-                                    {spanishActions[8].label}
+                                    className="applicant-card__save-button" disabled={this.state.searchigZipcode || this.state.insertDialogLoading}>
+                                    {spanishActions[4].label}
+                                    {this.state.insertDialogLoading && <i class="fas fa-spinner fa-spin ml-1" />}
                                 </button>
                             </div>
-                        )}
+                        ) : (
+                                <div className="applicant-card__footer">
+                                    <button
+                                        className="applicant-card__cancel-button"
+                                        onClick={() => {
+                                            window.location.href = '/home/Recruiter'
+                                        }}
+                                    >
+                                        {spanishActions[9].label}
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            this.props.handleNext();
+                                        }}
+                                        className="applicant-card__save-button">
+                                        {spanishActions[8].label}
+                                    </button>
+                                </div>
+                            )}
+                    </div>
+
                 </div>
 
-            </div>
+                <SendtoInterviewModal 
+                    open={this.state.openSendtoInterviewModal}
+                    userId={this.state.userId}
+                    email={this.state.emailAddress}
+                    phoneNumber={this.state.cellPhone}
+                    recruitersOpt={this.state.recruitersOpt}
+                    applicationId={this.props.applicationId}
+                    confirmSendtoInterview={this.confirmSendtoInterview}
+                    handleCloseSendtoInterviewModal={this.handleCloseSendtoInterviewModal}
+                />
+            </Fragment>
         );
     }
 }

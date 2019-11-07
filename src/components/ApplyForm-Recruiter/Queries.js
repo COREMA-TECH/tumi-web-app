@@ -209,4 +209,12 @@ export const GET_APPLICATION_SKILLS_BY_ID = gql`
     }
 `;
 
+export const GET_RECRUITER_QUERY = gql`
+query user{
+    user(IsActive:1,Id_Roles:[4]){
+      Id
+      Full_Name
+    }
+}
+`;
 

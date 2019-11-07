@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {Component, Fragment} from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -15,9 +17,20 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import { INSERT_ROL_FORM } from "./mutations";
 import withApollo from "react-apollo/withApollo";
-import { GET_ROL_FORMS_QUERY } from "./queries";
+import { GET_PARENT_ITEMS, GET_ROLE_FORMS_BY_ROLE } from "./queries";
 import withGlobalContent from "../../Generic/Global";
 import TableItem from "./TableItem";
+import RoleFormItem from './FormItem';
+
+const CustomTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white
+    },
+    body: {
+        fontSize: 14
+    }
+}))(TableCell);
 
 let counter = 0;
 
@@ -203,7 +216,7 @@ const styles = theme => ({
     },
 });
 
-class EnhancedTable extends React.Component {
+class EnhancedTable extends Component {
     state = {
         order: 'asc',
         orderBy: 'calories',
@@ -214,65 +227,21 @@ class EnhancedTable extends React.Component {
         ],
         page: 0,
         rowsPerPage: 5,
-        dataRolForm: []
-    };
+        dataRolForm: [],
+        parentNodes: [],
+        dummyRefreshState: false
+    };       
 
-    insertRolForm = (object) => {
+    getRolForms = () => {
         this.props.client
-            .mutate({
-                mutation: INSERT_ROL_FORM,
+            .query({
+                query: GET_ROLE_FORMS_BY_ROLE,
+                fetchPolicy: 'no-cache',
                 variables: {
-                    rolesforms: object
+                    IdRoles: this.props.rolId
                 }
             })
             .then(({ data }) => {
-                // Show a snackbar with a success message
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Successfully inserted!',
-                    'bottom',
-                    'right'
-                );
-
-                this.props.closeItem();
-            })
-            .catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to save permission. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            })
-    };
-
-    handleInsertRolForm = () => {
-        let objectRolForm = {
-            IdRoles: this.props.rolId,
-            IdForms: 0,
-            IsActive: 1,
-            User_Created: 1,
-            User_Updated: 1,
-            Date_Created: "'2018-08-14'",
-            Date_Updated: "'2018-08-14'"
-        };
-
-        this.state.selected.map(item => {
-            objectRolForm.IdForms = item;
-
-            this.insertRolForm(objectRolForm);
-        });
-    };
-
-    getRolForms = () => {
-
-        this.props.client
-            .query({
-                query: GET_ROL_FORMS_QUERY,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-
                 this.setState({
                     dataRolForm: data.rolesforms
                 });
@@ -284,66 +253,91 @@ class EnhancedTable extends React.Component {
                     'bottom',
                     'right'
                 );
-            })
-    };
+            })    
+        };
+
+    toggleDummyState = _ => {
+        this.setState(prev => {
+            return { dummyRefreshState: !prev.dummyRefreshState }
+        })
+    }
 
     componentWillMount() {
+        this.fetchData();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+		if(this.state.parentNodes === nextState.parentNodes && this.state.dataRolForm === nextState.dataRolForm){
+            return false;
+        } 
+            
+        if(this.state.dataRolForm.length > 0 && nextState.dataRolForm === 0){
+            return false;
+        }
+
+        return true;        
+	}
+
+    fetchData = _ => {
         this.getRolForms()
+        this.fetchParentItems();
+    }
+
+    fetchParentItems = _ => {
+        this.props.client.query({
+            query: GET_PARENT_ITEMS,
+            fetchPolicy: "no-cache",            
+        })
+        .then(({data: {getParentItems: parents}}) => {
+            this.setState(_ => {
+                return { parentNodes: parents.sort((a, b) => a.Id - b.Id) }
+            });
+        })
+        .catch(error => {
+            this.props.handleOpenSnackbar(
+                'error',
+                `Failed to fetch data: ${error}`,
+                'bottom',
+                'right'
+            );
+        })
+    }
+
+    renderTableRows = _ => {
+        return (
+            this.state.parentNodes.map(node => {
+                return(                    
+                    <RoleFormItem refreshData={_ => {this.fetchData()}} item={node} role={this.props.rolId} roleFormsInfo={this.state.dataRolForm} />
+                )
+            })
+        );
+    }
+
+    renderFormsTable = _ => {
+        return (
+            <Fragment>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <CustomTableCell className={"Table-head"} style={{ width: '220px '}} >Assigned</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{ width: '220px' }} >Code</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{ width: '220px' }} >Name</CustomTableCell>
+                            <CustomTableCell className={"Table-head"} style={{ width: '220px' }} >Value</CustomTableCell>                            
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {this.renderTableRows()}                        
+                    </TableBody>
+                </Table>  
+            </Fragment>
+        );
     }
 
     render() {
-        let forms = this.props.data;
-
         return (
-            <table className="table">
-                <thead className="thead-dark">
-                    <tr>
-                        <th scope="col">Assigned</th>
-                        <th scope="col">Code</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Value</th>
-                        <th scope="col">Parent</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {forms.map((item) => {
-                        let checked = false;
-                        let isActive = false;
-                        let idRolForm = 0;
-                        let parent = '';
-
-                        this.state.dataRolForm.map((itemRolForm) => {
-                            if (this.props.rolId === itemRolForm.IdRoles) {
-                                if (itemRolForm.IdForms === item.Id) {
-                                    if (itemRolForm.IsActive === 1) {
-                                        checked = true;
-                                    }
-                                    isActive = true;
-                                    idRolForm = itemRolForm.Id;
-                                }
-                            }
-                        });
-
-                        if (item.Parent)
-                            parent = item.Parent.Name;
-
-                        return (
-                            <TableItem
-                                idRolForm={idRolForm}
-                                formId={item.Id}
-                                rolId={this.props.rolId}
-                                active={isActive}
-                                asiggned={checked}
-                                code={item.Code}
-                                name={item.Name}
-                                url={item.Value}
-                                updateRolForms={this.getRolForms}
-                                parent={parent}
-                            />
-                        );
-                    })}
-                </tbody>
-            </table>
+            <Fragment>
+                { this.renderFormsTable() }
+            </Fragment>           
         );
     }
 }
