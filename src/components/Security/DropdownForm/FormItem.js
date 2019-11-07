@@ -5,7 +5,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import { withStyles } from '@material-ui/core/styles';
-import withApollo from "react-apollo/withApollo";
 
 import { INSERT_ROL_FORM, TOGGLE_ROL_FORMS } from "./mutations";
 
@@ -68,9 +67,9 @@ class RoleFormItem extends Component{
         const shouldEdit = this.props.roleFormsInfo.find(item => item.IdForms === this.props.item.Id);
 
         if(shouldEdit){
-            const idsToUpdate = this.props.item.Children.map(item => {
+            const idsToUpdate = this.props.item.Children ? this.props.item.Children.map(item => {
                 return item.Id
-            });
+            }) : [];
 
             this.props.client.mutate({
                 mutation: TOGGLE_ROL_FORMS,
@@ -100,7 +99,7 @@ class RoleFormItem extends Component{
                 Date_Updated: moment().format("MM/DD/YYYY"),
             }
 
-            const childRelations = this.props.item.Children.map(item => {
+            const childRelations = this.props.item.Children ? this.props.item.Children.map(item => {
                 return {
                     IdRoles: this.props.role,
                     IdForms: item.Id,
@@ -110,7 +109,7 @@ class RoleFormItem extends Component{
                     Date_Created: moment().format("MM/DD/YYYY"),
                     Date_Updated: moment().format("MM/DD/YYYY"),
                 }
-            })
+            }) : []
 
             this.props.client.mutate({
                 mutation: INSERT_ROL_FORM,
@@ -177,7 +176,7 @@ class RoleFormItem extends Component{
                                         {
                                             Children.map(item => {
                                                 return (
-                                                    <RoleFormItem item={item} roleFormsInfo={this.props.roleFormsInfo} />                                                    
+                                                    <RoleFormItem client={this.props.client} refreshData={this.props.refreshData} item={item} roleFormsInfo={this.props.roleFormsInfo} role={this.props.role}/>                                                    
                                                 );
                                             })
                                         }                               
@@ -192,4 +191,4 @@ class RoleFormItem extends Component{
     }
 }
 
-export default withApollo(RoleFormItem);
+export default RoleFormItem;
