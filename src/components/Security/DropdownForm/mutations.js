@@ -22,3 +22,9 @@ export const UPDATE_ROL_FORM = gql`
     }
 `;
 
+export const TOGGLE_ROL_FORMS = gql`
+    mutation toggleRolesForms($rolesForms: [Int], $IsActive: Boolean, $IdRoles: Int) {
+        toggleRolesForms(rolesForms:$rolesForms, IsActive: $IsActive, IdRoles: $IdRoles)
+    }
+`;
+
