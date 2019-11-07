@@ -17,8 +17,8 @@ import { withStyles } from '@material-ui/core/styles';
 import moment from 'moment';
 import SendtoInterviewModal from './SendtoInterviewModal';
 
-if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
-    localStorage.setItem('languageForm', 'en');
+if (!localStorage.getItem('languageForm')) {
+	localStorage.setItem('languageForm', 'en');
 }
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);

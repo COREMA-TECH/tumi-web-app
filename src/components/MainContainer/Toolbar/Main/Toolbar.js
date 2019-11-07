@@ -46,21 +46,19 @@ class Toolbar extends Component {
 
 	changeLanguage = async (e) => {
 		e.preventDefault();
-		let initialValue = localStorage.getItem('languageForm');
-
+		
 		if (this.state.languageIcon == 'en') {
-			await localStorage.setItem('languageForm', 'es');
+			localStorage.setItem('languageForm', 'es');
         }
 
         if (this.state.languageIcon == 'es') {
-			await localStorage.setItem('languageForm', 'en');
+			localStorage.setItem('languageForm', 'en');
         }
 
 		window.location.reload();
 	};
 
 	componentWillMount() {
-		//this.getRolesFormsInfo();
 		this.setState({
 			languageIcon: localStorage.getItem('languageForm')
 		});

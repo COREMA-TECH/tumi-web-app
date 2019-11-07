@@ -91,7 +91,9 @@ class VerticalLinearStepper extends Component {
                 applicationId: this.props.applicationId
             });
 
-            localStorage.setItem('languageForm', 'en');
+            if (!localStorage.getItem('languageForm')) {
+                localStorage.setItem('languageForm', 'en');
+            }
         } catch (error) {
             window.location.href = "/home/application";
         }
