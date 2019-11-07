@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormsTable from './FormsTable';
 import green from '@material-ui/core/colors/green';
@@ -436,7 +434,7 @@ class FormsForm extends React.Component {
 		});
 
 		return (
-			<div className={classes.container}>
+			<React.Fragment>
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -444,167 +442,148 @@ class FormsForm extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className={classes.divStyle}>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
-						<InputLabel htmlFor="code">Code</InputLabel>
-						<Input
-							id="code"
-							name="code"
-							inputProps={{
-								maxLength: 15,
-								classes: {
-									input: classes.codeControl
-								}
-							}}
-							className={classes.resize}
-							error={!this.state.codeValid}
-							value={this.state.code}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
-						<InputLabel htmlFor="name">Name</InputLabel>
-						<Input
-							id="name"
-							name="name"
-							inputProps={{
-								maxLength: 50,
-								classes: {
-									input: classes.nameControl
-								}
-							}}
-							className={classes.resize}
-							error={!this.state.nameValid}
-							value={this.state.name}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
-						<InputLabel htmlFor="value">Value</InputLabel>
-						<Input
-							id="value"
-							name="value"
-							inputProps={{
-								maxLength: 40,
-								classes: {
-									input: classes.valueControl
-								}
-							}}
-							className={classes.resize}
-							value={this.state.value}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
-						<InputLabel htmlFor="sort">Sort</InputLabel>
-						<Input
-							type="number"
-							id="sort"
-							name="sort"
-							value={this.state.sort}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-							className={classes.resize}
-							inputProps={{
-								max: 999,
-								classes: {
-									input: classes.valueControl
-								}
-							}}
-						/>
-					</FormControl>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
-						<InputLabel htmlFor="sort">Show In Menu</InputLabel>
-						<Select
-							options={this.state.parents}
-							value={this.getSelectedParent()}
-							onChange={this.updateParent}
-							closeMenuOnSelect={true}
-							components={makeAnimated()}
-							isMulti={false}
-							className={classes.resizeCombo}
-							placeholder="Parent"
+				<div className="card">
+					<div className="card-body">
+						<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+							<label htmlFor="code">Code</label>
+							<input
+								id="code"
+								name="code"
+								inputProps={{
+									maxLength: 15,
+									classes: {
+										input: classes.codeControl
+									}
+								}}
+								className={"form-control"}
+								error={!this.state.codeValid}
+								value={this.state.code}
+								onBlur={(event) => this.onBlurHandler(event)}
+								onChange={(event) => this.onChangeHandler(event)}
+								placeholder="Code"
+							/>
+						</FormControl>
+						<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+							<label htmlFor="name">Name</label>
+							<input
+								id="name"
+								name="name"
+								inputProps={{
+									maxLength: 50,
+									classes: {
+										input: classes.nameControl
+									}
+								}}
+								className={"form-control"}
+								error={!this.state.nameValid}
+								value={this.state.name}
+								onBlur={(event) => this.onBlurHandler(event)}
+								onChange={(event) => this.onChangeHandler(event)}
+							/>
+						</FormControl>
+						<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+							<label htmlFor="value">Url</label>
+							<input
+								id="value"
+								name="value"
+								inputProps={{
+									maxLength: 40,
+									classes: {
+										input: classes.valueControl
+									}
+								}}
+								className={"form-control"}
+								value={this.state.value}
+								onBlur={(event) => this.onBlurHandler(event)}
+								onChange={(event) => this.onChangeHandler(event)}
+							/>
+						</FormControl>
+						<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+							<label htmlFor="sort">Sort</label>
+							<input
+								type="number"
+								id="sort"
+								name="sort"
+								value={this.state.sort}
+								onBlur={(event) => this.onBlurHandler(event)}
+								onChange={(event) => this.onChangeHandler(event)}
+								className={"form-control"}
+								inputProps={{
+									max: 999,
+									classes: {
+										input: classes.valueControl
+									}
+								}}
+							/>
+						</FormControl>
+						<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+							<label htmlFor="sort">Icon</label>
+							<input
+								type="text"
+								id="icon"
+								name="icon"
+								value={this.state.icon}
+								onBlur={(event) => this.onBlurHandler(event)}
+								onChange={(event) => this.onChangeHandler(event)}
+								className={"form-control"}
+								inputProps={{
+									max: 999,
+									classes: {
+										input: classes.valueControl
+									}
+								}}
+							/>
+						</FormControl>
+						<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+							<label htmlFor="sort">Active?</label>
+							<Switch
+								name="show"
+								checked={this.state.show}
+								onChange={this.handleShowChange('show')}
+								color="primary"
+								inputProps={{ 'aria-label': 'primary checkbox' }}
+							/>
+						</FormControl>
+						<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+							<label htmlFor="sort">Show In Menu</label>
+							<Select
+								options={this.state.parents}
+								value={this.getSelectedParent()}
+								onChange={this.updateParent}
+								closeMenuOnSelect={true}
+								components={makeAnimated()}
+								isMulti={false}
+								className={classes.resizeCombo}
+								placeholder="Parent"
 
-						/>
-					</FormControl>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
-						<Switch
-							name="show"
-							checked={this.state.show}
-							onChange={this.handleShowChange('show')}
-							color="primary"
-							inputProps={{ 'aria-label': 'primary checkbox' }}
-						/>
-					</FormControl>
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip
-								title={
-									this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
-								}
-							>
-								<div>
-									<Button
-										disabled={this.state.loading}
-										//	disabled={!this.state.formValid}
-										variant="fab"
-										color="primary"
-										className={buttonClassname}
-										onClick={this.addFormsHandler}
-									>
-										{success ? (
-											<CheckIcon />
-										) : this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-													<SaveIcon />
-												) : (
-													<AddIcon />
-												)}
-									</Button>
-								</div>
-							</Tooltip>
-							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+							/>
+						</FormControl>
+						<div className={classes.root}>
+							<div className={classes.wrapper}>
+								
+									<div>
+										<button onClick={this.addFormsHandler} className="btn btn-success" disabled={this.state.loading}>
+											Save
+										</button>
+										<button onClick={this.cancelFormsHandler} className="btn btn-light" disabled={this.state.loading || !this.state.enableCancelButton}>
+											Cancel 
+										</button>
+									</div>
+								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+							</div>
 						</div>
-					</div>
 
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip title={'Cancel Operation'}>
-								<div>
-									<Button
-										disabled={this.state.loading || !this.state.enableCancelButton}
-										variant="fab"
-										color="secondary"
-										className={buttonClassname}
-										onClick={this.cancelFormsHandler}
-									>
-										<ClearIcon />
-									</Button>
-								</div>
-							</Tooltip>
-						</div>
+						
 					</div>
 				</div>
-				<div className={classes.divStyle}>
-					<FormsTable
-						data={this.state.data}
-						//company={this.state.company}
-						loading={this.state.loading}
-						onEditHandler={this.onEditHandler}
-						onDeleteHandler={this.onDeleteHandler}
-					/>
-				</div>
-			</div>
+				<FormsTable
+					data={this.state.data}
+					//company={this.state.company}
+					loading={this.state.loading}
+					onEditHandler={this.onEditHandler}
+					onDeleteHandler={this.onDeleteHandler}
+				/>
+			</React.Fragment>
 		);
 	}
 }

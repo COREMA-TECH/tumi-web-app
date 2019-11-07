@@ -5,7 +5,7 @@
         height: 25px;
         line-height: 25px;
         margin-bottom: 0;
-        margin-left: 1rem;
+        margin-left: 255px;
         margin-top: 0 !important;
         position: fixed;
         transition: margin-left .5s ease-out;
@@ -32,7 +32,7 @@
     width: 100% !important;
 
     @include media-breakpoint-up(md){
-        padding-left: 3rem !important;
+        padding-left: 2.5rem !important;
     }
 }
 
@@ -42,7 +42,7 @@
         list-style: none;
         .closeIcon {
             display: block;
-            color: $white !important;
+            color: $text-color !important;
             text-align: right;
             padding-right: 1rem;
             padding-top: 10px;
@@ -67,64 +67,38 @@
         z-index: 999;
     }
     &-option {
-        border-bottom: solid 1px #44555d;
         &:first-child, &:last-child {
             border-bottom: 0;
         }
     }
 }
 .MenuMobile {
-    background: transparent; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: $white; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-right: map-get($gray-shades, gray-4) solid 1px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
     clear: both;
-    height: 100%;
+    height: calc(100% - 50px);
+    left: 0;
     overflow: hidden;
-    transition: left .5s ease-out;
     position: fixed;
-    left: -290px;
-    z-index: 9999;
+    top: 50px;
+    transition: left .5s ease-out;
+    z-index: 1020;
     width: 290px;
-    &:after {
-        background: url(../images/logo-orion.png) no-repeat bottom left;
-        background-size: contain;
-        display: block;
-        content: " ";
-        position: absolute;
-        bottom: 0;
-        left: 25%;
-        height: 150px;
-        width: 150px;
-    }
-    &::before {
-        background: #0F2027;  /* fallback for old browsers */
-        background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        background-size: cover;
-        content: " ";
-        display: block;
-        opacity: .9;
-        position: absolute;
-        height: 100%;
-        width: 100%;
+    @include media-breakpoint-down(sm) {
+        left: -290px;
     }
     &-callback {
         display: none;
     }
     &-callback:checked~.MenuMobile {
-        left: 0px;
+        left: -290px;
         @include media-breakpoint-down(sm) {
             width: 100%;
         }
     }
     &-callback:checked~.Header-mobileMenu {
-        margin-left: 3rem;
-    }
-    &-callback:checked~&-overlay {
-        background-color: rgba(0,0,0,.5);
-        display: block;
-        height: 100%;
-        position: fixed;
-        width: 100%;
-        z-index: 98;
+        margin-left: 1rem;
     }
     &-icon {
         text-align: center;
@@ -133,7 +107,7 @@
     }
     &-link {
         align-items: center;
-        color: $white;
+        color: $text-color;
         display: flex;
         justify-content: flex-start;
         font-family: $font-family-sans-serif;
@@ -142,16 +116,18 @@
         text-decoration: none;
         width: 100%;
         span {
-            color: $white;
+            color: $text-color;
+            font-size: $font-family-sans-serif;
             font-weight: 400;
+            text-transform: uppercase;
         }
         &:hover {
-            color: $white;
+            color: $text-color;
             text-decoration: none;
         }
         &.selected {
             border-left: solid 3px $brand-primary;
-            color: $white;
+            color: $text-color;
         }
     }
     &-overlay {
@@ -281,7 +257,7 @@
 }
 
 .SubMenu {
-    background: darken($brand-secondary,5);
+    background: lighten(map-get($gray-shades,light), 0.50);
     height: 0;
     overflow: hidden;
     padding-bottom: 0;
@@ -298,7 +274,10 @@
     }
     &-link {
         font-family: $font-family-sans-serif;
-        color: lighten($color: $brand-primary, $amount: 25);
+        color: $text-color;
+        &:hover {
+            color: black;
+        }
     }
     &-show {
         padding-bottom: 1rem;

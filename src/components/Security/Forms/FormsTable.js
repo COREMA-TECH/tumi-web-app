@@ -107,30 +107,36 @@ const CustomTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 const styles = (theme) => ({
-	root: {
-		width: '100%',
-		marginTop: theme.spacing.unit * 3,
-		overflowX: 'auto'
-	},
-	table: {
-		minWidth: 500
-	},
-	tableWrapper: {
-		overflowX: 'auto'
-	},
-	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		}
-	},
-	fab: {
-		margin: theme.spacing.unit * 2
-	},
-	absolute: {
-		position: 'absolute',
-		bottom: theme.spacing.unit * 2,
-		right: theme.spacing.unit * 3
-	}
+    root: {
+        width: '100%',
+        marginTop: theme.spacing.unit * 3,
+        overflowX: 'auto'
+    },
+    table: {
+        minWidth: 500
+    },
+    tableWrapper: {
+        overflowX: 'auto'
+    },
+    row: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: '#fff'
+        },
+        '&:hover': {
+            cursor: 'pointer'
+        }
+    },
+    fab: {
+        margin: theme.spacing.unit * 2
+    },
+    absolute: {
+        position: 'absolute',
+        bottom: theme.spacing.unit * 2,
+        right: theme.spacing.unit * 3
+    },
+    th: {
+        backgroundColor: '#3da2c7'
+    }
 });
 
 let id = 0;
@@ -162,88 +168,67 @@ class FormsTable extends React.Component {
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
 		return (
-			<Paper className={classes.root}>
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<CustomTableCell padding="none" />
-							<CustomTableCell padding="none" />
-							<CustomTableCell>Code</CustomTableCell>
-							<CustomTableCell>Name</CustomTableCell>
-							<CustomTableCell>Value</CustomTableCell>
-							<CustomTableCell>Sort</CustomTableCell>
-							<CustomTableCell>Parent</CustomTableCell>
-							<CustomTableCell className={'text-center'}>Show In Menu</CustomTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-							return (
-								<TableRow hover className={classes.row} key={uuidv4()}>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
-										{' '}
-										<Tooltip title="Edit">
-											<div>
-												<IconButton
-													disabled={this.props.loading}
-													onClick={() => {
-														return this.props.onEditHandler({ ...row });
-													}}
-												>
-													<EditIcon color="primary" />
-												</IconButton>
-											</div>
-										</Tooltip>
-									</CustomTableCell>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
-										<Tooltip title="Delete">
-											<div>
-												<IconButton
-													disabled={this.props.loading}
-													onClick={() => {
-														return this.props.onDeleteHandler(row.Id);
-													}}
-												>
-													<DeleteIcon color="primary" />
-												</IconButton>
-											</div>
-										</Tooltip>
-									</CustomTableCell>
-									<CustomTableCell>{row.Code}</CustomTableCell>
-									<CustomTableCell>{row.Name}</CustomTableCell>
-									<CustomTableCell>{row.Value}</CustomTableCell>
-									<CustomTableCell>{row.sort}</CustomTableCell>
-									<CustomTableCell>{row.Parent ? row.Parent.Name : ''}</CustomTableCell>
-									<CustomTableCell className={'text-center'}>
-										<Checkbox
-											color="default"
-											checked={row.show}
-											inputProps={{
-												'aria-label': 'checkbox with default color',
-											}}
-										/>
-									</CustomTableCell>
-								</TableRow>
-							);
-						})}
-					</TableBody>
-					<TableFooter>
-						<TableRow>
-							{items.length > 0 && (
-								<TablePagination
-									colSpan={6}
-									count={items.length}
-									rowsPerPage={rowsPerPage}
-									page={page}
-									onChangePage={this.handleChangePage}
-									onChangeRowsPerPage={this.handleChangeRowsPerPage}
-									ActionsComponent={TablePaginationActionsWrapped}
-								/>
-							)}
-						</TableRow>
-					</TableFooter>
-				</Table>
-			</Paper>
+			<div className='card'>
+				<div className="card-body">
+					<Table className={classes.table}>
+						<TableHead>
+							<TableRow>
+								<CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Actions</CustomTableCell>
+								<CustomTableCell className={"Table-head"}>Code</CustomTableCell>
+								<CustomTableCell className={"Table-head"}>Name</CustomTableCell>
+								<CustomTableCell className={"Table-head"}>Value</CustomTableCell>
+								<CustomTableCell className={"Table-head"}>Sort</CustomTableCell>
+								<CustomTableCell className={"Table-head"}>Parent</CustomTableCell>
+								<CustomTableCell className={'Table-head'}>Show In Menu</CustomTableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+								return (
+									<TableRow hover className={classes.row} key={uuidv4()}>
+										<CustomTableCell component="th" padding="none">
+											<button className="btn btn-success float-left mr-1" disabled={this.props.loading} onClick={() => {return this.props.onEditHandler({ ...row });}}>
+												<i className="fas fa-pen"></i>
+											</button>
+											<button className="btn btn-danger float-left" disabled={this.props.loading} onClick={() => {return this.props.onDeleteHandler(row.Id);}}>
+												<i className="fas fa-trash"></i>
+											</button>
+										</CustomTableCell>
+										<CustomTableCell>{row.Code}</CustomTableCell>
+										<CustomTableCell>{row.Name}</CustomTableCell>
+										<CustomTableCell>{row.Value}</CustomTableCell>
+										<CustomTableCell>{row.sort}</CustomTableCell>
+										<CustomTableCell>{row.Parent ? row.Parent.Name : ''}</CustomTableCell>
+										<CustomTableCell className={'text-center'}>
+											<Checkbox
+												color="default"
+												checked={row.show}
+												inputProps={{
+													'aria-label': 'checkbox with default color',
+												}}
+											/>
+										</CustomTableCell>
+									</TableRow>
+								);
+							})}
+						</TableBody>
+						<TableFooter>
+							<TableRow>
+								{items.length > 0 && (
+									<TablePagination
+										count={items.length}
+										rowsPerPage={rowsPerPage}
+										page={page}
+										onChangePage={this.handleChangePage}
+										onChangeRowsPerPage={this.handleChangeRowsPerPage}
+										ActionsComponent={TablePaginationActionsWrapped}
+									/>
+								)}
+							</TableRow>
+						</TableFooter>
+					</Table>
+				</div>
+			</div>
 		);
 	}
 }

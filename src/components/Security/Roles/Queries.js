@@ -7,10 +7,6 @@ export const GET_FORMS_QUERY = gql`
             Code
             Name
             Value
-            Value01
-            Value02
-            Value03
-            Value04
             IsActive
         }
     }

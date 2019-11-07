@@ -8,9 +8,12 @@ import CustomBreadcrumb from '../../../components/ui-components/CustomBreadcrumb
 
 class MainContainer extends Component {
 
-	handleClickMenu = (event) => {
-		//Open the menu
-	};
+	constructor(props) {
+		super(props);
+		this.state = {
+			collapsedMenu: false
+		}
+	}
 
 	setTitle = (str) => {
 		var pathname = str.split('/');
@@ -59,31 +62,40 @@ class MainContainer extends Component {
 		return title;
 	};
 
+	/**
+	 * Collapse menu when clicking the bars icon
+	 * @return void
+	 */
+	collapsedMenu = () => {
+		this.setState(_ => {
+			return { collapsedMenu: !this.state.collapsedMenu}
+		});
+	}
+
 	renderHeader = () => {
 		if (localStorage.getItem('LoginId'))
-			return <div>
-				<input type="checkbox" className="MenuMobile-callback" id="MenuMobile-callback" />
+			return <React.Fragment>
+				<input type="checkbox" className="MenuMobile-callback" id="MenuMobile-callback" onClick={this.collapsedMenu} />
 				{localStorage.getItem('showMenu') == 'true' ?
 					<label className="Header-mobileMenu" htmlFor="MenuMobile-callback">
 						<i className="fas fa-bars" />
 					</label> : ('')
 				}
 				<MobileMenu />
-				<div className="MenuMobile-overlay" onClick={this.props.handleCloseMenu} />
 				<div className="main-container--header">
 					<span className="icon-menu" onClick={this.handleClickMenu} />
 					<span className="main-container__title"> {this.setTitle(window.location.pathname)}</span>
 					<Toolbar handleOpenSnackbar={this.props.handleOpenSnackbar} />
 				</div>
-				<CustomBreadcrumb />
-			</div>
+			</React.Fragment>
 	}
-
+	
 	render() {
 		return (
-			<div className="main-container">
+			<div className={`main-container ${!this.state.collapsedMenu ? 'uncollapsed-menu' : ''} `}>
 				{this.renderHeader()}
 				<div className="main-container--container">
+					<CustomBreadcrumb />
 					<Container />
 				</div>
 			</div>

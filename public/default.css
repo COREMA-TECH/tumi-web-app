@@ -3,6 +3,7 @@
 @import "https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,900";
 @import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900");
 @import url("https://fonts.googleapis.com/css?family=Ropa+Sans&display=swap");
+@import url("https://fonts.googleapis.com/css?family=Poppins:100,300,400,500,700,900&display=swap");
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic);
 html,
 body {
@@ -15,7 +16,7 @@ body {
   font-size: 100%; }
 
 * {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   line-height: 1.5; }
 
 h1 {
@@ -191,7 +192,7 @@ p {
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Nunito Sans", sans-serif;
+  --font-family-sans-serif: "Poppins", sans-serif;
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
 *,
@@ -211,7 +212,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 0.9rem;
   font-weight: 400;
   line-height: 1.5;
@@ -4929,7 +4930,7 @@ a.close.disabled {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -5014,7 +5015,7 @@ a.close.disabled {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -8175,12 +8176,12 @@ a.text-dark:hover, a.text-dark:focus {
     border-color: #dee2e6; } }
 
 * {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 300; }
 
 body {
   background: #f5f7f9 !important;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 300; }
 
 input[type="date"]::-webkit-inner-spin-button {
@@ -9805,7 +9806,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   margin-top: 0 !important; }
 
 .forgot {
-  font-family: "Nunito Sans", sans-serif; }
+  font-family: "Poppins", sans-serif; }
 
 .txt1 {
   margin-top: 1rem; }
@@ -10689,9 +10690,10 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   text-transform: capitalize; }
 
 .CustomBreadcrumb {
-  margin-top: 50px;
-  padding: 10px 15px;
+  padding-left: 15px;
+  padding-right: 15px;
   position: fixed;
+  top: 60px;
   width: 100%;
   z-index: 1050; }
   .CustomBreadcrumb-content {
@@ -10705,7 +10707,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   height: 25px;
   line-height: 25px;
   margin-bottom: 0;
-  margin-left: 1rem;
+  margin-left: 255px;
   margin-top: 0 !important;
   position: fixed;
   -webkit-transition: margin-left .5s ease-out;
@@ -10728,7 +10730,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   width: 100% !important; }
   @media (min-width: 768px) {
     .main-container__title {
-      padding-left: 3rem !important; } }
+      padding-left: 2.5rem !important; } }
 
 .MainMenu-option {
   -webkit-box-sizing: border-box;
@@ -10736,7 +10738,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   list-style: none; }
   .MainMenu-option .closeIcon {
     display: block;
-    color: #FFF !important;
+    color: #7e7e7e !important;
     text-align: right;
     padding-right: 1rem;
     padding-top: 10px; }
@@ -10758,67 +10760,38 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   position: relative;
   z-index: 999; }
 
-.MainMenu-option {
-  border-bottom: solid 1px #44555d; }
-  .MainMenu-option:first-child, .MainMenu-option:last-child {
-    border-bottom: 0; }
+.MainMenu-option:first-child, .MainMenu-option:last-child {
+  border-bottom: 0; }
 
 .MenuMobile {
-  background: transparent;
+  background: #FFF;
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  border-right: #ededed solid 1px;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
   clear: both;
-  height: 100%;
+  height: calc(100% - 50px);
+  left: 0;
   overflow: hidden;
+  position: fixed;
+  top: 50px;
   -webkit-transition: left .5s ease-out;
   -o-transition: left .5s ease-out;
   transition: left .5s ease-out;
-  position: fixed;
-  left: -290px;
-  z-index: 9999;
+  z-index: 1020;
   width: 290px; }
-  .MenuMobile:after {
-    background: url(../images/logo-orion.png) no-repeat bottom left;
-    background-size: contain;
-    display: block;
-    content: " ";
-    position: absolute;
-    bottom: 0;
-    left: 25%;
-    height: 150px;
-    width: 150px; }
-  .MenuMobile::before {
-    background: #0F2027;
-    /* fallback for old browsers */
-    background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: -webkit-gradient(linear, left top, left bottom, from(#2C5364), color-stop(#203A43), to(#0F2027));
-    background: -webkit-linear-gradient(top, #2C5364, #203A43, #0F2027);
-    background: -o-linear-gradient(top, #2C5364, #203A43, #0F2027);
-    background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    background-size: cover;
-    content: " ";
-    display: block;
-    opacity: .9;
-    position: absolute;
-    height: 100%;
-    width: 100%; }
+  @media (max-width: 767.98px) {
+    .MenuMobile {
+      left: -290px; } }
   .MenuMobile-callback {
     display: none; }
   .MenuMobile-callback:checked ~ .MenuMobile {
-    left: 0px; }
+    left: -290px; }
     @media (max-width: 767.98px) {
       .MenuMobile-callback:checked ~ .MenuMobile {
         width: 100%; } }
   .MenuMobile-callback:checked ~ .Header-mobileMenu {
-    margin-left: 3rem; }
-  .MenuMobile-callback:checked ~ .MenuMobile-overlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    display: block;
-    height: 100%;
-    position: fixed;
-    width: 100%;
-    z-index: 98; }
+    margin-left: 1rem; }
   .MenuMobile-icon {
     text-align: center;
     text-decoration: none;
@@ -10827,27 +10800,29 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    color: #FFF;
+    color: #7e7e7e;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     -webkit-box-pack: start;
     -ms-flex-pack: start;
     justify-content: flex-start;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: "Poppins", sans-serif;
     font-size: 0.8rem;
     padding: 1rem;
     text-decoration: none;
     width: 100%; }
     .MenuMobile-link span {
-      color: #FFF;
-      font-weight: 400; }
+      color: #7e7e7e;
+      font-size: "Poppins", sans-serif;
+      font-weight: 400;
+      text-transform: uppercase; }
     .MenuMobile-link:hover {
-      color: #FFF;
+      color: #7e7e7e;
       text-decoration: none; }
     .MenuMobile-link.selected {
       border-left: solid 3px #3ca2c8;
-      color: #FFF; }
+      color: #7e7e7e; }
   .MenuMobile-overlay {
     display: none; }
   .MenuMobile-wrapper {
@@ -10856,7 +10831,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     text-align: center; }
 
 .menu__item {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: "Poppins", sans-serif;
   padding: 1rem;
   text-decoration: none !important; }
   .menu__item .fa, .menu__item .fas, .menu__item .far {
@@ -10950,7 +10925,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     left: auto !important; }
 
 .SubMenu {
-  background: #1d333f;
+  background: #f7f8fa;
   height: 0;
   overflow: hidden;
   padding-bottom: 0;
@@ -10964,15 +10939,67 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     margin-bottom: 0.5rem;
     margin-top: 0.5rem; }
   .SubMenu-link {
-    font-family: "Nunito Sans", sans-serif;
-    color: #9fd1e4; }
+    font-family: "Poppins", sans-serif;
+    color: #7e7e7e; }
+    .SubMenu-link:hover {
+      color: black; }
   .SubMenu-show {
     padding-bottom: 1rem;
     padding-top: 1rem;
     height: auto; }
 
+.container-fluid {
+  max-width: 1616px; }
+
 .main-contract__content {
   width: 100% !important; }
+
+/* Track */
+/* Handle */
+/* Handle on hover */
+@media (max-width: 760px) {
+  .main-container {
+    width: 100% !important; } }
+
+.main-container {
+  width: 100%;
+  height: 100vh; }
+  .main-container--header {
+    height: 50px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    position: fixed;
+    z-index: 30;
+    width: 100%; }
+
+.main-container--container {
+  height: 92vh;
+  padding-top: 80px; }
+  .main-container--container::-webkit-scrollbar {
+    width: 10px; }
+  .main-container--container::-webkit-scrollbar-track {
+    background: #f1f1f1; }
+  .main-container--container::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 5px;
+    height: 30px; }
+    .main-container--container::-webkit-scrollbar-thumb:hover {
+      background: #555; }
+  .main-container.uncollapsed-menu .main-container--container {
+    margin-left: 290px;
+    -webkit-transition: left .5s ease-out;
+    -o-transition: left .5s ease-out;
+    transition: left .5s ease-out; }
+    @media (max-width: 767.98px) {
+      .main-container.uncollapsed-menu .main-container--container {
+        margin-left: 0; } }
 
 .Preferences-form .options-company {
   height: auto !important;

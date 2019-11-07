@@ -96,16 +96,16 @@ class MobileMenu extends Component {
         return (
             <div className="MenuMobile">
                 <ul className="MainMenu-container">
-                    <li className="MainMenu-option">
+                    {/* <li className="MainMenu-option">
                         <a className="closeIcon" onClick={this.props.handleCloseMenu}>
                             <i className="far fa-times-circle"></i>
                         </a>
-                    </li>
+                    </li> */}
 
                     {items.map((item, i) => {
                         return <li key={i} className="MainMenu-option">
                             <a href={item.Value} className="MenuMobile-link" onClick={e => {this.showSubMenu(item.Id, item.Value, e);}}>
-                                <i className={'fas fa-warehouse MenuMobile-icon'} title={item.Code} />
+                                <i className={`${item.icon} MenuMobile-icon`} title={item.Code} />
                                 <span>{item.Name}</span>
                             </a>
                             <ul className="SubMenu">
