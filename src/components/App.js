@@ -27,7 +27,7 @@ export const logPageView = () => {
 	ReactGA.pageview(window.location.pathname);
 }
 
-if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
+if (!localStorage.getItem('languageForm')) {
 	localStorage.setItem('languageForm', 'en');
 }
 

@@ -562,7 +562,7 @@ const Document = props => {
                                             <tr>
                                                 <td style={{ lineHeight: "1", verticalAlign: 'top' }}>
                                                     <input
-                                                        disabled={isCreated}
+                                                        // disabled={isCreated}
                                                         type="text"
                                                         style={{ border: 0, height: '16.5px' }}
                                                         id="excention-year"
@@ -1285,7 +1285,7 @@ const Document = props => {
                                                 <tr>
                                                     <td style={{ lineHeight: "1", verticalAlign: 'top' }}>
                                                         <input
-                                                            disabled={isCreated}
+                                                            // disabled={isCreated}
                                                             type="text"
                                                             style={{ border: 0, height: '16.5px' }}
                                                             id="excention-year"

@@ -11,8 +11,8 @@ import Skills from "./skills/Skills";
 import DatePicker from "react-datepicker";
 
 
-if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
-    localStorage.setItem('languageForm', 'en');
+if (!localStorage.getItem('languageForm')) {
+	localStorage.setItem('languageForm', 'en');
 }
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);

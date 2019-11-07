@@ -293,10 +293,6 @@ class FormsW4 extends Component {
         }
     };
 
-    sleep() {
-        return new Promise((resolve) => setTimeout(resolve, 8000));
-    }
-
     externalSetState = (updateData, callback = () => { }) => {
         this.setState(updateData, _ => callback());
     }
@@ -309,50 +305,50 @@ class FormsW4 extends Component {
         }
     }
 
-    render() {
-        let renderSignatureDialog = () => (
-            <div>
-                <Dialog
-                    open={this.state.openSignature}
-                    fullWidth
-                    onClose={() => {
-                        this.setState({
-                            openSignature: false,
-                        }, () => {
-                            if (this.state.signature === '') {
-                                this.setState({
-                                    accept: false
-                                })
-                            }
-                        })
-                    }}
-                    aria-labelledby="form-dialog-title">
-                    <Toolbar>
-                        <h1 className="primary apply-form-container__label">Please Sign</h1>
-                        <Button color="default" onClick={() => {
-                            this.setState(() => ({ openSignature: false }),
-                                () => {
-                                    if (this.state.signature === '') {
-                                        this.setState({
-                                            accept: false
-                                        })
-                                    }
-                                });
-                        }}>
-                            Close
-                                </Button>
-                    </Toolbar>
-                    <DialogContent>
-                        <SignatureForm
-                            applicationId={this.state.applicationId}
-                            signatureValue={this.handleSignature}
-                            showSaveIcon={null}
-                        />
-                    </DialogContent>
-                </Dialog>
-            </div>
-        );
+    renderSignatureDialog = () => (
+        <Fragment>
+            <Dialog
+                open={this.state.openSignature}
+                fullWidth
+                onClose={() => {
+                    this.setState({
+                        openSignature: false,
+                    }, () => {
+                        if (this.state.signature === '') {
+                            this.setState({
+                                accept: false
+                            })
+                        }
+                    })
+                }}
+                aria-labelledby="form-dialog-title">
+                <Toolbar>
+                    <h1 className="primary apply-form-container__label">Please Sign</h1>
+                    <Button color="default" onClick={() => {
+                        this.setState(() => ({ openSignature: false }),
+                            () => {
+                                if (this.state.signature === '') {
+                                    this.setState({
+                                        accept: false
+                                    })
+                                }
+                            });
+                    }}>
+                        Close
+                            </Button>
+                </Toolbar>
+                <DialogContent>
+                    <SignatureForm
+                        applicationId={this.state.applicationId}
+                        signatureValue={this.handleSignature}
+                        showSaveIcon={null}
+                    />
+                </DialogContent>
+            </Dialog>
+        </Fragment>
+    )
 
+    render() {
         return (
             <div className="Apply-container--application" style={{ maxWidth: '900px', width: '100%', margin: '0 auto' }}>
                 <div className="row">
@@ -392,6 +388,7 @@ class FormsW4 extends Component {
                                             <Document
                                                 setState={this.externalSetState}
                                                 languageForm={localStorage.getItem('languageForm')}
+                                                // languageForm="es"
                                                 showReadOnlyFields={this.state.showReadOnlyFields}
                                                 data={{
                                                     firstName: this.state.firstName,
@@ -1835,7 +1832,7 @@ class FormsW4 extends Component {
                     </div>
                 </div>
                 {
-                    renderSignatureDialog()
+                    this.renderSignatureDialog()
                 }
             </div>
         );

@@ -21,8 +21,9 @@ import IndependentContractDialog from './IndependentContract/Modal';
 import moment from 'moment';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 
-if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null)
-    localStorage.setItem('languageForm', 'en');
+if (!localStorage.getItem('languageForm')) {
+	localStorage.setItem('languageForm', 'en');
+}
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
