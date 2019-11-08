@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import green from '@material-ui/core/colors/green';
@@ -15,9 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+import InputForm from 'ui-components/InputForm/InputForm';
 
 import withGlobalContent from 'Generic/Global';
 import RolesDropdown from "../DropdownForm/RolesDropdown";
@@ -149,7 +146,7 @@ class RolesForm extends React.Component {
 		//this.setState({ [name]: value });
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
-	onBlurHandler(e) {
+	onBlurHandler() {
 		//const name = e.target.name;
 		//const value = e.target.value;
 		//this.setState({ [name]: value.trim() }, this.validateField(name, value));
@@ -256,7 +253,6 @@ class RolesForm extends React.Component {
 	};
 
 	getObjectToInsertAndUpdate = () => {
-		let id = 0;
 		let query = INSERT_ROLES_QUERY;
 		const isEdition = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
 
@@ -290,7 +286,7 @@ class RolesForm extends React.Component {
 							}
 						}
 					})
-					.then((data) => {
+					.then(() => {
 						this.props.handleOpenSnackbar('success', isEdition ? 'Roles Updated!' : 'Roles Inserted!');
 						this.loadRoles();
 						this.resetState();
@@ -308,7 +304,7 @@ class RolesForm extends React.Component {
 			}
 		);
 	};
-	deleteRoles = (id) => {
+	deleteRoles = () => {
 		this.setState(
 			{
 				loadingConfirm: true
@@ -321,7 +317,7 @@ class RolesForm extends React.Component {
 							Id: this.state.idToDelete
 						}
 					})
-					.then((data) => {
+					.then(() => {
 						this.props.handleOpenSnackbar('success', 'Role Deleted!');
 						this.loadRoles();
 						this.resetState();
@@ -379,94 +375,51 @@ class RolesForm extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className={classes.divStyle}>					
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
-						<InputLabel htmlFor="description">Description</InputLabel>
-						<Input
-							id="description"
-							name="description"
-							inputProps={{
-								maxLength: 30,
-								classes: {
-									input: classes.descriptionControl
-								}
-							}}
-							className={classes.resize}
-							error={!this.state.descriptionValid}
-							value={this.state.description}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip
-								title={
-									this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
-								}
-							>
-								<div>
-									<Button
+				<div className="col-12">
+					<div className="card w-100">	
+						<div className="card-body">		
+							<div className="row">
+								<div className="col-md-3">
+									<div className="input-group mb-2">									
+										<input
+											id="description"
+											name="description"
+											error={!this.state.descriptionValid}
+											value={this.state.description}
+											onBlur={(event) => this.onBlurHandler()}
+											onChange={(event) => this.onChangeHandler(event)}
+											type="text"
+											placeholder="Description"
+											className="form-control"
+											style={{flexBasis: "200px"}}
+										/>
+									</div>							
+								</div>
+								<div className="col-md-2">
+									<button
+										className="btn btn-success"
 										disabled={this.state.loading}
-										//	disabled={!this.state.formValid}
-										variant="fab"
-										color="primary"
-										className={buttonClassname}
 										onClick={this.addRolesHandler}
 									>
-										{success ? (
-											<CheckIcon />
-										) : this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-													<SaveIcon />
-												) : (
-													<AddIcon />
-												)}
-									</Button>
-								</div>
-							</Tooltip>
-							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
-						</div>
-					</div>
-
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip title={'Cancel Operation'}>
-								<div>
-									<Button
+										Save
+									</button>
+									{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+									<button
+										className="btn btn-danger ml-1"
 										disabled={this.state.loading || !this.state.enableCancelButton}
-										variant="fab"
-										color="secondary"
-										className={buttonClassname}
 										onClick={this.cancelRolesHandler}
 									>
-										<ClearIcon />
-									</Button>
-								</div>
-							</Tooltip>
-						</div>
+										Cancel
+									</button>								
+								</div>							
+							</div>											
+						</div>				
 					</div>
 				</div>
 				<div className={classes.divStyle}>
 					<RolesDropdown
 						data={this.state.data}
 					/>
-
-					{/*<RolesTable*/}
-					{/*data={this.state.data}*/}
-					{/*company={this.state.company}*/}
-					{/*loading={this.state.loading}*/}
-					{/*onEditHandler={this.onEditHandler}*/}
-					{/*onDeleteHandler={this.onDeleteHandler}*/}
-					{/*/>*/}
 				</div>
 			</div>
 		);

@@ -563,6 +563,7 @@ class WorkerCompensation extends Component {
                                 <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(
                                         Document({
+                                            languageForm: localStorage.getItem('languageForm'),
                                             initialProgram: this.state.initialProgram,
                                             initialNotification: this.state.initialNotification,
                                             injuryNotification: this.state.injuryNotification,

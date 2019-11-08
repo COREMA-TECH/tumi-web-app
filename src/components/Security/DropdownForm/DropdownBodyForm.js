@@ -307,7 +307,7 @@ class EnhancedTable extends Component {
         return (
             this.state.parentNodes.map(node => {
                 return(                    
-                    <RoleFormItem refreshData={_ => {this.fetchData()}} item={node} role={this.props.rolId} roleFormsInfo={this.state.dataRolForm} />
+                    <RoleFormItem client={this.props.client} refreshData={_ => {this.fetchData()}} item={node} role={this.props.rolId} roleFormsInfo={this.state.dataRolForm} />
                 )
             })
         );

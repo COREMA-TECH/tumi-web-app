@@ -5,7 +5,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import { withStyles } from '@material-ui/core/styles';
-import withApollo from "react-apollo/withApollo";
 
 import { INSERT_ROL_FORM, TOGGLE_ROL_FORMS } from "./mutations";
 
@@ -25,7 +24,8 @@ class RoleFormItem extends Component{
 
         this.state = {
             open: false,
-            hasRelationship: false
+            hasRelationship: false,
+            isLoading: false
         }
     }
 
@@ -38,7 +38,13 @@ class RoleFormItem extends Component{
     componentWillReceiveProps(nextProps){
         if(this.props.roleFormsInfo !== nextProps.roleFormsInfo && nextProps.roleFormsInfo.length > 0){
             this.setState(_ => ({
-                hasRelationship: this.findMatch(this.props.item.Id, nextProps.roleFormsInfo)
+                hasRelationship: this.findMatch(this.props.item.Id, nextProps.roleFormsInfo)                
+            }));
+        }
+
+        if(this.state.isLoading !== nextProps.isLoading){
+            this.setState(_ => ({
+                isLoading: nextProps.isLoading
             }));
         }
     }
@@ -64,67 +70,86 @@ class RoleFormItem extends Component{
     }
 
     updateRecord = _ => {
-        //Find out if a creation or an edition is needed.
-        const shouldEdit = this.props.roleFormsInfo.find(item => item.IdForms === this.props.item.Id);
+        if(this.state.isLoading){
+            return;
+        }
 
-        if(shouldEdit){
-            const idsToUpdate = this.props.item.Children.map(item => {
-                return item.Id
-            });
-
-            this.props.client.mutate({
-                mutation: TOGGLE_ROL_FORMS,
-                variables: {
-                    rolesForms: [...idsToUpdate, this.props.item.Id],
+        this.setState(_ => ({
+            isLoading: true
+        }), _ => {
+            //Find out if a creation or an edition is needed.
+            const shouldEdit = this.props.roleFormsInfo.find(item => item.IdForms === this.props.item.Id);
+    
+            if(shouldEdit){
+                const idsToUpdate = this.props.item.Children ? this.props.item.Children.map(item => {
+                    return item.Id
+                }) : [];
+    
+                this.props.client.mutate({
+                    mutation: TOGGLE_ROL_FORMS,
+                    variables: {
+                        rolesForms: [...idsToUpdate, this.props.item.Id],
+                        IdRoles: this.props.role,
+                        IsActive: !this.state.hasRelationship
+                    }                
+                })
+                .then(() => {
+                    this.props.refreshData();
+                    this.setState(_ => ({
+                        isLoading: false
+                    }));
+                })
+                .catch(error => {
+                    console.log(error);   
+                    this.setState(_ => ({
+                        isLoading: false
+                    }));             
+                })
+            } 
+            
+            else {
+                const newRelation = {
                     IdRoles: this.props.role,
-                    IsActive: !this.state.hasRelationship
-                }                
-            })
-            .then(() => {
-                this.props.refreshData();
-                // this.toggleRelationship();
-            })
-            .catch(error => {
-                console.log(error);                
-            })
-        } 
-        
-        else {
-            const newRelation = {
-                IdRoles: this.props.role,
-                IdForms: this.props.item.Id,
-                IsActive: 1,
-                User_Created: 1,
-                User_Updated: 1,
-                Date_Created: moment().format("MM/DD/YYYY"),
-                Date_Updated: moment().format("MM/DD/YYYY"),
-            }
-
-            const childRelations = this.props.item.Children.map(item => {
-                return {
-                    IdRoles: this.props.role,
-                    IdForms: item.Id,
+                    IdForms: this.props.item.Id,
                     IsActive: 1,
                     User_Created: 1,
                     User_Updated: 1,
                     Date_Created: moment().format("MM/DD/YYYY"),
                     Date_Updated: moment().format("MM/DD/YYYY"),
                 }
-            })
+    
+                const childRelations = this.props.item.Children ? this.props.item.Children.map(item => {
+                    return {
+                        IdRoles: this.props.role,
+                        IdForms: item.Id,
+                        IsActive: 1,
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: moment().format("MM/DD/YYYY"),
+                        Date_Updated: moment().format("MM/DD/YYYY"),
+                    }
+                }) : []
+    
+                this.props.client.mutate({
+                    mutation: INSERT_ROL_FORM,
+                    variables: {
+                        rolesforms: [newRelation, ...childRelations]
+                    }
+                })
+                .then(() => {
+                    this.setState(_ => ({
+                        isLoading: false
+                    }));
+                })
+                .catch(error => {  
+                    this.setState(_ => ({
+                        isLoading: false
+                    }));              
+                    console.log(error);
+                })            
+            }
+        })
 
-            this.props.client.mutate({
-                mutation: INSERT_ROL_FORM,
-                variables: {
-                    rolesforms: [newRelation, ...childRelations]
-                }
-            })
-            .then(() => {
-                // this.toggleRelationship();
-            })
-            .catch(error => {                
-                console.log(error);
-            })            
-        }        
     }
 
     render(){
@@ -145,8 +170,7 @@ class RoleFormItem extends Component{
                                 name={`${Id}-hasRelationship`}
                                 className="onoffswitch-checkbox"
                                 id={`${Id}-hasRelationship`}
-                                value={this.state.hasRelationship}
-                                // onChange={this.toggleRelationship}
+                                value={this.state.hasRelationship}                                
                                 onChange={this.updateRecord}
                             />
                             <label className="onoffswitch-label" htmlFor={`${Id}-hasRelationship`}>
@@ -177,7 +201,7 @@ class RoleFormItem extends Component{
                                         {
                                             Children.map(item => {
                                                 return (
-                                                    <RoleFormItem item={item} roleFormsInfo={this.props.roleFormsInfo} />                                                    
+                                                    <RoleFormItem client={this.props.client} refreshData={this.props.refreshData} item={item} roleFormsInfo={this.props.roleFormsInfo} role={this.props.role}/>                                                    
                                                 );
                                             })
                                         }                               
@@ -192,4 +216,4 @@ class RoleFormItem extends Component{
     }
 }
 
-export default withApollo(RoleFormItem);
+export default RoleFormItem;
