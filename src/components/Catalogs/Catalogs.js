@@ -139,10 +139,6 @@ class Catalogs extends React.Component {
 				DisplayLabel
 				Description
 				Value
-				Value01
-				Value02
-				Value03
-				Value04
 			}
 		}
 	`;
@@ -682,10 +678,6 @@ class Catalogs extends React.Component {
 								DisplayLabel: `'${this.state.displayLabel}'`,
 								Description: `'${this.state.description}'`,
 								Value: `'${this.state.value}'`,
-								Value01: null,
-								Value02: null,
-								Value03: null,
-								Value04: null,
 								IsActive: 1,
 								User_Created: 1,
 								User_Updated: 1,
