@@ -495,7 +495,8 @@ class BackgroundCheck extends Component {
     componentWillMount() {
         this.setState({
             loadingApplicantData: true,
-            userId: localStorage.getItem('LoginId') || 0
+            userId: localStorage.getItem('LoginId') || 0,
+            languageForm: localStorage.getItem("languageForm")
         }, () => {
             this.getDocumentType();
         });
@@ -576,8 +577,6 @@ class BackgroundCheck extends Component {
 
 
     render() {
-        const { fullScreen } = this.props;
-
         let renderSignatureDialog = () => (
             <div>
                 {
@@ -664,21 +663,33 @@ class BackgroundCheck extends Component {
                                             )
                                     }
                                 </div>
-
                             </div>
 
                             <div className="row" id="" style={{ margin: '0 auto', maxWidth: '100%' }}>
                                 <div className="col-md-12">
-                                    {renderHTML(`
-                                            <p dir="ltr">In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</p>
+                                    {
+                                        this.state.languageForm === "en" ? renderHTML(`
+                                                <p dir="ltr">In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</p>
+                                                <br>
+                                                <p dir="ltr">I further understand that for the purposes of this background inquiry, various sources will be contacted to provide information, including but not limited to various Federal, State, County, municipal, corporate, private and other agencies, which may maintain records concerning my past activities relating to my criminal conduct, civil court litigation, driving record, and credit performance, as well as various other experiences.</p>
+                                                <br>
+                                                <p dir="ltr">I hereby authorize without reservation, any company, agency, party of other source contracted to furnish the above information as requested. I do hereby release, discharge and indemnify the prospective employer, it&rsquo;s agents and associates to the full extent permitted by law from any claims, damages, losses, liabilities, cost and expenses arising from the retrieving and reporting of the requested information.</p>
+                                                <br>
+                                                <p dir="ltr">I acknowledge that a photocopy of this authorization be accepted with the same authority as the original and this signed release expires one (1) year after the date of origination.</p>
+                                                <h3>&nbsp;</h3>
+                                                `
+                                        ) : renderHTML(`
+                                            <p dir="ltr">En relación con mi solicitud de empleo, comprendo que se hará una investigación a fondo de mis antecedentes, incluyendo, pero no limitándose a, la comprobación de identidad y de la dirección o las direcciones anteriores, antecedentes penales, historial de conducción, historial crediticio, verificación de educación, verificación de empleos anteriores y otras referencias, así como otros tipos de información.</p>
                                             <br>
-                                            <p dir="ltr">I further understand that for the purposes of this background inquiry, various sources will be contacted to provide information, including but not limited to various Federal, State, County, municipal, corporate, private and other agencies, which may maintain records concerning my past activities relating to my criminal conduct, civil court litigation, driving record, and credit performance, as well as various other experiences.</p>
+                                            <p dir="ltr">Comprendo, además, que para los fines de esta investigación de antecedentes, se consultarán varias fuentes para que proporcionen información, incluyendo, pero no limitándose a, organismos federales, estatales, del condado, municipales, corporativos, privados y otros organismos, que pueden mantener registros relativos a mis actividades pasadas relacionadas con mi conducta delictiva, procedimientos judiciales civiles, historial de conducción e historial crediticio, así como relativos a otros tipos de actividades.</p>
                                             <br>
-                                            <p dir="ltr">I hereby authorize without reservation, any company, agency, party of other source contracted to furnish the above information as requested. I do hereby release, discharge and indemnify the prospective employer, it&rsquo;s agents and associates to the full extent permitted by law from any claims, damages, losses, liabilities, cost and expenses arising from the retrieving and reporting of the requested information.</p>
+                                            <p dir="ltr">Por la presente autorizo sin ningún tipo de reserva, a cualquier empresa, organismo, parte o cualquier otra fuente contratada, a facilitar la información antes mencionada según le sea solicitado.  Yo,por la presente, libero y eximo al empleador, a sus agentes y a sus colaboradores, en la medida permitida por la ley, de cualquier responsabilidadderivada decualquier reclamación, daños, pérdidas, responsabilidades, costes y gastos ocasionados porla recopilación y transmisión de información de los datos solicitados.</p>
                                             <br>
-                                            <p dir="ltr">I acknowledge that a photocopy of this authorization be accepted with the same authority as the original and this signed release expires one (1) year after the date of origination.</p>
+                                            <p dir="ltr">Acepto que una fotocopia de esta autorización tiene la misma validez legal que la autorización original, y que esta autorización firmada vence un (1) año después de la fecha de formalización.</p>
                                             <h3>&nbsp;</h3>
-                                    `)}
+                                        `)
+                                        
+                                    }
                                 </div>
                                 <form id="background-check-form" className="background-check-form"
                                     onSubmit={this.handleSubmit}>
@@ -729,37 +740,7 @@ class BackgroundCheck extends Component {
                                                         <span className="onoffswitch-inner" />
                                                         <span className="onoffswitch-switch" />
                                                     </label>
-                                                </div>
-                                                {/*<label className="switch">*/}
-                                                {/*<input*/}
-                                                {/*id="vehicleReportRequired"*/}
-                                                {/*type="checkbox"*/}
-                                                {/*className="form-control"*/}
-                                                {/*min="0"*/}
-                                                {/*maxLength="50"*/}
-                                                {/*minLength="10"*/}
-                                                {/*form="background-check-form"*/}
-                                                {/*onChange={(e) => {*/}
-                                                {/*this.setState({*/}
-                                                {/*vehicleReportRequired: e.target.checked*/}
-                                                {/*}, () => {*/}
-                                                {/*if (this.state.vehicleReportRequired === false) {*/}
-                                                {/*this.setState({*/}
-                                                {/*vehicleReportRequired: false,*/}
-                                                {/*driverLicenseNumber: '',*/}
-                                                {/*commercialDriverLicense: false,*/}
-                                                {/*licenseState: "",*/}
-                                                {/*licenseExpiration: "",*/}
-                                                {/*})*/}
-                                                {/*}*/}
-                                                {/*})*/}
-                                                {/*}}*/}
-                                                {/*value={this.state.vehicleReportRequired}*/}
-                                                {/*checked={this.state.vehicleReportRequired}*/}
-                                                {/*disabled={this.state.editing}*/}
-                                                {/*/>*/}
-                                                {/*<p className="slider round"></p>*/}
-                                                {/*</label>*/}
+                                                </div>                                               
                                             </div>
                                             <div className="col-md-12">
                                                 <label className="primary applicant-card__label">
@@ -875,28 +856,7 @@ class BackgroundCheck extends Component {
                                                         <span className="onoffswitch-inner" />
                                                         <span className="onoffswitch-switch" />
                                                     </label>
-                                                </div>
-                                                {/*<label className="switch">*/}
-                                                {/*<input*/}
-                                                {/*id="commercialDriverLicense"*/}
-                                                {/*type="checkbox"*/}
-                                                {/*className="form-control"*/}
-                                                {/*min="0"*/}
-                                                {/*maxLength="50"*/}
-                                                {/*minLength="10"*/}
-                                                {/*form="background-check-form"*/}
-                                                {/*onChange={(e) => {*/}
-
-                                                {/*this.setState({*/}
-                                                {/*commercialDriverLicense: e.target.checked*/}
-                                                {/*})*/}
-                                                {/*}}*/}
-                                                {/*value={this.state.commercialDriverLicense}*/}
-                                                {/*checked={this.state.commercialDriverLicense}*/}
-                                                {/*disabled={this.state.editing || !this.state.vehicleReportRequired}*/}
-                                                {/*/>*/}
-                                                {/*<p className="slider round"></p>*/}
-                                                {/*</label>*/}
+                                                </div>                                               
                                             </div>
                                             {
                                                 this.state.signature !== '' ? (
@@ -996,20 +956,16 @@ class BackgroundCheck extends Component {
                                 </form>
                                 <div className="col-md-12">
                                     <br /><br />
-                                    <h5>In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry.</h5>
-                                    <br /><br />
-                                    {/*{renderHTML(`*/}
-                                    {/*<p>&nbsp;</p>*/}
-                                    {/*<table style="border-collapse: collapse; width: 100%; height: 67px;" border="1">*/}
-                                    {/*<tbody>*/}
-                                    {/*<tr style="height: 67px;">*/}
-                                    {/*<td style="width: 50%; height: 67px; text-align: left;">&nbsp;</td>*/}
-                                    {/*<td style="width: 50%; height: 67px;">&nbsp;</td>*/}
-                                    {/*</tr>*/}
-                                    {/*</tbody>*/}
-                                    {/*</table>*/}
-                                    {/*<p>&nbsp;</p>*/}
-                                    {/*`)}*/}
+                                    <h5>
+                                        { 
+                                            this.state.languageForm === 'en' ? (
+                                                    "In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry."
+                                                ) : (
+                                                    "En relación con esta solicitud, eximo a las partes antes mencionadas de cualquier obligación o responsabilidad derivadas de la investigación de antecedentes."
+                                                ) 
+                                        }
+                                    </h5>
+                                    <br /><br />                                    
                                 </div>
                             </div>
                             <div style={{
@@ -1019,6 +975,7 @@ class BackgroundCheck extends Component {
                                 <div className="row" id="DocumentPDF" style={{ maxWidth: '100%', margin: '0' }}>
                                     <Document
                                         setState={this.externalSetState}
+                                        languageForm={localStorage.getItem('languageForm')}
                                         data={{
                                             firstName: this.state.firstName,
                                             middleName: this.state.middleName,

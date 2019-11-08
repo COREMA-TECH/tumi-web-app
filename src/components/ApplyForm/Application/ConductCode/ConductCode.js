@@ -145,11 +145,6 @@ class ConductCode extends Component {
     };
 
 	insertConductCode = () => {
-		// let conductObject = Object.assign({}, item);
-		// delete conductObject.openSignature;
-		// delete conductObject.id;
-		// delete conductObject.accept;
-		// delete conductObject.urlPDF; // no es necesario en el crear
 		const random = uuidv4();
         const html = this.cloneForm();
         const {applicantName, date, signature} = this.state;
@@ -265,7 +260,8 @@ class ConductCode extends Component {
 
 	componentWillMount() {
 		this.setState({
-            userId: localStorage.getItem('LoginId') || 0
+			userId: localStorage.getItem('LoginId') || 0,
+			languageForm: localStorage.getItem('languageForm'),
         }, () => this.getDocumentType());
 	}
 
