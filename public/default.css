@@ -10723,6 +10723,111 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     border-radius: 5px;
     padding: 2px 15px; }
 
+.OffsideModal-backdrop {
+  background-color: #000;
+  height: 100vh;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  opacity: 0.7;
+  position: fixed;
+  z-index: 1100; }
+
+.OffsideModal-wrapper {
+  background-color: #FFFFFF;
+  height: 100vh;
+  width: 550px;
+  right: 0;
+  top: 0;
+  position: fixed;
+  z-index: 1110; }
+  @media (max-width: 480px) {
+    .OffsideModal-wrapper {
+      width: 100vw; } }
+
+.OffsideModal-header {
+  background: -webkit-gradient(linear, right top, left top, from(#3ca2c8), to(#254151));
+  background: -webkit-linear-gradient(right, #3ca2c8, #254151);
+  background: -o-linear-gradient(right, #3ca2c8, #254151);
+  background: linear-gradient(to left, #3ca2c8, #254151);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  border-bottom: 1px solid #3ca2c8;
+  height: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0 10px 0 10px;
+  width: 100%;
+  z-index: 1115; }
+
+.OffsideModal-container {
+  height: calc(100% - $om-header-height); }
+
+.OffsideModal-title {
+  height: 50px;
+  width: 100%;
+  margin-top: -50px;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  padding: 0 10px 0 10px;
+  color: #FFF;
+  z-index: 1120; }
+
+.OffsideModal-btnClose {
+  color: #DFDBDB;
+  font-size: 16px;
+  z-index: 1125; }
+  .OffsideModal-btnClose:hover {
+    color: #FFFFFF;
+    font-weight: 900; }
+
+.OffsideModal-content {
+  padding: 10px;
+  margin-bottom: 50px; }
+
+.OffsideModal-footer {
+  background-color: #EDEDED;
+  bottom: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  padding: 0 10px 0 10px;
+  height: 50px;
+  position: absolute;
+  width: 100%; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -13724,5 +13829,3 @@ label.input-group-text {
 
 span[class^='MySnackbarContent-message-'] {
   color: #FFF; }
-
-/*# sourceMappingURL=default.css.map */
