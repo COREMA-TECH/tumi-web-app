@@ -1,0 +1,17 @@
+.Sidebar {
+    background: $white;
+    height: 100vh;
+    margin-left: -60px;
+    margin-right: 1rem;
+    margin-top: -30px;
+    width: 120px;
+}
+
+.withSidebar {
+    &-content {
+        width: calc(100% - 90px);
+    }
+    &-wrapper {
+        display: flex;
+    }
+}

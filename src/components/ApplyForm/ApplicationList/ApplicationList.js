@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import './index.css';
 import { gql } from 'apollo-boost';
 import withApollo from 'react-apollo/withApollo';
@@ -11,7 +11,9 @@ import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
 import makeAnimated from 'react-select/lib/animated';
 import Select from 'react-select';
-import { GET_PROPERTIES_QUERY, GET_DEPARTMENTS_QUERY } from './Queries';
+import { GET_PROPERTIES_QUERY, GET_DEPARTMENTS_QUERY, GET_APPLICATION_QUERY } from './Queries';
+import { DELETE_APPLICATION_QUERY } from './Mutation';
+import ApplicationSideBar from './ApplicationSideBar';
 
 
 const styles = (theme) => ({
@@ -62,16 +64,6 @@ class ApplicationList extends Component {
 		};
 	}
 
-	/**
-     * This method redirect to create application component
-     */
-	/*redirectToCreateApplication = () => {
-		this.props.history.push({
-			pathname: '/employment-application',
-			state: { ApplicationId: 0 }
-		});
-	};*/
-
 	redirectToCreateApplication = () => {
 		localStorage.setItem('idApplication', 0);
 		this.props.history.push({
@@ -81,58 +73,6 @@ class ApplicationList extends Component {
 		});
 	};
 
-	GET_APPLICATION_QUERY = gql`
-		query applicationsByUser($idUsers: Int,$Id_Deparment: Int, $idEntity: Int, $isActive:[Boolean] ,$isLead:Boolean){
-			applicationsByUser(idUsers: $idUsers, Id_Deparment: $Id_Deparment, idEntity: $idEntity, isActive: $isActive,isLead:$isLead) {
-				id
-				firstName
-				middleName
-				lastName
-				socialSecurityNumber
-				emailAddress
-				cellPhone
-				isLead
-				idWorkOrder
-				statusCompleted
-				sendInterview
-				User {
-					Full_Name
-				}
-				Employee{
-					idUsers
-				}
-				DefaultCompany{
-					Id
-					Name
-				}
-				Companies{
-					Id,
-					Code,
-					Name
-				}
-				Recruiter {
-					Full_Name
-				}
-				Position{
-					Position      
-				}
-				PositionCompany{
-     				Code
-    			}
-				workOrderId    
-			}
-		}
-	`;
-
-	DELETE_APPLICATION_QUERY = gql`
-		mutation disableApplication($id: Int!, $isActive: Boolean) {
-			disableApplication(id: $id,isActive: $isActive) {
-				id
-				isActive
-			}
-		}
-	`;
-
 	deleteApplication = () => {
 		this.setState(
 			{
@@ -141,7 +81,7 @@ class ApplicationList extends Component {
 			() => {
 				this.props.client
 					.mutate({
-						mutation: this.DELETE_APPLICATION_QUERY,
+						mutation: DELETE_APPLICATION_QUERY,
 						variables: {
 							id: this.state.idToDelete,
 							isActive: false
@@ -285,7 +225,7 @@ class ApplicationList extends Component {
 
 			this.props.client
 				.query({
-					query: this.GET_APPLICATION_QUERY,
+					query: GET_APPLICATION_QUERY,
 					variables,
 					fetchPolicy: 'no-cache'
 				})
@@ -323,6 +263,114 @@ class ApplicationList extends Component {
 
 	}
 
+	/**
+	 * To render the content of the header
+	 */
+	renderHeaderContent = () => (
+		<div className="row pb-0">
+			<div className="col-md-12">
+				<div className="input-group mb-2">
+					<div className="input-group-prepend">
+						<span className="input-group-text" id="basic-addon1">
+							<i className="fa fa-search icon" />
+						</span>
+					</div>
+					<input
+						onChange={(text) => {
+							this.setState({
+								filterText: text.target.value
+							});
+						}}
+						value={this.state.filterText}
+						type="text"
+						placeholder="Applicant Search"
+						className="form-control"
+					/>
+				</div>
+			</div>
+			<div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
+				<Select
+					name="property"
+					options={this.state.properties}
+					value={this.state.property}
+					onChange={this.handlePropertyChange}
+					components={makeAnimated()}
+					closeMenuOnSelect
+				/>
+			</div>
+			<div className="col-md-3 col-xl-2 mb-2">
+				<Select
+					name="department"
+					options={this.state.departments}
+					value={this.state.department}
+					onChange={this.handleDepartmentChange}
+					components={makeAnimated()}
+					closeMenuOnSelect
+				/>
+			</div>
+			<div className="col-md-3 col-xl-2 mb-2">
+				<Select
+					name="status"
+					options={this.state.status}
+					value={this.state.statu}
+					onChange={this.handleStatusChange}
+					components={makeAnimated()}
+					closeMenuOnSelect
+				/>
+			</div>
+		</div>
+	);
+
+	/**
+	 * To render the content of body screen
+	 */
+	renderContent = () => {
+		if (this.state.loading && !this.state.opendialog) return <LinearProgress />
+
+		let { applications } = this.state;
+		// if (applications != null && applications.length > 0) {
+		let dataApplication =
+			this.state.filterText === ''
+				? applications
+				: applications.filter((_, i) => {
+					let { id, firstName, lastName } = _;
+					let employee = { id, firstName, lastName };
+					let filterValue = [];
+					Object.keys(employee).forEach(key => {
+						if (employee[key])
+							filterValue.push(employee[key]);
+					})
+					return (
+						filterValue.join(' ').toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
+					);
+				});
+
+		return (
+			<div className="row pt-0">
+				{!this.props.propertyInfo && localStorage.getItem('isEmployee') === 'false' &&
+					<div className="col-md-12">
+						<button
+							className="btn btn-success float-right"
+							onClick={() => {
+								this.redirectToCreateApplication();
+							}}
+						>
+							Add Application
+									</button>
+					</div>}
+				<div className="col-md-12">
+					<div className="card">
+						<ApplicationTable
+							data={dataApplication}
+							onDeleteHandler={this.onDeleteHandler}
+							getApplications={this.getApplications}
+						/>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	render() {
 		var loading = this.state.loadingConfirm || this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
 		var variables = {};
@@ -352,122 +400,8 @@ class ApplicationList extends Component {
 			return <LinearProgress />;
 		}
 
-		// To render the content of the header
-		let renderHeaderContent = () => (
-			<div className="row pb-0">
-				<div className="col-md-3 col-xl-2">
-					<div className="input-group mb-2">
-						<div className="input-group-prepend">
-							<span className="input-group-text" id="basic-addon1">
-								<i className="fa fa-search icon" />
-							</span>
-						</div>
-						<input
-							onChange={(text) => {
-								this.setState({
-									filterText: text.target.value
-								});
-							}}
-							value={this.state.filterText}
-							type="text"
-							placeholder="Applicant Search"
-							className="form-control"
-						/>
-					</div>
-				</div>
-				<div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
-					{
-						!this.props.propertyInfo &&
-						<Select
-							name="property"
-							options={this.state.properties}
-							value={this.state.property}
-							onChange={this.handlePropertyChange}
-							components={makeAnimated()}
-							closeMenuOnSelect
-						/>
-					}
-				</div>
-				<div className="col-md-3 col-xl-2 mb-2">
-					<Select
-						name="department"
-						options={this.state.departments}
-						value={this.state.department}
-						onChange={this.handleDepartmentChange}
-						components={makeAnimated()}
-						closeMenuOnSelect
-					/>
-				</div>
-				<div className="col-md-3 col-xl-2 mb-2">
-					<Select
-						name="status"
-						options={this.state.status}
-						value={this.state.statu}
-						onChange={this.handleStatusChange}
-						components={makeAnimated()}
-						closeMenuOnSelect
-					/>
-				</div>
-			</div>
-		);
-
-		let renderContent = () => {
-			if (this.state.loading && !this.state.opendialog) return <LinearProgress />
-
-			let { applications } = this.state;
-			// if (applications != null && applications.length > 0) {
-			let dataApplication =
-				this.state.filterText === ''
-					? applications
-					: applications.filter((_, i) => {
-						let { id, firstName, lastName } = _;
-						let employee = { id, firstName, lastName };
-						let filterValue = [];
-						Object.keys(employee).forEach(key => {
-							if (employee[key])
-								filterValue.push(employee[key]);
-						})
-						return (
-							filterValue.join(' ').toLocaleLowerCase().indexOf(this.state.filterText.toLocaleLowerCase()) > -1
-						);
-					});
-
-			return (
-				<div className="row pt-0">
-					{!this.props.propertyInfo && localStorage.getItem('isEmployee') === 'false' &&
-						<div className="col-md-12">
-							<button
-								className="btn btn-success float-right"
-								onClick={() => {
-									this.redirectToCreateApplication();
-								}}
-							>
-								Add Application
-										</button>
-						</div>}
-					<div className="col-md-12">
-						<div className="row">
-							<div className={this.props.leftStepperComponent ? 'col-md-3 col-xl-2' : 'd-none'}>
-								{this.props.leftStepperComponent}
-							</div>
-
-							<div className={this.props.leftStepperComponent ? 'col-md-9 col-xl-10' : 'col-md-12'}>
-								<div className="card">
-									<ApplicationTable
-										data={dataApplication}
-										onDeleteHandler={this.onDeleteHandler}
-										getApplications={this.getApplications}
-									/>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			);
-		}
-
 		return (
-			<div className="main-application">
+			<Fragment>
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -475,11 +409,14 @@ class ApplicationList extends Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className="">{renderHeaderContent()}</div>
-				<div className="main-contract__content">
-					{renderContent()}
+				<div className="withSidebar-wrapper">
+					<ApplicationSideBar />
+					<div className="withSidebar-content">
+						{this.renderHeaderContent()}
+						{this.renderContent()}
+					</div>
 				</div>
-			</div>
+			</Fragment>
 		);
 	}
 }

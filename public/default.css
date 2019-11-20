@@ -10723,6 +10723,22 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     border-radius: 5px;
     padding: 2px 15px; }
 
+.Sidebar {
+  background: #FFF;
+  height: 100vh;
+  margin-left: -60px;
+  margin-right: 1rem;
+  margin-top: -30px;
+  width: 120px; }
+
+.withSidebar-content {
+  width: calc(100% - 90px); }
+
+.withSidebar-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -10786,7 +10802,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   border-bottom: 0; }
 
 .MenuMobile {
-  background: #FFF;
+  background: #254151;
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   border-right: #ededed solid 1px;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
@@ -10801,7 +10817,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   -o-transition: left .5s ease-out;
   transition: left .5s ease-out;
   z-index: 1020;
-  width: 290px; }
+  width: 245px; }
   @media (max-width: 767.98px) {
     .MenuMobile {
       left: -290px; } }
@@ -10822,7 +10838,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    color: #7e7e7e;
+    color: #FFF;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -10835,7 +10851,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     text-decoration: none;
     width: 100%; }
     .MenuMobile-link span {
-      color: #7e7e7e;
+      color: #FFF;
       font-size: "Poppins", sans-serif;
       font-weight: 400;
       text-transform: uppercase; }
@@ -10947,7 +10963,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     left: auto !important; }
 
 .SubMenu {
-  background: #f7f8fa;
+  background: #2a495c;
   height: 0;
   overflow: hidden;
   padding-bottom: 0;
@@ -10961,8 +10977,9 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     margin-bottom: 0.5rem;
     margin-top: 0.5rem; }
   .SubMenu-link {
+    color: #FFF;
     font-family: "Poppins", sans-serif;
-    color: #7e7e7e; }
+    font-size: .8rem; }
     .SubMenu-link:hover {
       color: black; }
   .SubMenu-show {
@@ -13724,5 +13741,3 @@ label.input-group-text {
 
 span[class^='MySnackbarContent-message-'] {
   color: #FFF; }
-
-/*# sourceMappingURL=default.css.map */
