@@ -110,6 +110,7 @@ class CustomizedTabs extends React.Component {
     }
 
     componentWillMount() {
+        alert(this.props.location.state.ApplicationId);
         try {
             if (this.props.location.state.ApplicationId === undefined)
                 window.location.href = "/home/application";
