@@ -23,7 +23,7 @@ import NoShowReport from '../../NoShowReport';
 import DatePicker from "react-datepicker";
 import moment from 'moment';
 import { GET_RECRUITERS } from '../../NoShowReport/queries';
-import {OffsideModal, OffsideModalTitle, OffsideModalContent, OffsideModalFooter} from '../../ui-components/OffsideModal';
+import QuickLeadCreation from './QuickLeadCreation';
 
 const styles = (theme) => ({
 	root: {
@@ -668,28 +668,10 @@ class ApplicationList extends Component {
 
 		console.log({ Filters })
 
-		// // eliminar 
-		// const openthismodal = () => this.setState({openesto: true });
-		// const closethismodal = () => this.setState({openesto: false });
-
 		return (
 			<div className="main-application">
-				 {/* TODO: (LF) SOLO PARA PRUEBAS, SE DEBE ELIMINAR */}
-				 {/* <button onClick={openthismodal}>Abrir</button>
-				<OffsideModal open={true} handleClose={closethismodal}>
-					<OffsideModalTitle>
-						Titulo de prueba
-					</OffsideModalTitle>
-					<OffsideModalContent>
-						Soy el contenido
-					</OffsideModalContent>
-					<OffsideModalFooter>
-						Soy el footer
-					</OffsideModalFooter>
-				</OffsideModal> */}
+				<QuickLeadCreation />
 
-
-				
 				{this.printNoShowReportPrefilter()}
 				{this.printNoShowReport()}
 				{this.renderConfirmSendToPackageDialog()}

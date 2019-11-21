@@ -1,6 +1,8 @@
 // Offside Modal
 $om-header-height: 50px;
 $om-footer-height: 50px;
+$om-wrapper-width: 550px;
+$om-mobile-screen-width: 480px;
 
 .OffsideModal {
     &-backdrop {
@@ -16,14 +18,23 @@ $om-footer-height: 50px;
 
     &-wrapper {
         background-color: #FFFFFF;
-        height: 100vh;
-        width: 550px;
-        right: 0;
+        min-height: 100vh;
+        width: $om-wrapper-width;
+        left: 100vw;
         top: 0;
-        position: fixed;
+        position: absolute;
+        transition: left .5s ease-out;
         z-index: 1110;
-        @media (max-width: 480px) {
+        @media (max-width: $om-mobile-screen-width) {
             width: 100vw;
+        }
+        
+        &.active {
+            left: calc(100vw - 550px);
+            top: 0;
+            @media (max-width: $om-mobile-screen-width) {
+                left: 0;
+            }
         }
     }
 
@@ -32,10 +43,10 @@ $om-footer-height: 50px;
         border-bottom: 1px solid $brand-primary;
         height: $om-header-height;
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        justify-content: center;
-        padding: 0 10px 0 10px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 25px 0 25px;
         width: 100%;
         z-index: 1115;
     }
@@ -50,42 +61,53 @@ $om-footer-height: 50px;
         margin-top: -$om-header-height;
         position: relative;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        padding: 0 10px 0 10px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 25px 0 25px;
         color: #FFF;
         z-index: 1120;
     }
 
     &-btnClose {
-        color: #DFDBDB;
-        font-size: 16px;
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: bold;
         z-index: 1125;
         &:hover {
-            color: #FFFFFF;
-            font-weight: 900;
+            color: $brand-secondary;
         }
     }
 
     &-content {
-        padding: 10px;
-        //border: 2px solid #BBF;
+        font-size: 0.75rem;
+        padding: 25px;
         margin-bottom: $om-footer-height;
     }
 
     &-footer {
-        //border: 2px solid #FDA;
         background-color: #EDEDED;
+        border: 1.5px solid #D2D3D4;
         bottom: 0;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
-        padding: 0 10px 0 10px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 25px 0 25px;
         height: $om-footer-height;
-        position: absolute;
-        width: 100%;
+        position: fixed;
+        width: $om-wrapper-width;
+        & > button {
+            padding: 0.25rem 0.5rem 0.25rem 0.5rem !important;
+            margin: 0 3px 0 3px;
+            font-size: 0.7875rem;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+        }
+        
+        @media (max-width: $om-mobile-screen-width) {
+            width: 100%;
+        }
     }
 
 }
