@@ -10725,19 +10725,65 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
 
 .Sidebar {
   background: #FFF;
+  border-right: solid 1px #bdbdbd;
   height: 100vh;
   margin-left: -60px;
   margin-right: 1rem;
   margin-top: -30px;
-  width: 120px; }
+  padding-left: 22.5px;
+  padding-top: 25px;
+  padding-right: 22.5px; }
+  .Sidebar-expanded {
+    width: 292px; }
+  .Sidebar-reduced {
+    width: 140px; }
+  @media (max-width: 767.98px) {
+    .Sidebar {
+      height: auto;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 0;
+      width: 100%; } }
+
+.SidebarIconList-item {
+  margin-bottom: 1rem;
+  text-align: center; }
+
+.SidebarIconList-title {
+  color: #7e7e7e;
+  font-size: .8rem;
+  display: block;
+  font-weight: 500; }
+  .SidebarIconList-title.withBadge:after {
+    background: #3ca2c8;
+    border-radius: 3px;
+    content: attr(data-value);
+    color: #FFF;
+    display: block;
+    font-size: .7rem;
+    height: 18px;
+    line-height: 18px;
+    margin: 0 auto;
+    text-align: center;
+    width: 18px; }
+
+.SidebarList-item label {
+  font-size: .8rem; }
 
 .withSidebar-content {
-  width: calc(100% - 90px); }
+  width: calc(100% - 110px); }
+  @media (max-width: 767.98px) {
+    .withSidebar-content {
+      width: 100%; } }
 
 .withSidebar-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
-  display: flex; }
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap; }
 
 .Header-mobileMenu {
   color: #FFF;
