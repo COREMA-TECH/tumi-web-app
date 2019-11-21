@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import './index.css';
-import { gql } from 'apollo-boost';
 import withApollo from 'react-apollo/withApollo';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import ApplicationTable from './ApplicationTable';
@@ -9,9 +8,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
-import makeAnimated from 'react-select/lib/animated';
-import Select from 'react-select';
-import { GET_PROPERTIES_QUERY, GET_DEPARTMENTS_QUERY, GET_APPLICATION_QUERY } from './Queries';
+import { GET_APPLICATION_QUERY } from './Queries';
 import { DELETE_APPLICATION_QUERY } from './Mutation';
 import ApplicationSideBar from './ApplicationSideBar';
 
@@ -128,72 +125,6 @@ class ApplicationList extends Component {
 		this.setState(() => ({ statu }), () => this.getApplications());
 	}
 
-	getProperties = () => {
-		this.setState(() => ({ loadingProperties: true }), () => {
-			this.props.client
-				.query({
-					query: GET_PROPERTIES_QUERY,
-					fetchPolicy: 'no-cache'
-				})
-				.then(({ data }) => {
-					let options = [];
-
-					//Add first record
-					options.push(DEFAULT_PROPERTY);
-
-					//Create structure based on property data
-					data.getbusinesscompanies.map((property) => {
-						options.push({ value: property.Id, label: property.Code + " | " + property.Name });
-					});
-
-					//Set values to state
-					this.setState(() => ({
-						properties: options,
-						loadingProperties: false
-					}));
-
-				})
-				.catch(error => {
-					this.setState(() => ({ loadingProperties: false }));
-				});
-		})
-	}
-
-	getDepartments = () => {
-		this.setState(() => ({ loadingDepartments: true }), () => {
-			var variables = {};
-
-			if (this.state.property.value)
-				variables = { Id_Entity: this.state.property.value };
-
-			this.props.client
-				.query({
-					query: GET_DEPARTMENTS_QUERY,
-					variables,
-					fetchPolicy: 'no-cache'
-				})
-				.then(({ data }) => {
-					let options = [];
-
-					//Add first record
-					options.push({ value: '', label: 'Department(All)' });
-
-					//Create structure based on department data
-					data.catalogitem.map(({ Id, DisplayLabel }) => {
-						options.push({ value: Id, label: DisplayLabel })
-					});
-
-					this.setState(() => ({
-						departments: options,
-						loadingDepartments: false
-					}));
-				})
-				.catch(error => {
-					this.setState(() => ({ loadingDepartments: false }));
-				});
-		})
-	}
-
 	getApplications = () => {
 		this.setState(() => {
 			return { loading: true, applications: [] }
@@ -256,8 +187,6 @@ class ApplicationList extends Component {
 			this.handlePropertyChange({ value: propertyInfo.id, label: propertyInfo.name });
 		}
 		else {
-			this.getProperties();
-			this.getDepartments();
 			this.getApplications();
 		}
 
@@ -287,36 +216,6 @@ class ApplicationList extends Component {
 						className="form-control"
 					/>
 				</div>
-			</div>
-			<div className="col-md-3 col-xl-2 offset-xl-4 mb-2">
-				<Select
-					name="property"
-					options={this.state.properties}
-					value={this.state.property}
-					onChange={this.handlePropertyChange}
-					components={makeAnimated()}
-					closeMenuOnSelect
-				/>
-			</div>
-			<div className="col-md-3 col-xl-2 mb-2">
-				<Select
-					name="department"
-					options={this.state.departments}
-					value={this.state.department}
-					onChange={this.handleDepartmentChange}
-					components={makeAnimated()}
-					closeMenuOnSelect
-				/>
-			</div>
-			<div className="col-md-3 col-xl-2 mb-2">
-				<Select
-					name="status"
-					options={this.state.status}
-					value={this.state.statu}
-					onChange={this.handleStatusChange}
-					components={makeAnimated()}
-					closeMenuOnSelect
-				/>
 			</div>
 		</div>
 	);
@@ -397,7 +296,7 @@ class ApplicationList extends Component {
 
 		// If contracts query is loading, show a progress component
 		if (loading) {
-			return <LinearProgress />;
+			//return <LinearProgress />;
 		}
 
 		return (

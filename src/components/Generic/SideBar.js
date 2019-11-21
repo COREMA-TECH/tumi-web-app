@@ -6,7 +6,7 @@ import React, {Fragment} from 'react';
  * @param {String} bodyType 
  */
 const SideBar = ({children, bodyType}) => {
-    let bodyTypeClass = bodyType === "full" ? "sideBar-expanded" : "sideBar-reduced";
+    let bodyTypeClass = bodyType === "full" ? "Sidebar-expanded" : "Sidebar-reduced";
     return (
         <Fragment>
             <div className={`Sidebar ${bodyTypeClass}`}>
