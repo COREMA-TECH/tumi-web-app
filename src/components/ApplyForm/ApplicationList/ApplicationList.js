@@ -105,7 +105,6 @@ class ApplicationList extends Component {
 	};
 
 	getApplications = (propertyValue, departmentValue, statusValue) => {
-		console.log(propertyValue, departmentValue, statusValue)
 		this.setState(() => {
 			return { loading: true, applications: [] }
 		}, () => {
@@ -261,7 +260,7 @@ class ApplicationList extends Component {
 
 		// If contracts query is loading, show a progress component
 		if (loading) {
-			//return <LinearProgress />;
+			return <LinearProgress />;
 		}
 
 		return (

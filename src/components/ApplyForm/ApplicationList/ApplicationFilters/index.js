@@ -41,6 +41,9 @@ class ApplicationFilters extends Component {
 		};
     }
 
+    /**
+     * @return {Void}
+     */
     getProperties = () => {
 		this.setState(() => ({ loadingProperties: true }), () => {
 			this.props.client
@@ -72,6 +75,9 @@ class ApplicationFilters extends Component {
 		})
 	}
 
+    /**
+     * @return {Void}
+     */
 	getDepartments = () => {
 		this.setState(() => ({ loadingDepartments: true }), () => {
 			var variables = {};
@@ -109,9 +115,12 @@ class ApplicationFilters extends Component {
     
     componentWillMount() {
         this.getProperties();
-        this.getDepartments();
     }
     
+    /**
+     * @param {Object} property
+     * @return {Void}
+     */
     handlePropertyChange = (property) => {
 		this.setState((prevState) => ({
 			property,
@@ -122,14 +131,26 @@ class ApplicationFilters extends Component {
 		});
     }
     
+    /**
+     * @param {Object} department
+     * @return {Void}
+     */
 	handleDepartmentChange = (department) => {
 		this.setState(() => ({ department }));
     }
     
+    /**
+     * @param {Object} statu
+     * @return {Void}
+     */
 	handleStatusChange = (statu) => {
 		this.setState(() => ({ statu }));
     }
     
+    /**
+     * @param {*} event
+     * @return {Void}
+     */
     handleSubmit = (event) => {
         event.preventDefault();
         let property = this.state.property.value;

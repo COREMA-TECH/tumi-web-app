@@ -10726,10 +10726,17 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
 .Sidebar {
   background: #FFF;
   border-right: solid 1px #bdbdbd;
-  height: 100vh;
+  height: auto !important;
+  /* Important rule for a modern browser */
+  height: 100%;
+  /* Minimum height for Internet Explorer */
   margin-left: -60px;
   margin-right: 1rem;
   margin-top: -30px;
+  min-height: 100%;
+  /* Minimum height for a modern browser */
+  overflow: hidden !important;
+  /* Firefox scroll-bar */
   padding-left: 22.5px;
   padding-top: 25px;
   padding-right: 22.5px; }
