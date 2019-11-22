@@ -110,55 +110,86 @@ class ApplicationFilters extends Component {
     componentWillMount() {
         this.getProperties();
         this.getDepartments();
-	}
+    }
+    
+    handlePropertyChange = (property) => {
+		this.setState((prevState) => ({
+			property,
+			department: prevState.property.value != property.value ? DEFAULT_DEPARTMENT : prevState.department,
+			departments: prevState.property.value != property.value ? [] : prevState.departments
+		}), () => {
+			this.getDepartments();
+		});
+    }
+    
+	handleDepartmentChange = (department) => {
+		this.setState(() => ({ department }));
+    }
+    
+	handleStatusChange = (statu) => {
+		this.setState(() => ({ statu }));
+    }
+    
+    handleSubmit = (event) => {
+        event.preventDefault();
+        let property = this.state.property.value;
+        let department = this.state.department.value;
+        let status = this.state.statu.value;
+        this.props.getApplications(property, department, status);
+        this.props.handleOpenModal();
+    }
 
     render() {
         return (
             <Fragment>
-                <Dialog maxWidth="xl" open={this.props.open} >
-                    <DialogContent>
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Select
-                                    name="property"
-                                    options={this.state.properties}
-                                    value={this.state.property}
-                                    onChange={this.handlePropertyChange}
-                                    components={makeAnimated()}
-                                    closeMenuOnSelect
-                                />
+                <Dialog fullWidth maxWidth="sm" open={this.props.open} >
+                    <form action="" onSubmit={this.handleSubmit}>
+                        <DialogTitle>
+                            Apply Filters
+                        </DialogTitle>
+                        <DialogContent>
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <Select
+                                        name="property"
+                                        options={this.state.properties}
+                                        value={this.state.property}
+                                        onChange={this.handlePropertyChange}
+                                        components={makeAnimated()}
+                                        closeMenuOnSelect
+                                    />
+                                </div>
+                                <div className="col-md-12 mt-2">
+                                    <Select
+                                        name="department"
+                                        options={this.state.departments}
+                                        value={this.state.department}
+                                        onChange={this.handleDepartmentChange}
+                                        components={makeAnimated()}
+                                        closeMenuOnSelect
+                                    />
+                                </div>
+                                <div className="col-md-12 mt-2">
+                                    <Select
+                                        name="status"
+                                        options={this.state.status}
+                                        value={this.state.statu}
+                                        onChange={this.handleStatusChange}
+                                        components={makeAnimated()}
+                                        closeMenuOnSelect
+                                    />
+                                </div>
                             </div>
-                            <div className="col-md-12">
-                                <Select
-                                    name="department"
-                                    options={this.state.departments}
-                                    value={this.state.department}
-                                    onChange={this.handleDepartmentChange}
-                                    components={makeAnimated()}
-                                    closeMenuOnSelect
-                                />
-                            </div>
-                            <div className="col-md-12">
-                                <Select
-                                    name="status"
-                                    options={this.state.status}
-                                    value={this.state.statu}
-                                    onChange={this.handleStatusChange}
-                                    components={makeAnimated()}
-                                    closeMenuOnSelect
-                                />
-                            </div>
-                        </div>
-                    </DialogContent>
-                    <DialogActions>
-                        <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.redirectToCreateApplication()}>
-                            Continue
-                                </button>
-                        <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleCloseConfirmDialog()}>
-                            Cancel
-                                </button>
-
-                    </DialogActions>
+                        </DialogContent>
+                        <DialogActions>
+                            <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="submit">
+                                Apply
+                            </button>
+                            <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={this.props.handleOpenModal}>
+                                Cancel
+                            </button>
+                        </DialogActions>
+                    </form>
                 </Dialog>
             </Fragment>
         )

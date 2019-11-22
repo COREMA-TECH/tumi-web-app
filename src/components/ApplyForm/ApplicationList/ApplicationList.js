@@ -11,6 +11,7 @@ import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { GET_APPLICATION_QUERY } from './Queries';
 import { DELETE_APPLICATION_QUERY } from './Mutation';
 import ApplicationSideBar from './ApplicationSideBar';
+import ApplicationFilters from './ApplicationFilters';
 
 
 const styles = (theme) => ({
@@ -24,10 +25,6 @@ const styles = (theme) => ({
 	}
 });
 
-const DEFAULT_PROPERTY = { value: '', label: 'Property(All)' };
-const DEFAULT_DEPARTMENT = { value: '', label: 'Department(All)' };
-const DEFAULT_STATUS = { value: 1, label: 'Active' };
-
 class ApplicationList extends Component {
 	constructor(props) {
 		super(props);
@@ -38,11 +35,9 @@ class ApplicationList extends Component {
 			data: [],
 			filterText: '',
 			opendialog: false,
-			property: DEFAULT_PROPERTY,
-			department: DEFAULT_DEPARTMENT,
+			openModal: false,
 			properties: [],
 			departments: [],
-			statu: DEFAULT_STATUS,
 			statusValue: [{
 				value: 1,
 				label: 'Status'
@@ -108,29 +103,14 @@ class ApplicationList extends Component {
 	handleConfirmAlertDialog = () => {
 		this.deleteApplication();
 	};
-	handlePropertyChange = (property) => {
-		this.setState((prevState) => ({
-			property,
-			department: prevState.property.value != property.value ? DEFAULT_DEPARTMENT : prevState.department,
-			departments: prevState.property.value != property.value ? [] : prevState.departments
-		}), () => {
-			this.getDepartments();
-			this.getApplications();
-		});
-	}
-	handleDepartmentChange = (department) => {
-		this.setState(() => ({ department }), () => this.getApplications());
-	}
-	handleStatusChange = (statu) => {
-		this.setState(() => ({ statu }), () => this.getApplications());
-	}
 
-	getApplications = () => {
+	getApplications = (propertyValue, departmentValue, statusValue) => {
+		console.log(propertyValue, departmentValue, statusValue)
 		this.setState(() => {
 			return { loading: true, applications: [] }
 		}, () => {
-			let property = this.state.property.value;
-			let department = this.state.department.value;
+			let property = propertyValue;
+			let department = departmentValue;
 			let variables = {
 				idEntity: property ? property : null,
 			};
@@ -140,7 +120,7 @@ class ApplicationList extends Component {
 			if (!!department)
 				variables = { ...variables, Id_Deparment: department };
 
-			switch (this.state.statu.value) {
+			switch (statusValue) {
 				case 1:
 					variables = { ...variables, isActive: [true] };
 					break;
@@ -270,29 +250,14 @@ class ApplicationList extends Component {
 		);
 	}
 
+	handleOpenModal = () => {
+		this.setState(_ => {
+			return { openModal: !this.state.openModal }
+		});
+	}
+
 	render() {
 		var loading = this.state.loadingConfirm || this.state.loadingContracts || this.state.loadingProperties || this.state.loadingDepartments;
-		var variables = {};
-
-		/**
-		 * Start - Define variables for application query
-		 */
-		if (localStorage.getItem('isEmployee') == 'true')
-			variables = { idUsers: localStorage.getItem('LoginId') };
-
-		if (this.state.property.value != '')
-			variables = { ...variables, idEntity: this.state.property.value };
-		if (this.state.department.value != '')
-			variables = { ...variables, Id_Deparment: this.state.department.value };
-		if (this.state.statu.value != '') {
-			if (this.state.statu.value == 1) { variables = { ...variables, isActive: [true] }; }
-			if (this.state.statu.value == 2) { variables = { ...variables, isActive: [false] }; }
-			if (this.state.statu.value == 3) { variables = { ...variables, isActive: [true, false] }; }
-		}
-
-		/**
-		 * End - Define variables for application query
-		 */
 
 		// If contracts query is loading, show a progress component
 		if (loading) {
@@ -308,8 +273,9 @@ class ApplicationList extends Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
+				<ApplicationFilters open={this.state.openModal} getApplications={this.getApplications} handleOpenModal={this.handleOpenModal}/>
 				<div className="withSidebar-wrapper">
-					<ApplicationSideBar />
+					<ApplicationSideBar handleOpenModal={this.handleOpenModal}/>
 					<div className="withSidebar-content">
 						{this.renderHeaderContent()}
 						{this.renderContent()}
