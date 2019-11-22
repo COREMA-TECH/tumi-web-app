@@ -55,7 +55,7 @@ class ApplicationSideBar extends Component {
                         </ul>
                     </div>
                     <div className="border-top pt-3 mt-3">
-                        <button className="btn btn-light">
+                        <button className="btn btn-light" onClick={this.props.handleOpenModal}>
                             Filters
                         </button>
                     </div>

@@ -47,38 +47,16 @@ export const GET_APPLICATION_QUERY = gql`
 				firstName
 				middleName
 				lastName
-				socialSecurityNumber
-				emailAddress
 				cellPhone
-				isLead
-				idWorkOrder
 				statusCompleted
 				sendInterview
+				origin
 				User {
 					Full_Name
-				}
-				Employee{
-					idUsers
-				}
-				DefaultCompany{
-					Id
-					Name
-				}
-				Companies{
-					Id,
-					Code,
-					Name
 				}
 				Recruiter {
 					Full_Name
 				}
-				Position{
-					Position      
-				}
-				PositionCompany{
-     				Code
-    			}
-				workOrderId    
 			}
 		}
 	`;
