@@ -10776,6 +10776,12 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     .withSidebar-content {
       width: 100%; } }
 
+.withSidebar-extended-content {
+  width: calc(100% - 292px); }
+  @media (max-width: 767.98px) {
+    .withSidebar-extended-content {
+      width: 100%; } }
+
 .withSidebar-wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -11496,6 +11502,136 @@ div[class*="MuiStepper-root-"] {
 
 .SummaryTab .signature-information {
   font-family: 'Tinos', serif; }
+
+.ActionButtons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  -ms-flex-negative: 1;
+  flex-shrink: 1;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  padding: 1.5rem 0rem; }
+
+.ActionButton {
+  text-align: center;
+  position: relative; }
+  .ActionButton:hover .ActionButton-submenu {
+    display: block;
+    opacity: 1; }
+  .ActionButton-item {
+    background-color: #eaf0f6;
+    border: 2px solid #d6dee8;
+    border-radius: 50%;
+    color: #4f6d91;
+    font-size: 16px;
+    height: 40px;
+    width: 40px;
+    margin-bottom: 12px; }
+  .ActionButton-submenu {
+    border: 2px solid #d6dee8;
+    display: none;
+    margin-top: 1rem;
+    position: absolute;
+    left: -60px;
+    width: 180px;
+    opacity: 0;
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease; }
+    .ActionButton-submenu-item {
+      display: block;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      -webkit-transition: all 0.5s ease;
+      -o-transition: all 0.5s ease;
+      transition: all 0.5s ease; }
+      .ActionButton-submenu-item:hover {
+        background-color: rgba(234, 240, 246, 0.6); }
+
+.ActivityTabs {
+  border-bottom: 2px solid #d6dee8;
+  margin-bottom: 2rem; }
+  .ActivityTabs-tab {
+    color: #4f6d91;
+    display: inline-block;
+    font-weight: 700;
+    padding: 10px 20px;
+    position: relative; }
+    .ActivityTabs-tab.active::after {
+      background-color: #4f6d91;
+      content: '';
+      display: block;
+      height: 2px;
+      width: 100%;
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      -webkit-transition: all 0.75s ease;
+      -o-transition: all 0.75s ease;
+      transition: all 0.75s ease; }
+
+.Activity {
+  padding-left: 2rem;
+  position: relative; }
+  .Activity-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 1rem; }
+  .Activity-type {
+    color: #4f6d91;
+    font-weight: 700; }
+  .Activity-title {
+    font-weight: 700;
+    margin-bottom: 30px; }
+    .Activity-title i {
+      font-size: 22px;
+      margin-right: 8px; }
+  .Activity-header {
+    padding-left: 1rem; }
+    .Activity-header::after {
+      display: none; }
+  .Activity-body {
+    padding-left: 1rem; }
+  .Activity-data {
+    border-bottom: 1px solid #d6dee8;
+    border-top: 1px solid #d6dee8;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    margin-bottom: 2rem;
+    padding: 10px 0px; }
+  .Activity-label {
+    font-size: 12px; }
+  .Activity-description {
+    color: #000;
+    font-weight: 300; }
+  .Activity .Activity-input {
+    border: none;
+    color: #3ca2c8;
+    font-weight: 700 !important; }
+    .Activity .Activity-input:-moz-read-only, .Activity .Activity-input[readonly] {
+      background: none !important; }
+    .Activity .Activity-input:read-only, .Activity .Activity-input[readonly] {
+      background: none !important; }
+    .Activity .Activity-input:active, .Activity .Activity-input:focus {
+      border: none;
+      -webkit-box-shadow: none;
+      box-shadow: none; }
 
 .External-label, .External .Location-label {
   color: #000 !important;
