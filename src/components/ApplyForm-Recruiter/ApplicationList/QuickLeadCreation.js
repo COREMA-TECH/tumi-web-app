@@ -3,14 +3,13 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import {OffsideModal, OffsideModalTitle, OffsideModalContent, OffsideModalFooter} from '../../ui-components/OffsideModal';
 import { GET_POSITIONS_QUERY } from '../../ApplyForm-Recruiter/Queries';
-import { CREATE_APPLICATION } from './Mutations';
-import {Route} from "react-router-dom";
 import Redirect from 'react-router-dom/es/Redirect';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../Generic/Global';
 import moment from 'moment';
 import InputMask from 'react-input-mask';
 import ZipCodeInfo from '../../ui-components/ZipCodeInfo';
+import gql from 'graphql-tag';
 
 /**
  * Custom Switch
@@ -47,14 +46,25 @@ const CustomSwitch = props => {
     )
 };
 
+const weekendRestriction = '{"weekDays":["SA","SU"],"startTime":"08:00","endTime":"17:00"}';
+
+const CREATE_APPLICATION = gql`
+    mutation quickAddLead($application: inputInsertApplication, $speakEnglish: Boolean, $codeuser: Int, $nameUser: String) {
+        quickAddLead(application: $application, speakEnglish: $speakEnglish, codeuser: $codeuser, nameUser: $nameUser) {
+            id
+        }
+    }
+`;
+
 const DEFAULT_STATE = {
-    positionAppyinForSelected: {value:0, label: 'empty'},
+    positionAppyinForSelected: {value:0, label: 'Select a position'},
     firstName: '',
     middleName: '',
     lastName: '',
     homePhone: '',
     zipCode: '',
-    zipCodeDir: '',
+    stateId: 0,
+    cityId: 0,
     proofofId: false,
     workonWeekends: false,
     transportation: false,
@@ -144,16 +154,16 @@ class QuickLeadCreation extends Component {
                                     date: currentDate,
                                     dateCreation: currentDate,
                                     //aptNumber: this.state.aptNumber,
-                                    city: this.state.city,
-                                    state: this.state.state,
+                                    city: this.state.cityId,
+                                    state: this.state.stateId,
                                     zipCode: this.state.zipCode,
                                     homePhone: this.state.homePhone,
                                     //cellPhone: this.state.cellPhone,
-                                    //car: this.state.car,
+                                    car: this.state.transportation,
                                     //emailAddress: this.state.emailAddress,
                                     positionApplyingFor: this.state.positionAppyinForSelected.value,
-                                    //scheduleRestrictions: this.state.scheduleRestrictions,
-                                    //scheduleExplain: this.state.scheduleExplain,
+                                    scheduleRestrictions: !this.state.workonWeekends,
+                                    scheduleExplain: this.state.workonWeekends ? null : weekendRestriction,
                                     //convicted: this.state.convicted,
                                     //convictedExplain: this.state.convictedExplain,
                                     //comment: this.state.comment,
@@ -162,20 +172,22 @@ class QuickLeadCreation extends Component {
                                     idRecruiter: userId,
                                     UserId: userId,
                                     sendInterview: false,
-                                    origin: 'Recruiter'
+                                    origin: 'Recruiter',
+                                    proofofID: this.state.proofofId
                                 },
+                                speakEnglish: this.state.speakEnglish,
                                 codeuser: userId,
                                 nameUser: nameUser
                             }
                         })
                         .then(({ data }) => {
-                            if(data.addLead){
+                            if(data.quickAddLead){
                                 this.setState({
                                     insertLoading: false
                                 });
                                 this.clearForm();
                                 this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
-                                if(gotoDetails) this.setState({ redirecttoDetailView: true, leadId: data.addLead.id });
+                                if(gotoDetails) this.setState({ redirecttoDetailView: true, leadId: data.quickAddLead.id });
                             }
                         })
                         .catch((error) => {
@@ -192,9 +204,21 @@ class QuickLeadCreation extends Component {
         }
     };
 
+    handlePositionApplyingFor = (selected) => {
+        this.setState({
+            positionAppyinForSelected: selected
+        });
+    }
+
     handleTextBoxChange = ({currentTarget: {name, value}}) => this.setState({[name]: value});
 
-    handleZipCodeChange = (value) => this.setState({zipCode: '78741-'});
+    handleZipCodeChange = (info = {}) => {
+        this.setState({
+            zipCode: info.zipCode,
+            stateId: info.stateId,
+            cityId: info.cityId
+        });
+    }
 
     handleSwitchChange = (isChecked, keyName) => {
         console.log('handleSwitchChange', isChecked, keyName); // TODO: (LF) QUITAR CONSOLE LOG
@@ -224,7 +248,7 @@ class QuickLeadCreation extends Component {
 
     render() {
         const { positionAppyinForSelected, firstName, middleName, lastName, homePhone, zipCode,
-                zipCodeDir, proofofId, workonWeekends, transportation, speakEnglish, positionsOpt } = this.state;
+                proofofId, workonWeekends, transportation, speakEnglish, positionsOpt } = this.state;
 
         console.log('render de Quick lead creation'); // TODO: (LF) QUITAR CONSOLE LOG
 
@@ -244,7 +268,7 @@ class QuickLeadCreation extends Component {
                             <Select
                                 options={positionsOpt}
                                 value={positionAppyinForSelected}
-                                onChange={{}}
+                                onChange={this.handlePositionApplyingFor}
                                 closeMenuOnSelect={true}
                                 components={makeAnimated()}
                             />
@@ -320,18 +344,6 @@ class QuickLeadCreation extends Component {
                                 placeholder="+(___) ___-____"
                                 minLength="15"
                             />
-                            {/* <input
-                                onChange={this.handleTextBoxChange}
-                                value={homePhone}
-                                name="homePhone"
-                                type="text"
-                                className="form-control"
-                                disabled={false}
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            /> */}
                         </div>
                         
                         <div className="col-md-12 mt-3">
@@ -339,34 +351,10 @@ class QuickLeadCreation extends Component {
                                 Zip Code
                             </span>
                             <ZipCodeInfo
-                                
+                                zipCode={zipCode}
+                                zipCodeOnChange={this.handleZipCodeChange}
                             />
-                            {/* <input
-                                onChange={this.handleZipCodeChange}
-                                value={zipCode}
-                                name="zipCode"
-                                type="text"
-                                className="form-control"
-                                disabled={false}
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            /> */}
                         </div>
-                        
-                        {/* <div className="col-md-8">
-                            <input
-                                value={zipCodeDir}
-                                name="zipCodeDir"
-                                type="text"
-                                className="form-control"
-                                disabled={true}
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                        </div> */}
                     </div>
 
                     <div className="row">
@@ -419,6 +407,36 @@ class QuickLeadCreation extends Component {
                                         <tr>
                                             <td>
                                                 Speaks English
+                                            </td>
+                                            <td>
+                                                <CustomSwitch
+                                                    id="speakEnglish"
+                                                    onChange={_ => this.handleSwitchChange(speakEnglish, 'speakEnglish')}
+                                                    checked={speakEnglish}
+                                                    value={speakEnglish}
+                                                    name="speakEnglish"
+                                                />
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                Quitar
+                                            </td>
+                                            <td>
+                                                <CustomSwitch
+                                                    id="speakEnglish"
+                                                    onChange={_ => this.handleSwitchChange(speakEnglish, 'speakEnglish')}
+                                                    checked={speakEnglish}
+                                                    value={speakEnglish}
+                                                    name="speakEnglish"
+                                                />
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                Quitar
                                             </td>
                                             <td>
                                                 <CustomSwitch

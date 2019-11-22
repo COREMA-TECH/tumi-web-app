@@ -3,25 +3,37 @@ import withApollo from 'react-apollo/withApollo';
 import InputMask from 'react-input-mask';
 import { GET_CITY_STATE_QUERY } from './Queries';
 
-const STATE_ID = 3, CITY_ID = 5,
-    DEFAULT_MASK = '99999', DEFAULT_PLACEHOLDER = '_____',
-    DEFAULT_STATE_CODE = 'XYZ';
+const DEFAULT_MASK = '99999', DEFAULT_PLACEHOLDER = '_____';
 
 class ZipCodeInfo extends Component {
     state = {
-        loadingData: false,
-        zipCode: null,
-        cityId: 0,
+        zipCode: '',
         stateId: 0,
-        cityName: null,
-        stateName: null
+        stateName: 'Enter a valid ZipCode',
+        cityId: 0,
+        cityName: '',
+        loadingData: false,
+        zipCodeOnChange: () => {}
     }
     
     handleZipCodeChange = ({currentTarget: {value}}) => {
-        this.setState({zipCode: value}, () => {
-            if(value && value.length > 4 && value.length <= 6) this.findZipCodeInfo();
-        });
+        this.setState({ zipCode: value });
     };
+
+    processZipCode = (zipCode) => {
+        if(zipCode && zipCode.length > 4 && zipCode.length <= 6){
+            this.findZipCodeInfo();
+        }
+        else {
+            this.setState({
+                zipCode,
+                stateId: 0,
+                stateName: 'Enter a valid ZipCode',
+                cityId: 0,
+                cityName: ''
+            });
+        }
+    }
 
     findZipCodeInfo = () => {
         const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
@@ -34,28 +46,74 @@ class ZipCodeInfo extends Component {
                         Zipcode: zipCode
                     }
                 }).then(({ data: { zipCodeStateCity } }) => {
-                    this.setState({ loadingData: false },
-                        () => {
-                            if (zipCodeStateCity)
-                                this.setState({ 
-                                    cityId: zipCodeStateCity.countryId,
-                                    stateId: zipCodeStateCity.stateId,
-                                    stateName: zipCodeStateCity.stateRelation.Name.trim(),
-                                    cityName: zipCodeStateCity.cityRelation.Name.trim() 
-                                });
-                        })
+                    if (zipCodeStateCity) {
+                        const foundData = {
+                            cityId: zipCodeStateCity.countryId,
+                            stateId: zipCodeStateCity.stateId,
+                            stateName: zipCodeStateCity.stateRelation.Name.trim(),
+                            cityName: zipCodeStateCity.cityRelation.Name.trim()
+                        };
+
+                        this.setState({ 
+                            ...foundData,
+                            loadingData: false
+                        }, () => {
+                            this.state.zipCodeOnChange({
+                                zipCode,
+                                ...foundData
+                            });
+                        });
+                    }
+                    else {
+                        const notFoundData = {
+                            cityId: 0,
+                            stateId: 0,
+                            stateName: 'Not Found',
+                            cityName: ''
+                        };
+
+                        this.setState({ 
+                            ...notFoundData,
+                            loadingData: false
+                        }, () => {
+                            this.state.zipCodeOnChange({
+                                zipCode,
+                                ...notFoundData
+                            });
+                        });
+                    }
                 }).catch(error => {
+                    console.log(error);
                     this.setState({
                         loadingData: false,
-                        stateName: 'Not Found',
+                        stateName: 'Error to get information',
                         cityName: null
                     });
                 })
         });
     }
 
+    componentWillReceiveProps(nextProps){
+        if(this.props.zipCode !== nextProps.zipCode)
+            this.setState({ zipCode: nextProps.zipCode })
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if(prevState.zipCode !== this.state.zipCode)
+            this.processZipCode(this.state.zipCode);
+    }
+
+    componentDidMount(){
+        const zipCodeOnChange = this.props.zipCodeOnChange ? this.props.zipCodeOnChange : () => {};
+        this.setState({
+            zipCode: this.props.zipCode,
+            zipCodeOnChange
+        });
+    }
+
     render() {
         const {stateName, cityName} = this.state;
+        console.log('Render ZipCodeInfo', this.props.zipCode); // TODO: (LF) QUITAR CONSOLE LOG
         return <Fragment>
             <div className="input-group ZipCodeInfo">
                 <InputMask
@@ -65,14 +123,10 @@ class ZipCodeInfo extends Component {
                     maskChar=""
                     className="form-control"
                     onChange={this.handleZipCodeChange}
-                    value={this.props.value}
+                    value={this.state.zipCode}
                     placeholder={DEFAULT_PLACEHOLDER}
-                    //required={this.props.requiredZipCode}
                     minLength="15"
-                    disabled={this.state.loadingData}
-                    //onKeyDown={this.handleOnKeyUp}
-                    //onBlur={this.handleOnBlur}
-
+                    disabled={this.state.loadingData || this.props.disabled}
                 />
                 <div class="input-group-append">
                     <span class="input-group-text" id="basic-addon2">
@@ -80,7 +134,7 @@ class ZipCodeInfo extends Component {
                         { 
                             this.state.loadingData 
                             ? <i className={`fa fa-spinner fa-spin select-animated-icon ${this.state.loadingCities || 'd-none'}`} />
-                            : !stateName && !cityName ? 'Enter a ZipCode' : [stateName, cityName].join() 
+                            : !stateName && !cityName ? 'Enter a ZipCode' : [stateName, cityName].join(', ') 
                         }
                     </span>
                 </div>

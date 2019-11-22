@@ -39,15 +39,14 @@ export const OffsideModal = props => {
     };
 
     return <Fragment>
-        <div className={`OffsideModal${classes ? ` ${classes}` : ''}`}>
-            {open && <div className="OffsideModal-backdrop"></div>}
-            <div className={`OffsideModal-wrapper${open ? ' active' : ''}`}>
-                <div className="OffsideModal-header">
-                    <a href="#" className="OffsideModal-btnClose" onClick={handlecloseBtn}><i className="fas fa-times"></i></a>
-                </div>
-                <div className="OffsideModal-container">
-                    {children}
-                </div>
+        <div className={`OffsideModal-wrapper ${open ? 'active' : ''}`}>
+            <div className="OffsideModal-header">
+                <a href="#" className="OffsideModal-btnClose" onClick={handlecloseBtn}>
+                    <i className="fas fa-times"></i>
+                </a>
+            </div>
+            <div className="OffsideModal-container">
+                {children}
             </div>
         </div>
     </Fragment>

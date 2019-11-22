@@ -5,6 +5,14 @@ $om-wrapper-width: 550px;
 $om-mobile-screen-width: 480px;
 
 .OffsideModal {
+    // top: 0;
+    // left: 0;
+    // height: 100vh;
+    // width: 100vw;
+    // overflow: hidden;
+    // position: fixed;
+    // z-index: 1100;
+
     &-backdrop {
         background-color: #000;
         height: 100vh;
@@ -18,23 +26,43 @@ $om-mobile-screen-width: 480px;
 
     &-wrapper {
         background-color: #FFFFFF;
-        min-height: 100vh;
-        width: $om-wrapper-width;
+        //display: none;
+        height: 100vh;
+        width: 0;
         left: 100vw;
         top: 0;
-        position: absolute;
-        transition: left .5s ease-out;
+        padding-bottom: $om-footer-height;
+        position: fixed;
+        transition: .5s ease-out;
         z-index: 1110;
-        @media (max-width: $om-mobile-screen-width) {
+        &:before {
+            display: none;
+            content: " ";
+            background-color: #000;
+            height: 100vh;
             width: 100vw;
-        }
-        
-        &.active {
-            left: calc(100vw - 550px);
+            left: -100vw;
             top: 0;
+            opacity: 0.7;
+            position: absolute;
+            transition: .5s ease-out;
+            z-index: 1100;
+        }
+        &.active {
+            //display: block;
+            left: calc(100vw - #{$om-wrapper-width});
+            top: 0;
+            width: $om-wrapper-width;
+            &:before {
+                display: block;
+                transition: 1s ease-in;
+            }
             @media (max-width: $om-mobile-screen-width) {
                 left: 0;
             }
+        }
+        @media (max-width: $om-mobile-screen-width) {
+            width: 100vw;
         }
     }
 
@@ -52,7 +80,9 @@ $om-mobile-screen-width: 480px;
     }
 
     &-container {
-        height: calc(100% - $om-header-height);
+        height: 100%;
+        width: 100%;
+        padding-bottom: $om-footer-height;
     }
 
     &-title {
@@ -82,7 +112,8 @@ $om-mobile-screen-width: 480px;
     &-content {
         font-size: 0.75rem;
         padding: 25px;
-        margin-bottom: $om-footer-height;
+        overflow-y: scroll;
+        height: 100%;
     }
 
     &-footer {
