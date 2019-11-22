@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 
 export const OffsideModalTitle = props => {
-    //console.log('memo title'); // TODO: (LF) QUITAR CONSOLE LOG
     const {classes, children} = props;
     return <div className={`OffsideModal-title${classes ? ` ${classes}` : ''}`}>
         {children}
@@ -9,7 +8,6 @@ export const OffsideModalTitle = props => {
 };
 
 export const OffsideModalContent = props => {
-    //console.log('memo content'); // TODO: (LF) QUITAR CONSOLE LOG
     const {classes, children} = props;
     return <div className={`OffsideModal-content${classes ? ` ${classes}` : ''}`}>
         {children}
@@ -17,7 +15,6 @@ export const OffsideModalContent = props => {
 };
 
 export const OffsideModalFooter = props => {
-    //console.log('memo footer'); // TODO: (LF) QUITAR CONSOLE LOG
     const {classes, children} = props;
     return <div className={`OffsideModal-footer${classes ? ` ${classes}` : ''}`}>
         {children}
@@ -32,7 +29,6 @@ export const OffsideModalFooter = props => {
  */
 export const OffsideModal = props => {
     const {open, classes, children, handleClose} = props;
-    //console.log('offsidemodal .. ', children[0]); // TODO: (LF) QUITAR CONSOLE LOG
     const handlecloseBtn = e => {
         e.preventDefault();
         handleClose();

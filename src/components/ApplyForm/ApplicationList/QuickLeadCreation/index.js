@@ -1,15 +1,15 @@
-import React, { Fragment, Component, memo } from 'react';
+import React, { Fragment, Component } from 'react';
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
-import {OffsideModal, OffsideModalTitle, OffsideModalContent, OffsideModalFooter} from '../../ui-components/OffsideModal';
-import { GET_POSITIONS_QUERY } from '../../ApplyForm-Recruiter/Queries';
+import {OffsideModal, OffsideModalTitle, OffsideModalContent, OffsideModalFooter} from '../../../ui-components/OffsideModal';
+import { GET_POSITIONS_QUERY } from './Queries';
+import { CREATE_APPLICATION } from './Mutations';
 import Redirect from 'react-router-dom/es/Redirect';
 import withApollo from 'react-apollo/withApollo';
-import withGlobalContent from '../../Generic/Global';
+import withGlobalContent from '../../../Generic/Global';
 import moment from 'moment';
 import InputMask from 'react-input-mask';
-import ZipCodeInfo from '../../ui-components/ZipCodeInfo';
-import gql from 'graphql-tag';
+import ZipCodeInfo from '../../../ui-components/ZipCodeInfo';
 
 /**
  * Custom Switch
@@ -48,14 +48,6 @@ const CustomSwitch = props => {
 
 const weekendRestriction = '{"weekDays":["SA","SU"],"startTime":"08:00","endTime":"17:00"}';
 
-const CREATE_APPLICATION = gql`
-    mutation quickAddLead($application: inputInsertApplication, $speakEnglish: Boolean, $codeuser: Int, $nameUser: String) {
-        quickAddLead(application: $application, speakEnglish: $speakEnglish, codeuser: $codeuser, nameUser: $nameUser) {
-            id
-        }
-    }
-`;
-
 const DEFAULT_STATE = {
     positionAppyinForSelected: {value:0, label: 'Select a position'},
     firstName: '',
@@ -78,7 +70,7 @@ class QuickLeadCreation extends Component {
         nameUser: null,
         redirecttoDetailView: false,
         leadId: 0,
-        openOffsideModal: true,
+        openOffsideModal: false,
         insertLoading: false,
         positionsOpt: [],
         ...DEFAULT_STATE
@@ -92,7 +84,6 @@ class QuickLeadCreation extends Component {
             })
             .then(({ data }) => {
                 if(data.workOrder && data.workOrder.length){
-                    console.log('data.workOrder', data.workOrder); // TODO: (LF) QUITAR CONSOLE LOG 
                     const positions = data.workOrder.map(item => {
                         return { value: item.id, label: `${item.position.Position.trim()} ${item.BusinessCompany.Code.trim()}` }
                     });
@@ -102,8 +93,6 @@ class QuickLeadCreation extends Component {
                         { value: 0, label: "Open Position" },
                         ...positions
                     ];
-
-                    console.log('optionstoAdd', optionstoAdd); // TODO: (LF) QUITAR CONSOLE LOG 
 
                     this.setState({
                         positionsOpt: optionstoAdd
@@ -153,22 +142,14 @@ class QuickLeadCreation extends Component {
                                     //lastName2: this.state.lastName2,
                                     date: currentDate,
                                     dateCreation: currentDate,
-                                    //aptNumber: this.state.aptNumber,
                                     city: this.state.cityId,
                                     state: this.state.stateId,
                                     zipCode: this.state.zipCode,
                                     homePhone: this.state.homePhone,
-                                    //cellPhone: this.state.cellPhone,
                                     car: this.state.transportation,
-                                    //emailAddress: this.state.emailAddress,
                                     positionApplyingFor: this.state.positionAppyinForSelected.value,
                                     scheduleRestrictions: !this.state.workonWeekends,
                                     scheduleExplain: this.state.workonWeekends ? null : weekendRestriction,
-                                    //convicted: this.state.convicted,
-                                    //convictedExplain: this.state.convictedExplain,
-                                    //comment: this.state.comment,
-                                    //generalComment: this.state.generalComment,
-                                    //isLead: true,
                                     idRecruiter: userId,
                                     UserId: userId,
                                     sendInterview: false,
@@ -221,7 +202,6 @@ class QuickLeadCreation extends Component {
     }
 
     handleSwitchChange = (isChecked, keyName) => {
-        console.log('handleSwitchChange', isChecked, keyName); // TODO: (LF) QUITAR CONSOLE LOG
         this.setState({[keyName]: !isChecked});
     }
 
@@ -236,8 +216,6 @@ class QuickLeadCreation extends Component {
                 />
     }
 
-    handleCloseOffsideModal = () => this.setState({openOffsideModal: false});
-
     componentDidMount = () => {
         this.getPositions();
         this.setState({
@@ -250,14 +228,10 @@ class QuickLeadCreation extends Component {
         const { positionAppyinForSelected, firstName, middleName, lastName, homePhone, zipCode,
                 proofofId, workonWeekends, transportation, speakEnglish, positionsOpt } = this.state;
 
-        console.log('render de Quick lead creation'); // TODO: (LF) QUITAR CONSOLE LOG
-
         if(this.state.redirecttoDetailView) return this.handleRedirecttoDetailView();
 
         return <Fragment>
-            {console.log('render de Quick lead creation <Fragment />') /* TODO: (LF) QUITAR CONSOLE LOG*/ }
-            <button onClick={_ => this.setState({openOffsideModal: true})}>abrir modal</button>
-            <OffsideModal open={this.state.openOffsideModal} handleClose={this.handleCloseOffsideModal}>
+            <OffsideModal open={this.props.open} handleClose={this.props.handleClose}>
                 <OffsideModalTitle>New Lead</OffsideModalTitle>
                 <OffsideModalContent>
                     <div className="row d-flex align-items-end">
@@ -418,36 +392,6 @@ class QuickLeadCreation extends Component {
                                                 />
                                             </td>
                                         </tr>
-
-                                        <tr>
-                                            <td>
-                                                Quitar
-                                            </td>
-                                            <td>
-                                                <CustomSwitch
-                                                    id="speakEnglish"
-                                                    onChange={_ => this.handleSwitchChange(speakEnglish, 'speakEnglish')}
-                                                    checked={speakEnglish}
-                                                    value={speakEnglish}
-                                                    name="speakEnglish"
-                                                />
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>
-                                                Quitar
-                                            </td>
-                                            <td>
-                                                <CustomSwitch
-                                                    id="speakEnglish"
-                                                    onChange={_ => this.handleSwitchChange(speakEnglish, 'speakEnglish')}
-                                                    checked={speakEnglish}
-                                                    value={speakEnglish}
-                                                    name="speakEnglish"
-                                                />
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -469,7 +413,7 @@ class QuickLeadCreation extends Component {
                     
                     <button 
                         className="btn border-success"
-                        onClick={this.handleCloseOffsideModal}
+                        onClick={this.props.handleClose}
                         >Cancel
                     </button>
                 </OffsideModalFooter>

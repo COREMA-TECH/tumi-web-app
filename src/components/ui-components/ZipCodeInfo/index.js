@@ -113,7 +113,6 @@ class ZipCodeInfo extends Component {
 
     render() {
         const {stateName, cityName} = this.state;
-        console.log('Render ZipCodeInfo', this.props.zipCode); // TODO: (LF) QUITAR CONSOLE LOG
         return <Fragment>
             <div className="input-group ZipCodeInfo">
                 <InputMask

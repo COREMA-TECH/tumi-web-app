@@ -23,7 +23,6 @@ import NoShowReport from '../../NoShowReport';
 import DatePicker from "react-datepicker";
 import moment from 'moment';
 import { GET_RECRUITERS } from '../../NoShowReport/queries';
-import QuickLeadCreation from './QuickLeadCreation';
 
 const styles = (theme) => ({
 	root: {
@@ -670,8 +669,6 @@ class ApplicationList extends Component {
 
 		return (
 			<div className="main-application">
-				<QuickLeadCreation />
-
 				{this.printNoShowReportPrefilter()}
 				{this.printNoShowReport()}
 				{this.renderConfirmSendToPackageDialog()}
