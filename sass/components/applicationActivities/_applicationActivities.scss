@@ -1,3 +1,21 @@
+.Activities{
+    height: 100%;
+    position: relative;
+
+    &-toggleModal{
+        color: $white;
+        background-color: $action-button-color;        
+        display: block;
+        margin-left: auto;
+        padding: 8px 10px;
+        transition: all 0.5s ease;
+
+        &:hover{
+            background-color: darken($action-button-color, 10%);            
+        }
+    }
+}
+
 .ActionButtons{
     display: flex;
     flex-direction: row;

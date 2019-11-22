@@ -10791,6 +10791,71 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   -ms-flex-flow: row wrap;
   flex-flow: row wrap; }
 
+.genModal {
+  background-color: #FFF;
+  border: 3px solid #dddddd;
+  display: none;
+  max-width: 350px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 100%;
+  z-index: 1000;
+  -webkit-transition: all 5s ease-out;
+  -o-transition: all 5s ease-out;
+  transition: all 5s ease-out; }
+  .genModal.open {
+    display: block;
+    -webkit-transition: all 5s ease-out;
+    -o-transition: all 5s ease-out;
+    transition: all 5s ease-out; }
+  .genModal-headbar {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-negative: 1;
+    flex-shrink: 1;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    background-color: #3ca2c8;
+    color: #FFF;
+    height: 40px;
+    padding-left: 18px; }
+  .genModal-header, .genModal-body, .genModal-footer {
+    padding: 15px 18px; }
+  .genModal-close {
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 700;
+    padding-left: 18px;
+    padding-right: 18px;
+    -webkit-transition: all 0.35s ease;
+    -o-transition: all 0.35s ease;
+    transition: all 0.35s ease; }
+    .genModal-close:hover {
+      background-color: #1d5367; }
+  .genModal-header, .genModal-body {
+    border-bottom: 1px solid #dddddd; }
+  @media (min-width: 992px) {
+    .genModal {
+      max-width: 450px; } }
+  @media (min-width: 1200px) {
+    .genModal {
+      max-width: 750px; } }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -11502,6 +11567,21 @@ div[class*="MuiStepper-root-"] {
 
 .SummaryTab .signature-information {
   font-family: 'Tinos', serif; }
+
+.Activities {
+  height: 100%;
+  position: relative; }
+  .Activities-toggleModal {
+    color: #FFF;
+    background-color: #4f6d91;
+    display: block;
+    margin-left: auto;
+    padding: 8px 10px;
+    -webkit-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease; }
+    .Activities-toggleModal:hover {
+      background-color: #3d5470; }
 
 .ActionButtons {
   display: -webkit-box;
