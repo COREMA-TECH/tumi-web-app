@@ -218,13 +218,9 @@ class ApplicationTable extends React.Component {
                                     <CustomTableCell className={"Table-head"} style={{ width: '150px' }}>Actions</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Id</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Recruited By</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Sent to Interview By</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Completed</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Stage</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Source</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>NHP Completed</CustomTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -290,12 +286,8 @@ class ApplicationTable extends React.Component {
                                             </CustomTableCell>
                                             <CustomTableCell>{row.id}</CustomTableCell>
                                             <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
-                                            <CustomTableCell>{row.emailAddress}</CustomTableCell>
-                                            <CustomTableCell>{row.workOrderId ? `000000${row.workOrderId}`.slice(-6) : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.Position ? `${row.Position.Position.trim()} ${row.PositionCompany ? `(${row.PositionCompany.Code.trim()})` : ''}` : 'Open Position'}</CustomTableCell>
-                                            <CustomTableCell>{row.DefaultCompany ? row.DefaultCompany.Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.origin}</CustomTableCell>
                                             <CustomTableCell>{row.Recruiter ? row.Recruiter.Full_Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.User && row.sendInterview ? row.User.Full_Name : ''}</CustomTableCell>
                                             <CustomTableCell>{row.statusCompleted === true ? "YES" : "NO"}</CustomTableCell>
                                         </TableRow>
                                     );

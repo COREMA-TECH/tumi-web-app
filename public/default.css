@@ -10723,6 +10723,75 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     border-radius: 5px;
     padding: 2px 15px; }
 
+.Sidebar {
+  background: #FFF;
+  border-right: solid 1px #bdbdbd;
+  height: auto !important;
+  /* Important rule for a modern browser */
+  height: 100%;
+  /* Minimum height for Internet Explorer */
+  margin-left: -60px;
+  margin-right: 1rem;
+  margin-top: -30px;
+  min-height: 100%;
+  /* Minimum height for a modern browser */
+  overflow: hidden !important;
+  /* Firefox scroll-bar */
+  padding-left: 22.5px;
+  padding-top: 25px;
+  padding-right: 22.5px; }
+  .Sidebar-expanded {
+    width: 292px; }
+  .Sidebar-reduced {
+    width: 140px; }
+  @media (max-width: 767.98px) {
+    .Sidebar {
+      height: auto;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 0;
+      width: 100%; } }
+
+.SidebarIconList-item {
+  margin-bottom: 1rem;
+  text-align: center; }
+
+.SidebarIconList-title {
+  color: #7e7e7e;
+  font-size: .8rem;
+  display: block;
+  font-weight: 500; }
+  .SidebarIconList-title.withBadge:after {
+    background: #3ca2c8;
+    border-radius: 3px;
+    content: attr(data-value);
+    color: #FFF;
+    display: block;
+    font-size: .7rem;
+    height: 18px;
+    line-height: 18px;
+    margin: 0 auto;
+    text-align: center;
+    width: 18px; }
+
+.SidebarList-item label {
+  font-size: .8rem; }
+
+.withSidebar-content {
+  width: calc(100% - 110px); }
+  @media (max-width: 767.98px) {
+    .withSidebar-content {
+      width: 100%; } }
+
+.withSidebar-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap; }
+
 .Header-mobileMenu {
   color: #FFF;
   display: block;
@@ -10786,7 +10855,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   border-bottom: 0; }
 
 .MenuMobile {
-  background: #FFF;
+  background: #254151;
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   border-right: #ededed solid 1px;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
@@ -10801,7 +10870,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
   -o-transition: left .5s ease-out;
   transition: left .5s ease-out;
   z-index: 1020;
-  width: 290px; }
+  width: 245px; }
   @media (max-width: 767.98px) {
     .MenuMobile {
       left: -290px; } }
@@ -10822,7 +10891,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    color: #7e7e7e;
+    color: #FFF;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -10835,7 +10904,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     text-decoration: none;
     width: 100%; }
     .MenuMobile-link span {
-      color: #7e7e7e;
+      color: #FFF;
       font-size: "Poppins", sans-serif;
       font-weight: 400;
       text-transform: uppercase; }
@@ -10947,7 +11016,7 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     left: auto !important; }
 
 .SubMenu {
-  background: #f7f8fa;
+  background: #2a495c;
   height: 0;
   overflow: hidden;
   padding-bottom: 0;
@@ -10961,8 +11030,9 @@ div[class*="MuiExpansionPanel-expanded"] .panel-dropdown-body {
     margin-bottom: 0.5rem;
     margin-top: 0.5rem; }
   .SubMenu-link {
+    color: #FFF;
     font-family: "Poppins", sans-serif;
-    color: #7e7e7e; }
+    font-size: .8rem; }
     .SubMenu-link:hover {
       color: black; }
   .SubMenu-show {
@@ -13724,5 +13794,3 @@ label.input-group-text {
 
 span[class^='MySnackbarContent-message-'] {
   color: #FFF; }
-
-/*# sourceMappingURL=default.css.map */

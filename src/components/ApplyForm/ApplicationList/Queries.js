@@ -36,3 +36,27 @@ export const GET_DEPARTMENTS_QUERY = gql`
     }
   }
 `;
+
+/**
+ * Query to get applications, if logged user have field employees role the query only get your own application
+ */
+export const GET_APPLICATION_QUERY = gql`
+		query applicationsByUser($idUsers: Int,$Id_Deparment: Int, $idEntity: Int, $isActive:[Boolean] ,$isLead:Boolean){
+			applicationsByUser(idUsers: $idUsers, Id_Deparment: $Id_Deparment, idEntity: $idEntity, isActive: $isActive,isLead:$isLead) {
+				id
+				firstName
+				middleName
+				lastName
+				cellPhone
+				statusCompleted
+				sendInterview
+				origin
+				User {
+					Full_Name
+				}
+				Recruiter {
+					Full_Name
+				}
+			}
+		}
+	`;
