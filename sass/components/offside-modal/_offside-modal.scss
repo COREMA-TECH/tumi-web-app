@@ -2,31 +2,11 @@
 $om-header-height: 50px;
 $om-footer-height: 50px;
 $om-wrapper-width: 550px;
-$om-mobile-screen-width: 480px;
+$om-mobile-screen-width: 700px;
 
 .OffsideModal {
-    // top: 0;
-    // left: 0;
-    // height: 100vh;
-    // width: 100vw;
-    // overflow: hidden;
-    // position: fixed;
-    // z-index: 1100;
-
-    &-backdrop {
-        background-color: #000;
-        height: 100vh;
-        width: 100vw;
-        left: 0;
-        top: 0;
-        opacity: 0.7;
-        position: fixed;
-        z-index: 1100;
-    }
-
     &-wrapper {
         background-color: #FFFFFF;
-        //display: none;
         height: 100vh;
         width: 0;
         left: 100vw;
@@ -49,7 +29,6 @@ $om-mobile-screen-width: 480px;
             z-index: 1100;
         }
         &.active {
-            //display: block;
             left: calc(100vw - #{$om-wrapper-width});
             top: 0;
             width: $om-wrapper-width;
@@ -59,10 +38,8 @@ $om-mobile-screen-width: 480px;
             }
             @media (max-width: $om-mobile-screen-width) {
                 left: 0;
+                width: 100vw;
             }
-        }
-        @media (max-width: $om-mobile-screen-width) {
-            width: 100vw;
         }
     }
 
@@ -134,9 +111,15 @@ $om-mobile-screen-width: 480px;
             font-size: 0.7875rem;
             line-height: 1.5;
             border-radius: 0.2rem;
+            @media (max-width: $om-mobile-screen-width){
+                font-size: 0.76rem;
+                padding: 0.15rem 0.3rem 0.15rem 0.3rem !important;
+                line-height: 1.3;
+            }
         }
         
         @media (max-width: $om-mobile-screen-width) {
+            padding: 5px 10px 5px 10px;
             width: 100%;
         }
     }

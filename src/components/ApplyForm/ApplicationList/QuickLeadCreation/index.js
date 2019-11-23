@@ -10,41 +10,7 @@ import withGlobalContent from '../../../Generic/Global';
 import moment from 'moment';
 import InputMask from 'react-input-mask';
 import ZipCodeInfo from '../../../ui-components/ZipCodeInfo';
-
-/**
- * Custom Switch
- * @param {*} id
- * @param {*} className
- * @param {*} onChange
- * @param {*} checked
- * @param {*} value
- * @param {*} name
- * @param {*} disabled
- */
-const CustomSwitch = props => {
-    const {id, className, onChange, checked, value, name, disabled} = props;
-    return (
-        <div className="onoffswitch">
-            <input
-                id={id}
-                className={`onoffswitch-checkbox ${className}`}
-                onChange={onChange}
-                checked={checked}
-                value={value}
-                name={name}
-                type="checkbox"
-                disabled={!!disabled}
-                min="0"
-                maxLength="50"
-                minLength="10"
-            />
-            <label className="onoffswitch-label" htmlFor={id}>
-                <span className="onoffswitch-inner" />
-                <span className="onoffswitch-switch" />
-            </label>
-        </div>
-    )
-};
+import CustomSwitch from '../../../ui-components/CustomSwitch';
 
 const weekendRestriction = '{"weekDays":["SA","SU"],"startTime":"08:00","endTime":"17:00"}';
 

@@ -1,6 +1,7 @@
 import React, {Fragment, Component} from 'react';
 import Sidebar from '../../../Generic/SideBar';
 import ActivitiesPanel from './activitiesPanel';
+import ApplicationStage from '../ApplicationStage';
 
 class Activities extends Component {
 
@@ -57,7 +58,10 @@ class Activities extends Component {
                                     Meet
                                 </span>
                             </span>
-                        </div>                       
+                        </div>
+                        <div className="ApplicationStage">
+                            <ApplicationStage />
+                        </div>
                     </Sidebar>
 					<div className="withSidebar-extended-content">
                         <ActivitiesPanel />						
