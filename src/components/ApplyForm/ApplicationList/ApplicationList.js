@@ -12,6 +12,7 @@ import { GET_APPLICATION_QUERY } from './Queries';
 import { DELETE_APPLICATION_QUERY } from './Mutation';
 import ApplicationSideBar from './ApplicationSideBar';
 import ApplicationFilters from './ApplicationFilters';
+import QuickLeadCreation from './QuickLeadCreation';
 
 
 const styles = (theme) => ({
@@ -36,6 +37,7 @@ class ApplicationList extends Component {
 			filterText: '',
 			opendialog: false,
 			openModal: false,
+			openQuickAddLead: false,
 			properties: [],
 			departments: [],
 			statusValue: [{
@@ -152,6 +154,10 @@ class ApplicationList extends Component {
 
 	}
 
+	handleOpenQuickAddLead = () => this.setState({ openQuickAddLead: true });
+
+	handleCloseQuickAddLead = () => this.setState({ openQuickAddLead: false });
+
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.propertyInfo) {
 			let propertyInfo = this.props.propertyInfo;
@@ -234,7 +240,13 @@ class ApplicationList extends Component {
 							}}
 						>
 							Add Application
-									</button>
+						</button>
+						<button
+							className="btn btn-success float-right mx-2"
+							onClick={this.handleOpenQuickAddLead}
+						>
+							Add Lead
+						</button>
 					</div>}
 				<div className="col-md-12">
 					<div className="card">
@@ -265,6 +277,7 @@ class ApplicationList extends Component {
 
 		return (
 			<Fragment>
+				<QuickLeadCreation open={ this.state.openQuickAddLead } handleClose={this.handleCloseQuickAddLead} />
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}

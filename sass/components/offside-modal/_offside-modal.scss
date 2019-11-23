@@ -1,0 +1,144 @@
+// Offside Modal
+$om-header-height: 50px;
+$om-footer-height: 50px;
+$om-wrapper-width: 550px;
+$om-mobile-screen-width: 480px;
+
+.OffsideModal {
+    // top: 0;
+    // left: 0;
+    // height: 100vh;
+    // width: 100vw;
+    // overflow: hidden;
+    // position: fixed;
+    // z-index: 1100;
+
+    &-backdrop {
+        background-color: #000;
+        height: 100vh;
+        width: 100vw;
+        left: 0;
+        top: 0;
+        opacity: 0.7;
+        position: fixed;
+        z-index: 1100;
+    }
+
+    &-wrapper {
+        background-color: #FFFFFF;
+        //display: none;
+        height: 100vh;
+        width: 0;
+        left: 100vw;
+        top: 0;
+        padding-bottom: $om-footer-height;
+        position: fixed;
+        transition: .5s ease-out;
+        z-index: 1110;
+        &:before {
+            display: none;
+            content: " ";
+            background-color: #000;
+            height: 100vh;
+            width: 100vw;
+            left: -100vw;
+            top: 0;
+            opacity: 0.7;
+            position: absolute;
+            transition: .5s ease-out;
+            z-index: 1100;
+        }
+        &.active {
+            //display: block;
+            left: calc(100vw - #{$om-wrapper-width});
+            top: 0;
+            width: $om-wrapper-width;
+            &:before {
+                display: block;
+                transition: 1s ease-in;
+            }
+            @media (max-width: $om-mobile-screen-width) {
+                left: 0;
+            }
+        }
+        @media (max-width: $om-mobile-screen-width) {
+            width: 100vw;
+        }
+    }
+
+    &-header {
+        background: linear-gradient(to left, $brand-primary, $brand-secondary); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        border-bottom: 1px solid $brand-primary;
+        height: $om-header-height;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 25px 0 25px;
+        width: 100%;
+        z-index: 1115;
+    }
+
+    &-container {
+        height: 100%;
+        width: 100%;
+        padding-bottom: $om-footer-height;
+    }
+
+    &-title {
+        height: $om-header-height;
+        width: 100%;
+        margin-top: -$om-header-height;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 25px 0 25px;
+        color: #FFF;
+        z-index: 1120;
+    }
+
+    &-btnClose {
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: bold;
+        z-index: 1125;
+        &:hover {
+            color: $brand-secondary;
+        }
+    }
+
+    &-content {
+        font-size: 0.75rem;
+        padding: 25px;
+        overflow-y: scroll;
+        height: 100%;
+    }
+
+    &-footer {
+        background-color: #EDEDED;
+        border: 1.5px solid #D2D3D4;
+        bottom: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 25px 0 25px;
+        height: $om-footer-height;
+        position: fixed;
+        width: $om-wrapper-width;
+        & > button {
+            padding: 0.25rem 0.5rem 0.25rem 0.5rem !important;
+            margin: 0 3px 0 3px;
+            font-size: 0.7875rem;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+        }
+        
+        @media (max-width: $om-mobile-screen-width) {
+            width: 100%;
+        }
+    }
+
+}
