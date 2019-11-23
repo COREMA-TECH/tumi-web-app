@@ -12,7 +12,7 @@ import InputMask from 'react-input-mask';
 import ZipCodeInfo from '../../../ui-components/ZipCodeInfo';
 import CustomSwitch from '../../../ui-components/CustomSwitch';
 
-const weekendRestriction = '{"weekDays":["SA","SU"],"startTime":"08:00","endTime":"17:00"}';
+const weekendRestriction = '{"weekDays":["SA","SU"],"startTime":"00:01","endTime":"23:59"}';
 
 const DEFAULT_STATE = {
     positionAppyinForSelected: {value:0, label: 'Select a position'},
