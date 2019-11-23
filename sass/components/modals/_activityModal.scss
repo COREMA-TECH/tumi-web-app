@@ -1,0 +1,65 @@
+.genModal{
+    background-color: $white;
+    border: 3px solid $gray;
+    display: none;
+    max-width: 350px;
+    
+    overflow-x: hidden;
+    overflow-y: auto;    
+
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+
+    width: 100%;
+    z-index: 1000;
+
+    transition: all 5s ease-out;
+
+    &.open{
+        display: block;    
+        transition: all 5s ease-out;
+    }
+
+    &-headbar{
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        flex-shrink: 1;
+        justify-content: space-between;        
+
+        background-color: $success;
+        color: $white;
+        height: 40px;
+        padding-left: 18px;
+    }    
+
+    &-header, &-body, &-footer{
+        padding: 15px 18px;
+    }
+
+    &-close{
+        cursor: pointer;
+        font-size: 24px;
+        font-weight: 700;
+        padding-left: 18px;
+        padding-right: 18px;
+        transition: all 0.35s ease;
+        &:hover{
+            background-color: darken($success, 25%);
+        }
+    }
+    
+    &-header, &-body{
+        border-bottom: 1px solid $gray;
+    }
+
+    @include media-breakpoint-up(lg){
+        max-width: 450px;
+    }
+
+    @include media-breakpoint-up(xl){
+        max-width: 750px;
+    }
+}

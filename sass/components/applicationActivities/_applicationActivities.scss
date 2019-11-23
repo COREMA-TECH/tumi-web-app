@@ -1,0 +1,173 @@
+.Activities{
+    height: 100%;
+    position: relative;
+
+    &-toggleModal{
+        color: $white;
+        background-color: $action-button-color;        
+        display: block;
+        margin-left: auto;
+        padding: 8px 10px;
+        transition: all 0.5s ease;
+
+        &:hover{
+            background-color: darken($action-button-color, 10%);            
+        }
+    }
+}
+
+.ActionButtons{
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    flex-shrink: 1;
+    justify-content: space-around;
+
+    padding: 1.5rem 0rem;
+}
+
+.ActionButton{
+    text-align: center;
+    position: relative;
+    
+    &:hover &-submenu{
+        display: block;
+        opacity: 1;
+    }
+
+    &-item{
+        background-color: $action-button-bg;
+        border: 2px solid $action-button-border;
+        border-radius: 50%;
+
+        color: $action-button-color;
+        font-size: 16px;
+
+        height: 40px;
+        width: 40px;
+        margin-bottom: 12px;
+
+    }
+
+    &-submenu{
+        border: 2px solid $action-button-border;
+        display: none;
+        margin-top: 1rem;
+        position: absolute;        
+        left: -60px;        
+        width: 180px;
+
+        opacity: 0;
+        transition: all 0.5s ease;
+
+        &-item{
+            display: block;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            transition: all 0.5s ease;
+
+            &:hover{
+                background-color: rgba($action-button-bg, 0.6);
+            }
+        }
+    }
+}
+
+.ActivityTabs{
+    border-bottom: 2px solid $action-button-border;
+    margin-bottom: 2rem;
+
+    &-tab{
+        color: $action-button-color;
+        display: inline-block;
+        font-weight: 700;;
+        padding: 10px 20px;
+        position: relative;
+
+        &.active::after{            
+            background-color: $action-button-color;
+            content: '';
+            display: block;
+            
+            height: 2px;
+            width: 100%;
+
+            position: absolute;
+            bottom: -2px;
+            left: 0;  
+            transition: all 0.75s ease;          
+        }
+    }
+}
+
+.Activity{
+    padding-left: 2rem;;
+    position: relative;
+
+    &-icon{
+        position: absolute;
+        left: 1.25rem;
+        top: 1rem;
+    }
+
+    &-type{
+        color: $action-button-color;
+        font-weight: 700;
+    }
+
+    &-title{
+        font-weight: 700;
+        margin-bottom: 30px;
+        i{
+            font-size: 22px;
+            margin-right: 8px;
+        }
+    }
+
+    &-header{
+        padding-left: 1rem;
+        &::after{
+            display: none;
+        }
+    }
+
+    &-body{
+        padding-left: 1rem;
+    }
+
+    &-data{
+        border-bottom: 1px solid $action-button-border;
+        border-top: 1px solid $action-button-border;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+
+        margin-bottom: 2rem;
+        padding: 10px 0px;
+    }
+
+    &-label{
+        font-size: 12px;
+    }
+
+    &-description{
+        color: $black;
+        font-weight: 300;
+    }
+
+    & &-input{
+        border: none;
+        color: $success;
+        font-weight: 700 !important;
+
+        &:read-only, &[readonly]{
+            background: none !important;
+        }
+
+        &:active, &:focus {
+            border: none;
+            box-shadow: none;
+        }
+    }
+}

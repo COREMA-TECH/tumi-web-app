@@ -10,43 +10,9 @@ import withGlobalContent from '../../../Generic/Global';
 import moment from 'moment';
 import InputMask from 'react-input-mask';
 import ZipCodeInfo from '../../../ui-components/ZipCodeInfo';
+import CustomSwitch from '../../../ui-components/CustomSwitch';
 
-/**
- * Custom Switch
- * @param {*} id
- * @param {*} className
- * @param {*} onChange
- * @param {*} checked
- * @param {*} value
- * @param {*} name
- * @param {*} disabled
- */
-const CustomSwitch = props => {
-    const {id, className, onChange, checked, value, name, disabled} = props;
-    return (
-        <div className="onoffswitch">
-            <input
-                id={id}
-                className={`onoffswitch-checkbox ${className}`}
-                onChange={onChange}
-                checked={checked}
-                value={value}
-                name={name}
-                type="checkbox"
-                disabled={!!disabled}
-                min="0"
-                maxLength="50"
-                minLength="10"
-            />
-            <label className="onoffswitch-label" htmlFor={id}>
-                <span className="onoffswitch-inner" />
-                <span className="onoffswitch-switch" />
-            </label>
-        </div>
-    )
-};
-
-const weekendRestriction = '{"weekDays":["SA","SU"],"startTime":"08:00","endTime":"17:00"}';
+const weekendRestriction = '{"weekDays":["SA","SU"],"startTime":"00:01","endTime":"23:59"}';
 
 const DEFAULT_STATE = {
     positionAppyinForSelected: {value:0, label: 'Select a position'},

@@ -14,7 +14,8 @@ import MainContract from '../../Contract/Main/MainContract/MainContract';
 import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationRecruiter from 'ApplyForm-Recruiter/ApplicationList/ApplicationList';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
-import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
+// import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
+import ApplicationActivities from '../../ApplyForm/Application/Activities';
 import WorkOrders from '../../WorkOrders';
 import WorkOrdersPosition from '../../WorkOrdersPosition';
 import ResetPassword from '../../ResetPassword/ResetPassword';
@@ -205,7 +206,8 @@ class Container extends Component {
 				<Route exact path="/home/Users" component={CreateUsers} />
 				<Route exact path="/home/payroll" component={PayRoll} />
 				<Route exact path="/home/calendar" component={Calendar} />
-				<Route exact path="/home/application/info" component={ApplicationTabs} />
+				{/* <Route exact path="/home/application/info" component={ApplicationTabs} /> */}
+				<Route exact path="/home/application/info" component={ApplicationActivities} />
 				<Route exact path="/home/recruiter" component={ApplicationRecruiter} />
 				<Route exact path="/home/recruiter/report" component={RecruiteReport} />
 				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />

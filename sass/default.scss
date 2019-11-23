@@ -69,6 +69,7 @@
 @import "components/offside-modal/offside-modal";
 @import "components/zipCodeInfo/zipCodeInfo";
 @import "components/sideBar/sidebar";
+@import "components/modals/activityModal";
 
 // Layout
 @import "layout/header";
@@ -87,6 +88,9 @@
 @import "components/apply/profile-picture";
 @import "components/apply/stepper";
 @import "components/apply/summary";
+
+//Application Activities
+@import "components/applicationActivities/applicationActivities";
 
 //External apply
 @import "components/apply/external/index";
